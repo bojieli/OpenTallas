@@ -7,10 +7,10 @@ from fault_bench import fixture, generate, normalize
 p=argparse.ArgumentParser(); p.add_argument('--plan'); p.add_argument('--candidate-mode',action='store_true'); p.add_argument('--rtl',default='rtl/qwen_sys/split_20261014/qkd_astk_phys.sv'); p.add_argument('--source-commit',required=True); a=p.parse_args()
 version=subprocess.check_output(['verilator','--version'],text=True).strip()
 if '5.050' not in version: raise SystemExit('requires fleet Verilator 5.050: '+version)
-rtl=Path(a.rtl).resolve(); plan=json.loads(Path(a.plan).read_text()) if a.plan else fixture()
+rtl=Path(a.rtl).resolve(); plan_bytes=Path(a.plan).read_bytes() if a.plan else (json.dumps(fixture(),indent=2)+'\n').encode(); plan=json.loads(plan_bytes)
 root=Path('bench_output'); root.mkdir(exist_ok=True)
-(root/'plan.json').write_text(json.dumps(plan,indent=2)+'\n')
-summary=dict(source_commit=a.source_commit,rtl_sha256=hashlib.sha256(rtl.read_bytes()).hexdigest(),verilator=version,qualification='abstract topology admission only; fixed transport delays do NOT establish physical CDC signoff',tests={})
+(root/'plan.json').write_bytes(plan_bytes)
+summary=dict(source_commit=a.source_commit,input_plan_file_sha256=hashlib.sha256(plan_bytes).hexdigest(),rtl_sha256=hashlib.sha256(rtl.read_bytes()).hexdigest(),verilator=version,qualification='abstract topology admission only; fixed transport delays do NOT establish physical CDC signoff',tests={})
 for mutant in ('none','missingfold','duplicate_wrongbranch'):
     out=root/mutant; meta=generate(plan,out,mutant,a.candidate_mode)
     cmd=['verilator','--binary','--timing','--top-module','tb','-Wno-fatal','--build-jobs','2','--Mdir','obj',str(rtl),'tb.sv']
