@@ -23,6 +23,11 @@ module tb_dsdv_mu_mem_early_capture;
      next_ra=6'(i); @(negedge ck);
    end
    we=0; next_ra=ra; repeat(3) @(negedge ck); compare=1;
+   // SRAM samples OLD on writeA/readA; following capture must use registered fd,
+   // while current wv is0 so the new current-write bypass cannot conceal it.
+   we=1;wa=6'd5;wd=63'h6edcba987654321;next_ra=6'd5; @(negedge ck);
+   we=0;wa=6'd23;wd=63'h0123456789abcde;next_ra=6'd5; @(negedge ck);
+   next_ra=6'd5; @(negedge ck);
    for(i=0;i<1024;i=i+1) begin
      we=(i%5!=0);wa=(i%4==0)?ra:6'(i*13);wd=63'h7543210fedcba98 ^63'(i*32771);
      next_ra=(i%3==0)?ra:6'(i*7); @(negedge ck);
