@@ -12,7 +12,10 @@
   "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
   "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv"
  ],
- "params": {},
+ "params": {
+  "NU": 4,
+  "MCTX": 1
+ },
  "clock_port": "ck",
  "reset_ports": [
   "rst_n"
@@ -254,13 +257,16 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "job": {
-  "owner": "Claude:S-QWCOL",
-  "branch": "claude/s-qwcol-1018",
-  "tag": "n2",
-  "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face | n2: Q seat bank as decoded constant-index slices (n1c gate synth smoke timed out at 2700 s on the 8 x 16384-b runtime part-select writes + 512-b read); function unchanged",
+  "owner": "Claude:MU-D2D-OVL",
+  "branch": "claude/mu-d2d-ovl-1019",
+  "tag": "m1",
+  "purpose": "MU release compute die (dv2f18dh) qfd_native59_dv_service, NU 4 + MCTX 1 (MU-D2D-OVL 10-19, coordinator 0ki): two static operation context slots (front/back) so a user's request runs while another user's response is in flight on the overlapping D2D segments; merges main QXF-LINK q_open Q window (MUT 4), S-QWCOL reset distribution + formatter eb_r copies (025424c30), MU-DQ-D2DUSER epoch user tag (c93aee75b); outline/pins/faces = n2 (dv2f14bn slot 777.6x518.4), no new port",
   "extra_paths": [
    "rtl/test/qwen_split",
    "results/arch/qwen_split_compute_1014/q_n59_1017",
@@ -348,5 +354,9 @@
  "pin_regs": {
   "enable": false,
   "reason": "RTL is flop-first at every pin (Q-N59 dd73225e0: every input lands in a p_* pin register, every output is a flop; the die calendar already counts those +1 edges); OT_PIN_REGS would add a second edge and break the benched edge contract"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
  }
 }

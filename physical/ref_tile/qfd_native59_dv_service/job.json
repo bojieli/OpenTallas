@@ -1,27 +1,29 @@
 {
- "name": "qfd_native59_dv_service-n1-COMMIT",
+ "name": "qfd_native59_dv_service-m1-COMMIT",
  "block": "qfd_native59_dv_service",
  "ref_tile": true,
- "owner": "Claude:S-QWCOL",
- "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face",
+ "owner": "Claude:MU-D2D-OVL",
+ "purpose": "MU release compute die (dv2f18dh) qfd_native59_dv_service, NU 4 + MCTX 1 (MU-D2D-OVL 10-19, coordinator 0ki): two static operation context slots (front/back) so a user's request runs while another user's response is in flight on the overlapping D2D segments; merges main QXF-LINK q_open Q window (MUT 4), S-QWCOL reset distribution + formatter eb_r copies (025424c30), MU-DQ-D2DUSER epoch user tag (c93aee75b); outline/pins/faces = n2 (dv2f14bn slot 777.6x518.4), no new port",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/s-qwcol-1018",
+  "branch": "claude/mu-d2d-ovl-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/qwen_split",
    "results/arch/qwen_split_compute_1014/q_n59_1017",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "rtl/qwen_sys/vm_nox_20261014",
-   "rtl/qwen_sys/static_embedding_20261014"
+   "rtl/qwen_sys/static_embedding_20261014",
+   "rtl/qwen_sys/split_20261014",
+   "results/rtl/mu_qwen_1018/d2d_ovl"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_dv_service u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_dv_service.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_static_service.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_dv_service #(.NU(4), .MCTX(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_dv_service.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_static_service.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -61,7 +63,7 @@
      "verilator"
     ],
     "fail_regex": "^N59DV_FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut1_q_lane.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/nu1_mut1_q_lane.log"
    },
    {
     "name": "n59dv_mut2_kv_addr",
@@ -73,7 +75,7 @@
      "verilator"
     ],
     "fail_regex": "^N59DV_FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut2_kv_addr.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/nu1_mut2_kv_addr.log"
    },
    {
     "name": "n59dv_mut3_emb_word",
@@ -85,7 +87,122 @@
      "verilator"
     ],
     "fail_regex": "^N59DV_FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut3_emb_word.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/nu1_mut3_emb_word.log"
+   },
+   {
+    "name": "n59mu_positive",
+    "cmd": "N59MU_ONLY=positive bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^positive OK \\(pass\\)"
+   },
+   {
+    "name": "n59mu_ret_bad",
+    "cmd": "N59MU_ONLY=ret_bad bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ret_bad",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ret_bad OK \\(pass\\)"
+   },
+   {
+    "name": "n59mu_mut5_m7",
+    "cmd": "N59MU_ONLY=mut5_m7 bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_mut5_m7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/mu_mut5_m7.log"
+   },
+   {
+    "name": "n59mu_mut6_seq",
+    "cmd": "N59MU_ONLY=mut6_seq bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_mut6_seq",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/mu_mut6_seq.log"
+   },
+   {
+    "name": "n59mu_mctx_serial",
+    "cmd": "N59MU_ONLY=mctx_serial bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_mctx_serial",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^mctx_serial OK \\(pass\\)"
+   },
+   {
+    "name": "n59mu_ovl_positive",
+    "cmd": "N59MU_ONLY=ovl_positive bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ovl_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ovl_positive OK \\(pass\\)"
+   },
+   {
+    "name": "n59mu_ovl_ret_bad",
+    "cmd": "N59MU_ONLY=ovl_ret_bad bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ovl_ret_bad",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ovl_ret_bad OK \\(pass\\)"
+   },
+   {
+    "name": "n59mu_ovl_asbuilt_1ctx",
+    "cmd": "N59MU_ONLY=ovl_asbuilt_1ctx bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ovl_asbuilt_1ctx",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/mu_ovl_asbuilt_1ctx.log"
+   },
+   {
+    "name": "n59mu_ovl_mut_collide",
+    "cmd": "N59MU_ONLY=ovl_mut_collide bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ovl_mut_collide",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/mu_ovl_mut_collide.log"
+   },
+   {
+    "name": "n59mu_ovl_mut5_m7",
+    "cmd": "N59MU_ONLY=ovl_mut5_m7 bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/n59mu_ovl_mut5_m7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/n59/mu_ovl_mut5_m7.log"
    }
   ],
   "calibrate": {
@@ -136,7 +253,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_native59_dv_service/qfd_native59_dv_service-n1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_native59_dv_service/qfd_native59_dv_service-m1-COMMIT"
   }
  ],
  "cycles_added": 0,

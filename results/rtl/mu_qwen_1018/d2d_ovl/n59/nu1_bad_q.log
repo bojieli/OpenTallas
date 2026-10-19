@@ -1,0 +1,6 @@
+bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
+STAGE_RC 0

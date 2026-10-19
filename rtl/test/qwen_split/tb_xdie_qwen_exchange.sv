@@ -249,7 +249,7 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && n_fault && !sf) begin sf <= 1;
             $display("XQ_CAUSE native59 cyc %0d rel %0d: context %0d qtag %0d qexport %0d dv %0d formatter %0d x3 %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) land %0d visibility %0d vm_addr %0d service %0d",
                 cyc, rel, native59.context_fault, native59.qtag_fault, native59.export_control_fault, native59.dv_fault, native59.formatter_fault,
-                native59.x3_fault, native59.record_fault, native59.u_record.fault_cause, native59.land_fault, native59.visibility_fault,
+                native59.x3_fault, native59.record_fault, native59.g_slot[0].u_record.fault_cause, native59.land_fault, native59.visibility_fault,
                 native59.vm_address_fault, native59.svc_fault); end
     end else begin : g_cstub
         // component-bench producer: the record codec on the compiled slots (no die stages)

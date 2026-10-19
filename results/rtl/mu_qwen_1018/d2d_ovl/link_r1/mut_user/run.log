@@ -1,0 +1,6 @@
+D2DOVL_ERR cyc 22316: dir 0: rx_user 2 != sender user 1 (kind 1)
+D2DOVL_FAIL OVL 1
+- rtl/test/qwen_split/tb_d2d_ovl_mu.sv:192: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.317 s; speed 66.628 us/s
+- Verilator: cpu 0.317 s on 1 threads; allocated 7 MB

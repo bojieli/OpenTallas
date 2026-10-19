@@ -108,7 +108,14 @@ endmodule
 module ot_qwen_d2d_static_end #(
     parameter integer NT = 4, NR = 4, FW = 548, CW = 16, PW = FW + 19 + CW, NE = 32,
     parameter [8*4-1:0] TXD = {8'd1, 8'd1, 8'd2, 8'd1},   // per TX port codec latency (port p = byte p), 1..8
-    parameter integer MUT = 0      // bench: 1 = TX write slot off by one (lap ownership), 2 = RX demux port 0<->1
+    parameter integer MUT = 0,     // bench: 1 = TX write slot off by one (lap ownership), 2 = RX demux port 0<->1
+    // MU-D2D-OVL 10-19 (opt-in; 0 = the as-built end on every edge): OVERLAPPING request / response segments.  OVL = 1:
+    // the RX calendar has its own compiled start (cal_start_rx / cal_seg_rx) so a user's request segment may run while
+    // another user's response segment runs; every start carries the USER whose segment it plays (cal_user_tx /
+    // cal_user_rx) and the end tags each TX slot (tx_user, with tx_slot) and each RX event (rx_user, with rx_slot /
+    // rx_event).  Each direction stays ONE playhead: a start while that direction runs is the calendar's sticky fault
+    // (collision = fault).  The compiler (tools/qwen_static_schedule/mu_d2d_ovl.py) places every segment in free slots.
+    parameter integer OVL = 0
 ) (
     input  wire [4:0]       ck,           // [0] control + calendars, [1..4] SRAM bank entries (one logical domain)
     input  wire             rst_n,
@@ -119,6 +126,12 @@ module ot_qwen_d2d_static_end #(
     input  wire [7:0]       epoch,
     input  wire             cal_start,
     input  wire             cal_seg,      // segment at cal_start: 0 layer run, 1 token run
+    input  wire             cal_start_rx, // OVL = 1: RX calendar start / segment / user (OVL = 0: unused)
+    input  wire             cal_seg_rx,
+    input  wire [1:0]       cal_user_tx,  // OVL = 1: user of the TX / RX segment started on this edge
+    input  wire [1:0]       cal_user_rx,
+    output wire [1:0]       tx_user,      // OVL = 1: user of tx_slot (0 when OVL = 0)
+    output reg  [1:0]       rx_user,      // OVL = 1: user of rx_slot / rx_event (0 when OVL = 0)
     // producer face
     output wire [NT-1:0]    tx_slot,
     output wire [3:0]       tx_kind,
@@ -147,10 +160,24 @@ module ot_qwen_d2d_static_end #(
     ot_qwen_d2d_cal #(.NE(NE)) u_txcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_tx_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .start(cal_start), .start_seg(cal_seg), .halt(halt), .ev_v(tv), .ev_port(tp), .ev_kind(tk), .ev_beat(tb),
         .running(trun), .fault(tf));
+    wire rx_start = (OVL != 0) ? cal_start_rx : cal_start;
+    wire rx_seg   = (OVL != 0) ? cal_seg_rx : cal_seg;
     ot_qwen_d2d_cal #(.NE(NE)) u_rxcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_rx_we), .cfg_addr(cfg_addr),
-        .cfg_data(cfg_data), .start(cal_start), .start_seg(cal_seg), .halt(halt), .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb),
+        .cfg_data(cfg_data), .start(rx_start), .start_seg(rx_seg), .halt(halt), .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb),
         .running(rrun), .fault(rf));
     assign cal_running = trun | rrun;
+    // OVL: the user of each playhead, latched on its start (held until the next start of that direction); the RX user
+    // rides the 2-edge expectation pipeline with the event it tags
+    reg [1:0] utx, urx, r1u;
+    generate if (OVL != 0) begin : g_ovl_user
+        always @(posedge ck[0] or negedge rst_n)
+            if (!rst_n) begin utx <= 2'd0; urx <= 2'd0; end
+            else begin if (cal_start) utx <= cal_user_tx; if (cal_start_rx) urx <= cal_user_rx; end
+        assign tx_user = utx;
+    end else begin : g_one_user
+        always @* begin utx = 2'd0; urx = 2'd0; end
+        assign tx_user = 2'd0;
+    end endgenerate
     genvar p;
     for (p = 0; p < NT; p = p + 1) begin : g_slot
         assign tx_slot[p] = tv && tp == p;
@@ -198,7 +225,7 @@ module ot_qwen_d2d_static_end #(
         if (!rst_n) begin
             wcnt <= 0; rcnt <= 0; rslot <= 0; rd_v <= 0; ecnt <= 0; end_fault <= 0;
             r1v <= 0; r2v <= 0; r1p <= 0; r2p <= 0; r1k <= 0; r1b <= 0;
-            rx_slot <= 0; rx_kind <= 0; rx_beat <= 0;
+            rx_slot <= 0; rx_kind <= 0; rx_beat <= 0; r1u <= 0; rx_user <= 0;
         end else if (epoch_begin) begin
             wcnt <= 0; rcnt <= 0; rd_v <= 0; ecnt <= 0; end_fault <= 0; r1v <= 0; r2v <= 0;
             rx_slot <= 0;
@@ -207,7 +234,7 @@ module ot_qwen_d2d_static_end #(
             rd_v <= wr_v & ~halt; rslot <= wslot;
             if (rv) ecnt <= ecnt + 6'd1;
             if (stray | multi | tf | rf | bad_port) end_fault <= 1'b1;
-            r1v <= rv; r1p <= rp; r1k <= rk; r1b <= rb;
+            r1v <= rv; r1p <= rp; r1k <= rk; r1b <= rb; r1u <= urx; rx_user <= r1u;
             r2v <= r1v; r2p <= (MUT == 2 && r1p < 2) ? r1p ^ 3'd1 : r1p;
             rx_kind <= r1k; rx_beat <= r1b;
             for (i = 0; i < NR; i = i + 1) rx_slot[i] <= r1v && r1p == i;

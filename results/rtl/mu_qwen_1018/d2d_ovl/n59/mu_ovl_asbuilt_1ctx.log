@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+ovl_asbuilt_1ctx OK (mutant fails)
+N59MU_FAIL ovl_asbuilt_1ctx
+N59MU_FAULT first at cycle 188 op 1 user 1
+N59MU_ERR cycle 189 op 1: user-0 dr word != NU 1
+N59MU_ERR cycle 190 op 1: user-0 dr word != NU 1
+N59MU_ERR cycle 191 op 1: user-0 dr word != NU 1
+N59MU_FAIL errors=348 tag_errors=0 first_fault=188 records u0..3 33/0/0/0
+N59MU_BENCH_EXIT 1
+STAGE_RC 1
