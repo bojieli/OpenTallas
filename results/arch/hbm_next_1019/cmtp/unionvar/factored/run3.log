@@ -1,0 +1,6 @@
+END_EDGE 49  done
+END_EDGE 280  done
+END_EDGE 530  done
+[9140000] %Fatal: tb_hnx_union_factored.sv:60: Assertion failed in tb_hnx_union_factored: UNION_FACTORED_WRONG_VARIANT launch 26 edge 535 loop 1 slot 0 c 2 kref 101 expected loop 1 slot 0 c 1 kref 100
+%Error: rtl/hbm_next/control/tb_hnx_union_factored.sv:60: Verilog $stop
+Aborting...
