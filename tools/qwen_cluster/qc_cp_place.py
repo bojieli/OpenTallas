@@ -10,7 +10,7 @@ from qc_safe_graph import ROOT,extract
 S=1000;GRID=43200;GAP=20000
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--soft-reach',action='store_true',help='diagnostic legal packing minimizing sum of405um reach overruns');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
+ p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--hint-only',action='store_true');p.add_argument('--shelf-hint',action='store_true');p.add_argument('--greedy-hint',action='store_true');p.add_argument('--soft-reach',action='store_true',help='diagnostic legal packing minimizing sum of405um reach overruns');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
  knots=sorted([(0,0),(c['outline_um']['w'],W)]+[(x+d,y+d)for x,y in zip(oldx,cols)for d in [0,457.92]])
  def mx(x):
   for(oa,na),(ob,nb)in zip(knots,knots[1:]):
@@ -37,7 +37,7 @@ def main():
    w,h=[round(t*S)for t in shape];ix=m.new_int_var(1,math.floor((W*S-GAP-w)/GRID),k+'_ix');iy=m.new_int_var(1,math.floor((H*S-GAP-h)/GRID),k+'_iy')
    x=m.new_int_var(GRID,round(W*S),k+'_x');y=m.new_int_var(GRID,round(H*S),k+'_y');m.add(x==ix*GRID);m.add(y==iy*GRID)
    xs.append(m.new_fixed_size_interval_var(x,w+GAP,k+'_xr'));ys.append(m.new_fixed_size_interval_var(y,h+GAP,k+'_yr'))
-   jobs[k]=dict(logical=n,kind=v['kind'],region=v['region'],w=shape[0],h=shape[1],ix=ix,iy=iy,x=x,y=y,center=(x+w//2,y+h//2))
+   jobs[k]=dict(logical=n,kind=v['kind'],region=v['region'],w=shape[0],h=shape[1],ix=ix,iy=iy,x=x,y=y,center=(x+w//2,y+h//2),target=[mx(v['at'][0]),v['at'][1]])
    if a.zones:
     # Redundant but stronger propagation: all empty tile-array space is the
     # union of five vertical corridors and five horizontal row gaps. This
@@ -52,8 +52,8 @@ def main():
      on=m.new_bool_var(k+f'_zone{zi}');var=ix if axis=='x'else iy
      m.add(var>=lower).only_enforce_if(on);m.add(var<=upper).only_enforce_if(on);choices.append(on)
     m.add_bool_or(choices)
-   m.add_hint(ix,min(math.floor((W*S-GAP-w)/GRID),max(1,round((mx(v['at'][0])-shape[0]/2)/43.2))))
-   m.add_hint(iy,min(math.floor((H*S-GAP-h)/GRID),max(1,round((v['at'][1]-shape[1]/2)/43.2))))
+   if not(a.greedy_hint or a.shelf_hint):m.add_hint(ix,min(math.floor((W*S-GAP-w)/GRID),max(1,round((mx(v['at'][0])-shape[0]/2)/43.2))))
+   if not(a.greedy_hint or a.shelf_hint):m.add_hint(iy,min(math.floor((H*S-GAP-h)/GRID),max(1,round((v['at'][1]-shape[1]/2)/43.2))))
  # Optional sibling pairing removes duplicate-split symmetry, while preserving
  # both horizontal and vertical legal channels. This is a restricted feasibility
  # search, never an impossibility claim for the unrestricted parent.
@@ -70,6 +70,39 @@ def main():
   col=int(t['inst'][4]);tx=round(cols[col]*S);ty=round(t['at'][1]*S)
   xs.append(m.new_fixed_size_interval_var(tx,round(457.92*S)+GAP,t['inst']+'_xr'));ys.append(m.new_fixed_size_interval_var(ty,round(1166.4*S)+GAP,t['inst']+'_yr'))
  m.add_no_overlap_2d(xs,ys)
+ if a.shelf_hint:
+  assert abs(a.step-777.6)<1e-6 and not(a.full_land or a.forward_bank)
+  inner=[math.ceil((cols[i]+457.92+20)/43.2-1e-8)for i in range(3)];outer=[1,math.ceil((cols[-1]+457.92+20)/43.2-1e-8)]
+  catalog={(64.8,129.6):[(x+d,1+4*r)for x in inner for d in [0,2,4]for r in range(24)],(90.72,129.6):[(x,1+4*r)for x in outer for r in range(8)]}
+  catalog[90.72,64.8]=[(x+d,97+2*r)for x in inner for d in [0,3]for r in range(12)]+[(x,33+2*r)for x in outer for r in range(44)]+[(round(x/43.2)+d,y)for x in cols for d in [0,3,6]for y in [math.ceil((row+1166.4+20)/43.2-1e-8)for row in sorted(set(t['at'][1]for t in c['tiles']))[:-1]]]
+  placements=[]
+  for k,j in sorted(jobs.items(),key=lambda item:(item[1]['region'],item[0])):
+   shape=j['w'],j['h'];slots=catalog[shape];assert slots,(shape,k)
+   ix,iy=min(slots,key=lambda pos:abs(pos[0]*43.2+shape[0]/2-j['target'][0])+abs(pos[1]*43.2+shape[1]/2-j['target'][1]));slots.remove((ix,iy))
+   m.add_hint(j['ix'],ix);m.add_hint(j['iy'],iy);placements.append(dict(inst=k,at=[ix*43.2,iy*43.2],w=shape[0],h=shape[1]))
+  hint=Path(a.out+'.hint.json');hint.parent.mkdir(parents=True,exist_ok=True);hint.write_text(json.dumps(dict(diagnostic_only=True,release_ready=False,scope='constructive shelf legal packing hint only; no reach/clock/reset qualification',outline_um=dict(w=W,h=H),placement=placements,jobs=len(jobs)),indent=1)+'\n')
+  print('CP_SHELF_HINT',len(placements),'of',len(jobs),'placed',flush=True)
+ if a.greedy_hint:
+  occupied=set();placements=[];legal={}
+  obstacles=[(cols[int(t['inst'][4])],t['at'][1],457.92,1166.4)for t in c['tiles']]
+  def clash(rect,other):
+   x,y,w,h=rect;u,v,bw,bh=other
+   return not(x+w+20<=u+1e-7 or u+bw+20<=x+1e-7 or y+h+20<=v+1e-7 or v+bh+20<=y+1e-7)
+  for k,j in sorted(jobs.items(),key=lambda item:(-item[1]['w']*item[1]['h'],item[1]['region'],item[0])):
+   shape=j['w'],j['h'];w,h=shape;nw=math.ceil((w+20)/43.2-1e-8);nh=math.ceil((h+20)/43.2-1e-8)
+   if shape not in legal:
+    legal[shape]=[(ix,iy)for ix in range(1,math.floor((W-20-w)/43.2)+1)for iy in range(1,math.floor((H-20-h)/43.2)+1)if not any(clash((ix*43.2,iy*43.2,w,h),o)for o in obstacles)]
+   candidates=sorted(legal[shape],key=lambda pos:abs(pos[0]*43.2+w/2-j['target'][0])+abs(pos[1]*43.2+h/2-j['target'][1]))
+   for ix,iy in candidates:
+    cells={(x,y)for x in range(ix,ix+nw)for y in range(iy,iy+nh)}
+    if occupied&cells:continue
+    occupied.update(cells);m.add_hint(j['ix'],ix);m.add_hint(j['iy'],iy);placements.append(dict(inst=k,at=[ix*43.2,iy*43.2],w=w,h=h));break
+   else:print('CP_HINT_UNPLACED',k,flush=True)
+  hint=Path(a.out+'.hint.json');hint.parent.mkdir(parents=True,exist_ok=True);hint.write_text(json.dumps(dict(diagnostic_only=True,release_ready=False,scope='legal packing hint only; no reach/clock/reset qualification',outline_um=dict(w=W,h=H),placement=placements,jobs=len(jobs)),indent=1)+'\n')
+  print('CP_GREEDY_HINT',len(placements),'of',len(jobs),'placed',flush=True)
+ if a.hint_only:
+  assert a.greedy_hint or a.shelf_hint
+  return
  def center(k):return jobs[k]['center']if k in jobs else fixed[k]
  ee=[];assume={};native_bounds={};native_bits=0;overruns=[]
  if a.native_pins:
