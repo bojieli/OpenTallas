@@ -1,0 +1,10 @@
+MEM sectors=5988
+V 246 0
+V 249 1
+V 252 2
+V 255 3
+FAULT svg cycle 320 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0)
+ISSUER rc 78 sq_n 4 gq_n 0 gh_at 0 go_busy 0 cache_ready 00 block_ready 0000 a_v 1 p_v 1 st_v 1 s_blk 40 rd_q 0
+[273750000] %Fatal: tb_hbm_svg_rel_sm.sv:94: Assertion failed in tb_hbm_svg_rel_sm: svg fault
+%Error: /srv/opentallas-scratch/claude/codex-svg-sram-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:94: Verilog $stop
+Aborting...
