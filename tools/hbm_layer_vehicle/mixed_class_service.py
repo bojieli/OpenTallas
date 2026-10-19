@@ -15,6 +15,10 @@ def compile_fixture(mutation=''):
     for mode in modes:
         cmd=(0xa2<<184)|(mode<<181)
         programmes.append(store.add([S.svg_word(cmd & ((1<<83)-1),None,retire=True)],[cmd>>83]))
+    if mutation=='command_class':
+        # Preserve positive storage allocation and every descriptor; flip only
+        # command mode[2] atXC programme bit100 (assembled bit183).
+        store.xc[programmes[1][0]] ^= 1<<100
     ing=[];t=10
     for addr in range(store.top):
         for target,word,width in ((S.SVG_TGT,store.svg[addr],135),(S.XC_TGT,store.xc[addr],173)):
@@ -35,10 +39,10 @@ def compile_fixture(mutation=''):
     for j,target in enumerate((S.SVG_TGT,S.XC_TGT)):
         ing.append((arm+j,S.ingress(desc=(0,3,1),target=target)))
     ing.append((launch,S.ingress(launch=True)));ing.sort()
-    return dict(ing=ing,xw=[],ids=[],mem=mem,n_end=rc0+gos[-1]+256),[(p[0],g) for p,g in zip(programmes,gos)],dict(literal_modes=modes,distinct_programmes=len(store.progs),resident_words=store.top,descriptors=3,sectors=24,launch=launch,run_origin=rc0,mutation_target=('SVG descriptor197 only; XC and literal commands unchanged' if mutation=='descriptor_class' else 'Middle literal and both metadata modes3 with matched class0; globally invalid, no class mismatch' if mutation=='invalid_mode' else None))
+    return dict(ing=ing,xw=[],ids=[],mem=mem,n_end=rc0+gos[-1]+256),[(p[0],g) for p,g in zip(programmes,gos)],dict(literal_modes=(0,0,0) if mutation=='command_class' else modes,metadata_modes=modes,distinct_programmes=len(store.progs),resident_words=store.top,descriptors=3,sectors=24,launch=launch,run_origin=rc0,mutation_target=('SVG descriptor197 only; XC and literal commands unchanged' if mutation=='descriptor_class' else 'XC programme commandmode2 only; both descriptors and allocation unchanged' if mutation=='command_class' else 'Middle literal and both metadata modes3 with matched class0; globally invalid, no class mismatch' if mutation=='invalid_mode' else None))
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--work',required=True);p.add_argument('--exe');p.add_argument('--out',required=True);p.add_argument('--service-build-revision',required=True);p.add_argument('--mut',choices=['','descriptor_class','invalid_mode'],default='');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--work',required=True);p.add_argument('--exe');p.add_argument('--out',required=True);p.add_argument('--service-build-revision',required=True);p.add_argument('--mut',choices=['','descriptor_class','command_class','invalid_mode'],default='');a=p.parse_args()
     c,expected,budget=compile_fixture(a.mut);work=Path(a.work).resolve();work.mkdir(parents=True,exist_ok=True);counts=S.write_events(c,work)
     report=dict(mutation=a.mut,budget=budget,expected_go=expected,event_sha256={p.name:S.sha(p) for p in work.glob('*.hex')},service_build_revision=a.service_build_revision,compiler_sha256=S.sha(Path(__file__)),scope='three mode-only drained programmes; actual transport qualification only, no arithmetic or general stateful splitting proof')
     if a.exe:
@@ -47,7 +51,7 @@ def main():
         exact=[(g[1],g[2]) for g in gos]==expected
         positive=r.returncode==0 and exact and bool(done) and not fault and not results and len(runs)==1
         first_fault=next((line for line in log.splitlines() if line.startswith('FAULT ')),None)
-        assembled_class_causal=bool(a.mut=='descriptor_class' and first_fault and first_fault.startswith('FAULT svg ') and 'issuer 0 feed 0 ' in first_fault)
+        assembled_class_causal=bool(a.mut in ('descriptor_class','command_class') and first_fault and first_fault.startswith('FAULT svg ') and 'issuer 0 feed 0 ' in first_fault)
         invalid_mode_causal=bool(a.mut=='invalid_mode' and first_fault and any(first_fault.startswith('FAULT '+scope+' ') for scope in ['svg','xc','sm_arith','sm_schedule']))
         report.update(first_fault=first_fault,assembled_class_causal=assembled_class_causal,invalid_mode_causal=invalid_mode_causal,pass_=positive,rc=r.returncode,go_exact=exact,go_count=len(gos),done=done,fault=fault,run_count=len(runs),sm_results=len(results),executable_sha256=S.sha(exe),negative_causal_review_required=bool(a.mut))
     Path(a.out).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
