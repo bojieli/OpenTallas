@@ -1,0 +1,20 @@
+{
+ "lane": "S81-SAFE-FIX/GUNIT",
+ "date": "2026-10-19",
+ "commit": "afa31fbae",
+ "tool": "Verilator 5.050 (ot-epyc6, ~/.local/opentallas-tools/verilator-5.050)",
+ "benches": {
+  "gunit_exact": {"cmd": "run_gunit_bench.sh <dir> 8 0", "result": "PASS cases=8 router_lat=56 hc_lat=803 (unit pins 815)", "log": "exact.log"},
+  "gunit_mut8": {"cmd": "run_gunit_bench.sh <dir> 4 8", "result": "FAIL as required (52 errors)", "log": "mut8.log"},
+  "gunit_mut10": {"cmd": "run_gunit_bench.sh <dir> 4 10", "result": "FAIL as required (37 errors: Sinkhorn step one stage early)", "log": "mut10.log"},
+  "sinkhorn_p_eq": {"cmd": "run_sinkhorn_p_eq.sh <dir> 300 0", "result": "PASS 300 cases (180 normal, 120 fault) bit-exact y+fault vs ot_hdc_sinkhorn, out_valid at accept + 441", "log": "skeq.log"},
+  "sinkhorn_p_mut1": {"cmd": "run_sinkhorn_p_eq.sh <dir> 40 1", "result": "FAIL as required", "log": "skmut1.log"}
+ },
+ "cycles_added": {
+  "hc_result": "+55 edges (tail L 637 -> 692; G-unit hc_lat 748 -> 803 stop pins, 760 -> 815 unit pins)",
+  "reset_release": "+2 edges (reset_landing 2)",
+  "router": "0 (router_lat 56 unchanged)",
+  "table_select_replication": "0", "index_from_age": "0"
+ },
+ "handed_to": "lanes/MU-DIE-S81.md ## INBOX from S81-SAFE-FIX (10-19 06:44)"
+}
