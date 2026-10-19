@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.bw_aq_fanout_model.v1",
+  "source_base": "18bd3c0ef",
+  "scope": "AQ head/ACT/row same-edge retained replicas; no CFG metadata edits",
+  "latency_delta_edges": 0,
+  "interface_bits_delta": 0,
+  "sram_count_delta": 0,
+  "schedule": "Production OP_GAP384 and fixed 154 GO slots unchanged; rerun before adoption",
+  "proposal": {
+    "head_row_and_rd": {
+      "groups": 4,
+      "banks_per_group": 8,
+      "width": 20,
+      "additional_state_bits": 80,
+      "row_bit_expected_loads": 16,
+      "rd_expected_loads": 16
+    },
+    "row_command": {
+      "groups": 2,
+      "banks_per_group": 16,
+      "width": 22,
+      "additional_state_bits": 44,
+      "row_bit_expected_loads": 16
+    },
+    "act_selection": {
+      "onehot_bits": 32,
+      "additional_state_bits": 32,
+      "notes": "select actual registered candidate on its existing stage; no extra capture edge"
+    },
+    "act_row_copies": {
+      "groups": 2,
+      "banks_per_group": 16,
+      "additional_state_bits": 19
+    },
+    "group_valid_copies": {
+      "additional_state_bits": 12
+    },
+    "refresh_selectors": {
+      "groups": 4,
+      "additional_state_bits": 20
+    }
+  },
+  "estimated_added_flops_upper_bound_initial": 188,
+  "area_admission": "Await actual mapped area; no physical kit or gate authorized by this model",
+  "fanout_admission": "Mapped unique retained copy identities and actual buffer-collapsed loads must be <=32; analytic counts are estimates only",
+  "macs_per_cycle": 0,
+  "memory_bandwidth_delta_bits_per_cycle": 0,
+  "routing_tracks_delta": "Local bank-region replication only; actual floorplan placement/reach remains pending"
+}
