@@ -122,7 +122,7 @@ def safe_land_reset_cycles(row, master=None):
     an existing lane calendar. reset_calendar_audit passes the actual emitted master.
     """
     masters = [master] if master is not None else [row.get(k, '') for k in ('landing_master', 'class_master', 'cls', 'master')]
-    detected = any(re.match(r'^qfd_landh0?_300_[NSEW]{2}_65x60$', str(m or '')) for m in masters)
+    detected = any(re.match(r'^qfd_landh0?_300_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
     value = row.get('safe_land_reset_cycles', 2 if detected else 0)
     if type(value) is not int or value not in (0, 2):
         raise ValueError('safe landing reset release must be exactly0(legacy)or2(safe300)cycles')
