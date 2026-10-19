@@ -80,8 +80,10 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
     if {[dict size $::ot_tie_rows::actual_m9]} {
       dict for {net stripes} $::ot_tie_rows::actual_m9 {
         set found 0
-        foreach r $stripes {
+        set start [expr {max(0,[lsearch -bisect -integer -index 0 $stripes $lo])}]
+        foreach r [lrange $stripes $start end] {
           lassign $r a b c d
+          if {$a > $hi} break
           if {$a >= $lo+300 && $c <= $hi-300} {set found 1; break}
         }
         if {!$found} {return 0}
@@ -226,7 +228,7 @@ proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
     }
     if {[dict size $edges] != 1 || ![llength $vertical]} {error "OT_CLOCK_ROWS: ambiguous/missing actual mesh $name"}
     dict set phases $name [lindex [dict keys $edges] 0]
-    dict set stripes $name $vertical
+    dict set stripes $name [lsort -integer -index 0 $vertical]
   }
   set preserved {}; set segs {}; set occupied {}
   foreach name $names {
@@ -266,8 +268,11 @@ proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
     set hi [expr {int(floor(double(min($hi,[$bb xMax]+$HALF))/$pitch))*$pitch}]
     foreach net {VDD VSS} {
       set q [[$inst findITerm $net] getBBox]; set found 0
-      foreach r [dict get $stripes $net] {
+      set vertical [dict get $stripes $net]
+      set start [expr {max(0,[lsearch -bisect -integer -index 0 $vertical $lo])}]
+      foreach r [lrange $vertical $start end] {
         lassign $r a b c d
+        if {$a > $hi} break
         if {$a >= $lo+$margin && $c <= $hi-$margin && $b <= [$q yMin] && $d >= [$q yMax]} {set found 1; break}
       }
       if {!$found} {error "OT_CLOCK_ROWS: no actual M9 stack budget $name/$net"}

@@ -31,10 +31,11 @@ set site [[lindex [$block getRows] 0] getSite]
 receipts=[]
 for name,expected in ((good[0],True),(bad[0],False)):
     obj=b.findInst(name);before=(tuple(obj.getLocation()),str(obj.getOrient()))
-    try:
-        result=d.evalTclString('ot_clock_rows_prepare $block $dbu $obstacles {'+name+'} 12000 600 8640 .48 $site')
-        accepted=True;error=None
-    except Exception as e:accepted=False;error=str(e);result=None
+    # evalTclString does not propagate Tcl errors as Python exceptions in this
+    # OpenROAD build. Explicit catch/status is essential for a negative witness.
+    status=d.evalTclString('set probe_code [catch {ot_clock_rows_prepare $block $dbu $obstacles {'+name+'} 12000 600 8640 .48 $site} probe_result]; set probe_code')
+    message=d.evalTclString('set probe_result')
+    accepted=str(status)=='0';error=None if accepted else message;result=message if accepted else None
     after=(tuple(obj.getLocation()),str(obj.getOrient()))
     if accepted!=expected or before!=after:raise ValueError('actual preflight control failed '+str((name,accepted,error,before,after)))
     receipts.append(dict(clock=name,expected_accept=expected,actual_accept=accepted,error=error,
