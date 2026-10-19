@@ -32,10 +32,10 @@ DS = DeepSeek-V4.1 on the d4g price of record:
 
 **Throughput per die mm².** The recommended P = 2 die gives 3,071 / ~671 mm² = **4.58 DS MTP tok/s per mm²**. The current die gives 2.64 for MTP and 2.97 for AR.
 
-**Qwen3-8B (D1 model).**
+**Qwen3-8B (D1 model, QCHK-corrected 7bc2156cd).**
 - Multi-user aggregate at P = 2 is 1,734 tok/s, against 946 for AR.
-- DFlash b16 at P = 2 is 865 tok/s with the published tau and 395 with the measured tau.
-- The Qwen DFlash rows are under check in lane HBM-MTP-QCHK and are **not a headline** until it reports.
+- DFlash b16 at P = 2 is 874 tok/s with the published tau (8.01) and 399 with the measured tau (3.656); b8 published is 1,212.
+- QCHK (7bc2156cd) fixed the DFlash record-size/head-pass choice. DS rows are unchanged. DFlash stays below AR at P = 2 (a step costs 3.1–5.2 AR steps), so for Qwen the P = 2 die is a multi-user gain, not a DFlash gain.
 
 **What each feature buys at P = 2.** The table shows the DS MTP verify cycles each feature saves per step, measured by removing that feature alone (`d2/p2_ablation.json`).
 
@@ -238,7 +238,7 @@ The plan builds the low-risk pieces first and starts the riskiest tile on day 0.
 **Day 0, before any RTL (needs the owner's go): close the model gaps, ~0.5 day.**
 - M1: price the P x x-load beats and the lane-major result publish in `ds_mtp_verify` (expected < 1%).
 - M2: settle the HC row II basis, i.e. which HC engine GEN2 binds, and its measured row II. If it is the 4,385 engine, re-price or redesign HC rows before HC RTL.
-- M3: take the QCHK verdict on the Qwen DFlash rows.
+- M3: done. QCHK 7bc2156cd re-timed the Qwen DFlash rows (§1).
 - E1 / E2: read the golden's reduction orders for sparse attention and the MoE combine. That decides whether the ATT lanes stay in scope.
 
 **Track SM, the riskiest, started first and run continuously:**
