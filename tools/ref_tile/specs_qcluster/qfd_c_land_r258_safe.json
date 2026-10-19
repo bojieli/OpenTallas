@@ -1,0 +1,98 @@
+{
+ "name": "qfd_c_land_r258_safe",
+ "top": "qfd_c_land_r258_safe",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qcluster/qfd_c_land_safe.sv",
+  "rtl/physical/qcluster/qfd_c_land.sv",
+  "rtl/test/tb_qfd_c_land_safe.sv",
+  "tools/qwen_cluster/bench_land_safe.sh"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rsi"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "o",
+   "ck",
+   "rsi"
+  ],
+  "N": [
+   "bank"
+  ]
+ },
+ "pin_ranges": {
+  "o": [
+   0.54,
+   205.74
+  ],
+  "ck": [
+   207.36,
+   210.6
+  ],
+  "rsi": [
+   211.68,
+   215.46
+  ],
+  "bank": [
+   0.54,
+   215.46
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ring capture flops and registered read output are the landed bank endpoint; adding input stages changes the priced ring window"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "rsi lands through kept r1/r2 flops separately in each <=24bit slice"
+ },
+ "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound.",
+ "job": {
+  "owner": "Codex:SAFE-QW-CB16",
+  "branch": "codex/safe-qw-cb16-1019",
+  "tag": "safe1",
+  "purpose": "hard landing half; critical CB16 parent prerequisite, gate only",
+  "submit": false,
+  "benches": [
+   {
+    "name": "safe_land",
+    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh bench_safe",
+    "expect": "pass",
+    "pass_regex": "SAFE_LAND_EXIT 0",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ]
+ }
+}
