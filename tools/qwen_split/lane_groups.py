@@ -86,6 +86,23 @@ def group_of(rows):
 T_PS = 833.333
 
 
+# QK-LANDEN 10-19 (coordinator, Q.STA.LAND600.3 option (b)): a one-frame lane (n = 1, qfd_landh0) registers the source's
+# released reset en on ck_s before its hop-0 clock gate (rtl/qwen_split/qfd_fwd_lane.sv ot_qfd_land FIRST=1): its write
+# epoch is source edge G + 1, so its strap is K = (E + G + 1 - R0) mod 8.  The data age E (and lane_cycles) is unchanged:
+# every word is still written on the same physical edge.  Added ONCE here (the land plan's K / calendar exclude it) and in
+# reset_calendar_audit.py (finalize_model / audit), which owns the post-reset-tree strap.
+# RLYH0-EN 10-19: the multi-frame lanes' hop-0 station (qfd_rlyh0, ot_qfd_lane_st FIRST=1) registers en on its source root
+# the same way (closed rlyh0 views: en -> ICG native capture 194-278 ps > 190), so EVERY forwarded data lane (n >= 1)
+# carries the +1: K = (E + G + 1 - R0) mod 8.
+HOP0_EN_REG = 1
+
+
+def hop0_en_reg(row):
+    """release edges the hop-0 en register adds to the lane's write epoch: 1 for every forwarded data lane (n >= 1:
+    landh0 or rlyh0 registers en on the source root before its clock gate), else 0"""
+    return HOP0_EN_REG if int(row.get('n') or 0) >= 1 else 0
+
+
 def equalize(rows, D=4, cal=None, h0=None):
     """In-place: one E per bus group for the forwarded data lanes (rows with E not None).  cal: {bid: G - R0};
     h0: {bid: {corner: single-cycle hold slack ps}} from the land plan (die STA).  The earlier member's landing MCP grows
@@ -122,9 +139,10 @@ def equalize(rows, D=4, cal=None, h0=None):
             r['group'] = g
         rec[g] = dict(E=E, members={r['bid']: r.get('E_own', E) for r in mem})
     for r in data:
-        r['cal'] = int(cal.get(r['bid'], 0)) % 8
+        r['cal'] = (int(cal.get(r['bid'], 0)) + hop0_en_reg(r)) % 8
         r['K'] = (int(r['E']) + r['cal']) % 8
-        r['K_basis'] = 'Q-COLLCAL: K = (total E + G - R0) mod 8' + (' (land plan calendar)' if r['bid'] in cal else ' (G = R0)')
+        r['K_basis'] = ('Q-COLLCAL: K = (total E + G - R0) mod 8' + (' (land plan calendar)' if r['bid'] in cal else ' (G = R0)')
+                        + (' + 1 (hop-0 en registered on the source root: QK-LANDEN landh0 / RLYH0-EN rlyh0)' if hop0_en_reg(r) else ''))
     if bad:
         raise ValueError('bus groups: ' + '; '.join(bad))
     return rec

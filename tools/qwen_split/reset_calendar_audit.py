@@ -11,6 +11,11 @@ import json
 import re
 from pathlib import Path
 
+# QK-LANDEN 10-19: a one-frame lane's landing (qfd_landh0, no stations) registers en on ck_s before its clock gate, so
+# its write epoch is the source release G + 1 (tools/qwen_split/lane_groups.py HOP0_EN_REG; the same value).
+# RLYH0-EN 10-19: the multi-frame lanes' hop-0 station (qfd_rlyh0) registers en the same way: +1 for EVERY data lane.
+HOP0_EN_REG = 1
+
 
 def audit(netlist, lanes, roots):
     instances = {}
@@ -52,6 +57,7 @@ def audit(netlist, lanes, roots):
         _, source = instances[first]
         _, sink = instances[row['landing']]
         g, r0 = release(source['en']), release(sink['rs'])
+        g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         k = (int(row['E']) + g - r0) % 8
         rows.append(dict(bid=row['bid'], landing=row['landing'], E=row['E'], E_sta=row['E_sta'],
                          n=row['n'], G=g, R0=r0, calendar=g-r0, K_before=row['K'], K=k,
@@ -116,6 +122,7 @@ def finalize_model(model, root_release=None):
             continue
         first = (row.get('stations') or [row['landing']])[0]
         gr, g = trace((first, 'en'))
+        g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         rr, r0 = trace((row['landing'], 'rs'))
         if gr != rr:
             raise ValueError(f"{row['bid']}: undeclared reset-root relationship {gr} vs {rr}; "
@@ -131,7 +138,8 @@ def finalize_model(model, root_release=None):
             if pins:
                 buses.append((f"ftk_{row['bid']}_{pol}", 'constant', 1, [(name, f'tie_{pol}')] + pins))
         row.update(K=k, cal=g-r0, G_reset_tree=g, R0_reset_tree=r0,
-                   reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8')
+                   reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8'
+                   + ' with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)')
     model['buses'] = buses
     if proposals:
         model['fwd_lanes']['reset_calendar_finalized'] = True

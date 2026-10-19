@@ -126,17 +126,28 @@ module ot_hbm_su_static_cxport_dl #(parameter integer QID=0, G=0, MUT=0)(
 endmodule
 
 // ------------------------------------------------------------------------------------------------ inject leaf
-module ot_hbm_su_static_cxport_ij #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0
+// CX-IJ 10-18: same class as dl / rc (routes hbm_su_cx_{dl,rc}_1017-s2-761317600 NEEDS_RTL): the two-root ij leaf
+// carried two 3:4 crossings inside one leaf (ijd_slot (clk_s) -> ipv / ipgb / ibad (clk_q), stream->serial; io_slot
+// (clk_q) -> idl (clk_s), serial->stream, 3 x 1,024 b), which related-clock STA times at the VCO tick (setup 277.8 ps,
+// coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl / rc split, S81 x34 _s/_t precedent): ONE
+// clock root per leaf. ot_hbm_su_static_cxport_ij_s (stream) keeps the request pipe, decode, sfault_s, idl / ins_coll /
+// inj_d; it writes the decoded request into TWO banks jb0 / jb1 (events alternate, as dl_s) and reads the serial
+// inject banks ob0 / ob1 alternately on its event edges (as rc_s reads cb). ot_hbm_su_static_cxport_ij_q (serial) keeps
+// the inject pipe / one-hot select / iq / gather; it reads jb alternately (as dl_q) and writes ob alternately on every
+// serial edge (as rc_q writes cb). Same calendar as dl / rc: every seam arc has >= 3 quanta (833 ps) both for setup and
+// for rewrite-after-read; die STA owns the seam arcs with the epoch multicycle. Seam 2 x 32 + 2 x 1,024 + 2 = 2,114 b
+// (the hub's slots were 4 x 32 + 3 x 1,024). Same edges and outputs (lockstep vs the hub).
+module ot_hbm_su_static_cxport_ij_s #(
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, R=8
 )(
- input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
+ input wire clk_s, rst_s_n,
  input wire [1:0] inj_rd,
  input wire [159:0] inj_addr,
  output reg [1023:0] inj_d,
- input wire [1023:0] inj_q0, inj_q1, inj_q2, inj_q3,   // slice G port-5 data (hub inj_q[1024G +: 1024])
- output reg fault
+ output reg [31:0] jb0, jb1,          // request banks {nz12, iv4, ig8, ib8}
+ input wire [1023:0] ob0, ob1,        // serial inject banks
+ output reg sfault_s, ins_coll
 );
- wire [4*1024-1:0] inj_q = {inj_q3, inj_q2, inj_q1, inj_q0};
  function automatic integer lat_of(input integer ph);
   integer a,n,m,pp;
   begin a=40+ph; n=(3*a+3+3)/4; m=n+4+SD; pp=(4*m+3+2)/3; lat_of=pp-a; end
@@ -148,18 +159,17 @@ module ot_hbm_su_static_cxport_ij #(
  localparam integer K=LMAX-LMIN+X;
  initial if(X<0)$fatal(1,"cxport_ij: INJ_RET must be >= 1+RQ+LMAX");
  initial if(RQC>RQ)$fatal(1,"cxport_ij: RQC must be <= RQ");
- wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
- ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
- reg sfault_s;
+ // wp: bank of this event edge (write jb; ob read = ~wp); R kept copies (ob read select: 1,024 / R loads each)
+ reg [1:0] sp; (* keep = "true" *) reg [R-1:0] wp;
+ always @(posedge clk_s or negedge rst_s_n)
+  if(!rst_s_n) begin sp<=2'd0; wp<={R{1'b0}}; end
+  else begin sp<=sp+2'd1; if(sp!=2'd2) wp<=~wp; end
  reg [161:0] rqd [0:RQ-RQC];
  always @(posedge clk_s) begin
   rqd[0] <= {inj_rd, inj_addr};
   for(integer t=1;t<=RQ-RQC;t=t+1) rqd[t] <= rqd[t-1];
  end
  wire [161:0] rq_al = (RQ==RQC) ? {inj_rd, inj_addr} : rqd[(RQ>RQC)?RQ-RQC-1:0];
- // MUX-ONLY CROSSING: the request is decoded on the stream side; the slot holds {nz12, iv4, ig8, ib8} (HBM-SU6: the
- // aperture check is stored as three <=11-bit OR partials per request (<= 2 levels from inj_addr) and finished on the
- // serial side, where it feeds only FAULT -- same edge)
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (|rq_al[161:160])) sfault_s<=1'b1;
  reg [3:0] iv_s; reg [7:0] ig_s; reg [7:0] ib_s; reg [11:0] nz_s;
@@ -177,38 +187,14 @@ module ot_hbm_su_static_cxport_ij #(
    nz_s[3*k+:3] = {|{a[2:0], a[17:16]^2'(QID), a[39]}, |a[28:18], |a[38:29]};
   end
  end
- reg [31:0] ijd_slot [0:3];
- always @(posedge clk_s) ijd_slot[sp] <= {nz_s, iv_s, ig_s, ib_s};
- wire [31:0] ijd = ijd_slot[rslot];
- wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
- wire ibad = |{iv[3] && (|ijd[31:29]), iv[2] && (|ijd[28:26]), iv[1] && (|ijd[25:23]), iv[0] && (|ijd[22:20])};
- // inject pipe (HBM-SU6): only the 4 valid bits are reset; the g/b fields are datapath (no reset). The select is
- // registered ONE-HOT (64 b = lane k x source 4g+b) one edge ahead, from the pipe word it will equal: each one-hot bit
- // gates 256 data bits (the gate saw ip[3] g/b bits driving 4,096 mux loads and a runtime 1,024-b part-select).
- reg [3:0] ipv [0:3+SD]; reg [15:0] ipgb [0:3+SD];
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ipv[t]<=4'd0; end
-  else begin ipv[0]<=iv; for(integer t=1;t<=3+SD;t=t+1) ipv[t]<=ipv[t-1]; end
- always @(posedge clk_q) begin ipgb[0]<={ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ipgb[t]<=ipgb[t-1]; end
- function automatic [63:0] ohdec(input [3:0] v, input [15:0] gb);
-  integer kk; begin ohdec=64'd0;
-   for(kk=0;kk<4;kk=kk+1) if(v[kk]) ohdec[16*kk + 4*gb[8+2*kk+:2] + gb[2*kk+:2]] = 1'b1; end
- endfunction
- reg [63:0] ioh;                                  // = ohdec(isel) of the hub's isel (ip[3+SD]; MUT 1: ip[2+SD])
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) ioh<=64'd0;
-  else ioh <= (MUT==1) ? ohdec(ipv[1+SD], ipgb[1+SD]) : ohdec(ipv[2+SD], ipgb[2+SD]);
- reg [4*1024-1:0] iq;
- always @(posedge clk_q) iq <= inj_q;
- wire [4*1024-1:0] isrc = (MUT==1) ? inj_q : iq;
- reg [1023:0] iword;
- always @* begin
-  iword = 1024'd0;
-  for(k=0;k<4;k=k+1)
-   for(integer j=0;j<16;j=j+1) iword[256*k+:256] = iword[256*k+:256] | (isrc[256*j+:256] & {256{ioh[16*k+j]}});
+ always @(posedge clk_s) if(sp!=2'd2) begin
+  if(wp[0]) jb1 <= {nz_s, iv_s, ig_s, ib_s}; else jb0 <= {nz_s, iv_s, ig_s, ib_s};
  end
- reg [1023:0] io_slot [0:2];
- always @(posedge clk_q) io_slot[sq] <= iword;
+ // event p reads the ob bank written at serial m = p-1 (bank (p+1) mod 2; p = 0 reads bank 1, as the hub's slot 2)
+ wire [1023:0] ev_i;
+ for(genvar r=0;r<R;r=r+1) begin : g_ob
+  assign ev_i[(1024/R)*r +: (1024/R)] = wp[r] ? ob0[(1024/R)*r +: (1024/R)] : ob1[(1024/R)*r +: (1024/R)];
+ end
  function automatic integer ins_of(input integer rp);
   integer ph, r; begin r=-1;
    for(ph=0;ph<4;ph=ph+1) if(ph!=2 && ((ph+lat_of(ph))%4)==rp) r=lat_of(ph)-LMIN;
@@ -217,8 +203,6 @@ module ot_hbm_su_static_cxport_ij #(
  localparam integer I0=ins_of(0), I1=ins_of(1), I2=ins_of(2), I3=ins_of(3);
  initial if(I2>=0)$fatal(1,"cxport_ij: an inject event maps to stream phase 2");
  reg [1023:0] idl [0:K];
- reg ins_coll;
- wire [1023:0] ev_i = io_slot[oslot_i];
  integer ins;
  always @* ins = (sp==2'd0)?I0:(sp==2'd1)?I1:(sp==2'd3)?I3:-1;
  always @(posedge clk_s) begin
@@ -228,9 +212,74 @@ module ot_hbm_su_static_cxport_ij #(
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) ins_coll<=1'b0; else if(ins>0 && (|idl[ins-1])) ins_coll<=1'b1;
  always @* inj_d = idl[K];
+endmodule
+
+module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8)(
+ input wire clk_q, rst_q_n,
+ input wire [31:0] jb0, jb1,
+ input wire [1023:0] inj_q0, inj_q1, inj_q2, inj_q3,   // slice G port-5 data (hub inj_q[1024G +: 1024])
+ output reg [1023:0] ob0, ob1,
+ input wire sfault_s, ins_coll,
+ output reg fault
+);
+ wire [4*1024-1:0] inj_q = {inj_q3, inj_q2, inj_q1, inj_q0};
+ // rp: serial edge n reads jb bank (n+1) mod 2 (n = 0 reads the unwritten bank 1, as the hub reads slot 3) and writes
+ // ob bank n mod 2; R kept copies (ob write enable 2,048 / R loads each). MUT 4: off by one event.
+ (* keep = "true" *) reg [R-1:0] rp;
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) rp <= (MUT==4) ? {R{1'b0}} : {R{1'b1}}; else rp <= ~rp;
+ wire [31:0] ijd = rp[0] ? jb1 : jb0;
+ wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
+ wire ibad = |{iv[3] && (|ijd[31:29]), iv[2] && (|ijd[28:26]), iv[1] && (|ijd[25:23]), iv[0] && (|ijd[22:20])};
+ reg [3:0] ipv [0:3+SD]; reg [15:0] ipgb [0:3+SD];
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ipv[t]<=4'd0; end
+  else begin ipv[0]<=iv; for(integer t=1;t<=3+SD;t=t+1) ipv[t]<=ipv[t-1]; end
+ always @(posedge clk_q) begin ipgb[0]<={ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ipgb[t]<=ipgb[t-1]; end
+ function automatic [63:0] ohdec(input [3:0] v, input [15:0] gb);
+  integer kk; begin ohdec=64'd0;
+   for(kk=0;kk<4;kk=kk+1) if(v[kk]) ohdec[16*kk + 4*gb[8+2*kk+:2] + gb[2*kk+:2]] = 1'b1; end
+ endfunction
+ reg [63:0] ioh;
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) ioh<=64'd0;
+  else ioh <= (MUT==1) ? ohdec(ipv[1+SD], ipgb[1+SD]) : ohdec(ipv[2+SD], ipgb[2+SD]);
+ reg [4*1024-1:0] iq;
+ always @(posedge clk_q) iq <= inj_q;
+ wire [4*1024-1:0] isrc = (MUT==1) ? inj_q : iq;
+ reg [1023:0] iword; integer k;
+ always @* begin
+  iword = 1024'd0;
+  for(k=0;k<4;k=k+1)
+   for(integer j=0;j<16;j=j+1) iword[256*k+:256] = iword[256*k+:256] | (isrc[256*j+:256] & {256{ioh[16*k+j]}});
+ end
+ for(genvar r=0;r<R;r=r+1) begin : g_ob
+  always @(posedge clk_q)
+   if(rp[r]) ob0[(1024/R)*r +: (1024/R)] <= iword[(1024/R)*r +: (1024/R)];
+   else      ob1[(1024/R)*r +: (1024/R)] <= iword[(1024/R)*r +: (1024/R)];
+ end
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s||ins_coll;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(ibad||sf_q) fault<=1'b1;
+endmodule
+
+// composition with the old leaf ports (bench lockstep vs the hub; the die binds ij_s + ij_q as two abutted leaves)
+module ot_hbm_su_static_cxport_ij #(
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0
+)(
+ input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
+ input wire [1:0] inj_rd,
+ input wire [159:0] inj_addr,
+ output wire [1023:0] inj_d,
+ input wire [1023:0] inj_q0, inj_q1, inj_q2, inj_q3,
+ output wire fault
+);
+ wire [31:0] jb0, jb1; wire [1023:0] ob0, ob1; wire sfs, icl;
+ ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT)) u_s(
+  .clk_s(clk_s),.rst_s_n(rst_s_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.jb0(jb0),.jb1(jb1),.ob0(ob0),.ob1(ob1),
+  .sfault_s(sfs),.ins_coll(icl));
+ ot_hbm_su_static_cxport_ij_q #(.SD(SD),.MUT(MUT)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.jb0(jb0),.jb1(jb1),
+  .inj_q0(inj_q0),.inj_q1(inj_q1),.inj_q2(inj_q2),.inj_q3(inj_q3),.ob0(ob0),.ob1(ob1),.sfault_s(sfs),.ins_coll(icl),.fault(fault));
 endmodule
 
 // ------------------------------------------------------------------------------------------------ RED_CARRY + SFU operand

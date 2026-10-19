@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2 bench bench_fcxr2_mut_x1 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2 log cl/bench_fcxr2_mut_x1.a1b1.log captured 2026-10-19T01:17:29-07:00
+# fail_regex '^FCXR2 FAIL mismatches=[1-9]'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc 9 xo 1 lo 0 fo 0
+MISMATCH cyc 10 xo 1 lo 0 fo 0
+MISMATCH cyc 11 xo 1 lo 0 fo 0
+FCXR2 FAIL mismatches=3992 reset_bad=0 checked=3992
+- rtl/hbm_accel/sm/test/tb_fc_xr2.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.004 s; speed 2.090 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

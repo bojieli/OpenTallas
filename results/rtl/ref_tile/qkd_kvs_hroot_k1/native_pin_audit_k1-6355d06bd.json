@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.native_pin_audit.view_receipt.v1",
+ "verdict": "FAIL",
+ "job": "qkd_kvs_hroot_k1-k1-6355d06bd",
+ "closure": "CLOSED TT +77.62 / FF +16.39 ps DRC 0 (record cfd401ab1)",
+ "view": "physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot",
+ "view_sha256": {
+  "qkd_kvs_hroot.lef": "70caddd290c69029f39c134ee29e03ea058eb21f9c159262b55ee7b690766136",
+  "qkd_kvs_hroot_tt.lib": "1280544bff65fc092f0f9a7a2718caacb14743f842ced04c72519d9bef537266",
+  "qkd_kvs_hroot_ff.lib": "b3e8abab3d9eb4f2625977f7de289b65095eb96bc2e699aaa1b3fe4730c13e4d",
+  "qkd_kvs_hroot_ss.lib": "172ed5aae45c63c6ea385ae41ae785660e8c1566850583c71e789943444a6dbd",
+  "insertion.json": "0bc07fd0817acec49936955c7663fe7c312d3a472c85ecb6badfb5e6f3ae163d",
+  "abstract.json": "6b4ae80b9593ac91a78410ab8ed8e8b3112a9eef5252e7d29a80c86e90f2b1ca"
+ },
+ "tool": "tools/hier_contract/native_pin_audit.py --view physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot --cell qkd_kvs_hroot --relative-to physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot/insertion.json",
+ "tool_source": "f60acff2e5bc21791652afcf6358e56d5a0256ab",
+ "record": {
+  "cell": "qkd_kvs_hroot",
+  "view": "physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot",
+  "lib_cell": "qkd_kvs_hroot",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean -> relative C 236.2"
+  ],
+  "R_ps": 236.2,
+  "spread_ps": 89.1,
+  "relative_to": "neighbour physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot/insertion.json boundary mean",
+  "outputs": 1557,
+  "inputs": 1564,
+  "launch_ps": 418.4,
+  "launch_pin": "o_c0[4]",
+  "capture_ps": 452.7,
+  "capture_pin": "i_ctl[5]",
+  "launch_over": 712,
+  "capture_over": 1484,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 83.2,
+  "ff_launch_min_ps": 83.0,
+  "ff_hold_need_ps": -73.7,
+  "relative": {
+   "tt": {
+    "clock_pin": "ck",
+    "rel_min_ps": -34.3,
+    "rel_max_ps": 54.8,
+    "mismatch_ps": 54.8,
+    "offset_ps": 0.0,
+    "comp_ps": 236.2
+   },
+   "ff": {
+    "clock_pin": "ck",
+    "rel_min_ps": -33.2,
+    "rel_max_ps": 50.0,
+    "mismatch_ps": 50.0,
+    "offset_ps": 0.0,
+    "comp_ps": 196.3
+   }
+  },
+  "pass": false,
+  "fail_why": "launch 418.35365 > 220 (712 pins); capture 452.66112 > 190 (1484 pins); TT pin-flop spread 89.1 > 80; FF pin-flop spread 83.2 > 80"
+ },
+ "per_port_group_tt": {
+  "input:esh__stack": {
+   "n": 2,
+   "min": 437.3,
+   "median": 446.8,
+   "max": 446.8,
+   "over": 2
+  },
+  "input:i_ctl": {
+   "n": 1118,
+   "min": 141.3,
+   "median": 273.2,
+   "max": 452.7,
+   "over": 1039
+  },
+  "input:i_g": {
+   "n": 144,
+   "min": 241.4,
+   "median": 287.6,
+   "max": 334.3,
+   "over": 144
+  },
+  "input:i_r": {
+   "n": 299,
+   "min": 219.7,
+   "median": 272.3,
+   "max": 323.1,
+   "over": 299
+  },
+  "input:rst_n": {
+   "n": 1,
+   "min": 161.6,
+   "median": 161.6,
+   "max": 161.6,
+   "over": 0
+  },
+  "output:o_c0": {
+   "n": 5,
+   "min": 314.3,
+   "median": 367.3,
+   "max": 418.4,
+   "over": 5
+  },
+  "output:o_c1": {
+   "n": 5,
+   "min": 320.4,
+   "median": 344.8,
+   "max": 381.5,
+   "over": 5
+  },
+  "output:o_c2": {
+   "n": 5,
+   "min": 322.3,
+   "median": 340.8,
+   "max": 381.2,
+   "over": 5
+  },
+  "output:o_c3": {
+   "n": 5,
+   "min": 342.5,
+   "median": 362.1,
+   "max": 383.0,
+   "over": 5
+  },
+  "output:o_c4": {
+   "n": 5,
+   "min": 344.6,
+   "median": 382.4,
+   "max": 399.4,
+   "over": 5
+  },
+  "output:o_c5": {
+   "n": 5,
+   "min": 336.4,
+   "median": 353.9,
+   "max": 379.8,
+   "over": 5
+  },
+  "output:o_c6": {
+   "n": 5,
+   "min": 322.3,
+   "median": 351.2,
+   "max": 362.2,
+   "over": 5
+  },
+  "output:o_c7": {
+   "n": 5,
+   "min": 334.2,
+   "median": 368.1,
+   "max": 372.9,
+   "over": 5
+  },
+  "output:o_ch0": {
+   "n": 271,
+   "min": 187.0,
+   "median": 238.2,
+   "max": 320.1,
+   "over": 204
+  },
+  "output:o_ctl": {
+   "n": 144,
+   "min": 253.5,
+   "median": 295.1,
+   "max": 361.5,
+   "over": 144
+  },
+  "output:o_emb": {
+   "n": 299,
+   "min": 252.0,
+   "median": 315.3,
+   "max": 373.5,
+   "over": 299
+  },
+  "output:o_kg": {
+   "n": 23,
+   "min": 325.7,
+   "median": 380.6,
+   "max": 412.6,
+   "over": 23
+  },
+  "output:o_pc": {
+   "n": 780,
+   "min": 124.5,
+   "median": 169.6,
+   "max": 238.6,
+   "over": 2
+  }
+ },
+ "classification": "Structural, not rst_n (rst_n capture 162 PASS). The ft_flop_mid hook put the 777 single-flop feed-through relays (i_r->o_emb 299, i_g->o_ctl 144, i_ctl fan->o_c*/o_kg/o_ch0 334) at mid-span (150-512 um), so both the pin->flop and flop->pin legs carry ~half the wire: capture i_r median 272 / i_g 288 / i_ctl 273 (>190), launch o_emb 315 / o_ctl 295 / o_c* ~360 (>220). A single-flop relay over ~465 um cannot meet capture 190 + launch 220 at both pins; pre-fix (flop at the input pin) failed tile reg->out instead. Boundary pin-flop spread TT 89.1 / FF 83.2 (>80) also fails (gate place-time estimate was 71.6 / 67.6). NOTE: i_ctl has 1118 pins of which only 334 are fan relays, yet 1039 fail capture: the non-relay i_ctl capture flops are also not at their pins (needs a per-pin trace in the routed odb before choosing the fix).",
+ "options": [
+  "die pin re-order (KV-PLAN): place i_r under o_emb / i_g under o_ctl / fan sources beside their sinks so relay spans fall under ~150 um (0 cycles)",
+  "two-flop relays (pin flop at each face; +1 cycle on emb/ctl/fan relay edges -> KV calendar re-price)",
+  "route the feed-throughs around the tile at die level (forwarded relay hops in the channel) instead of through it"
+ ]
+}
