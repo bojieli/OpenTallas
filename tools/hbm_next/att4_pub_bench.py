@@ -36,7 +36,7 @@ S = importlib.util.module_from_spec(_sp)
 _sp.loader.exec_module(S)
 
 F = np.float32
-NL, LV = 4, 3
+NL, LV = 3, 3        # NL = query lanes = SM lanes P (P3 default, owner 10-19; --nl 3..4); stim keeps 4 lane fields
 SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hbm_next/att/ot_hnx_att4_smerge.sv", "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
@@ -123,22 +123,24 @@ def write_stim(recs, path):
     for cyc in sorted(recs):
         r = recs[cyc]
         pub = 0 if r["pub"] is None else (1 << 5) | (r["pub"][0] << 3) | r["pub"][1]
-        tags = "".join(f"{r['tags'][l]:04x}" for l in reversed(range(NL)))
-        sums = "".join("".join(f"{int(w):08x}" for w in reversed(np.asarray(r["sums"][l], dtype=F).view(np.uint32)))
-                       for l in reversed(range(NL)))
+        tg = list(r["tags"]) + [0] * (4 - NL)                    # lane fields >= NL are zero (no pins at NL < 4)
+        sm = list(r["sums"]) + [np.zeros(16, dtype=F)] * (4 - NL)
+        tags = "".join(f"{tg[l]:04x}" for l in reversed(range(4)))
+        sums = "".join("".join(f"{int(w):08x}" for w in reversed(np.asarray(sm[l], dtype=F).view(np.uint32)))
+                       for l in reversed(range(4)))
         lines.append(f"{cyc:08x}{r['ev'] << 4:02x}{pub:02x}{tags}{sums}")
     Path(path).write_text("\n".join(lines) + "\n")
     return len(lines)
 
 
 def build(work, mut):
-    obj = work / f"obj_pub_m{mut}"
+    obj = work / (f"obj_pub_m{mut}" + ("" if NL == 4 else f"_nl{NL}"))
     exe = obj / "Vtb_hnx_att4_pub"
     if exe.exists():
         return exe
     cmd = [VERILATOR, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module",
-           "tb_hnx_att4_pub", f"-GMUT={mut}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+           "tb_hnx_att4_pub", f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     for _ in range(2):                                          # one retry on a precompiled-header race
         r = subprocess.run(cmd, capture_output=True, text=True)
         (work / f"build_pub_m{mut}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
@@ -156,7 +158,12 @@ def main(argv=None):
     p.add_argument("--rounds", type=int, default=24)
     p.add_argument("--seed", type=int, default=1019)
     p.add_argument("--mut", type=int, default=0)
+    p.add_argument("--nl", type=int, default=3, help="query lanes = SM lanes P (P3 production default 3; 4 = old P4)")
     a = ap.parse_args(argv)
+    global NL
+    NL = a.nl
+    if not 3 <= NL <= 4:
+        ap.error("--nl 3..4 (spvm: 2 lanes N face + NL - 2 S face)")
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     recs, nodes, last = make(a.rounds, a.seed)
@@ -196,7 +203,7 @@ def main(argv=None):
     fault = "FAULT" in out
     ok = r.returncode == 0 and not fault and mism == 0 and len(streams) == len(exp) and len(exp) > 0
     nrun = {k: sum(1 for x in nodes if x["n"] == k) for k in range(1, 5)}
-    res = dict(bench="att4_pub", mut=a.mut, seed=a.seed, rounds=a.rounds, nodes=len(exp), streams=len(streams),
+    res = dict(bench="att4_pub", nl=NL, mut=a.mut, seed=a.seed, rounds=a.rounds, nodes=len(exp), streams=len(streams),
                node_mismatches=mism, word_mismatches=word_mism, fault=fault, rc=r.returncode, runs_by_chunks=nrun,
                verilator=VERILATOR, examples=bad, pass_=ok)
     Path(a.out).write_text(json.dumps(res, indent=1))

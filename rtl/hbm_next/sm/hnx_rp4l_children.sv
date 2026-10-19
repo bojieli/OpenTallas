@@ -22,39 +22,69 @@ module hnx_rp4l_pinbeat(input wire clk, input wire rst_n, input wire [2068:0] d,
 endmodule
 // N-band gather relays: leaf 0's own-row lane (u_grv1/u_grd1 at the leaf, u_grv2/u_grd2 mid-tile) and the two
 // pass-through lanes' first two registers (u_v/u_d at the N edge, u_v2/u_d2 mid-tile)
-module hnx_rp4l_gn(input wire clk, input wire rst_n, input wire [49:0] g0, input wire [99:0] gin,
+// NREL (P3-SM 10-19, safe-design item 2 reach <= 405 um): extra relay stages on the N-edge -> mid hop of every pass lane
+// (g_gl[k].g_rl[r]) and on leaf 0's leaf -> mid hop (g_ro[r]); +NREL edges on those lanes (compiler record).  0 = SM4 / rp4lp.
+module hnx_rp4l_gn #(parameter integer NREL = 0) (input wire clk, input wire rst_n, input wire [49:0] g0, input wire [99:0] gin,
  output wire [49:0] g0m, output wire [99:0] gpm);
  wire [49:0] g1;
+ wire [(NREL+1)*50-1:0] g1c;
  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0[49:48]), .q(g1[49:48]));
  hnx_rp4l_kreg #(.W(48)) u_grd1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0[47:0]), .q(g1[47:0]));
- hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[49:48]), .q(g0m[49:48]));
- hnx_rp4l_kreg #(.W(48)) u_grd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[47:0]), .q(g0m[47:0]));
+ assign g1c[49:0] = g1;
+ genvar r;
+ for (r = 0; r < NREL; r = r + 1) begin : g_ro
+  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_rv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1c[r*50+48 +: 2]), .q(g1c[(r+1)*50+48 +: 2]));
+  hnx_rp4l_kreg #(.W(48)) u_rd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1c[r*50 +: 48]), .q(g1c[(r+1)*50 +: 48]));
+ end
+ hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1c[NREL*50+48 +: 2]), .q(g0m[49:48]));
+ hnx_rp4l_kreg #(.W(48)) u_grd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1c[NREL*50 +: 48]), .q(g0m[47:0]));
  genvar k;
  for (k = 0; k < 2; k = k + 1) begin : g_gl
   wire [49:0] gm;
+  wire [(NREL+1)*50-1:0] gc;
   hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50+48 +: 2]), .q(gm[49:48]));
   hnx_rp4l_kreg #(.W(48)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50 +: 48]), .q(gm[47:0]));
-  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[49:48]), .q(gpm[k*50+48 +: 2]));
-  hnx_rp4l_kreg #(.W(48)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[47:0]), .q(gpm[k*50 +: 48]));
+  assign gc[49:0] = gm;
+  for (r = 0; r < NREL; r = r + 1) begin : g_rl
+   hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_rv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[r*50+48 +: 2]), .q(gc[(r+1)*50+48 +: 2]));
+   hnx_rp4l_kreg #(.W(48)) u_rd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[r*50 +: 48]), .q(gc[(r+1)*50 +: 48]));
+  end
+  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[NREL*50+48 +: 2]), .q(gpm[k*50+48 +: 2]));
+  hnx_rp4l_kreg #(.W(48)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[NREL*50 +: 48]), .q(gpm[k*50 +: 48]));
  end
 endmodule
 // S-band gather: leaf 1's own-row lane (g1, g2 at the leaf), every lane's S-edge output register (u_gov/u_god,
 // u_v3/u_d3).  gout lane order as core: leaf j -> gout[(1-j)*50 +: 50], pass lane k -> gout[(2+k)*50 +: 50].
-module hnx_rp4l_gs(input wire clk, input wire rst_n, input wire [49:0] g1in, input wire [49:0] g0m, input wire [99:0] gpm,
- output wire [199:0] gout);
+// NREL (P3-SM 10-19, reach <= 405 um): extra relay stages on the mid -> S-edge hop of every pass lane (g_gl[k].g_rl[r]) and of
+// leaf 0's lane (g_ro[r]); leaf 1's own lane is inside the S half already (unchanged).  0 = SM4 / rp4lp.
+module hnx_rp4l_gs #(parameter integer NREL = 0) (input wire clk, input wire rst_n, input wire [49:0] g1in, input wire [49:0] g0m,
+ input wire [99:0] gpm, output wire [199:0] gout);
  wire [49:0] g1, g2;
+ wire [(NREL+1)*50-1:0] g0c;
  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1in[49:48]), .q(g1[49:48]));
  hnx_rp4l_kreg #(.W(48)) u_grd1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1in[47:0]), .q(g1[47:0]));
  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[49:48]), .q(g2[49:48]));
  hnx_rp4l_kreg #(.W(48)) u_grd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[47:0]), .q(g2[47:0]));
  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_gov1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g2[49:48]), .q(gout[48 +: 2]));
  hnx_rp4l_kreg #(.W(48)) u_god1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g2[47:0]), .q(gout[0 +: 48]));
- hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_gov0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0m[49:48]), .q(gout[98 +: 2]));
- hnx_rp4l_kreg #(.W(48)) u_god0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0m[47:0]), .q(gout[50 +: 48]));
+ assign g0c[49:0] = g0m;
+ genvar r;
+ for (r = 0; r < NREL; r = r + 1) begin : g_ro
+  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_rv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0c[r*50+48 +: 2]), .q(g0c[(r+1)*50+48 +: 2]));
+  hnx_rp4l_kreg #(.W(48)) u_rd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0c[r*50 +: 48]), .q(g0c[(r+1)*50 +: 48]));
+ end
+ hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_gov0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0c[NREL*50+48 +: 2]), .q(gout[98 +: 2]));
+ hnx_rp4l_kreg #(.W(48)) u_god0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0c[NREL*50 +: 48]), .q(gout[50 +: 48]));
  genvar k;
  for (k = 0; k < 2; k = k + 1) begin : g_gl
-  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50+48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
-  hnx_rp4l_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50 +: 48]), .q(gout[(2+k)*50 +: 48]));
+  wire [(NREL+1)*50-1:0] gc;
+  assign gc[49:0] = gpm[k*50 +: 50];
+  for (r = 0; r < NREL; r = r + 1) begin : g_rl
+   hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_rv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[r*50+48 +: 2]), .q(gc[(r+1)*50+48 +: 2]));
+   hnx_rp4l_kreg #(.W(48)) u_rd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[r*50 +: 48]), .q(gc[(r+1)*50 +: 48]));
+  end
+  hnx_rp4l_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[NREL*50+48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
+  hnx_rp4l_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gc[NREL*50 +: 48]), .q(gout[(2+k)*50 +: 48]));
  end
 endmodule
 

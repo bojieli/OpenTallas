@@ -319,3 +319,84 @@ Chain `physical/hbm_next/die/hnx_p4_chain.sh` (the GEN2 S4..S8 form, forked by c
 - The `fus_*` and `idx_nsel` blocks have no GEN2 slot or contract instance yet. In the case they appear as plan or region blocks only, until UNITS publishes those tiles.
 - `cxdl_<q>4` (L=5) also still needs the UNITS-COLL contract entry.
 - The next case runs `bash hnx_case.sh f4c_t8` on the fleet, then `TAG=f4c_t8 bash hnx_p4_chain.sh`. It starts once the t5 chain ends, because the chain's `$B/hnx_*` intermediates and `$A` logs are not tag-keyed.
+
+## STEP 5 (10-19 ~06:10-06:30, fresh DIE agent): DIE-P4-1 GEN fix, case on f4c_t8, SM4 tile check
+
+**DIE-P4-1 on f4c_t5 ENDED at S7 GEN** (exit 3 after 1 h 55 min): `no free area for hb_idx__s_SW (1508.976x1509.84)`. Lane rows 40,936 (63,311 tiles); 16,660 rows went to "row nearest free area".
+- Cause: the contract slots `idx_s<k>_h<j>` match no grant slot. GEN therefore placed the four 1.5-mm IDX score quarters LAST, in free area outside plan blocks. In the relay-free case they found it (W/E PHY corners). In the relayed case the lane rows had already taken it.
+- Structural fix (`hnx_case_inputs.py`, @694ce60c9): one die slot per quadrant, `idxs_<q>`, at the plan's IDX corner block, with the stand-in view outline. The GEN2 W-corner pair slots `idx_s0`/`idx_s1` are dropped. The S-E plan corner holds the single stand-in `hc_eng`, so `idxs_SE` goes to the free S-E corner E of it (x 21,905; this is where the relay-free GEN had put it). The case scripts slot-map `hb_idx__s_<q>` to `idxs_<q>` (tags with those slots), so GEN places them as grant slots BEFORE the lane rows.
+- t5 relay outputs were deleted (a failed run). t5 logs are in `/home/ubuntu/artifacts/hnx/die_p4/t5_failed_1019/`.
+
+**Relay-free case f4c_t8: GEN_OK.** 1,214 insts, **0 placement problems**, 11.6 min, 7.2 GB. IDX quarters sit in their slots (`case_f4c_t8/layout.png`). Relay-free overreach is 669,586 nets, vs 682,640 on t5 (-1.9 %) and 710,093 on GEN2a. The chain then runs S4..S8 on t8 (`hnx_t8_run.sh`).
+
+**SM4 lever (a) tile `hnx_rp4lp4x` 1,080 x 1,339.2 on the f4c_t8 lattice (COORD 04:30 request; evaluator `plan_p4.py`, t8 arguments):**
+
+| arrangement | SM column (um) | die (mm) | mm² | cut v / h | reticle (26 x 33, 0.5 margin) |
+|---|---|---|---:|---|---|
+| 4 x 4, as drawn (`f4c_t8_Lx`) | 4,428 x 5,918.4 | 38.27 x 25.21 | 964.68 | 0.522 / 0.44 | FAIL (38.27 mm side) |
+| 4 x 4 + A1 row (`f4c_t8_LxA`) | 4,428 x 6,091.2 | 38.27 x 25.55 | 977.91 | 0.521 / 0.53 | FAIL |
+| 4 x 4 transposed (`f4c_t8_LxT`) | 5,464.8 x 4,881.6 | 46.56 x 23.13 | 1,077.21 | 0.508 / 0.594 | FAIL |
+| 2 x 8 column | 2,268 x 11,275.2 | band-bound W, H ~35.9 | - | - | FAIL: the plan builder rejects it (quadrant core overruns the centre channel); at the t8 band H = 13.37 + 2 x 11.28 = 35.9 mm > 33 |
+
+**No lattice arrangement of the 1,080-wide tile fits the reticle.** As the 04:30 request said, SM4 should re-pack the leaf 673.92 wide (BF16 stacks N/S of the xs4). The (a) price stays at **811.81 mm²** (t8_LaA, cut 0.585), unproven until that re-pack is done.
+
+## STEP 6 (10-19 ~06:40, P3-DIE agent): OWNER P3+(a) case f4c_t9p3, FUSED re-plan at the measured size, S6 fix, chain relaunched
+
+OWNER 10-19 (HANDOFF 0le): the next-release die is P = 3 with the shared 3-lane x store (P3+(a)). P = 4 work stops.
+
+**f4c_t9p3** = f4c_t8 with:
+- **SM slot for P3+(a).** The P3+(a) lever geometry, 630.72 x 2,203.2 um: SM4's 1.343 mm² estimate plus the A1 row.
+  - This is a stand-in until P3-SM posts the synthesis-sized `hnx_rp3lp3x` outline. Then re-run the same command with `--tile-w/--tile-h`.
+- **FUSED lanes at the measured size** (FUSED-SRAM n3: ~104k um² std + 2 x 128x256 SRAM, 475.2² ≈ 0.226 mm²).
+  - The lane is re-outlined to **345.6 x 648 um** (0.224 mm², aspect 1.875, on the 43.2 lattice).
+  - Two lanes stack per SU group at the foot of the SFU/HC client column, beside their bank pair (S face = bank).
+  - Why not square: a 475.2 square widens each of the 4 group columns by 216 um. The quadrant core then overruns the 400-um centre channel by 79-424 um, which would need ~+0.85 mm of die width (~+27 mm²).
+  - Two other layouts were rejected (step 4): a separate lane row over the banks makes the die +0.8 mm tall, past the reticle margin, and lanes in row A overrun the channel.
+- **FUSED parent per COORD 0kl.**
+  - A small hub tile `fus_hub` (432 x 432 reserve) sits on the strip centre line. It holds the top's own logic: job decode, prologue, heap, divc, rsqrt.
+  - The csum is a **tree over neighbour hops**: lane pair (stacked) -> g1->g0 and g2->g3 (neighbour columns) -> g0->g3 (quadrant node = the innermost group, lane 6) -> hub. The command and r broadcast use the same tree in reverse.
+  - Graph classes: `FUSED_VM` 547 b (rq/rr/wq) and `FUSED_TREE` 441 b (up 268 + dn 140 + r 33), from the ot_hnx_fused_lane ports.
+- Unchanged from t8: IDXN, VM 2^19 (measured bank), A1, COLL L=5, one HC engine as 4 ring quarters.
+
+Command: `plan_p4.py --plans f4c --grp-side 259.2 --coll-d 4500 --coll-l5 --hc quad --vm-dh 90.72 --idxn --tile-w 630.72 --tile-h 2203.2 --fused 345.6 --fused-h 648 --fused-hub 432 --suffix _t9p3 --png`. The check `t8Lp3a_chk` reproduces t8_Lp3a exactly (767.41 / 0.484 / 0.458 / 0.699 M).
+
+| plan | die | mm² | cut v / h | bit-mm | stages_bw | SM_HBM | longest | relay flops (graph) |
+|---|---|---:|---|---:|---:|---:|---:|---:|
+| t8_Lp3a (step 4: FUSED 259.2 guess, no FUSED graph) | 23.89 x 32.12 | 767.41 | 0.484 / 0.458 | 0.699 M | 6.22 | 5.25 | 11.6 mm | 1.28 M |
+| **f4c_t9p3 (P3+(a), FUSED measured + tree + hub)** | 23.89 x 32.12 | **767.41** | **0.469 / 0.504** | **0.776 M** | **6.30** | 5.25 | 11.2 mm | 1.43 M |
+
+- **Area: 767.41 mm²**, 90.6 mm² under the 858 reticle (26 x 33). Margins are 2.11 mm short and 0.88 mm long (≥ 0.5 required). Placed area is 601.8 mm², density 0.784.
+  - The FUSED growth (2.15 -> 7.2 mm²) costs 0 mm². The lane columns rise to 2.0 mm, under the 2.8-mm SU slot that sets the band height.
+- **Cuts ≤ 0.55-0.60.**
+  - Worst v cut: 0.469.
+  - Worst h cut: 0.504, at y 20.0 mm, x 8.5-9.5 (N band, FUSED tree/bank links beside the quadrant core). It is inside the rule, with 0.05 margin to 0.55.
+- **Bit-mm +0.077 M**, all from the FUSED graph: FUSED_VM 17,504 b at 5.0 stages, longest 1.07 mm; FUSED_TREE 14,112 b at 4.66 stages, longest 6.2 mm (quadrant node -> hub).
+- **Reach 405 + stations, landed-regions clocking** (`clock_plan_f4c_t9p3.json`):
+  - 76 regions; the largest non-SM region is 3.43 mm (≤ 4 mm). Neighbour pairs: 189.
+  - 389 landed links / 213,176 b (t5: 369 / 206,402).
+  - Relay flops at 405: 2.29 M (t5: 2.01 M). Max hops: 33.
+  - FUSED: lane<->bank stays inside its group region (0 landed, ≤ 8 hops). The tree has 16 landed crossings (group -> core -> strip).
+- **FUSED latency for CMTP:** the worst lane -> hub tree path is 14.5 mm = 37 hops at 405 ≈ 18.5 cycles at forwarded half-cycle hops, each way.
+  - This adds ~+37 cycles to c1 per FUSED record (up + broadcast down), plus 4 tree-add levels.
+  - The row II is unchanged (the tree is pipelined).
+  - The star form with RL = 4 relays per lane is not legal on the die (32 x 441 b into one hub).
+- **Open (owners):**
+  - UNITS-FUSED: re-outline `hnx_fused_lane_1019` to 345.6 x 648 (or say why it must be square).
+  - UNITS-FUSED: move the csum adders into tree nodes, in the golden order. Lane `lid` = q*8 + bank must match the golden tree pairing.
+  - UNITS-FUSED: kit `fus_hub`.
+  - P3-SM: post the synthesis-sized `hnx_rp3lp3x` outline, then re-run t9p3.
+  - The plan graph's SM_X / SM_OUT bits are still the d4g basis (not P-scaled), as in every P = 4 plan.
+  - `fus_*` / `fus_hub` have no contract instances yet (plan / region blocks only in the case).
+- PNGs: `plan/f4c_t9p3.png`, `plan/f4c_t9p3_flow.png` (LOOKED: lanes in the group columns, hub on the centre line, no overlaps). Case inputs: `physical/hbm_next/die/f4c_t9p3/` (grants, region map, pin plan; the SM pin tcl is the P = 4 stand-in).
+
+**S6 structural fix.**
+- The t8 chain died at S6 with SYNTH_MISSING on 8 hbfd masters: land0_48 NS/SN/WE, lh0_136 EW/NS/SN_f2, lh_136 EW/NS_f4.
+- `hnx_p4_chain.sh` S6 now derives the missing list from the run's own view plan instead of stopping. It then:
+  - pulls the plan rows and wrappers;
+  - adds the wrappers to the case src `v16w/` (add-only; src lacked land0_48_NS/WE);
+  - synthesises exactly those masters with `hnx_s6_synth.sh` (`NOCHAIN=1`; GEN2 synth_master/etm, normal priority, LIBCELLS=1 for lh0/land0);
+  - fetches (source-checked), uploads, and re-merges.
+- It still stops if any master stays missing (no stubs).
+
+**Chain relaunched on the P3 case:** `TAG=f4c_t9p3 bash physical/hbm_next/die/hnx_case_run.sh` (replaces hnx_t8_run.sh). It runs S3 (relay-free GEN), then S4..S8. Log: `/home/ubuntu/artifacts/hnx/die_p4/chain.log`. The t8 logs are in `t8_dead_s6_1019/`, and t8 is not rerun.
+- S3 relay-free case f4c_t9p3: **GEN_OK**, 1,214 insts, 0 placement problems, overreach 696,308 nets (t8 669,586; the die is 2.8 mm taller), `case_f4c_t9p3/layout.png` (LOOKED: SM = P=1 stand-ins in the P3 slots, IDX quarters in corners). S4..S8 running.

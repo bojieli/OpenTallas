@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hbm_next_1019.cmtp.emitter.v2",
- "generated_utc": "2026-10-19T10:53:07Z",
+ "generated_utc": "2026-10-19T13:33:09Z",
  "rule": "HBM-NEXT-CMTP: object-level VM allocator + HGI-1R binary record emitter (FIRST VERSION, step 2).\n\nInput: the compiled N-row programme (plane_compiler headline knobs; M.ds_compile) and its S2 timeline per layer\nsegment (static_check.schedule_segments).  The compiled records keep the AR descriptors (row 0 addresses of the AR VM\nmap) plus per-position footprints shifted by VM_OFF per position (and SLOT_OFF per union expert slot): the allocator\nturns that bookkeeping into a real VM map; the emitter writes HGI-1R bytes (isa_rows.encode) against it.\n\nALLOCATOR (per layer segment):\n  1. CLUSTERS: AR VM word ranges joined by any footprint interval and by all intervals of one descriptor (so every\n     descriptor addresses exactly one cluster; relocation is one base shift a cluster).\n  2. INSTANCES: word-level liveness as static_check C4 (a word is live from the START of its writer -- the writer\n     owns the words while it runs -- to the END of its last reader before the next write); a cluster copy's live\n     spans are merged into instances (gaps with no live word split them).\n  3. OBJECTS: the per-position copies (p = 0 .. N - 1) of one cluster whose instances overlap in time form ONE ROW\n     ARRAY: N rows at a fixed row stride (cluster size rounded up to 8 words), lifetime = the union -- so an N-row\n     record addresses row rho at base + rho x rs (ROWX rs_k).  Clusters only read in the segment (gains, tables, HC\n     rows) are CONSTANTS: one row, rs = 0 (broadcast).  The entering columns h / PRE are PINNED row arrays at VM 0\n     (live across segments).  Union expert slot j copies are separate objects (one per slot).\n  4. PLACEMENT: first-fit by start time into the address space; the high-water mark is the VM this map needs.  It is\n     >= the C4 word-level peak (C4 = lower bound: no fragmentation, no cluster granularity).\nEMITTER: every record with VM operands in clusters gets its bases relocated (row 0) and, when it carries N > 1\npositions, a ROWX (n = N, slot0 = 0, rs_k = the row stride of operand k's object or 0, SM: rpl = best_rpl, param\n[5:2] = N - 1).  Checked per record: isa_rows.check (legality), encode -> decode round trip identical, expand(): every\nrow's descriptor intervals fall inside that row of the allocated object, rows independent (R2).  AR (N = 1) is the\nidentity: no relocation, no ROWX, bytes == records.Rec.encode.\nNOT YET (next): union expert slots as the IDX.UNION + rsel CTL.LOOP form (emitted here as SKIPPED, counted), the\nIDX.UNION record itself, CTL.USERS banks for the users image, implicit engine state (fixed-address intervals no\ndescriptor names: reported, pinned at their AR address), whole-token image assembly + VEH hand-off.\n\n    PYTHONPATH=tools python3 tools/hbm_next/emitter.py --mode mtp --layers 0,1 --out DIR\n",
  "mode": "mu",
  "N": 3,
@@ -11,12 +11,12 @@
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 7807.881714915258,
     "peak_objects": [
@@ -79,42 +79,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 190560,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -138,18 +142,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "23a14e1cd56a3605912df710d0e044a812ade4aefb020aa53578c10acf6ef019"
+   "image_sha256": "9fb08db5e72d7b1fb49d64294acea0ed9f5e565f6554e03ba24533fc862ff6a8"
   },
   "1": {
    "values": 496,
    "objects": {
     "shared_load": 7,
-    "row_array": 56,
+    "row_array": 57,
     "pinned_column": 2
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 238640,
+    "pinned_words": 73752,
+    "high_water": 250928,
     "object_bound": 238640,
     "object_peak_at": 4741.330557425711,
     "peak_objects": [
@@ -226,42 +230,46 @@
     ],
     "method": "first_fit_by_time",
     "tries": {
-     "first_fit_by_time": 238640,
-     "greedy_by_size": 238640
+     "first_fit_by_time": 250928,
+     "greedy_by_size": 250928
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 204842,
-   "frag_over_c4": 1.165,
+   "frag_over_c4": 1.225,
    "objects_over_c4": 1.165,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -285,18 +293,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 236778
    },
-   "image_sha256": "0bdef86253647cf8b0ed6db1652f92581ad64dcec8834845e3e537184b8b9522"
+   "image_sha256": "f23e3f3ad96170bb7dc44cb2e39ef395ce78e5fa4c9228cac790f854df68a6d5"
   },
   "2": {
    "values": 401,
    "objects": {
-    "row_array": 50,
+    "row_array": 51,
     "pinned_column": 2,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
     "object_bound": 175592,
     "object_peak_at": 25294.023877280706,
     "peak_objects": [
@@ -387,42 +395,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 193592,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 206488,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 133964,
-   "frag_over_c4": 1.311,
+   "frag_over_c4": 1.402,
    "objects_over_c4": 1.311,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -447,18 +459,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 176076
    },
-   "image_sha256": "5bae6eba7367b02bc2b284327cac201d19361b091a742425e8c45188528fa5a3"
+   "image_sha256": "4f3fcd3ed6a3d65baaefa6e5232da14f060b684f9e2fb13b86bba01a3db032bd"
   },
   "3": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -521,42 +533,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -580,18 +596,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "8633a47e90a3afdaafe4e3e4d66ad1292108feaed9a293b708f62437e7d3867b"
+   "image_sha256": "2bac5bf3aa43a0f7544c60c14b8a7d211cbfcbddb70407a3f08b9f3065bf475e"
   },
   "4": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -654,42 +670,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -713,18 +733,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "6989d24009b9bac6c6919c108eea64ab2d5afc7e983a5aa823f3aaba4348539f"
+   "image_sha256": "a8b0bfb53da1f80d622a227957b66a6d74bd6d15fec1c250bf62d6ee5d0ad3f1"
   },
   "5": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -787,42 +807,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -846,18 +870,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "e8032c2aa84a5c0f486fc50fe4c9c9aa6cb38ea1dc12d334d11c036f74ead17b"
+   "image_sha256": "ff1e616a87f4c1334f0c5a7754108ab10ee7ef3e576c0cd0edfc644091f32c1c"
   },
   "6": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -920,42 +944,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -979,18 +1007,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "ad8b1516da4f1253ce1ca6935024a0b4241df598bb767745027fd15b7d4e3765"
+   "image_sha256": "997dc866f61128ae5dbb25cd8b0a1093b2a6e5cd0176b21c095105789e736e62"
   },
   "7": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1053,42 +1081,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1112,18 +1144,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "415b17cd91bb19f0467ca1c035af2d05edd475ac9382e121fae119a255c8c4a2"
+   "image_sha256": "97f8469f919110ee93aa8d334204ec807730800ffaa1aac99319405a86ada038"
   },
   "8": {
    "values": 401,
    "objects": {
-    "row_array": 50,
+    "row_array": 51,
     "pinned_column": 2,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
     "object_bound": 175592,
     "object_peak_at": 25294.023877280706,
     "peak_objects": [
@@ -1214,42 +1246,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 193592,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 206488,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 133964,
-   "frag_over_c4": 1.311,
+   "frag_over_c4": 1.402,
    "objects_over_c4": 1.311,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1274,18 +1310,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 176076
    },
-   "image_sha256": "783b9a7b3891b8ab81f2316c8291a2597622526db2720ba16eb861c9377fa1a4"
+   "image_sha256": "06fc64acf4706a824ec862a77f35aa1e1dada7b8b21f2299e44b3c28c05bf47f"
   },
   "9": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1348,42 +1384,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1407,18 +1447,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "6caa0cd5f9132a4a9f848001b3a164d308f170f7323b6f4a4fed876b8a9c0a0e"
+   "image_sha256": "3ac6e7d36723716acd3180a00c084bad38edfe24c605365135c1f2f1c99ff739"
   },
   "10": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1481,42 +1521,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1540,18 +1584,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "a696c2917ed6ab4fda3824a59b95acadbbc0ada3e3ec10faea03ade0311ff90b"
+   "image_sha256": "9c2abf51611aba9d2ac129c1ae2f0ae7c5517bdff24e4acf39b9f4ca94e3593f"
   },
   "11": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1614,42 +1658,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1673,18 +1721,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "90aac48e140530ead6b5aefae18f2a5766827ae28519037c52dcd64bc69cdac4"
+   "image_sha256": "2a90fda566fdf940685f55aa97b1b784299c21f37e534aceaf3a738be2c55e93"
   },
   "12": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1747,42 +1795,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1806,18 +1858,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "50cd8fc83bc85ad48de02bb601d40f882f5c47001c0a5264e2c9e8808688f46a"
+   "image_sha256": "46bdacbbfda1dc5001298e7a15fe3bb98bd387a6804a0e57408fb5ea2d1dd16e"
   },
   "13": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -1880,42 +1932,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -1939,19 +1995,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "6106a8f516e73ab7d3c727a6f74eaafd86479d8418db56e59cca54ea7dc37292"
+   "image_sha256": "16c736ce9d7d005fe6774b6e485bd335cfdf2b9dcd687ea5b098b448a2f2a25b"
   },
   "14": {
    "values": 619,
    "objects": {
     "shared_load": 7,
     "pinned_column": 2,
-    "row_array": 63
+    "row_array": 64
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 242160,
-    "object_bound": 242160,
+    "pinned_words": 73752,
+    "high_water": 252912,
+    "object_bound": 240624,
     "object_peak_at": 4642.150557425711,
     "peak_objects": [
      {
@@ -2011,20 +2067,6 @@
       "packed": false
      },
      {
-      "kind": "row_array",
-      "anchor": "0|DMA.LOAD|kv_rope.table",
-      "rows": 3,
-      "size": 576,
-      "need": 1728,
-      "ar": [
-       53312,
-       53888
-      ],
-      "t0": 4638.2,
-      "t1": 29309.0,
-      "packed": false
-     },
-     {
       "kind": "shared_load",
       "anchor": "0|DMA.LOAD|q_norm.gain",
       "rows": 1,
@@ -2054,6 +2096,20 @@
      },
      {
       "kind": "row_array",
+      "anchor": "0|DMA.LOAD|kv_rope.table",
+      "rows": 3,
+      "size": 64,
+      "need": 192,
+      "ar": [
+       53312,
+       53376
+      ],
+      "t0": 4638.2,
+      "t1": 29309.0,
+      "packed": false
+     },
+     {
+      "kind": "row_array",
       "anchor": "0|SU.VOP|engram.rH",
       "rows": 3,
       "size": 8,
@@ -2069,42 +2125,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 257696,
-     "greedy_by_size": 242160
+     "first_fit_by_time": 269984,
+     "greedy_by_size": 252912
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 211565,
-   "frag_over_c4": 1.145,
-   "objects_over_c4": 1.145,
+   "frag_over_c4": 1.195,
+   "objects_over_c4": 1.137,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2129,18 +2189,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 252078
    },
-   "image_sha256": "b49f07f08649651b9a1bb8a348f6d663d6a8720914032bcf2c05aece0734ba10"
+   "image_sha256": "f0b8958a3c570b6cb4dbcb2c7cc1a04ae2a7f23d6d835fe06a37674ad96841e7"
   },
   "15": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -2203,42 +2263,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2262,18 +2326,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "2ad0a28da58356de4a75f3c5a6d9722b7daf720767b7908d56fbce3ab55e1c33"
+   "image_sha256": "cd371f916d0d146a13f008cd4fdf2b06abeed8c872fb37b7275556197e47dc0e"
   },
   "16": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -2336,42 +2400,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2395,18 +2463,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "abb848e10989411394a3ad2d903017cb6def23bc4750ececf9b071071db2b273"
+   "image_sha256": "485685964e4f752e1938b53437f315ab4b87b3b61eade5d7c88d94b72cad36c3"
   },
   "17": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -2469,42 +2537,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2528,18 +2600,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "a93bd58ef7423879724270376fe7b991941a1c220f4bf0386d7dc3754caa236f"
+   "image_sha256": "658f138f71273a197cb8756f5801037872d064908bd1e6a84ffbdc520f2042df"
   },
   "18": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -2602,42 +2674,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2661,18 +2737,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "1adfe76019d1a73fad82520938fdecd7bf6c12c42301e12784e8bd1047079469"
+   "image_sha256": "cc1405ed2d1631333ae04def7e8468b26a9b6cf52ba223a39d6875babe14e3f2"
   },
   "19": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -2735,42 +2811,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2794,20 +2874,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "c69440542bf19edd5ce0d9b2f8aebe81193cfe28a6ae0b8bf7141b1d826f1ab3"
+   "image_sha256": "7d0a057c0c0d9e11fa5e2af394c3ba7cdc62208c99d8d912d6aaa41c0415c920"
   },
   "20": {
-   "values": 414,
+   "values": 410,
    "objects": {
     "row_array": 52,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "single": 1
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
-    "object_bound": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
+    "object_bound": 187880,
     "object_peak_at": 26846.27369316037,
     "peak_objects": [
      {
@@ -2897,42 +2976,47 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 193800,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 205984,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440,
+     "188864": 61464
     }
    },
-   "c4_peak": 136696,
-   "frag_over_c4": 1.285,
-   "objects_over_c4": 1.285,
+   "c4_peak": 142160,
+   "frag_over_c4": 1.322,
+   "objects_over_c4": 1.322,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -2949,69 +3033,26 @@
    },
    "errors": [],
    "image_bytes": 13648,
-   "livein_words": 4194,
-   "livein_top": [
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     0,
-     1366,
-     24722.6,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     1,
-     1366,
-     24722.6,
-     1
-    ],
-    [
-     "0|IDX.INDEX|index frame (G18)",
-     2,
-     1366,
-     24722.6,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     0,
-     32,
-     3615.3,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     1,
-     32,
-     3615.3,
-     1
-    ],
-    [
-     "0|SU.VOP|index_q.rope",
-     2,
-     32,
-     3615.3,
-     1
-    ]
-   ],
+   "livein_words": 0,
+   "livein_top": [],
    "self_overwritten_read_words": {
     "COLL.ALL_GATHER": 98523
    },
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 174555
    },
-   "image_sha256": "e53e5712f8e60c4bfe2db1dade0aacda0d09869f6d2fa6e276d8447eafff2cc8"
+   "image_sha256": "eafc094fc1916ef378266408abdd8122a0c54e3fbf1ae06ede1749b7f09eca00"
   },
   "21": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3074,42 +3115,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3133,18 +3178,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "bb446242c57bc8d1663b04165c2b15b269b82d702beebbf4340fbaea5c8942f5"
+   "image_sha256": "01cc7165049f51df140809f24f838162086e37db667d6e3f29db825e43a6d2f3"
   },
   "22": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3207,42 +3252,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3266,18 +3315,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "0d5ee2adbc6a7df1e66d5215ad3f08cf37ca31cc30982c6ad386706f1ae4098a"
+   "image_sha256": "b866e01a04f15e29d32f858ab550933ea03ba6a0d00c11606dfa7e259ce22f62"
   },
   "23": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3340,42 +3389,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3399,20 +3452,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "1fbeee8dcc1eba0cf6305c2fd9e3b064d179264be96c07b0113973cd9d8894b2"
+   "image_sha256": "15bf1cfa595f545e5c42b4b3ec5ebc4b1d20d3779fd3bb294d3a9bb04c699ed0"
   },
   "24": {
-   "values": 397,
+   "values": 398,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
-    "object_bound": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
+    "object_bound": 187880,
     "object_peak_at": 26288.06199227072,
     "peak_objects": [
      {
@@ -3502,42 +3554,47 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 207384,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 215576,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440,
+     "188864": 61464
     }
    },
    "c4_peak": 150444,
-   "frag_over_c4": 1.167,
-   "objects_over_c4": 1.167,
+   "frag_over_c4": 1.249,
+   "objects_over_c4": 1.249,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3562,18 +3619,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 173034
    },
-   "image_sha256": "56648d91f0c7622725d39c50155604e097ad08d3baa64c640ab1d2388e2e0dfe"
+   "image_sha256": "e9713ceacf334feeacf9bca067856a412607aeaa98e044a7a0e8422cedf2b304"
   },
   "25": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3636,42 +3693,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3695,18 +3756,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "4a079cec907039ab5b55a4c650ece66d69070cd2b7c890ab9e6eb7c9c8420680"
+   "image_sha256": "1aa9bf8c03f4e5cd185b757df2685070d66dea6db8f1f8190935700a2e248e33"
   },
   "26": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3769,42 +3830,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3828,18 +3893,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "bafde911dbba41ba48bb8f3efb8e75c5e15bb18f2989837e6057f314507c40f6"
+   "image_sha256": "175a3a45a448c41fcaa1a11a5dac05f3531e913eb0627fad60bf0fd7517f22e9"
   },
   "27": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -3902,42 +3967,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -3961,20 +4030,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "7ac48ed200239ab9cfb6058c94f57822af923a4a2569015804e7dd496cb26dd2"
+   "image_sha256": "48ccaf0c090fbb62b326dccd0bde26040af6f22f0ced1d9aefd25f3eefeb2d4a"
   },
   "28": {
-   "values": 397,
+   "values": 398,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
-    "object_bound": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
+    "object_bound": 187880,
     "object_peak_at": 28240.699027670347,
     "peak_objects": [
      {
@@ -4064,42 +4132,47 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 207384,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 215576,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440,
+     "188864": 61464
     }
    },
    "c4_peak": 150444,
-   "frag_over_c4": 1.167,
-   "objects_over_c4": 1.167,
+   "frag_over_c4": 1.249,
+   "objects_over_c4": 1.249,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4124,18 +4197,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 173034
    },
-   "image_sha256": "7f271b4987bd6908f4162a10a30bf7fe8492dafad3b76778196c590994c0c165"
+   "image_sha256": "e48fcd6a288166fdcf379d56d105589589d3b8384cbaf876a181dae22e28d06a"
   },
   "29": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -4198,42 +4271,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4257,18 +4334,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "6bd64a61d179d74e3b1cf1d0680dac3413a35f72b0d7a74ed5db6b65599adeb2"
+   "image_sha256": "1e32d54808a23c579c5f5f2637ce833489368a32a9eac9a95a4f1d8e2b17e1a8"
   },
   "30": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -4331,42 +4408,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4390,18 +4471,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "2b9c8e54334538481e0bf997927235c819e6f283b021060d39eb28aea162fa1e"
+   "image_sha256": "4928955520080245232a1783839fa248ee4b8cceb89947aa8c65886a23aedbcc"
   },
   "31": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -4464,42 +4545,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4523,20 +4608,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "b84a1b66d33b56b561b40bbe467c22e113dba10ab5c6fd83ce5cdd284744e5f9"
+   "image_sha256": "7d3ea07e312143a4f305f348355c91ddf34153c7c2e3c4eecf938085ce5c1656"
   },
   "32": {
-   "values": 397,
+   "values": 398,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
-    "object_bound": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
+    "object_bound": 187880,
     "object_peak_at": 26288.06199227072,
     "peak_objects": [
      {
@@ -4626,42 +4710,47 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 207384,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 215576,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440,
+     "188864": 61464
     }
    },
    "c4_peak": 150444,
-   "frag_over_c4": 1.167,
-   "objects_over_c4": 1.167,
+   "frag_over_c4": 1.249,
+   "objects_over_c4": 1.249,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4686,18 +4775,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 173034
    },
-   "image_sha256": "b943fc2559451be44e158ab33052558334af9f5c82e43361c3d1aacc5adc346d"
+   "image_sha256": "68ff67a3166f05b3efc457cc9429d77659ad7371c8710873683fe1f277273fbf"
   },
   "33": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -4760,42 +4849,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4819,18 +4912,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "fc940ac630560d356c0c8d2884c78ce94af5d1257f0be5ccf8f8ab9b122a1ad4"
+   "image_sha256": "afaa26f077946ca7c05380837ce86a408c534acf0e1625a72d9e9ede49670dd3"
   },
   "34": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -4893,42 +4986,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -4952,18 +5049,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "03b94c38d8b42d8f9c5b6eedd196e161ce414ca6f7a2d5e34fedfde68d004c20"
+   "image_sha256": "67864d6bb23a03085ddcda7b83c83489cb6e58085f14a61aaa0c0e04b1bda2f6"
   },
   "35": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -5026,42 +5123,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -5085,20 +5186,19 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "edde48463f450840415c9d43c776d04278667f64ab2041d3ef3d084b56968c9f"
+   "image_sha256": "9011e3b6edc9dadcd9c34b0ffda1d2d406a67c21081217afd0dc4d226d9e1f63"
   },
   "36": {
-   "values": 397,
+   "values": 398,
    "objects": {
-    "row_array": 49,
-    "pinned_column": 2,
-    "shared_load": 5,
-    "constant": 1
+    "row_array": 50,
+    "pinned_column": 3,
+    "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175592,
-    "object_bound": 175592,
+    "pinned_words": 73752,
+    "high_water": 187880,
+    "object_bound": 187880,
     "object_peak_at": 26954.85767073726,
     "peak_objects": [
      {
@@ -5188,42 +5288,47 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 207384,
-     "greedy_by_size": 175592
+     "first_fit_by_time": 215576,
+     "greedy_by_size": 187880
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440,
+     "188864": 61464
     }
    },
    "c4_peak": 150444,
-   "frag_over_c4": 1.167,
-   "objects_over_c4": 1.167,
+   "frag_over_c4": 1.249,
+   "objects_over_c4": 1.249,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -5248,18 +5353,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 173034
    },
-   "image_sha256": "1a57d64dfa7a0a54dfa336438d5df41c0dbf38a59cb6ad1edbbba0dad1e88aa7"
+   "image_sha256": "cd93f8ebac8cd767c499f578e5f230d42b91181cf5db3be547268102b7d14cf6"
   },
   "37": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -5322,42 +5427,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -5381,18 +5490,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "a11744899120bab39b15e348f396af96d57ec85b29ba226727ba1a74f9ae6a3d"
+   "image_sha256": "b91e7322ebec81c58c1f448ac4fdd5aeb4ca93ea261e026555505b8e0f583930"
   },
   "38": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -5455,42 +5564,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -5514,18 +5627,18 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "17a974bbef089c0a0b211426881360ff54f2cf54cd16f26cba61f5d4edb93fec"
+   "image_sha256": "7caae7f470356587fb75fdb762d1803a0b9265ce5e5ee8c5f0c592020d1cd3a4"
   },
   "39": {
    "values": 278,
    "objects": {
     "pinned_column": 2,
-    "row_array": 43,
+    "row_array": 44,
     "shared_load": 5
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 175200,
+    "pinned_words": 73752,
+    "high_water": 187488,
     "object_bound": 175200,
     "object_peak_at": 9163.045431092578,
     "peak_objects": [
@@ -5588,42 +5701,46 @@
     ],
     "method": "greedy_by_size",
     "tries": {
-     "first_fit_by_time": 178272,
-     "greedy_by_size": 175200
+     "first_fit_by_time": 194032,
+     "greedy_by_size": 187488
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 152582,
-   "frag_over_c4": 1.148,
+   "frag_over_c4": 1.229,
    "objects_over_c4": 1.148,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "union.list": [
-     242208,
+     252960,
      18
     ],
     "union.count": [
-     242240,
+     252992,
      1
     ],
     "union.tables": [
-     242272,
+     253024,
      576
     ],
     "kvunion.plan.p0": [
-     242848,
+     253600,
      10240
     ],
     "kvunion.map.p0": [
-     253088,
+     263840,
      400
     ]
    },
-   "vm_need_words": 253504,
+   "vm_need_words": 264256,
    "fits": {
-    "as_built": true,
+    "as_built": false,
     "grown_412k": true,
     "vm_2p19": true
    },
@@ -5647,7 +5764,7 @@
    "c4_self_overwritten": {
     "COLL.ALL_GATHER": 160776
    },
-   "image_sha256": "93eb9b1c41cd64055d5400f84f84de8136d3e3882a61aed399423a144a8c8229"
+   "image_sha256": "15a191965e2d8d4b2a7e88420b20c3def7a2d51fb44c630b0a17ddada10cb933"
   },
   "head": {
    "values": 15,
@@ -5656,8 +5773,8 @@
     "row_array": 3
    },
    "alloc": {
-    "pinned_words": 61464,
-    "high_water": 76848,
+    "pinned_words": 73752,
+    "high_water": 89136,
     "object_bound": 76848,
     "object_peak_at": 1237.952,
     "peak_objects": [
@@ -5692,24 +5809,28 @@
     ],
     "method": "first_fit_by_time",
     "tries": {
-     "first_fit_by_time": 76848,
-     "greedy_by_size": 76848
+     "first_fit_by_time": 89136,
+     "greedy_by_size": 89136
+    },
+    "pinned_bases": {
+     "0": 0,
+     "40960": 61440
     }
    },
    "c4_peak": 61452,
-   "frag_over_c4": 1.251,
+   "frag_over_c4": 1.45,
    "objects_over_c4": 1.251,
    "aux": {
     "users.table": [
-     242176,
+     252928,
      6
     ],
     "tokx": [
-     242208,
+     252960,
      4
     ]
    },
-   "vm_need_words": 242240,
+   "vm_need_words": 252992,
    "fits": {
     "as_built": true,
     "grown_412k": true,
@@ -5722,7 +5843,7 @@
      "ok": 6,
      "rowx_records": 4,
      "plain_records": 2,
-     "tokx_base": 242208,
+     "tokx_base": 252960,
      "accept_base": null
     }
    },
@@ -5732,12 +5853,62 @@
    "livein_top": [],
    "self_overwritten_read_words": {},
    "c4_self_overwritten": {},
-   "image_sha256": "fc04ae2d9197a84e77b2c18e1ce096b1197d32fde810fb258ed95b6d57397ec5"
+   "image_sha256": "cf8d1060c761926c7212b499c6aae0cf3a0a4175dd4cc03f6163f601f960da88"
   }
  },
+ "carried": {
+  "carried": [
+   [
+    188864,
+    192960
+   ]
+  ],
+  "host": [],
+  "consumers": [
+   {
+    "segment": "24",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "28",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "32",
+    "words": 4096,
+    "from_earlier": 4096
+   },
+   {
+    "segment": "36",
+    "words": 4096,
+    "from_earlier": 4096
+   }
+  ],
+  "pinned": [
+   [
+    0,
+    20480,
+    0
+   ],
+   [
+    40960,
+    40964,
+    61440
+   ],
+   [
+    188864,
+    192960,
+    61464
+   ]
+  ],
+  "pinned_words": 73752,
+  "rule": "AR intervals read before any in-segment writer and written by some segment (outside h / PRE): pinned N-row arrays at one token-wide base, like h / PRE"
+ },
  "vm_map": {
-  "aux_base": 242176,
-  "largest_high_water": 242160,
+  "aux_base": 252928,
+  "largest_high_water": 252912,
   "note": "pinned columns h / PRE at 0, every segment's aux at aux_base; values a segment reads before its own writer (live-ins, not pinned) are listed in token.liveins: their producer's placement is NOT yet tied to the consumer's (open)"
  },
  "users_hbm": {
@@ -5753,50 +5924,29 @@
    "rowx_records": 1
   },
   "errors": [],
-  "sha256": "e22ef0221d8932705a41fadac8120cffc497046927d0878c5359a0ad6b4012fc",
+  "sha256": "1a1079ec4dc7c4f1255afe381d30100e10fa8f3bd1323b004ee1c50299330312",
   "note": "A = the host-written {token_s, pos_s} table at the image's users.table aux address (the per-segment aux map below); relocated by the whole-token assembler"
  },
  "token": {
   "image": "mu_N3_token.hgi1r",
   "bytes": 498928,
   "records": 3595,
-  "sha256": "cdce2edcdfc434300da25a0e8fe8e6a5d66b26c87432fae89cdd65a2b51f5c62",
-  "liveins": {
-   "20": {
-    "words": 4194,
-    "top": [
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      0,
-      1366,
-      24722.6,
-      1
-     ],
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      1,
-      1366,
-      24722.6,
-      1
-     ],
-     [
-      "0|IDX.INDEX|index frame (G18)",
-      2,
-      1366,
-      24722.6,
-      1
-     ],
-     [
-      "0|SU.VOP|index_q.rope",
-      0,
-      32,
-      3615.3,
-      1
-     ]
-    ]
-   }
+  "sha256": "e807cb37a0f753a823caf7df36291e92bc765ba668bd78363ab40582aadb6704",
+  "liveins": {},
+  "pinned_bases": {
+   "0": [
+    0
+   ],
+   "40960": [
+    61440
+   ],
+   "188864": [
+    61464
+   ]
   },
-  "one_vm_map": false,
+  "pinned_one_base": true,
+  "host_preloaded": [],
+  "one_vm_map": true,
   "end_at": [
    3594
   ],
@@ -5819,257 +5969,257 @@
     "segment": "0",
     "offset": 80,
     "bytes": 11616,
-    "sha256": "23a14e1cd56a3605912df710d0e044a812ade4aefb020aa53578c10acf6ef019"
+    "sha256": "9fb08db5e72d7b1fb49d64294acea0ed9f5e565f6554e03ba24533fc862ff6a8"
    },
    {
     "segment": "1",
     "offset": 11696,
     "bytes": 20784,
-    "sha256": "0bdef86253647cf8b0ed6db1652f92581ad64dcec8834845e3e537184b8b9522"
+    "sha256": "f23e3f3ad96170bb7dc44cb2e39ef395ce78e5fa4c9228cac790f854df68a6d5"
    },
    {
     "segment": "2",
     "offset": 32480,
     "bytes": 13616,
-    "sha256": "5bae6eba7367b02bc2b284327cac201d19361b091a742425e8c45188528fa5a3"
+    "sha256": "4f3fcd3ed6a3d65baaefa6e5232da14f060b684f9e2fb13b86bba01a3db032bd"
    },
    {
     "segment": "3",
     "offset": 46096,
     "bytes": 11680,
-    "sha256": "8633a47e90a3afdaafe4e3e4d66ad1292108feaed9a293b708f62437e7d3867b"
+    "sha256": "2bac5bf3aa43a0f7544c60c14b8a7d211cbfcbddb70407a3f08b9f3065bf475e"
    },
    {
     "segment": "4",
     "offset": 57776,
     "bytes": 11680,
-    "sha256": "6989d24009b9bac6c6919c108eea64ab2d5afc7e983a5aa823f3aaba4348539f"
+    "sha256": "a8b0bfb53da1f80d622a227957b66a6d74bd6d15fec1c250bf62d6ee5d0ad3f1"
    },
    {
     "segment": "5",
     "offset": 69456,
     "bytes": 11680,
-    "sha256": "e8032c2aa84a5c0f486fc50fe4c9c9aa6cb38ea1dc12d334d11c036f74ead17b"
+    "sha256": "ff1e616a87f4c1334f0c5a7754108ab10ee7ef3e576c0cd0edfc644091f32c1c"
    },
    {
     "segment": "6",
     "offset": 81136,
     "bytes": 11680,
-    "sha256": "ad8b1516da4f1253ce1ca6935024a0b4241df598bb767745027fd15b7d4e3765"
+    "sha256": "997dc866f61128ae5dbb25cd8b0a1093b2a6e5cd0176b21c095105789e736e62"
    },
    {
     "segment": "7",
     "offset": 92816,
     "bytes": 11680,
-    "sha256": "415b17cd91bb19f0467ca1c035af2d05edd475ac9382e121fae119a255c8c4a2"
+    "sha256": "97f8469f919110ee93aa8d334204ec807730800ffaa1aac99319405a86ada038"
    },
    {
     "segment": "8",
     "offset": 104496,
     "bytes": 13616,
-    "sha256": "783b9a7b3891b8ab81f2316c8291a2597622526db2720ba16eb861c9377fa1a4"
+    "sha256": "06fc64acf4706a824ec862a77f35aa1e1dada7b8b21f2299e44b3c28c05bf47f"
    },
    {
     "segment": "9",
     "offset": 118112,
     "bytes": 11680,
-    "sha256": "6caa0cd5f9132a4a9f848001b3a164d308f170f7323b6f4a4fed876b8a9c0a0e"
+    "sha256": "3ac6e7d36723716acd3180a00c084bad38edfe24c605365135c1f2f1c99ff739"
    },
    {
     "segment": "10",
     "offset": 129792,
     "bytes": 11680,
-    "sha256": "a696c2917ed6ab4fda3824a59b95acadbbc0ada3e3ec10faea03ade0311ff90b"
+    "sha256": "9c2abf51611aba9d2ac129c1ae2f0ae7c5517bdff24e4acf39b9f4ca94e3593f"
    },
    {
     "segment": "11",
     "offset": 141472,
     "bytes": 11680,
-    "sha256": "90aac48e140530ead6b5aefae18f2a5766827ae28519037c52dcd64bc69cdac4"
+    "sha256": "2a90fda566fdf940685f55aa97b1b784299c21f37e534aceaf3a738be2c55e93"
    },
    {
     "segment": "12",
     "offset": 153152,
     "bytes": 11680,
-    "sha256": "50cd8fc83bc85ad48de02bb601d40f882f5c47001c0a5264e2c9e8808688f46a"
+    "sha256": "46bdacbbfda1dc5001298e7a15fe3bb98bd387a6804a0e57408fb5ea2d1dd16e"
    },
    {
     "segment": "13",
     "offset": 164832,
     "bytes": 11680,
-    "sha256": "6106a8f516e73ab7d3c727a6f74eaafd86479d8418db56e59cca54ea7dc37292"
+    "sha256": "16c736ce9d7d005fe6774b6e485bd335cfdf2b9dcd687ea5b098b448a2f2a25b"
    },
    {
     "segment": "14",
     "offset": 176512,
     "bytes": 22784,
-    "sha256": "b49f07f08649651b9a1bb8a348f6d663d6a8720914032bcf2c05aece0734ba10"
+    "sha256": "f0b8958a3c570b6cb4dbcb2c7cc1a04ae2a7f23d6d835fe06a37674ad96841e7"
    },
    {
     "segment": "15",
     "offset": 199296,
     "bytes": 11680,
-    "sha256": "2ad0a28da58356de4a75f3c5a6d9722b7daf720767b7908d56fbce3ab55e1c33"
+    "sha256": "cd371f916d0d146a13f008cd4fdf2b06abeed8c872fb37b7275556197e47dc0e"
    },
    {
     "segment": "16",
     "offset": 210976,
     "bytes": 11680,
-    "sha256": "abb848e10989411394a3ad2d903017cb6def23bc4750ececf9b071071db2b273"
+    "sha256": "485685964e4f752e1938b53437f315ab4b87b3b61eade5d7c88d94b72cad36c3"
    },
    {
     "segment": "17",
     "offset": 222656,
     "bytes": 11680,
-    "sha256": "a93bd58ef7423879724270376fe7b991941a1c220f4bf0386d7dc3754caa236f"
+    "sha256": "658f138f71273a197cb8756f5801037872d064908bd1e6a84ffbdc520f2042df"
    },
    {
     "segment": "18",
     "offset": 234336,
     "bytes": 11680,
-    "sha256": "1adfe76019d1a73fad82520938fdecd7bf6c12c42301e12784e8bd1047079469"
+    "sha256": "cc1405ed2d1631333ae04def7e8468b26a9b6cf52ba223a39d6875babe14e3f2"
    },
    {
     "segment": "19",
     "offset": 246016,
     "bytes": 11680,
-    "sha256": "c69440542bf19edd5ce0d9b2f8aebe81193cfe28a6ae0b8bf7141b1d826f1ab3"
+    "sha256": "7d0a057c0c0d9e11fa5e2af394c3ba7cdc62208c99d8d912d6aaa41c0415c920"
    },
    {
     "segment": "20",
     "offset": 257696,
     "bytes": 13648,
-    "sha256": "e53e5712f8e60c4bfe2db1dade0aacda0d09869f6d2fa6e276d8447eafff2cc8"
+    "sha256": "eafc094fc1916ef378266408abdd8122a0c54e3fbf1ae06ede1749b7f09eca00"
    },
    {
     "segment": "21",
     "offset": 271344,
     "bytes": 11680,
-    "sha256": "bb446242c57bc8d1663b04165c2b15b269b82d702beebbf4340fbaea5c8942f5"
+    "sha256": "01cc7165049f51df140809f24f838162086e37db667d6e3f29db825e43a6d2f3"
    },
    {
     "segment": "22",
     "offset": 283024,
     "bytes": 11680,
-    "sha256": "0d5ee2adbc6a7df1e66d5215ad3f08cf37ca31cc30982c6ad386706f1ae4098a"
+    "sha256": "b866e01a04f15e29d32f858ab550933ea03ba6a0d00c11606dfa7e259ce22f62"
    },
    {
     "segment": "23",
     "offset": 294704,
     "bytes": 11680,
-    "sha256": "1fbeee8dcc1eba0cf6305c2fd9e3b064d179264be96c07b0113973cd9d8894b2"
+    "sha256": "15bf1cfa595f545e5c42b4b3ec5ebc4b1d20d3779fd3bb294d3a9bb04c699ed0"
    },
    {
     "segment": "24",
     "offset": 306384,
     "bytes": 12944,
-    "sha256": "56648d91f0c7622725d39c50155604e097ad08d3baa64c640ab1d2388e2e0dfe"
+    "sha256": "e9713ceacf334feeacf9bca067856a412607aeaa98e044a7a0e8422cedf2b304"
    },
    {
     "segment": "25",
     "offset": 319328,
     "bytes": 11680,
-    "sha256": "4a079cec907039ab5b55a4c650ece66d69070cd2b7c890ab9e6eb7c9c8420680"
+    "sha256": "1aa9bf8c03f4e5cd185b757df2685070d66dea6db8f1f8190935700a2e248e33"
    },
    {
     "segment": "26",
     "offset": 331008,
     "bytes": 11680,
-    "sha256": "bafde911dbba41ba48bb8f3efb8e75c5e15bb18f2989837e6057f314507c40f6"
+    "sha256": "175a3a45a448c41fcaa1a11a5dac05f3531e913eb0627fad60bf0fd7517f22e9"
    },
    {
     "segment": "27",
     "offset": 342688,
     "bytes": 11680,
-    "sha256": "7ac48ed200239ab9cfb6058c94f57822af923a4a2569015804e7dd496cb26dd2"
+    "sha256": "48ccaf0c090fbb62b326dccd0bde26040af6f22f0ced1d9aefd25f3eefeb2d4a"
    },
    {
     "segment": "28",
     "offset": 354368,
     "bytes": 12944,
-    "sha256": "7f271b4987bd6908f4162a10a30bf7fe8492dafad3b76778196c590994c0c165"
+    "sha256": "e48fcd6a288166fdcf379d56d105589589d3b8384cbaf876a181dae22e28d06a"
    },
    {
     "segment": "29",
     "offset": 367312,
     "bytes": 11680,
-    "sha256": "6bd64a61d179d74e3b1cf1d0680dac3413a35f72b0d7a74ed5db6b65599adeb2"
+    "sha256": "1e32d54808a23c579c5f5f2637ce833489368a32a9eac9a95a4f1d8e2b17e1a8"
    },
    {
     "segment": "30",
     "offset": 378992,
     "bytes": 11680,
-    "sha256": "2b9c8e54334538481e0bf997927235c819e6f283b021060d39eb28aea162fa1e"
+    "sha256": "4928955520080245232a1783839fa248ee4b8cceb89947aa8c65886a23aedbcc"
    },
    {
     "segment": "31",
     "offset": 390672,
     "bytes": 11680,
-    "sha256": "b84a1b66d33b56b561b40bbe467c22e113dba10ab5c6fd83ce5cdd284744e5f9"
+    "sha256": "7d3ea07e312143a4f305f348355c91ddf34153c7c2e3c4eecf938085ce5c1656"
    },
    {
     "segment": "32",
     "offset": 402352,
     "bytes": 12944,
-    "sha256": "b943fc2559451be44e158ab33052558334af9f5c82e43361c3d1aacc5adc346d"
+    "sha256": "68ff67a3166f05b3efc457cc9429d77659ad7371c8710873683fe1f277273fbf"
    },
    {
     "segment": "33",
     "offset": 415296,
     "bytes": 11680,
-    "sha256": "fc940ac630560d356c0c8d2884c78ce94af5d1257f0be5ccf8f8ab9b122a1ad4"
+    "sha256": "afaa26f077946ca7c05380837ce86a408c534acf0e1625a72d9e9ede49670dd3"
    },
    {
     "segment": "34",
     "offset": 426976,
     "bytes": 11680,
-    "sha256": "03b94c38d8b42d8f9c5b6eedd196e161ce414ca6f7a2d5e34fedfde68d004c20"
+    "sha256": "67864d6bb23a03085ddcda7b83c83489cb6e58085f14a61aaa0c0e04b1bda2f6"
    },
    {
     "segment": "35",
     "offset": 438656,
     "bytes": 11680,
-    "sha256": "edde48463f450840415c9d43c776d04278667f64ab2041d3ef3d084b56968c9f"
+    "sha256": "9011e3b6edc9dadcd9c34b0ffda1d2d406a67c21081217afd0dc4d226d9e1f63"
    },
    {
     "segment": "36",
     "offset": 450336,
     "bytes": 12944,
-    "sha256": "1a57d64dfa7a0a54dfa336438d5df41c0dbf38a59cb6ad1edbbba0dad1e88aa7"
+    "sha256": "cd93f8ebac8cd767c499f578e5f230d42b91181cf5db3be547268102b7d14cf6"
    },
    {
     "segment": "37",
     "offset": 463280,
     "bytes": 11680,
-    "sha256": "a11744899120bab39b15e348f396af96d57ec85b29ba226727ba1a74f9ae6a3d"
+    "sha256": "b91e7322ebec81c58c1f448ac4fdd5aeb4ca93ea261e026555505b8e0f583930"
    },
    {
     "segment": "38",
     "offset": 474960,
     "bytes": 11680,
-    "sha256": "17a974bbef089c0a0b211426881360ff54f2cf54cd16f26cba61f5d4edb93fec"
+    "sha256": "7caae7f470356587fb75fdb762d1803a0b9265ce5e5ee8c5f0c592020d1cd3a4"
    },
    {
     "segment": "39",
     "offset": 486640,
     "bytes": 11680,
-    "sha256": "93eb9b1c41cd64055d5400f84f84de8136d3e3882a61aed399423a144a8c8229"
+    "sha256": "15a191965e2d8d4b2a7e88420b20c3def7a2d51fb44c630b0a17ddada10cb933"
    },
    {
     "segment": "head",
     "offset": 498320,
     "bytes": 608,
-    "sha256": "fc04ae2d9197a84e77b2c18e1ce096b1197d32fde810fb258ed95b6d57397ec5"
+    "sha256": "cf8d1060c761926c7212b499c6aae0cf3a0a4175dd4cc03f6163f601f960da88"
    }
   ],
-  "vm_need_words": 253504,
+  "vm_need_words": 264256,
   "fits_2p19": true,
   "errors": 0
  },
  "sources_sha256": {
-  "tools/hbm_next/emitter.py": "3666f8980f960cd0e09e4938f622b26111167ab6c829e1e4cbe69ba1f2279cee",
-  "tools/hbm_next/isa_rows.py": "9b549f7df5b72e91846302e576d6d8f8547f4c5d34893dcd0193745454f31277",
-  "tools/hbm_next/plane_compiler.py": "837c2dee3eb60de6997a42b7d05d4788df21079ac8ff71fdfa2c323a9965c6b7",
+  "tools/hbm_next/emitter.py": "d0a5180ea10b09c4dc14f23473ba291f930165ea8f31bb5628079cc166a60c34",
+  "tools/hbm_next/isa_rows.py": "778e66cf64b07fef7750b8ed97dffdd622670dbb83a98ba97a361afa560cb36b",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
   "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40"
  }
 }

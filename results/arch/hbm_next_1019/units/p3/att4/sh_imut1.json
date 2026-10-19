@@ -1,0 +1,108 @@
+{
+ "summary": {
+  "nl": 3,
+  "seed": 1019,
+  "sigma": 0.3,
+  "topk": 512,
+  "imut": 1,
+  "pvmut": 0,
+  "kvmut": 0,
+  "variant": "shared",
+  "smut": 0,
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "union_lines": 809,
+  "lane_lines": [
+   640,
+   640,
+   640
+  ],
+  "ops": 4,
+  "passed": 0,
+  "wall_s": 115.7,
+  "pv_span_max": 339,
+  "pv_union_rows_max": 49,
+  "verdict": "FAIL",
+  "mutant_detected": true
+ },
+ "ops": [
+  {
+   "name": "q4",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 42,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 1,
+   "fault": true,
+   "results": 92,
+   "expected": 96,
+   "mismatches": 102,
+   "pass": false
+  },
+  {
+   "name": "p4",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 42,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 1,
+   "fault": true,
+   "results": 96,
+   "expected": 96,
+   "mismatches": 1536,
+   "pass": false
+  },
+  {
+   "name": "q10",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 1,
+   "fault": true,
+   "results": 95,
+   "expected": 96,
+   "mismatches": 115,
+   "pass": false
+  },
+  {
+   "name": "p10",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 49,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 104,
+    "first_in": 416,
+    "last_in": 720,
+    "last_out": 755,
+    "span": 339,
+    "beats": 343
+   },
+   "results": 96,
+   "expected": 96,
+   "mismatches": 1536,
+   "pass": false
+  }
+ ]
+}

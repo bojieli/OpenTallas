@@ -38,7 +38,7 @@ SB = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(SB)
 
 F = np.float32
-NLN, W, K, HD = 4, 128, 512, 512
+NLN, W, K, HD = 3, 128, 512, 512   # NLN = query lanes = SM lanes P (P3 default, owner 10-19; --nl 1..4)
 SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/gpu/ot_gpu_tree.sv",
        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
@@ -127,7 +127,7 @@ def op_files(rec, job, d):
         sset = set(rr)
         for u, r in enumerate(rows):
             if r in sset:
-                masks[u // 16] |= 1 << (NLN * (u % 16) + l)
+                masks[u // 16] |= 1 << (4 * (u % 16) + l)       # fixed R10 layout (4 b a row) at every NL
     lf, xf, mf = d / f"{name}.lines.hex", d / f"{name}.x.hex", d / f"{name}.m.hex"
     lf.write_text("".join(f"{w:0272x}\n" for w in lines))
     xf.write_text("".join(f"{w:0256x}\n" for w in xs))
@@ -136,14 +136,14 @@ def op_files(rec, job, d):
 
 
 def build(work, imut, pvmut, kvmut, variant="base", smut=0):
-    vtag = "" if variant == "base" and not smut else f"_{variant}_s{smut}"
+    vtag = ("" if variant == "base" and not smut else f"_{variant}_s{smut}") + ("" if NLN == 4 else f"_nl{NLN}")
     obj = work / f"obj_i{imut}_p{pvmut}_k{kvmut}{vtag}"
     exe = obj / "Vtb_hnx_att4"
     if exe.exists():
         return exe
     cmd = [VERILATOR, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hnx_att4",
-           f"-GIMUT={imut}", f"-GPVMUT={pvmut}", f"-GKVMUT={kvmut}", f"-GSMUT={smut}"] + \
+           f"-GIMUT={imut}", f"-GPVMUT={pvmut}", f"-GKVMUT={kvmut}", f"-GSMUT={smut}", f"-GNLN={NLN}"] + \
           [f"-G{k}={v}" for k, v in VARIANTS[variant].items()] + ["--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     for attempt in range(2):                           # one retry on a precompiled-header race
         r = subprocess.run(cmd, capture_output=True, text=True)
@@ -229,11 +229,14 @@ def main(argv=None):
     p.add_argument("--only", default="")
     p.add_argument("--p1", action="store_true", help="also run every lane alone on the same slice (P = 1 spans)")
     p.add_argument("--jobs", type=int, default=16)
+    p.add_argument("--nl", type=int, default=3, help="query lanes = SM lanes P (P3 production default 3; 4 = old P4)")
     p.add_argument("--topk", type=int, default=512, help="top-k a lane (512 = DS; other values give partial last runs: "
                    "T mod 32 in (0,8] / (8,16] / (16,24] -> a last run of 1 / 2 / 3 chunks, the merge flush paths)")
     a = ap.parse_args(argv)
-    global K
-    K = a.topk
+    global K, NLN
+    K, NLN = a.topk, a.nl
+    if not 1 <= NLN <= 4:
+        ap.error("--nl 1..4")
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -252,7 +255,7 @@ def main(argv=None):
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda j: run_job(exe, rec, j, vec), jobs))
     mut = a.imut or a.pvmut or a.kvmut or a.smut
-    summ = dict(seed=a.seed, sigma=a.sigma, topk=K, imut=a.imut, pvmut=a.pvmut, kvmut=a.kvmut, variant=a.variant, smut=a.smut,
+    summ = dict(nl=NLN, seed=a.seed, sigma=a.sigma, topk=K, imut=a.imut, pvmut=a.pvmut, kvmut=a.kvmut, variant=a.variant, smut=a.smut,
                 verilator=VERILATOR,
                 union_lines=len(rec["union"]), lane_lines=[len(ln["rows"]) for ln in rec["lanes"]],
                 ops=len(res), passed=sum(r["pass"] for r in res), wall_s=round(time.time() - t0, 1))

@@ -92,6 +92,27 @@ There is no "N = 1 = d4g" reference, because d4g has no such unit. N = 1 is chec
   - Absorb the macro read latency into the scale pipeline (`xo` / `wm_d` delay +L). This is a fixed retime, so the row II is unchanged.
   - Re-run m0 + m1..m6 (the witnesses must be re-made if the logs change), then re-gate `hnx_fused_lane_1019` with `macros` in the spec.
 
+## SRAM stores + gate n2/n3 (HBM-NEXT-UNITS-FUSED-SRAM, 2026-10-19)
+
+- **RTL (5e2b4ea95):** the x store `xb` (KX x NM = 80 x 256 b) and the gain store `gb` (NM = 20 x 256 b) are now 1R1W SRAM macros
+  `ot_sram_1r1w_128x256_m1_r2c2` (`u_xb`, `u_gb`). The macro read is registered (data the edge after the address, read-before-write),
+  which is exactly the old `xo <= xb[..]` / `wo <= gb[..]` registered read, so the calendar is unchanged edge for edge. MUT 5 (gain not
+  held) is now a sticky zeroing of every gain read issued after the row-1 edge.
+- **Benches (Verilator 5.050, ot-epyc8, bundle 5e2b4ea95; `sram/`):** m0 `SUMMARY pass=10 fail=0 noresult=0`, cycles identical to the
+  flop version (PRE 404/486/567/648/810 -> II 81; POST 196/304/407/510/716 -> II 103). m1..m6 all FAIL with the same mismatch counts as
+  before (m1 10,183 / 40,878, m2 15,343 / 61,337, m3 15,349, m4 fault + 15,816, m5 20,480, m6 15,360); witnesses refreshed in `witness/`.
+- **Gate n2 (259.2 outline + 2 macros, ot-epyc7):** FAIL synth_smoke again, but synthesis DID finish, in 4,438 s (cap 2,700): SHARE
+  1,476 s + ABC 1,385 s. The lane is **852,881 cells / 94,740 flops, ~104k um2 std area** (72.6k comb + ~31k seq est.), i.e. the 259.2
+  outline (67k um2) was ~3x too small. The cause of the stall is the size of the 8 flat element columns (deep FP32 pipelines), not the x store.
+- **n3 (1073b91b5):** the 8 element columns are one kept module `ot_hnx_fused_el` (no parameter override, `(* keep_hierarchy *)`,
+  `route.synth_keep_modules`) so yosys/ABC map it once; `SYNTH_ARGS=-noshare` (production precedent: hbm norm, tools/hbm_norm_noshare.py);
+  outline 475.2 x 475.2 (util ~0.47 + macros). Benches m0 + m1..m6 and the `--cts` gate are RUNNING (pending_results).
+- **DIE impact:** a lane is ~0.23 mm2 outline, so 32 lanes = **~7.2 mm2**, not the 2.15 mm2 (259.2 guess) in f4c_t8.
+- **Parent (`ot_hnx_fused_top`, 32 lanes):** not kitted. It needs the closed lane view, and its geometry is open: the lanes sit beside
+  their VM banks across 4 quadrants (DIE), so a single hardened 32-lane cluster (~2 x 2 mm with region clocks) conflicts with that
+  placement. Proposed: kit the top's own logic (job decode, scalar prologue, csum tree, heap, divc, rsqrt) as a hub tile, with the per-lane
+  RL relays as die-level forwarded hops; DIE/PROG to decide.
+
 ## Files
 
 - RTL: `rtl/hbm_next/fused/ot_hnx_fused_eng.sv`

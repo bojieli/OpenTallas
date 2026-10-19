@@ -36,7 +36,8 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // slot-major publish: lane p delayed p*LSKEW, merged onto one gather word {gv, gf, gy[31:0], gt[15:0]}, registered.
 // MUT 3 (bench only): lane 2 uses lane 1's slot (collides).
-module hnx_rp4lp4_pub #(parameter integer P = 4, parameter integer LSKEW = 8, parameter integer MUT = 0) (
+// RING (P3-SM 10-19): 1 = ring-buffer lane delays (production, safe-design item 5), 0 = the SM4 shift registers.
+module hnx_rp4lp4_pub #(parameter integer P = 4, parameter integer LSKEW = 8, parameter integer MUT = 0, parameter integer RING = 1) (
     input  wire clk, input wire rst_n,
     input  wire [P*50-1:0] g_p, input wire [P-1:0] act,
     output wire [49:0] g
@@ -50,7 +51,7 @@ module hnx_rp4lp4_pub #(parameter integer P = 4, parameter integer LSKEW = 8, pa
         wire fi = g_p[p*50 + 48] && act[p];
         if (DL == 0) begin : g_d0
             assign v[p] = vi; assign f[p] = fi; assign d[p*48 +: 48] = g_p[p*50 +: 48];
-        end else begin : g_dl
+        end else if (RING == 0) begin : g_dl
             // plain flop shift registers (flat vectors, no array: never a yosys memory)
             reg [DL-1:0] sv, sf;
             reg [DL*48-1:0] sd;
@@ -59,6 +60,25 @@ module hnx_rp4lp4_pub #(parameter integer P = 4, parameter integer LSKEW = 8, pa
                 else begin sv <= (sv << 1) | {{(DL-1){1'b0}}, vi}; sf <= (sf << 1) | {{(DL-1){1'b0}}, fi}; end
             always @(posedge clk) sd <= (sd << 48) | {{((DL-1)*48){1'b0}}, g_p[p*50 +: 48]};
             assign v[p] = sv[DL-1]; assign f[p] = sf[DL-1]; assign d[p*48 +: 48] = sd[(DL-1)*48 +: 48];
+        end else begin : g_rb
+            // RING BUFFER (P3-SM 10-19, safe-design item 5: a delay line >= 3 deep is a ring, not a flop->flop chain):
+            // DL entries, one write pointer; each cycle the entry written DL cycles ago is read, then overwritten.
+            // Delay exactly DL, every entry written once per DL cycles (no shifting, no hold chain).  <= 2 kb per lane
+            // (P = 3: 16 x 50 b) -> flops, read through a registered-pointer DL:1 mux (log2 DL levels).
+            localparam integer AW = (DL <= 2) ? 1 : $clog2(DL);
+            reg [AW-1:0] wp;
+            reg [DL-1:0] rv, rf;
+            reg [DL*48-1:0] rd;
+            integer e, e2;
+            always @(posedge clk)
+                if (!rst_n) begin wp <= {AW{1'b0}}; rv <= {DL{1'b0}}; rf <= {DL{1'b0}}; end
+                else begin
+                    wp <= (wp == DL - 1) ? {AW{1'b0}} : wp + 1'b1;
+                    for (e = 0; e < DL; e = e + 1) if (wp == e) begin rv[e] <= vi; rf[e] <= fi; end
+                end
+            always @(posedge clk)
+                for (e2 = 0; e2 < DL; e2 = e2 + 1) if (wp == e2) rd[e2*48 +: 48] <= g_p[p*50 +: 48];
+            assign v[p] = rv[wp]; assign f[p] = rf[wp]; assign d[p*48 +: 48] = rd[wp*48 +: 48];
         end
     end endgenerate
     // merge: AND-OR of the valid lanes; two valid lanes in one cycle = schedule collision -> fault
@@ -149,12 +169,34 @@ module hnx_rp4lp4_lfx #(parameter integer P = 4, parameter integer LSKEW = 8, pa
     wire [LSB*16-1:0] iwf_e, iwf_w;
     wire [PEW*LSB*16-1:0] ixf_e;
     wire [PW*LSB*16-1:0] ixf_w;
-    hnx_xs4 #(.P(P), .MUT((MUT == 1 || MUT == 4) ? MUT : 0)) u_xs (.clk(clk), .rst_a(rr[0]), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
-        .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rq), .bk1({bv, bd}), .ohl1(bd[2060:2048]), .wl(wl),
-        .o_iv_b(iv_b), .o_iv_f(iv_f), .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iwb(iwb), .o_ixb(ixb),
-        .o_iwf_e(iwf_e), .o_ixf_e(ixf_e), .o_iwf_w(iwf_w), .o_ixf_w(ixf_w),
-        .o_ifirst_e(ifirst_e), .o_ilast_e(ilast_e), .o_itag_e(itag_e),
-        .o_iv_fw(iv_fw), .o_ifirst_w(ifirst_w), .o_ilast_w(ilast_w), .o_itag_w(itag_w));
+    // The store is a HARD child: at P = 3 (owner 10-19 production, P3+(a)) it is hnx_xs3 (P = 3 by default) instantiated
+    // WITHOUT a parameter override in the kit (MUT = 0), so synthesis keeps the master name hnx_xs3 (no $paramod rename);
+    // other P (P = 4 evidence, P = 1 / 2 benches) use hnx_xs4 #(.P(P)).  Instance path: u_lfN.g_xs3.u_xs / u_lfN.g_xs.u_xs.
+    localparam integer XMUT = (MUT == 1 || MUT == 4) ? MUT : 0;
+`define HNX_LFX_XS_PORTS (.clk(clk), .rst_a(rr[0]), .xs_a1(st[8:0]), .xs_g1(st[13:9]), \
+        .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rq), .bk1({bv, bd}), .ohl1(bd[2060:2048]), .wl(wl), \
+        .o_iv_b(iv_b), .o_iv_f(iv_f), .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iwb(iwb), .o_ixb(ixb), \
+        .o_iwf_e(iwf_e), .o_ixf_e(ixf_e), .o_iwf_w(iwf_w), .o_ixf_w(ixf_w), \
+        .o_ifirst_e(ifirst_e), .o_ilast_e(ilast_e), .o_itag_e(itag_e), \
+        .o_iv_fw(iv_fw), .o_ifirst_w(ifirst_w), .o_ilast_w(ilast_w), .o_itag_w(itag_w))
+`ifdef SYNTHESIS
+    // hard-build path (kit define SYNTHESIS = spec hard_define): hard children with NO parameter overrides
+    generate if (P == 3) begin : g_xs3
+        hnx_xs3 u_xs `HNX_LFX_XS_PORTS;
+    end else begin : g_xs
+        hnx_xs4 u_xs `HNX_LFX_XS_PORTS;
+    end endgenerate
+`else
+    // simulation: bench mutants and P = 1 / 2 / 4 through the parameterised stores
+    generate if (P == 3 && XMUT == 0) begin : g_xs3
+        hnx_xs3 u_xs `HNX_LFX_XS_PORTS;
+    end else if (P == 3) begin : g_xs3m
+        hnx_xs3 #(.MUT(XMUT)) u_xs `HNX_LFX_XS_PORTS;
+    end else begin : g_xs
+        hnx_xs4 #(.P(P), .MUT(XMUT)) u_xs `HNX_LFX_XS_PORTS;
+    end endgenerate
+`endif
+`undef HNX_LFX_XS_PORTS
     wire [P*50-1:0] g_p;
     genvar p;
     generate for (p = 0; p < P; p = p + 1) begin : g_ln
