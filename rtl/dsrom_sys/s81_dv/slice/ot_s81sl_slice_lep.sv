@@ -167,6 +167,7 @@ module ot_s81sl_lep_core #(
     localparam integer TX_NS=(H+8)/8;
     localparam integer FRAME_NS=(2*H+7)/8;
     localparam integer TX_NA=(TX_NS+3)/4;
+    localparam integer PUSH_GROUPS=(TX_NA+1)/2;
     localparam integer TX_RST_STRIDE=TX_NS+2*TX_NA;
     localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_RST_STRIDE:0;
     localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
@@ -175,7 +176,7 @@ module ot_s81sl_lep_core #(
     localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
     localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
     localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
-    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8:0;
+    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8+PUSH_GROUPS+NL:0;
     localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     wire [3+NRX_RST:0] rr;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
@@ -237,6 +238,7 @@ module ot_s81sl_lep_core #(
     end endgenerate
     wire push = rov || hp_go || kp_go;
     // ---------------------------------------------------------------- MU TX tag window (MU_EN 1)
+    wire [31:0] window_count;
     wire wopen, wab; wire [32:0] wtag; wire terr;       // window open, pair B, {pos, user, land, 1}
     generate if (MU_EN != 0) begin : g_mtx
     reg [33:0] mcq; reg [NBW-1:0] wn; reg w_ab, te; reg [32:0] w_t;
@@ -258,6 +260,7 @@ module ot_s81sl_lep_core #(
             end else if (rov && wn != '0) wn <= wn - 1'b1;
             if (rov && wn != '0 && roq[3:1] != K_XB && roq[3:1] != K_XQ) te <= 1'b1;   // non-h beat inside a window
         end
+    assign window_count=32'(wn);
     assign wopen = wn != '0; assign wtag = w_t; assign terr = te;
 `ifdef OT_S81SL_LEP_MUT_WRONGCOPY
     assign wab = 1'b0;                                 // MUTANT: copy select ignored
@@ -265,6 +268,7 @@ module ot_s81sl_lep_core #(
     assign wab = w_ab;
 `endif
     end else begin : g_nmtx
+    assign window_count=0;
     assign wopen = 1'b0; assign wab = 1'b0; assign wtag = 33'd0; assign terr = 1'b0;
     end endgenerate
     wire stamp = rov && wopen;
@@ -280,6 +284,12 @@ module ot_s81sl_lep_core #(
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
         wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
+        wire stamp_local;
+`ifdef OT_S81SL_LEP_MUT_HSTAMP
+        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(1'b1),.stamp(stamp_local));
+`else
+        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(rov_r),.stamp(stamp_local));
+`endif
         always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
           if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;kevent_r<=0;end
           else begin
@@ -300,11 +310,11 @@ module ot_s81sl_lep_core #(
           wire base=rov_r?roq[fb]:(hp?hd:(kp?kd:1'b0));
           if(fb>=TG && fb<TG+33) begin:g_tag
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
-            assign fr[fb]=wopen?wtag[fb-TG]:base;
+            assign fr[fb]=stamp_local?wtag[fb-TG]:base;
 `elsif OT_S81SL_LEP_MUT_TAGDROP
             assign fr[fb]=base;
 `else
-            assign fr[fb]=(rov_r && wopen)?wtag[fb-TG]:base;
+            assign fr[fb]=stamp_local?wtag[fb-TG]:base;
 `endif
           end else begin:g_plain assign fr[fb]=base; end
         end
@@ -326,15 +336,20 @@ module ot_s81sl_lep_core #(
     end
     end endgenerate
     wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
-    localparam integer PUSH_GROUPS=(TX_NA+1)/2;
     wire [2*PUSH_GROUPS-1:0] push_group;
     wire [2*NL-1:0] push_lane;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_push_groups
       for(genvar pg=0;pg<PUSH_GROUPS;pg=pg+1) begin:g_group
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(rov),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
+        (* keep *) reg ring_r;
+        always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
+          if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=ro[0];
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(rov),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
+        (* keep *) reg ring_r;
+        always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl])
+          if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=ro[0];
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
       end
     end endgenerate
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
@@ -1273,4 +1288,8 @@ endmodule
 
 (* keep_hierarchy=1 *) module ot_s81sl_lep_host_enable(input wire ne0,ne1,hit,output wire en);
  assign en=ne0 && ne1 && hit;
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_lep_stamp(input wire [31:0] count,input wire ring,output wire stamp);
+ assign stamp=ring && count!=0;
 endmodule
