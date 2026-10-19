@@ -103,7 +103,7 @@
    "count": 1,
    "at": [
     43.2,
-    216.0
+    259.2
    ],
    "inst": "*g_lane[1].g_lv[1].g_half[1].u_ring"
   },
@@ -112,7 +112,7 @@
    "count": 1,
    "at": [
     172.8,
-    216.0
+    259.2
    ],
    "inst": "*g_lane[1].g_lv[2].g_half[0].u_ring"
   },
@@ -121,7 +121,7 @@
    "count": 1,
    "at": [
     302.4,
-    216.0
+    259.2
    ],
    "inst": "*g_lane[1].g_lv[2].g_half[1].u_ring"
   },
@@ -130,7 +130,7 @@
    "count": 1,
    "at": [
     43.2,
-    259.2
+    302.4
    ],
    "inst": "*g_lane[2].g_lv[0].g_half[0].u_ring"
   },
@@ -139,7 +139,7 @@
    "count": 1,
    "at": [
     172.8,
-    259.2
+    302.4
    ],
    "inst": "*g_lane[2].g_lv[0].g_half[1].u_ring"
   },
@@ -148,7 +148,7 @@
    "count": 1,
    "at": [
     302.4,
-    259.2
+    302.4
    ],
    "inst": "*g_lane[2].g_lv[1].g_half[0].u_ring"
   },
@@ -157,7 +157,7 @@
    "count": 1,
    "at": [
     43.2,
-    302.4
+    345.6
    ],
    "inst": "*g_lane[2].g_lv[1].g_half[1].u_ring"
   },
@@ -166,7 +166,7 @@
    "count": 1,
    "at": [
     172.8,
-    302.4
+    345.6
    ],
    "inst": "*g_lane[2].g_lv[2].g_half[0].u_ring"
   },
@@ -175,7 +175,7 @@
    "count": 1,
    "at": [
     302.4,
-    302.4
+    345.6
    ],
    "inst": "*g_lane[2].g_lv[2].g_half[1].u_ring"
   }
@@ -229,7 +229,8 @@
    "tools/hdc_golden.py",
    "tools/hdc_golden_v41.py",
    "tools/hgi_sim",
-   "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43"
+   "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "physical/hbm_next/att4/p3_spvm_band.tcl"
   ],
   "benches": [
    {
@@ -290,8 +291,8 @@
  "std_area_um2": 11277.25092,
  "util": 0.55,
  "outline": {
-  "w": 432.0,
-  "h": 388.8
+  "w": 432,
+  "h": 432
  },
  "params": {
   "NL": 3
@@ -301,14 +302,16 @@
   "enable": false,
   "reason": "RTL rst_n -> spvm.rq -> smerge kept rst_c/rst_e/rst_m = two registered stages; data pins already registered"
  },
+ "pin_hook_before_flops": [
+  "physical/hbm_next/att4/p3_spvm_band.tcl"
+ ],
+ "io_flop_at_pins": {
+  "enable": true
+ },
  "children": [],
  "inter": [],
  "hold_budget": "die",
  "inhold": false,
  "outhold": false,
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
  "keep_pin_regs": true
 }
