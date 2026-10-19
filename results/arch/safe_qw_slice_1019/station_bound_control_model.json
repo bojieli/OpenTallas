@@ -1,7 +1,7 @@
 {
   "module": "qfd_dv_redstn2",
   "reset": "rst_n",
-  "leaf_count": 94,
+  "leaf_count": 124,
   "max_data_reset_loads": 32,
   "reset_release_added_edges": 2,
   "child_reset_loads": "requires synthesis census; not bounded by data assignment partition",
@@ -105,21 +105,6 @@
       "target": "bt_word",
       "lsb": 0,
       "bits": 9
-    },
-    {
-      "target": "fv1",
-      "lsb": 0,
-      "bits": 1
-    },
-    {
-      "target": "fv2",
-      "lsb": 0,
-      "bits": 1
-    },
-    {
-      "target": "fv3",
-      "lsb": 0,
-      "bits": 1
     },
     {
       "target": "r_v",
@@ -333,6 +318,198 @@
       "target": "child",
       "bits": null,
       "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
       "index": 0
     },
     {
@@ -526,6 +703,12 @@
       "bits": null,
       "lsb": null,
       "index": 31
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
     },
     {
       "target": "child",

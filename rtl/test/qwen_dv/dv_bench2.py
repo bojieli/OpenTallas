@@ -53,7 +53,7 @@ if SAFE_STREAM_RESET and not SAFE_RESET:
 SAFE_CFG = os.environ.get("DV2_SAFE_CFG", "0") == "1"
 if SAFE_CFG and not SAFE_SCALAR_RESET:
     raise SystemExit("DV2_SAFE_CFG requires DV2_SAFE_SCALAR_RESET")
-RESET_WARM = 16 if SAFE_SCALAR_RESET else 8 if SAFE_RESET else 0  # deterministic boot guard, outside steady execution
+RESET_WARM = 16 if (SAFE_SCALAR_RESET or SAFE_STATION_MATH) else 8 if SAFE_RESET else 0  # deterministic boot guard, outside steady execution
 if SAFE_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_slice2_rsafe.sv").replace("rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv") for s in SRCS2]
     SRCS2.append("rtl/qwen_dv/qfd_dv_reset_tree.sv")
@@ -70,6 +70,9 @@ if SAFE_STATION_CFG:
 if SAFE_STATION_MATH:
     SRCS2 = [s.replace("qfd_dv_redstn2_csafe.sv", "qfd_dv_redstn2_gsafe.sv") for s in SRCS2]
     SRCS2.append("rtl/qwen_dv/qfd_dv_station_math_g.sv")
+    for dep in ["rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/common/landed_parent/ot_pl_land.sv"]:
+        if dep not in SRCS2:
+            SRCS2.append(dep)
 if SAFE_STREAM_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_stream.sv", "rtl/qwen_dv/qfd_dv_stream_rsafe.sv") for s in SRCS2]
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);

@@ -74,11 +74,13 @@ for(genvar z=0;z<2;z=z+1) begin:g_mode_mid
 end
 for(genvar z=0;z<32;z=z+1) begin:g_mode_payload
  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(100+z)) u_p(.ck(ck),.d(mode_mid[z/16]),.q(mode_payload[z]));
- (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z%2==0)) u_m(.ck(ck),.rst_n(sr_reset[25+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
+ (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z%2==0)) u_m(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
 end
 wire[15:0] ws_rep;
 for(genvar z=0;z<16;z=z+1) begin:g_ws
- (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(200+z)) u_c(.ck(ck),.d(ws2),.q(ws_rep[z]));
+ wire ws_source;
+ (* keep_hierarchy="yes" *) qfd_dv_station_cfgbit #(.ID(z)) u_c(.ck(ck),.rst_n(sr_reset[54+z]),.cfg_v(cfg_final[2*z]),.d(safe_cfg_wsrc),.q(ws_source));
+ qfd_dv_ring_delay #(.W(1),.D(3)) u_d(.clk(ck),.rst_n(sr_reset[70+z]),.d(ws_source),.q(ws_rep[z]));
 end
 
 
@@ -111,8 +113,8 @@ always @(posedge ck or negedge sr_reset[4])
                                                                                                       
     wire [513:0] ns, nn;                                                              
 
-    qfd_dv_sram_delay #(.W(514), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(sr_reset[57]), .d(rs_s[513:0]), .q(ns));
-    qfd_dv_sram_delay #(.W(514), .D(SKEW)) u_skn (.ck(ck), .rst_n(sr_reset[58]), .d(rs_n[513:0]), .q(nn));
+    qfd_dv_sram_delay #(.W(514), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(sr_reset[86]), .d(rs_s[513:0]), .q(ns));
+    qfd_dv_sram_delay #(.W(514), .D(SKEW)) u_skn (.ck(ck), .rst_n(sr_reset[87]), .d(rs_n[513:0]), .q(nn));
 
 
 
@@ -355,9 +357,9 @@ always @(posedge ck or negedge sr_reset[16])
     wire v9 = v9l[0];
                                                                                                                        
 for(genvar z=0;z<32;z=z+1) begin:g_nb
- qfd_dv_station_out #(.W(16),.ID(z)) u_o(.ck(ck),.rst_n(sr_reset[59+z]),.d((v8_rep[z]&&local_mode[z][3])?y8[16*z+:16]:16'd0),.q(nb_o[16*z+:16]));
+ qfd_dv_station_out #(.W(16),.ID(z)) u_o(.ck(ck),.rst_n(sr_reset[88+z]),.d((v8_rep[z]&&local_mode[z][3])?y8[16*z+:16]:16'd0),.q(nb_o[16*z+:16]));
 end
-qfd_dv_station_out #(.W(2),.ID(100)) u_ov(.ck(ck),.rst_n(sr_reset[91]),.d({1'b0,v8&&mode==2'd3}),.q(nb_o[513:512]));
+qfd_dv_station_out #(.W(2),.ID(100)) u_ov(.ck(ck),.rst_n(sr_reset[120]),.d({1'b0,v8&&mode==2'd3}),.q(nb_o[513:512]));
     wire        fv = (mode == 2'd0) ? v7 : (mode == 2'd1) ? v8 : (mode == 2'd2) ? v9 : 1'b0;
     wire[511:0] fd;
 for(genvar z=0;z<32;z=z+1) begin:g_fd
@@ -377,30 +379,12 @@ always @(posedge ck or negedge sr_reset[19])
         else begin ; bt_word[0 +: 9] <= 9'((sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0)) >> 0); end
 
     wire [511:0] fd3;
-    qfd_dv_sram_delay #(.W(512), .D(3)) u_scale_wait (.ck(ck), .rst_n(sr_reset[92]), .d(fd), .q(fd3));
+    qfd_dv_sram_delay #(.W(512), .D(3)) u_scale_wait (.ck(ck), .rst_n(sr_reset[121]), .d(fd), .q(fd3));
 
 
 
-    reg         fv1, fv2, fv3, ws1, ws2, ws3, ls1, ls2, ls3;
-    reg [7:0]   j1, j2, j3;
-    always @(posedge ck or negedge sr_reset[20])
-        if (!sr_reset[20]) begin fv1 <= 1'b0; ; ; end
-        else begin fv1 <= fv; ; ; end
-always @(posedge ck or negedge sr_reset[21])
-        if (!sr_reset[21]) begin ; fv2 <= 1'b0; ; end
-        else begin ; fv2 <= fv1; ; end
-always @(posedge ck or negedge sr_reset[22])
-        if (!sr_reset[22]) begin ; ; fv3 <= 1'b0; end
-        else begin ; ; fv3 <= fv2; end
-    always @(posedge ck) begin
-
-
-
-        ws1 <= wsrc; ws2 <= ws1; ws3 <= ws2; j1 <= j; j2 <= j1; j3 <= j2;
-        ls1 <= (j + 8'd1 == nwords); ls2 <= ls1; ls3 <= ls2;
-    end
-                                                                                                                        
-                                                            
+wire fv3,ls3;wire[7:0] j3;
+qfd_dv_ring_delay #(.W(10),.D(3)) u_meta(.clk(ck),.rst_n(sr_reset[122]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [511:0] y;
     wire [15:0]  vs;
     wire [31:0]  es;
@@ -410,9 +394,9 @@ always @(posedge ck or negedge sr_reset[22])
             .y(y[32*l +: 32]), .err(es[2*l +: 2]), .valid_out(vs[l]));
     end endgenerate
     wire [7:0] jo; wire lo;
-    ot_hdc_delay #(.W(9), .D(SCALE_LAT)) u_jd (.clk(ck), .rst_n(sr_reset[93]), .d({ls3, j3}), .q({lo, jo}));
-    always @(posedge ck or negedge sr_reset[23])
-        if (!sr_reset[23]) r_v <= 1'b0;
+    qfd_dv_ring_delay #(.W(9), .D(SCALE_LAT)) u_jd (.clk(ck), .rst_n(sr_reset[123]), .d({ls3, j3}), .q({lo, jo}));
+    always @(posedge ck or negedge sr_reset[20])
+        if (!sr_reset[20]) r_v <= 1'b0;
         else r_v <= vs[0];
     always @(posedge ck) begin r_d <= y; r_idx <= jo; r_last <= lo; end
                                                                                                                     
@@ -421,12 +405,12 @@ always @(posedge ck or negedge sr_reset[22])
                   (nbv && mode != 2'd2) | (mode != 2'd0 && (vlo ^ vhi)) | (vhi && mode == 2'd0 && hn == 4'd8 && !hpop) |
                   (v9_in && lead == 4'd0) | (fv && j >= nwords);
     wire fp_bad = (vlo && |elo) | (vhi && |ehi) | (v8 && |e8) | (v9 && |e9) | (vs[0] && |es);
-    always @(posedge ck or negedge sr_reset[24])
-        if (!sr_reset[24]) fault <= 1'b0;
+    always @(posedge ck or negedge sr_reset[21])
+        if (!sr_reset[21]) fault <= 1'b0;
         else fault <= fault | in_bad | fp_bad | cfg_schedule_fault;
 
-wire [93:0] sr_reset;
-qfd_dv_reset_tree #(.N(94)) u_safe_reset (.ck(ck),.rst_n(rst_n),.q(sr_reset));
+wire [123:0] sr_reset;
+qfd_dv_reset_tree #(.N(124)) u_safe_reset (.ck(ck),.rst_n(rst_n),.q(sr_reset));
 wire[34:0] math_reset;
 qfd_dv_reset_tree #(.N(35)) u_math_reset(.ck(ck),.rst_n(rst_n),.q(math_reset));
 endmodule
@@ -532,6 +516,9 @@ always @(posedge ck) q<=d;
 endmodule
 (* keep_hierarchy="yes" *) module qfd_dv_station_out #(parameter integer W=16,ID=0)(input wire ck,rst_n,input wire[W-1:0] d,output reg[W-1:0] q);
 always @(posedge ck or negedge rst_n) if(!rst_n) q<=0;else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module qfd_dv_station_cfgbit #(parameter integer ID=0)(input wire ck,rst_n,cfg_v,d,output reg q);
+always @(posedge ck or negedge rst_n) if(!rst_n)q<=0;else if(cfg_v)q<=d;
 endmodule
 (* keep_hierarchy="yes" *) module qfd_dv_station_mode #(parameter integer ID=0,USE2=1)(input wire ck,rst_n,cfg_v,input wire[1:0] mode,output wire[3:0] q);
 reg[2:0] used_q;
