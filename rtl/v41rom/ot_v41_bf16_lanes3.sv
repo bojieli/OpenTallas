@@ -86,7 +86,15 @@ module ot_v41_bf16_lanes3 #(
     localparam integer PL = RC != 0 ? 8 : 5;                     // product latency
     localparam [8:0] CUTT = RC != 0 ? 9'b1_1111_1111 : CUT;    // tree adders
     localparam integer LATT = 1 + CUTT[0] + CUTT[1] + CUTT[2] + CUTT[3] + CUTT[4] + CUTT[5] + CUTT[6] + CUTT[7] + CUTT[8];
+    // TAGREP (S81-SAFE-FIX/C199 2026-10-19, opt-in define OT_BF_TAGREP, default off = unchanged): the last stage of the
+    // tag line is replicated into every lane tile (a kept register on the lane's gated clock lclk, whose enable is the same
+    // function as the tree tile's), so each slot / first / last bit drives one lane's chain (~270 loads) instead of all
+    // 16 (textbook high_fanout: u_pt line[..] 4,272 loads).  Same delay PL, same edges: zero cycles.
+`ifdef OT_BF_TAGREP
+    ot_hdc_delay #(.W(TW), .D(PL - 1)) u_pt (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_p));
+`else
     ot_hdc_delay #(.W(TW), .D(PL)) u_pt (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_p));
+`endif
     wire [15:0] pv;
     wire [15:0] pf;
     wire [31:0] prod [0:15];
@@ -113,18 +121,29 @@ module ot_v41_bf16_lanes3 #(
         reg [PL-1:0] vp;
         always @(posedge lclk or negedge lrst) if (!lrst) vp <= '0; else vp <= {vp[PL-2:0], v_r};
         assign pv[l] = vp[PL-1];
+`ifdef OT_BF_TAGREP
+        (* keep *) reg [TW-1:0] t_lr;
+`ifdef TAGREP_MUTANT_LANE
+        always @(posedge lclk) t_lr <= (l == 5) ? t_p ^ {{(TW-1){1'b0}}, 1'b1} : t_p;   // negative control: lane 5's copy corrupt
+`else
+        always @(posedge lclk) t_lr <= t_p;
+`endif
+        wire [TW-1:0] t_l = t_lr;
+`else
+        wire [TW-1:0] t_l = t_p;
+`endif
         if (RC >= 2) begin : g_cu
         ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_l[TW-1 -: HW]), .first(t_l[TRW+2]), .last(t_l[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_l[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else if (RC != 0) begin : g_c4
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_l[TW-1 -: HW]), .first(t_l[TRW+2]), .last(t_l[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_l[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else begin : g_c2
         ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_l[TW-1 -: HW]), .first(t_l[TRW+2]), .last(t_l[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_l[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end
     end endgenerate
     // 4-level pairwise tree over the 16 chunk sums (all lanes emit in the same cycle)
