@@ -1,0 +1,4 @@
+F16_RLEAF_STUCK_INJECT
+[2229000] %Fatal: tb_qwen_typed_witness_control.sv:128: Assertion failed in tb_qwen_typed_witness_control: F16_RESET_OWNERSHIP_NOT_CLEAR
+%Error: src/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:128: Verilog $stop
+Aborting...

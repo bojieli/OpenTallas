@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.mutant-witness-index.v1",
+ "bench": "results/arch/qwen_calendar_integration_1019/f16_phys/run.sh (Verilator 5.050, tb_qwen_typed_witness_control PHYS=1)",
+ "pass": {"log": "paired/stim_nominal.log", "regex": "completions=65 retired=5 starts=5.*\\n.*TWC_RESULT_CLEAN"},
+ "paired_stimulus_mutants": {"logs": "paired/stim_<name>.log (27, every output compared to the legacy controller delayed LAG=2 on every edge)", "fail_regex": "TWC_RESULT_FAULT"},
+ "mechanism_mutants": {
+  "SKEW": {"log": "mech/SKEW.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "DUE_CORRUPT": {"log": "mech/DUE_CORRUPT.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "SELECT_WRONG": {"log": "mech/SELECT_WRONG.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "SELECT_CLEAR": {"log": "mech/SELECT_CLEAR.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "BANK_WRONG": {"log": "mech/BANK_WRONG.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "TPL_WRONG (new: kept template write-enable sector fires for the previous record)": {"log": "mech/TPL_WRONG.log", "fail_regex": "TWC_RESULT_FAULT"},
+  "RLEAF_STUCK (new: run-control reset leaf stuck released)": {"log": "mech/RLEAF_STUCK.log", "fail_regex": "F16_RESET_OWNERSHIP_NOT_CLEAR"}
+ },
+ "positive_checks": {"OVERFLOW": "overflow.log F16_ACTUAL_CACHE_OVERFLOW_PASS", "CHECK_SECTORS": "coverage.log groups=1fff banks=ff users=f", "RESET_CLEAR": "mech/RESET_CLEAR.log F16_PENDING_LANDED_CLEAR_PASS", "EN0": "legacy.log zero outputs", "SELECT baseline": "paired/S_stim_*.log (SAFE_SELECT, no PHYS, still edge-exact)"}
+}

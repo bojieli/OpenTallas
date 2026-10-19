@@ -1,0 +1,963 @@
+{
+  "source": "generic.json",
+  "scope": "all emitted roles including top/reset, BUF/INV transparent, clock-only pins excluded",
+  "roots": 29104,
+  "violations_over32": 0,
+  "role_counts": {
+    "comb": 24212,
+    "ff": 4666,
+    "input": 225,
+    "constant": 1
+  },
+  "role_max": {
+    "comb": 31,
+    "input": 5,
+    "constant": 1,
+    "ff": 24
+  },
+  "ff_cells": 4666,
+  "cells": 31796,
+  "counter_vectors": {},
+  "top50": [
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$89119/Y[0]",
+      "role": "comb",
+      "loads": 31,
+      "aliases": [
+        "$abc$78887$new_n18807"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$89122/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$89276/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$89282/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97517/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97569/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97621/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97698/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97805/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$81000/Y[0]",
+      "role": "comb",
+      "loads": 30,
+      "aliases": [
+        "$abc$78887$new_n10688"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101552/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101689/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101702/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101905/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101939/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102012/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102246/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81002/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$81007/Y[0]",
+      "role": "comb",
+      "loads": 30,
+      "aliases": [
+        "$abc$78887$new_n10695"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101553/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101688/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101699/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101904/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101940/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102082/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102124/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81009/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$81004/Y[0]",
+      "role": "comb",
+      "loads": 29,
+      "aliases": [
+        "$abc$78887$new_n10692"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101550/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101693/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101698/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101937/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102009/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102103/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81006/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81013/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$80997/Y[0]",
+      "role": "comb",
+      "loads": 27,
+      "aliases": [
+        "$abc$78887$new_n10685"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101549/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101692/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101703/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101717/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101936/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$80999/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81012/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81019/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$89282/Y[0]",
+      "role": "comb",
+      "loads": 27,
+      "aliases": [
+        "$abc$78887$new_n18970"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101466/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101467/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101468/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101469/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101470/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101486/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101487/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101488/S[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$89122/Y[0]",
+      "role": "comb",
+      "loads": 26,
+      "aliases": [
+        "$abc$78887$new_n18810"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101476/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101477/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101478/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101479/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101480/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101516/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101517/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101518/S[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$89276/Y[0]",
+      "role": "comb",
+      "loads": 26,
+      "aliases": [
+        "$abc$78887$new_n18964"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101471/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101472/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101473/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101474/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101475/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101501/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101502/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101503/S[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$98100/Y[0]",
+      "role": "comb",
+      "loads": 26,
+      "aliases": [
+        "$abc$78887$new_n27788"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101481/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101482/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101483/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101484/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101485/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101531/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101532/S[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101533/S[0]"
+      ]
+    },
+    {
+      "root": "$abc$78887$auto$blifparse.cc:397:parse_blif$89201/Y[0]",
+      "role": "comb",
+      "loads": 24,
+      "aliases": [
+        "$abc$78887$new_n18889"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97518/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97570/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97622/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97699/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97806/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97859/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97911/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$97963/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.rlr.$auto$ff.cc:337:slice$68174/Q[0]",
+      "role": "ff",
+      "loads": 24,
+      "aliases": [
+        "dut.gp.rl_run",
+        "dut.gp.rlr.q"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101906/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102111/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102218/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102221/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102224/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102227/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102230/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102233/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$67999/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[0]",
+        "dut.template_select[0][0]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101647/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81707/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81738/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81759/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81794/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81812/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81832/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81864/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68000/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[1]",
+        "dut.template_select[0][1]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101663/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81714/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81732/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81763/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81784/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81809/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81839/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81861/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68001/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[2]",
+        "dut.template_select[0][2]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101658/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81706/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81734/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81762/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81791/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81808/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81841/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81860/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68002/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[3]",
+        "dut.template_select[0][3]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101650/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81719/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81733/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81758/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81793/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81815/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81844/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81867/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68003/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[4]",
+        "dut.template_select[0][4]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101651/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81709/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81739/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81768/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81792/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81817/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81840/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81869/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68004/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[5]",
+        "dut.template_select[0][5]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101654/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81712/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81742/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81761/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81789/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81818/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81834/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81870/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68005/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[6]",
+        "dut.template_select[0][6]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101659/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81713/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81740/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81767/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81785/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81806/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81838/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81858/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68006/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[7]",
+        "dut.template_select[0][7]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101653/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81711/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81731/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81760/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81786/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81819/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81836/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81871/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68007/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[8]",
+        "dut.template_select[0][8]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101664/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81717/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81743/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81765/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81782/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81814/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81842/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81866/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68008/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[9]",
+        "dut.template_select[0][9]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101667/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81718/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81737/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81764/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81788/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81813/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81843/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81865/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68009/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[10]",
+        "dut.template_select[0][10]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101661/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81708/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81736/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81756/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81787/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81811/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81833/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81863/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68010/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[11]",
+        "dut.template_select[0][11]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101666/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81715/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81741/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81757/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81781/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81816/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81837/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81868/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[0].ff.$auto$ff.cc:337:slice$68011/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[0].ff.q[12]",
+        "dut.template_select[0][12]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$101648/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81716/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81735/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81766/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81790/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81807/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81831/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$81859/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68340/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[0]",
+        "dut.template_select[10][0]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102067/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83368/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83404/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83420/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83451/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83481/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83496/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83523/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68341/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[1]",
+        "dut.template_select[10][1]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102054/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83375/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83405/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83425/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83445/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83470/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83495/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83528/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68342/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[2]",
+        "dut.template_select[10][2]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102051/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83367/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83400/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83427/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83447/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83473/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83502/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83520/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68343/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[3]",
+        "dut.template_select[10][3]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102052/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83380/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83394/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83430/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83449/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83480/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83504/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83526/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68344/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[4]",
+        "dut.template_select[10][4]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102063/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83370/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83393/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83428/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83446/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83479/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83500/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83524/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68345/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[5]",
+        "dut.template_select[10][5]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102057/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83373/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83395/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83426/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83453/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83476/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83503/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83531/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68346/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[6]",
+        "dut.template_select[10][6]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102058/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83374/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83399/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83419/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83443/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83471/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83505/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83521/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68347/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[7]",
+        "dut.template_select[10][7]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102068/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83372/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83403/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83422/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83452/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83472/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83497/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83530/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68348/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[8]",
+        "dut.template_select[10][8]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102070/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83376/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83397/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83429/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83442/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83468/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83493/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83522/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68349/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[9]",
+        "dut.template_select[10][9]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102064/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83379/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83398/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83424/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83448/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83474/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83499/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83519/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68350/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[10]",
+        "dut.template_select[10][10]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102055/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83369/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83402/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83417/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83450/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83478/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83498/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83525/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68351/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[11]",
+        "dut.template_select[10][11]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102071/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83378/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83392/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83423/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83454/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83467/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83492/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83529/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[10].ff.$auto$ff.cc:337:slice$68352/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[10].ff.q[12]",
+        "dut.template_select[10][12]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102062/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83377/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83396/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83418/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83444/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83475/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83501/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$83527/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68327/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[0]",
+        "dut.template_select[11][0]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102023/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82812/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82838/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82863/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82895/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82922/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82940/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82964/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68328/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[1]",
+        "dut.template_select[11][1]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102031/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82825/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82841/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82868/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82885/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82916/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82937/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82968/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68329/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[2]",
+        "dut.template_select[11][2]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102027/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82829/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82835/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82867/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82887/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82912/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82939/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82961/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68330/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[3]",
+        "dut.template_select[11][3]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102025/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82821/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82843/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82866/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82886/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82917/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82943/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82963/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68331/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[4]",
+        "dut.template_select[11][4]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102032/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82815/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82839/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82870/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82892/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82910/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82945/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82966/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68332/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[5]",
+        "dut.template_select[11][5]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102024/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82828/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82845/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82864/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82891/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82915/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82946/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82973/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68333/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[6]",
+        "dut.template_select[11][6]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102028/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82826/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82837/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82862/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82889/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82919/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82934/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82972/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68334/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[7]",
+        "dut.template_select[11][7]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102020/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82810/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82836/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82861/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82884/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82920/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82942/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82965/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68335/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[8]",
+        "dut.template_select[11][8]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102019/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82813/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82844/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82869/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82896/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82911/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82936/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82970/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68336/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[9]",
+        "dut.template_select[11][9]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102029/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82820/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82834/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82859/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82890/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82921/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82941/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82969/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68337/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[10]",
+        "dut.template_select[11][10]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102026/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82816/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82840/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82865/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82893/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82909/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82944/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82967/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68338/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[11]",
+        "dut.template_select[11][11]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102022/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82822/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82846/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82871/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82894/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82918/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82947/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82962/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gs.sel[11].ff.$auto$ff.cc:337:slice$68339/Q[0]",
+      "role": "ff",
+      "loads": 21,
+      "aliases": [
+        "dut.gs.sel[11].ff.q[12]",
+        "dut.template_select[11][12]"
+      ],
+      "examples": [
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$102021/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82809/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82842/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82860/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82888/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82914/A[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82935/B[0]",
+        "$abc$78887$auto$blifparse.cc:397:parse_blif$82971/A[0]"
+      ]
+    }
+  ]
+}

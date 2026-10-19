@@ -1,0 +1,10 @@
+F16_TPL_WRONG_INJECT record=0
+TWC_FIRST_FAULT edge=1129 ctl=1 obs=0
+TWC_ORDER_ERROR edge=1410 user=0 group=1 expect=0
+TWC_ORDER_ERROR edge=1426 user=1 group=1 expect=0
+TWC_SUMMARY en=1 fault=1 obs_fault=0 ready_seen=1 ready_end=0 completions=24 retired=0 starts=5 max_live=2 active_end=0000 first_fault=1129 edges=26823
+TWC_RESULT_FAULT
+- src/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:204: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.232 s; speed 231.270 us/s
+- Verilator: cpu 0.232 s on 1 threads; allocated 7 MB

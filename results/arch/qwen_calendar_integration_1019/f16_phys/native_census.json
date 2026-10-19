@@ -1,0 +1,923 @@
+{
+  "source": "native.json",
+  "scope": "all emitted roles including top/reset, BUF/INV transparent, clock-only pins excluded",
+  "roots": 20488,
+  "violations_over32": 5,
+  "role_counts": {
+    "comb": 15596,
+    "ff": 4666,
+    "input": 225,
+    "constant": 1
+  },
+  "role_max": {
+    "input": 5,
+    "ff": 32,
+    "constant": 3,
+    "comb": 45
+  },
+  "ff_cells": 4666,
+  "cells": 22596,
+  "counter_vectors": {},
+  "top50": [
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65033/Y[0]",
+      "role": "comb",
+      "loads": 45,
+      "aliases": [
+        "$abc$55358$new_n19151"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65035/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65036/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65037/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65038/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65039/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65040/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65041/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65042/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$64993/Y[0]",
+      "role": "comb",
+      "loads": 43,
+      "aliases": [
+        "$abc$55358$new_n19111"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65033/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65463/A[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66441/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66448/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66458/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66465/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66473/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66480/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$64695/Y[0]",
+      "role": "comb",
+      "loads": 42,
+      "aliases": [
+        "$abc$55358$new_n18813"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64696/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64723/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64750/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64779/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64804/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64829/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64854/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$64880/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65020/Y[0]",
+      "role": "comb",
+      "loads": 41,
+      "aliases": [
+        "$abc$55358$new_n19138"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65021/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65045/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65057/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66442/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66449/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66459/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66467/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66474/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65021/Y[0]",
+      "role": "comb",
+      "loads": 36,
+      "aliases": [
+        "$abc$55358$new_n19139"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65027/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65028/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65069/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65070/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65071/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65072/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65073/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65074/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$63056/Y[0]",
+      "role": "comb",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$new_n17174"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63092/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63121/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63122/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63176/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63198/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63227/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63228/C[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$63230/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65045/Y[0]",
+      "role": "comb",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$new_n19163"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65051/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65052/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65053/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65054/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65129/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65130/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65131/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65132/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[0].hi.$auto$ff.cc:337:slice$68135/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54418"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60855/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60856/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60857/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60858/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60859/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60860/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60861/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60862/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[0].lo.$auto$ff.cc:337:slice$68136/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54420"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66001/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66002/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71109/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71111/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71112/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71113/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71114/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71115/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[1].hi.$auto$ff.cc:337:slice$68133/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54422"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60667/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60668/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60669/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60670/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60671/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60672/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60673/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60674/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[1].lo.$auto$ff.cc:337:slice$68134/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54424"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65854/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65855/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72939/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72941/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72943/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72945/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72947/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72949/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[2].hi.$auto$ff.cc:337:slice$68131/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54426"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62237/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62238/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62239/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62240/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62241/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62242/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62243/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$62244/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[2].lo.$auto$ff.cc:337:slice$68132/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54428"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61941/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61942/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61943/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61944/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61945/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61946/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61947/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61948/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[3].hi.$auto$ff.cc:337:slice$68129/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54430"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61495/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61496/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61497/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61498/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61499/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61500/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61501/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61502/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.pe[3].lo.$auto$ff.cc:337:slice$68130/QN[0]",
+      "role": "ff",
+      "loads": 32,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54432"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61369/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61370/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61371/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61372/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61373/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61374/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61375/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61376/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65339/Y[0]",
+      "role": "comb",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$new_n19457"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65341/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65507/C2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65510/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65514/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65515/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65524/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65659/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65708/A[0]"
+      ]
+    },
+    {
+      "root": "$abc$55358$auto$blifparse.cc:397:parse_blif$65340/Y[0]",
+      "role": "comb",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$new_n19458"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65341/B1[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65507/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65509/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65517/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65523/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65644/A1[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65661/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65762/A[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[0].ff.$auto$ff.cc:337:slice$68128/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54512"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61317/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61318/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61319/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61320/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61321/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61322/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61323/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61324/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[2].ff.$auto$ff.cc:337:slice$68126/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54516"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61189/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61190/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61191/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61192/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61193/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61194/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61195/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61196/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[3].ff.$auto$ff.cc:337:slice$68125/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54518"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$68199/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$68200/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69468/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69469/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69470/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69471/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69472/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$69473/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[4].ff.$auto$ff.cc:337:slice$68124/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54520"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58981/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58982/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58983/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58984/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58985/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58986/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58987/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$58988/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[5].ff.$auto$ff.cc:337:slice$68123/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54522"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60559/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60560/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60561/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60562/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60563/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60564/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60565/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60566/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[6].ff.$auto$ff.cc:337:slice$68122/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54524"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65895/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65896/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72501/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72502/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72503/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72504/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72505/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72506/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[0].sc[7].ff.$auto$ff.cc:337:slice$68121/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54526"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61065/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61066/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61067/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61068/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61069/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61070/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61071/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$61072/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[0].ff.$auto$ff.cc:337:slice$68038/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54530"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65929/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72061/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72062/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72063/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72064/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72065/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72066/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72067/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[2].ff.$auto$ff.cc:337:slice$68036/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54534"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65933/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65934/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72009/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72010/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72011/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72012/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72013/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$72014/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[3].ff.$auto$ff.cc:337:slice$68035/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54536"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65935/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65936/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71981/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71982/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71983/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71984/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71985/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71986/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[4].ff.$auto$ff.cc:337:slice$68034/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54538"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65943/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65944/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71903/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71904/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71905/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71906/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71907/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71908/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[5].ff.$auto$ff.cc:337:slice$68033/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54540"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65945/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65946/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71875/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71876/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71877/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71878/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71879/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71880/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[6].ff.$auto$ff.cc:337:slice$68032/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54542"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65947/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65948/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71847/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71848/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71849/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71850/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71851/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71852/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[10].sc[7].ff.$auto$ff.cc:337:slice$68031/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54544"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65949/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65950/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71819/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71820/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71821/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71822/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71823/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71824/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[0].ff.$auto$ff.cc:337:slice$68029/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54548"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65955/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71737/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71738/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71739/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71740/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71741/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71742/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71743/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[2].ff.$auto$ff.cc:337:slice$68027/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54552"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65959/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65960/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71685/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71686/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71687/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71688/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71689/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71690/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[3].ff.$auto$ff.cc:337:slice$68026/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54554"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65963/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65964/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71633/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71634/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71635/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71636/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71637/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71638/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[4].ff.$auto$ff.cc:337:slice$68025/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54556"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65965/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65966/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71605/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71606/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71607/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71608/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71609/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71610/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[5].ff.$auto$ff.cc:337:slice$68024/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54558"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65967/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65968/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71577/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71578/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71579/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71580/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71581/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71582/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[6].ff.$auto$ff.cc:337:slice$68023/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54560"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65969/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65970/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71549/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71550/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71551/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71552/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71553/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71554/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[11].sc[7].ff.$auto$ff.cc:337:slice$68022/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54562"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65971/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65972/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71521/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71522/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71523/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71524/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71525/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71526/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[0].ff.$auto$ff.cc:337:slice$68020/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54566"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65977/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71439/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71440/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71441/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71442/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71443/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71444/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71445/B[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[2].ff.$auto$ff.cc:337:slice$68018/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54570"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65983/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65984/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71359/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71360/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71361/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71362/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71363/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71364/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[3].ff.$auto$ff.cc:337:slice$68017/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54572"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65987/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65988/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71303/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71304/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71305/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71306/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71307/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71308/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[4].ff.$auto$ff.cc:337:slice$68016/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54574"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65989/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65990/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71275/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71276/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71277/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71278/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71279/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71280/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[5].ff.$auto$ff.cc:337:slice$68015/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54576"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65991/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65992/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71247/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71248/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71249/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71250/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71251/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71252/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[6].ff.$auto$ff.cc:337:slice$68014/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54578"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65995/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65996/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71195/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71196/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71197/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71198/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71199/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71200/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[12].sc[7].ff.$auto$ff.cc:337:slice$68013/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54580"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$65999/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$66000/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71139/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71140/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71141/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71142/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71143/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$71144/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[1].sc[0].ff.$auto$ff.cc:337:slice$68119/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54584"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60961/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60962/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60963/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60964/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60965/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60966/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60967/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60968/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[1].sc[2].ff.$auto$ff.cc:337:slice$68117/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54588"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60827/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60828/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60829/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60830/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60831/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60832/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60833/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60834/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[1].sc[3].ff.$auto$ff.cc:337:slice$68116/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54590"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60799/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60800/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60801/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60802/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60803/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60804/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60805/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60806/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[1].sc[4].ff.$auto$ff.cc:337:slice$68115/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54592"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60725/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60726/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60727/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60728/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60729/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60730/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60731/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60732/A2[0]"
+      ]
+    },
+    {
+      "root": "$flatten\\dut.gp.tr[1].sc[5].ff.$auto$ff.cc:337:slice$68114/QN[0]",
+      "role": "ff",
+      "loads": 30,
+      "aliases": [
+        "$abc$55358$auto$dfflibmap.cc:539:dfflibmap$54594"
+      ],
+      "examples": [
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60697/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60698/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60699/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60700/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60701/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60702/A2[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60703/B[0]",
+        "$abc$55358$auto$blifparse.cc:397:parse_blif$60704/A2[0]"
+      ]
+    }
+  ]
+}
