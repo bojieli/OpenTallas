@@ -130,11 +130,18 @@ module ot_s81sl_xr #(
     // Partner-only typed V word: valid1/kind3/leaf3/even-row10/data256.
     // Each word is one complete row pair; no partial-message payload buffer.
     wire v_rd = vv && vb[3:1] == K_RD;
-    wire rdv0 = re || rw_ || b_rd || v_rd;
+    // Internal registered CI loopback reuses the existing RD input/classify/
+    // unpack pipeline. Do not mux rstop dl_e: it unshares 1024 gather FF.
+    wire local_rd = ci_v && s_local && ci_dir == 3'd0 && ci_b[3:1] == K_RD;
+    wire rdv0 = re || rw_ || b_rd || v_rd || local_rd;
 `else
     wire rdv0 = re || rw_ || b_rd;
 `endif
+`ifdef OT_S81SL_RD_PAIR
+    wire [W-1:0] rdb0 = local_rd ? ci_b : re ? eb : rw_ ? wb : bb;
+`else
     wire [W-1:0] rdb0 = re ? eb : rw_ ? wb : bb;
+`endif
 `ifdef OT_S81SL_RD_PAIR
     wire [2:0] rl0 = v_rd ? vb[6:4] : rdb0[37 +: 3];
 `else
@@ -162,7 +169,7 @@ module ot_s81sl_xr #(
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
             f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd
 `ifdef OT_S81SL_RD_PAIR
-                     + v_rd
+                     + v_rd + local_rd
 `endif
                     ) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
                   ((ce || cw || cv) && tgt0 > 5'd5)
