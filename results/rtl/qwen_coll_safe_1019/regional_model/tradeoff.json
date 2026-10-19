@@ -86,6 +86,30 @@
   "B_added_P_R_storage_bits": 69888,
   "B_added_P_R_macro_area_um2": 57596.832,
   "note": "A targets four crossings x2 added edges; B models x3 final-capture increments. Neither is an observed integrated calendar; root phase, startup, first operation and steady workloads require proof.",
+  "core_cmd_free_boundary": {
+    "status": "MODEL_ONLY_NO_LIVE_SOURCE_RETIMING",
+    "source_owner": "ot_coll_tp8_static cmd_free_next via qfd_io_collective_static",
+    "consumers": "ot_coll_cmd_issue -> ot_qwen_fixed_issue available/end_ok; qfd_seq_su_collective_calendar wraps same issuer",
+    "use": "Compiled-cycle issue is unconditional; availability/end_ok only set sticky fault",
+    "existing_semantics": "combinational one-edge-next availability compensates existing command-pin capture",
+    "blind_capture": "INVALID: adds one status-age edge and can false-fault legal free transition",
+    "predictor_option": {
+      "capture_edges_added": 1,
+      "lookahead_transitions": 2,
+      "new_boundary_flops": 1,
+      "command_payload_cycles_added_if_proved": 0,
+      "mapped_area": "UNMEASURED",
+      "proof": "two-step state includes current pin-command and external command; actual root-age alignment required"
+    },
+    "delayed_diagnostic_option": {
+      "capture_edges_added": 1,
+      "diagnostic_edges_added": 1,
+      "command_payload_cycles_added": 0,
+      "completion_guard": "must include pending end/status fault",
+      "shared_issuer_source_change": "requires coordination; not implemented"
+    },
+    "clock_warning": "10190 soft sinks/large-outline advisory; actual TT/FF pin spread and linked references decide acceptance"
+  },
   "shared_32x64_option": {
     "status": "UNQUALIFIED_COMPOSITION_OPTION_ONLY",
     "macro_source": "b65718325",
