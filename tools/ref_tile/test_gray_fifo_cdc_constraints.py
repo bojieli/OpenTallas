@@ -93,6 +93,14 @@ class Fixture(unittest.TestCase):
 
 @unittest.skipUnless(Path(YOSYS).exists(), 'Yosys 0.68 required')
 class Lint(Fixture):
+    def test_launch_aliases_carry_launch_roles_only(self):
+        record = G.lint(spec(), self.root)
+        aliases = record.get('launch_aliases', {})
+        for k, owner in aliases.items():
+            self.assertIn(record['roles'][k][0], ('src', 'esrc', 'lsrc'))
+            self.assertEqual(record['roles'][k], record['roles'][owner.split('/')[0]])
+        print('LAUNCH_ALIASES', sorted(aliases))
+
     def test_admitted_and_bounded_only(self):
         record = G.lint(spec(), self.root)
         fifos = {f['scope']: f for f in record['fifos'].values()}

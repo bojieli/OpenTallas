@@ -1133,6 +1133,29 @@ def _lint(spec, root):
         cell = net.flops[q]['cell'].lstrip('\\')
         if not cell.startswith('$'):
             record['roles'].setdefault(cell, list(r))
+    # Launch aliases (HKV-HROOT 10-18): an untagged flop of the same cell type with the same D, clock and reset net as a
+    # tagged launch register (pointer src / event esrc / level lsrc) is the same register; ORFS synthesis' opt_merge
+    # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
+    # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
+    # tagged roles aliases nothing.
+    sig = {}
+    for p, f in net.flops.items():
+        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for q, r in sorted(role.items(), key=lambda x: str(x[0])):
+        if r[0] not in ('src', 'esrc', 'lsrc'):
+            continue
+        f = net.flops[q]
+        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        if len({role[x] for x in group if x in role}) != 1:
+            continue
+        for p in group:
+            if p in role:
+                continue
+            cell = net.flops[p]['cell'].lstrip('\\')
+            for k in list(net.names.get(p, [])) + ([cell] if not cell.startswith('$') else []):
+                if k not in record['roles']:
+                    record['roles'][k] = list(r)
+                    record.setdefault('launch_aliases', {})[k] = net.key(q)
     record['counts'] = {k: sum(1 for x in role.values() if x[0] == k)
                         for k in ('src', 'sync1', 'stage', 'mem', 'rstage', 'consumer', 'rst')}
     if dead:

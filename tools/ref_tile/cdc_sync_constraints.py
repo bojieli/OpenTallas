@@ -230,7 +230,7 @@ class Netlist:
             if f:
                 q = conn['Q'][0]
                 self.flops[q] = dict(cell=cname, d=conn['D'][0], c=conn['C'][0], pos=f.group(1) == 'P',
-                                     r=conn.get('R', [None])[0])
+                                     r=conn.get('R', [None])[0], t=t)
                 self.driver[q] = ('flop', cname)
             elif t in COMB:
                 self.driver[conn['Y'][0]] = ('comb', cname, t, {k: v[0] for k, v in conn.items() if k != 'Y'})
