@@ -1925,11 +1925,19 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             small = host_cores(cfg) < SMALL_HOST_CORES and threads > SMALL_HOST_THREADS and big_has_cores
             tput = cfg.get("role") == "throughput"
             role = (-3 if die_job else (1 if ratios[h] <= 1.0 else 0)) if tput else 0
+            if cfg.get("role") == "smalldisk" and die_job:   # FLEET-NEW2: ot-epyc8 (~820 GB disk) -- no die-chain scratch
+                role = -3
             return -ratios[h] + 0.05 * fr + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0) \
                 - (5 if small else 0) + role
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
+            cap = host_cfg(h).get("max_die_jobs")
+            if die_job and cap is not None:     # DIE CAP (FLEET-NEW2 2026-10-19): ot-epyc8 = tile work + ONE die chain
+                n = die_jobs_on(h)
+                if n is None or n >= cap:
+                    why.append(f"{host_cfg(h)['label']} DIE CAP {cap} ({'unknown' if n is None else n} die job(s) there)")
+                    continue
             ok, msg = self.fits(h, threads, ram)
             if ok:
                 ok, msg = self.sync_room(h)
@@ -1941,6 +1949,40 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 
 SMALL_HOST_CORES, SMALL_HOST_THREADS = 48, 8   # see Fleet._choose
+
+# DIE CAP (FLEET-NEW2 2026-10-19): hosts.json max_die_jobs bounds the die-level jobs on a host = this daemon's die jobs
+# placed there (DIE_SPEC_RE names; only those state files are read) + ot-run die units / die waiters on the host
+# (OT_HEAVY_PRIO=die; same count as ~/bin/ot-run HOST_MAX_DIE).  Cached 60 s; None = unknown (the host is skipped).
+DIE_PLACED = {"SYNC", "RUNNING", "ECO", "SUMMARY", "ECO_INSTALL", "MIGRATING"}
+DIE_UNITS_SH = ("n=0; for u in $(systemctl --user list-units --type=scope --state=active --no-legend --plain 'oth-*' "
+                "2>/dev/null | awk '{print $1}'); do cg=$(systemctl --user show -p ControlGroup --value $u); "
+                "for p in $(head -3 /sys/fs/cgroup$cg/cgroup.procs 2>/dev/null); do "
+                "tr '\\0' '\\n' </proc/$p/environ 2>/dev/null | grep -qx OT_HEAVY_PRIO=die && { n=$((n+1)); break; }; done; "
+                "done; for p in $(pgrep -f '^(/bin/)?bash /usr/local/bin/ot-heavy '); do "
+                "tr '\\0' '\\n' </proc/$p/environ 2>/dev/null | grep -qx OT_HEAVY_PRIO=die && n=$((n+1)); done; "
+                "echo DIEUNITS $n")
+_DIE_CACHE = {}
+
+
+def die_jobs_on(host):
+    c = _DIE_CACHE.get(host)
+    if c and time.time() - c[0] < 60:
+        return c[1]
+    n = 0
+    try:
+        for f in os.listdir(STATE / "jobs"):
+            if f.endswith(".json") and DIE_SPEC_RE.search(f[:-5]):
+                try:
+                    j = json.loads((STATE / "jobs" / f).read_text())
+                except (OSError, ValueError):
+                    continue
+                n += j.get("host") == host and j.get("status") in DIE_PLACED
+        r = ssh(host, DIE_UNITS_SH, timeout=40)
+        n += int(r.stdout.split("DIEUNITS")[-1].split()[0])
+    except (OSError, ValueError, IndexError, subprocess.SubprocessError):
+        n = None
+    _DIE_CACHE[host] = (time.time(), n)
+    return n
 
 
 def host_cores(cfg):
