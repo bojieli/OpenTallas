@@ -5,7 +5,7 @@
 // No reset/storage ECC is added to the SRAM. Two unconditional payload registers
 // avoid a W-bit hit-enable cone; reset-distinct kept flags each select <=16 bits.
 module ot_sram_showahead_1r1w #(
- parameter integer W=553, AW=3, WREG=1, NS=(W+15)/16, MUT=0, LOCAL_HIT=0
+ parameter integer W=553, AW=3, WREG=1, NS=(W+SB-1)/SB, MUT=0, LOCAL_HIT=0, SB=16
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire [AW-1:0] ra, output wire [W-1:0] q);
@@ -40,7 +40,7 @@ module ot_sram_showahead_1r1w #(
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
  for(s=0;s<NS;s=s+1) begin:g_slice
-  localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
+  localparam integer LO=s*SB, SW=(W-LO<SB)?W-LO:SB;
   (* keep="true" *) reg cur_q, prev_q;
   always @(posedge clk or negedge rst_n[s])
    if(!rst_n[s]) begin cur_q<=1'b0; prev_q<=1'b0; end
@@ -49,7 +49,7 @@ module ot_sram_showahead_1r1w #(
  end endgenerate
 `ifndef SYNTHESIS
  initial begin
-  if(AW>5 || AW<1 || W<1 || NS!=(W+15)/16) $fatal(1,"ot_sram_showahead_1r1w invalid shape");
+  if(AW>5 || AW<1 || W<1 || NS!=(W+SB-1)/SB || (SB!=8 && SB!=16)) $fatal(1,"ot_sram_showahead_1r1w invalid shape");
  end
 `endif
 endmodule

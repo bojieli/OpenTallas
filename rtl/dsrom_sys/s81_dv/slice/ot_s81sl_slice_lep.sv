@@ -161,7 +161,7 @@ module ot_s81sl_lep_core #(
     localparam [2:0] K_XQ = 3'd1, K_XB = 3'd2;
     localparam integer TG = 1045;                      // tag field base: [TG] tag, [TG+1] land, user, pos
     // regional reset: the port drives only this relay (own synchroniser on this leaf's clock root); one copy per region
-    localparam integer RX_NS=(H+16)/16;
+    localparam integer RX_NS=(H+8)/8;
     localparam integer NRX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*RX_NS:0;
     localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
     localparam integer TX_NS=(H+8)/8;
@@ -538,7 +538,7 @@ module ot_s81sl_lep_core #(
 `else
                 wire [AR-1:0] read_next=rp_nx;
 `endif
-                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1)) u_rx_mem(
+                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
                     .ra(read_next),.q(head));
                 assign rhd[t*(H+1)+:H+1]=head;
