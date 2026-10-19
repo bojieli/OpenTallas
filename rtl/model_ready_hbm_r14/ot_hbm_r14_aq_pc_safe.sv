@@ -147,7 +147,9 @@ module ot_hbm_r14_aq_pc_safe #(
   reg [RW_ROW-1:0] orow [0:31];
   reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
   reg [3:0] rtw_c, wtr_c; reg phase;
-  reg c_v; reg [2:0] c_op; reg [4:0] c_bank; reg [31:0] c_oh; reg [RW_ROW-1:0] c_row;
+  reg c_v; reg [2:0] c_op; reg [4:0] c_bank; wire [31:0] c_oh=command_bank_valid?(32'b1<<command_bank_local):32'b0;
+  (* keep="true",dont_touch="true" *) reg [4:0] command_bank_local;
+  (* keep="true",dont_touch="true" *) reg command_bank_valid; reg [RW_ROW-1:0] c_row;
   // Registered decoded commands share the original command capture edge.
   // The three decoded controls and row word are local to sixteen banks.
   (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:3];
@@ -411,7 +413,7 @@ module ot_hbm_r14_aq_pc_safe #(
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
       refreshed <= 0; blk_valid <= 0;blk_bank<=0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
-      rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
+      rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; command_bank_local<=0;command_bank_valid<=0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
     end else begin
@@ -427,7 +429,7 @@ module ot_hbm_r14_aq_pc_safe #(
       if (noact_c != 0) noact_c <= noact_c - 1'b1;
       for (integer f = 0; f < 4; f = f + 1) if (fawq[f] != 0) fawq[f] <= fawq[f] - 1'b1;
       phase <= ~phase;
-      c_v <= slot_next && r_v; c_op <= r_op; c_bank <= r_bank; c_oh <= r_oh; c_row <= r_row;
+      c_v <= slot_next && r_v; c_op <= r_op; c_bank <= r_bank; command_bank_local<=r_bank;command_bank_valid<=slot_next&&r_v; c_row <= r_row;
       if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
       if (ref_c == RW'(LEAD)) begin
         if (ep) begin ref_pend <= 1; ep <= 0; end                               // a pending pull-in becomes this slot
