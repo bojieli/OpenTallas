@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.s81_dieplace.setup.v1",
+  "outcome": "ABORTED_INVALID_INPUT_INVENTORY_NOT_A_BIND_VERDICT",
+  "source": "f282cac9e",
+  "missing": [
+    "physical/rom_host_ingest/rtl/dsfd_host.sv"
+  ],
+  "present": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "stopped_exact_remote_pids": [
+    2720917,
+    2722004,
+    2723090
+  ],
+  "preserved": "/srv/opentallas-scratch/claude/codex-s81-dieplace/setup_missing_host",
+  "retry": "oth-ubuntu-2754218-1792422669, source a83c008ea, complete declared rtl_files preflight"
+}
