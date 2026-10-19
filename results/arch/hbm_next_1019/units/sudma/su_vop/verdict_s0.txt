@@ -1,0 +1,13 @@
+2026-10-19T00:32:45-07:00 start host=regular-crane bundle=09d204bf0
+2026-10-19T01:10:49-07:00 build s0 rc=0 bin=ok
+2026-10-19T01:11:06-07:00 s0 ab_n1: SU_ROWS_EDGES first_vm_read=1 last_vm_write=160 span=160 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=164 fill_reads=1792 vm_writes=896 MUT=0 RUN_RC=0 
+2026-10-19T01:11:10-07:00 s0 ab_n2: SU_ROWS_EDGES first_vm_read=1 last_vm_write=204 span=204 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=208 fill_reads=2688 vm_writes=1792 MUT=0 RUN_RC=0 
+2026-10-19T01:11:11-07:00 s0 abc_n1: SU_ROWS_EDGES first_vm_read=1 last_vm_write=216 span=216 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=220 fill_reads=2688 vm_writes=896 MUT=0 RUN_RC=0 
+2026-10-19T01:11:16-07:00 s0 ab_n3: SU_ROWS_EDGES first_vm_read=1 last_vm_write=248 span=248 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=252 fill_reads=3584 vm_writes=2688 MUT=0 RUN_RC=0 
+2026-10-19T01:11:19-07:00 s0 ab_n4_abs: SU_ROWS_EDGES first_vm_read=1 last_vm_write=292 span=292 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=296 fill_reads=4480 vm_writes=3584 MUT=0 RUN_RC=0 
+2026-10-19T01:11:19-07:00 s0 ab_n4: SU_ROWS_EDGES first_vm_read=1 last_vm_write=292 span=292 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=296 fill_reads=4480 vm_writes=3584 MUT=0 RUN_RC=0 
+2026-10-19T01:11:20-07:00 s0 ab_n4_g0: [3330000] %Fatal: tb_hnx_su_rows.sv:112: Assertion failed in tb_hnx_su_rows.unnamedblk2: SU_ROWS FAIL errors=312 reads=4480 writes=3584 MUT=0 RUN_RC=1 
+2026-10-19T01:11:27-07:00 s0 ab_n6: SU_ROWS_EDGES first_vm_read=1 last_vm_write=380 span=380 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=384 fill_reads=6272 vm_writes=5376 MUT=0 RUN_RC=0 
+2026-10-19T01:11:28-07:00 s0 abc_n4: SU_ROWS_EDGES first_vm_read=1 last_vm_write=432 span=432 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=436 fill_reads=8064 vm_writes=3584 MUT=0 RUN_RC=0 
+2026-10-19T01:11:41-07:00 s0 abc_n6: SU_ROWS_EDGES first_vm_read=1 last_vm_write=576 span=576 SU_ROWS PASS lanes=512 store_banks=512 SRAMs=3072+8 edges=580 fill_reads=11648 vm_writes=5376 MUT=0 RUN_RC=0 
+2026-10-19T01:11:42-07:00 done

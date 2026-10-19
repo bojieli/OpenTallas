@@ -1,0 +1,7 @@
+2026-10-19T00:32:45-07:00 start host=regular-crane bundle=09d204bf0
+2026-10-19T00:33:06-07:00 g_d4g: GATHER_NATIVE PASS checks=304 canonical_routes=6 structural_routes=32 banks=32 SRAMs=96 fixed_cycles=36 RUN_RC=0 
+2026-10-19T00:33:17-07:00 g_m0: GATHER_ROWS PASS checks=776 cases=24 banks=32 SRAMs=96 fixed_cycles R1=36 R2=37 R3=38 R4=39 R5=40 R6=41 R7=42 R8=43 RUN_RC=0 
+2026-10-19T00:33:18-07:00 g_m1: [7937620000] %Fatal: tb_hnx_su_indexed_rows.sv:124: Assertion failed in tb_hnx_su_indexed_rows: GATHER_ROWS FAIL checks=776 errors=77 RUN_RC=1 
+2026-10-19T00:33:18-07:00 g_m3: [7937620000] %Fatal: tb_hnx_su_indexed_rows.sv:124: Assertion failed in tb_hnx_su_indexed_rows: GATHER_ROWS FAIL checks=776 errors=76 RUN_RC=1 
+2026-10-19T00:33:19-07:00 g_m2: [7937620000] %Fatal: tb_hnx_su_indexed_rows.sv:124: Assertion failed in tb_hnx_su_indexed_rows: GATHER_ROWS FAIL checks=776 errors=95 RUN_RC=1 
+2026-10-19T00:33:19-07:00 done
