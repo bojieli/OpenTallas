@@ -368,7 +368,14 @@ def build(a):
             if rec['parent'].get(c) == root:
                 rec['parent'][c] = rn
         ri.findITerm('Y').connect(nn)
-        ri.findITerm('A').connect(rnet)
+        if lxy:
+            # local_root stand-in: the generator->region spine is not built; the root buffer input sits on its own
+            # (undriven) net so STA sees an ideal clock source there, not a mm-long unbuffered wire from the generator
+            sn = odb.dbNet.create(blk, f'n_{rn}_spine')
+            sn.setSigType('CLOCK')
+            ri.findITerm('A').connect(sn)
+        else:
+            ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
         rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
