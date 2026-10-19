@@ -1,0 +1,379 @@
+{
+ "schema": "opentallas.qwk_slice_attn.grp_facts.v2",
+ "die_v": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/port_bind_v2/die_bound.v",
+ "stacks": [
+  "WS",
+  "ES"
+ ],
+ "relay_stages": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/case_kv/relay_stages.json",
+ "landing_seg_latency": 8,
+ "groups": [
+  {
+   "g": 0,
+   "inst": "slg_WS_0",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 1,
+   "inst": "slg_WS_1",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 2,
+   "inst": "slg_WS_2",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 3,
+   "inst": "slg_WS_3",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 4,
+   "inst": "slg_WS_4",
+   "master": "qkd_kvs_grp_h"
+  },
+  {
+   "g": 5,
+   "inst": "slg_WS_5",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 6,
+   "inst": "slg_WS_6",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 7,
+   "inst": "slg_WS_7",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 8,
+   "inst": "slg_ES_0",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 9,
+   "inst": "slg_ES_1",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 10,
+   "inst": "slg_ES_2",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 11,
+   "inst": "slg_ES_3",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 12,
+   "inst": "slg_ES_4",
+   "master": "qkd_kvs_grp_h"
+  },
+  {
+   "g": 13,
+   "inst": "slg_ES_5",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 14,
+   "inst": "slg_ES_6",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 15,
+   "inst": "slg_ES_7",
+   "master": "qkd_kvs_grp"
+  }
+ ],
+ "ectl": [
+  {
+   "ectl": "ectl_ES_0",
+   "RESPONSE_LAT": 80,
+   "req_stages": 68,
+   "rsp_stages": 4,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_1",
+   "RESPONSE_LAT": 80,
+   "req_stages": 68,
+   "rsp_stages": 4,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_2",
+   "RESPONSE_LAT": 80,
+   "req_stages": 66,
+   "rsp_stages": 6,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_3",
+   "RESPONSE_LAT": 80,
+   "req_stages": 61,
+   "rsp_stages": 11,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_4",
+   "RESPONSE_LAT": 80,
+   "req_stages": 53,
+   "rsp_stages": 19,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_5",
+   "RESPONSE_LAT": 80,
+   "req_stages": 43,
+   "rsp_stages": 29,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_6",
+   "RESPONSE_LAT": 80,
+   "req_stages": 31,
+   "rsp_stages": 41,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_ES_7",
+   "RESPONSE_LAT": 80,
+   "req_stages": 49,
+   "rsp_stages": 23,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_0",
+   "RESPONSE_LAT": 80,
+   "req_stages": 69,
+   "rsp_stages": 3,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_1",
+   "RESPONSE_LAT": 80,
+   "req_stages": 69,
+   "rsp_stages": 3,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_2",
+   "RESPONSE_LAT": 80,
+   "req_stages": 67,
+   "rsp_stages": 5,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_3",
+   "RESPONSE_LAT": 80,
+   "req_stages": 63,
+   "rsp_stages": 9,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_4",
+   "RESPONSE_LAT": 80,
+   "req_stages": 56,
+   "rsp_stages": 16,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_5",
+   "RESPONSE_LAT": 80,
+   "req_stages": 47,
+   "rsp_stages": 25,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_6",
+   "RESPONSE_LAT": 80,
+   "req_stages": 34,
+   "rsp_stages": 38,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_7",
+   "RESPONSE_LAT": 80,
+   "req_stages": 51,
+   "rsp_stages": 21,
+   "needed": 80,
+   "ok": true
+  }
+ ],
+ "ectl_ok": 16,
+ "vport": [
+  {
+   "vport": "vport_ES_0",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_ES_1",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_ES_2",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 8
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_ES_3",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_WS_0",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_WS_1",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_WS_2",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 6
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  },
+  {
+   "vport": "vport_WS_3",
+   "master": "qkd_pv16_vport_b",
+   "RT_parameter": 31,
+   "RT_parameter_role": "hardware_bound",
+   "programmed_age": {
+    "RT": 16,
+    "DQ": 10
+   },
+   "nominal_relay_rt_i0": 15,
+   "nominal_relay_rt_i1": 15,
+   "ok": null
+  }
+ ],
+ "vport_ok": 0,
+ "vport_programmable": 8,
+ "age_drives": [
+  {
+   "net": "n_ks_age_pv",
+   "port": "i_n_ks_age_pv",
+   "value": 29041
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__0_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__0_16",
+   "value": 2576
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__128_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__128_16",
+   "value": 2576
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__144_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__144_16",
+   "value": 2576
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__160_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__160_16",
+   "value": 2064
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__16_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__16_16",
+   "value": 2576
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__176_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__176_16",
+   "value": 2576
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__32_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__32_16",
+   "value": 1552
+  },
+  {
+   "net": "n_ks_kvs_ctl__dcfg__age_vport__48_16",
+   "port": "i_n_ks_kvs_ctl__dcfg__age_vport__48_16",
+   "value": 2576
+  }
+ ],
+ "boot_ages_sha256": "57405f718950941fa241f207e49a7e278e6f8d8c152ecf67ab0bcb1851afafd6"
+}

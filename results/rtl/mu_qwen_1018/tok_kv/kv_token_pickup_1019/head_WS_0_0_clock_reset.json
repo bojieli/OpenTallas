@@ -1,0 +1,531 @@
+{
+  "die": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/port_bind_v2/die_bound.v",
+  "sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "head": "head_WS_0_0",
+  "instances": [
+    {
+      "master": "ot_qkh_head_frontq_native",
+      "instance": "head_WS_0_0__g_front_0__u_front",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "pack_fault": "n_head_WS_0_0__pack_fault[0]",
+        "q_valid_in": "n_th_WS_0_0[1040]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s21[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_frontq_native",
+      "instance": "head_WS_0_0__g_front_1__u_front",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "pack_fault": "n_head_WS_0_0__pack_fault[1]",
+        "q_valid_in": "n_th_WS_0_0[1040]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s21[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_frontq_native",
+      "instance": "head_WS_0_0__g_front_2__u_front",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "pack_fault": "n_head_WS_0_0__pack_fault[2]",
+        "q_valid_in": "n_th_WS_0_0[1040]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s21[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_frontq_native",
+      "instance": "head_WS_0_0__g_front_3__u_front",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "pack_fault": "n_head_WS_0_0__pack_fault[3]",
+        "q_valid_in": "n_th_WS_0_0[1040]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_0__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[0]",
+        "q_valid_in": "n_head_WS_0_0__g_t_0__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_0__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[0]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s16[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_0__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[0]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[0]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_10__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[10]",
+        "q_valid_in": "n_head_WS_0_0__g_t_10__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[10]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_10__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[10]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_10__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[10]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[10]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_11__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[11]",
+        "q_valid_in": "n_head_WS_0_0__g_t_11__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[11]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_11__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[11]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_11__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[11]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[11]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_12__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[12]",
+        "q_valid_in": "n_head_WS_0_0__g_t_12__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[12]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_12__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[12]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_12__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[12]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[12]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_13__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[13]",
+        "q_valid_in": "n_head_WS_0_0__g_t_13__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[13]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_13__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[13]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_13__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[13]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[13]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_14__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[14]",
+        "q_valid_in": "n_head_WS_0_0__g_t_14__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[14]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_14__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[14]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_14__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[14]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[14]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_15__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[15]",
+        "q_valid_in": "n_head_WS_0_0__g_t_15__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[15]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_15__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[15]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s32[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_15__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[15]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[15]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_1__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[1]",
+        "q_valid_in": "n_head_WS_0_0__g_t_1__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[1]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_1__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[1]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s16[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_1__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[1]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[1]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_2__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[2]",
+        "q_valid_in": "n_head_WS_0_0__g_t_2__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[2]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_2__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[2]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s16[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_2__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[2]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[2]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_3__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[3]",
+        "q_valid_in": "n_head_WS_0_0__g_t_3__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[3]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_3__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[3]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_3__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[3]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[3]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_4__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[4]",
+        "q_valid_in": "n_head_WS_0_0__g_t_4__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[4]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_4__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[4]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s16[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_4__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[4]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[4]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s21[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_5__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[5]",
+        "q_valid_in": "n_head_WS_0_0__g_t_5__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[5]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_5__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[5]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_5__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[5]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[5]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_6__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[6]",
+        "q_valid_in": "n_head_WS_0_0__g_t_6__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[6]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_6__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[6]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_6__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[6]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[6]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_7__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[7]",
+        "q_valid_in": "n_head_WS_0_0__g_t_7__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[7]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_7__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[7]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s26[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_7__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[7]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[7]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_8__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[8]",
+        "q_valid_in": "n_head_WS_0_0__g_t_8__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[8]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_8__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[8]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_8__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[8]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[8]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s34[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_lane8",
+      "instance": "head_WS_0_0__g_t_9__u_l8",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv": "n_head_WS_0_0__kpv_t[9]",
+        "q_valid_in": "n_head_WS_0_0__g_t_9__cr_o[0]",
+        "rst_n": "n_head_WS_0_0__lane_rst_n[9]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stin_native",
+      "instance": "head_WS_0_0__g_t_9__u_stin",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "lane_rst_n": "n_head_WS_0_0__lane_rst_n[9]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_stk_native",
+      "instance": "head_WS_0_0__g_t_9__u_stk",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_i": "n_head_WS_0_0__kpv_t[9]",
+        "kpv_o": "n_head_WS_0_0__kpv_k[9]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s28[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_ktree",
+      "instance": "head_WS_0_0__u_kt",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kpv_in": "n_head_WS_0_0__kpv_k[0]",
+        "rst_n": "n_head_WS_0_0__kt_rst_n[0]"
+      }
+    },
+    {
+      "master": "ot_qkh_head_score4_native",
+      "instance": "head_WS_0_0__u_score",
+      "ports": {
+        "clk": "n_clk_core_WS[0]",
+        "kt_rst_n": "n_head_WS_0_0__kt_rst_n[0]",
+        "pack_fault": "n_head_WS_0_0__pack_fault[3:0]",
+        "rst_n": "n_rrs_n_rst_die_t0__m_0__g1_s21[0]"
+      }
+    }
+  ],
+  "clock_phase_age_proof": "not established; connectivity identities only"
+}

@@ -46,8 +46,9 @@ fi
 SL=$OUT/cut
 python3 $H/slice_cut.py --die-v $R/port_bind_v2/die_bound.v --bind $R/port_bind_v2/port_bind_v2.json --src $K "${SEL[@]}" \
   --grow 'qkd_rlys.*|qkd_landsh.*|qkd_rst_region.*' --top $TOP --out $SL > $OUT/cut.log 2>&1 || { echo "KVA_CUT_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
+BOOT_AGE_ARGS=(); [ ! -f "$R/case_kv/boot_ages.json" ] || BOOT_AGE_ARGS=(--boot-ages "$R/case_kv/boot_ages.json")
 python3 $H/kv_attn_grp_map.py --die-v $R/port_bind_v2/die_bound.v --slice $SL/slice.json --relay-stages $R/case_kv/relay_stages.json \
-  --out $SL/kva_grp_map.svh --facts $SL/kva_grp_facts.json --stacks $STK >> $OUT/cut.log 2>&1 || { echo "KVA_MAP_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
+  ${BOOT_AGE_ARGS[@]} --out $SL/kva_grp_map.svh --facts $SL/kva_grp_facts.json --stacks $STK >> $OUT/cut.log 2>&1 || { echo "KVA_MAP_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
 python3 $H/kva_mu_ports.py --slice $SL/slice.json --relay-stages $R/case_kv/relay_stages.json --relay-check $R/relay_check.json \
   --out $SL/kva_ports.svh >> $OUT/cut.log 2>&1 || { echo "KVA_PORTS_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
 tail -3 $OUT/cut.log

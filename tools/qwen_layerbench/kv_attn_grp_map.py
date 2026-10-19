@@ -20,6 +20,7 @@ stack's 8 landing groups, ECTL cfg / kgo and fault pins are emitted, with `defin
 are not in the vehicle, so the bench reports timing, not RESULT exactness).
 """
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -46,6 +47,7 @@ def main():
     ap.add_argument('--relay-stages', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--facts', required=True)
+    ap.add_argument('--boot-ages', help='Exact case_kv/boot_ages.json for programmable age inputs')
     ap.add_argument('--stacks', default=','.join(STACKS), help='comma list of the stacks in the vehicle (default all 4)')
     a = ap.parse_args()
     stk = [x for x in STACKS if x in a.stacks.split(',')]
@@ -54,6 +56,31 @@ def main():
     V = Path(a.die_v).read_text()
     S = json.loads(Path(a.slice).read_text())
     ports = {(p['dir'], p['net']): p for p in S['ports']}
+    boot = json.loads(Path(a.boot_ages).read_text()) if a.boot_ages else None
+    age_inputs = [p for p in S['ports'] if p['dir'] == 'input' and
+                  (p['net'] == 'n_ks_age_pv' or re.fullmatch(r'n_ks_kvs_ctl__dcfg__age_vport__\d+_16', p['net']))]
+    if age_inputs and (boot is None or boot.get('error') is not None):
+        raise SystemExit('kv_attn_grp_map: programmable age inputs require valid --boot-ages; zero is not a schedule')
+    if boot is not None:
+        expected = [boot['words'][0], boot['ages']['pv']['0'], boot['ages']['pv']['1']]
+        expected += [(boot['ages']['vport'][f'vport_{st}_{i}']['DQ'] << 8) |
+                     boot['ages']['vport'][f'vport_{st}_{i}']['RT'] for st in STACKS for i in range(4)]
+        if boot['words'] != expected:
+            raise SystemExit('kv_attn_grp_map: boot age words disagree with named ages')
+    age_drives = []
+    for p in age_inputs:
+        if p['width'] != 16:
+            raise SystemExit('kv_attn_grp_map: unexpected age input width')
+        if p['net'] == 'n_ks_age_pv':
+            value = boot['words'][1] | (boot['words'][2] << 8)
+        else:
+            offset = int(re.fullmatch(r'n_ks_kvs_ctl__dcfg__age_vport__(\d+)_16', p['net']).group(1))
+            if offset % 16 or offset >= 256:
+                raise SystemExit('kv_attn_grp_map: unsupported vport age offset')
+            value = boot['words'][3 + offset // 16]
+        if not 0 <= value <= 65535:
+            raise SystemExit('kv_attn_grp_map: age word out of range')
+        age_drives.append(dict(net=p['net'], port=p['port'], value=value))
     grps = []
     for line in V.splitlines():
         m = re.match(r'\s*(qkd_kvs_grp(?:_h)?) (slg_(WS|WN|ES|EN)_(\d))\s*\(', line)
@@ -106,6 +133,8 @@ def main():
         L.append(f'    always @* drv_{ports[("input", r["rsp"][0])]["port"]} = kva_rsp[{g}];')
     # ECTL cfg (5 b) from the HOST roots: 4 e + stack (G-K1 boot run: hroot_<s>.o_c<e> sealed values)
     L.append('    task automatic kva_ectl_cfg(); begin')
+    for drive in age_drives:
+        L.append(f"        drv_{drive['port']} = 16'd{drive['value']}; // exact sealed boot age")
     for s, st in enumerate(STACKS):
         if st not in stk:
             continue
@@ -139,7 +168,7 @@ def main():
     R = json.loads(Path(a.relay_stages).read_text())
     st = {(b['src']['inst'], b['src']['port'], b['dst']['inst'], b['dst']['port']): b['stages'] for b in R['buses']}
     rl = {m.group(2): int(m.group(1)) for m in re.finditer(r'qkd_ectl3_kiss_st #\(\.RESPONSE_LAT\((\d+)\).*?\) (ectl_\w+) \(', V)}
-    rt = {m.group(2): int(m.group(1)) for m in re.finditer(r'qkd_pv16_vport(?:_b)? #\(\.MUT\(\d+\), \.DQ\(\d+\), \.RT\((\d+)\)\) (vport_\w+) \(', V)}
+    rt = {m.group(3): (m.group(1), int(m.group(2))) for m in re.finditer(r'(qkd_pv16_vport(?:_b)?) #\(\.MUT\(\d+\), \.DQ\(\d+\), \.RT\((\d+)\)\) (vport_\w+) \(', V)}
     ectl = []
     rl = {e: v for e, v in rl.items() if e.split('_')[1] in stk}
     rt = {v: x for v, x in rt.items() if v.split('_')[1] in stk}
@@ -149,19 +178,27 @@ def main():
         ectl.append(dict(ectl=e, RESPONSE_LAT=lat, req_stages=q, rsp_stages=r_, needed=q + LANDING_SEG_LAT + r_,
                          ok=lat == q + LANDING_SEG_LAT + r_))
     vport = []
-    for v, rtv in sorted(rt.items()):
+    for v, (master, rtv) in sorted(rt.items()):
         q0 = [s for k, s in st.items() if k[0] == v and k[1] == 'vq0'][0]
         q1 = [s for k, s in st.items() if k[0] == v and k[1] == 'vq1'][0]
         i0 = [s for k, s in st.items() if k[2] == v and k[3] == 'i0'][0]
         i1 = [s for k, s in st.items() if k[2] == v and k[3] == 'i1'][0]
-        vport.append(dict(vport=v, RT=rtv, rt_i0=q0 + LANDING_SEG_LAT + i0, rt_i1=q1 + LANDING_SEG_LAT + i1,
-                          ok=rtv == q0 + LANDING_SEG_LAT + i0 == q1 + LANDING_SEG_LAT + i1))
-    facts = dict(schema='opentallas.qwk_slice_attn.grp_facts.v1', die_v=a.die_v, stacks=stk, relay_stages=a.relay_stages,
+        programmable = master.endswith('_b')
+        vport.append(dict(vport=v, master=master, RT_parameter=rtv,
+                          RT_parameter_role='hardware_bound' if programmable else 'fixed_age',
+                          programmed_age=boot['ages']['vport'][v] if programmable and boot else None,
+                          nominal_relay_rt_i0=q0 + LANDING_SEG_LAT + i0,
+                          nominal_relay_rt_i1=q1 + LANDING_SEG_LAT + i1,
+                          # Relay table omits later expanded pin/face register repairs.
+                          ok=None if programmable else rtv == q0 + LANDING_SEG_LAT + i0 == q1 + LANDING_SEG_LAT + i1))
+    facts = dict(schema='opentallas.qwk_slice_attn.grp_facts.v2', die_v=a.die_v, stacks=stk, relay_stages=a.relay_stages,
                  landing_seg_latency=LANDING_SEG_LAT, groups=[dict(g=g, inst=r['inst'], master=r['master']) for g, r in enumerate(grps)],
-                 ectl=ectl, ectl_ok=sum(x['ok'] for x in ectl), vport=vport, vport_ok=sum(x['ok'] for x in vport))
+                 ectl=ectl, ectl_ok=sum(x['ok'] for x in ectl), vport=vport, vport_ok=sum(x['ok'] is True for x in vport),
+                 vport_programmable=sum(x['ok'] is None for x in vport), age_drives=age_drives,
+                 boot_ages_sha256=hashlib.sha256(Path(a.boot_ages).read_bytes()).hexdigest() if a.boot_ages else None)
     Path(a.facts).write_text(json.dumps(facts, indent=1) + '\n')
     print(f'kv_attn_grp_map: {NG} groups (stacks {",".join(stk)}) -> {a.out}; ECTL RESPONSE_LAT consistent with die stages '
-          f'{facts["ectl_ok"]}/{len(ectl)}, V port RT consistent {facts["vport_ok"]}/{len(vport)}')
+          f'{facts["ectl_ok"]}/{len(ectl)}, V port fixed RT consistent {facts["vport_ok"]}, programmable {facts["vport_programmable"]} (bounds are not ages)')
 
 
 if __name__ == '__main__':
