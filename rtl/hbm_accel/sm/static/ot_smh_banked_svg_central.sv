@@ -20,11 +20,11 @@ module ot_smh_banked_svg_central #(
  output wire[107:0]request0,request1,
  input wire[134:0]row0,row1,input wire[8:0]ok0,ok1,input wire[107:0]token0,token1,
  output reg[134:0]programme,output wire programme_v,
- output wire active,done,fault
+ output wire active,done,output reg fault
 );
  initial if(COMMANDALIGN!=0)$fatal(1,"command-only alignment is not implemented in this wrapper");
  wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;
- wire calendar_fault,app_reset_n,app_next_valid;wire[7:0]app_resets;wire[134:0]app_next_word;
+ wire calendar_fault,app_reset_n,app_next_valid,app_next_fault;wire[7:0]app_resets;wire[134:0]app_next_word;
  wire[15:0]local_valid;wire[3:0]write_copy,read_copy;
  for(genvar g=0;g<16;g=g+1)begin:g_app_valid
   (* keep=1 *) ot_smh_banked_rbit u_v(.clk(clk),.rst_n(app_resets[2+g%6]),.d(app_next_valid),.q(local_valid[g]));
@@ -39,7 +39,7 @@ module ot_smh_banked_svg_central #(
   .cfg0_we(cfg0_we),.cfg1_we(cfg1_we),.bank_cfg_addr(bank_cfg_addr),.bank_cfg_data(bank_cfg_data),
   .request0(request0),.request1(request1),.row0(row0),.row1(row1),.ok0(ok0),.ok1(ok1),.token0(token0),.token1(token1),
   .calendar(word),.calendar_ctx(wctx),.calendar_iter(wit),.calendar_lastit(wlast),
-  .calendar_v(word_v),.ordinal(ordinal),.active(active),.done(done),.fault(calendar_fault),.app_reset_n(app_reset_n),.app_reset_branches(app_resets),.app_next_valid(app_next_valid),.app_next_calendar(app_next_word));
+  .calendar_v(word_v),.ordinal(ordinal),.active(active),.done(done),.fault(calendar_fault),.app_reset_n(app_reset_n),.app_reset_branches(app_resets),.app_next_valid(app_next_valid),.app_next_fault(app_next_fault),.app_next_calendar(app_next_word));
  // RELOC (P2).  Context {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}; iteration i of a looped body.
  //   R stage (+1 edge): cache READ of word t, relocated: row += i*lstep, tag += tag_base + i*lstep, bank/epoch = context.
  //   C stage (+2 edges): SM COMMAND (+ cache retire) of word t, relocated: row12 / slot += row_off, xaddr += i, first |=
@@ -89,9 +89,10 @@ module ot_smh_banked_svg_central #(
   if(PREL!=0&&local_valid[12]&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
  end
  always @(posedge clk or negedge app_reset_n)
-  if(!app_reset_n)begin programme_v_q<=0;inj_f<=0;end
+  if(!app_reset_n)begin programme_v_q<=0;inj_f<=0;fault<=0;end
   else begin
    programme_v_q<=local_valid[13];
+   fault<=app_next_fault||inj_f||(PREL!=0&&local_valid[14]&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r));
    if(PREL!=0&&local_valid[14]&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r))inj_f<=1;     // format launch slot not idle
   end
  always @* begin
@@ -101,6 +102,6 @@ module ot_smh_banked_svg_central #(
   else begin programme[82:0]=cmd_r;programme[117]=ret_r;programme[134:118]=retf_r;end
  end
  assign programme_v=programme_v_q;
- assign fault=calendar_fault||inj_f;
+
 endmodule
 `default_nettype wire
