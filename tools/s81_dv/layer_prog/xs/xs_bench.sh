@@ -6,7 +6,7 @@
 #   python3 tools/s81_dv/layer_prog/lower_xs.py gen --frame <die frame> --out <vecdir> [--mutant swap|shift]
 # (real L0 a_proj rows, the lowering's images and return calendar).  Logs: <outdir>/run_<vec>.log; the check is
 #   python3 tools/s81_dv/layer_prog/lower_xs.py check --dir <vecdir> --log <outdir>/run_<vec>.log
-# Env: MASTER (col_h9), LK (5), LDLY (3: the landing window (LK - 4) T < dL < LK T, LANDING-CONTRACT; LDLY 0 at LK 5 is the
+# Env: MASTER (col_h9), LK (5), XS_DEFS (extra defines, e.g. -DTB_PVTRACE: element PV edge trace), LDLY (3: the landing window (LK - 4) T < dL < LK T, LANDING-CONTRACT; LDLY 0 at LK 5 is the
 # window violation of landing/frame_l4_bench b2/h9_k5_d0), J (8).  Verilator = the closure daemon's 5.050.
 set -u
 O=$(realpath -m $1); shift; mkdir -p $O
@@ -18,7 +18,7 @@ TOPF="$FR/${MASTER}_l4_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsr
 SRCS="$FR/${MASTER}_l4.sv $TOPF rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv"
 if [ ! -x $O/obj/Vtb_s81dv_frame ]; then
   /usr/bin/time -v -o $O/time_build.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
-    -Wno-MULTIDRIVEN -DLK=$LK -DTB_FWD_GATE -DTB_LDLY=$LDLY -DFRAME=${MASTER}_l4_b -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 \
+    -Wno-MULTIDRIVEN -DLK=$LK -DTB_FWD_GATE -DTB_LDLY=$LDLY -DFRAME=${MASTER}_l4_b ${XS_DEFS:-} -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 \
     --top-module tb_s81dv_frame -Mdir $O/obj -f tools/s81_dv/frame_bench.f $SRCS \
     --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 \
     || { echo "BUILD_FAILED"; grep -m8 -E "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }

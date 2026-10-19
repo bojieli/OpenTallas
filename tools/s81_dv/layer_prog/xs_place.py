@@ -14,14 +14,16 @@ an equal share (+-1 row group):
   ffn.router        96 rows, 6 / slice, BF16 K 5120 (bf pairs)                                               BF16
   attn.wo_a         grouped BF16 matvec (golden matvec_c: fp32 mul of the dequantised weight x bf16(o))      BF16
 A phase holds 2 x (pairs // nseg) rows (frame_return_plan.plan_phase: one segment per q pair); nseg is the smallest
-golden-aligned split whose segments all share one unit class.  The phase's element-work term (lower_xs.ELEM_EXTRA) is
-MEASURED per (units / segment, rows / element) class on the frame bench; a class without a measurement is placed and
-imaged but its calendar is reported 'calendar_unmeasured' (no cycle-exact claim).
+golden-aligned split whose segments all share one unit class.  The element-work term of the return calendar is
+MEASURED per phase shape (fmt, K, nseg) and per segment (ELEM_SEG; frame bench + PV trace) and legalised in; a shape
+without a measurement is placed and imaged but its calendar is reported 'calendar_unmeasured' (no cycle-exact claim).
+Every FP8 / FP4 shape of L0 is measured (bench_xsp*: 13 phases of u_f_0L00 PASS cycle-exact + fixture BF16).
 
     xs_place.py tie   [--fixtures D]                         golden of every placed row == the layer fixture (no RTL)
     xs_place.py frame --frame u_f_0L00 --out DIR [--ops ...]  compile one frame's multi-phase field + images
-    xs_place.py gen   --frame F --op OP --phase-of-op N --out VEC [--mutant swap|shift]   bench vectors of one phase
+    xs_place.py gen   --frame F (--op OP [--nth N] | --phase K ...) --out VEC [--mutant swap|shift]   bench vectors
     xs_place.py check --dir VEC --log RUN.LOG                  cycle-exact + bit-exact check (lower_xs.check_words)
+    xs_place.py collect --out BENCH_OUT [--res DIR] VEC...      bench record (check.json + witnesses)
 """
 from __future__ import annotations
 
@@ -256,17 +258,19 @@ NPAIRS = LX.NPAIRS          # q pairs per phase (a_proj's choice; every phase of
 # element-work term per (fmt, units / segment, rows / element): MEASURED on the frame bench only (lower_xs.ELEM_EXTRA is
 # the fp8 a_proj measurement); a class missing here is placed and imaged with calendar_unmeasured
 ELEM_EXTRA = {('fp8',) + k: v for k, v in LX.ELEM_EXTRA.items()}
-# The class-only term is FALSIFIED by bench_xsp (ot-epyc4 10-18 23:5x, run with the spine ROMs present): wo_b
-# (fp8, 2 units, 2 rows, K 2048 nseg 2) returned every word exactly 20 edges before the class term (+13, not +33), values
-# exact; experts_gu fp4 K 5120 nseg 5: +18; down fp4 K 2304 nseg 5: -14 (all words, constant).  So the term is keyed by
-# the phase SHAPE (fmt, units / segment, rows / element, K, nseg); a shape measured on one phase is a prediction for
-# every other phase of that shape (validated by bench_xsp2 on different phases / rows).  wq_b (fp8 K 1280 nseg 3: the
-# last segment is a half unit) faulted in the return tree under the unmeasured calendar: per-segment work differs
-# inside the phase, which the one-term rule cannot express -- it stays calendar_unmeasured.
-ELEM_SHAPE = {('fp8', 2, 2, 5120, 5): 33,      # a_proj bench_xs + shared_gu bench_xsp sgu (exact)
-              ('fp8', 2, 2, 2048, 2): 13,      # wo_b bench_xsp wob (phase 12)
-              ('fp4', 2, 2, 5120, 5): 18,      # experts_gu bench_xsp egu (phase 20)
-              ('fp4', 1, 2, 2304, 5): -14}     # down bench_xsp down (phase 47)
+# The class-only term is FALSIFIED by bench_xsp (ot-epyc4 10-18, run with the spine ROMs present): wo_b (fp8, 2 units,
+# K 2048 nseg 2) returned every word exactly 20 edges before the class term (+13, not +33), values exact.  The PV trace
+# (bench_xsp_pv, -DTB_PVTRACE: every element's emission edge) shows the term is per SEGMENT: fp8 K 2304 / K 1280 emit
+# their 256-element last segment 14 edges before the full 512-element ones (the others exactly on the e0 rule).  So the
+# compiler keys the MEASURED term by phase shape (fmt, K, nseg) -> one value per segment, and legalises with it
+# (frame_return_plan.plan_phase seg_extra); a shape measured on one phase is the prediction for every other phase of
+# that shape (bench_xsp2 / bench_xsp_pv: other phases / rows of the same shapes PASS cycle-exact).
+ELEM_SEG = {('fp8', 5120, 5): [33] * 5,        # a_proj bench_xs + shared_gu bench_xsp sgu; PV trace p16 exact
+            ('fp8', 2048, 2): [13] * 2,        # wo_b bench_xsp wob (phase 12); predicts phase 13 (bench_xsp2)
+            ('fp4', 5120, 5): [18] * 5,        # experts_gu bench_xsp egu (phase 20); predicts phase 24
+            ('fp4', 2304, 5): [-14] * 5,       # down bench_xsp down (phase 47); predicts phase 50; PV trace p50 exact
+            ('fp8', 2304, 5): [0, 0, 0, 0, -14],   # shared down, PV trace p44 (bench_xsp_pv)
+            ('fp8', 1280, 3): [0, 0, -14]}     # wq_b, PV trace p1 (bench_xsp_pv)
 
 
 def frame_slot(die, frame):
@@ -281,17 +285,14 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
-    plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk))
+    sx = ELEM_SEG.get((mat.fmt, mat.K, nseg))
+    plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
+                        seg_extra=sx)
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
-    cls = (mat.fmt, units.pop(), 2)
-    x_ = ELEM_SHAPE.get(cls + (mat.K, nseg))
-    plan['elem_class'] = list(cls)
-    plan['calendar'] = 'measured_class' if x_ is not None else 'calendar_unmeasured'
-    if x_ is not None:
-        plan['ret'] = [[w_[0] + x_] + list(w_[1:]) for w_ in plan['ret']]
-        plan['emission'] = dict(plan['emission'], elem_extra=x_,
-                                edges={k: v + x_ for k, v in plan['emission']['edges'].items()})
+    plan['elem_class'] = [mat.fmt, max(units), 2]
+    plan['calendar'] = 'measured_class' if sx is not None else 'calendar_unmeasured'
+    plan['emission'] = dict(plan['emission'], elem_extra=sx)
     return plan
 
 
@@ -515,7 +516,7 @@ def cmd_check(a):
 def cmd_collect(a):
     """bench_xsp record: per vector the check verdict; base runs of measured classes must PASS, every mutant must FAIL;
     an unmeasured-class run is a MEASUREMENT of its element-work term (constant ret-edge offset vs the e0 rule)"""
-    res = ROOT / BENCHP
+    res = ROOT / (a.res or BENCHP)
     res.mkdir(parents=True, exist_ok=True)
     out = Path(a.out)
     import shutil
@@ -565,6 +566,7 @@ def cmd_collect(a):
 
 # ------------------------------------------------------------------------------------------------ compiler hook
 BENCHP = 'results/rtl/s81_layer_tput_1018/compiler/bench_xsp'
+BENCH_RECORDS = [BENCHP + '4', BENCHP + '2', BENCHP]   # bench_xsp4 = current field (per-segment terms legalised in)
 OPS = [r'^attn\.(wq_b|wo_a|wo_b|idx\.q|cmp\.wk)$', r'^ffn\.(router|shared_gu|experts_gu|down)$', r'^eng\.wkv$']
 REST = ('the slice xs CALENDAR images (75-b action words: stream requests, VM responses, cfg / launch / retire), the is_d '
         'GO word per phase and the cap write-back cfg_d (row tag -> owning slice row) for the DV placement are not '
@@ -593,13 +595,14 @@ def lower_placed(die, op, ctx):
         nseg, units = nseg_for(f, K, NPAIRS)
         mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * (NPAIRS // nseg),
                          phases=sum(1 for x in seq if x[1] == gi), rows_per_frame=[len(fr) for fr in grp['groups'][g]],
-                         calendar='measured_class' if (f, units, 2, K, nseg) in ELEM_SHAPE else 'calendar_unmeasured',
+                         calendar='measured_class' if (f, K, nseg) in ELEM_SEG else 'calendar_unmeasured',
                          tie='fixture' if grp['tie'] else 'golden', note=grp.get('note')))
     bench = None
-    bp = ROOT / BENCHP / 'check.json'
-    if bp.exists():
-        b = json.loads(bp.read_text())
-        bench = next((r for r in b.get('runs', []) if r['op'] == name and r.get('pass')), None)
+    for bd in BENCH_RECORDS:          # newest first: the per-segment calendar record, then the validation / first runs
+        bp = ROOT / bd / 'check.json'
+        if bench is None and bp.exists():
+            b = json.loads(bp.read_text())
+            bench = next((dict(r, record=bd) for r in b.get('runs', []) if r['op'] == name and r.get('pass')), None)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
         schema='opentallas.s81_dv.xs_place.v1', op=op, slice=sl, slice_index=g, phases_die_wide=len(seq), mats=mats,
         bench=bench, images='python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of '
@@ -649,6 +652,7 @@ def main(argv=None):
     k = sp.add_parser('collect')
     k.add_argument('--out', required=True)
     k.add_argument('--host', default=None)
+    k.add_argument('--res', default=None, help='results dir (repo-relative); default the bench_xsp record')
     k.add_argument('--fixtures', default=None)
     k.add_argument('vec', nargs='+')
     a = ap.parse_args(argv)
