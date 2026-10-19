@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   996 GB (avail 784, growth 88, headroom 0, waiters 0/0 GB) load 118/128 running 30 disk 316 GB 
+ot-run: ot-epyc5       admits   791 GB (avail 633, growth 79, headroom 0, waiters 0/0 GB) load 53/128 running 8 disk 1021 GB 
+ot-run: ot-epyc6       admits   789 GB (avail 666, growth 113, headroom 0, waiters 0/0 GB) load 32/128 running 14 disk 6029 GB 
+ot-run: ot-epyc7       admits   879 GB (avail 704, growth 89, headroom 0, waiters 0/0 GB) load 38/96 running 17 disk 6432 GB 
+ot-run: ot-epyc8       admits  1281 GB (avail 965, growth 68, headroom 0, waiters 0/0 GB) load 25/128 running 19 disk 288 GB 
+ot-run: ot-pve1        admits   126 GB (avail 100, growth 8, headroom 0, waiters 0/0 GB) load 39/28 running 4 disk 1197 GB 
+ot-run: ot-agidock128  admits   108 GB (avail 88, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 272 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3994835-1792430278 after 0 s
+Warning: Replacing memory \srr_q with list of registers. See rtl/rom/ot_coll_tp8_static.sv:284
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3994835-1792430278): exit 0

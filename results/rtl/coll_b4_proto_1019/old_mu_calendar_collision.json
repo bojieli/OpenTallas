@@ -1,0 +1,108 @@
+{
+  "grade": "compiler reservation witness; not RTL/whole-body proof",
+  "source": "qwen_coll_tp8_static_bench.word_events",
+  "old_fixture": "results/rtl/mu_qwen_1018/coll/mu_cal.json",
+  "rows": [
+    {
+      "case": "mu_window",
+      "LU": 53,
+      "LS": 378,
+      "collision_count": 0,
+      "first_collisions": []
+    },
+    {
+      "case": "mu_window",
+      "LU": 65,
+      "LS": 390,
+      "collision_count": 192,
+      "first_collisions": [
+        {
+          "resource": "ucie",
+          "cycle": 3753,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3754,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3755,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3756,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3757,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3758,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3759,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3760,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3761,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3762,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3763,
+          "previous_msg": 2,
+          "message": 3
+        },
+        {
+          "resource": "ucie",
+          "cycle": 3764,
+          "previous_msg": 2,
+          "message": 3
+        }
+      ]
+    },
+    {
+      "case": "mu_window_ref_user0",
+      "LU": 53,
+      "LS": 378,
+      "collision_count": 0,
+      "first_collisions": []
+    },
+    {
+      "case": "mu_window_ref_user0",
+      "LU": 65,
+      "LS": 390,
+      "collision_count": 0,
+      "first_collisions": []
+    }
+  ]
+}

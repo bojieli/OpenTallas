@@ -1,0 +1,546 @@
+{
+  "schema": "opentallas.coll_b4.mapped_clock_capacity.v1",
+  "status": "SOURCE MAPPED CENSUS PASS; no physical arrival/timing proof",
+  "source_revision": "1866aaeee",
+  "native_banks": 72,
+  "native_clock_group_counts": {
+    "clk_pring0": 9,
+    "clk_pring1": 9,
+    "clk_pring2": 9,
+    "clk_pring3": 9,
+    "clk_rring0": 9,
+    "clk_rring1": 9,
+    "clk_rring2": 9,
+    "clk_rring3": 9
+  },
+  "native_clock_pins": [
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_pring0",
+      "constant_one_mask_bits": 34,
+      "constant_zero_mask_bits": 30,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_pring1",
+      "constant_one_mask_bits": 34,
+      "constant_zero_mask_bits": 30,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_pring2",
+      "constant_one_mask_bits": 34,
+      "constant_zero_mask_bits": 30,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_pring3",
+      "constant_one_mask_bits": 34,
+      "constant_zero_mask_bits": 30,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_rring0",
+      "constant_one_mask_bits": 2,
+      "constant_zero_mask_bits": 62,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_rring1",
+      "constant_one_mask_bits": 2,
+      "constant_zero_mask_bits": 62,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_rring2",
+      "constant_one_mask_bits": 2,
+      "constant_zero_mask_bits": 62,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[0].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[1].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[2].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[3].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[4].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[5].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[6].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[7].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 64,
+      "constant_zero_mask_bits": 0,
+      "dynamic_mask_bits": 0
+    },
+    {
+      "path": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[8].u_m",
+      "clk_root": "clk_rring3",
+      "constant_one_mask_bits": 2,
+      "constant_zero_mask_bits": 62,
+      "dynamic_mask_bits": 0
+    }
+  ],
+  "soft_mapped_FF_count": 10294,
+  "soft_mapped_FF_types": {
+    "DFFHQNx1_ASAP7_75t_R": 8667,
+    "DFFASRHQNx1_ASAP7_75t_R": 1627
+  },
+  "mapped_soft_area_um2": 4883.08986,
+  "mapped_sequential_area_um2": 3144.06036,
+  "excluded_hard_children": {
+    "native32x64": 72,
+    "Sring512x128": 5,
+    "fold_slice": 8
+  },
+  "raw_PR_macro_area_um2": 39773.30688,
+  "physical_PR_bits": 147456,
+  "useful_PR_bits": 135680,
+  "padding_PR_bits": 11776,
+  "wide32x546_cells": 0,
+  "notes": [
+    "TT RVT standard cell synthesis/ABC, hard child Liberty area not included",
+    "No CTS, placement, pin/reset landing helpers, hold or routing; not equivalent to gate cell area",
+    "All72 actual native pins map directly to eight distinct top source ports, nine each",
+    "Constant masks prove30 P and62 R padding bits; ninth R bank remains observable",
+    "Merged liberty hash was not recorded by this first run; image ID and source library filenames/merge recipe retained"
+  ]
+}

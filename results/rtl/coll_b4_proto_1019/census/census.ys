@@ -1,0 +1,12 @@
+read_verilog -sv -DSYNTHESIS -DOT_COLL_B4_NATIVE rtl/rom/ot_coll_rst_leaf.sv rtl/rom/ot_coll_fold_slice.sv rtl/rom/ot_coll_tp8_static.sv rtl/physical/ot_qfd_io_collective_static.sv rtl/rom/ot_coll_sram_bank64.sv
+blackbox ot_coll_fold_slice
+read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+chparam -set PR_B4 1 -set LU 65 -set LS 390 qfd_io_collective_static
+hierarchy -check -top qfd_io_collective_static
+synth -top qfd_io_collective_static -flatten -noabc
+dfflibmap -liberty /tmp/lib/seq.lib
+abc -liberty /tmp/lib/all.lib
+opt_clean
+tee -o /out/mapped.stat stat -liberty /tmp/lib/all.lib
+write_json /out/mapped.json
+write_verilog -noattr /out/mapped.v
