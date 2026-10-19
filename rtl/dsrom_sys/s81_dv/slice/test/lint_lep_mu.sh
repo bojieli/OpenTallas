@@ -20,4 +20,5 @@ lint land256 'dsdv_mu_land #(.SRAM(1), .NB(160)) u_top ();'
 lint cl_w_mu_ab 'ot_s81sl_slice_lep #(.SIDE(0), .HOST_EN(0), .MU_EN(1), .AB_EN(1)) u_top ();'
 lint cl_e_mu_host 'ot_s81sl_slice_lep #(.SIDE(1), .HOST_EN(1), .MU_EN(1), .AB_EN(0)) u_top ();'
 lint masters 'ot_s81sl_slice_lepw a (); ot_s81sl_slice_lepe b (); ot_s81sl_slice_lepe_nh c ();'
+lint masters_mu 'ot_s81sl_slice_lepw_mu a (); ot_s81sl_slice_lepw_mus b (); ot_s81sl_slice_lepe_mu c (); ot_s81sl_slice_lepe_nh_mus d (); ot_s81sl_slice_lepw_mab e ();'   # MU-S81/DIE
 [ $bad = 0 ] && echo "LEP_MU_LINT PASS" || echo "LEP_MU_LINT FAIL"; exit $bad
