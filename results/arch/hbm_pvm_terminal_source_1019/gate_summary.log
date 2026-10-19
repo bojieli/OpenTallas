@@ -1,0 +1,21 @@
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_smh_pvm_ref_s3_20261019-122643.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_smh_pvm_ref_s3_20261019-122643.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/smh_pvm_ref_s3-20261019-122643
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 174 s (gate total 8438 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1128, 'pin_rectangles': 1128, 'pin_track_checked': 1128, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 6534793e1737c21fb78d2f41f7bc70c87593f133668bc029678586c499f511f0
+GATE INFO util: synthesized std area 10301 um2 + macros 26363 in core 88852: util 18% (std-cell density 17.5% of placeable 58860 um2; total fill 41.3%)
+GATE INFO port_latency: elaborated pin registers: 8 input / 9 output ports +1 edge; 2 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: PASS ot_hbm_sm_pv_merge_s3 cells 87,291 flops 13,845 depth 385.1 ps util 0.3983 reach 0.0 um (2.5 s)
+GATE INFO cts_calibration: ss insertion all 291.0..355.6 ps (spread 64.6), boundary mean 337.6; tt insertion all 218.0..268.5 ps (spread 50.5), boundary mean 250.7; ff insertion all 176.1..217.9 ps (spread 41.8), boundary mean 200.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/smh_pvm_ref_s3/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->macro    272 paths, worst slack -418.8 ps (e.g. u_ot_pr_core.u_stack/wd_in[250])
+GATE INFO path_classes: reg->reg      316 paths, worst slack 1.0 ps (e.g. pv_y__ot_pr[297]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS -4.1882441959018024e-10 hold WNS 4.077524429213497e-11
+GATE INFO clock_rule: root port:clk: 13,846 sinks on the largest root; measured TT insertion 268.5 ps, FF insertion 217.9 ps, TT pin-flop spread 20.3 ps, FF pin-flop spread 20.2 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-pvm-iop-1019/physical/ref_tile/smh_pvm_ref_s3/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-hbm-pvm-iop-1019/physical/ref_tile/smh_pvm_ref_s3/gate_layout/density.png; congestion /home/ubuntu/wt/codex-hbm-pvm-iop-1019/physical/ref_tile/smh_pvm_ref_s3/gate_layout/congestion.png
+GATE FAIL trial_route: trial GRT: total overflow 508; worst layer M3 40.90% used; worst-overflow layer M3 (220); worst gcell Vertical congestion overflow 6 (cap 20 use 26) at (128.82,246.81)-(129.39,247.38) um; 329 markers span (80.94,186.39)-(255.93,298.11) um; congestion map /home/ubuntu/wt/codex-hbm-pvm-iop-1019/physical/ref_tile/smh_pvm_ref_s3/gate_layout/congestion.png; GRT 6629 s  -> FIX: regroup macros / widen the congested channels / move pins to their consumers; look at congestion.png and density.png
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)
+GATE: smh_pvm_ref_s3/gate_result.json written (exact staged source binding; commit it with the kit)

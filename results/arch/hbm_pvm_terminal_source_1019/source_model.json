@@ -1,0 +1,83 @@
+{
+  "scope": "MODEL_ONLY_NO_RTL_OR_ENGINE",
+  "all_driver_strict": "OPEN, existing textbook negatives only; no macrobus omission permitted",
+  "roots": [
+    {
+      "net": "u_ot_pr_core.fd1$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 2063,
+      "flops": 0,
+      "groups_at_32": 65
+    },
+    {
+      "net": "ev__ot_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 1587,
+      "flops": 0,
+      "groups_at_32": 50
+    },
+    {
+      "net": "_050437_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 1045,
+      "flops": 0,
+      "groups_at_32": 33
+    },
+    {
+      "net": "u_ot_pr_core.fd0$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 1037,
+      "flops": 1,
+      "groups_at_32": 33
+    },
+    {
+      "net": "_083388_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 851,
+      "flops": 0,
+      "groups_at_32": 27
+    },
+    {
+      "net": "_052842_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 523,
+      "flops": 0,
+      "groups_at_32": 17
+    },
+    {
+      "net": "u_ot_pr_core.word_next[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 518,
+      "flops": 0,
+      "groups_at_32": 17
+    },
+    {
+      "net": "_051065_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 518,
+      "flops": 0,
+      "groups_at_32": 17
+    }
+  ],
+  "lifetime": {
+    "barrel_entries": 8,
+    "entry_turn_edges": 8,
+    "operand_landing_edges": 1,
+    "adder_edges": 7,
+    "fold_request_to_write_edges": 10,
+    "publication_request_to_first_word_core_edges": 2,
+    "publication_words": 16,
+    "next_request_at_current_word": 14,
+    "generic_wrapper_input_edges": 1,
+    "generic_wrapper_output_edges": 1,
+    "reset_sampled_assertion_and_release_edges": 2
+  },
+  "storage": {
+    "stack_words": 64,
+    "word_bits": 512,
+    "stack_bits": 32768,
+    "fold_a_operand_bits": 512,
+    "publication_buffer_bits": 512,
+    "fold_ring_bits": 32
+  },
+  "proof_obligations": [
+    "complete mapped everydriver transparent nonclock census",
+    "actual reset landing/copy ancestry incl D ownership",
+    "sameedge useful fd1/ev/fd0/word selector copies and all combin reconvergence",
+    "native macro all-pin/PG/OBS/via contacts and load-sensitive max/min Liberty",
+    "allendpoint TT setup FFhold and actual 405um reach",
+    "finite last-write/read first-use table before any new write pipeline/calendar change"
+  ]
+}
