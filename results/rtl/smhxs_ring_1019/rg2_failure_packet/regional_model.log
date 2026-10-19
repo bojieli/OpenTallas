@@ -1,0 +1,68 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/smhclock-audit-1019
+ot-run: ot-agidock128  admits   101 GB (avail 83, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 261 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1459316-1792429713 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints saved CTS SDC (diagnostic; no signoff boundary replay)
+OT_GQ_CLOCK_INV inst=_121542__18810 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18811 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18809 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18808 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18813 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18812 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18814 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_INV inst=_121542__18815 master=INVx1_ASAP7_75t_R output_stage=17
+OT_GQ_CLOCK_GRAPH sinks=20550 flops=20542 macros=8 native_io_clocks=4536 stages=16..17 native=16..16 macro=16..16 buffers=862 inventory=BUFx24_ASAP7_75t_R 854 INVx1_ASAP7_75t_R 8
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[2\].wce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[2\].rce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[3\].rce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[3\].wce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[1\].rce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[1\].wce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[0\].wce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_EXTRA_STAGE endpoint=u_leaf.g_xm\[0\].rce3$_DFF_NN0_/CLK master=DFFASRHQNx1_ASAP7_75t_R stages=17
+OT_GQ_CLOCK_GRAPH_NONUNIFORM
+SMH_REGION_MACRO name=u_leaf.g_wr_ring\[0\].u_w x=220.212 y=150.12 region=r0c1
+SMH_REGION_MACRO name=u_leaf.g_wr_ring\[1\].u_w x=349.812 y=150.12 region=r0c2
+SMH_REGION_MACRO name=u_leaf.g_wr_ring\[2\].u_w x=90.612 y=236.52 region=r1c0
+SMH_REGION_RADDR name=u_leaf.g_wr_ring\[3\].ra_n\[0\]$_DFF_N_ x=293.652 y=175.095 region=r1c2
+SMH_REGION_RADDR name=u_leaf.g_wr_ring\[3\].ra_n\[1\]$_DFF_N_ x=294.084 y=172.125 region=r0c2
+SMH_REGION_MACRO name=u_leaf.g_wr_ring\[3\].u_w x=220.212 y=236.52 region=r1c1
+SMH_REGION_MACRO name=u_leaf.g_xm\[0\].u_x x=90.612 y=63.72 region=r0c0
+SMH_REGION_MACRO name=u_leaf.g_xm\[1\].u_x x=220.212 y=63.72 region=r0c1
+SMH_REGION_MACRO name=u_leaf.g_xm\[2\].u_x x=349.812 y=63.72 region=r0c2
+SMH_REGION_MACRO name=u_leaf.g_xm\[3\].u_x x=90.612 y=150.12 region=r0c0
+SMH_REGION_COUNTS r0c1_sinks 9756 r0c2_sinks 5882 r1c0_sinks 1099 r1c0_native 593 r0c0_sinks 3257 r0c0_native 561 r0c2_native 1276 r0c1_native 1715 r1c2_sinks 189 r1c2_native 162 r1c1_sinks 367 r1c1_native 229
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1459316-1792429713): exit 0

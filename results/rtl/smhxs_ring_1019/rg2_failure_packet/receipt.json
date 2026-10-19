@@ -1,0 +1,132 @@
+{
+  "status": "FAIL_NO_REVIEW_NO_SUBMIT",
+  "source_binding": {
+    "start_commit": "b1c7e3d2ad3c5bab52332c1b8a963741c36659b2",
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "de2a24b37757b2686775e68b6e2758297055d415078e987a7ce3219f3b77e1e8",
+    "remote_archive_verified": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/smh_xs_ring_rg2_1019-20261019-090842"
+  },
+  "clock": {
+    "tt_insertion_ps": 655.9,
+    "ff_insertion_ps": 529.1,
+    "tt_spread_ps": 185.9,
+    "ff_spread_ps": 153.6,
+    "tt_pin_spread_ps": 149.5,
+    "ff_pin_spread_ps": 136.4
+  },
+  "actual_final_clock_graph": {
+    "source": "4_cts.odb,read-only",
+    "sinks": 20550,
+    "flops": 20542,
+    "macros": 8,
+    "native_io_clockpins": 4536,
+    "phase0_stage": 16,
+    "phase0_ff": 20534,
+    "native_and_macro_stage": 16,
+    "phase1_stage": 17,
+    "phase1_ff": 8,
+    "phase1_names": "g_xm[0..3].wce3/rce3: mapped intentional negative edge async reset controls",
+    "buffers": {
+      "BUFx24": 854,
+      "INVx1": 8
+    },
+    "qualification": "Uniform per intended phase; actual TT/FF pin spread still FAIL independent of phase exception"
+  },
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "parent",
+    "skip_incremental_repair": false,
+    "rc": "0",
+    "grt_s": 1561,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 3436658,
+        "usage": 607613,
+        "pct": 17.68,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 4116370,
+        "usage": 773671,
+        "pct": 18.79,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 3159705,
+        "usage": 390565,
+        "pct": 12.36,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 3375664,
+        "usage": 296479,
+        "pct": 8.78,
+        "overflow": 0
+      },
+      {
+        "layer": "M6",
+        "capacity": 2593369,
+        "usage": 217049,
+        "pct": 8.37,
+        "overflow": 0
+      },
+      {
+        "layer": "M7",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M3",
+      18.79
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  },
+  "placement_TT_diagnostic": {
+    "setup_ps": -79.998868,
+    "hold_ps": 35.379366,
+    "worst_class": "reg->macro",
+    "endpoint": "g_wr_ring[2].u_w/r_addr_in[0]",
+    "macro_to_reg_ps": 123.4,
+    "reg_reg_ps": 144.8,
+    "reg_out_ps": 121.2
+  },
+  "geometry": {
+    "outline": [
+      432,
+      345.6
+    ],
+    "hard_macro_area": 31132.61568,
+    "synthesis_std_area_preflight": 13468.217,
+    "final_floorplan_std_area": 11254.1,
+    "final_floorplan_fill": 0.28391,
+    "waiver": "Parent approved lattice/macro-face channel/full-face geometry; no squeeze",
+    "channel_x": 34.776,
+    "channel_y": 45.36
+  },
+  "png_review": "Inspected floorplan and density:8safe macros,fullfacepins,contiguoussouthernstdcellband; terminalfailedclockspread, notapproval",
+  "regional_population_model": {
+    "r0c0": 3257,
+    "r0c1": 9756,
+    "r0c2": 5882,
+    "r1c0": 1099,
+    "r1c1": 367,
+    "r1c2": 189
+  }
+}
