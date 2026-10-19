@@ -1,0 +1,8 @@
+{
+  "first_job": "oth-ubuntu-2274401-1792449777",
+  "first_verdict": "HARNESS_FAIL: MUT5 correctly caught accept_frontier cycle0 but allowed mutant regex omitted accept_frontier",
+  "continuation_job": "oth-ubuntu-2275714-1792449842",
+  "session": 77933,
+  "changes": "runner accepts explicit accept_frontier witness and uses separate logs_attempt2; source/testbench unchanged; compiled objects reused",
+  "runner_sha256": "d77ee902c96c651f8a0fee046d2cf87b1d780d74ec9cca75b709b7e5e6260fac"
+}

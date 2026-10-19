@@ -1,0 +1,326 @@
+{
+  "component_only": true,
+  "tool": "Verilator5.050",
+  "positive_runs": 6,
+  "caught_mutants": 27,
+  "tests": [
+    {
+      "width": 268,
+      "mutant": 0,
+      "seed": 1,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=268 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m0_seed1.log"
+    },
+    {
+      "width": 268,
+      "mutant": 0,
+      "seed": 31,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=268 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m0_seed31.log"
+    },
+    {
+      "width": 268,
+      "mutant": 0,
+      "seed": 7,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=268 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m0_seed7.log"
+    },
+    {
+      "width": 268,
+      "mutant": 1,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a217c want=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m1_seed1.log"
+    },
+    {
+      "width": 268,
+      "mutant": 1,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a217c want=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m1_seed31.log"
+    },
+    {
+      "width": 268,
+      "mutant": 1,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a217c want=ea728f3ff614225a91db5edde6960015cf7f2b09eb3971ce44a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m1_seed7.log"
+    },
+    {
+      "width": 268,
+      "mutant": 2,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m2_seed1.log"
+    },
+    {
+      "width": 268,
+      "mutant": 2,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m2_seed31.log"
+    },
+    {
+      "width": 268,
+      "mutant": 2,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m2_seed7.log"
+    },
+    {
+      "width": 268,
+      "mutant": 3,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m3_seed1.log"
+    },
+    {
+      "width": 268,
+      "mutant": 3,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m3_seed31.log"
+    },
+    {
+      "width": 268,
+      "mutant": 3,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m3_seed7.log"
+    },
+    {
+      "width": 268,
+      "mutant": 5,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m5_seed1.log"
+    },
+    {
+      "width": 268,
+      "mutant": 5,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m5_seed31.log"
+    },
+    {
+      "width": 268,
+      "mutant": 5,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w268_m5_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 0,
+      "seed": 1,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=68 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m0_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 0,
+      "seed": 31,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=68 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m0_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 0,
+      "seed": 7,
+      "rc": 0,
+      "pass": true,
+      "witness": "TRANSPORT_PASS W=68 MUT=0 edges=363 accepted=250 observed=246 reset_discarded=4 first_accept=19 first_output=23",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m0_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 1,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=a15b8469ff71a217c want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m1_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 1,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=a15b8469ff71a217c want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m1_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 1,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=a15b8469ff71a217c want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m1_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 2,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m2_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 2,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m2_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 2,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[666000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=66 got=0 want=1 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m2_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 3,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m3_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 3,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m3_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 3,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[206000] %Fatal: tb_transport.sv:112: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL valid_frontier cycle=20 got=1 want=0 first_accept=19",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m3_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 4,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=915b8469ff71a210d want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m4_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 4,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=915b8469ff71a210d want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m4_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 4,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[236000] %Fatal: tb_transport.sv:115: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL payload cycle=23 got=915b8469ff71a210d want=a15b8469ff71a210d",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m4_seed7.log"
+    },
+    {
+      "width": 68,
+      "mutant": 5,
+      "seed": 1,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m5_seed1.log"
+    },
+    {
+      "width": 68,
+      "mutant": 5,
+      "seed": 31,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m5_seed31.log"
+    },
+    {
+      "width": 68,
+      "mutant": 5,
+      "seed": 7,
+      "rc": 1,
+      "pass": true,
+      "witness": "[5000] %Fatal: tb_transport.sv:95: Assertion failed in tb_transport.edge_step: TRANSPORT_FAIL accept_frontier cycle=0 got=1 want=0",
+      "log": "results/kv_ahub_transport_component_1019/logs_attempt2/w68_m5_seed7.log"
+    }
+  ],
+  "public_files": [
+    {
+      "path": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+      "byte_identical_selected": true,
+      "sha256": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b"
+    },
+    {
+      "path": "rtl/lib/ot_rst_pipe.sv",
+      "byte_identical_selected": true,
+      "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441"
+    },
+    {
+      "path": "tools/qwen_kv_die/kv_static_die.py",
+      "byte_identical_selected": true,
+      "sha256": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a"
+    }
+  ],
+  "source_ff_state_bits": 3083,
+  "native_allroot_status": "HOLD: inputvalid34/reset86 roots; no map",
+  "retained_health": "HOLD: opaque transport has no retained fault state",
+  "physical_child_calendar": "HOLD"
+}

@@ -6,7 +6,8 @@ bench=results/kv_ahub_transport_component_1019
 if ! "$VERILATOR" --version | tee "$bench/tool_version.log" | grep -q 'Verilator 5.050'; then
   echo 'Required Verilator 5.050 is unavailable' >&2; exit 2
 fi
-mkdir -p "$bench/logs"
+logdir="$bench/logs_attempt2"
+mkdir -p "$logdir"
 for width in 268 68; do
   for mutant in 0 1 2 3 4 5; do
     if [[ $mutant == 4 && $width != 68 ]]; then continue; fi
@@ -15,9 +16,9 @@ for width in 268 68; do
       -j 2 -Wno-fatal --x-initial unique --x-assign unique \
       -GW="$width" -GMUT="$mutant" \
       rtl/lib/ot_rst_pipe.sv rtl/hdc/nearhbm/qkd_ahub_transport_private.sv \
-      "$bench/tb_transport.sv" >"$bench/logs/${name}_build.log" 2>&1
+      "$bench/tb_transport.sv" >"$logdir/${name}_build.log" 2>&1
     for seed in 1 7 31; do
-      log="$bench/logs/${name}_seed${seed}.log"
+      log="$logdir/${name}_seed${seed}.log"
       set +e
       "$bench/obj_$name/Vtb_transport" +verilator+rand+reset+2 +verilator+seed+"$seed" >"$log" 2>&1
       rc=$?
@@ -27,7 +28,7 @@ for width in 268 68; do
         [[ $rc == 0 ]] && grep -q "TRANSPORT_PASS W=$width MUT=0" "$log"
         ! grep -q TRANSPORT_FAIL "$log"
       else
-        [[ $rc != 0 ]] && grep -Eq "TRANSPORT_FAIL (payload|valid_frontier)" "$log"
+        [[ $rc != 0 ]] && grep -Eq "TRANSPORT_FAIL (payload|valid_frontier|accept_frontier)" "$log"
         ! grep -q TRANSPORT_PASS "$log"
       fi
     done
