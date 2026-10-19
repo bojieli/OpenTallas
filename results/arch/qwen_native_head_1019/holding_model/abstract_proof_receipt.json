@@ -1,0 +1,17 @@
+{
+  "job": "oth-ubuntu-1484954-1792441032",
+  "host": "ot-epyc6",
+  "remote": "/srv/opentallas-scratch/claude/qw-head-controls-trim-1019",
+  "result": "14336 recurrence equalities PASS; valid-gating failureedge2; pointer-rewind and WRITE_FIRST counterexamples",
+  "scope": "abstract storage recurrence only; no RTL/production qualification",
+  "cached_enrichment_jobs": [
+    "oth-ubuntu-1480157-1792440895",
+    "oth-ubuntu-1483031-1792440985"
+  ],
+  "proof_source_version": "pre readability-only explicit write-first collision expansion; same old0/new1 example",
+  "artifacts_sha256": {
+    "exact_chains.json": "9b69b1c91943c392bd23efe453c7e7a5ade02230c2cee2010775b9ae235787c3",
+    "model.json": "71a05a7fba9b03cc342fc23b7852333b1a5c636fe7181ef99d7b141c138f3459",
+    "model_holding_chains.py": "7e3ac035cc109bf440afec59ae57ac7d066f728782a70c25be30a2cf5da36c2e"
+  }
+}

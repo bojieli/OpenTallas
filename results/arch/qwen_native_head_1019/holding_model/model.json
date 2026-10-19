@@ -1,0 +1,5747 @@
+{
+  "status": "MODEL_ONLY_ROOT_REVIEW_REQUIRED_NO_RTL",
+  "source": "5cd31ebb8",
+  "terminal": "cd660e13e",
+  "parent_ledger": "0dd6c84a7",
+  "source_sha256": "e42ab0024f36bf139459b2d0945e521549d457318be08f14106d7f783dc45016",
+  "detector_error": "startswith($_DFF_) includes async reset cells; 201 is candidate graph count, not 201 plain holding lines",
+  "counts": {
+    "mixed_reset_arithmetic_or_valid": 24,
+    "required_pin_address_boundary": 20,
+    "required_SRAM_capture_and_output_pin": 24,
+    "SRAM_capture_plus_three_tag_tail_edges": 97,
+    "SRAM_capture_plus_two_tag_edges": 36
+  },
+  "chains": [
+    {
+      "chain": 0,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.s1_v[0]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[133]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[133]",
+        "u_h.u_lane.s3_v[0]",
+        "u_h.u_lane.v3[0]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[2].u_bank/d[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 1,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ma.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c2.d[225]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ma.g_l.u.c3[39]",
+        "u_h.u_lane.u_ma.g_l.u.c4[39]",
+        "u_h.u_lane.u_ma.g_l.u.c6[33]",
+        "u_h.u_lane.u_ma.g_l.u.e_err[0]",
+        "u_h.u_lane.u_ma.g_l.u.o_err[0]",
+        "u_h.u_lane.u_ma.g_l.u.r_err[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.g_r.r[39]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.q[39]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.d[39]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.q[39]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.d[33]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.q[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 2,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ma.g_l.u.s1_sign[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c2.d[224]"
+      ],
+      "last_Q": [
+        "$flatten\\u_h.\\u_lane.\\u_ma.\\g_l.u.$ternary$rtl/hdc/ot_hdc_fp32_mul_lat.sv:243$10916_Y[31]",
+        "u_h.u_lane.u_ma.g_l.u.c3[38]",
+        "u_h.u_lane.u_ma.g_l.u.c4[38]",
+        "u_h.u_lane.u_ma.g_l.u.c6[31]",
+        "u_h.u_lane.u_ma.g_l.u.code[31]",
+        "u_h.u_lane.u_ma.g_l.u.e_code[31]",
+        "u_h.u_lane.u_ma.g_l.u.o_sign[0]",
+        "u_h.u_lane.u_ma.g_l.u.r_sign[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.g_r.r[38]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.q[38]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.d[38]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.q[38]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.d[31]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.q[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 3,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ma.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c2.d[227]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ma.g_l.u.c3[41]",
+        "u_h.u_lane.u_ma.g_l.u.c4[41]",
+        "u_h.u_lane.u_ma.g_l.u.c6[35]",
+        "u_h.u_lane.u_ma.g_l.u.e_byp[0]",
+        "u_h.u_lane.u_ma.g_l.u.o_byp[0]",
+        "u_h.u_lane.u_ma.g_l.u.r_byp[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.g_r.r[41]",
+        "u_h.u_lane.u_ma.g_l.u.u_c3.q[41]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.d[41]",
+        "u_h.u_lane.u_ma.g_l.u.u_c4.q[41]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.d[35]",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.q[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 4,
+      "depth": 5,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ma.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_ma.g_l.u.u_c2.d[228]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ma.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_ma.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 5,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mb.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c2.d[225]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mb.g_l.u.c3[39]",
+        "u_h.u_lane.u_mb.g_l.u.c4[39]",
+        "u_h.u_lane.u_mb.g_l.u.c6[33]",
+        "u_h.u_lane.u_mb.g_l.u.e_err[0]",
+        "u_h.u_lane.u_mb.g_l.u.o_err[0]",
+        "u_h.u_lane.u_mb.g_l.u.r_err[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.g_r.r[39]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.q[39]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.d[39]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.q[39]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.d[33]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.q[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 6,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mb.g_l.u.s1_sign[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c2.d[224]"
+      ],
+      "last_Q": [
+        "$flatten\\u_h.\\u_lane.\\u_mb.\\g_l.u.$ternary$rtl/hdc/ot_hdc_fp32_mul_lat.sv:243$10916_Y[31]",
+        "u_h.u_lane.u_mb.g_l.u.c3[38]",
+        "u_h.u_lane.u_mb.g_l.u.c4[38]",
+        "u_h.u_lane.u_mb.g_l.u.c6[31]",
+        "u_h.u_lane.u_mb.g_l.u.code[31]",
+        "u_h.u_lane.u_mb.g_l.u.e_code[31]",
+        "u_h.u_lane.u_mb.g_l.u.o_sign[0]",
+        "u_h.u_lane.u_mb.g_l.u.r_sign[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.g_r.r[38]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.q[38]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.d[38]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.q[38]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.d[31]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.q[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 7,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mb.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c2.d[227]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mb.g_l.u.c3[41]",
+        "u_h.u_lane.u_mb.g_l.u.c4[41]",
+        "u_h.u_lane.u_mb.g_l.u.c6[35]",
+        "u_h.u_lane.u_mb.g_l.u.e_byp[0]",
+        "u_h.u_lane.u_mb.g_l.u.o_byp[0]",
+        "u_h.u_lane.u_mb.g_l.u.r_byp[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.g_r.r[41]",
+        "u_h.u_lane.u_mb.g_l.u.u_c3.q[41]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.d[41]",
+        "u_h.u_lane.u_mb.g_l.u.u_c4.q[41]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.d[35]",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.q[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 8,
+      "depth": 5,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mb.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_mb.g_l.u.u_c2.d[228]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mb.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_mb.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 9,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ad.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cb.d[101]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ad.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_ad.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 10,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ad.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cb.d[100]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ad.g_l.u.c2_in[69]",
+        "u_h.u_lane.u_ad.g_l.u.s2_byp[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_byp[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.d[69]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.q[69]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 11,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ad.g_l.u.s1_sign[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cb.d[98]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ad.g_l.u.c2_in[67]",
+        "u_h.u_lane.u_ad.g_l.u.code[31]",
+        "u_h.u_lane.u_ad.g_l.u.s2_sign[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.d[67]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.q[67]",
+        "u_h.u_lane.u_ad.g_l.u.u_sign[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 12,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_ad.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cb.d[96]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_ad.g_l.u.c2_in[65]",
+        "u_h.u_lane.u_ad.g_l.u.s2_err[0]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.d[65]",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.q[65]",
+        "u_h.u_lane.u_ad.g_l.u.u_err[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 13,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_e1.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_cb.d[101]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_e1.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_e1.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 14,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_e1.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_cb.d[100]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_e1.g_l.u.c2_in[69]",
+        "u_h.u_lane.u_e1.g_l.u.s2_byp[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_byp[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.d[69]",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.q[69]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 15,
+      "depth": 3,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_e1.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_cb.d[96]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_e1.g_l.u.c2_in[65]",
+        "u_h.u_lane.u_e1.g_l.u.s2_err[0]",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.d[65]",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.q[65]",
+        "u_h.u_lane.u_e1.g_l.u.u_err[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 16,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mc.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c2.d[225]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mc.g_l.u.c3[39]",
+        "u_h.u_lane.u_mc.g_l.u.c4[39]",
+        "u_h.u_lane.u_mc.g_l.u.c6[33]",
+        "u_h.u_lane.u_mc.g_l.u.e_err[0]",
+        "u_h.u_lane.u_mc.g_l.u.o_err[0]",
+        "u_h.u_lane.u_mc.g_l.u.r_err[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.g_r.r[39]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.q[39]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.d[39]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.q[39]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.d[33]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.q[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 17,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mc.g_l.u.s1_sign[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c2.d[224]"
+      ],
+      "last_Q": [
+        "$flatten\\u_h.\\u_lane.\\u_mc.\\g_l.u.$ternary$rtl/hdc/ot_hdc_fp32_mul_lat.sv:243$10916_Y[31]",
+        "u_h.u_lane.u_mc.g_l.u.c3[38]",
+        "u_h.u_lane.u_mc.g_l.u.c4[38]",
+        "u_h.u_lane.u_mc.g_l.u.c6[31]",
+        "u_h.u_lane.u_mc.g_l.u.code[31]",
+        "u_h.u_lane.u_mc.g_l.u.e_code[31]",
+        "u_h.u_lane.u_mc.g_l.u.o_sign[0]",
+        "u_h.u_lane.u_mc.g_l.u.r_sign[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.g_r.r[38]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.q[38]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.d[38]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.q[38]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.d[31]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.q[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 18,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mc.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c2.d[227]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mc.g_l.u.c3[41]",
+        "u_h.u_lane.u_mc.g_l.u.c4[41]",
+        "u_h.u_lane.u_mc.g_l.u.c6[35]",
+        "u_h.u_lane.u_mc.g_l.u.e_byp[0]",
+        "u_h.u_lane.u_mc.g_l.u.o_byp[0]",
+        "u_h.u_lane.u_mc.g_l.u.r_byp[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.g_r.r[41]",
+        "u_h.u_lane.u_mc.g_l.u.u_c3.q[41]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.d[41]",
+        "u_h.u_lane.u_mc.g_l.u.u_c4.q[41]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.d[35]",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.q[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 19,
+      "depth": 5,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_mc.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_mc.g_l.u.u_c2.d[228]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_mc.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_mc.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 20,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_md.g_l.u.s1_err[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c2.d[225]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_md.g_l.u.c3[39]",
+        "u_h.u_lane.u_md.g_l.u.c4[39]",
+        "u_h.u_lane.u_md.g_l.u.c6[33]",
+        "u_h.u_lane.u_md.g_l.u.e_err[0]",
+        "u_h.u_lane.u_md.g_l.u.o_err[0]",
+        "u_h.u_lane.u_md.g_l.u.r_err[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.g_r.r[39]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.q[39]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.d[39]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.q[39]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.d[33]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.q[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 21,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_md.g_l.u.s1_sign[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c2.d[224]"
+      ],
+      "last_Q": [
+        "$flatten\\u_h.\\u_lane.\\u_md.\\g_l.u.$ternary$rtl/hdc/ot_hdc_fp32_mul_lat.sv:243$10916_Y[31]",
+        "u_h.u_lane.u_md.g_l.u.c3[38]",
+        "u_h.u_lane.u_md.g_l.u.c4[38]",
+        "u_h.u_lane.u_md.g_l.u.c6[31]",
+        "u_h.u_lane.u_md.g_l.u.code[31]",
+        "u_h.u_lane.u_md.g_l.u.e_code[31]",
+        "u_h.u_lane.u_md.g_l.u.o_sign[0]",
+        "u_h.u_lane.u_md.g_l.u.r_sign[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.g_r.r[38]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.q[38]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.d[38]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.q[38]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.d[31]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.q[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 22,
+      "depth": 4,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_PN0_",
+        "$_DFF_P_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_md.g_l.u.s1_byp[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c2.d[227]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_md.g_l.u.c3[41]",
+        "u_h.u_lane.u_md.g_l.u.c4[41]",
+        "u_h.u_lane.u_md.g_l.u.c6[35]",
+        "u_h.u_lane.u_md.g_l.u.e_byp[0]",
+        "u_h.u_lane.u_md.g_l.u.o_byp[0]",
+        "u_h.u_lane.u_md.g_l.u.r_byp[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.g_r.r[41]",
+        "u_h.u_lane.u_md.g_l.u.u_c3.q[41]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.d[41]",
+        "u_h.u_lane.u_md.g_l.u.u_c4.q[41]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.d[35]",
+        "u_h.u_lane.u_md.g_l.u.u_c6.q[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 23,
+      "depth": 5,
+      "group": "mixed_reset_arithmetic_or_valid",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_",
+        "$_DFF_PN0_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.u_md.g_l.u.s1_v[0]",
+        "u_h.u_lane.u_md.g_l.u.u_c2.d[228]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.u_md.g_l.u.valid_out[0]",
+        "u_h.u_lane.u_md.vo[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 24,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[4]",
+        "u_h.u_lane.cura[4]",
+        "u_h.u_lane.cura0[4]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[4]",
+        "u_h.wrom_addr[0]",
+        "va_addr[4]",
+        "wrom_addr[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 25,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[5]",
+        "u_h.u_lane.cura[5]",
+        "u_h.u_lane.cura0[5]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[5]",
+        "u_h.wrom_addr[1]",
+        "va_addr[5]",
+        "wrom_addr[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 26,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[6]",
+        "u_h.u_lane.cura[6]",
+        "u_h.u_lane.cura0[6]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[6]",
+        "u_h.wrom_addr[2]",
+        "va_addr[6]",
+        "wrom_addr[2]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 27,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[7]",
+        "u_h.u_lane.cura[7]",
+        "u_h.u_lane.cura0[7]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[7]",
+        "u_h.wrom_addr[3]",
+        "va_addr[7]",
+        "wrom_addr[3]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 28,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[8]",
+        "u_h.u_lane.cura[8]",
+        "u_h.u_lane.cura0[8]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[8]",
+        "u_h.wrom_addr[4]",
+        "va_addr[8]",
+        "wrom_addr[4]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 29,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[9]",
+        "u_h.u_lane.cura[9]",
+        "u_h.u_lane.cura0[9]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[9]",
+        "u_h.wrom_addr[5]",
+        "va_addr[9]",
+        "wrom_addr[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 30,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[10]",
+        "u_h.u_lane.cura[10]",
+        "u_h.u_lane.cura0[10]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[10]",
+        "u_h.wrom_addr[6]",
+        "va_addr[10]",
+        "wrom_addr[6]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 31,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[11]",
+        "u_h.u_lane.cura[11]",
+        "u_h.u_lane.cura0[11]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[11]",
+        "u_h.wrom_addr[7]",
+        "va_addr[11]",
+        "wrom_addr[7]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 32,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[12]",
+        "u_h.u_lane.cura[12]",
+        "u_h.u_lane.cura0[12]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[12]",
+        "u_h.wrom_addr[8]",
+        "va_addr[12]",
+        "wrom_addr[8]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 33,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[13]",
+        "u_h.u_lane.cura[13]",
+        "u_h.u_lane.cura0[13]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[13]",
+        "u_h.wrom_addr[9]",
+        "va_addr[13]",
+        "wrom_addr[9]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 34,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[14]",
+        "u_h.u_lane.cura[14]",
+        "u_h.u_lane.cura0[14]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[14]",
+        "u_h.wrom_addr[10]",
+        "va_addr[14]",
+        "wrom_addr[10]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 35,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[15]",
+        "u_h.u_lane.cura[15]",
+        "u_h.u_lane.cura0[15]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[15]",
+        "u_h.wrom_addr[11]",
+        "va_addr[15]",
+        "wrom_addr[11]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 36,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[16]",
+        "u_h.u_lane.cura[16]",
+        "u_h.u_lane.cura0[16]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[16]",
+        "u_h.wrom_addr[12]",
+        "va_addr[16]",
+        "wrom_addr[12]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 37,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[17]",
+        "u_h.u_lane.cura[17]",
+        "u_h.u_lane.cura0[17]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[17]",
+        "u_h.wrom_addr[13]",
+        "va_addr[17]",
+        "wrom_addr[13]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 38,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[18]",
+        "u_h.u_lane.cura[18]",
+        "u_h.u_lane.cura0[18]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[18]",
+        "u_h.wrom_addr[14]",
+        "va_addr[18]",
+        "wrom_addr[14]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 39,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[19]",
+        "u_h.u_lane.cura[19]",
+        "u_h.u_lane.cura0[19]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[19]",
+        "u_h.wrom_addr[15]",
+        "va_addr[19]",
+        "wrom_addr[15]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 40,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[20]",
+        "u_h.u_lane.cura[20]",
+        "u_h.u_lane.cura0[20]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[20]",
+        "u_h.wrom_addr[16]",
+        "va_addr[20]",
+        "wrom_addr[16]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 41,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[21]",
+        "u_h.u_lane.cura[21]",
+        "u_h.u_lane.cura0[21]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[21]",
+        "u_h.wrom_addr[17]",
+        "va_addr[21]",
+        "wrom_addr[17]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 42,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[22]",
+        "u_h.u_lane.cura[22]",
+        "u_h.u_lane.cura0[22]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[22]",
+        "u_h.wrom_addr[18]",
+        "va_addr[22]",
+        "wrom_addr[18]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 43,
+      "depth": 3,
+      "group": "required_pin_address_boundary",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.q_cura[23]",
+        "u_h.u_lane.cura[23]",
+        "u_h.u_lane.cura0[23]"
+      ],
+      "last_Q": [
+        "u_h.va_addr[23]",
+        "u_h.wrom_addr[19]",
+        "va_addr[23]",
+        "wrom_addr[19]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 44,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[34]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[34]",
+        "u_h.u_lane.o_daddr[0]",
+        "u_h.u_lane.o_tail[34]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[34]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[34]"
+      ],
+      "last_Q": [
+        "kv_waddr[0]",
+        "u_h.kv_waddr[0]",
+        "u_h.vm_waddr[0]",
+        "vm_waddr[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 45,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[35]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[35]",
+        "u_h.u_lane.o_daddr[1]",
+        "u_h.u_lane.o_tail[35]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[35]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[35]"
+      ],
+      "last_Q": [
+        "kv_waddr[1]",
+        "u_h.kv_waddr[1]",
+        "u_h.vm_waddr[1]",
+        "vm_waddr[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 46,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[36]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[36]",
+        "u_h.u_lane.o_daddr[2]",
+        "u_h.u_lane.o_tail[36]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[36]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[36]"
+      ],
+      "last_Q": [
+        "kv_waddr[2]",
+        "u_h.kv_waddr[2]",
+        "u_h.vm_waddr[2]",
+        "vm_waddr[2]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 47,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[37]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[37]",
+        "u_h.u_lane.o_daddr[3]",
+        "u_h.u_lane.o_tail[37]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[37]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[37]"
+      ],
+      "last_Q": [
+        "kv_waddr[3]",
+        "u_h.kv_waddr[3]",
+        "u_h.vm_waddr[3]",
+        "vm_waddr[3]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 48,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[38]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[38]",
+        "u_h.u_lane.o_daddr[4]",
+        "u_h.u_lane.o_tail[38]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[38]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[38]"
+      ],
+      "last_Q": [
+        "kv_waddr[4]",
+        "u_h.kv_waddr[4]",
+        "u_h.vm_waddr[4]",
+        "vm_waddr[4]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 49,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[39]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[39]",
+        "u_h.u_lane.o_daddr[5]",
+        "u_h.u_lane.o_tail[39]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[39]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[39]"
+      ],
+      "last_Q": [
+        "kv_waddr[5]",
+        "u_h.kv_waddr[5]",
+        "u_h.vm_waddr[5]",
+        "vm_waddr[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 50,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[40]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[40]",
+        "u_h.u_lane.o_daddr[6]",
+        "u_h.u_lane.o_tail[40]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[40]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[40]"
+      ],
+      "last_Q": [
+        "kv_waddr[6]",
+        "u_h.kv_waddr[6]",
+        "u_h.vm_waddr[6]",
+        "vm_waddr[6]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 51,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[41]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[41]",
+        "u_h.u_lane.o_daddr[7]",
+        "u_h.u_lane.o_tail[41]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[41]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[41]"
+      ],
+      "last_Q": [
+        "kv_waddr[7]",
+        "u_h.kv_waddr[7]",
+        "u_h.vm_waddr[7]",
+        "vm_waddr[7]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 52,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[42]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[42]",
+        "u_h.u_lane.o_daddr[8]",
+        "u_h.u_lane.o_tail[42]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[42]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[42]"
+      ],
+      "last_Q": [
+        "kv_waddr[8]",
+        "u_h.kv_waddr[8]",
+        "u_h.vm_waddr[8]",
+        "vm_waddr[8]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 53,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[43]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[43]",
+        "u_h.u_lane.o_daddr[9]",
+        "u_h.u_lane.o_tail[43]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[43]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[43]"
+      ],
+      "last_Q": [
+        "kv_waddr[9]",
+        "u_h.kv_waddr[9]",
+        "u_h.vm_waddr[9]",
+        "vm_waddr[9]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 54,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[44]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[44]",
+        "u_h.u_lane.o_daddr[10]",
+        "u_h.u_lane.o_tail[44]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[44]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[44]"
+      ],
+      "last_Q": [
+        "kv_waddr[10]",
+        "u_h.kv_waddr[10]",
+        "u_h.vm_waddr[10]",
+        "vm_waddr[10]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 55,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[45]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[45]",
+        "u_h.u_lane.o_daddr[11]",
+        "u_h.u_lane.o_tail[45]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[45]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[45]"
+      ],
+      "last_Q": [
+        "kv_waddr[11]",
+        "u_h.kv_waddr[11]",
+        "u_h.vm_waddr[11]",
+        "vm_waddr[11]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 56,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[46]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[46]",
+        "u_h.u_lane.o_daddr[12]",
+        "u_h.u_lane.o_tail[46]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[46]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[46]"
+      ],
+      "last_Q": [
+        "kv_waddr[12]",
+        "u_h.kv_waddr[12]",
+        "u_h.vm_waddr[12]",
+        "vm_waddr[12]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 57,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[47]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[47]",
+        "u_h.u_lane.o_daddr[13]",
+        "u_h.u_lane.o_tail[47]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[47]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[47]"
+      ],
+      "last_Q": [
+        "kv_waddr[13]",
+        "u_h.kv_waddr[13]",
+        "u_h.vm_waddr[13]",
+        "vm_waddr[13]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 58,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[48]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[48]",
+        "u_h.u_lane.o_daddr[14]",
+        "u_h.u_lane.o_tail[48]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[48]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[48]"
+      ],
+      "last_Q": [
+        "kv_waddr[14]",
+        "u_h.kv_waddr[14]",
+        "u_h.vm_waddr[14]",
+        "vm_waddr[14]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 59,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[49]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[49]",
+        "u_h.u_lane.o_daddr[15]",
+        "u_h.u_lane.o_tail[49]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[49]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[49]"
+      ],
+      "last_Q": [
+        "kv_waddr[15]",
+        "u_h.kv_waddr[15]",
+        "u_h.vm_waddr[15]",
+        "vm_waddr[15]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 60,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[50]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[50]",
+        "u_h.u_lane.o_daddr[16]",
+        "u_h.u_lane.o_tail[50]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[50]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[50]"
+      ],
+      "last_Q": [
+        "kv_waddr[16]",
+        "u_h.kv_waddr[16]",
+        "u_h.vm_waddr[16]",
+        "vm_waddr[16]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 61,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[51]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[51]",
+        "u_h.u_lane.o_daddr[17]",
+        "u_h.u_lane.o_tail[51]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[51]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[51]"
+      ],
+      "last_Q": [
+        "kv_waddr[17]",
+        "u_h.kv_waddr[17]",
+        "u_h.vm_waddr[17]",
+        "vm_waddr[17]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 62,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[52]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[52]",
+        "u_h.u_lane.o_daddr[18]",
+        "u_h.u_lane.o_tail[52]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[52]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[52]"
+      ],
+      "last_Q": [
+        "kv_waddr[18]",
+        "u_h.kv_waddr[18]",
+        "u_h.vm_waddr[18]",
+        "vm_waddr[18]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 63,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[53]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[53]",
+        "u_h.u_lane.o_daddr[19]",
+        "u_h.u_lane.o_tail[53]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[53]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[53]"
+      ],
+      "last_Q": [
+        "kv_waddr[19]",
+        "u_h.kv_waddr[19]",
+        "u_h.vm_waddr[19]",
+        "vm_waddr[19]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 64,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[54]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[54]",
+        "u_h.u_lane.o_daddr[20]",
+        "u_h.u_lane.o_tail[54]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[54]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[54]"
+      ],
+      "last_Q": [
+        "kv_waddr[20]",
+        "u_h.kv_waddr[20]",
+        "u_h.vm_waddr[20]",
+        "vm_waddr[20]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 65,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[55]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[55]",
+        "u_h.u_lane.o_daddr[21]",
+        "u_h.u_lane.o_tail[55]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[55]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[55]"
+      ],
+      "last_Q": [
+        "kv_waddr[21]",
+        "u_h.kv_waddr[21]",
+        "u_h.vm_waddr[21]",
+        "vm_waddr[21]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 66,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[56]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[56]",
+        "u_h.u_lane.o_daddr[22]",
+        "u_h.u_lane.o_tail[56]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[56]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[56]"
+      ],
+      "last_Q": [
+        "kv_waddr[22]",
+        "u_h.kv_waddr[22]",
+        "u_h.vm_waddr[22]",
+        "vm_waddr[22]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 67,
+      "depth": 3,
+      "group": "required_SRAM_capture_and_output_pin",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q[57]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo[57]",
+        "u_h.u_lane.o_daddr[23]",
+        "u_h.u_lane.o_tail[57]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q[57]",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q[57]"
+      ],
+      "last_Q": [
+        "kv_waddr[23]",
+        "u_h.kv_waddr[23]",
+        "u_h.vm_waddr[23]",
+        "vm_waddr[23]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 68,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[0]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[7]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[7]",
+        "u_h.u_lane.s3_tail[7]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[7]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 69,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[1]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[8]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[8]",
+        "u_h.u_lane.s3_tail[8]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[8]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 70,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[2]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[9]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[9]",
+        "u_h.u_lane.s3_tail[9]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[9]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 71,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[3]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[10]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[10]",
+        "u_h.u_lane.s3_tail[10]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[10]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 72,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[4]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[11]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[11]",
+        "u_h.u_lane.s3_tail[11]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[11]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 73,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[5]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[12]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[12]",
+        "u_h.u_lane.s3_tail[12]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[12]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 74,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[6]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[13]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[13]",
+        "u_h.u_lane.s3_tail[13]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[13]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 75,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[7]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[14]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[14]",
+        "u_h.u_lane.s3_tail[14]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[14]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 76,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[8]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[15]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[15]",
+        "u_h.u_lane.s3_tail[15]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[15]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 77,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[9]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[9]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[9]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[9]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[9]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[16]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[16]",
+        "u_h.u_lane.s3_tail[16]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[16]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 78,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[10]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[10]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[10]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[10]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[10]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[17]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[17]",
+        "u_h.u_lane.s3_tail[17]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[17]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 79,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[11]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[11]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[11]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[11]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[11]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[18]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[18]",
+        "u_h.u_lane.s3_tail[18]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[18]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 80,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[12]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[12]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[12]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[12]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[12]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[19]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[19]",
+        "u_h.u_lane.s3_tail[19]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[19]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 81,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[13]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[13]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[13]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[13]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[13]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[20]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[20]",
+        "u_h.u_lane.s3_tail[20]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[20]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 82,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[14]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[14]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[14]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[14]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[14]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[21]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[21]",
+        "u_h.u_lane.s3_tail[21]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[21]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 83,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[15]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[15]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[15]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[15]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[15]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[22]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[22]",
+        "u_h.u_lane.s3_tail[22]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[22]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 84,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[16]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[16]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[16]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[16]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[16]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[23]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[23]",
+        "u_h.u_lane.s3_tail[23]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[23]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 85,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[17]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[17]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[17]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[17]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[17]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[24]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[24]",
+        "u_h.u_lane.s3_tail[24]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[24]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 86,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[18]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[18]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[18]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[18]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[18]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[25]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[25]",
+        "u_h.u_lane.s3_tail[25]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[25]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 87,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[19]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[19]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[19]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[19]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[19]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[26]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[26]",
+        "u_h.u_lane.s3_tail[26]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[26]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 88,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[20]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[20]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[20]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[20]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[20]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[27]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[27]",
+        "u_h.u_lane.s3_tail[27]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[27]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 89,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[21]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[21]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[21]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[21]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[21]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[28]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[28]",
+        "u_h.u_lane.s3_tail[28]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[28]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 90,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[22]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[22]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[22]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[22]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[22]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[29]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[29]",
+        "u_h.u_lane.s3_tail[29]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[29]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 91,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[23]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[23]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[23]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[23]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[23]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[30]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[30]",
+        "u_h.u_lane.s3_tail[30]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[30]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 92,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[24]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[24]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[24]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[24]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[24]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[34]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[34]",
+        "u_h.u_lane.s3_tail[34]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[34]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 93,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[25]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[25]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[25]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[25]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[25]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[35]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[35]",
+        "u_h.u_lane.s3_tail[35]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 94,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[26]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[26]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[26]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[26]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[26]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[36]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[36]",
+        "u_h.u_lane.s3_tail[36]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[36]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 95,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[27]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[27]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[27]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[27]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[27]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[37]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[37]",
+        "u_h.u_lane.s3_tail[37]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[37]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 96,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[28]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[28]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[28]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[28]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[28]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[38]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[38]",
+        "u_h.u_lane.s3_tail[38]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[38]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 97,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[29]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[29]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[29]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[29]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[29]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[39]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[39]",
+        "u_h.u_lane.s3_tail[39]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[39]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 98,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[30]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[30]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[30]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[30]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[30]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[40]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[40]",
+        "u_h.u_lane.s3_tail[40]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[40]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 99,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[31]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[31]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[31]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[31]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[31]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[41]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[41]",
+        "u_h.u_lane.s3_tail[41]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[41]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 100,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[32]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[32]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[32]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[32]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[32]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[42]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[42]",
+        "u_h.u_lane.s3_tail[42]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[42]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 101,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[33]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[33]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[33]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[33]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[33]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[43]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[43]",
+        "u_h.u_lane.s3_tail[43]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[43]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 102,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[34]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[34]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[34]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[34]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[34]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[44]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[44]",
+        "u_h.u_lane.s3_tail[44]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[44]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 103,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[35]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[35]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[35]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[35]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[35]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[45]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[45]",
+        "u_h.u_lane.s3_tail[45]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[45]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 104,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[36]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[36]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[36]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[36]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[36]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[46]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[46]",
+        "u_h.u_lane.s3_tail[46]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[46]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 105,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[37]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[37]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[37]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[37]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[37]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[47]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[47]",
+        "u_h.u_lane.s3_tail[47]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[47]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 106,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[38]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[38]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[38]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[38]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[38]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[48]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[48]",
+        "u_h.u_lane.s3_tail[48]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[48]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 107,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[39]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[39]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[39]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[39]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[39]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[49]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[49]",
+        "u_h.u_lane.s3_tail[49]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[49]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 108,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[40]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[40]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[40]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[40]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[40]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[50]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[50]",
+        "u_h.u_lane.s3_tail[50]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[50]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 109,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[41]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[41]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[41]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[41]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[41]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[51]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[51]",
+        "u_h.u_lane.s3_tail[51]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[51]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 110,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[42]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[42]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[42]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[42]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[42]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[52]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[52]",
+        "u_h.u_lane.s3_tail[52]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[52]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 111,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[43]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[43]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[43]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[43]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[43]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[53]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[53]",
+        "u_h.u_lane.s3_tail[53]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[53]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 112,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[44]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[44]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[44]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[44]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[44]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[54]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[54]",
+        "u_h.u_lane.s3_tail[54]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[54]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 113,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[45]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[45]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[45]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[45]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[45]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[55]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[55]",
+        "u_h.u_lane.s3_tail[55]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[55]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 114,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[46]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[46]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[46]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[46]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[46]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[56]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[56]",
+        "u_h.u_lane.s3_tail[56]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[56]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 115,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[47]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[47]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[47]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[47]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[47]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[57]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[57]",
+        "u_h.u_lane.s3_tail[57]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[57]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 116,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[48]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[48]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[48]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[48]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[48]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[0]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[0]",
+        "u_h.u_lane.s3_tail[0]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 117,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[49]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[49]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[49]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[49]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[49]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[1]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[1]",
+        "u_h.u_lane.s3_tail[1]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 118,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[50]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[50]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[50]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[50]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[50]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[2]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[2]",
+        "u_h.u_lane.s3_tail[2]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[2]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 119,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[51]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[51]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[51]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[51]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[51]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[3]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[3]",
+        "u_h.u_lane.s3_tail[3]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[3]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 120,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[52]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[52]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[52]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[52]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[52]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[4]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[4]",
+        "u_h.u_lane.s3_tail[4]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[4]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 121,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[53]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[53]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[53]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[53]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[53]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[5]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[5]",
+        "u_h.u_lane.s3_tail[5]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 122,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[54]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[54]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[54]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[54]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[54]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[6]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[6]",
+        "u_h.u_lane.s3_tail[6]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[6]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 123,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[59]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[59]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[59]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[59]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[59]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[5]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[5]",
+        "u_h.u_lane.s3_imm2[0]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 124,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[60]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[60]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[60]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[60]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[60]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[6]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[6]",
+        "u_h.u_lane.s3_imm2[1]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[6]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 125,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[61]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[61]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[61]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[61]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[61]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[7]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[7]",
+        "u_h.u_lane.s3_imm2[2]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[7]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 126,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[62]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[62]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[62]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[62]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[62]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[8]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[8]",
+        "u_h.u_lane.s3_imm2[3]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[8]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 127,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[63]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[63]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[63]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/q[63]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/used_q[63]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[9]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[9]",
+        "u_h.u_lane.s3_imm2[4]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[9]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 128,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[64]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[64]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[64]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[0]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[10]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[10]",
+        "u_h.u_lane.s3_imm2[5]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[10]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 129,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[65]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[65]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[65]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[1]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[11]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[11]",
+        "u_h.u_lane.s3_imm2[6]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[11]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 130,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[66]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[66]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[66]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[2]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[12]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[12]",
+        "u_h.u_lane.s3_imm2[7]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[12]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 131,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[67]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[67]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[67]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[3]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[13]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[13]",
+        "u_h.u_lane.s3_imm2[8]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[13]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 132,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[68]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[68]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[68]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[4]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[14]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[14]",
+        "u_h.u_lane.s3_imm2[9]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[14]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 133,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[69]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[69]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[69]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[5]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[15]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[15]",
+        "u_h.u_lane.s3_imm2[10]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[15]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 134,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[70]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[70]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[70]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[6]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[16]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[16]",
+        "u_h.u_lane.s3_imm2[11]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[16]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 135,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[71]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[71]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[71]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[7]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[17]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[17]",
+        "u_h.u_lane.s3_imm2[12]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[17]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 136,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[72]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[72]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[72]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[8]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[18]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[18]",
+        "u_h.u_lane.s3_imm2[13]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[18]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 137,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[73]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[73]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[73]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[9]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[9]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[19]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[19]",
+        "u_h.u_lane.s3_imm2[14]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[19]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 138,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[74]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[74]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[74]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[10]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[10]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[20]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[20]",
+        "u_h.u_lane.s3_imm2[15]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[20]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 139,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[75]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[75]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[75]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[11]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[11]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[21]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[21]",
+        "u_h.u_lane.s3_imm2[16]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[21]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 140,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[76]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[76]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[76]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[12]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[12]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[22]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[22]",
+        "u_h.u_lane.s3_imm2[17]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[22]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 141,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[77]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[77]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[77]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[13]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[13]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[23]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[23]",
+        "u_h.u_lane.s3_imm2[18]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[23]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 142,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[78]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[78]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[78]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[14]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[14]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[24]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[24]",
+        "u_h.u_lane.s3_imm2[19]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[24]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 143,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[79]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[79]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[79]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[15]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[15]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[25]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[25]",
+        "u_h.u_lane.s3_imm2[20]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[25]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 144,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[80]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[80]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[80]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[16]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[16]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[26]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[26]",
+        "u_h.u_lane.s3_imm2[21]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[26]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 145,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[81]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[81]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[81]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[17]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[17]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[27]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[27]",
+        "u_h.u_lane.s3_imm2[22]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[27]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 146,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[82]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[82]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[82]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[18]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[18]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[28]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[28]",
+        "u_h.u_lane.s3_imm2[23]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[28]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 147,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[83]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[83]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[83]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[19]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[19]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[29]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[29]",
+        "u_h.u_lane.s3_imm2[24]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[29]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 148,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[84]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[84]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[84]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[20]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[20]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[30]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[30]",
+        "u_h.u_lane.s3_imm2[25]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[30]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 149,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[85]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[85]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[85]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[21]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[21]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[31]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[31]",
+        "u_h.u_lane.s3_imm2[26]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 150,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[86]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[86]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[86]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[22]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[22]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[32]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[32]",
+        "u_h.u_lane.s3_imm2[27]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[32]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 151,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[87]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[87]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[87]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[23]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[23]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[33]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[33]",
+        "u_h.u_lane.s3_imm2[28]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 152,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[88]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[88]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[88]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[24]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[24]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[34]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[34]",
+        "u_h.u_lane.s3_imm2[29]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[34]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 153,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[89]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[89]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[89]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[25]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[25]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[35]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[35]",
+        "u_h.u_lane.s3_imm2[30]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[35]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 154,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[90]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[90]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[90]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[26]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[26]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[36]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[36]",
+        "u_h.u_lane.s3_imm2[31]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[36]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 155,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[91]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[91]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[91]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[27]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[27]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 156,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[92]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[92]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[92]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[28]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[28]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 157,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[93]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[93]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[93]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[29]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[29]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[2]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 158,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[94]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[94]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[94]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[30]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[30]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[3]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 159,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[95]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[95]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[95]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[31]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[31]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[4]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 160,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[96]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[96]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[96]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[32]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[32]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[5]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 161,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[97]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[97]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[97]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[33]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[33]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[6]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 162,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[98]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[98]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[98]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[34]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[34]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[7]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 163,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[99]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[99]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[99]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[35]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[35]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[8]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 164,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[100]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[100]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[100]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[36]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[36]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[9]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 165,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[101]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[101]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[101]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[37]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[37]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[10]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 166,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[102]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[102]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[102]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[38]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[38]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[11]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 167,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[103]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[103]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[103]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[39]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[39]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[12]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 168,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[104]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[104]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[104]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[40]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[40]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[13]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 169,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[105]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[105]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[105]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[41]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[41]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[14]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 170,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[106]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[106]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[106]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[42]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[42]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[15]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 171,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[107]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[107]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[107]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[43]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[43]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[16]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 172,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[108]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[108]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[108]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[44]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[44]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[17]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 173,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[109]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[109]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[109]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[45]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[45]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[18]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 174,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[110]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[110]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[110]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[46]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[46]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[19]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 175,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[111]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[111]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[111]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[47]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[47]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[20]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 176,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[112]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[112]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[112]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[48]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[48]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[21]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 177,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[113]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[113]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[113]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[49]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[49]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[22]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 178,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[114]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[114]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[114]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[50]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[50]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[23]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 179,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[115]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[115]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[115]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[51]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[51]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[24]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 180,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[116]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[116]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[116]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[52]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[52]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[25]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 181,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[117]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[117]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[117]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[53]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[53]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[26]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 182,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[118]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[118]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[118]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[54]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[54]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[27]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 183,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[119]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[119]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[119]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[55]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[55]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[28]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 184,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[120]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[120]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[120]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[56]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[56]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[29]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 185,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[121]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[121]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[121]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[57]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[57]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[30]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 186,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[122]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[122]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[122]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[58]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[58]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_imm1[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 187,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[123]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[123]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[123]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[59]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[59]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[0]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[0]",
+        "u_h.u_lane.s3_ad[0]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 188,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[124]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[124]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[124]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[60]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[60]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[1]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[1]",
+        "u_h.u_lane.s3_ad[1]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 189,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[125]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[125]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[125]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[61]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[61]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_packed_d38.u_d38.d[2]",
+        "u_h.u_lane.g_packed_d38.u_d38.di[2]",
+        "u_h.u_lane.s3_ad[2]",
+        "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/d[2]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 190,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[126]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[126]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[126]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[62]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[62]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[32]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[32]",
+        "u_h.u_lane.s3_tail[32]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[32]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 191,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[127]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[127]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[127]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/q[63]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/used_q[63]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[33]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[33]",
+        "u_h.u_lane.s3_tail[33]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[33]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 192,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[128]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[128]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[128]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[0]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[0]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[58]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[58]",
+        "u_h.u_lane.s3_tail[58]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[58]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 193,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[129]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[129]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[129]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[1]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[1]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[59]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[59]",
+        "u_h.u_lane.s3_tail[59]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[59]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 194,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[130]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[130]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[130]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[2]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[2]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_mb[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 195,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[131]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[131]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[131]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[3]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[3]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_mb[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 196,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[132]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[132]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[132]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[4]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[4]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_ma[0]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 197,
+      "depth": 3,
+      "group": "SRAM_capture_plus_two_tag_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[133]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[133]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[133]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[5]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[5]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.s2_ma[1]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": false
+    },
+    {
+      "chain": 198,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[134]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[134]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[134]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[6]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[6]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[31]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[31]",
+        "u_h.u_lane.s3_tail[31]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[31]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 199,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[135]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[135]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[135]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[7]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[7]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[60]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[60]",
+        "u_h.u_lane.s3_tail[60]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[60]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    },
+    {
+      "chain": 200,
+      "depth": 4,
+      "group": "SRAM_capture_plus_three_tag_tail_edges",
+      "clock": [
+        2
+      ],
+      "stage_types": [
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_",
+        "$_DFF_P_"
+      ],
+      "first_Q": [
+        "u_h.u_lane.e_tag_m[136]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.q[136]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.qo[136]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/q[8]",
+        "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/used_q[8]"
+      ],
+      "last_Q": [
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.d[61]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.di[61]",
+        "u_h.u_lane.s3_tail[61]",
+        "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/d[61]"
+      ],
+      "partial_ring_eligible_after_lifetime_proof": true
+    }
+  ],
+  "candidate": {
+    "eligible_chain_ids": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      198,
+      199,
+      200
+    ],
+    "kept_SRAM_output_capture_FF": 97,
+    "replaceable_tail_bits": 291,
+    "ring_slot_count": 2,
+    "ring_slot_data_bits": 194,
+    "registered_result_FF": 97,
+    "phase_copies": 10,
+    "max_chunk_width": 10,
+    "extra_control_FF": 10,
+    "total_partial_state_FF": 301,
+    "whole_head_projected_FF_before_other_safe_fixes": 6729,
+    "clock_load_delta": 10,
+    "new_reset_sinks": 10,
+    "write_bits_per_edge": 97,
+    "read_bits_per_edge": 97,
+    "continuous_update": true,
+    "logical_clock": "C=[2], actual head clk",
+    "source_tail_reset": "none",
+    "source_tail_class_clear": "none; lifetime suppression is downstream, not tail update",
+    "source_user_port": null,
+    "source_abort_port": null,
+    "same_address_semantics": "read OLD slot and overwrite same slot on each native edge",
+    "equations": "slot[phase] <- input; result <- OLD slot[phase]; phase <- !phase. Result delay3 incl sample edge. Keep upstream SRAM capture.",
+    "added_steady_edges": 0,
+    "native_std_area_um2": null,
+    "macro_identity": "none new; finite291bit storage below2kb, all15 old macros unchanged",
+    "mux_upper_bound": {
+      "write_feedback_mux2": 194,
+      "read_mux2": 97,
+      "total_mux2": 291,
+      "phase_inverters": 10
+    },
+    "fanout_analytical_per_phase_max": 31,
+    "native_fanout_depth_reach_reset_first_use": null,
+    "clock_cap_delta_fF": null,
+    "counter_width_bits_per_chunk": 1,
+    "valid_mask_bits": 0,
+    "first_use_reset_contract": null,
+    "all_output_equivalence_before_convergence": false,
+    "adoption": "HOLD. Pointer reset changes unreset retained history. Need real source qualified-consumer/abort/reset producer contract; no invented warmguard."
+  },
+  "all_output_ports_preserved": 30,
+  "metadata_and_numeric_ages": "unchanged intended; no RTL simulation run for candidate; priorW10 ages189/140/110/70/196 do not validate candidate",
+  "mixed_chains": "All24 including FPU arithmetic/valid remain unchanged; no shared FPU/reset edits authorized.",
+  "unconsumed_capture_FF": [
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102697",
+      "Q": [
+        44134
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_p",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102698",
+      "Q": [
+        44135
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_p",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102699",
+      "Q": [
+        44136
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_p",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102701",
+      "Q": [
+        44137
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_final",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102702",
+      "Q": [
+        44138
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_first8",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102703",
+      "Q": [
+        44139
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_ifirst",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    },
+    {
+      "cell": "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/$auto$ff.cc:337:slice$102758",
+      "Q": [
+        44140
+      ],
+      "names": [
+        "u_h.u_lane.g_packed_dmd.u_dmd.q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.qo",
+        "u_h.u_lane.o_mc",
+        "u_h.u_lane.o_tail",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/q",
+        "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/used_q"
+      ]
+    }
+  ],
+  "no_ghost_pruning": true,
+  "output_ports": [
+    "va_re",
+    "va_addr",
+    "vb_re",
+    "vb_addr",
+    "vc_re",
+    "vc_addr",
+    "wrom_re",
+    "wrom_addr",
+    "crom_re",
+    "crom_addr",
+    "vm_we",
+    "vm_waddr",
+    "vm_wdata",
+    "kv_we",
+    "kv_waddr",
+    "kv_wdata",
+    "l_ov",
+    "l_out",
+    "l_red",
+    "l_redsq",
+    "l_raddr",
+    "l_last",
+    "retire",
+    "l_fault",
+    "sx_exp_v",
+    "sx_exp_x",
+    "sx_rcp_v",
+    "sx_rcp_x",
+    "sx_rsq_v",
+    "sx_rsq_x"
+  ],
+  "readwrite_operations_per_edge": {
+    "ring_slot_read": 97,
+    "ring_slot_write": 97,
+    "SRAM_ports_added": 0
+  },
+  "model_proof_vehicle": "prove_holding_model.py abstract recurrence; production source and all-output validation not run"
+}
