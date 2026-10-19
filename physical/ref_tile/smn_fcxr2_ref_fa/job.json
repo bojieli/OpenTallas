@@ -1,5 +1,5 @@
 {
- "name": "smn_fcxr2_ref_fa-r1-f4f16e878",
+ "name": "smn_fcxr2_ref_fa-r1-COMMIT",
  "block": "ot_hbm_accel_smh_fc_xr2",
  "ref_tile": true,
  "owner": "Claude:HF-5a",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/hf5a-1018",
-  "commit": "f4f16e878",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
   ]
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smn_fcxr2_ref_fa/smn_fcxr2_ref_fa-r1-f4f16e878"
+   "to": "results/rtl/ref_tile/smn_fcxr2_ref_fa/smn_fcxr2_ref_fa-r1-COMMIT"
   }
  ],
  "cycles_added": 1,
