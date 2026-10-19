@@ -23,5 +23,7 @@ rep(' `PGS_PORTS(r)\n', ''' `PGS_PORTS(r)
  reg r_lgf_h=0;
 ''')
 rep('ot_hbm_su_static_pg_stream_split_safe2 #(', 'ot_hbm_su_static_pg_stream_split_safe3 #(')
-rep('  if(d_lgf!==r_lgf) err("lg_fault");\n', '  if(d_lgf!==r_lgf_h) err("lg_fault (+1 stream)");\n  r_lgf_h <= r_lgf;\n')
+rep('  if(d_lgf!==r_lgf) err("lg_fault");\n', '  if(d_lgf!==r_lgf_h) err("lg_fault (+1 stream)");\n')
+# history of the reference lg_fault on EVERY stream edge (also while chk = 0, e.g. across the second reset epoch)
+rep(' reg r_lgf_h=0;\n', ' reg r_lgf_h=0;\n always @(posedge pg_clk) r_lgf_h <= r_lgf;\n')
 Path('rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_safe3.sv').write_text(t)

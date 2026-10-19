@@ -46,6 +46,7 @@ module tb_hbm_su_pg_stream_safe3;
  wire [59:0] r_vmr = r_vmr_q, d_vmr = vmr;
  wire [561:0] r_suwq = r_suwq_q, d_suwq = suwq;
  reg r_lgf_h=0;
+ always @(posedge pg_clk) r_lgf_h <= r_lgf;
  // SAFE2 r5 inject pin capture: reference inputs one pg_clk edge late (DUT registers them itself).
  reg [1:0] r_injrd_q=0; reg [159:0] r_inja_q=0;
  always @(posedge pg_clk) begin r_injrd_q <= injrd; r_inja_q <= inja; end
@@ -142,7 +143,6 @@ module tb_hbm_su_pg_stream_safe3;
   if(d_farrr!==r_farrr) err("far_rr");
   if(d_farwd!==r_farwd) err("far_w_done");
   if(d_lgf!==r_lgf_h) err("lg_fault (+1 stream)");
-  r_lgf_h <= r_lgf;
  end
  // ---------------------------------------------------------------- seam calendar windows
  // groups: 0 request banks (q->s), 1 return banks (s->q), 2 inject banks (s->q)
