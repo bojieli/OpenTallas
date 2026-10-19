@@ -52,9 +52,9 @@ one(){ # case
  echo "RUN_RC=$?" >> "$O/$case.log"
  local m; m=$(grep -E "^(ROWGATHER_ROWS|ARGMAX_ROWS)_MEASURE" "$O/$case.log" | head -1)
  if [[ -z "$mut" ]];then
-  if grep -q "^$tag PASS" "$O/$case.log";then V "$case: PASS rows=$nq3/$nq2 | $m";else V "$case: FAIL (expected PASS) | $m";fi
+  if grep -Eq "^ *$tag PASS" "$O/$case.log";then V "$case: PASS rows=$nq3/$nq2 | $m";else V "$case: FAIL (expected PASS) | $m";fi
  else
-  if grep -q "^$tag FAIL" "$O/$case.log";then V "$case: mutant FAIL (rejected, expected) | $m";else V "$case: MUTANT SURVIVED | $m";fi
+  if grep -Eq "^ *$tag FAIL" "$O/$case.log";then V "$case: mutant FAIL (rejected, expected) | $m";else V "$case: MUTANT SURVIVED | $m";fi
  fi
 }
 for c in ${CASES:-P1 P2 P3 P4 P6 A1 A2 A3 A4 A6 P4_row_stride P4_link_step A4_vm_step};do one $c & done

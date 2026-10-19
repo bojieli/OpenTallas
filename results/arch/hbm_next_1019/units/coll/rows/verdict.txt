@@ -1,0 +1,16 @@
+2026-10-19T01:44:02-07:00 start host=regular-crane bundle=503d67d376efa578c3e7703fdbe64534c51f9e50 R=623 W=453
+2026-10-19T01:50:06-07:00 build ok
+2026-10-19T01:50:08-07:00 P1: PASS rows=28/26 | ROWGATHER_ROWS_MEASURE P1 R623 W453 launch_to_last_delivery q3=1113 q2=1113 die=1113 delivered3115/3115 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:08-07:00 A2: FAIL (expected PASS) | ARGMAX_ROWS_MEASURE P2 launch_to_last_delivery q3=85 positions2/2 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:09-07:00 A3: FAIL (expected PASS) | ARGMAX_ROWS_MEASURE P3 launch_to_last_delivery q3=117 positions3/3 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:09-07:00 P4_link_step: mutant FAIL (rejected, expected) | ROWGATHER_ROWS_MEASURE P4 R623 W453 launch_to_last_delivery q3=2982 q2=2982 die=2982 delivered12460/12460 data_err12450 addr_err0 stray0 fault_first26
+2026-10-19T01:50:09-07:00 A6: FAIL (expected PASS) | ARGMAX_ROWS_MEASURE P6 launch_to_last_delivery q3=213 positions6/6 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:09-07:00 A4_vm_step: MUTANT SURVIVED | ARGMAX_ROWS_MEASURE P4 launch_to_last_delivery q3=149 positions4/4 data_err3 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:10-07:00 A4: FAIL (expected PASS) | ARGMAX_ROWS_MEASURE P4 launch_to_last_delivery q3=149 positions4/4 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:10-07:00 P2: PASS rows=29/27 | ROWGATHER_ROWS_MEASURE P2 R623 W453 launch_to_last_delivery q3=1736 q2=1736 die=1736 delivered6230/6230 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:10-07:00 A1: FAIL (expected PASS) | ARGMAX_ROWS_MEASURE P1 launch_to_last_delivery q3=53 positions1/1 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:11-07:00 P3: PASS rows=30/28 | ROWGATHER_ROWS_MEASURE P3 R623 W453 launch_to_last_delivery q3=2359 q2=2359 die=2359 delivered9345/9345 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:13-07:00 P6: PASS rows=33/31 | ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=4228 q2=4228 die=4228 delivered18690/18690 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:13-07:00 P4: PASS rows=31/29 | ROWGATHER_ROWS_MEASURE P4 R623 W453 launch_to_last_delivery q3=2982 q2=2982 die=2982 delivered12460/12460 data_err0 addr_err0 stray0 fault_first-1
+2026-10-19T01:50:14-07:00 P4_row_stride: mutant FAIL (rejected, expected) | ROWGATHER_ROWS_MEASURE P4 R623 W453 launch_to_last_delivery q3=2982 q2=2982 die=2982 delivered12460/12460 data_err0 addr_err9345 stray0 fault_first-1
+2026-10-19T01:50:14-07:00 done
