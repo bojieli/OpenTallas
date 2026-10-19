@@ -1,0 +1,517 @@
+{
+  "schema": "opentallas.qwen.ovl-phase-storage-comparison.candidate.v1",
+  "model_only": true,
+  "source": {
+    "shared": "844953bfc",
+    "canonical_context": "results/rtl/mu_qwen_1018/kvctx/README.md#2",
+    "controller_adapter": "14114cd77"
+  },
+  "frame_tokens": 16,
+  "calpipe_opcal_sha256": "47eafdf934214be8ef6a5585f7ca4607c68651db97a3bcf4887b5b5c7c006f4e",
+  "leaf_capacity": {
+    "validation_error": "4521 leaf entries do not fit the 4096-word ROM",
+    "base_entries": 4521,
+    "base_4096_banks": 2,
+    "cohort2H_estimate": 4524,
+    "qualification": "cohort2H count still requires calpipe INIT/RETIRE emission manifest; +3 is three INIT head variants only"
+  },
+  "H": 4026800,
+  "origin": 4022621,
+  "D0": 16,
+  "rate": 13708.15535909407,
+  "calendar_entries": {
+    "req": {
+      "C_tx": 4,
+      "K_rx": 4
+    },
+    "rsp": {
+      "C_rx": 2,
+      "K_tx": 2
+    },
+    "tok_tx": {
+      "C_tx": 2,
+      "K_rx": 2
+    },
+    "tok_rx": {
+      "C_rx": 5,
+      "K_tx": 5
+    }
+  },
+  "per_user_go_counts": {
+    "C_tx": {
+      "0": 592,
+      "1": 555,
+      "2": 296,
+      "3": 259
+    },
+    "C_rx": {
+      "0": 592,
+      "1": 555,
+      "2": 296,
+      "3": 259
+    },
+    "K_tx": {
+      "0": 592,
+      "1": 555,
+      "2": 296,
+      "3": 259
+    },
+    "K_rx": {
+      "0": 592,
+      "1": 555,
+      "2": 296,
+      "3": 259
+    }
+  },
+  "canonical_context": {
+    "logical_mu": {
+      "kind": 12,
+      "beat": 1,
+      "K_cycle": 2
+    },
+    "logical_user0": {
+      "kind": 12,
+      "beat": 0,
+      "K_cycle": 3
+    },
+    "wire_beat": 0,
+    "identity_bits": 129,
+    "wire_record_bits": 548,
+    "controller_bank_load_after_rx_slot": 2,
+    "identity_validation": "full face context receiver checks digest/image epoch/cap; raw observer alone insufficient"
+  },
+  "playhead_quiet_boundary": {
+    "last_busy_offset": -3856,
+    "next_start_offset": 3924,
+    "width": 7780,
+    "qualification": "link playheads only: does not prove programme retirement or host/controller quiescence"
+  },
+  "physical_rom": {
+    "depth": 4096,
+    "width": 72,
+    "area_um2": 2391.5865599999997,
+    "outline_um": [
+      38.016,
+      62.91
+    ]
+  },
+  "candidates": [
+    {
+      "representation": "expanded32",
+      "phases": 2,
+      "packing": 1,
+      "entries": {
+        "C_tx": 3405,
+        "C_rx": 3405,
+        "K_tx": 3405,
+        "K_rx": 3405
+      },
+      "logical_period": 8053600,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 12,
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 0,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 2,
+      "packing": 2,
+      "entries": {
+        "C_tx": 3405,
+        "C_rx": 3405,
+        "K_tx": 3405,
+        "K_rx": 3405
+      },
+      "logical_period": 8053600,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 12,
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 1,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "mask32",
+      "phases": 2,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 1,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "mask72",
+      "phases": 2,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 1,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 4,
+      "packing": 1,
+      "entries": {
+        "C_tx": 6809,
+        "C_rx": 6809,
+        "K_tx": 6809,
+        "K_rx": 6809
+      },
+      "logical_period": 16107200,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 13,
+      "physical_banks": {
+        "C_tx": 2,
+        "C_rx": 2,
+        "K_tx": 2,
+        "K_rx": 2
+      },
+      "macro_area_um2": 19132.692479999998,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 0,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 4,
+      "packing": 2,
+      "entries": {
+        "C_tx": 6809,
+        "C_rx": 6809,
+        "K_tx": 6809,
+        "K_rx": 6809
+      },
+      "logical_period": 16107200,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 13,
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 1,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "mask32",
+      "phases": 4,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 2,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "mask72",
+      "phases": 4,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 2,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 8,
+      "packing": 1,
+      "entries": {
+        "C_tx": 13617,
+        "C_rx": 13617,
+        "K_tx": 13617,
+        "K_rx": 13617
+      },
+      "logical_period": 32214400,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 14,
+      "physical_banks": {
+        "C_tx": 4,
+        "C_rx": 4,
+        "K_tx": 4,
+        "K_rx": 4
+      },
+      "macro_area_um2": 38265.384959999996,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 0,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 8,
+      "packing": 2,
+      "entries": {
+        "C_tx": 13617,
+        "C_rx": 13617,
+        "K_tx": 13617,
+        "K_rx": 13617
+      },
+      "logical_period": 32214400,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 14,
+      "physical_banks": {
+        "C_tx": 2,
+        "C_rx": 2,
+        "K_tx": 2,
+        "K_rx": 2
+      },
+      "macro_area_um2": 19132.692479999998,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 1,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "mask32",
+      "phases": 8,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 3,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "mask72",
+      "phases": 8,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 3,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 16,
+      "packing": 1,
+      "entries": {
+        "C_tx": 27233,
+        "C_rx": 27233,
+        "K_tx": 27233,
+        "K_rx": 27233
+      },
+      "logical_period": 64428800,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 15,
+      "physical_banks": {
+        "C_tx": 7,
+        "C_rx": 7,
+        "K_tx": 7,
+        "K_rx": 7
+      },
+      "macro_area_um2": 66964.42367999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 0,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 16,
+      "packing": 2,
+      "entries": {
+        "C_tx": 27233,
+        "C_rx": 27233,
+        "K_tx": 27233,
+        "K_rx": 27233
+      },
+      "logical_period": 64428800,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 15,
+      "physical_banks": {
+        "C_tx": 4,
+        "C_rx": 4,
+        "K_tx": 4,
+        "K_rx": 4
+      },
+      "macro_area_um2": 38265.384959999996,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 1,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "mask72",
+      "phases": 16,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 4,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 32,
+      "packing": 1,
+      "entries": {
+        "C_tx": 54465,
+        "C_rx": 54465,
+        "K_tx": 54465,
+        "K_rx": 54465
+      },
+      "logical_period": 128857600,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 16,
+      "physical_banks": {
+        "C_tx": 14,
+        "C_rx": 14,
+        "K_tx": 14,
+        "K_rx": 14
+      },
+      "macro_area_um2": 133928.84735999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 0,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "expanded32",
+      "phases": 32,
+      "packing": 2,
+      "entries": {
+        "C_tx": 54465,
+        "C_rx": 54465,
+        "K_tx": 54465,
+        "K_rx": 54465
+      },
+      "logical_period": 128857600,
+      "fits_current_leaf_22bit_period": false,
+      "logical_address_bits": 16,
+      "physical_banks": {
+        "C_tx": 7,
+        "C_rx": 7,
+        "K_tx": 7,
+        "K_rx": 7
+      },
+      "macro_area_um2": 66964.42367999999,
+      "mask_or_phase_rtl": "none; AW/ROM banking only",
+      "extra_pipeline_edges": 1,
+      "minimum_list_dt": 35,
+      "qualification": "packing2 needs registered halfword select, MIN_DT>=5; no start edge shift"
+    },
+    {
+      "representation": "mask72",
+      "phases": 32,
+      "entries": {
+        "C_tx": 1703,
+        "C_rx": 1703,
+        "K_tx": 1703,
+        "K_rx": 1703
+      },
+      "physical_banks": {
+        "C_tx": 1,
+        "C_rx": 1,
+        "K_tx": 1,
+        "K_rx": 1
+      },
+      "macro_area_um2": 9566.346239999999,
+      "phase_state_bits_per_player": 5,
+      "new_contract": "phase mask for GO words, wrap only for wait words; common phase increments at H boundary",
+      "qualification": "requires new decoder/reserved-bit validation and all wrapper/leaf/context clocks agree"
+    }
+  ],
+  "unresolved": [
+    "calpipe canonical INIT/RETIRE eligibility and per-user context-load edge manifest",
+    "active request and response must share originating exchange eligibility, not independent start-time masks",
+    "MU paired context selector must be emitted on both ends; missing-selector model cannot qualify admission",
+    "retire-to-next-INIT window must include actual native/KV/controller lifetime, not merely link quiet",
+    "P<=8 is a development candidate, not an irreversible admission count limit"
+  ]
+}
