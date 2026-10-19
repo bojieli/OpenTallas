@@ -445,7 +445,7 @@ def template(root=ROOT):
     params={
         'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
-        'ownership':dict(MUT=0,**({'MU':1,'PIPE':1} if MU else {})),'drain_guard':dict(MUT=0),   # KV-CTL mu2 PIPE drain stage + MU-KV-PROG MU 1 (MU-KV-CTL3 mu3)
+        'ownership':dict(MUT=0,**({'MU':1,'PIPE':1,'SAFE':1} if MU else {})),'drain_guard':dict(MUT=0),   # KV-CTL mu2 PIPE drain stage + MU-KV-PROG MU 1 (MU-KV-CTL3 mu3)
         'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),

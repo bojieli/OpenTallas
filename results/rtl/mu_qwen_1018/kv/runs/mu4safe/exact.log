@@ -1,0 +1,5 @@
+PASS MU4_SAFE checks2688 drain32 group32 rearm64 clean_trace_equal fault_plus1
+- tb.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.004 s; speed 14.214 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

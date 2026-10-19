@@ -1,0 +1,35 @@
+FAIL MU4 check 84 cycle=5 fc=00 halt=1111
+FAIL MU4 check 168 cycle=5 fc=00 halt=1111
+FAIL MU4 check 252 cycle=5 fc=00 halt=1111
+FAIL MU4 check 336 cycle=5 fc=00 halt=1111
+FAIL MU4 check 420 cycle=5 fc=00 halt=1111
+FAIL MU4 check 504 cycle=5 fc=00 halt=1111
+FAIL MU4 check 588 cycle=5 fc=00 halt=1111
+FAIL MU4 check 672 cycle=5 fc=00 halt=1111
+FAIL MU4 check 756 cycle=5 fc=00 halt=1111
+FAIL MU4 check 840 cycle=5 fc=00 halt=1111
+FAIL MU4 check 924 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1008 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1092 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1176 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1260 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1344 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1428 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1512 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1596 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1680 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1764 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1848 cycle=5 fc=00 halt=1111
+FAIL MU4 check 1932 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2016 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2100 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2184 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2268 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2352 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2436 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2520 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2604 cycle=5 fc=00 halt=1111
+FAIL MU4 check 2688 cycle=5 fc=00 halt=1111
+[54406000] %Fatal: tb.sv:31: Assertion failed in tb_kv_ctl_mu4_safe: FAIL MU4 errors32 drain32 group0
+%Error: tb.sv:31: Verilog $stop
+Aborting...

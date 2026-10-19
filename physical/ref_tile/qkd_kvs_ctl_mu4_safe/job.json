@@ -1,0 +1,422 @@
+{
+ "name": "qkd_kvs_ctl_mu4_safe-mu4safe-COMMIT",
+ "block": "qkd_kvs_ctl",
+ "ref_tile": true,
+ "owner": "Codex:KV-CTL",
+ "purpose": "SAFE mu4: registered ownership bad with four KEPT stop copies; forecast guards at root-2 (+1 quiet ck vs mu3), group/config/go fault observation +1 ck; root-bank local enables. 40/16 reset copies conservative upper sizing pending PREOPT load table; 2-stage landing latency unchanged. Centered S ck. All mu3 pin/boot/MU schedules retained.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/kv-ctl-mu4-safe-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_kits_b_1018",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_static_programme_1017/die/target2.hex",
+   "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
+   "results/rtl/mu_qwen_1018/kvboot",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
+   "rtl",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+   "rtl/qwen_sys/mu_qwen_20261018",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_mu_kv_tiles.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu2_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu3_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_boot.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_pc_path_rows.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_writer_rows.f",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu3_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv",
+   "tools",
+   "tools/qwen_kv_die",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu4_safe.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctl_mu_lint",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu lint_mu_kv_tiles; rc=$?; cat {RUN}/bench/mu/lint_mu_kv_tiles.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS LINT_MU_KV_TILES",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/lint_mu_kv_tiles.log"
+   },
+   {
+    "name": "ctl_mu_writer_rows",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu tb_mu_kv_writer_rows; rc=$?; cat {RUN}/bench/mu/tb_mu_kv_writer_rows.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS MU_KV_WRITE_ROWS users4",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/tb_mu_kv_writer_rows.log"
+   },
+   {
+    "name": "ctl_mu_mw1",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw1; rc=$?; cat {RUN}/bench/mu/mw1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user1 layer0 pos0 errors272 nalias8",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mut/mw1.log"
+   },
+   {
+    "name": "ctl_mu_mw2",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw2; rc=$?; cat {RUN}/bench/mu/mw2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user1 layer0 pos0 errors8 nalias0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mut/mw2.log"
+   },
+   {
+    "name": "ctl_mu_mw3",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw3; rc=$?; cat {RUN}/bench/mu/mw3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user0 layer0 pos0 errors272 nalias0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mut/mw3.log"
+   },
+   {
+    "name": "ctl_mu2_lockstep",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 tb_kv_ctl_mu2_lockstep; rc=$?; cat {RUN}/bench/mu2/tb_kv_ctl_mu2_lockstep.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS KV_CTL_MU2_LOCKSTEP",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu2/tb_kv_ctl_mu2_lockstep.log"
+   },
+   {
+    "name": "ctl_mu2_c1",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c1; rc=$?; cat {RUN}/bench/mu2/c1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu2/c1.log"
+   },
+   {
+    "name": "ctl_mu2_c2",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c2; rc=$?; cat {RUN}/bench/mu2/c2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu2/c2.log"
+   },
+   {
+    "name": "ctl_mu2_c3",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c3; rc=$?; cat {RUN}/bench/mu2/c3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu2/c3.log"
+   },
+   {
+    "name": "ctl_mu3_tb_mu_kv_boot",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb tb_mu_kv_boot; rc=$?; cat {RUN}/bench/kb/tb_mu_kv_boot.log; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT: 471-word MU image",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/tb_mu_kv_boot.log"
+   },
+   {
+    "name": "ctl_mu3_kb_sealwrong",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_sealwrong; rc=$?; cat {RUN}/bench/kb/kb_sealwrong.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme not configured .*lprg fault 04",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/kb_sealwrong.log"
+   },
+   {
+    "name": "ctl_mu3_kb_gapnot",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_gapnot; rc=$?; cat {RUN}/bench/kb/kb_gapnot.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme not configured .*lprg fault 01",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/kb_gapnot.log"
+   },
+   {
+    "name": "ctl_mu3_kb_u0gap",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_u0gap; rc=$?; cat {RUN}/bench/kb/kb_u0gap.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "user 0 differs from MU 0",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/kb_u0gap.log"
+   },
+   {
+    "name": "ctl_mu3_kb_collide",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_collide; rc=$?; cat {RUN}/bench/kb/kb_collide.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme / dispatcher fault .*lprg fault 10",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/kb_collide.log"
+   },
+   {
+    "name": "ctl_mu3_tb_kv_ctl_mu3_lockstep",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 tb_kv_ctl_mu3_lockstep; rc=$?; cat {RUN}/bench/mu3/tb_kv_ctl_mu3_lockstep.log; exit $rc",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS KV_CTL_MU3_LOCKSTEP",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/tb_kv_ctl_mu3_lockstep.log"
+   },
+   {
+    "name": "ctl_mu3_d1",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d1; rc=$?; cat {RUN}/bench/mu3/d1.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/d1.log"
+   },
+   {
+    "name": "ctl_mu3_d2",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d2; rc=$?; cat {RUN}/bench/mu3/d2.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/d2.log"
+   },
+   {
+    "name": "ctl_mu3_d3",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d3; rc=$?; cat {RUN}/bench/mu3/d3.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu3/d3.log"
+   },
+   {
+    "name": "ctl_mu4safe_exact",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU4_SAFE",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu4safe/exact.log"
+   },
+   {
+    "name": "ctl_mu4safe_guard",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe guard",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu4safe/guard.log"
+   },
+   {
+    "name": "ctl_mu4safe_group",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe group",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu4safe/group.log"
+   },
+   {
+    "name": "ctl_mu4safe_copy",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe copy",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu4safe/copy.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_ctl_mu4_safe/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_ctl_mu4_safe/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_ctl_mu4_safe --out {RUN}/record/views/qkd_kvs_ctl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_ctl_mu4_safe/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_ctl/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_ctl/qkd_kvs_ctl_mu4_safe-mu4safe-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SAFE mu4: registered ownership bad with four KEPT stop copies; forecast guards at root-2 (+1 quiet ck vs mu3), group/config/go fault observation +1 ck; root-bank local enables. 40/16 reset copies conservative upper sizing pending PREOPT load table; 2-stage landing latency unchanged. Centered S ck. All mu3 pin/boot/MU schedules retained."
+}

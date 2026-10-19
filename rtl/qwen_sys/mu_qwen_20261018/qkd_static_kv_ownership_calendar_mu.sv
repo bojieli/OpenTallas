@@ -20,7 +20,7 @@
 // PIPE (MU-KV-CTL3 10-19, = KV-CTL mu2 PIPE of the original; 0 = unchanged): the 32-group drain AND gets its own register
 //   (drained_all_q, guards see the drain 1 edge earlier vs the compiled roots: compiler QUIET / drain window +1 ck before
 //   enter / leave) and the root - k compare offsets are captured with the root words (roots are static once sealed).
-module qkd_static_kv_ownership_calendar_mu #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0) (
+module qkd_static_kv_ownership_calendar_mu #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0, parameter integer SAFE = 0) (
     input wire ck, rst_n,
     input wire cfg_we, input wire [1:0] cfg_addr, input wire [31:0] cfg_data,
     input wire go,
@@ -62,6 +62,26 @@ end else begin : g_mu
     wire enter_tr = enter_now && (!nm || MUT == 6);            // host -> native transition only
     wire leave_now = ac && !rearm && cy == ((PIPE != 0) ? leave_m : leave_root - 32'd1);
     wire deadline_now = cy == ((PIPE != 0) ? deadline_m : deadline_root - 32'd1);
+    // SAFE guard forecast is sampled one edge before the ownership boundary.
+    // Four KEPT registered stop copies isolate root banks and control enables.
+    reg [31:0] enter_guard, leave_guard;
+    wire guard_enter = SAFE ? (ac && !rearm && !nm && cy == enter_guard) : enter_tr;
+    wire guard_leave = SAFE ? (ac && !rearm && cy == leave_guard) : leave_now;
+    (* keep = 1 *) reg [7:0] bad_q;
+    (* keep = 1, dont_touch = 1 *) reg [3:0] halt_q;
+    wire [7:0] bad_use = SAFE ? bad_q : bad;
+    wire stop_ctl = SAFE ? halt_q[3] : (ft || (|bad));
+    wire [3:0] stop_bank = SAFE ? halt_q : {4{ft || (|bad)}};
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin bad_q <= 0; halt_q <= 0; end
+        else begin
+            bad_q <= bad;
+            halt_q[0] <= ft || (|bad);
+            halt_q[1] <= ft || (|bad);
+            halt_q[2] <= ft || (|bad);
+            halt_q[3] <= ft || (|bad);
+        end
+    end
     reg [7:0] bad;
     always @* begin
         bad = 0;
@@ -70,25 +90,24 @@ end else begin : g_mu
             (written != 3'b111 || data_q != 32'h514b564d || enter_root < 3 ||
              leave_root <= enter_root || deadline_root <= leave_root)) bad[1] = 1;
         if (go_q && (!cf || we_q || (ac && MUT == 5))) bad[2] = 1;
-        if (enter_tr && (!host_q || !upstream_q || !drained_ok)) bad[3] = 1;
-        if (leave_now && MUT != 2 && (!upstream_q || !drained_ok)) bad[4] = 1;
+        if (guard_enter && (!host_q || !upstream_q || !drained_ok)) bad[3] = 1;
+        if (guard_leave && MUT != 2 && (!upstream_q || !drained_ok)) bad[4] = 1;
         if ((|fault_q) && MUT != 3) bad[5] = 1;
     end
     always @(posedge ck or negedge rn) begin
         if (!rn) begin
             nm <= 0; ov <= 0; nr <= 0; ac <= 0;
             dn <= 0; cf <= 0; cy <= 0; ft <= 0; fc <= 0;
-            enter_root <= 0; leave_root <= 0; deadline_root <= 0; written <= 0;
-            enter_m <= 0; leave_m <= 0; deadline_m <= 0;
-        end else if (ft || (|bad)) begin
-            ft <= 1; fc <= fc | bad;
+            written <= 0;
+        end else if (stop_ctl) begin
+            ft <= 1; fc <= fc | bad_use;
             ov <= 0; nr <= 1; ac <= 0; dn <= 0;
         end else begin
             dn <= 0;
             if (we_q) case (addr_q)
-                0: begin enter_root <= data_q; enter_m <= data_q - ((MUT == 1) ? 32'd2 : 32'd1); written[0] <= 1; end
-                1: begin leave_root <= data_q; leave_m <= data_q - 32'd1; written[1] <= 1; end
-                2: begin deadline_root <= data_q; deadline_m <= data_q - 32'd1; written[2] <= 1; end
+                0: written[0] <= 1;
+                1: written[1] <= 1;
+                2: written[2] <= 1;
                 3: begin cf <= 1; ov <= 1; end
             endcase
             if (ac) begin
@@ -101,6 +120,27 @@ end else begin : g_mu
                 cy <= 0; ac <= 1; nr <= 1;
                 if (!ac) nm <= 0;                              // a fresh window starts in host mode (the original)
             end
+        end
+    end
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin enter_root <= 0; enter_m <= 0; enter_guard <= 0; end
+        else if (!stop_bank[0] && we_q && addr_q == 0) begin
+            enter_root <= data_q;
+            enter_m <= data_q - ((MUT == 1) ? 32'd2 : 32'd1);
+            enter_guard <= data_q - 32'd2;
+        end
+    end
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin leave_root <= 0; leave_m <= 0; leave_guard <= 0; end
+        else if (!stop_bank[1] && we_q && addr_q == 1) begin
+            leave_root <= data_q; leave_m <= data_q - 32'd1;
+            leave_guard <= data_q - 32'd2;
+        end
+    end
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin deadline_root <= 0; deadline_m <= 0; end
+        else if (!stop_bank[2] && we_q && addr_q == 2) begin
+            deadline_root <= data_q; deadline_m <= data_q - 32'd1;
         end
     end
     assign native_mode = nm; assign ownership_valid = ov; assign native_reserved = nr;
