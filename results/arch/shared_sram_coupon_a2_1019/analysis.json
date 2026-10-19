@@ -1,0 +1,1468 @@
+{
+  "status": "BOUNDED_VISIBLE_WIRE_A2_RESULT_ONLY",
+  "full_master_qualified": false,
+  "source_model_commit": "c634d1540",
+  "source_input_commit": "2825d2ba5",
+  "all_native_markers": [
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case30_net0",
+        "case30_net1"
+      ],
+      "bbox_nm": [
+        864,
+        10620,
+        864,
+        10643
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        30
+      ],
+      "inside_own_score_ROI": [
+        30
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case30_net0",
+        "case30_net1"
+      ],
+      "bbox_nm": [
+        1152,
+        10620,
+        1152,
+        10643
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        30
+      ],
+      "inside_own_score_ROI": [
+        30
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10596
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2952,
+        10596
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2952,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10620,
+        2928,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10620,
+        2952,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Metal Spacing",
+      "nets": [
+        "case30_net0",
+        "case30_net1"
+      ],
+      "bbox_nm": [
+        864,
+        10620,
+        1152,
+        10643
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        30
+      ],
+      "inside_own_score_ROI": [
+        30
+      ]
+    },
+    {
+      "type": "Metal Spacing",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case6_net7"
+      ],
+      "bbox_nm": [
+        1465,
+        2583,
+        1511,
+        2607
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        6
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case19_net0"
+      ],
+      "bbox_nm": [
+        2425,
+        6807,
+        2471,
+        6831
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        19
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2928,
+        10596,
+        2952,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case19_net10"
+      ],
+      "bbox_nm": [
+        3385,
+        7191,
+        3431,
+        7215
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        19
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case2_net7"
+      ],
+      "bbox_nm": [
+        5305,
+        1431,
+        5351,
+        1455
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        2
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case3_net7"
+      ],
+      "bbox_nm": [
+        7225,
+        1239,
+        7271,
+        1263
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        3
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case16_net6"
+      ],
+      "bbox_nm": [
+        9145,
+        5271,
+        9191,
+        5295
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        16
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case5_net0"
+      ],
+      "bbox_nm": [
+        10105,
+        759,
+        10151,
+        783
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        5
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case5_net10"
+      ],
+      "bbox_nm": [
+        11065,
+        1431,
+        11111,
+        1455
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        5
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case17_net6"
+      ],
+      "bbox_nm": [
+        11065,
+        5175,
+        11111,
+        5199
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        17
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case19_net10"
+      ],
+      "bbox_nm": [
+        3396,
+        7180,
+        3420,
+        7226
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        19
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case25_net3"
+      ],
+      "bbox_nm": [
+        3396,
+        8428,
+        3420,
+        8474
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        25
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case2_net7"
+      ],
+      "bbox_nm": [
+        5316,
+        1420,
+        5340,
+        1466
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        2
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case16_net6"
+      ],
+      "bbox_nm": [
+        9156,
+        5260,
+        9180,
+        5306
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        16
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case5_net10"
+      ],
+      "bbox_nm": [
+        11076,
+        1420,
+        11100,
+        1466
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        5
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case11_net2"
+      ],
+      "bbox_nm": [
+        11076,
+        2572,
+        11100,
+        2618
+      ],
+      "layer": "M5",
+      "source_case_ids": [
+        11
+      ],
+      "inside_own_score_ROI": []
+    },
+    {
+      "type": "Lef58SpacingEndOfLine",
+      "nets": [
+        "case31_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        31
+      ],
+      "inside_own_score_ROI": [
+        31
+      ]
+    },
+    {
+      "type": "Rect Only",
+      "nets": [
+        "case29_net0"
+      ],
+      "bbox_nm": [
+        10584,
+        8667,
+        10632,
+        8691
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        29
+      ],
+      "inside_own_score_ROI": [
+        29
+      ]
+    },
+    {
+      "type": "Rect Only",
+      "nets": [
+        "case29_net0"
+      ],
+      "bbox_nm": [
+        10608,
+        8667,
+        10632,
+        8700
+      ],
+      "layer": "M4",
+      "source_case_ids": [
+        29
+      ],
+      "inside_own_score_ROI": [
+        29
+      ]
+    }
+  ],
+  "all_native_markers_count": 29,
+  "all_native_marker_types": {
+    "Lef58EolKeepOut": 8,
+    "Metal Spacing": 2,
+    "Min Area": 16,
+    "Lef58SpacingEndOfLine": 1,
+    "Rect Only": 2
+  },
+  "representative_target_marker_totals": {},
+  "cases": [
+    {
+      "case": 0,
+      "name": "qwen_wclk_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "wclk",
+      "target_native_nets": [
+        "case0_net0"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 1,
+      "name": "qwen_r_ce_in_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case1_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 2,
+      "name": "qwen_r_ce_in_via_first",
+      "family": "qwen",
+      "kind": "via_first",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case2_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 3,
+      "name": "qwen_r_ce_in_via_last",
+      "family": "qwen",
+      "kind": "via_last",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case3_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 4,
+      "name": "qwen_rd_out[0]_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case4_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 5,
+      "name": "qwen_rd_out[0]_via_first",
+      "family": "qwen",
+      "kind": "via_first",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case5_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 6,
+      "name": "qwen_rd_out[0]_via_last",
+      "family": "qwen",
+      "kind": "via_last",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case6_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 7,
+      "name": "qwen_wd_in[24]_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "wd_in[24]",
+      "target_native_nets": [
+        "case7_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 8,
+      "name": "qwen_wd_in[24]_via_first",
+      "family": "qwen",
+      "kind": "via_first",
+      "pin": "wd_in[24]",
+      "target_native_nets": [
+        "case8_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 9,
+      "name": "qwen_wd_in[24]_via_last",
+      "family": "qwen",
+      "kind": "via_last",
+      "pin": "wd_in[24]",
+      "target_native_nets": [
+        "case9_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 10,
+      "name": "qwen_wd_in[25]_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "wd_in[25]",
+      "target_native_nets": [
+        "case10_net0"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 11,
+      "name": "qwen_w_mask_in[63]_source",
+      "family": "qwen",
+      "kind": "source",
+      "pin": "w_mask_in[63]",
+      "target_native_nets": [
+        "case11_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 12,
+      "name": "qwen_w_mask_in[63]_via_first",
+      "family": "qwen",
+      "kind": "via_first",
+      "pin": "w_mask_in[63]",
+      "target_native_nets": [
+        "case12_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 13,
+      "name": "qwen_w_mask_in[63]_via_last",
+      "family": "qwen",
+      "kind": "via_last",
+      "pin": "w_mask_in[63]",
+      "target_native_nets": [
+        "case13_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 14,
+      "name": "sc2_clk_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "clk",
+      "target_native_nets": [
+        "case14_net0"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 15,
+      "name": "sc2_r_ce_in_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case15_net1"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 16,
+      "name": "sc2_r_ce_in_via_first",
+      "family": "sc2",
+      "kind": "via_first",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case16_net1"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 17,
+      "name": "sc2_r_ce_in_via_last",
+      "family": "sc2",
+      "kind": "via_last",
+      "pin": "r_ce_in",
+      "target_native_nets": [
+        "case17_net1"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 18,
+      "name": "sc2_rd_out[0]_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case18_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 19,
+      "name": "sc2_rd_out[0]_via_first",
+      "family": "sc2",
+      "kind": "via_first",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case19_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 20,
+      "name": "sc2_rd_out[0]_via_last",
+      "family": "sc2",
+      "kind": "via_last",
+      "pin": "rd_out[0]",
+      "target_native_nets": [
+        "case20_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 21,
+      "name": "sc2_wd_in[69]_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "wd_in[69]",
+      "target_native_nets": [
+        "case21_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 22,
+      "name": "sc2_wd_in[69]_via_first",
+      "family": "sc2",
+      "kind": "via_first",
+      "pin": "wd_in[69]",
+      "target_native_nets": [
+        "case22_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 23,
+      "name": "sc2_wd_in[69]_via_last",
+      "family": "sc2",
+      "kind": "via_last",
+      "pin": "wd_in[69]",
+      "target_native_nets": [
+        "case23_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 24,
+      "name": "sc2_wd_in[70]_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "wd_in[70]",
+      "target_native_nets": [
+        "case24_net0"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 25,
+      "name": "sc2_cr_sel[13]_source",
+      "family": "sc2",
+      "kind": "source",
+      "pin": "cr_sel[13]",
+      "target_native_nets": [
+        "case25_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 26,
+      "name": "sc2_cr_sel[13]_via_first",
+      "family": "sc2",
+      "kind": "via_first",
+      "pin": "cr_sel[13]",
+      "target_native_nets": [
+        "case26_net5"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 27,
+      "name": "sc2_cr_sel[13]_via_last",
+      "family": "sc2",
+      "kind": "via_last",
+      "pin": "cr_sel[13]",
+      "target_native_nets": [
+        "case27_net2"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 28,
+      "name": "aligned_rectangle",
+      "family": "control",
+      "kind": "aligned_rectangle",
+      "pin": "a",
+      "target_native_nets": [
+        "case28_net0"
+      ],
+      "target_counts": {},
+      "all_inner_counts": {},
+      "native_roi_counts": {},
+      "geometry_components": 1,
+      "markers": [],
+      "inner_markers": []
+    },
+    {
+      "case": 29,
+      "name": "original_9nm_step",
+      "family": "control",
+      "kind": "original_9nm_step",
+      "pin": "a",
+      "target_native_nets": [
+        "case29_net0"
+      ],
+      "target_counts": {
+        "Rect Only": 2
+      },
+      "all_inner_counts": {
+        "Rect Only": 2
+      },
+      "native_roi_counts": {
+        "Rect Only": 2
+      },
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case29_net0"
+          ],
+          "bbox_nm": [
+            10584,
+            8667,
+            10632,
+            8691
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case29_net0"
+          ],
+          "bbox_nm": [
+            10608,
+            8667,
+            10632,
+            8700
+          ],
+          "layer": "M4"
+        }
+      ],
+      "inner_markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case29_net0"
+          ],
+          "bbox_nm": [
+            10584,
+            8667,
+            10632,
+            8691
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case29_net0"
+          ],
+          "bbox_nm": [
+            10608,
+            8667,
+            10632,
+            8700
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 30,
+      "name": "spacing_23nm",
+      "family": "control",
+      "kind": "spacing_23nm",
+      "pin": "a",
+      "target_native_nets": [
+        "case30_net0"
+      ],
+      "target_counts": {
+        "Lef58EolKeepOut": 2,
+        "Metal Spacing": 1
+      },
+      "all_inner_counts": {
+        "Lef58EolKeepOut": 2,
+        "Metal Spacing": 1
+      },
+      "native_roi_counts": {
+        "Lef58EolKeepOut": 2,
+        "Metal Spacing": 1
+      },
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            864,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            1152,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        }
+      ],
+      "inner_markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            864,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            1152,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case30_net0",
+            "case30_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 31,
+      "name": "disconnected_contact",
+      "family": "control",
+      "kind": "disconnected_contact",
+      "pin": "a",
+      "target_native_nets": [
+        "case31_net0"
+      ],
+      "target_counts": {
+        "Lef58EolKeepOut": 6,
+        "Lef58SpacingEndOfLine": 1,
+        "Metal Spacing": 1,
+        "Min Area": 1
+      },
+      "all_inner_counts": {
+        "Lef58EolKeepOut": 6,
+        "Lef58SpacingEndOfLine": 1,
+        "Metal Spacing": 1,
+        "Min Area": 1
+      },
+      "native_roi_counts": {
+        "Lef58EolKeepOut": 6,
+        "Lef58SpacingEndOfLine": 1,
+        "Metal Spacing": 1,
+        "Min Area": 1
+      },
+      "geometry_components": 2,
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58SpacingEndOfLine",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Min Area",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2928,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        }
+      ],
+      "inner_markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58SpacingEndOfLine",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Min Area",
+          "nets": [
+            "case31_net0"
+          ],
+          "bbox_nm": [
+            2928,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        }
+      ]
+    }
+  ],
+  "coverage_HOLD": [
+    "Non-ORTH width-table DRT binding/import absent; native silence is not table qualification.",
+    "Track-phase native enforcement not established.",
+    "OBS identities retained as reservations only; own PG/OBS conflicts unresolved; no AP/PG route check.",
+    "Conditional core/contact/internalPG model has no fabricated/extracted transistor layout.",
+    "No native timing/RC, B/C, production LEF/Lib, full-master access, source phase, reset, K or first-use closure."
+  ]
+}

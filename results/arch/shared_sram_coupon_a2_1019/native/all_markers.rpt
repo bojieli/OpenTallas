@@ -1,0 +1,87 @@
+violation type: Lef58EolKeepOut
+	srcs: net:case30_net0 net:case30_net1
+	bbox = (0.8640, 10.6200) - (0.8640, 10.6430) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case30_net0 net:case30_net1
+	bbox = (1.1520, 10.6200) - (1.1520, 10.6430) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9280, 10.5960) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9280, 10.6200) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9520, 10.5960) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9520, 10.6200) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.6200) - (2.9280, 10.6200) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.6200) - (2.9520, 10.6200) on Layer M4
+violation type: Metal Spacing
+	srcs: net:case30_net0 net:case30_net1
+	bbox = (0.8640, 10.6200) - (1.1520, 10.6430) on Layer M4
+violation type: Metal Spacing
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9280, 10.6200) on Layer M4
+violation type: Min Area
+	srcs: net:case6_net7
+	bbox = (1.4650, 2.5830) - (1.5110, 2.6070) on Layer M4
+violation type: Min Area
+	srcs: net:case19_net0
+	bbox = (2.4250, 6.8070) - (2.4710, 6.8310) on Layer M4
+violation type: Min Area
+	srcs: net:case31_net0
+	bbox = (2.9280, 10.5960) - (2.9520, 10.6200) on Layer M4
+violation type: Min Area
+	srcs: net:case19_net10
+	bbox = (3.3850, 7.1910) - (3.4310, 7.2150) on Layer M4
+violation type: Min Area
+	srcs: net:case2_net7
+	bbox = (5.3050, 1.4310) - (5.3510, 1.4550) on Layer M4
+violation type: Min Area
+	srcs: net:case3_net7
+	bbox = (7.2250, 1.2390) - (7.2710, 1.2630) on Layer M4
+violation type: Min Area
+	srcs: net:case16_net6
+	bbox = (9.1450, 5.2710) - (9.1910, 5.2950) on Layer M4
+violation type: Min Area
+	srcs: net:case5_net0
+	bbox = (10.1050, 0.7590) - (10.1510, 0.7830) on Layer M4
+violation type: Min Area
+	srcs: net:case5_net10
+	bbox = (11.0650, 1.4310) - (11.1110, 1.4550) on Layer M4
+violation type: Min Area
+	srcs: net:case17_net6
+	bbox = (11.0650, 5.1750) - (11.1110, 5.1990) on Layer M4
+violation type: Min Area
+	srcs: net:case19_net10
+	bbox = (3.3960, 7.1800) - (3.4200, 7.2260) on Layer M5
+violation type: Min Area
+	srcs: net:case25_net3
+	bbox = (3.3960, 8.4280) - (3.4200, 8.4740) on Layer M5
+violation type: Min Area
+	srcs: net:case2_net7
+	bbox = (5.3160, 1.4200) - (5.3400, 1.4660) on Layer M5
+violation type: Min Area
+	srcs: net:case16_net6
+	bbox = (9.1560, 5.2600) - (9.1800, 5.3060) on Layer M5
+violation type: Min Area
+	srcs: net:case5_net10
+	bbox = (11.0760, 1.4200) - (11.1000, 1.4660) on Layer M5
+violation type: Min Area
+	srcs: net:case11_net2
+	bbox = (11.0760, 2.5720) - (11.1000, 2.6180) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:case31_net0
+	bbox = (2.9180, 10.5960) - (2.9280, 10.6200) on Layer M4
+violation type: Rect Only
+	srcs: net:case29_net0
+	bbox = (10.5840, 8.6670) - (10.6320, 8.6910) on Layer M4
+violation type: Rect Only
+	srcs: net:case29_net0
+	bbox = (10.6080, 8.6670) - (10.6320, 8.7000) on Layer M4
