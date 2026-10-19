@@ -148,8 +148,18 @@ class Die:
             n = len(st.get(lk, []))
             # half-cycle stations: one T/2 each; landing: last station -> o = K + 1 edges (ot_s81_land contract, gate
             # calendar R0 = G + N mod 2).  S81-LBGAP/G8: the die.v K strap (bundle age), E only when no strap is bound
-            age = (math.ceil(n / 2) + (k if k is not None else e) + 1) if lk in ld else n / 2
-            self.links[lk] = dict(stations=n, landing=ld.get(lk), K=k, E=e, src=src, dst=dst, age_edges=age,
+            internal = None
+            row = self.E.get(lk, {})
+            if lk not in ld and row.get('cls') == 'x_frame':
+                match = re.fullmatch(r'.+_l(\d+)', lk)
+                receiver = 'u_' + row['dst'].split('.')[0]
+                strap = self.strap(receiver, 'lk') if receiver in self.inst else None
+                if match and strap is not None:
+                    k = (strap >> (3 * int(match.group(1)))) & 7
+                    internal = receiver
+            age = (math.ceil(n / 2) + (k if k is not None else e) + 1) if lk in ld or internal else n / 2
+            self.links[lk] = dict(stations=n, landing=ld.get(lk), internal_landing=internal, K=k, E=e,
+                                  src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
 
     def unlanded(self):
