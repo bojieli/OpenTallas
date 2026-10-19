@@ -5,10 +5,11 @@ results/arch/safe_audit_1019/kv.md: every HOST-cluster child drove ONE reset rel
 The RTL generators (tools/qwen_kv_die/host_cluster/gen_prompt_rr.py, tools/ref_tile/face_land.py, the reset landing of
 physical/common_flow/ot_pin_regs.tcl) emit a relay with N KEPT, logically identical copies (ot_rst_relay REGIONS N, or the
 landing's last stage replicated N times), but a member has one rst_n pin, so every reset flop of the member still hangs off
-copy 0.  This pass runs in synthesis (physical/common_flow/ot_rst_split.tcl, sourced by ot_keep_regs.tcl when
-OT_RST_SPLIT_MAX is set) on the FLATTENED coarse netlist and re-points the loads of each copy family over its copies:
+copy 0.  This pass runs in synthesis (physical/common_flow/ot_rst_copies.tcl, sourced by ot_keep_regs.tcl when
+OT_RST_COPIES_MAX is set) on the FLATTENED coarse netlist and re-points the loads of each copy family over its copies:
 
-  * a FAMILY is a multi-bit wire whose name matches --re and whose every bit is driven by a flip-flop with the same type,
+  * a FAMILY is a multi-bit wire whose name matches --re (or that carries the ot_rst_split attribute of the KV-PEER5
+    gen_peer_rr wrappers) and whose every bit is driven by a flip-flop with the same type,
     parameters, clock, D and reset (an identical register copy).  The pass PROVES this per bit and refuses the family
     otherwise -- that structural identity is the whole equivalence argument (re-pointing a load between identical
     registers cannot change the function);
@@ -22,7 +23,7 @@ OT_RST_SPLIT_MAX is set) on the FLATTENED coarse netlist and re-points the loads
     keep attribute), so opt_merge cannot fold them back; the gate's textbook_lint high_fanout check on 1_2_yosys.v is the
     independent post-synthesis witness (<= max loads per copy).
 
-  python3 ot_rst_split.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
+  python3 ot_rst_copies.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
 exit 0 always when the JSON parses (groups over --max are reported as OVER lines and in the table: the gate judges them);
 exit 2 on unusable input.
 """
@@ -45,13 +46,13 @@ def top_module(nl, top=None):
     mods = nl["modules"]
     if top:
         if top not in mods:
-            raise SystemExit(f"ot_rst_split: top {top} not in netlist")
+            raise SystemExit(f"ot_rst_copies: top {top} not in netlist")
         return top, mods[top]
     for n, m in mods.items():
         a = m.get("attributes") or {}
         if str(a.get("top", "0")).strip("0") != "":
             return n, m
-    raise SystemExit("ot_rst_split: no top module attribute")
+    raise SystemExit("ot_rst_copies: no top module attribute")
 
 
 def yname(n):
@@ -91,7 +92,8 @@ def analyse(nl, max_loads, rx, top=None):
     for wn in sorted(m.get("netnames") or {}, key=natural):
         nn = m["netnames"][wn]
         bits = nn.get("bits") or []
-        if len(bits) < 2 or not all(isinstance(b, int) for b in bits) or not rxc.search(wn):
+        marked = "ot_rst_split" in (nn.get("attributes") or {})   # KV-PEER5 wrappers: (* keep, ot_rst_split *) <r>_qv
+        if len(bits) < 2 or not all(isinstance(b, int) for b in bits) or not (rxc.search(wn) or marked):
             continue
         key = tuple(bits)
         if key in seen or len(set(bits)) != len(bits):
@@ -198,6 +200,38 @@ def split_family(wn, bits, cells, drv, loads, max_loads, m):
     return rec
 
 
+def prep(nl, rx, top=None):
+    """yosys commands that map every MULTI-BIT register reset (or otherwise loaded on a 1-bit port) by a copy family to
+    per-bit flops, so the split can place single flops (a 64-bit $adff on one ARST bit is one indivisible load).
+    Patterns: the cell names with glob characters replaced by '?' (a wider match only maps more flops per bit:
+    function unchanged)."""
+    tname, m = top_module(nl, top)
+    cells = m.get("cells") or {}
+    rxc = re.compile(rx)
+    fam = set()
+    for wn, nn in (m.get("netnames") or {}).items():
+        bits = nn.get("bits") or []
+        if len(bits) >= 2 and all(isinstance(b, int) for b in bits) and (
+                rxc.search(wn) or "ot_rst_split" in (nn.get("attributes") or {})):
+            fam |= set(bits)
+    pats = []
+    for cn, c in sorted(cells.items(), key=lambda x: natural(x[0])):
+        if not FLOP_RE.match(c["type"]) or c["type"].startswith("$_") or flop_width(c) < 2:
+            continue
+        if any(len(pb) == 1 and pb[0] in fam for pn, pb in (c.get("connections") or {}).items()
+               if (c.get("port_directions") or {}).get(pn) == "input"):
+            if not SAFE_NAME.match(cn):
+                continue
+            pats.append(re.sub(r"[\[\]*?\\]", "?", cn))
+    lines = [f"cd {yname(tname)}"]
+    if pats:
+        lines.append("select -set ot_rc_tm " + " ".join(pats))
+        lines.append("techmap @ot_rc_tm")
+        lines.append("select -clear")
+    lines.append("cd ..")
+    return len(pats), "\n".join(lines) + "\n"
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", required=True)
@@ -205,13 +239,19 @@ def main(argv=None):
     ap.add_argument("--re", default=DEFAULT_RE)
     ap.add_argument("--top")
     ap.add_argument("--ys", required=True)
-    ap.add_argument("--tsv", required=True)
+    ap.add_argument("--tsv")
+    ap.add_argument("--prep", action="store_true", help="only write the per-bit techmap script (--ys)")
     a = ap.parse_args(argv)
     try:
         nl = json.load(open(a.json))
     except (OSError, ValueError) as ex:
-        print(f"OT_RST_SPLIT ERROR {ex}")
+        print(f"OT_RST_COPIES ERROR {ex}")
         return 2
+    if a.prep:
+        n, ys = prep(nl, a.re, a.top)
+        open(a.ys, "w").write(ys)
+        print(f"OT_RST_COPIES: {n} multi-bit registers on relay copies mapped to per-bit flops")
+        return 0
     tname, recs = analyse(nl, a.max, a.re, a.top)
     lines = [f"cd {yname(tname)}"]
     tsv = ["family\tcopies\ttotal_loads\tfixed\tmoves\tgroup_loads\tstatus"]
@@ -219,12 +259,12 @@ def main(argv=None):
         lines += r["cmds"]
         tsv.append(f"{r['family']}\t{r['copies']}\t{r['total']}\t{r['fixed']}\t{r['moves']}\t"
                    f"{','.join(map(str, r['groups']))}\t{r['status']}")
-        print(f"OT_RST_SPLIT {r['family']}: {r['copies']} copies, {r['total']} loads -> "
+        print(f"OT_RST_COPIES {r['family']}: {r['copies']} copies, {r['total']} loads -> "
               f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}")
     lines.append("cd ..")
     open(a.ys, "w").write("\n".join(lines) + "\n")
     open(a.tsv, "w").write("\n".join(tsv) + "\n")
-    print(f"OT_RST_SPLIT {len(recs)} relay copy families (max {a.max} loads a copy); table {a.tsv}")
+    print(f"OT_RST_COPIES {len(recs)} relay copy families (max {a.max} loads a copy); table {a.tsv}")
     return 0
 
 
