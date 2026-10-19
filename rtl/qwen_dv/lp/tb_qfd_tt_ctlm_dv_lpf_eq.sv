@@ -59,6 +59,10 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
             dh[186:119] = {1'b1, 3'(i - 1024), img_w};
         end
     end endtask
+    function automatic [143:0] bank_a; integer q; begin bank_a = 0;
+        for (q = 0; q < 4; q = q + 1) bank_a[36*q +: 36] = {u_a.tok_b[q], u_a.pos_b[q]}; end endfunction
+    function automatic [143:0] bank_b; integer q; begin bank_b = 0;
+        for (q = 0; q < 4; q = q + 1) bank_b[36*q +: 36] = {u_b.u_gi.tok_b[q], u_b.u_gi.pos_b[q]}; end endfunction
     initial begin
         bad = 0; nc = 0; act = 0; act_nc = 0; act_cmd = 0; act_hr = 0; vprev = 0; rnd;
         for (cyc = 0; cyc < CYC; cyc = cyc + 1) begin
@@ -71,6 +75,10 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
             if (cyc > 20) begin
                 nc = nc + 1; if (va !== vprev) act = act + 1; if (va[968:589] !== vprev[968:589]) act_nc = act_nc + 1;
                 vprev = va;
+                // OPSEG: the per-user token / position banks are state the outputs show only through EMB / SEG (and
+                // op_fault is already set by the empty-ROM leaf here), so compare them directly (flat vs re-cut)
+                if (OPSEG != 0 && bank_a() !== bank_b()) begin bad = bad + 1;
+                    if (bad <= 5) $display("EQ_MISMATCH cycle=%0d tok/pos banks %h / %h", cyc, bank_a(), bank_b()); end
                 if (va !== vb) begin bad = bad + 1;
                     if (bad <= 5) $display("EQ_MISMATCH cycle=%0d dc %h/%h hr_lo %h/%h cmd %h/%h cf %b/%b", cyc, a_dc, b_dc,
                         a_hr[72:0], b_hr[72:0], a_cmd, b_cmd, a_cf, b_cf); end
