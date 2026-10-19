@@ -129,13 +129,13 @@
     "tool": {
      "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
      "clock_entry_constraints.py": "1487004dccf79b06df8d1b2c073aacc2df46f19e2db9fa5dbb84fddf732fc29d",
-     "gray_fifo_cdc_constraints.py": "567e0e04231a4c9f88ee9eb144358340c9effd41cd4b925bd514680cf8b951c8"
+     "gray_fifo_cdc_constraints.py": "6b831c9ccb649e93a460fcaa0789230b4ec08bf13c86d5439614a13f684431f5"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-18T23:32:41-0700",
-   "host": "ot-epyc4",
-   "key": "3a8c31e505d2f23c8a9a7a1c5175477b3d46d9b72884455c69c337fb7ce2846c",
+   "created": "2026-10-18T23:48:00-0700",
+   "host": "ot-pve1",
+   "key": "c048fb50c88c548463c999c3538c3e44106c49ee88d64269d0fffe3771b02965",
    "record": {
     "counts": {
      "consumer": 0,
@@ -67254,7 +67254,7 @@
      "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_cdc.sv": "40ba47533b84ed2269eccf818b5aab5c7c255e791d45e3292b117d64db66b126"
     }
    },
-   "seconds": 11
+   "seconds": 41
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

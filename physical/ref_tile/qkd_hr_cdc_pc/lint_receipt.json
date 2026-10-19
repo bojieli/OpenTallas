@@ -80,13 +80,13 @@
     "tool": {
      "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
      "clock_entry_constraints.py": "1487004dccf79b06df8d1b2c073aacc2df46f19e2db9fa5dbb84fddf732fc29d",
-     "gray_fifo_cdc_constraints.py": "567e0e04231a4c9f88ee9eb144358340c9effd41cd4b925bd514680cf8b951c8"
+     "gray_fifo_cdc_constraints.py": "6b831c9ccb649e93a460fcaa0789230b4ec08bf13c86d5439614a13f684431f5"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-18T23:32:29-0700",
-   "host": "ot-epyc4",
-   "key": "51ad409bc11aa917014122a49ecbe7df622611530829b9b795e3b5e93f7e063f",
+   "created": "2026-10-18T23:47:53-0700",
+   "host": "ot-pve1",
+   "key": "20b991d8dc7e42d9b2a86a7cce10fc59d4f67c01dff914c5ccb46c081f9ea27e",
    "record": {
     "counts": {
      "consumer": 0,
@@ -66283,7 +66283,7 @@
      "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc.v": "0a8ab591ce02a7348ba8f2db5d710d931ddeb1bb150fc7091b78e5ce7280cb9b"
     }
    },
-   "seconds": 7
+   "seconds": 34
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
