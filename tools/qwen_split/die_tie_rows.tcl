@@ -230,7 +230,13 @@ proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
     dict set phases $name [lindex [dict keys $edges] 0]
     dict set stripes $name [lsort -integer -index 0 $vertical]
   }
-  set preserved {}; set segs {}; set occupied {}
+  set preserved {}; set segs {}; set occupied {}; set obstacle_bins {}
+  foreach r $obstacles {
+    lassign $r a b c d
+    for {set bin [expr {int(floor(double($b)/100000))}]} {$bin <= int(floor(double($d)/100000))} {incr bin} {
+      dict lappend obstacle_bins $bin $r
+    }
+  }
   foreach name $names {
     if {[dict exists $preserved $name]} {error "OT_CLOCK_ROWS: duplicate clock $name"}
     set inst [$block findInst $name]
@@ -256,7 +262,11 @@ proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
       }
     }
     set lo [$die xMin]; set hi [$die xMax]
-    foreach r $obstacles {
+    set nearby {}
+    for {set bin [expr {int(floor(double($bottom)/100000))}]} {$bin <= int(floor(double($top)/100000))} {incr bin} {
+      if {[dict exists $obstacle_bins $bin]} {set nearby [concat $nearby [dict get $obstacle_bins $bin]]}
+    }
+    foreach r $nearby {
       lassign $r a b c d
       if {$b < $top && $d > $bottom} {
         if {$a < $xmax && $c > $xmin} {error "OT_CLOCK_ROWS: clock PG footprint inside macro halo: $name"}
