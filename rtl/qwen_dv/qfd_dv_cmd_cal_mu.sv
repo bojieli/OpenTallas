@@ -89,6 +89,13 @@
 //   Issue edges, late / fault semantics, TLOAD and the shared read port are unchanged: NU = 1 stays edge-identical to
 //   qfd_dv_cmd_cal (lockstep bench), compiler rules (T_0 >= 4 + (NU - 1)) unchanged.
 //   MUT 33 (bench only): the precomputed next head on a pop takes FIFO slot rp instead of rp + 1 (one-hot not rotated).
+// FIREDQ (QW-CTLM4 10-19, safe-design item 4: the kit gate's textbook lint named tcount -> fire_q ~745 ps / 20 levels =
+//   20-b incrementer (tcount + 1) -> 20-b subtract (- ht_q) -> == dd): the relative head time is now a REGISTER,
+//   dq = tcount + 1 - ht_q (MUT 1: tcount - ht_q), kept by induction: start -> 2 (MUT 1: 1), reset -> 1 (MUT 1: 0),
+//   a non-frozen edge -> dq + run_q - (nh_v ? dd : 0) (the same edges on which tcount / ht_q move; frozen and refused
+//   starts hold all three).  fire_n compares the dq register with dd: no adder from tcount before fire_q.  ZERO added
+//   edges (edge-identical: lockstep with qfd_dv_cmd_cal at NU 1 and the compiled NU 4 timeline unchanged), no schedule
+//   change.  tcount stays for the overflow / late faults only.  MUT 34 (bench only): a start loads dq = 1 (one short).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -254,6 +261,7 @@ module qfd_dv_cmd_cal_mu #(
     reg  [NU-1:0]  fire_q;
     reg  [115:0]   hc_q [0:NU-1];
     reg  [TW-1:0]  ht_q [0:NU-1];
+    reg  [TW-1:0]  dq [0:NU-1];                     // FIREDQ: = tcount + 1 - ht_q (MUT 1: tcount - ht_q), registered
     // Two-row, eight-entry SRAM ring per playhead. One complete four-entry program
     // fetch is staged at the SRAM write pins. Read the row of the next head ahead
     // of its pop; the head register is the SRAM read-data capture. SRAM models are
@@ -373,10 +381,11 @@ module qfd_dv_cmd_cal_mu #(
     reg  [2:0]     f_n [0:NU-1];
     reg            any_gnt;
     reg  [NU-1:0]  run_n, nh_v, fire_n;
+    reg  [TW-1:0]  dq_n [0:NU-1];
     reg  [115:0]   nh_c [0:NU-1];
     reg  [TW-1:0]  nh_t [0:NU-1];
     reg  [7:0]     rpa_oh [0:NU-1];
-    reg  [TW-1:0]  tcm, tdif, ht_m;
+    reg  [TW-1:0]  tdif, ht_m;
     reg  [115:0]   csel;
     reg  [11:0]    dsel, dd;
     reg  [3:0]     fn_ap;
@@ -400,8 +409,7 @@ module qfd_dv_cmd_cal_mu #(
             hgo[u] = fire_q[u] && !frz_u[u] && hc_q[u][0];
             // next edge's head and its fire flag (used on a non-frozen edge; a frozen edge holds them)
             run_n[u] = run_q[u] && !(fire_q[u] && i_rem[u] == 10'd1);
-            tcm = tcount[u] + ((MUT == 1) ? {TW{1'b0}} : {{(TW-1){1'b0}}, 1'b1});   // next tcount - MUT 1 offset
-            tdif = tcm - ht_q[u];
+            tdif = dq[u];                                    // FIREDQ: registered tcount + 1 - ht_q (no adder here)
             fn_ap = fifo_n[u] - (fire_q[u] ? 4'd1 : 4'd0);
             rpa_oh[u] = {rp_oh[u][6:0], rp_oh[u][7]};
             csel = fq_word[u][115:0];
@@ -419,6 +427,8 @@ module qfd_dv_cmd_cal_mu #(
             end
             nh_t[u] = ht_q[u] + {{(TW-12){1'b0}}, dd};
             fire_n[u] = run_n[u] && nh_v[u] && tdif == {{(TW-12){1'b0}}, dd};
+            // FIREDQ next value on a non-frozen edge: tcount moves by run_q, ht_q by dd when nh_v
+            dq_n[u] = dq[u] + {{(TW-1){1'b0}}, run_q[u]} - (nh_v[u] ? {{(TW-12){1'b0}}, dd} : {TW{1'b0}});
         end
     end
     // per-playhead issue word: relocation for its user (constant stride), carry / tag checks, TLOAD checks -- all from
@@ -508,6 +518,7 @@ module qfd_dv_cmd_cal_mu #(
                 rp_oh[k] <= 8'd1; tcount[k] <= {TW{1'b0}};
                 rrow_q[k] <= 6'd0; r_n_q[k] <= 3'd0; rd_n[k] <= 3'd0;
                 hc_q[k] <= 116'd0; ht_q[k] <= {TW{1'b0}};
+                dq[k] <= (MUT == 1) ? {TW{1'b0}} : {{(TW-1){1'b0}}, 1'b1};
             end
             wh <= {NU{1'b0}}; fire_q <= {NU{1'b0}}; rdb_oh <= 2'b00;
             rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}};
@@ -550,6 +561,7 @@ module qfd_dv_cmd_cal_mu #(
                     else if (g_cnt != 16'd0) begin
                         run_q[k] <= 1'b1; f_idx[k] <= g_first[9:0]; f_rem[k] <= g_cnt[9:0]; i_rem[k] <= g_cnt[9:0];
                         tcount[k] <= {{(TW-1){1'b0}}, 1'b1}; ht_q[k] <= {TW{1'b0}};
+                        dq[k] <= (MUT == 1 || MUT == 34) ? {{(TW-1){1'b0}}, 1'b1} : {{(TW-2){1'b0}}, 2'd2};
                         fifo_n[k] <= 4'd0; infl[k] <= 4'd0; wh[k] <= 1'b0; rp_oh[k] <= 8'd1;
                         rce_q[k] <= 1'b0; rd_v[k] <= 1'b0; fire_q[k] <= 1'b0;
                     end else begin
@@ -558,6 +570,7 @@ module qfd_dv_cmd_cal_mu #(
                     end
                 end else if (!frz_u[k]) begin
                     fire_q[k] <= fire_n[k];
+                    dq[k] <= dq_n[k];
                     if (nh_v[k]) begin hc_q[k] <= nh_c[k]; ht_q[k] <= nh_t[k]; end
                     if (run_q[k]) begin
                         tcount[k] <= tcount[k] + {{(TW-1){1'b0}}, 1'b1};
