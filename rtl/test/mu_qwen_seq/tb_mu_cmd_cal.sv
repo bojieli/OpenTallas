@@ -7,19 +7,20 @@
 //   "c CMD u hex" (cmd != 0), "c SUI u pidx", "c XCI u", "c EMB u", "c SEG u base", "c DONE u", "c FAULT code" (rise),
 //   "c MISMATCH" (lockstep), and at the end "c END fault code mismatches".
 module tb_mu_cmd_cal;
-    parameter integer NU = 1, MUT = 0, LOCKSTEP = 0, UVM_STRIDE = 16384, PIDX_STRIDE = 64, BOUNDARY_RELOC = 0;
+    parameter integer NU = 1, MUT = 0, LOCKSTEP = 0, UVM_STRIDE = 16384, PIDX_STRIDE = 64, BOUNDARY_RELOC = 0, CALENDAR_ROM = 0, CTX_DW = 0;
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
     reg ck = 1'b0;
     always #5 ck = ~ck;
     reg rst_n = 1'b0;
     reg pw_v = 0, dw_v = 0, start = 0; reg [9:0] pw_addr = 0; reg [63:0] pw_data = 0, dw_data = 0; reg [2:0] dw_addr = 0;
+    reg start_rng=0; reg[9:0] start_first=0,start_cnt=0;
     reg [5:0] stage = 0; reg [UB-1:0] start_user = 0;
     wire [115:0] cmd; wire [UB-1:0] cmd_user, done_user; wire loc_emb, loc_seg, su_issue, xc_issue, image_ready, running, done, fault;
     wire [1087:0] tl, r_tl;
     wire [11:0] loc_base; wire [8:0] su_pidx; wire [75:0] pobs; wire [68:0] dobs; wire [NU-1:0] running_u; wire [5:0] fcode;
-    qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+    qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
         .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v), .dw_addr(dw_addr), .dw_data(dw_data),
-        .start(start), .stage(stage), .start_user(start_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .tl(tl), .cmd_user(cmd_user), .loc_emb(loc_emb),
+        .start(start), .stage(stage), .start_user(start_user), .start_rng(start_rng), .start_first(start_first), .start_cnt(start_cnt), .cmd(cmd), .tl(tl), .cmd_user(cmd_user), .loc_emb(loc_emb),
         .loc_seg(loc_seg), .loc_base(loc_base), .su_issue(su_issue), .su_pidx(su_pidx), .xc_issue(xc_issue),
         .program_obs(pobs), .descriptor_obs(dobs), .image_ready(image_ready), .running(running), .running_u(running_u),
         .done(done), .done_user(done_user), .fault(fault), .fault_code(fcode));
@@ -62,12 +63,13 @@ module tb_mu_cmd_cal;
                 end
             end
             // inputs for the next posedge (cyc + 1)
-            pw_v = 1'b0; dw_v = 1'b0; start = 1'b0;
+            pw_v = 1'b0; dw_v = 1'b0; start = 1'b0; start_rng=0;
             while (have && ec == cyc + 1) begin
                 case (ek)
                     0: begin pw_v = 1'b1; pw_addr = ev[73:64]; pw_data = ev[63:0]; end
                     1: begin dw_v = 1'b1; dw_addr = ev[66:64]; dw_data = ev[63:0]; end
                     2: begin start = 1'b1; stage = ev[5:0]; start_user = UB'(ev[7:6]); end
+                    3: begin start=1;start_rng=1;stage=ev[5:0];start_user=UB'(ev[7:6]);start_first=ev[17:8];start_cnt=ev[27:18];end
                     default: $fatal(1, "bad kind %0d", ek);
                 endcase
                 r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);

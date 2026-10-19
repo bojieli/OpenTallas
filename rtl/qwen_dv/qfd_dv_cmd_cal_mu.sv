@@ -77,6 +77,7 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer BOUNDARY_RELOC = 0,         // opt-in actual local ROOT/BTAB/STREAM joins; no XPF qualification
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer CALENDAR_ROM = 0,             // opt-in CALR/two-ROM calendar; +1 fetch edge
     parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
 ) (
     input  wire          ck,
@@ -114,6 +115,9 @@ module qfd_dv_cmd_cal_mu #(
     output wire [127:0]  ctx_dw,                    // {DW6, DW5} of the sealed image (CTX_DW)
     output wire          ctx_load                   // one edge: the image (with its context record) was sealed (CTX_DW)
 );
+    // CALENDAR_ROM=1 selects immutable CALR10 descriptors and the actual two-ROM
+    // port. Its boundary capture adds one fetch edge; issue times remain exact
+    // and a too-early first command faults. Legacy default0 is unchanged.
     // ================================================================ image load (as qfd_dv_cmd_cal)
     reg         loading, sealed, sealed_d;
     reg  [10:0] pw_cnt;
@@ -122,16 +126,18 @@ module qfd_dv_cmd_cal_mu #(
     reg  [63:0] dwr [0:6];
     wire [63:0] d0 = dwr[0];
     wire [9:0]  base = d0[25:16];
-    wire [8:0]  nent = d0[8:0];
+    wire [9:0]  nent = CALENDAR_ROM ? d0[9:0] : {1'b0,d0[8:0]};
     reg         seal_bad;
     integer     s;
     always @* begin
-        seal_bad = d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
-                   nent == 9'd0 || {1'b0, base} + {1'b0, nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0} ||
+        seal_bad = (CALENDAR_ROM ? (d0[63:32] != 32'h43414c52 || d0[31:10] != 22'd0) :
+                   (d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
+                    {1'b0, base} + {nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0})) ||
+                   nent == 10'd0 ||
                    (CTX_DW == 0 && (dwr[5] != 64'd0 || dwr[6] != 64'd0)) || dw_data != 64'd0;
         for (s = 1; s <= 4; s = s + 1)
             if (dwr[s][63:32] != 32'd0 ||
-                (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {8'd0, nent})))
+                (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {7'd0, nent})))
                 seal_bad = 1'b1;
     end
     reg         pw_v2, pw_b2; reg [5:0] pw_row2; reg [7:0] pw_sl2; reg [63:0] pw_d2;
@@ -207,7 +213,7 @@ module qfd_dv_cmd_cal_mu #(
     wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, start_first} : gd[31:16];
     wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, start_cnt} : gd[15:0];
     wire        rng_bad = g_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 ||
-                                    {1'b0, start_first} + {1'b0, start_cnt} > {2'd0, nent});
+                                    {1'b0, start_first} + {1'b0, start_cnt} > {1'b0, nent});
     wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? start_user : {UB{1'b0}};
     // a start reaches only its own playhead (MUT 15: every playhead, the single calendar's gating)
     reg  [NU-1:0] go_u, frz_u;
@@ -231,6 +237,31 @@ module qfd_dv_cmd_cal_mu #(
     reg  [NU-1:0]  zd;
     reg  [115:0]   hc [0:NU-1];
     reg  [TW-1:0]  ht [0:NU-1];
+    wire rom_valid,rom_fault; wire [511:0] rom_data;
+    wire [1:0] rom_user; wire [5:0] rom_stage; wire [2:0] rom_count;
+    reg rom_req; reg [9:0] rom_first; reg [2:0] rom_n; reg [1:0] rom_u;
+    integer ri;
+    always @* begin
+        rom_req=0;rom_first=0;rom_n=0;rom_u=0;
+        for(ri=0;ri<NU;ri=ri+1)if(gnt[ri])begin
+            rom_req=1;rom_first=f_idx[ri];rom_n=f_n[ri];rom_u=2'(ri);
+        end
+    end
+    generate if(CALENDAR_ROM != 0)begin:g_calrom
+        qfd_dv_calendar_rom #(.NENT(1023)) u_rom(.ck(ck),.rst_n(rst_n),.req(rom_req),
+          .first(rom_first),.count(rom_n),.user_id(rom_u),.stage(6'd0),
+          .install(pw_v && running),.running(running),.valid(rom_valid),.data(rom_data),
+          .out_user(rom_user),.out_stage(rom_stage),.out_count(rom_count),.fault(rom_fault));
+    end else begin:g_no_calrom
+        assign rom_valid=0;assign rom_fault=0;assign rom_data=0;
+        assign rom_user=0;assign rom_stage=0;assign rom_count=0;
+    end endgenerate
+    wire [NU-1:0] fetch_valid;
+    wire [2:0] fetch_count[0:NU-1];
+    generate for(g=0;g<NU;g=g+1)begin:g_fetch_return
+        assign fetch_valid[g]=CALENDAR_ROM ? (rom_valid && rom_user==2'(g)) : rd_v[g];
+        assign fetch_count[g]=CALENDAR_ROM ? rom_count : rd_n[g];
+    end endgenerate
     reg            any_gnt;
     integer        u, j;
     always @* begin
@@ -245,9 +276,9 @@ module qfd_dv_cmd_cal_mu #(
             if (can_read[u] && !frz_u[u]) any_gnt = 1'b1;
             zd[u] = 1'b0;
             for (j = 0; j < 4; j = j + 1) begin
-                ent[u][j] = (MUT == 2) ? {rd[rd_bank[u]][128*j +: 64], rd[rd_bank[u]][128*j + 64 +: 64]}
+                ent[u][j] = CALENDAR_ROM ? rom_data[128*j +: 128] : (MUT == 2) ? {rd[rd_bank[u]][128*j +: 64], rd[rd_bank[u]][128*j + 64 +: 64]}
                                        : rd[rd_bank[u]][128*j +: 128];
-                if ((j < rd_n[u]) && ent[u][j][127:116] == 12'd0) zd[u] = 1'b1;
+                if ((j < fetch_count[u]) && ent[u][j][127:116] == 12'd0) zd[u] = 1'b1;
             end
             et[u][0] = t_acc[u] + {{(TW-12){1'b0}}, ent[u][0][127:116]};
             for (j = 1; j < 4; j = j + 1) et[u][j] = et[u][j-1] + {{(TW-12){1'b0}}, ent[u][j][127:116]};
@@ -276,7 +307,7 @@ module qfd_dv_cmd_cal_mu #(
     wire [5:0]    tl_row = ic[9:4];
     wire [2:0]    tl_kind = ic[12:10];
     wire [10:0]   tl_lo = {1'b0, tl_row, 4'd0}, tl_hi = tl_lo + 11'd16;
-    wire          tl_bad = tl_kind == 3'd0 || tl_kind[2] || ic[111:73] != 39'd0 || {4'd0, tl_row} < meta_rows ||
+    wire          tl_bad = (CALENDAR_ROM != 0) || tl_kind == 3'd0 || tl_kind[2] || ic[111:73] != 39'd0 || {4'd0, tl_row} < meta_rows ||
                            tl_row >= 6'd61 || (tl_lo < {1'b0, base} + {1'b0, nent, 1'b0} && tl_hi > {1'b0, base});
     wire [UB-1:0] ru = (MUT == 11 && NU > 1) ? ((iu == NU - 1) ? {UB{1'b0}} : iu + 1'b1) : iu;
     wire [24:0]   ub = (NU > 1 && MUT != 12) ? 25'(ru) * 25'(UVM_STRIDE) : 25'd0;
@@ -343,6 +374,10 @@ module qfd_dv_cmd_cal_mu #(
         initial $error("qfd_dv_cmd_cal_mu: BOUNDARY_RELOC requires actual NU2..4/VM4096/PROG128 ABI");
     end endgenerate
 
+    generate if (CALENDAR_ROM != 0 && NU > 4) begin:g_calrom_users_bad
+        initial $error("CALENDAR_ROM requires NU <= 4");
+    end endgenerate
+
     // ================================================================ sequential
     integer k;
     reg     d_any, d_col; reg [UB-1:0] d_u;
@@ -387,6 +422,7 @@ module qfd_dv_cmd_cal_mu #(
                     if (seal_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end else sealed <= 1'b1;
                 end
             end
+            if (rom_fault) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
             if (m_dbl) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
             // ---------------- playheads
             for (k = 0; k < NU; k = k + 1) begin
@@ -408,18 +444,18 @@ module qfd_dv_cmd_cal_mu #(
                     rce_q[k] <= gnt[k]; rbank_q[k] <= waddr[k][3]; rrow_q[k] <= waddr[k][9:4]; r_n_q[k] <= f_n[k];
                     if (gnt[k]) begin f_idx[k] <= f_idx[k] + 10'd4; f_rem[k] <= f_rem[k] - {7'd0, f_n[k]}; end
                     rd_v[k] <= rce_q[k]; rd_bank[k] <= rbank_q[k]; rd_n[k] <= r_n_q[k];
-                    infl[k] <= infl[k] + (gnt[k] ? {1'b0, f_n[k]} : 4'd0) - (rd_v[k] ? {1'b0, rd_n[k]} : 4'd0);
-                    if (rd_v[k]) begin
+                    infl[k] <= infl[k] + (gnt[k] ? {1'b0, f_n[k]} : 4'd0) - (fetch_valid[k] ? {1'b0, fetch_count[k]} : 4'd0);
+                    if (fetch_valid[k]) begin
                         for (j = 0; j < 4; j = j + 1)
-                            if (j < rd_n[k]) begin
+                            if (j < fetch_count[k]) begin
                                 q_cmd[8*k + {29'd0, 3'(wp[k] + j[2:0])}] <= ent[k][j][115:0];
                                 q_t[8*k + {29'd0, 3'(wp[k] + j[2:0])}] <= et[k][j];
                             end
-                        wp[k] <= wp[k] + rd_n[k];
-                        t_acc[k] <= et[k][rd_n[k][1:0] - 2'd1];
+                        wp[k] <= wp[k] + fetch_count[k];
+                        t_acc[k] <= et[k][fetch_count[k][1:0] - 2'd1];
                         if (zd[k]) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                     end
-                    fifo_n[k] <= fifo_n[k] + {1'b0, (rd_v[k] ? rd_n[k] : 3'd0)} - (fire[k] ? 4'd1 : 4'd0);
+                    fifo_n[k] <= fifo_n[k] + {1'b0, (fetch_valid[k] ? fetch_count[k] : 3'd0)} - (fire[k] ? 4'd1 : 4'd0);
                     if (late[k]) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
                     if (fire[k]) begin
                         rp[k] <= rp[k] + 3'd1; i_rem[k] <= i_rem[k] - 10'd1;
