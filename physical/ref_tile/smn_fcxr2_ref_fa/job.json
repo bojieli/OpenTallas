@@ -1,14 +1,14 @@
 {
- "name": "smn_fcxr2_ref_fa-r1-076625a41",
+ "name": "smn_fcxr2_ref_fa-r2-COMMIT",
  "block": "ot_hbm_accel_smh_fc_xr2",
  "ref_tile": true,
  "owner": "Claude:HF-5a",
- "purpose": "HF-5a: native-view fix of the front_c x-write / PR1-line relay. Routed native audit of fc_xr (record 1e78e63ef, smn_fcxr_ref_fa-r2-c1dfe3d51): launch 409 ps on 2,642 xo/lo pins (budget 220) because the ONE register stage sits at the input faces (DEF: u_xd y 141-149 of 151, u_ld at li) and every output wire crosses the 151 um tile. fc_xr2 = same ports / exact pin plan / outline / recipe 2, one more stage: A at xi/li/fi faces, B at xo/lo/fo faces (reg->reg across the tile). +1 cycle on xo, lo, fo equally (fc_b xi stays aligned with li/fi); front_c calendar edge recorded in lanes/HF-5.md (HF-5a).",
+ "purpose": "HF-5a: native-view fix of the front_c x-write / PR1-line relay. Routed native audit of fc_xr (record 1e78e63ef, smn_fcxr_ref_fa-r2-c1dfe3d51): launch 409 ps on 2,642 xo/lo pins (budget 220) because the ONE register stage sits at the input faces (DEF: u_xd y 141-149 of 151, u_ld at li) and every output wire crosses the 151 um tile. fc_xr2 = same ports / exact pin plan / outline / recipe 2, one more stage: A at xi/li/fi faces, B at xo/lo/fo faces (reg->reg across the tile). +1 cycle on xo, lo, fo equally (fc_b xi stays aligned with li/fi); front_c calendar edge recorded in lanes/HF-5.md (HF-5a). HH-2 10-19: r1 793270d4b EARLY_FAIL_CONGESTION GRT-0116 = S face (xo, 10.5 pins/um on M5 only) y 0-3 um: 2,642 FIRM BUF+HB2+BUF output stacks (3.21 um, 100% row fill) under the 26-column stage-B flop band; M3 V overflow 1,746 / total 2,795, all 746 hot gcells at y<15 um. The stage-B flops are now at the face (fc_xr had them at the far N face, so S held only the stacks). OT_OUTHOLD_FREE=1: hold pad stays one dont_touch HB2 per pin, only its location is free (m5a/m5b class).",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/hf5a-1018",
-  "commit": "076625a41",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
   ]
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smn_fcxr2_ref_fa/smn_fcxr2_ref_fa-r1-076625a41"
+   "to": "results/rtl/ref_tile/smn_fcxr2_ref_fa/smn_fcxr2_ref_fa-r2-COMMIT"
   }
  ],
  "cycles_added": 1,
