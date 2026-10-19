@@ -4,7 +4,11 @@
 // descriptor producer drives controller load one edge later. run is independently
 // compiler scheduled after guard acceptance (at least 4 edges after issue).
 // No programme or arithmetic is generated from link payloads or reference code.
-module qkd_native_attention_programme #(parameter integer MUT=0)(
+// KV-ATTNKIT 10-18: LAND=1 (die knob OT_KV_ATTN_LAND) = qkd_native_attention_static_ctl LAND=1 (landed RX codec, TX
+// launch flops: +1 edge on K.tx_record) and prg_l = the die prg word {q_data, q_beat, q_valid, request_position,
+// request_valid} through a launch flop (+1 edge on ks_prg; request_valid is fault-gated combinationally, so the
+// unlaunched word left the tile through logic).  LAND=0: prg_l is that word unregistered (= the generated tile's prg).
+module qkd_native_attention_programme #(parameter integer MUT=0,parameter integer LAND=0)(
  input wire ck,rst_n,
  input wire issue,run,
  input wire fused_program_capability,authority_valid,
@@ -24,7 +28,8 @@ module qkd_native_attention_programme #(parameter integer MUT=0)(
  input wire [15:0] result_epoch,input wire [5:0] result_layer,
  input wire result_done,service_fault,
  output wire result_reserved,
- output wire busy,output wire fault,output wire [15:0] age
+ output wire busy,output wire fault,output wire [15:0] age,
+ output wire [536:0] prg_l
 );
 
  wire load,producer_fault,ctl_fault;
@@ -43,7 +48,7 @@ module qkd_native_attention_programme #(parameter integer MUT=0)(
   .authority_valid(authority_valid),.authority_epoch(authority_epoch),.authority_token(authority_token),
   .authority_position(authority_position),.authority_stage(authority_stage),
   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
- qkd_native_attention_static_ctl #(.MUT(MUT)) ctl(
+ qkd_native_attention_static_ctl #(.MUT(MUT),.LAND(LAND)) ctl(
   .load(load),.command(command),.command_tag(command_tag),.fault(ctl_fault),
   .ck(ck),
   .rst_n(rst_n),
@@ -85,4 +90,13 @@ module qkd_native_attention_programme #(parameter integer MUT=0)(
   .busy(busy),
   .age(age));
  assign fault=ctl_fault|producer_fault;
+ wire [536:0] prg_w={q_data,q_beat,q_valid,request_position,request_valid};
+ generate if(LAND!=0)begin:g_prg
+  reg prg_rv,prg_qv;reg [535:0] prg_d;
+  always @(posedge ck or negedge rst_n)if(!rst_n)begin prg_rv<=0;prg_qv<=0;end else begin prg_rv<=request_valid;prg_qv<=q_valid;end
+  always @(posedge ck)prg_d<=prg_w[536:1];
+  assign prg_l={prg_d[535:19],prg_qv,prg_d[17:0],prg_rv};
+ end else begin:g_prgc
+  assign prg_l=prg_w;
+ end endgenerate
 endmodule
