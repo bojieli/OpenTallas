@@ -21,7 +21,9 @@
  "clock_port": "ck",
  "reset_ports": [
   "por_n",
-  "rst_n"
+  "rst_n",
+  "fwd_link_rst_n",
+  "phy_rst_n"
  ],
  "outline": {
   "w": 475.2,
