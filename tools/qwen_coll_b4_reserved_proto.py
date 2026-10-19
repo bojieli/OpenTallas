@@ -66,7 +66,7 @@ def main():
 
     for i, (name, nmsg, n, mk, kind, extra) in enumerate(B.PRODUCTION_CASES):
         modes = [0,0,1] if mk == 'rrg1' else [int(mk == 'g')] * nmsg
-        words = [n] * nmsg
+        words = [n,n,1] if mk == 'rrg1' else [n] * nmsg
         prog = B.schedule(modes, words, 65, 390, shared_ucie=True)
         run('shared_' + name, modes, words, prog, 1000+i)
 
@@ -103,7 +103,7 @@ def main():
         cache_guard=guard, shared_ucie_reservations=True, cases=records,
         reference_identity=dict(message_map=ids, same_absolute_normalized_input_output_cycles=True,
             same_numeric_stimuli=True, local_message_tags='reference tags are compact message indices; not unchanged header/body proof'),
-        helper_sha256={str(p.relative_to(B.ROOT)):sha(p) for p in [Path(__file__),B.ROOT/'tools/qwen_coll_tp8_static_bench.py',B.ROOT/'tools/qwen_static_schedule/mu_calendar.py']}),indent=2)+'\n')
+        helper_sha256={str(p.relative_to(B.ROOT)):sha(p) for p in [Path(__file__).resolve(),B.ROOT/'tools/qwen_coll_tp8_static_bench.py',B.ROOT/'tools/qwen_static_schedule/mu_calendar.py']}),indent=2)+'\n')
     print('B4_RESERVED PASS cases=6',flush=True)
 
 
