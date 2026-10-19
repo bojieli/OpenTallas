@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: ot-epyc5       admits   738 GB (avail 630, growth 113, headroom 0, waiters 0/0 GB) load 97/128 running 17 disk 1144 GB 
+ot-run: ot-epyc6       admits   565 GB (avail 509, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 18 disk 6074 GB 
+ot-run: ot-epyc7       admits   833 GB (avail 684, growth 101, headroom 0, waiters 0/0 GB) load 62/96 running 22 disk 6396 GB 
+ot-run: ot-epyc8       admits  1016 GB (avail 825, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 28 disk 385 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3232234-1792425388 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+BOUNDARY_JOIN_PASS 0 {'mismatches': 0, 'commands': 5616, 'expected': 5616, 'fault': 0, 'pass_': True}
+BOUNDARY_GUARDS_PASS 4
+BOUNDARY_JOIN_FAIL 17 {'mismatches': 1296, 'commands': 5616, 'expected': 5616, 'fault': 0, 'pass_': False}
+BOUNDARY_JOIN_FAIL 18 {'mismatches': 1296, 'commands': 5616, 'expected': 5616, 'fault': 0, 'pass_': False}
+BOUNDARY_JOIN_FAIL 19 {'mismatches': 1296, 'commands': 5616, 'expected': 5616, 'fault': 0, 'pass_': False}
+BOUNDARY_JOIN_MATRIX_PASS
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3232234-1792425388): exit 0

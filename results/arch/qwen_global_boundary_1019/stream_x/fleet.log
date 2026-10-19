@@ -1,0 +1,34 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: ot-epyc5       admits   813 GB (avail 682, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 16 disk 1124 GB 
+ot-run: ot-epyc6       admits   545 GB (avail 495, growth 113, headroom 0, waiters 0/0 GB) load 32/128 running 18 disk 6072 GB 
+ot-run: ot-epyc7       admits   962 GB (avail 759, growth 85, headroom 0, waiters 0/0 GB) load 57/96 running 21 disk 6395 GB 
+ot-run: ot-epyc8       admits  1089 GB (avail 872, growth 110, headroom 0, waiters 0/0 GB) load 46/128 running 27 disk 380 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-global-allocator-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2959010-1792425527 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+GLOBAL_X_JOIN cases=576 got=23040 expected=23040 errors=0 fault=0 mut=0
+GLOBAL_X_JOIN_PASS
+- /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:41: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 0.164 s; speed 11.837 ms/s
+- Verilator: cpu 0.164 s on 1 threads; allocated 7 MB
+GLOBAL_X_JOIN cases=576 got=0 expected=23040 errors=1 fault=0 mut=1
+[1935400000] %Fatal: tb_global_x_join.sv:40: Assertion failed in tb_global_x_join: GLOBAL_X_JOIN_FAIL
+%Error: /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:40: Verilog $stop
+Aborting...
+GLOBAL_X_JOIN cases=576 got=22464 expected=23040 errors=1 fault=0 mut=2
+[1935400000] %Fatal: tb_global_x_join.sv:40: Assertion failed in tb_global_x_join: GLOBAL_X_JOIN_FAIL
+%Error: /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:40: Verilog $stop
+Aborting...
+GLOBAL_X_JOIN cases=576 got=5760 expected=23040 errors=1 fault=0 mut=3
+[1935400000] %Fatal: tb_global_x_join.sv:40: Assertion failed in tb_global_x_join: GLOBAL_X_JOIN_FAIL
+%Error: /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:40: Verilog $stop
+Aborting...
+GLOBAL_X_JOIN cases=576 got=22752 expected=23040 errors=1 fault=1 mut=4
+[1935400000] %Fatal: tb_global_x_join.sv:40: Assertion failed in tb_global_x_join: GLOBAL_X_JOIN_FAIL
+%Error: /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:40: Verilog $stop
+Aborting...
+GLOBAL_X_JOIN_MATRIX_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2959010-1792425527): exit 0

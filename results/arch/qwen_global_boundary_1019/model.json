@@ -1,0 +1,144 @@
+{
+  "schema": "opentallas.qwen-global-boundary-model.v1",
+  "qualification": "component_address_join_only",
+  "source": {
+    "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv": "e2a753c7cd6d42736bfa76d10b34b490963b3acedaea9c0af2bee3465bdd658c",
+    "rtl/qwen_dv/qfd_dv_vm.sv": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+    "rtl/qwen_dv/qfd_dv_stream.sv": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69",
+    "rtl/qwen_dv/qfd_dv_heads.sv": "c51565f67881cddd81e542ad8c207b28a0ad7bc6df44db797abffa96f9243c4f",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "ee03b60c52e7b0d51be7484becee15c4aeaddbd2391058fb3967bd3b1e031803",
+    "tools/qwen_layerbench/dv_lower.py": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5",
+    "tools/qwen_layerbench/dv_lower_vec.py": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff",
+    "tools/qwen_layerbench/dv_lower_mat.py": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+    "tools/qwen_layerbench/global_boundary.py": "76397ead01f5dec8b2823545b7d6bd07ced514d93b3207c8642064418b471028"
+  },
+  "local_vm": {
+    "elements_per_user": 4096,
+    "users": 4,
+    "physical_elements": 16384,
+    "read_ports": 3,
+    "write_sources": "one16-element plus8-SU or scalar only on disjoint banks; conflicts fault",
+    "capacity_change": 0
+  },
+  "btab": {
+    "physical_words": 512,
+    "word_bits": 256,
+    "decode_offsets": [
+      0,
+      272,
+      344,
+      416
+    ],
+    "decode_words_each": 72,
+    "head_shared": [
+      72,
+      272
+    ],
+    "total_distinct_words": 488,
+    "capacity_change": 0,
+    "head_table_source_join": "OPEN"
+  },
+  "x_namespace": {
+    "address_bits": 24,
+    "SU_window_payload_bits": 22,
+    "user_stride": 65536,
+    "max_layer_element": 230911,
+    "capacity_change": 0,
+    "scope": "identity tags, not local VM allocation",
+    "epochs": {
+      "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+      "epochs": {
+        "qkv": {
+          "pc": 1,
+          "original_base": 4096,
+          "base": 4096,
+          "elements": 4096,
+          "word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200002000601001000000001000008000040000000000400008180000001"
+        },
+        "o": {
+          "pc": 12,
+          "original_base": 50672,
+          "base": 16384,
+          "elements": 512,
+          "word": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000005000000100000800000000000020000200000100c5f0000001000008000010000040000100018800000005"
+        },
+        "gu": {
+          "pc": 16,
+          "original_base": 4096,
+          "base": 4096,
+          "elements": 4096,
+          "word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a0000040e00000100000800000000000020000200173f001000000001000008000100000070001000008600000409"
+        },
+        "down": {
+          "pc": 20,
+          "original_base": 55280,
+          "base": 32768,
+          "elements": 1536,
+          "word": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000042000000d000000100000800000000000020000200000100d7f0000001000008000030000170000300018800000189"
+        }
+      }
+    },
+    "head_element_range": [
+      8192,
+      12288
+    ]
+  },
+  "head": {
+    "plan_sha256": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45",
+    "die": 0,
+    "epochs": [
+      {
+        "pc": 3,
+        "base": 8192,
+        "elements": 4096,
+        "word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200004000001002000000001000008000040000000000400040c00000409"
+      },
+      {
+        "pc": 4,
+        "base": 8192,
+        "elements": 4096,
+        "word": "0000000000000000000000000000000230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000112000001000008000000000000200004000301002000000001000008000040000200000400040c0000040d"
+      },
+      {
+        "pc": 5,
+        "base": 8192,
+        "elements": 4096,
+        "word": "0000000000000000000000000000000260000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000112000001000008000000000000200004000601002000000001000008000040000400000400040c0000040d"
+      },
+      {
+        "pc": 6,
+        "base": 8192,
+        "elements": 4096,
+        "word": "000000000000000000000000000000029000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000900000011200000100000800000000000020000400090100200000000100000800004000060000040000811800040d"
+      }
+    ],
+    "scope": "Actual head ME identities only; local finalnorm lowering and live ownership remain required"
+  },
+  "boundary_cost": {
+    "extra_data_cycles": 0,
+    "new_memory_bits": 0,
+    "new_functional_pins": 0,
+    "logic": "two24-bitROOTaddress additions+BTABfixed-offsetselection+comparators/tag inserts; synthesis/physical cost OPEN",
+    "throughput": "same116-bit command/edge; X1088-bit stream/edge,1024payload/edge; immutable loader owns separate reserved windows",
+    "MAC_per_cycle_change": 0,
+    "communication_intensity_change": 0,
+    "routing_tracks_change": "no new buses; nativeCTS/cellarea not yet measured",
+    "replicas": 1,
+    "slot_fit": "not admitted until parent re-gate"
+  },
+  "ownership": {
+    "scalar": "single32slot reduction state; reserve cfg through finalRB; no overlapping users",
+    "stream": "onepartial64elementpacker andcfg; reserve cfg through lastpublishedbeat",
+    "X": "two epochs; full arm-to-last-read reservation; one active fill owner; no third live epoch",
+    "complete_native_schedule": false
+  },
+  "blockers": [
+    "absolute coldprefix schedule binding",
+    "actual all36 checkpoint payload rewritten+native consumption",
+    "head finalnorm local lowering and sharedBTAB installation",
+    "actual source-pinned scalar/stream/X retirement lifetimes",
+    "MU controller ME/XPF issue user identity",
+    "native parent timing/area and die slot bind",
+    "full SU/4user token exact pass"
+  ]
+}

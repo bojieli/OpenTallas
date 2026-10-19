@@ -1,0 +1,113 @@
+{
+  "results": {
+    "0": {
+      "mismatches": 0,
+      "commands": 5616,
+      "expected": 5616,
+      "fault": 0,
+      "pass_": true
+    },
+    "17": {
+      "mismatches": 1296,
+      "commands": 5616,
+      "expected": 5616,
+      "fault": 0,
+      "pass_": false
+    },
+    "18": {
+      "mismatches": 1296,
+      "commands": 5616,
+      "expected": 5616,
+      "fault": 0,
+      "pass_": false
+    },
+    "19": {
+      "mismatches": 1296,
+      "commands": 5616,
+      "expected": 5616,
+      "fault": 0,
+      "pass_": false
+    }
+  },
+  "vm": {
+    "X": {
+      "base": 0,
+      "size": 384,
+      "what": "residual x rows (owned o / down blocks, ascending global block)"
+    },
+    "SSX": {
+      "base": 384,
+      "size": 16,
+      "what": "root: the 32-slot total spill (ROOT ss; unused with fuse 1)"
+    },
+    "RX": {
+      "base": 400,
+      "size": 16,
+      "what": "rb landing: r = rsqrt(sum / 4096 + eps) (ROOT rx, every slice)"
+    },
+    "T": {
+      "base": 416,
+      "size": 384,
+      "what": "AR landing of t (owned o / down rows, AR calendar order = owned order)"
+    },
+    "QKV": {
+      "base": 800,
+      "size": 128,
+      "what": "qkv receiver: the head block the L9 station lands (q head / k / v)"
+    },
+    "SS": {
+      "base": 928,
+      "size": 16,
+      "what": "head sum of squares (reducer window 00)"
+    },
+    "RS": {
+      "base": 944,
+      "size": 16,
+      "what": "head rsqrt"
+    },
+    "QN": {
+      "base": 960,
+      "size": 128,
+      "what": "QK-normed head"
+    },
+    "GU": {
+      "base": 1088,
+      "size": 256,
+      "what": "gate block s (0..127) + up block s (128..255): the L7 station landing"
+    },
+    "ATT": {
+      "base": 1344,
+      "size": 128,
+      "what": "attention output block i (o_proj x elements 128 i ..) landed from the D2D return chain (dd_en window, dd_base = ATT - 128 i)"
+    }
+  },
+  "x_contract": {
+    "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+    "epochs": {
+      "qkv": {
+        "pc": 1,
+        "base": 4096,
+        "elements": 4096,
+        "word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200002000601001000000001000008000040000000000400008180000001"
+      },
+      "o": {
+        "pc": 12,
+        "base": 50672,
+        "elements": 512,
+        "word": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000005000000100000800000000000020000200000100c5f0000001000008000010000040000100018800000005"
+      },
+      "gu": {
+        "pc": 16,
+        "base": 4096,
+        "elements": 4096,
+        "word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a0000040e00000100000800000000000020000200173f001000000001000008000100000070001000008600000409"
+      },
+      "down": {
+        "pc": 20,
+        "base": 55280,
+        "elements": 1536,
+        "word": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000042000000d000000100000800000000000020000200000100d7f0000001000008000030000170000300018800000189"
+      }
+    }
+  }
+}

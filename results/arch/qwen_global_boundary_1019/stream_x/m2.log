@@ -1,0 +1,4 @@
+GLOBAL_X_JOIN cases=576 got=22464 expected=23040 errors=1 fault=0 mut=2
+[1935400000] %Fatal: tb_global_x_join.sv:40: Assertion failed in tb_global_x_join: GLOBAL_X_JOIN_FAIL
+%Error: /srv/opentallas-scratch/claude/qwen-global-allocator-1019/rtl/test/mu_qwen_seq/tb_global_x_join.sv:40: Verilog $stop
+Aborting...
