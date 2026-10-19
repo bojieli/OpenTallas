@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   969 GB (avail 792, growth 113, headroom 0, waiters 0/0 GB) load 102/128 running 39 disk 315 GB 
+ot-run: ot-epyc5       admits   807 GB (avail 678, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 15 disk 1092 GB 
+ot-run: ot-epyc6       admits   392 GB (avail 381, growth 107, headroom 0, waiters 0/0 GB) load 43/128 running 18 disk 6066 GB 
+ot-run: ot-epyc7       admits   742 GB (avail 620, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 18 disk 6444 GB 
+ot-run: ot-epyc8       admits  1160 GB (avail 908, growth 96, headroom 0, waiters 0/0 GB) load 39/128 running 26 disk 366 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-calendar-store-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-calendar-store-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-319647-1792426384 after 1 s
+run.sh: line 14: rg: command not found
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-319647-1792426384): exit 127

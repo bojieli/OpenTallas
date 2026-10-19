@@ -1,0 +1,6 @@
+CAL_ROM_PASS checks=29792 all38stages4users back_to_back
+CAL_GUARD_PASS fault=1
+- /srv/opentallas-scratch/claude/qwen-calendar-store-1019/src/rtl/test/qwen_dv/tb_qfd_dv_calendar_rom.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 298us; walltime 0.119 s; speed 2.504 ms/s
+- Verilator: cpu 0.119 s on 1 threads; allocated 7 MB

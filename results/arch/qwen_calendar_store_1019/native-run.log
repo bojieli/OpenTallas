@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   923 GB (avail 760, growth 113, headroom 0, waiters 0/0 GB) load 94/128 running 39 disk 315 GB 
+ot-run: ot-epyc5       admits   834 GB (avail 697, growth 113, headroom 0, waiters 0/0 GB) load 82/128 running 13 disk 1092 GB 
+ot-run: ot-epyc6       admits   399 GB (avail 379, growth 100, headroom 0, waiters 0/0 GB) load 44/128 running 17 disk 6065 GB 
+ot-run: ot-epyc7       admits   732 GB (avail 613, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 18 disk 6461 GB 
+ot-run: ot-epyc8       admits  1173 GB (avail 911, growth 90, headroom 0, waiters 0/0 GB) load 39/128 running 25 disk 365 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-calendar-store-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-calendar-store-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-686879-1792426432 after 1 s
+[106000] %Fatal: tb_qfd_dv_calendar_rom.sv:18: Assertion failed in tb_qfd_dv_calendar_rom.tick: CAL_DATA_MISMATCH cycle3 row1 user0 stage0
+[96000] %Fatal: tb_qfd_dv_calendar_rom.sv:18: Assertion failed in tb_qfd_dv_calendar_rom.tick: CAL_DATA_MISMATCH cycle2 row0 user0 stage0
+[96000] %Fatal: tb_qfd_dv_calendar_rom.sv:18: Assertion failed in tb_qfd_dv_calendar_rom.tick: CAL_DATA_MISMATCH cycle2 row0 user0 stage0
+[96000] %Fatal: tb_qfd_dv_calendar_rom.sv:18: Assertion failed in tb_qfd_dv_calendar_rom.tick: CAL_DATA_MISMATCH cycle2 row0 user0 stage0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-686879-1792426432): exit 0
