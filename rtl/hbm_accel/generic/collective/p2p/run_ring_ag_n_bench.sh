@@ -21,7 +21,8 @@ mut_run(){ local n=$1; shift; bring ring_$n "$@"; block lock_$n $4 $5 $6 $7
   "$OUT/lock_$n/Vtb_hgi_coll_ring_ag_n_lock" +rr=2 >> "$OUT/mut_$n.lock.log" 2>&1 || true; grep -q '^RING_AG_N RR HZ PASS ' "$OUT/mut_$n.lock.log" || ok=0
   "$OUT/ring_$n/Vtb_hgi_coll_ring_ag_n" +MODE=0 > "$OUT/mut_$n.ring.log" 2>&1 || true; grep -q '^RING_AG PASS ' "$OUT/mut_$n.ring.log" || ok=0
   "$OUT/ring_$n/Vtb_hgi_coll_ring_ag_n" +MODE=0 +fault=8 > "$OUT/mut_$n.f8.log" 2>&1 || true; grep -q '^RING_AG FAULT PASS ' "$OUT/mut_$n.f8.log" || ok=0
-  cat "$OUT/mut_$n.lock.log" "$OUT/mut_$n.ring.log" "$OUT/mut_$n.f8.log" | grep -h 'RING_AG' | head -8
+  # Consume all inputs: head can cause SIGPIPE before the mutant verdict.
+  awk '/RING_AG/ { if (++shown <= 8) print }' "$OUT/mut_$n.lock.log" "$OUT/mut_$n.ring.log" "$OUT/mut_$n.f8.log"
   if [[ $ok == 1 ]]; then echo "RING_AG_N MUTANT $n PASSED"; return 0; else echo "RING_AG_N MUTANT $n FAILED"; return 1; fi; }
 mspec(){ case $1 in txlead) echo "0 0 0 1 0 0 0";; cw) echo "0 0 0 0 1 0 0";; hz) echo "0 0 0 0 0 1 0";; rrlead) echo "0 0 0 0 0 0 1";; hzrr) echo "0 0 0 0 0 2 0";;
   ttl) echo "1 0 0 0 0 0 0";; src) echo "0 1 0 0 0 0 0";; tag) echo "0 0 1 0 0 0 0";; *) echo bad;; esac; }
