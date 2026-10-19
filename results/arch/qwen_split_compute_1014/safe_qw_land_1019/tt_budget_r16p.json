@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.qwen.safe_landing_tt_budget.v1",
+ "tile": "qfwd_landh0_300_en_54x54_r16p",
+ "period_ps": 833.333,
+ "quarter_period_ps": 208.33325,
+ "uncertainty_setup_ps": 685.0,
+ "setup_ps": 16.9,
+ "launch_clock_ps": 145.641,
+ "capture_clock_ps": 89.25,
+ "data_delay_ps": 201.578,
+ "setup_slack_ps": -126.535,
+ "clock_mean_lane_ps": 145.2,
+ "clock_mean_core_ps": 95.2,
+ "mean_compensation_credit_ps": 50.0,
+ "compensated_estimated_slack_ps": -76.535,
+ "additional_crossroot_setup_reserve_to_150_ps": 90.0,
+ "root_rule": "TTsetup+FFhold binding; SSsensitivity only",
+ "verdict": "FAIL real logic deficit; phase/source-compensation alone insufficient; structural read-stage pipeline needed",
+ "next_candidate": "D4 W180:720write+720shadow+180out+controls<2kb; +1receivercycle;600=>4x180",
+ "native_phase_contract": "Useexistingclockentry phi-R preserving150/100reserves. QuarterT setup/3quarterT overwritehold needs explicitphaseenvelope; no exceptions/MCP."
+}
