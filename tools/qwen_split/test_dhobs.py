@@ -65,7 +65,7 @@ def test_instance_gated_and_placed():
     os.environ['OT_QWEN_MU_NU'] = '4'
     i = DV._dhobs_inst(V, m, {}, keep)
     assert i.name == 'mu_dhobs' and i.master == 'qfd_sys_face_mu_dhobs' and keep[-1] is i
-    assert i.x + i.w <= 216.0 + 777.6 - 86.4 + 1e-6 and i.y >= 20271.224 + 1814.4 and i.y + i.h <= 22193.624, vars(i)
+    assert abs(i.x - 734.4) < 1e-6 and i.y >= 20271.224 + 1814.4 and i.y + i.h <= 22193.624, vars(i)
     os.environ['OT_SPLIT_DV_DHOBS_XY'] = '300,22170'                          # into native59: refused
     try:
         DV._dhobs_inst(V, {}, {}, _keep())

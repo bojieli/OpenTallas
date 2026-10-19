@@ -79,6 +79,13 @@ WCOL_REN = {'rsi': 'rst_n'}
 DHOBS = ('mu_dhobs', 'qfd_sys_face_mu_dhobs', 'rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv')
 DHOBS_WH = (43.2, 43.2)          # outline (um): ~60 flops + the 45-entry stage list; 187 + 6 pins on its faces
 DHOBS_GAP = 17.28                # above tt_ctlm's N face (the tt_ctlm | native59 channel is 108 um)
+# x: 259.2 um W of tt_ctlm's NE corner (die x 734.4 on dv2f18; between the ctlm's dh_user (x 636) and dh (x 952-970)
+# pins).  Placement trials (GEN only, 10-19): 172.8 W (dv2f18dh) and below sys_face's S face (A) push the sys_face ->
+# native59 q_slot / q_slot_beat / visibility_slot hops over reach (405.7-485.1 um: the observer's seq_dh leg relays take
+# their sites in the sys_face | native59 corner); E of tt_ctlm (C, 20800) re-plans tt_ctlm's own dh leg (3 relays, was 2).
+# Here the GEN passes with tt_ctlm's dh leg unchanged (2 relays, E 1); the observer's leg is E 2: it sees each h_start ONE
+# edge after tt_ctlm's dh pin (GEN has no equal-E fan-out legs) -- harmless under OPSEG (dh_user constant 0, ignored).
+DHOBS_DX = 259.2
 
 
 def _load(env):
@@ -166,8 +173,7 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
 
 def _dhobs_inst(v, m, M, keep):
     """MU-DQ-DHUSER: the observer instance on the MU die (None on a single-user die or without tt_ctlm.dh_user).
-    Placed in the tt_ctlm | native59 channel, its E edge 86.4 um W of tt_ctlm's NE corner (the dh pins sit at the E end of
-    tt_ctlm's N face, dh_user near its middle); OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
+    Placed in the tt_ctlm | native59 channel, DHOBS_DX W of tt_ctlm's NE corner; OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
     nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
     tt = next((i for i in keep if i.name == 'tt_ctlm'), None)
     if os.environ.get('OT_SPLIT_DV_DHOBS', '1') == '0':
@@ -180,7 +186,7 @@ def _dhobs_inst(v, m, M, keep):
     if xy:
         x, y = (float(z) for z in xy.split(','))
     else:
-        x, y = tt.x + tt.w - 86.4 - w, tt.y + tt.h + DHOBS_GAP
+        x, y = tt.x + tt.w - DHOBS_DX, tt.y + tt.h + DHOBS_GAP
     x, y = round(round(x / 0.216) * 0.216, 3), round(y, 3)
     hit = [i.name for i in keep if x < i.x + i.w - 1e-3 and i.x < x + w - 1e-3 and y < i.y + i.h - 1e-3 and i.y < y + h - 1e-3]
     if hit:
