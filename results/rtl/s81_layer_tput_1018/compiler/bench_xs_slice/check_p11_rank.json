@@ -1,0 +1,55 @@
+{
+ "summary": {
+  "words": 4,
+  "rows": 4,
+  "complete_rows_at_root": 4,
+  "partial_words": 0,
+  "plan_exact": true,
+  "end": "END edges=1278 ret_words=4 xo_checked=1276 fault=0"
+ },
+ "lockstep": {
+  "D": 321,
+  "compared": 956,
+  "mismatch": 0,
+  "valid_ref": 26,
+  "valid_xs": 26,
+  "first_ref": 67,
+  "first_xs": 388,
+  "xs_fault_at": -1
+ },
+ "errors": [],
+ "xs": {
+  "D": 321,
+  "off": 37,
+  "off_load": 37,
+  "ts": 300,
+  "mutant": null,
+  "tags": "rank",
+  "cal_rows": 70,
+  "stall_edges": 0,
+  "gather_slack": 245,
+  "nbeat_x": 20,
+  "fam": 0,
+  "K": 1280,
+  "nbeat_stream": 64,
+  "sbase": 720,
+  "end_iter": 585,
+  "launch_row": 103,
+  "cfg_row": 40,
+  "stream_rows": [
+   103,
+   166
+  ],
+  "is_d": {
+   "24": "0000000258000000000000000000000000000000",
+   "150": "0000000001000000000000000000000000000000",
+   "280": "0000000000023000200000000000000000000000",
+   "300": "0000000000023000400000000000000000000000",
+   "323": "0000000000000000000000000000000000000017"
+  },
+  "calendar": "pq_calendar_action/time.viamap.hex (75-b action ABI, tools/s81_static_control/pq_calendar)"
+ },
+ "op": "attn.wq_b",
+ "field_phase": 11,
+ "pass_": true
+}

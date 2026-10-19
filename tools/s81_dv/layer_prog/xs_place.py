@@ -568,10 +568,12 @@ def cmd_collect(a):
 BENCHP = 'results/rtl/s81_layer_tput_1018/compiler/bench_xsp'
 BENCH_RECORDS = [BENCHP + '4', BENCHP + '2', BENCHP]   # bench_xsp4 = current field (per-segment terms legalised in)
 OPS = [r'^attn\.(wq_b|wo_a|wo_b|idx\.q|cmp\.wk)$', r'^ffn\.(router|shared_gu|experts_gu|down)$', r'^eng\.wkv$']
-REST = ('the slice xs CALENDAR images (75-b action words: stream requests, VM responses, cfg / launch / retire), the is_d '
-        'GO word per phase and the cap write-back cfg_d (row tag -> owning slice row) for the DV placement are not '
-        'emitted; no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine '
-        'with the same phase / stream words)')
+REST = ('per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d '
+        '(xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); '
+        'open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank '
+        'proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the '
+        'layer + one gather per x vector in one calendar) is not compiled')
+XS_SLICE_BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice'
 
 
 def lower_placed(die, op, ctx):
