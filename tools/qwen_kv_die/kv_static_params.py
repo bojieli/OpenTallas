@@ -75,6 +75,7 @@ def model_lite(m):
         hub = dict(inst='ahub', master=by['ahub'].master,
                    parameters=(KSD.bindings().get('qkd_ahub') or {}).get('parameters'))
     return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan,
+                face_land=dict(enabled=KSD.FACE_LAND, tiles=KSD.FACE_LAND_TILES),
                 flags=dict(attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
                            astk_erl=KSD.ASTK_ERL, afault=KSD.AFAULT, ahub_static=KSD.AHUB_STATIC))
 
@@ -246,6 +247,18 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
                 fails.append(dict(id='AHUB_OFS_BOUND', what=f'hub AP_OFS {got["AP_OFS"]} FR_OFS {got["FR_OFS"]} ({how}); '
                                   f'the die stage table needs AP_OFS {ah["AP_OFS"]} ({ah["AP_OFS_hex"]}) FR_OFS {ah["FR_OFS"]}',
                                   fix='harden the hub kit (and bind the die instance) at the static_params.json values'))
+    fl = model.get('face_land') or {}
+    if die_v and Path(die_v).exists() and fl.get('tiles'):
+        txt = Path(die_v).read_text(errors='replace')
+        for inst, t in fl['tiles'].items():
+            mm = re.search(r'^\s*(\w+)\s+(?:#\s*\(.*?\)\s*)?' + re.escape(inst) + r'\s*\(', txt, re.M | re.S)
+            if not mm:
+                continue
+            landed = mm.group(1).endswith('_fl')
+            if landed != bool(fl.get('enabled')):
+                fails.append(dict(id='FACE_LAND_BINDING', what=f'{inst} binds {mm.group(1)} but OT_KV_FACE_LAND='
+                                  f'{int(bool(fl.get("enabled")))}: the compiler ages / startup calendar disagree with the tile',
+                                  fix='bind the _fl view (CLOSED only) together with OT_KV_FACE_LAND=1, or neither'))
     plan = model.get('plan') or {}
     stale = []
     for k in ('ahub_ages', 'astk_eread', 'attn_fault'):

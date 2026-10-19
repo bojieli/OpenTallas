@@ -86,3 +86,31 @@ def test_landed_lane_age_from_fwd_lanes_else_unresolved():
 
 def test_ap_ofs_hex_parse():
     assert KSP._ap_list("{16'hffdc, 16'hffdd, 16'hffde, 16'hffdf}") == [-33, -34, -35, -36]
+
+
+def test_face_land_binding_must_match_the_flag(tmp_path):
+    v = tmp_path / 'die.v'
+    v.write_text('module qkd_die;\n  qkd_kvs_attn_fl kvs_attn (.ck(n_ck));\nendmodule\n')
+    m = model(dict(RS))
+    m['face_land'] = dict(enabled=False, tiles=KSD.FACE_LAND_TILES)
+    r = KSP.run(m, table(), die_v=v)
+    assert any(f['id'] == 'FACE_LAND_BINDING' for f in r['fails'])
+    m['face_land']['enabled'] = True
+    r = KSP.run(m, table(), die_v=v)
+    assert not any(f['id'] == 'FACE_LAND_BINDING' for f in r['fails'])
+
+
+def test_face_land_compiler_ages():
+    import os
+    import importlib
+    os.environ['OT_KV_FACE_LAND'] = '1'
+    try:
+        sys.path.insert(0, str(HERE.parents[1]))
+        from tools.qwen_kv_die import kv_static_die as K2
+        importlib.reload(K2)
+        import kv_static_programme as C
+        fl = C._face_land()
+        assert fl['enabled'] and fl['i_ctl'] == 1 and fl['F_DLY_delta'] == 1 and fl['rst_release_max'] == 3
+    finally:
+        os.environ.pop('OT_KV_FACE_LAND')
+        importlib.reload(K2)

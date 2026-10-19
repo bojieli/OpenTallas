@@ -194,13 +194,29 @@ def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
 
 
 # ---- profile: every age the compile uses -----------------------------------------------------------------------------
+def _face_land():
+    """HKV-RSTCAP 10-19: kvs_attn_fl lands i_ctl (+1: every lprg -> attention launch one edge earlier = att + 1) and fin
+    (+1: F_DLY + 1); every _fl tile releases reset +3 edges later (startup only; checked against the region hold budget)"""
+    from tools.qwen_kv_die import kv_static_die as KSD
+    if not KSD.FACE_LAND:
+        return dict(enabled=False, i_ctl=0, fin=0, rst_release_max=0)
+    t = KSD.FACE_LAND_TILES
+    rr = max(v['rst_release'] for v in t.values())
+    if rr > KSD.FACE_LAND_RST_BUDGET:
+        raise ValueError(f'face_land reset release +{rr} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
+    return dict(enabled=True, i_ctl=t['kvs_attn']['i_ctl'], fin=t['kvs_attn']['fin'], rst_release_max=rr,
+                F_DLY_delta=t['kvs_attn']['fin'], tiles=sorted(t))
+
+
 def profile(kind, ages=None):
     if kind == 'component':
         return dict(kind='component', start_relays=0, att=0, rx=0, writer=0, kvn=0, groups=0, crossing=False,
                     qk_age=KC.SOURCED['qk_consume_age'], qk_row_latency=KC.SOURCED['qk_row_latency'],
                     v_rl=19, d_rl=0, d_qk=0, phase=None, ld=1, rc=3, landing_uncertainty=0)
     L = ages['link']
-    return dict(kind='die', start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'],
+    fl = _face_land()
+    return dict(kind='die', start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
+                face_land=fl,
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
                 groups=L['programme_to_groups']['edges'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
