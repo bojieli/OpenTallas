@@ -1,0 +1,222 @@
+{
+ "name": "s81lk_serdes_col_e3",
+ "top": "ot_pdie_serdes_col",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_edge3.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec_edge3.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_edge3.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_bb.v",
+  "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_bb.v"
+ ],
+ "params": {
+  "MUT": 0,
+  "TXL": 3
+ },
+ "defines": [
+  "OT_PMA_HARD"
+ ],
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "pma_rck"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst",
+    "tx"
+   ],
+   "outputs": [
+    "rx",
+    "st",
+    "pma_tx",
+    "pma_tck"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "pma_rck"
+   ],
+   "inputs": [
+    "pma_rx"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst in 2 registered stages per domain (rs_t on clk beside u_enc, rs_r on pma_rck beside u_prx/u_syn); the decoder's lp regional reset runs follow"
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 3844.8,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_txm",
+   "count": 1,
+   "inst": "u_ptx",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_rxm",
+   "count": 1,
+   "inst": "u_prx",
+   "at": [
+    216.0,
+    43.2
+   ]
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "count": 1,
+   "inst": "u_dec.u_syn",
+   "at": [
+    43.2,
+    2376.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "count": 1,
+   "inst": "u_dec.u_dly",
+   "at": [
+    43.2,
+    2635.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "count": 1,
+   "inst": "u_dec.u_chn",
+   "at": [
+    43.2,
+    2851.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "count": 1,
+   "inst": "u_dec.u_out",
+   "at": [
+    43.2,
+    3110.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_rate_match/views/ot_s81_rate_match",
+   "count": 1,
+   "inst": "u_rm",
+   "at": [
+    43.2,
+    3412.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc",
+   "count": 1,
+   "inst": "u_enc",
+   "at": [
+    43.2,
+    3585.6
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "pma_tx",
+   "pma_tck",
+   "pma_rx",
+   "pma_rck"
+  ],
+  "N": [
+   "tx",
+   "rx",
+   "st",
+   "clk",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "pma_tx": [
+   45.0,
+   170.0
+  ],
+  "pma_tck": [
+   170.5,
+   172.0
+  ],
+  "pma_rck": [
+   218.0,
+   219.5
+  ],
+  "pma_rx": [
+   220.0,
+   343.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "structural_change": "S81-CTRL-SVC 10-19 (S81.STA.OWN.7): first kit of the SerDes column parent ot_pdie_serdes_col sized to the approved 518.4 x 3844.8 slot (results/arch/serdes_parent_recovery_1019/model.json): two analog PMA abstracts (tools/mem_compiler/s81_pma_gen.py, 129.6 x 2246.4 each, pads S, digital face N) + six closed column children on the 43.2 lattice; decoder seams = ot_s81_kp4_dec_edge3 (ordinary edge-timed flops, NO multicycle/SDC exceptions; col bench PASS 6000, mut1/mut2 FAIL); TX lane TXL 3 relay rows (enc -> PMA ~1.3 mm in 4 hops <= 405 um); no pin hold pads (ODB-0373 lesson); clk / pma_rck same-PLL related roots, rate matcher gray FIFO kept.",
+ "job": {
+  "owner": "Claude:S81-CTRL-SVC",
+  "branch": "claude/s81-serdes-col-e3-1019",
+  "tag": "e3k1",
+  "purpose": "S81 SerDes column parent first kit (diagnostic gate)"
+ }
+}

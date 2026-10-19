@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   971 GB (avail 784, growth 105, headroom 0, waiters 0/0 GB) load 64/128 running 29 disk 412 GB 
+ot-run: ot-epyc5       admits   790 GB (avail 667, growth 113, headroom 0, waiters 0/0 GB) load 103/128 running 20 disk 564 GB 
+ot-run: ot-epyc6       admits   892 GB (avail 738, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 23 disk 563 GB 
+ot-run: ot-epyc7       admits   889 GB (avail 707, growth 85, headroom 0, waiters 0/0 GB) load 62/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1087 GB (avail 857, growth 96, headroom 0, waiters 0/0 GB) load 51/128 running 25 disk 566 GB 
+ot-run: ot-pve1        skipped: no /tmp/s81-serdes-parent-1019
+ot-run: ot-agidock128  skipped: no /tmp/s81-serdes-parent-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3118740-1792423999 after 0 s
+ERR beat 0
+ERR beat 1
+ERR beat 2
+TB_S81_PDIE_COL MODE=0 MUT=1 sent=6000 got=4475 bad=4475 idles_seen=2080 stA=10 stB=10
+TB_S81_PDIE_COL FAIL
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3118740-1792423999): exit 1

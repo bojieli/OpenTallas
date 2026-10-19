@@ -1,0 +1,103 @@
+{
+  "basis": "results/arch/serdes_parent_recovery_1019/model.json analog 250 x 2250 (two halves)",
+  "claim_boundary": "placement/connection abstract of analog IP; footprint and timing assumed",
+  "faces": {
+    "N": [
+      "ck",
+      "d_v",
+      "d"
+    ],
+    "S": [
+      "pma_tx",
+      "pma_tck"
+    ]
+  },
+  "footprint_um": [
+    129.6,
+    2246.4
+  ],
+  "generator": "tools/mem_compiler/s81_pma_gen.py v1.0",
+  "name": "ot_s81_pma_txm",
+  "pins": {
+    "N": {
+      "pins": 546,
+      "pins_per_um": 4.347,
+      "pitch_um": 0.192
+    },
+    "S": {
+      "pins": 545,
+      "pins_per_um": 4.339,
+      "pitch_um": 0.192
+    }
+  },
+  "schema": "opentallas.s81-pma-abstract.v1",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 0.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 0.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 0.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "views": {
+    "ot_s81_pma_txm.lef": "61de63139a0050f09f6fb828a6f693abed775015e04ff7d3eb2d6efc060550fa",
+    "ot_s81_pma_txm_bb.v": "5ddb029e31436e6c84ffcc1bfe23363cd1ce38c7f8e302103dc59edbf667bb04",
+    "ot_s81_pma_txm_ff.lib": "d5c0ec450480277163e4e4411bf174e53f54b13ed5ddadada9bf5b4e6d3ba84a",
+    "ot_s81_pma_txm_ss.lib": "c9e1b47b6c0af2176fc7a03b83100531eb25c6c19a26d6a27093f04e53d5fa40",
+    "ot_s81_pma_txm_tt.lib": "af157b0a5318afb094abaf18576a36d22f4fe0333dce851f4d4eb778e998d2df"
+  }
+}

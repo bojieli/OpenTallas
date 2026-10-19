@@ -63,6 +63,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     assign st = st_q;
 endmodule
 
+`ifndef OT_PMA_HARD
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81_pma_txm / ot_s81_pma_rxm: the S81 SerDes ANALOG PMA as two hard abstracts (each ~125 x 2250 um, side by side in the
 // column: pads on the die-edge face, digital face toward the KP4 stack), one clock each.  Behavioural model = the two
@@ -87,3 +88,4 @@ module ot_s81_pma_rxm #(parameter integer LAT = 4) (
 );
     ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
 endmodule
+`endif
