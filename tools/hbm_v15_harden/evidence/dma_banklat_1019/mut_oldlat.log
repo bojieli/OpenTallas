@@ -1,11 +1,11 @@
 ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
 ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
-ot-run: ot-epyc6       admits  1010 GB (avail 848, growth 142, headroom 0, waiters 0/0 GB) load 11/128 running 10 disk 6722 GB 
-ot-run: ot-epyc7       admits  1040 GB (avail 891, growth 164, headroom 0, waiters 0/0 GB) load 107/96 running 30 disk 6799 GB 
+ot-run: ot-epyc6       admits   830 GB (avail 658, growth 77, headroom 0, waiters 0/0 GB) load 13/128 running 12 disk 6696 GB 
+ot-run: ot-epyc7       admits  1090 GB (avail 886, growth 123, headroom 0, waiters 0/0 GB) load 72/96 running 31 disk 6778 GB 
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
-ot-run: -> ot-epyc6
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-46104-1792402111 after 1 s
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-140444-1792402360 after 1 s
 Verilator 5.050 2026-07-01 rev v5.050
 BANKLAT die bank0: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
 BANKLAT die bank1: rq lane 21 + pad 30, bank 8, rr lane 21 -> round trip 80
@@ -19,5 +19,5 @@ BANKLAT FAIL mv_fault at cycle 31 move 0 (landing/response latency or drain lag)
 [310000] %Fatal: tb_dma_vp4_banklat.sv:86: Assertion failed in tb_dma_vp4_banklat
 %Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat.sv:86: Verilog $stop
 Aborting...
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-46104-1792402111): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-140444-1792402360): exit 1
 EXIT 1
