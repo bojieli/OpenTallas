@@ -4,4 +4,4 @@ N59MU_PASS ops=14 users=4 CMD u0..3 6/3/2/3 Q 192/96/64/96 (every beat tagged {s
 N59MU_PASS ops=14 users=4 CMD u0..3 6/3/2/3 Q 192/96/64/96 (every beat tagged {seq,user}); results 32/op matched, 1 completion/op, KVN identity tagged; user-0 == NU 1 on 533 edges
 N59MU_BENCH_EXIT 0
 STAGE_RC=0
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1929404-1792434782): exit 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-943207-1792436236): exit 0

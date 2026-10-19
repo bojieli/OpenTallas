@@ -1,1 +1,1 @@
-QW-N59-SAFE3 fleet witnesses (Verilator 5.050 via ot-run, ot-epyc5/ot-epyc4) at source 005f4ae7a (claude/n59-safe3-1019), top qfd_native59_dv_service_r1 (N59_R1=1) NU4 MCTX1 SAFE2 RST_FOREST1. Positives PASS; every mutant FAIL by its fail_regex.
+QW-N59-SAFE3 fleet witnesses (Verilator 5.050 via ot-run) refreshed at source 3c51edcae (safe3c, rst_cp_land 56); first set at 005f4ae7a gave identical verdicts. top qfd_native59_dv_service_r1 NU4 MCTX1 SAFE2 RST_FOREST1. Positives PASS; every mutant FAIL by its fail_regex.
