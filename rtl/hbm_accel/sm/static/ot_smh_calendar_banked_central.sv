@@ -9,12 +9,13 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  output wire[TW-1:0]request0,request1,
  input wire[W-1:0]row0,row1,input wire[QW-1:0]ok0,ok1,input wire[TW-1:0]token0,token1,
  output reg[W-1:0]calendar,output reg[XW-1:0]calendar_ctx,output reg[15:0]calendar_iter,
- output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault
+ output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n
 );
  initial if(AW!=11||W<1||W>223)$fatal(1,"banked provider requires AW11 and protected payload");
  (* keep=1 *) reg[1:0]reset_landing;
  always @(posedge clk or negedge rst_n)if(!rst_n)reset_landing<=0;else reset_landing<={reset_landing[0],1'b1};
  wire[7:0]reset_branch;
+ assign app_reset_n=reset_branch[0];
  for(genvar g=0;g<8;g=g+1)begin:g_reset
   (* keep=1 *) ot_smh_banked_reset_branch u_reset(.clk(clk),.rst_n(rst_n),.phase0(reset_landing[0]),.q(reset_branch[g]));
  end
