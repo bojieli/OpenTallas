@@ -1,0 +1,255 @@
+{
+  "pass_": false,
+  "mutation": "read_early",
+  "source": {
+    "att_kv_json": "/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/att/L02/att_kv.json",
+    "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+    "layer": 2,
+    "rank": 0,
+    "qk_priced": [
+      {
+        "i": 63,
+        "start": 10427.06,
+        "end": 11032.36,
+        "base_cost": 547
+      }
+    ],
+    "pv_priced": [
+      {
+        "i": 67,
+        "start": 11577.74,
+        "end": 12547.17,
+        "base_cost": 808
+      }
+    ],
+    "ring": {
+      "n": 128,
+      "m": 128,
+      "on": true,
+      "first": 0
+    },
+    "c_rows": 512
+  },
+  "service_build_revision": "00a753ba0",
+  "compiler_sha256": "692c7b1942f53b078a8854ceab94e6cd1df40975906785d7c1754453d6660e23",
+  "event_sha256": {
+    "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+    "ing.hex": "a7bd4d391cdc12981c7535a9304f6ebba4723b70cf5a9717c61c164a1e6a6712",
+    "mem.hex": "9d1914870899bef78408a726c94dbf2c93c39cda28024376a57652e57c9a230c",
+    "xw.hex": "91861e27fec2ea20f367e6f57686231706bcb1fae23d2d76c99e8e86a8740792"
+  },
+  "budget": {
+    "model": {
+      "rows_per_sm": 64,
+      "subrun_rows": 8,
+      "encoded_bytes_per_subrun": 4224,
+      "lines_per_block": 32,
+      "descriptors_per_run": 16,
+      "hbm_bytes_per_run": 69632,
+      "packet_bits_per_edge": 1099,
+      "command_bits_per_edge": 192,
+      "hbm_service_bytes_per_stream_edge": 98.9090909090909,
+      "hbm_fetch_stream_edges_lower_bound": 44,
+      "cache_line_bits": 1088,
+      "svg_word_bits": 135,
+      "xc_word_bits": 173,
+      "programme_words_capacity": 2048,
+      "descriptor_capacity": 256,
+      "programme_replicas": 2,
+      "programme_mux": "existing paired 1024x256 SRAMs",
+      "cache_replicas": 1,
+      "added_hardware_area_um2": 0,
+      "new_boundary_registers": 0,
+      "new_routing_tracks": 0,
+      "cache_read_to_command_edges": 1,
+      "go_to_first_command_edges": 7,
+      "native_landing_padding_edges": 8,
+      "regional_return_edges_unadopted": 7,
+      "dense_consumer_attention_opt_in": "mask dense valid bit25 only at unused dense decode; keep external command and packet/tag checks",
+      "provider_gap_edges": 0,
+      "retire": "last word after full result tail",
+      "context": {
+        "row_off": 0,
+        "tag_base": 0,
+        "lstep": 0,
+        "fl": 0,
+        "mrel": 0,
+        "loops": 1
+      },
+      "golden": "QK rows exact; each PV node is csum8, merge in original tree order",
+      "latency": "actual compiler calendar length + fixed fetch/x-load/go gaps; measured in receipt",
+      "adoption": "OPEN: residency, descriptor composition, exact RTL, physical parent"
+    },
+    "descriptors": 16,
+    "distinct_programmes": 2,
+    "resident_words": 635,
+    "available_words": 2048,
+    "attention_reserved_legacy": 1019,
+    "fits_legacy_attention_reservation": true,
+    "ingress_install_edges": 1302,
+    "run_edges": 9432,
+    "rows_per_sm": 64,
+    "hbm_lines": 512,
+    "provider_gap_edges": 0
+  },
+  "executable": "/srv/opentallas-scratch/claude/codex-attention-prel-1019/work/obj_SMB_SRAMFIFO_SMB_ATTENTION_00a753ba0/Vtb_hbm_svg_rel_sm",
+  "executable_sha256": "e42325c0db2da3852594f730f7667904e8e1f67cff0580da7cd8251dfedb7668",
+  "rc": 1,
+  "fault": "FAULT sm_schedule cycle 1863",
+  "done": null,
+  "fixed_go_count": 1,
+  "fixed_go_exact": false,
+  "pv_merge": {
+    "exact": false,
+    "rows": 64,
+    "nodes": 8,
+    "pad": 8,
+    "scope": "Python golden-tree composition of actual RTL subrun nodes, no on-die merge claim"
+  },
+  "results": [
+    {
+      "name": "qk_sm_SW0_k0",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k1",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k2",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k3",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k4",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k5",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k6",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k7",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k0",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k1",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k2",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k3",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k4",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k5",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k6",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k7",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    }
+  ]
+}
