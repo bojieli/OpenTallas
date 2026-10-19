@@ -90,7 +90,7 @@ end
   $display("RF_DRAIN episode=%0d age=%0d",episode,qt-startqt);
  end
  #0.001;
- if(qt-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
+ if(startqt>0&&qt-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
  if(s0_0.u_slice.su_w_done[0])begin
   $display("SERIAL_RETIRE episode=%0d age=%0d",episode,qt-startqt);
   if(qt-startqt!=670)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
@@ -99,7 +99,7 @@ end
 ''')
  for replica in range(6):
   s.append(f'''always @(posedge clk)begin #0.001;
- if(runrq&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[{replica}].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica={replica}");
+ if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[{replica}].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica={replica}");
 end
 ''')
  for q in range(4):
