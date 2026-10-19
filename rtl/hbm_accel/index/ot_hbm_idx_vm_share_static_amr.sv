@@ -19,7 +19,11 @@
 // MUT (bench only): 1 leaf owner tap one edge short (own[6] against the registered vm_rr); AMMUT (bench only): 1 lanes
 // 6-7 skip stage A (unequal tree); 2 lane valid bits mirrored (lane l at 7-l); 3 data not masked by the owner-steered
 // valid; 4 the 8 fp32 elements of the data word reversed (tie-break order).
-module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0)(
+// VM_RT (VEH-TOPKFIX2 2026-10-19): fixed extra VM round-trip edges between this tile's vm_rq / vm_rr ports and the bank
+// beyond the 7-edge non-face model (d4g hfd_vms_bank_native_q0_faces input pin flop = 1, plus any die relay / landing
+// stages on the rq4 / rr4 lanes): the owner tap moves to own[7+VM_RT]. Every response face (INDEX, TOPK, ARGMAX) leaves
+// VM_RT edges later. Default 0 = bit-identical to r3.
+module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
     input  wire          clk, rst_n,
     input  wire [33:0]   index_rq, topk_rq, argmax_rq,   // registered sources (pin flops / TOPK request register)
     output reg  [33:0]   vm_rq,
@@ -27,8 +31,8 @@ module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0)(
     output wire [513:0]  index_rr, topk_rr, argmax_rr,   // from the vm_rr pin register
     output reg           fault
 );
-    reg [5:0] own [0:7];                    // per bank b: {argmax, topk, index} at [3b +: 3]
-    wire [5:0] o = own[(MUT == 1) ? 6 : 7];
+    reg [5:0] own [0:7+VM_RT];              // per bank b: {argmax, topk, index} at [3b +: 3]
+    wire [5:0] o = own[((MUT == 1) ? 6 : 7) + VM_RT];
     reg [513:0] rr_q;                       // vm_rr pin register (no reset)
     always @(posedge clk) rr_q <= vm_rr;
     reg [5:0] issue; reg [2:0] v;
@@ -42,15 +46,15 @@ module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0)(
         end
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d < 8; d = d + 1) own[d] <= 6'd0; end
+        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d < 8 + VM_RT; d = d + 1) own[d] <= 6'd0; end
         else begin
             own[0] <= issue;                    // sampled on the bank's own sampling edge n+1
-            for (integer d = 1; d < 8; d = d + 1) own[d] <= own[d-1];
+            for (integer d = 1; d < 8 + VM_RT; d = d + 1) own[d] <= own[d-1];
             for (integer b = 0; b < 2; b = b + 1)
                 if ({1'b0, index_rq[17*b+16]} + {1'b0, topk_rq[17*b+16]} + {1'b0, argmax_rq[17*b+16]} > 2'd1) fault <= 1'b1;
         end
     for (genvar b = 0; b < 2; b = b + 1) begin : g_b
-        // the bank answers n+7 (port); rr_q holds it n+8..n+9, own[7] holds the owner booked at n+1 then
+        // the bank answers n+7+VM_RT (port); rr_q holds it one edge later, own[7+VM_RT] holds the owner booked at n+1 then
         assign index_rr[257*b +: 257]  = {rr_q[257*b+256] && o[3*b],   rr_q[257*b +: 256]};
         assign topk_rr[257*b +: 257]   = {rr_q[257*b+256] && o[3*b+1], rr_q[257*b +: 256]};
         assign argmax_rr[257*b +: 257] = {rr_q[257*b+256] && o[3*b+2], rr_q[257*b +: 256]};
@@ -82,7 +86,7 @@ module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0)(
         argmax_m <= a0 | a1 | ((AMMUT == 1) ? h1b : 264'd0);
     end
 endmodule
-module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter integer AMMUT = 0)(
+module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter integer AMMUT = 0, parameter integer VM_RT = 0)(
     input  wire          clk,
     input  wire          rst_n,
     input  wire [135:0]  index_rq, topk_rq, argmax_rq,   // registered sources
@@ -94,7 +98,7 @@ module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter int
 );
     wire [3:0] f; wire [2055:0] am;
     for (genvar p = 0; p < 4; p = p + 1) begin : g_pair
-        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT)) leaf(.clk(clk), .rst_n(rst_n),
+        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT), .VM_RT(VM_RT)) leaf(.clk(clk), .rst_n(rst_n),
             .index_rq(index_rq[34*p +: 34]), .topk_rq(topk_rq[34*p +: 34]), .argmax_rq(argmax_rq[34*p +: 34]),
             .vm_rq(vm_rq[34*p +: 34]), .vm_rr(vm_rr[514*p +: 514]), .index_rr(index_rr[514*p +: 514]),
             .topk_rr(topk_rr[514*p +: 514]), .argmax_rr(am[514*p +: 514]), .fault(f[p]));
