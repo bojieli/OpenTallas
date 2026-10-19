@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   112 GB (avail 206, growth 128, headroom 0, waiters 13/1020 GB) load 125/128 running 35 disk 594 GB 
+ot-run: ot-epyc5       admits    26 GB (avail 237, growth 219, headroom 0, waiters 12/945 GB) load 146/128 running 27 disk 1687 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/veh-topkfix/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/veh-topkfix/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2711693-1792397951 after 0 s
+pin_in 1 records 29 (prod 3, faults 3) preload 660 check 147 edges 3288; production edges/record 155, 154, 159
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT0 records29 dones26 faults3 sectors_checked147 errors0 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT1 records29 dones26 faults3 sectors_checked147 errors30 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT2 records29 dones26 faults3 sectors_checked147 errors30 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT3 records29 dones24 faults5 sectors_checked147 errors38 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT4 records29 dones0 faults29 sectors_checked147 errors100 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT5 records29 dones26 faults3 sectors_checked147 errors15 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT0 MUT6 records29 dones0 faults29 sectors_checked147 errors59 schedule_edges3288
+IDX_TOPK_STATIC PIN_IN1 SMUT1 MUT0 records29 dones0 faults29 sectors_checked147 errors100 schedule_edges3288
+IDX_TOPK_STATIC GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2711693-1792397951): exit 0
