@@ -1,0 +1,149 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Native H9b pure K pin capture, KR registered readiness and outputs, PHY return capture and OREG pin output flops. Custom PRE_GLOBAL_PLACE preserves stock recipe3 pin-split/hold/pin-flop order; generated duplicate wrappers disabled.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hdie_pc_ctrl_bw_n64_20261019-114111.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hdie_pc_ctrl_bw_n64_20261019-114111.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_bw_n64-20261019-114111",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc8 in 132 s (gate total 4475 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1229, 'pin_rectangles': 1229, 'pin_track_checked': 1229, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 db50710393681cebca93389b3ee603a3b2c417e28c80cf7f417008cf1fc9a57f",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 6284 um2 + macros 21387 in core 202226: util 4% (std-cell density 3.9% of placeable 162930 um2; total fill 13.7%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy cells 44,436 flops 9,431 depth 478.4 ps util 0.1375 reach 185.4 um (1.7 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "38 input->register endpoint(s) > 3 levels (worst kr_rdy->u_kr_bridge.u_ring.g_control[8].genblk1.g_nonempty.g_owner.live_q$_DFF_P_/D 5 lv, kr_rdy->u_kr_bridge.u_ring.g_control[6].genblk1.g_nonempty.g_owner.live_q$_DFF_P_/D 5 lv, kr_rdy->u_kr_bridge.u_ring.g_control[4].genblk1.g_nonempty.g_owner.live_q$_DFF_P_/D 5 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 888.7..956.6 ps (spread 67.9), boundary mean 921.7; tt insertion all 655.2..735.4 ps (spread 80.2), boundary mean 689.0; ff insertion all 514.4..597.7 ps (spread 83.3), boundary mean 547.8; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 4 (fine) leaves 1215 sinks 9429 cells 13603 leaf arrival 567.2..611.7 ps (spread 44.5) pad 73.9 / 16.2 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 5 (fine) leaves 1215 sinks 9429 cells 13819 leaf arrival 583.0..611.7 ps (spread 28.7) pad 73.9 / 16.4 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hdie_pc_ctrl_bw_n64/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    300 paths, worst slack -189.6 ps (e.g. u_native.controller.head_bank_cfg[0]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      300 paths, worst slack 322.9 ps (e.g. u_native.u_rst.rst_n[30]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.8964441128588305e-10 hold WNS 3.569500250932833e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 9,431 sinks on the largest root; measured TT insertion 735.4 ps, FF insertion 597.7 ps, TT pin-flop spread 60.3 ps, FF pin-flop spread 63.8 ps; WARN: insertion 735.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-bw-1019/physical/ref_tile/hdie_pc_ctrl_bw_n64/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-bw-1019/physical/ref_tile/hdie_pc_ctrl_bw_n64/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "measured_band_fill",
+   "message": "legal rows do not cover full-width standard-cell band; measured std-band density outside 40..60% or invalid band; missing coordinator approval/reason; unapproved standard cell outside full-width band",
+   "fix": "fix actual placement/row envelope; preserve this failed receipt"
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 14% = (hard macros 21386.8 + synthesized std cells 6414.0) / outline 206219.5 um2; pin demand per face: S 657 pins over 558.6/561.6 um (100%), N 622 pins over 558.7/561.6 um (100%), W 76 pins over 273.9/367.2 um (75%), E 82 pins over 339.1/367.2 um (92%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 10.65% used; GRT 2214 s",
+   "fix": ""
+  }
+ ]
+}
