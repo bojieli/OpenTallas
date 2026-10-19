@@ -5,6 +5,7 @@
 #   lp<M>   lockstep re-cut == regenerated landed parent qfd_dv_slice2_e_lpf_lp (MU_NU 4), lp.py MUT M
 #   audit   lp.py region audit (+ unland mutant must FAIL)
 #   b2      dv_bench2 f j m n o on the HEAD slice (-GSU_LT=1 -GHD_W130=1 -GMU_NU=4)
+#   faces<M> tb_qfd_dv2_faces (W1 W0 E0 E1 chain of qfd_dv_slice2_w / _e at SU_LT 1, HD_W130 1, MU_NU 4), MUT M (0 PASS; 11/12 FAIL)
 #   b2n7    NEG: dv_bench2 n with DV2_AM_MUT 7 (root mixed-merge check dropped) -> must FAIL
 set -u
 C=$1; WORK=$2; R=results/rtl/mu_qwen_1018/adopt_slice/runs_gate; mkdir -p "$R" "$WORK"
@@ -16,5 +17,11 @@ case $C in
   lp*) bash rtl/test/qwen_dv/run_slice2_e_lpf.sh "$WORK/$C" lp ${C#lp} ;;
   audit) bash rtl/test/qwen_dv/run_slice2_e_lpf.sh "$WORK/$C" audit ;;
   b2) python3 rtl/test/qwen_dv/dv_bench2.py f j m n o --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4" --work "$WORK/b2" ;;
+  faces*) m=${C#faces}
+    S=$(python3 -c "import sys; sys.path.insert(0,'rtl/test/qwen_dv'); import dv_bench2 as D; print(' '.join(s for s in D.SRCS2 + D.XSRCS if not s.endswith('tb_qfd_dv2.sv')))")
+    verilator --binary --timing -O2 -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 \
+      --top-module tb_qfd_dv2_faces -GMUT=$m -GMU_NU=4 -GSU_LT=1 -GHD_W130=1 -Mdir "$WORK/$C" -o sim $S rtl/qwen_dv/qfd_dv_slice2_faces.sv \
+      rtl/test/qwen_dv/tb_qfd_dv2_faces.sv > "$WORK/$C.build.log" 2>&1 || { echo BUILD FAIL; tail -30 "$WORK/$C.build.log"; }
+    "$WORK/$C/sim" ;;
   b2n7) DV2_AM_MUT=7 python3 rtl/test/qwen_dv/dv_bench2.py n --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4" --work "$WORK/b2n7" ;;
 esac; echo "# exit $?"; } > "$R/$C.out" 2>&1
