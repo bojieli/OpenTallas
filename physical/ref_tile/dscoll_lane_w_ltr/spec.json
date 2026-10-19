@@ -357,21 +357,25 @@
   "clock": "ck",
   "reason": "rs lands on core face in two ck flops, then existing two-flop synchroniser and one relay; RXSRAM expands same-depth relay from5 to40 independent copies. No added data/reset release edge versus SAFE geometry."
  },
- "std_area_um2": 10495.7,
+ "std_area_um2": 7357.69494,
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "ROOT mandated SRAM storage successor plus43.2lattice and>=20umchannels; newthirdcolumn needs561.6square. Candidate measuredstdarea must be refreshed from synthesis beforefullgate. stdband216..259.2.",
+   "why": "Explicit fifteen-SRAM lattice/channel-bound561.6square; measuredstd7357.69494 in actual standard rows216..246.24 gives43.6603percent density. Full physical core and paid outline remain unchanged. Five additional32x128 banks replace4424b runtime flop array; no timing/hold waiver.",
    "lattice_um": 43.2,
    "min_channel_um": 41.88,
-   "std_band_util": 0.435968,
+   "std_band_util": 0.43660281699889264,
    "approved_by": "ROOT coordinator 10-19 S81-COLL-GEOM (final visual approval pending)",
    "std_band_y_um": [
     216,
-    259.2
+    246.24
    ]
   }
  },
  "slot_change_request": {
   "reason": "S81-COLL-STORAGEP1 candidate561.6square (was475.2x561.6safegeometry; originally432x336.96); all15macros charged, parentmustproveactualslot+escape beforeadoption."
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/dscoll_cx/coll_gpl_row_envelope.tcl",
+  "PRE_GLOBAL_PLACE_TCL": "physical/dscoll_cx/coll_gpl_row_envelope.tcl"
  }
 }

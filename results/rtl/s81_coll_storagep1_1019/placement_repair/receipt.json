@@ -1,0 +1,15 @@
+{
+  "baseline": "sizing_failure/receipt.json",
+  "component_scope": "same immutable saved2_4ODB,15fixedSRAMs,160rows216..259.2; no RTL/pins/macro/blockage changes",
+  "actual_status_audit": "all49535CORE and2915tie cells PLACED, only15BLOCK/FIRM,2102welltapLOCKED; no intersecting placement blockage",
+  "cause": "stored physical core is full2.16..559.44 while actual rows form216..259.2band; current OpenDB computeCoreArea and getCoreArea differ after pruning",
+  "tests": {
+    "row_envelope_GPL_then_DPL_check": "PASS",
+    "restore_full_physical_core_before_DPL_check": "PASS",
+    "production_try_finally_GPL_wrapper_then_DPL_check": "PASS"
+  },
+  "production_revision": "actual7357.69494stdarea; rowband216..246.24 yields43.6603%; new fullflow validation pending",
+  "assertions": "full physical core and die restored unchanged; fixed15macro locations/orient/status unchanged; no region retained; no timing/hold/ref threshold changes",
+  "public_source": "https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/odb/src/db/dbBlock.cpp",
+  "source_note": "getCoreArea reads stored core; computeCoreArea computes row envelope. Pinned API independently exercised in real OpenROAD26Q3-1510."
+}

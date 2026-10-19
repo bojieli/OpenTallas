@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc6       admits   410 GB (avail 386, growth 98, headroom 0, waiters 0/0 GB) load 38/128 running 18 disk 6067 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storage-inspect-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-13580-1792426101 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+AUDIT_STORED_CORE 2.16 2.16 559.44 559.44
+AUDIT_COMPUTED_CORE 2.16 216.0 559.44 259.2
+AUDIT_ROWS asap7sc7p5t/54/270/R0 80 asap7sc7p5t/54/270/MX 80
+AUDIT_STATUSES CORE/PLACED 49535 CORE_TIELOW/PLACED 601 CORE_WELLTAP/LOCKED 2102 CORE_TIEHIGH/PLACED 2314 BLOCK/FIRM 15
+AUDIT_STD_BAND std=52450 outside=0 examples=
+AUDIT_BAND_BLOCKAGES 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-13580-1792426101): exit 0

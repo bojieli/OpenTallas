@@ -29,8 +29,17 @@
   ],
   "std_band_y_um": [
    216,
-   259.2
+   246.24
   ]
  },
- "guard": "requires cycle-equivalence, native SRAM SS clkq and CTS proof, explicit die slot update before adoption"
+ "guard": "requires cycle-equivalence, native SRAM SS clkq and CTS proof, explicit die slot update before adoption",
+ "measured_std_area_um2": 7357.69494,
+ "measured_std_band_density": 0.4366028169988926,
+ "full_physical_core_um": [
+  2.16,
+  2.16,
+  559.44,
+  559.44
+ ],
+ "row_envelope_scope": "ONLY global_placement temporary metadata; full physical core restored by finally before metrics, other physical stages and export. Full paid outline remains561.6square."
 }

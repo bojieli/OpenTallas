@@ -16,7 +16,7 @@
   559.44
  ],
  "why": "spec outline",
- "std_area_um2": 10495.7,
+ "std_area_um2": 7357.69494,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -249,7 +249,7 @@
   [
    "WARN",
    "fill",
-   "fill 21% = (macros/children 57120 + std 10496) / outline 315395 um2 (lattice/channel-bound gate-rule exception: ROOT mandated SRAM storage successor plus43.2lattice and>=20umchannels; newthirdcolumn needs561.6square. Candidate measuredstdarea must be refreshed from synthesis beforefullgate. stdband216..259.2.)",
+   "fill 20% = (macros/children 57120 + std 7358) / outline 315395 um2 (lattice/channel-bound gate-rule exception: Explicit fifteen-SRAM lattice/channel-bound561.6square; measuredstd7357.69494 in actual standard rows216..246.24 gives43.6603percent density. Full physical core and paid outline remain unchanged. Five additional32x128 banks replace4424b runtime flop array; no timing/hold waiver.)",
    ""
   ]
  ],
@@ -289,6 +289,8 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/dscoll_cx/coll_gpl_row_envelope.tcl",
+  "physical/dscoll_cx/coll_gpl_row_envelope.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/dscoll_lane_w_ltr/spine_ins.tcl",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
