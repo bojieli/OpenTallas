@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc7       admits  1114 GB (avail 839, growth 59, headroom 0, waiters 0/0 GB) load 26/96 running 17 disk 6423 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3303702-1792433361 after 0 s
+{"status": "PASS", "wrapper_sha256": "dfb9edb38034f3f52f5d81f8d44511ebd7909d217f9dd55fe75c7dadf535e545", "config_sha256": "5ce0e4a0494c6e1a53d93383b013c6985d4f58fbed95aede3121a66cf7cb3b7b", "public_ports": 89, "public_bits": 2788, "input_cycles": 1, "output_cycles": 1, "synchronous_reset_cycles": 2, "reference": "exact historical native12 flow wrapper; no candidate wrapper generator"}
+{"clock_pins": 3429, "macro_counts": {"ot_rom_4096x72_m8": 1, "ot_sram_1r1w_64x16_m1": 6}, "max_nonclock_load": 13, "multiply_driven": 0, "native_buffers": 0, "original_equations": 11087, "reset_forest_ff": 242, "same_edge_copies": 428, "sequential_correspondence": "PASS", "undriven": 0}
+miter outputs 62
+miter outputs 62
+cold_mut_copy_d
+[70000] %Fatal: miter.sv:687: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_COPY_FAIL 14560
+cold_mut_reset_short
+[7000] %Fatal: miter.sv:446: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_RESET_FAIL safe_rst_leaf_0
+cold_mut_gate_input
+[1911000] %Fatal: miter.sv:763: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_COPY_FAIL 14842
+PHYSICAL_SOURCE_MATRIX_DONE
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3303702-1792433361): exit 0
