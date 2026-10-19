@@ -27,11 +27,13 @@
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
-  "rtl/qwen_dv/qfd_dv_su_lane.sv"
+  "rtl/qwen_dv/qfd_dv_su_lane.sv",
+  "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv"
  ],
  "params": {
   "SU_LT": 1,
-  "HD_W130": 1
+  "HD_W130": 1,
+  "MU_NU": 4
  },
  "defines": [
   "OT_DV_SU_LANE_HARD",
@@ -1269,14 +1271,61 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "QK-SLICE 10-18 (coordinator 0gs(c)): HIERARCHICAL pathfinding kit of the qfd_dv_slice2_w master inside the die's M1-M7 grant (cluster: children M5, straps M6, PG M7). Hard children: 8 x (qfd_dv_lane_h STAND-IN + closed ot_hdc_sfu_exp/rcp/rsq_t), 32 x ot_qfd_xs_leaf M5 STAND-IN (closed w130 view, M6 E/W pins re-layered to M4); 22 VM SRAMs; glue soft. RTL SU_LT 1 / HD_W130 1 (benched opt-in configuration, bench_h1). Diagnostic: stand-ins are never bindable; CRITICAL prefix, no REVIEW/submit. Landed regions: the slice RTL has one clock port today; the per-region ck_<r> ports + landed crossings need the slice core split into a wires-only parent (tools/landed_parent/lp.py) -- owed, see PARTITION.md.",
+ "structural_change": "QK-SLICE 10-18 (coordinator 0gs(c)): HIERARCHICAL pathfinding kit of the qfd_dv_slice2_w master inside the die's M1-M7 grant (cluster: children M5, straps M6, PG M7). Hard children: 8 x (qfd_dv_lane_h STAND-IN + closed ot_hdc_sfu_exp/rcp/rsq_t), 32 x ot_qfd_xs_leaf M5 STAND-IN (closed w130 view, M6 E/W pins re-layered to M4); 22 VM SRAMs; glue soft. RTL SU_LT 1 / HD_W130 1 (benched opt-in configuration, bench_h1), MU_NU 4 (MU-SLICE-GATE 10-19: 4-user LM-head argmax qfd_dv_amax_mu + root merge restart / mixed-user fault). Diagnostic: stand-ins are never bindable; CRITICAL prefix, no REVIEW/submit. Landed regions: the slice RTL has one clock port today; the per-region ck_<r> ports + landed crossings need the slice core split into a wires-only parent (tools/landed_parent/lp.py) -- owed, see PARTITION.md.",
  "job": {
-  "owner": "Claude:QK-SLICE",
-  "branch": "claude/qslice2-hard-1018",
-  "tag": "wh1",
+  "owner": "Claude:MU-SLICE-GATE",
+  "branch": "claude/mu-slice-gate-1019",
+  "tag": "wh2mu",
   "submit": false,
   "purpose": "qfd_dv_slice2_w hierarchical pathfinding (die grant M1-M7), critical: gate only",
   "hold_merge": "QK-SLICE diagnostic: lane_h + xs_leaf stand-ins",
-  "benches": []
+  "benches": [
+   {
+    "name": "faces_m0",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh faces0 {RUN}/bench/faces_m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "FACES MUT=0: PASS"
+   },
+   {
+    "name": "faces_m11",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh faces11 {RUN}/bench/faces_m11",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FACES MUT=11: FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/faces11.out"
+   },
+   {
+    "name": "b2_mu4",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2 {RUN}/bench/b2_mu4",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "# exit 0"
+   },
+   {
+    "name": "b2n_am7",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2n7 {RUN}/bench/b2n_am7",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(n\\) MUT=0: FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/b2n7.out"
+   }
+  ]
  }
 }

@@ -33,6 +33,29 @@ VM_S = ("physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2", 94.824, 
 VM_B = ("physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2", 172.824, 4)
 
 
+# MU-SLICE-GATE 10-19: the deployed 4-user LM-head argmax (MU-QWEN R4, qfd_dv_amax_mu; root merge restart + mixed-user
+# fault in qfd_dv_scalar2, MU-ADOPT-SLICE2 a540f1f9f / MU-QW-AMIX 95074c8a3); the gated RTL is claude/mu-slice-gate-1019
+MU_NU = 4
+RG = "results/rtl/mu_qwen_1018/adopt_slice/runs_gate"
+
+
+def _b(name, case, expect, rx):
+    b = {"name": name, "cmd": f"bash {RG}/run_one.sh {case} {{RUN}}/bench/{name}", "expect": expect, "threads": 16,
+         "peak_ram_gb": 64, "needs": ["verilator"]}
+    if expect == "pass":
+        b["pass_regex"] = rx
+    else:
+        b["fail_regex"], b["fail_witness"] = rx, f"{RG}/{case}.out"
+    return b
+
+
+# the W/E face chain at the kit configuration (SU_LT 1, HD_W130 1, MU_NU 4) and the head slice's MU benches (f j m n o)
+BENCHES = [_b("faces_m0", "faces0", "pass", "FACES MUT=0: PASS"),
+           _b("faces_m11", "faces11", "fail", "FACES MUT=11: FAIL"),
+           _b("b2_mu4", "b2", "pass", "# exit 0"),
+           _b("b2n_am7", "b2n7", "fail", r"bench2 \(n\) MUT=0: FAIL")]
+
+
 def r(v):
     return round(v, 4)
 
@@ -70,8 +93,9 @@ def main():
         "top": "qfd_dv_slice2_w",
         "kind": "cluster",
         "diagnostic": True,
-        "sources": flat["sources"] + ["rtl/qwen_dv/qfd_dv_su_lane.sv"],
-        "params": {"SU_LT": 1, "HD_W130": 1},
+        "sources": flat["sources"] + ["rtl/qwen_dv/qfd_dv_su_lane.sv"] +
+                   [x for x in ["rtl/qwen_dv/mu/qfd_dv_amax_mu.sv"] if x not in flat["sources"]],
+        "params": {"SU_LT": 1, "HD_W130": 1, "MU_NU": MU_NU},
         "defines": ["OT_DV_SU_LANE_HARD", "OT_DV_HEADS_HARD"],
         "hard_define": "OT_DV_HEADS_HARD",   # the define the hard-child #() lint checks (OT_DV_SU_LANE_HARD: no #() on lane_h / SFU)
         "clock_port": flat["clock_port"],
@@ -93,13 +117,14 @@ def main():
                               "master inside the die's M1-M7 grant (cluster: children M5, straps M6, PG M7). Hard children: "
                               "8 x (qfd_dv_lane_h STAND-IN + closed ot_hdc_sfu_exp/rcp/rsq_t), 32 x ot_qfd_xs_leaf M5 "
                               "STAND-IN (closed w130 view, M6 E/W pins re-layered to M4); 22 VM SRAMs; glue soft. RTL "
-                              "SU_LT 1 / HD_W130 1 (benched opt-in configuration, bench_h1). Diagnostic: stand-ins are "
+                              "SU_LT 1 / HD_W130 1 (benched opt-in configuration, bench_h1), MU_NU 4 (MU-SLICE-GATE 10-19: 4-user "
+                              "LM-head argmax qfd_dv_amax_mu + root merge restart / mixed-user fault). Diagnostic: stand-ins are "
                               "never bindable; CRITICAL prefix, no REVIEW/submit. Landed regions: the slice RTL has one "
                               "clock port today; the per-region ck_<r> ports + landed crossings need the slice core split "
                               "into a wires-only parent (tools/landed_parent/lp.py) -- owed, see PARTITION.md."),
-        "job": {"owner": "Claude:QK-SLICE", "branch": "claude/qslice2-hard-1018", "tag": "wh1", "submit": False,
+        "job": {"owner": "Claude:MU-SLICE-GATE", "branch": "claude/mu-slice-gate-1019", "tag": "wh2mu", "submit": False,
                 "purpose": "qfd_dv_slice2_w hierarchical pathfinding (die grant M1-M7), critical: gate only",
-                "hold_merge": "QK-SLICE diagnostic: lane_h + xs_leaf stand-ins", "benches": []},
+                "hold_merge": "QK-SLICE diagnostic: lane_h + xs_leaf stand-ins", "benches": BENCHES},
     }
     out = ROOT / KD / "spec.json"
     out.parent.mkdir(parents=True, exist_ok=True)

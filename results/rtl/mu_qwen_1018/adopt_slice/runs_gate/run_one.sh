@@ -25,3 +25,4 @@ case $C in
     "$WORK/$C/sim" ;;
   b2n7) DV2_AM_MUT=7 python3 rtl/test/qwen_dv/dv_bench2.py n --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4" --work "$WORK/b2n7" ;;
 esac; echo "# exit $?"; } > "$R/$C.out" 2>&1
+cat "$R/$C.out"

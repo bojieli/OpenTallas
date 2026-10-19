@@ -1,13 +1,13 @@
 {
- "name": "qfd_dv_slice2_e-lp1-COMMIT",
+ "name": "qfd_dv_slice2_e-lp2mu-COMMIT",
  "block": "qfd_dv_slice2_e_lpf_lp",
  "ref_tile": true,
- "owner": "Claude:OWN-QWEN/SLICE-E",
+ "owner": "Claude:MU-SLICE-GATE",
  "purpose": "qfd_dv_slice2_e landed parent pathfinding (critical: gate only, COORD-REVIEW-QUEUE)",
  "threads": 32,
  "peak_ram_gb": 192,
  "source": {
-  "branch": "claude/ownq-slicee-1018",
+  "branch": "claude/mu-slice-gate-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"
@@ -17,7 +17,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_slice2_e_lpf_lp #(.SU_TLS(1), .SU_LT(1), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_DV_SU_LANE_HARD -DOT_DV_HEADS_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/lp/qfd_dv_slice2_e_lpf_lp.sv rtl/qwen_dv/qfd_dv_slice2_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_redstn2.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v rtl/qwen_dv/qfd_dv_su_lane.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_slice2_e_lpf_lp #(.SU_TLS(1), .SU_LT(1), .MU_NU(4), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_DV_SU_LANE_HARD -DOT_DV_HEADS_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/lp/qfd_dv_slice2_e_lpf_lp.sv rtl/qwen_dv/qfd_dv_slice2_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_redstn2.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v rtl/qwen_dv/qfd_dv_su_lane.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -27,7 +27,7 @@
    },
    {
     "name": "eq_m0",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m0 eq 0",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq0 {RUN}/bench/eq_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -38,7 +38,7 @@
    },
    {
     "name": "eq_m1",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m1 eq 1",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq1 {RUN}/bench/eq_m1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -46,11 +46,11 @@
      "verilator"
     ],
     "fail_regex": "EQ MUT=1: LPF_EQ FAIL",
-    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/eq1h.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/eq1.out"
    },
    {
     "name": "eq_m3",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m3 eq 3",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq3 {RUN}/bench/eq_m3",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -58,11 +58,11 @@
      "verilator"
     ],
     "fail_regex": "EQ MUT=3: LPF_EQ FAIL",
-    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/eq3.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/eq3.out"
    },
    {
     "name": "lp_m0",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m0 lp 0",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp0 {RUN}/bench/lp_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -73,7 +73,7 @@
    },
    {
     "name": "lp_m1",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m1 lp 1",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp1 {RUN}/bench/lp_m1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -81,11 +81,11 @@
      "verilator"
     ],
     "fail_regex": "LP MUT=1: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp1_395025d51.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/lp1.out"
    },
    {
     "name": "lp_m2",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m2 lp 2",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp2 {RUN}/bench/lp_m2",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -93,11 +93,11 @@
      "verilator"
     ],
     "fail_regex": "LP MUT=2: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp2_395025d51.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/lp2.out"
    },
    {
     "name": "lp_m3",
-    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m3 lp 3",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp3 {RUN}/bench/lp_m3",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -105,7 +105,30 @@
      "verilator"
     ],
     "fail_regex": "LP MUT=3: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp3_395025d51.log"
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/lp3.out"
+   },
+   {
+    "name": "b2_mu4",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2 {RUN}/bench/b2_mu4",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "# exit 0"
+   },
+   {
+    "name": "b2n_am7",
+    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2n7 {RUN}/bench/b2n_am7",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(n\\) MUT=0: FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/b2n7.out"
    }
   ],
   "calibrate": {
@@ -165,7 +188,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_dv_slice2_e/qfd_dv_slice2_e-lp1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_dv_slice2_e/qfd_dv_slice2_e-lp2mu-COMMIT"
   }
  ],
  "cycles_added": 0,

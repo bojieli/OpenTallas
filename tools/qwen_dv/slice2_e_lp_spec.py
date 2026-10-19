@@ -68,7 +68,7 @@ def main():
         "kind": "cluster",
         "diagnostic": True,
         "sources": srcs,
-        "params": {"SU_TLS": 1, "SU_LT": 1, "MUT": 0},
+        "params": {"SU_TLS": 1, "SU_LT": 1, "MU_NU": 4, "MUT": 0},
         "defines": wh["defines"],
         "hard_define": wh["hard_define"],
         "clock_port": "ck_core",
@@ -95,13 +95,13 @@ def main():
                         "neighbour-relative delivery); every input on time; outputs +6 edges (cmd/hr/st/sc/ch/l9/cc chains), "
                         "+9 (cw corridor words), +12 (ss status, ag OR chain) vs the flat qfd_dv_slice2_e -> cycles_dv.py / "
                         "die GEN must re-derive the chain hop ages (cmd 2 -> 8, hr/ch 1 -> 7 edges a slice hop); reset release "
-                        "+9.  Residual: the 8 SU lane groups share ck_core (su8 read loop lane -> VM -> lane)."),
+                        "+9.  MU-SLICE-GATE 10-19: MU_NU 4 (4-user LM-head argmax, root merge restart + mixed-user fault).  Residual: the 8 SU lane groups share ck_core (su8 read loop lane -> VM -> lane)."),
         "structural_change": ("OWN-QWEN/SLICE-E 10-18 (landed-regions-standard-1018): qfd_dv_slice2_e as a LANDED parent "
                               "(lp.py: 10 region roots core/hd/ef/wf/nw/nc/ne/sw/sc/se, 42 landings D4 E2, reset depth 9) "
                               "instead of one balanced tree over 2.46 x 2.59 mm. Geometry = the qfd_dv_slice2_wh hierarchical "
                               "kit (stand-in lane_h + M5 x-leaf, closed SFU, 22 SRAM). Diagnostic (stand-ins): never bindable; "
                               "CRITICAL prefix, no REVIEW/submit."),
-        "job": {"owner": "Claude:OWN-QWEN/SLICE-E", "branch": "claude/ownq-slicee-1018", "tag": "lp1", "submit": False,
+        "job": {"owner": "Claude:MU-SLICE-GATE", "branch": "claude/mu-slice-gate-1019", "tag": "lp2mu", "submit": False,
                 "purpose": "qfd_dv_slice2_e landed parent pathfinding (critical: gate only, COORD-REVIEW-QUEUE)",
                 "hold_merge": "OWN-QWEN/SLICE-E diagnostic: lane_h + xs_leaf stand-ins",
                 "extra_paths": ["results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"], "benches": BENCHES},
@@ -128,13 +128,29 @@ def _b(name, kind, m, expect, rx, wit=None):
 # eq: qfd_dv_slice2_e == the wires-only re-cut (3 stimulus modes); lp: the re-cut == the generated landed parent.
 # Unobservable mutants (recorded, not benched): eq MUT 2 (cw_n1/cw_n2 swap: equal words under random stimulus) and lp MUT 4
 # (u_c / u_hd reset run one stage long: both re-synchronise their reset and the random stimulus flushes the state).
-BENCHES = [_b("eq_m0", "eq", 0, "pass", "EQ MUT=0: LPF_EQ PASS"),
-           _b("eq_m1", "eq", 1, "fail", "EQ MUT=1: LPF_EQ FAIL", f"{WIT}/eq1h.log"),
-           _b("eq_m3", "eq", 3, "fail", "EQ MUT=3: LPF_EQ FAIL", f"{WIT}/eq3.log"),
-           _b("lp_m0", "lp", 0, "pass", "LP MUT=0: LP_LOCKSTEP PASS"),
-           _b("lp_m1", "lp", 1, "fail", "LP MUT=1: LP_LOCKSTEP FAIL", f"{WIT}/lp1_395025d51.log"),
-           _b("lp_m2", "lp", 2, "fail", "LP MUT=2: LP_LOCKSTEP FAIL", f"{WIT}/lp2_395025d51.log"),
-           _b("lp_m3", "lp", 3, "fail", "LP MUT=3: LP_LOCKSTEP FAIL", f"{WIT}/lp3_395025d51.log")]
+RG = "results/rtl/mu_qwen_1018/adopt_slice/runs_gate"
+
+
+def _g(name, case, expect, rx):
+    b = {"name": name, "cmd": f"bash {RG}/run_one.sh {case} {{RUN}}/bench/{name}", "expect": expect, "threads": 16,
+         "peak_ram_gb": 64, "needs": ["verilator"]}
+    if expect == "pass":
+        b["pass_regex"] = rx
+    else:
+        b["fail_regex"], b["fail_witness"] = rx, f"{RG}/{case}.out"
+    return b
+
+
+# MU-SLICE-GATE 10-19: re-run at MU_NU 4 on claude/mu-slice-gate-1019 (witnesses in RG); + the head slice MU benches
+BENCHES = [_g("eq_m0", "eq0", "pass", "EQ MUT=0: LPF_EQ PASS"),
+           _g("eq_m1", "eq1", "fail", "EQ MUT=1: LPF_EQ FAIL"),
+           _g("eq_m3", "eq3", "fail", "EQ MUT=3: LPF_EQ FAIL"),
+           _g("lp_m0", "lp0", "pass", "LP MUT=0: LP_LOCKSTEP PASS"),
+           _g("lp_m1", "lp1", "fail", "LP MUT=1: LP_LOCKSTEP FAIL"),
+           _g("lp_m2", "lp2", "fail", "LP MUT=2: LP_LOCKSTEP FAIL"),
+           _g("lp_m3", "lp3", "fail", "LP MUT=3: LP_LOCKSTEP FAIL"),
+           _g("b2_mu4", "b2", "pass", "# exit 0"),
+           _g("b2n_am7", "b2n7", "fail", r"bench2 \(n\) MUT=0: FAIL")]
 
 OUTREG = {
     "ef": ["st_eo", "sc_eo", "arv_eo", "art_eo", "arm_eo", "arl_eo", "ard_eo", "dd_eo", "ccv_eo", "ccm_eo", "ccw_eo", "cct_eo",
