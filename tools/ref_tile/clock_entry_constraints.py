@@ -980,22 +980,40 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
-# Match ck_insertion.py's exported insertion.json boundary population: input
-# timing endpoints plus output timing launch registers, intersected with this root.
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
 proc ot_ce_boundary_cells {} {
-  set boundary {}
-  set inputs [all_inputs -no_clocks]
-  if {[llength $inputs]} {
-    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
-    }
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
   }
-  if {[llength [all_outputs]]} {
-    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
-    }
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
   }
-  return $boundary
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
 }
 # Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
 # (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
