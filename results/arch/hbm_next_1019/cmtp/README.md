@@ -299,11 +299,49 @@ Per unit (P4 (a), vs priced): IDXN −0.32% MTP / 0 users (was −3.10% at 953);
 
 **Goldens:** `goldens/mtp_all5/` DONE (forced drafter: drafts [223, 939, 23, 695, 22] all accepted + bonus 1266; layer-major argmax equal, L0 bit-equal; manifest PASS 21 arrays). `mu4` still running (user 2 of 4 at 03:33; ETA ~04:40, pending_results).
 
-## 10. Pending / next (updated step 5, 10-19 03:55)
+## 10. Pending / next (updated step 6, 10-19 06:50)
 
-1. **Goldens:** DONE (`ar_mtp_g5`, `mtp_all5`, `mu4` CONTROL PASS, 10-19 06:10).
-2. **Whole-token images:** DONE except the layer-20 live-in (IDX.INDEX index frame + index_q.rope, 1,398 words a position): pin it across segments; then VEH runs the images.
-3. **Re-time as redesigns land:** SM4 parallel publish (skew −2.0% in ALL v2), M1 measured; `plane_compiler.py meas --step5`.
-4. Static calendar for the data-dependent spans (union loop U ≤ 6N, KV plan 128 lines a SM): extend `static_check` to the image form.
-5. Engram sub-block groups (optional; the 2^19 VM fits every layer).
-6. M1 priced → SM4 measured x-store / publish; remainder split re-time if SM4 builds it.
+1. **Goldens:** DONE (`ar_mtp_g5`, `mtp_all5`, `mu4` CONTROL PASS).
+2. **Whole-token images:** DONE, one VM map (sec. 17); VEH runs them (`emitter/whole/<mode>_N<n>/`).
+3. **OWNER / PROG decision (sec. 17):** the union loop is a data-dependent span. Reserving its bound U = 6N in the static calendar costs -6.3% MTP (P4(a)+split 3,263.5; rpl0 3,170.1; P3+(a) 3,180.2 -- all under 3,364). Options: (a) reserve 6N and accept; (b) a union budget below 6N with E_RANGE fault + an AR fallback for the over-budget step (as ATT_BUDGET); (c) let the CP issue the records after the loop on its drain (data-dependent timing; a rule question for the owner).
+4. **Re-time as redesigns land:** SM4 declined parallel publish (only-significant-gains); M1 measured and the (a) re-pack are DIE inputs; `plane_compiler.py meas --step5 [--union-bound]` on ot-epyc7 `hnx-cmtp4/opt6`.
+5. Remainder split only if SM4 builds the second row word. Engram sub-block groups optional (MTP image needs 506.1k of 524.3k words).
+
+## 17. Step 6 (10-19 06:50): `mu4` golden, one VM map for the whole-token images, image-form static check, reserved-calendar re-time
+
+**`mu4` golden** (`goldens/mu4/`): 4 users with 2-token prompts. Position 1 of every user is the users N = 4 step. User 0 reproduces `ar_mtp_g5` bit for bit (160 arrays compared, 0 mismatches, CONTROL PASS). The manifest lists 640 arrays and PASSes; `mu4.npz` sha256 fc19651c... matches `mu4.json`.
+
+**The layer-20 "live-in" was two model bugs, not a cross-segment value.** Both are fixed at the source:
+- `IDX.INDEX` D with cand_en is the candidate table the frame WRITES (`machine.u_idx_index`). `timing.footprint` read it, so layer 20 seemed to read 1,366 words a position before writing them. Fix: `timing.is_write_operand` (O, R, and D of IDX.INDEX cand_en). `isa_rows.written_operands` makes D a write only where an IDX op writes it (UNION, KVUNION, INDEX cand_en).
+- SU `b_half` reads B and D at i >> 1, so it reads ceil(n / 2) words. `emitter.desc_ivs` and `isa_rows.check_rows_independent` used the full n. So `index_q.rope` over-read 32 words past the RoPE table, which made the second false live-in. The over-read also inflated the RoPE row stride (96 instead of 64 words).
+- `static_check` still gives 123 / 123 segments PASS, and its mutants fail as witnesses (`static/`). The re-time is unchanged: P4(a) 3,483.7 / 4,462.0, rpl0 3,377.9, P3+(a) 3,390.1 / 4,251.2 are reproduced exactly on the fixed tree.
+
+**One real cross-segment value: CANDM.** `emitter.carried_values` scans the whole token. It looks for words that a segment reads before any in-segment writer and that some segment writes. Only one such value exists: the layer-20 candidate keep table `CANDM` (2 x 2,048 words, AR 188,864). COLL.TOPK_MERGE writes it in layer 20, and IDX.INDEX keep_en reads it in layers 24 / 28 / 32 / 36. Before this step it was relocated per segment as a "constant": a wrong address in those 4 layers, and shared across positions although it is per position. It is now a pinned N-row array at one token-wide base, like h / PRE. `pinned_layout` gives every segment the same pinned map. The token report checks `pinned_one_base`, `liveins` = {}, `host_preloaded` = [] and 0 emit errors; `one_vm_map` = true for all 6 images.
+
+| image | records | bytes | VM need (2^19 = 524,288) | pinned words | one map |
+|---|---|---|---|---|---|
+| ar_N1 | 3,954 | 470,976 | 99,200 | 24,584 | yes |
+| mtp_N6 | 3,715 | 516,304 | 506,112 (96.5%; +21.5k for CANDM x 6) | 147,504 | yes |
+| mu_N1 / N2 / N3 / N4 | 3,955 / 3,595 / 3,595 / 3,595 | 471,056 / 498,928 x 3 | 99.2k / 187.0k / 264.3k / 341.4k | 24.6k / 49.2k / 73.8k / 98.3k | yes |
+
+**Image-form static check** (`tools/hbm_next/image_check.py`, `image_check.json`): all 6 images PASS. The checks:
+- I1: every record decodes, round-trips and is legal.
+- I2: frame -- one END, last; the ACCEPT / TOKX tail; USERS first.
+- I3: union loops -- balanced and not nested. The count word is the D[0] of the last IDX.UNION, and nothing clobbers it before the loop. The bound U <= 6N is structural (A = N x 6 ids; O and R hold 6N). Body records have rsel 1, rtab = the UNION's R, and n = N. U_max = 36 MTP; 12 / 18 / 24 users.
+- I4: every KVUNION has budget 128, NL <= P and a full plan, and every plan-mode ATT follows its KVUNION.
+- I5: every VM row extent is < 2^19.
+- I6: one map, 0 emit errors.
+
+Five mutants (wrong count word, KV budget 256, wrong rtab, lost END, VM past 2^19) FAIL as witnesses. A first re-run of the images had 128 records failing on the stale row check; I6 caught it, and those records are now emitted.
+
+**Reserved static calendar (union loop at its bound)** (`plane_compiler.py meas --step5 --union-bound`, `retime/ub6_*.json`; ALL measured v2). Every union loop is priced at U = 6N (verify 36, users 6 x users; draft / seed bodies 36, conservative). The MTP-STATS mean is not used:
+
+| option | AR | MTP mean -> bound | 4u agg mean -> bound (per user) |
+|---|---|---|---|
+| P4(a) + split | 1,949.7 | 3,483.7 -> **3,263.5 (-6.3%)** | 4,462.0 -> 4,396.6 (1,099.2) |
+| P4(a) rpl0 | 1,949.7 | 3,377.9 -> **3,170.1 (-6.2%)** | 4,462.0 -> 4,396.6 (1,099.2) |
+| P3+(a) | 1,949.7 | 3,390.1 -> **3,180.2 (-6.2%)** | 4,251.2 -> 4,191.8 (1,048.0); 3 users 3,873.1 (the interpolated 3-user mean exceeds 18: artefact) |
+
+The draft is unchanged: it already uses the no-sharing bound. Reading: if the calendar must reserve the worst-case union, every option misses the MTP target (3,364) by 3-6%. The 4-user rows still meet the 1,000 per user floor. This is an OWNER / PROG decision (sec. 10 item 3). The ATT KV plan already reserves its bound (128 lines, model upper bound 109).
+
+Fleet tree of record: ot-epyc7 `/srv/opentallas-scratch/claude/hnx-cmtp4/opt6` (= opt5 + the step-6 tools).
