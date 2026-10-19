@@ -42,8 +42,8 @@ def report():
     collisions = M.collisions(candidate, users, period, colours)[0]
     assert not collisions, collisions
     assert bound > period and design['dies'] == 520
-    return dict(schema='opentallas.s81_dv.mu_47_bound.v1', owner_target_users=n,
-                owner_target_dies=520, target_preserved=True,
+    return dict(schema='opentallas.s81_dv.mu_47_bound.v1', coordinator_decision=DECISION, owner_target_users=46, superseded_target_users=n,
+                owner_target_dies=520, target_preserved=False,
                 source_model=dict(path=str(M.BAL.relative_to(M.ROOT)),
                                   sha256=hashlib.sha256(M.BAL.read_bytes()).hexdigest()),
                 phase_quantum=q, period=period,
@@ -60,6 +60,12 @@ def report():
                 rejected_shortcuts=['46 users is diagnostic, not completion of owner target',
                     'Third copies require die budget change; not adopted',
                     'Changing user copy each token requires mutable-state migration/replication and user-0 fixed-copy proof'])
+
+# Coordinator decision 2026-10-19 (MU-S81b): the target is the proven 46-user calendar; this bound is kept as the
+# condition under which 47 would be recorded.
+DECISION = {"date": "2026-10-19", "target_users": 46,
+            "text": "S81 multi-user AR target = 46 users (the proven collision-free calendar), not 47. No third copy of the four full-scan groups (S002/S011/S020/S029, ~+40 dies) for one user. 47 is recorded only if the twelve non-duplicated FFN-pair stages measure >= 1.4% faster in RTL (occupancy 20,754 -> <= 20,468 cycles); until then 47 is a hypothetical opportunity, not a target.",
+            "composition": "46 x 1,224.1 = 56,309 tok/s aggregate AR (results/arch/token_path_1018/index.json multi_user.ds_rom.ar)"}
 
 
 if __name__ == '__main__':
