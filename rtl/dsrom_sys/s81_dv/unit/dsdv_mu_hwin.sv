@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -189,14 +189,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         c_n = {NEP*34{1'b0}}; rc_n = {NEP*11{1'b0}};
         for(p3=0;p3<NEP;p3=p3+1) for(e3=0;e3<NEV;e3=e3+1) begin
             for(k3=0;k3<34;k3=k3+1)
-                c_n[34*p3+k3] = c_n[34*p3+k3] | (c_select[p3*3+k3/12][e3] && head_word[e3][k3]);
-            rc_n[11*p3+:11] = rc_n[11*p3+:11] | ({11{r_select[p3][e3]}} & {h_eu[e3],1'b1});
+                c_n[34*p3+k3] = c_n[34*p3+k3] | (c_select[p3*3+k3/12][e3] && output_word[e3][k3]);
+            rc_n[11*p3+:11] = rc_n[11*p3+:11] | ({11{r_select[p3][e3]}} & {output_word[e3][12:3],1'b1});
         end
     end
     // A head that stays fresh has the same payload after this edge. Register the
     // exact next-edge fire decision and winning endpoint selects beside each
     // <=12-bit output slice, at the same edge as eqn/okq/fresh. No output edge added.
-    wire [33:0] head_word[0:NEV-1];
+    wire [33:0] head_word[0:NEV-1], output_word[0:NEV-1];
     wire [NEV-1:0] c_select[0:NEP*3-1], r_select[0:NEP-1];
     wire [NEV-1:0] next_fire;
     reg [NEP-1:0] next_collision;
@@ -206,6 +206,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         assign next_fire[oe]=ok[oe] && h_fr[oe] && h_ts[oe]==tm_event[oe]
             && !adv[oe] && !(|(pe[oe]&rec_slot));
         assign head_word[oe]={h_ep[oe],h_eu[oe],h_at[oe][1],(MUT==3)?1'b0:h_at[oe][0],1'b1};
+        if(HEAD_STAGE!=0) begin:g_payload_stage
+            // Unconditional capture beside the registered winning selects. A
+            // selected head is fresh on both edges, so this is the same payload
+            // the original output consumes. No event edge or D bound changes.
+            reg [33:0] payload_q;
+            always @(posedge ck) payload_q<=head_word[oe];
+            assign output_word[oe]=payload_q;
+        end else begin:g_payload_direct
+            assign output_word[oe]=head_word[oe];
+        end
     end endgenerate
     wire [NEV-1:0] nsc[0:NEP-1], nsr[0:NEP-1];
     generate for(op=0;op<NEP;op=op+1) begin:g_output_select
@@ -459,7 +469,7 @@ module dsdv_seq_host_mux (
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
     assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};

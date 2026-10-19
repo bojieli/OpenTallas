@@ -46,7 +46,7 @@ module tb_dsdv_mu_hwin;
     wire [3:0] mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};      // the die master's t_mf fold
     dsdv_mu_hslot #(.NSLOT(NS), .MUT(0)) u_hs (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
-    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
+    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction

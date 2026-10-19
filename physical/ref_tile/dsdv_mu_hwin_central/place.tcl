@@ -286,3 +286,6 @@ $i setOrient R0; $i setLocation [expr {round(172.8 * $dbu)}] [expr {round(518.4 
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x16_m1 at 172.8 518.4 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 84} { error "ref_tile place: expected 84 macros, netlist has $nb" }
+
+# Row pruning must precede tapcell; physical core and macro placements remain unchanged.
+source /src/physical/ref_tile/dsdv_mu_hwin_central/hwin_cell_band.tcl
