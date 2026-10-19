@@ -119,7 +119,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // calendar slot.  One sel-0 word (n = 1) = the former uniform period S with nw = NSLOT: the previous behaviour.
     // cs = the smallest gap.  gtm[k] = g[k] - 1 (the timer's compare value).
      reg [SI:0] gn; reg [23:0] cg; wire [23:0] ng;
-    wire [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; 
+    wire [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1];
     // sl stays OH0 until arming: directly use the same slot state, avoiding a broadcast mux.
     wire [NSLOT-1:0] ss = sl;
     wire on_cal = !armed || ph == 24'd0;
