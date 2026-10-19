@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  259.2,
-  129.6
+  241.92,
+  131.76
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  127.44
+  239.76,
+  129.6
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,8 +29,7 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "N": [
-   "clk_program",
+  "W": [
    "clk_program_mem",
    "rst_n",
    "slot",
@@ -44,6 +43,7 @@
    "nkeys"
   ],
   "S": [
+   "clk_program",
    "weight_slot",
    "query_slot",
    "query_index",
@@ -64,7 +64,7 @@
    "kbf",
    "fault"
   ],
-  "W": [],
+  "N": [],
   "E": []
  },
  "clock_port": "clk_program",
@@ -83,7 +83,7 @@
    "inst": "*calendar.store",
    "idx": 0,
    "x": 43.2,
-   "y": 43.2,
+   "y": 86.4,
    "w": 172.824,
    "h": 41.064,
    "orient": "R0",

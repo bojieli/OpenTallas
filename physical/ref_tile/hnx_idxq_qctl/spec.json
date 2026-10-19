@@ -37,12 +37,11 @@
  ],
  "clock_port": "clk_program",
  "outline": {
-  "w": 259.2,
-  "h": 129.6
+  "w": 241.92,
+  "h": 131.76
  },
  "pins": {
-  "N": [
-   "clk_program",
+  "W": [
    "clk_program_mem",
    "rst_n",
    "slot",
@@ -56,6 +55,7 @@
    "nkeys"
   ],
   "S": [
+   "clk_program",
    "weight_slot",
    "query_slot",
    "query_index",
@@ -76,8 +76,18 @@
    "kbf",
    "fault"
   ],
-  "W": [],
+  "N": [],
   "E": []
+ },
+ "pin_ranges": {
+  "clk_program": [
+   119.0,
+   123.0
+  ],
+  "clk_program_mem": [
+   104.0,
+   108.0
+  ]
  },
  "route": {
   "pd": 0.5,
@@ -103,6 +113,11 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "count": 1,
    "inst": "*calendar.store",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
    "clock_entry": {
     "port": "clk_program_mem",
     "pin": "clk",
@@ -173,7 +188,7 @@
  "clock_cts_roots": [
   "clk_program"
  ],
- "cts_sink_note": "9,290 sinks in 259 x 130 um: gate 1 spread 118 ps > 80 at TT -> balanced sink clusters",
+ "cts_sink_note": "9,290 sinks in 259 x 130 um: gate 1 spread 118 / gate 2 104 ps > 80 at TT -> CW=1 windows (~4.4k sinks) + L band",
  "pin_regs": {
   "enable": false,
   "reason": "every input lands in a kept pin flop and every output leaves a flop in the RTL (+1/+1 edge, the d4g ot_hbm_idx_qctl_static pin rule, lockstep-proven); automatic pin registers would add an unpriced edge"
