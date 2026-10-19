@@ -129,8 +129,8 @@ module ot_hbm_r14_aq_pc_safe #(
     act_b=ac2_b;act_row=ac2_row;act_cand_oh=32'b1<<ac2_b;
     act_cand=ac2_v&&bank_n[ac2_b]!=0&&!open[ac2_b]&&!blk[ac2_b]&&look_row[ac2_b]==ac2_row;
   end
-  always @(posedge clk or negedge rst_n)begin
-    if(!rst_n)begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_row<=0;
+  always @(posedge clk or negedge reset_regions[63])begin
+    if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_row<=0;
       for(integer g=0;g<4;g=g+1)begin ac_b[g]<=0;ac_row[g]<=0;end
     end else begin
       for(integer g=0;g<4;g=g+1)begin:SG

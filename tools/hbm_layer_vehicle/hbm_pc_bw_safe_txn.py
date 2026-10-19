@@ -15,6 +15,7 @@ SOURCES = [
     D + 'ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv',
     D + 'ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv',
     D + 'ot_hbm_svc_ring_h9b.sv',
+    D + 'ot_hbm_svc_ring_bw_safe.sv',
     D + 'ot_hbm_svc_pin_skid2_h9.sv',
     'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv',
     'rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv',

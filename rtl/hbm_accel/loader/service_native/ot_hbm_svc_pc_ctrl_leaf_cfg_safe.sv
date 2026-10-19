@@ -111,7 +111,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_h9b #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
+        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
           .in_v(kv_q&&k_rdy_seen),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
           .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
           .cnt(n),.cnt_next(nn),.fault(kfront_fault));
@@ -233,7 +233,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in({235'b0,pending_meta[20:0]}),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_aq_pc_safe #(.WQ(QD),.MRKEY(MRKEY)) controller(
-        .clk(clk),.rst_n(lrst_n),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
+        .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_rd(push_read),.wr_r(wr),
