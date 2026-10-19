@@ -37,8 +37,9 @@ for x in m:
     print(f'hier_block -module "{x}"')
 PY
     echo "hier blocks: $(grep -c hier_block $W/hier.vlt)"
-    /usr/bin/time -f "%e s %M KB" -o $W/build.time bash -c "verilator --cc --exe --main --timing --hierarchical -j ${KVA_J:-16} $VOPTS \
-        $W/hier.vlt $VFILES && make -C $O -f Vtb_${TOP}_hier.mk -j1 hier_verilation && make -C $O -f Vtb_${TOP}_hier.mk -j ${KVA_J:-16} hier_build" > $W/build.log 2>&1
+    export VOPTS VFILES O TOP W KJ=${KVA_J:-16}
+    /usr/bin/time -f "%e s %M KB" -o $W/build.time bash -c 'verilator --cc --exe --main --timing --hierarchical -j $KJ $VOPTS \
+        $W/hier.vlt $VFILES && make -C $O -f Vtb_${TOP}_hier.mk -j1 hier_verilation && make -C $O -f Vtb_${TOP}_hier.mk -j $KJ hier_build' > $W/build.log 2>&1
   else
     /usr/bin/time -f "%e s %M KB" -o $W/build.time verilator --binary --timing -j ${KVA_J:-32} $VOPTS $VFILES > $W/build.log 2>&1
   fi
