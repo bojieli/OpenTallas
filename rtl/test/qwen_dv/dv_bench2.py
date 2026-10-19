@@ -454,7 +454,10 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL.  One ROOT cfg at the start: at MU_NU > 1
     the root restarts its argmax merge after each token (qfd_dv_scalar2 MU_NU; a ROOT cfg per user token would clear
     other users' PSUM slots); DV2_AM_MUT 6 removes that restart and must FAIL (every token = the largest head so far).
-    DV2_GAP 12 / 14 issue the next STN while the previous op's results are pending: the stn_pend fault must fire (FAIL)."""
+    DV2_GAP 12 / 14 issue the next STN while the previous op's results are pending: the stn_pend fault must fire (FAIL).
+    MU-QW-AMIX 10-19 (MU_NU > 1): every token also carries its USER -- the root's and slice 1's status st[27:26] on the
+    tok_v edge (contract with MU-QW-B1-RTL: ss5[27:26]) and the TOK broadcast word's tag[1:0] -- and must equal the
+    emitted user."""
     seed = int(os.environ.get("DV2_SEED", seed))
     rng = np.random.default_rng(seed)
     gap = int(os.environ.get("DV2_GAP", "18"))
@@ -531,13 +534,18 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     tok = [w & 0xFFFFFF for _, w in log.get("S0TOK", [])]
     ring = [(w >> 64) & 0xFFFFFF for _, w in log.get("S0SC", []) if (w >> 92) & 7 == 4]
     tok1 = [w & 0xFFFFFF for _, w in log.get("S1TOK", [])]
+    # MU-QW-AMIX: token users (status [27:26] at the tok_v edge, TOK word tag[1:0] = raw scalar word [33:32])
+    utok = [(w >> 26) & 3 for _, w in log.get("S0TOK", [])]
+    utok1 = [(w >> 26) & 3 for _, w in log.get("S1TOK", [])]
+    uring = [(w >> 32) & 3 for _, w in log.get("S0SU", []) if (w >> 44) & 7 == 5]
     ok = 0
     for i, (rnd, w, g) in enumerate(exp):
         got = [lst[i] if i < len(lst) else None for lst in (tok, ring, tok1)]
-        if all(x == g for x in got):
+        gu = [lst[i] if i < len(lst) else None for lst in (utok, uring, utok1)]
+        if all(x == g for x in got) and (MU_NU == 1 or all(x == w for x in gu)):
             ok += 1
         else:
-            errs.append(f"round {rnd} user {w}: root token / broadcast / slice-1 token {got}, golden argmax {g}")
+            errs.append(f"round {rnd} user {w}: root token / broadcast / slice-1 token {got} users {gu}, golden argmax {g}")
     if len(tok) != len(exp):
         errs.append(f"{len(tok)} root tokens for {len(exp)} emits")
     print(f"    bench2 (m): seed {seed} gap {gap} MU_NU {MU_NU} FACE {FACE} AM_MUT {AM_MUT}: {len(exp)} emits, "
@@ -582,6 +590,69 @@ def bench_o(work, mut, seed=31):
     return ok, 2, errs
 
 
+def bench_n(work, mut, seed=41):
+    """MU-QW-AMIX 10-19: the root argmax merge must hold ONE user's candidates (qfd_dv_scalar2 MU_NU > 1 checks it).
+    2-slice chain, root = slice 0 (amnb 2).  Users 1 and 2 each run one amax-armed STN chunk on both slices (rows
+    sl*512 + {0, 128}..), heads cleared first.  Case 'mixed': slice 1 emits user 1 while the root emits user 2 (one merge,
+    two users' candidates), then slice 1 emits user 2 while the root emits user 1.  Every per-slice command is legal for
+    qfd_dv_amax_mu (both heads open), so only the root's mixed-merge check can see it: PASS iff the root's sc fault
+    (status bit 65) is set, its port fault (63) is clear and slice 1 has no fault.  Case 'legal': the same heads, both
+    slices emit user 1, then both user 2: no fault, root / slice-1 tokens = the golden argmax of each user's rows with
+    the token user in status [27:26] and in the TOK word tag.  DV2_AM_MUT 7 (no check) must FAIL 'mixed'.  MU_NU > 1."""
+    rng = np.random.default_rng(int(os.environ.get("DV2_SEED", seed)))
+    users = (1, 2)
+    ok, errs = 0, []
+    for case in ("mixed", "legal"):
+        ev = B.Ev()
+        ev.at(B.P_CMD + 0, B.cmd_root(1, 0, 0, amnb=2), t=ev.t)
+        ev.at(B.P_CMD + 1, B.cmd_root(0, 0, 0), t=ev.t + 1)
+        ev.step(8)
+        gold = {}
+        for c, u in enumerate(users):
+            v = (rng.standard_normal(2 * 128) * 4.0).astype(F)
+            v[v == 0] = F(1.0)
+            rows = [sl * 512 + c * 128 + j for sl in (0, 1) for j in range(128)]
+            vv = G.mul(G.add(v, F(0)), F(1.0))
+            gold[u] = rows[int(np.argmax(vv))]
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=u), t=ev.t + sl)
+            ev.step(3)
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 512 + c * 128, amax=1, user=u), t=ev.t + sl)
+            ev.step(4 + SK)
+            for k in range(8):
+                for sl in (0, 1):
+                    pair2(ev, sl, v[sl * 128 + 16 * k:sl * 128 + 16 * k + 16], np.zeros(16, dtype=F), None, None, ev.t)
+                ev.step()
+            ev.step(18)
+        ev.step(40)
+        pairs = [(1, 2), (2, 1)] if case == "mixed" else [(1, 1), (2, 2)]
+        for u1, u0 in pairs:                       # (slice 1's emit user, the root's emit user)
+            ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=u1)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=u0), t=ev.t + 3)
+            ev.step(40)
+        ev.step(20)
+        log = run_sim2(f"n_{case}", ev, work, mut, ev.t + 20)
+        st0, st1 = log["S0ST"][0][1], log["S1ST"][0][1]
+        sc0, pf0, any1 = (st0 >> 65) & 1, (st0 >> 63) & 1, (st1 >> 69) & 1
+        if case == "mixed":
+            if sc0 == 1 and pf0 == 0 and any1 == 0:
+                ok += 1
+            else:
+                errs.append(f"mixed: root sc fault {sc0} (want 1), root port fault {pf0} (want 0), slice-1 any fault {any1} (want 0)")
+            continue
+        bad = status_ok2(log)
+        tok = [(w & 0xFFFFFF, (w >> 26) & 3) for _, w in log.get("S0TOK", [])]
+        tok1 = [(w & 0xFFFFFF, (w >> 26) & 3) for _, w in log.get("S1TOK", [])]
+        ring = [((w & 0xFFFFFF), (w >> 32) & 3) for _, w in log.get("S0SU", []) if (w >> 44) & 7 == 5]
+        want = [(gold[u], u) for u in users]
+        if not bad and tok == want and tok1 == want and ring == want:
+            ok += 1
+        else:
+            errs.append(f"legal: faults {bad}; root {tok} / slice-1 {tok1} / TOK words {ring}, want {want}")
+    print(f"    bench2 (n): MU_NU {MU_NU} FACE {FACE} AM_MUT {AM_MUT}")
+    return ok, 2, errs
+
+
 def install():
     B.Ev = Ev2
     B.load_vm = load_vm2
@@ -590,7 +661,7 @@ def install():
 
 
 BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
-           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o}
+           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
 def main():
