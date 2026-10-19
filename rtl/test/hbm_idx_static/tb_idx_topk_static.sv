@@ -7,6 +7,8 @@
 // PIN_IN 1 (VEH-TOPKFIX 10-19): the slice banks carry literal input pin flops (BANK_PIN_IN 1 = the d4g
 // hfd_vms_bank_native_q0_faces timing), the engine runs PIN_IN 1 and reads through the rootctl read-group share
 // (ot_hbm_idx_vm_share_static PIN_IN 1, as ot_hbm_idx_rootctl_static_pin wires it); SMUT = share mutant.
+// PIN_IN 1 binds the strapped native physical banks (ot_vms_bank_native_physical: the die's q0 bank RTL; the
+// behavioural ot_vms_bank_static has no pin flops).
 // Checks: every done/fault edge, every output sector (incl. untouched neighbour words), slice status 0.
 module tb_idx_topk_static;
     parameter integer MUT = 0;
@@ -42,7 +44,7 @@ module tb_idx_topk_static;
         .cq(cq), .cq_seq(cq_seq), .cr(cr_all[1*274 +: 274]), .busy(busy), .done(done), .fault(fault));
     assign rq = {vm_rq, rq_bench[4*136-1:0]};   // IDX is the top read group (4 of 0..4)
     always @* begin cq_all = 0; cq_all[1*338 +: 338] = cq; client_seq = 0; client_seq[2 +: 2] = cq_seq; end
-    hfd_hgi_vms_static_SW #(.BANK_PIN_IN(PIN_IN)) slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
+    hfd_hgi_vms_static_SW #(.STRAP_BANKS(PIN_IN != 0 ? 1 : 0), .BANK_PIN_IN(PIN_IN)) slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
         .cq(cq_all), .cr(cr_all), .client_seq(client_seq), .response_enable(response_enable), .response_seq(response_seq),
         .bank_enable(bank_enable), .bank_client(bank_client), .hub_ring_enable(2'd0), .hub_ring_client(4'd0),
         .rslot_v(rslot_v), .wslot_v(wslot_v), .rslot(rslot), .wslot(wslot), .rq(rq), .rr(rr),

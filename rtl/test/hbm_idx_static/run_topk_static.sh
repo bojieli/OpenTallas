@@ -14,6 +14,10 @@ src=(rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/index/ot_hbm_id
  rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
  rtl/test/hbm_idx_static/tb_idx_topk_static.sv)
+D=rtl/hbm_accel/generic/vm/static   # PIN_IN 1: the strapped native physical banks (as run_parent_pin.sh)
+[ "$pin" = 0 ] || src+=($D/ot_vms_ce_counter_pipe.sv $D/ot_vms_bank_static_strap.sv $D/ot_vms_bank_native_physical.sv
+ $D/physical/hfd_vms_bank_native_q*.sv $D/wq_merge/hfd_vms_wq2_merge.sv
+ physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$VL" ] || VL=$(command -v verilator)
 rc_all=0
 runs="0 1 2 3 4 5 6"; [ "$pin" = 0 ] || runs="$runs S1"
