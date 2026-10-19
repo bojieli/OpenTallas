@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.safe_collective.rx_mirror_track_waiver.v1",
+  "authority": "ROOT scoped candidate acceptance, 2026-10-19; final visual/DRC/native approval pending",
+  "baseline_commit": "17ac09ab3",
+  "unchanged_sha256": {
+    "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546.lef": "59a7b6d9f08d212b9b1c5184afb2442f9faed034f8dc6f2d63af40cede3d202a",
+    "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee"
+  },
+  "child_view_unchanged": true,
+  "child_rtl_unchanged": true,
+  "lef": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546.lef",
+  "lef_sha256": "59a7b6d9f08d212b9b1c5184afb2442f9faed034f8dc6f2d63af40cede3d202a",
+  "transform": "MY: (x,y)->(W-x,y); then translate by actual origin",
+  "nominal_origin_um": [
+    129.6,
+    302.4
+  ],
+  "actual_origin_um": [
+    129.624,
+    302.4
+  ],
+  "waiver_delta_nm": [
+    24,
+    0
+  ],
+  "nominal": {
+    "orient": "MY",
+    "origin_nm": [
+      129600,
+      302400
+    ],
+    "layers": {
+      "M4": {
+        "pins": 1112,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      },
+      "M5": {
+        "pins": 3,
+        "offtrack": 3,
+        "max_offset_nm": 24.0
+      }
+    }
+  },
+  "actual": {
+    "orient": "MY",
+    "origin_nm": [
+      129624,
+      302400
+    ],
+    "layers": {
+      "M4": {
+        "pins": 1112,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      },
+      "M5": {
+        "pins": 3,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      }
+    }
+  },
+  "nominal_shape_access": {
+    "SIGNAL": {
+      "shapes": 1114,
+      "inaccessible": 2,
+      "pins": 1113
+    },
+    "CLOCK": {
+      "shapes": 4,
+      "inaccessible": 4,
+      "pins": 2
+    },
+    "PG": {
+      "shapes": 86,
+      "inaccessible": 0,
+      "pins": 2
+    }
+  },
+  "actual_shape_access": {
+    "SIGNAL": {
+      "shapes": 1114,
+      "inaccessible": 0,
+      "pins": 1113
+    },
+    "CLOCK": {
+      "shapes": 4,
+      "inaccessible": 0,
+      "pins": 2
+    },
+    "PG": {
+      "shapes": 86,
+      "inaccessible": 0,
+      "pins": 2
+    }
+  },
+  "all_other_origins_on_43_2": true,
+  "verdict": "PASS_TRACK_PROOF_ONLY"
+}
