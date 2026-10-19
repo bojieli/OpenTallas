@@ -6,9 +6,9 @@
   "results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json": "501b41bea1486f865eccc568695ace605aa87b7b2b069f083d810e2738674b17",
   "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
   "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/lowering.json": "85ceb5f54550bd94c4f40c76d033ed436de4888a9c43be5d61ca1b71503777a7",
-  "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz": "4117978729c8c66355bc28db85763083556104f38798884ebf62aacd25b923bc",
-  "results/rtl/qwen_layer_tput_1018/compiled_L1/relay_schedule/compute_compiled.json": "f605571645581e350883de13ae306d3363af25524588747778de4a63613735fe",
-  "results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json": "f404f9f1558bf673345e69e6bd4fe76a7a7e5a92efc5233388880212c6ed94e2"
+  "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz": "9099fd609f4af665d31cdce20a5ccae15f228a9ce3e7d1fa8ec6fa20ef5d282f",
+  "results/rtl/qwen_layer_tput_1018/compiled_L1/relay_schedule/compute_compiled.json": "5768892a42d27247c84fa2fcd3708a4dd40ac53f42bc981be80a03898fa92e54",
+  "results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json": "787345b9fc1845e9897f6200eaa5fe0ffd31f08a454ef75911bafb1d8a632d23"
  },
  "stage_starts_T": [
   {
@@ -20,143 +20,143 @@
    "stage": 1
   },
   {
-   "cycle": 6856,
+   "cycle": 6858,
    "stage": 2
   },
   {
-   "cycle": 13697,
+   "cycle": 13701,
    "stage": 3
   },
   {
-   "cycle": 20538,
+   "cycle": 20544,
    "stage": 4
   },
   {
-   "cycle": 27379,
+   "cycle": 27387,
    "stage": 5
   },
   {
-   "cycle": 34220,
+   "cycle": 34230,
    "stage": 6
   },
   {
-   "cycle": 41061,
+   "cycle": 41073,
    "stage": 7
   },
   {
-   "cycle": 47902,
+   "cycle": 47916,
    "stage": 8
   },
   {
-   "cycle": 54743,
+   "cycle": 54759,
    "stage": 9
   },
   {
-   "cycle": 61584,
+   "cycle": 61602,
    "stage": 10
   },
   {
-   "cycle": 68425,
+   "cycle": 68445,
    "stage": 11
   },
   {
-   "cycle": 75266,
+   "cycle": 75288,
    "stage": 12
   },
   {
-   "cycle": 82107,
+   "cycle": 82131,
    "stage": 13
   },
   {
-   "cycle": 88948,
+   "cycle": 88974,
    "stage": 14
   },
   {
-   "cycle": 95789,
+   "cycle": 95817,
    "stage": 15
   },
   {
-   "cycle": 102630,
+   "cycle": 102660,
    "stage": 16
   },
   {
-   "cycle": 109471,
+   "cycle": 109503,
    "stage": 17
   },
   {
-   "cycle": 116312,
+   "cycle": 116346,
    "stage": 18
   },
   {
-   "cycle": 123153,
+   "cycle": 123189,
    "stage": 19
   },
   {
-   "cycle": 129994,
+   "cycle": 130032,
    "stage": 20
   },
   {
-   "cycle": 136835,
+   "cycle": 136875,
    "stage": 21
   },
   {
-   "cycle": 143676,
+   "cycle": 143718,
    "stage": 22
   },
   {
-   "cycle": 150517,
+   "cycle": 150561,
    "stage": 23
   },
   {
-   "cycle": 157358,
+   "cycle": 157404,
    "stage": 24
   },
   {
-   "cycle": 164199,
+   "cycle": 164247,
    "stage": 25
   },
   {
-   "cycle": 171040,
+   "cycle": 171090,
    "stage": 26
   },
   {
-   "cycle": 177881,
+   "cycle": 177933,
    "stage": 27
   },
   {
-   "cycle": 184722,
+   "cycle": 184776,
    "stage": 28
   },
   {
-   "cycle": 191563,
+   "cycle": 191619,
    "stage": 29
   },
   {
-   "cycle": 198404,
+   "cycle": 198462,
    "stage": 30
   },
   {
-   "cycle": 205245,
+   "cycle": 205305,
    "stage": 31
   },
   {
-   "cycle": 212086,
+   "cycle": 212148,
    "stage": 32
   },
   {
-   "cycle": 218927,
+   "cycle": 218991,
    "stage": 33
   },
   {
-   "cycle": 225768,
+   "cycle": 225834,
    "stage": 34
   },
   {
-   "cycle": 232609,
+   "cycle": 232677,
    "stage": 35
   },
   {
-   "cycle": 239450,
+   "cycle": 239520,
    "stage": 36
   },
   {
@@ -186,11 +186,11 @@
   "R_HR": 14,
   "R_SS": 13,
   "R_AG": 13,
-  "digest": "sha256:3e6f397235a6c7d51d13d3312da20a88f1342056459a604751d9efa01c0ffc4f",
+  "digest": "sha256:0ce64d5f152e4a491728543c37b9ba3a4af35a395f0b3b9b137234108bb19339",
   "source": "results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan)"
  },
  "stage_label": 1,
- "period": 6581,
+ "period": 6583,
  "lead": 21,
  "xpf_transport_edges": 15,
  "me_observe_edges": 1,
@@ -338,14 +338,14 @@
    "unit": 1,
    "kind": "NATIVE",
    "at": 534,
-   "done": 2217,
+   "done": 2219,
    "window": "attn_kv"
   },
   {
    "pc": 12,
    "unit": 1,
    "kind": "ME",
-   "at": 2225,
+   "at": 2227,
    "done": 2594,
    "window": "o_proj"
   },
@@ -514,8 +514,8 @@
   {
    "pc": 12,
    "unit": 1,
-   "cycle": 2222,
-   "hex": "100c000008ae"
+   "cycle": 2224,
+   "hex": "100c000008b0"
   },
   {
    "pc": 13,
@@ -563,9 +563,9 @@
    "consumer_pc": 12,
    "producer_pc": 11,
    "producer_unit": 1,
-   "arm_cycle": 2179,
+   "arm_cycle": 2181,
    "issue_cycle": 533,
-   "first_write_cycle": 2197,
+   "first_write_cycle": 2199,
    "xpf72": "800050002004018be1"
   },
   {
@@ -867,8 +867,8 @@
     "unit": 1
    },
    {
-    "head_cycle": 2222,
-    "edge": 2225,
+    "head_cycle": 2224,
+    "edge": 2227,
     "pc": 12,
     "unit": 1
    },
@@ -909,7 +909,7 @@
     "pc": 1
    },
    {
-    "edge": 2227,
+    "edge": 2229,
     "pc": 12
    },
    {
@@ -934,7 +934,7 @@
     "consumer_pc": 1
    },
    {
-    "edge": 2184,
+    "edge": 2186,
     "xpf72": "800050002004018be1",
     "consumer_pc": 12
    },
@@ -1052,7 +1052,7 @@
     "pc": 1
    },
    {
-    "edge": 2241,
+    "edge": 2243,
     "pc": 12
    },
    {
@@ -1071,7 +1071,7 @@
     "consumer_pc": 1
    },
    {
-    "edge": 2198,
+    "edge": 2200,
     "xpf72": "800050002004018be1",
     "consumer_pc": 12
    },
@@ -1318,12 +1318,12 @@
    "value": 0
   },
   {
-   "edge": 2217,
+   "edge": 2219,
    "field": "native_idle",
    "value": 1
   },
   {
-   "edge": 2226,
+   "edge": 2228,
    "field": "stn_busy",
    "value": 1
   },
@@ -1493,12 +1493,309 @@
    "value": 64
   }
  ],
- "digest": "031fbf0c46078f2b",
+ "digest": "c36fbf0c46078f2b",
  "footer": "5850463100001052",
  "not_compiled": [
-  "G-C4 DV slice lowering: slice PROG image (the 457-b SU words of the SU commands' pidx = ISA PC), STN / ROOT / STREAM / PORTS / AMAX command fields (need the DV row->slice ownership and slice-local VM address maps)",
+  "G-C4 DV slice lowering (dv_lower.py): LOWERED = slice map / SETID ids / cmd + scalar chain ages, row ownership of every matrix, slice-local VM map, PROG image + kind-3 stream words, the global RMSNorm sum of squares (per-slice SSQ, PSUM tags = golden block positions, fused ROOT r) with a collision-free scalar-chain schedule; NOT LOWERED: norm apply h = (x r) g + BF16 stream (CROM gains, window 01 x packer); residual adds (AR landings, PORTS); QK-norm / RoPE on the qkv receiver slices; STN commands of qkv / o / gate-up / down / LM head; XC collectives; SiLU x up; LM-head AMAX; stage-0 slice commands (embedding landing em_base)",
   "stage-0 slice commands beyond the LOCAL EMB start (E calendar / embedding landing not compiled)",
   "LM-head (stage 37) ME programme: the head has one fixed-issue calendar per image, armed at base 0 only",
-  "per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)"
- ]
+  "per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)",
+  "decode calendar still issues the sum-of-squares ops as broadcast SU commands (SU PC0, SU PC15, SU PC23): dv_lower --mutant broadcast shows that schedule collides on the scalar chain (62 collisions); the calendar must take dv_lower's per-slice entries (ssq_entry) -- next step",
+  "RTL GAP (LM head): ot_qfd_tt_ctlm_head_static_rk / split_static arm the fixed-issue calendar only at prog_base 0 (u_fixed_issue .start(q_h_start && q_prog_base == 0)) and PW976..983 hold ONE 8-row calendar per image: an LM-head ME programme at another base cannot issue on a compiled cycle"
+ ],
+ "dv_lowering": {
+  "tool": "tools/qwen_layerbench/dv_lower.py",
+  "slices": [
+   "dvs_W5",
+   "dvs_W4",
+   "dvs_W3",
+   "dvs_W2",
+   "dvs_W1",
+   "dvs_W0",
+   "dvs_E0",
+   "dvs_E1",
+   "dvs_E2",
+   "dvs_E3",
+   "dvs_E4",
+   "dvs_E5"
+  ],
+  "cmd_arrival": [
+   0,
+   2,
+   4,
+   6,
+   8,
+   10,
+   12,
+   14,
+   16,
+   18,
+   20,
+   22
+  ],
+  "residual_blocks": [
+   [
+    0,
+    12,
+    24
+   ],
+   [
+    1,
+    13,
+    25
+   ],
+   [
+    2,
+    14,
+    26
+   ],
+   [
+    3,
+    15,
+    27
+   ],
+   [
+    4,
+    16,
+    28
+   ],
+   [
+    5,
+    17,
+    29
+   ],
+   [
+    6,
+    18,
+    30
+   ],
+   [
+    7,
+    19,
+    31
+   ],
+   [
+    8,
+    20
+   ],
+   [
+    9,
+    21
+   ],
+   [
+    10,
+    22
+   ],
+   [
+    11,
+    23
+   ]
+  ],
+  "vm": {
+   "X": {
+    "base": 0,
+    "size": 384,
+    "what": "residual x rows (owned o / down blocks, ascending global block)"
+   },
+   "SSX": {
+    "base": 384,
+    "size": 16,
+    "what": "root: the 32-slot total spill (ROOT ss; unused with fuse 1)"
+   },
+   "RX": {
+    "base": 400,
+    "size": 16,
+    "what": "rb landing: r = rsqrt(sum / 4096 + eps) (ROOT rx, every slice)"
+   }
+  },
+  "root": {
+   "slice": 0,
+   "nb": 32,
+   "k": 12,
+   "eps": 897988541,
+   "rx": 400,
+   "ss": 384
+  },
+  "prog_sha256": {
+   "0": "b071191c7511c2a3aae33b17324ded2b7e19dd3d75dc1bb2fdaaa40995936e5a",
+   "1": "168000d17caac625427551f71fbb5275beae0ffbead79e7b9739cbd94973075c",
+   "2": "30142a5d3310b7ca0e4a0a8a4cfe5ccb86109147e30d39a03dc4e8b913941ee6",
+   "3": "97a789b9685894a261a3dbf842a82712fffd342d3e0b38499e430f96758316da",
+   "4": "4f86e60a73735b41c5ea4ccdc64e4c60d54779fc8836ab9a6d384d373e09bfbd",
+   "5": "756eb4e714b9b8c23cadba2c570e88141287c0c07234a6cde4d22bce465a1a81",
+   "6": "6c4951df3471e9006e51113cbd6ffae00d82e78654549f93f1c924ec3ca30eb8",
+   "7": "8e1c57ddeea3d1a1a82668e7bb1f3d761bc8076509cc32f0fb99377437b4be29",
+   "8": "fa2eeeb9c2e41adebef5895457f4bb647e076b99d2858254c25788f354cbd7e9",
+   "9": "8aae538884b5eca37bc1c5adc3893864a63fa76432958ee95e557225804181b7",
+   "10": "97391aa3572627fb35eb25fb9628a756bdc4de30d34a97a16677d09820c67aec",
+   "11": "23a6839d6fddb23f587fd5247f83a3a6bfee08e980abc724a98c800856056aae"
+  },
+  "commands": [
+   {
+    "edge": 0,
+    "cmd": "0000000000000000000000000000f",
+    "label": "SETID 0"
+   },
+   {
+    "edge": 26,
+    "cmd": "00000c358637bd0001908000c0417",
+    "label": "ROOT s0 (root, fused r)"
+   },
+   {
+    "edge": 27,
+    "cmd": "100000000000000001900000c0407",
+    "label": "ROOT s1"
+   },
+   {
+    "edge": 28,
+    "cmd": "200000000000000001900000c0407",
+    "label": "ROOT s2"
+   },
+   {
+    "edge": 29,
+    "cmd": "300000000000000001900000c0407",
+    "label": "ROOT s3"
+   },
+   {
+    "edge": 30,
+    "cmd": "400000000000000001900000c0407",
+    "label": "ROOT s4"
+   },
+   {
+    "edge": 31,
+    "cmd": "500000000000000001900000c0407",
+    "label": "ROOT s5"
+   },
+   {
+    "edge": 32,
+    "cmd": "600000000000000001900000c0407",
+    "label": "ROOT s6"
+   },
+   {
+    "edge": 33,
+    "cmd": "700000000000000001900000c0407",
+    "label": "ROOT s7"
+   },
+   {
+    "edge": 34,
+    "cmd": "800000000000000001900000c0407",
+    "label": "ROOT s8"
+   },
+   {
+    "edge": 35,
+    "cmd": "900000000000000001900000c0407",
+    "label": "ROOT s9"
+   },
+   {
+    "edge": 36,
+    "cmd": "a00000000000000001900000c0407",
+    "label": "ROOT s10"
+   },
+   {
+    "edge": 37,
+    "cmd": "b00000000000000001900000c0407",
+    "label": "ROOT s11"
+   },
+   {
+    "edge": 42,
+    "cmd": "b0000000000000000000000000003",
+    "label": "SSQ s11 blocks [11, 23]"
+   },
+   {
+    "edge": 43,
+    "cmd": "a0000000000000000000000000003",
+    "label": "SSQ s10 blocks [10, 22]"
+   },
+   {
+    "edge": 44,
+    "cmd": "90000000000000000000000000003",
+    "label": "SSQ s9 blocks [9, 21]"
+   },
+   {
+    "edge": 45,
+    "cmd": "80000000000000000000000000003",
+    "label": "SSQ s8 blocks [8, 20]"
+   },
+   {
+    "edge": 46,
+    "cmd": "70000000000000000000000000003",
+    "label": "SSQ s7 blocks [7, 19, 31]"
+   },
+   {
+    "edge": 47,
+    "cmd": "60000000000000000000000000003",
+    "label": "SSQ s6 blocks [6, 18, 30]"
+   },
+   {
+    "edge": 48,
+    "cmd": "50000000000000000000000000003",
+    "label": "SSQ s5 blocks [5, 17, 29]"
+   },
+   {
+    "edge": 49,
+    "cmd": "40000000000000000000000000003",
+    "label": "SSQ s4 blocks [4, 16, 28]"
+   },
+   {
+    "edge": 50,
+    "cmd": "30000000000000000000000000003",
+    "label": "SSQ s3 blocks [3, 15, 27]"
+   },
+   {
+    "edge": 51,
+    "cmd": "20000000000000000000000000003",
+    "label": "SSQ s2 blocks [2, 14, 26]"
+   },
+   {
+    "edge": 52,
+    "cmd": "10000000000000000000000000003",
+    "label": "SSQ s1 blocks [1, 13, 25]"
+   },
+   {
+    "edge": 53,
+    "cmd": "00000000000000000000000000003",
+    "label": "SSQ s0 blocks [0, 12, 24]"
+   }
+  ],
+  "ssq_entry": {
+   "11": 42,
+   "10": 43,
+   "9": 44,
+   "8": 45,
+   "7": 46,
+   "6": 47,
+   "5": 48,
+   "4": 49,
+   "3": 50,
+   "2": 51,
+   "1": 52,
+   "0": 53
+  },
+  "ages": {
+   "schema": "opentallas.qwen.dv-slice-ages.v1",
+   "ssq_psum_out": [
+    83,
+    99,
+    115
+   ],
+   "root_cfg_lead": 4,
+   "sc_hop_measured": 2,
+   "per_slice": {
+    "11": [
+     83,
+     99
+    ],
+    "1": [
+     83,
+     99,
+     115
+    ]
+   },
+   "source": "rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)",
+   "root_cfg_lead_note": "structural: the root slots clear on the ROOT cfg edge; PSUMs land >= 4 edges later"
+  },
+  "die_gaps": [
+   "dvs_W5.st_wi is tied 1088'h0 on the die (dv_case chain-end idle rule) and no master emits stream table words (kinds 1..3): the slice PROG / CROM / BTAB stores have NO load path on the die; this image reaches them only in a bench that drives W5.st_wi"
+  ]
+ }
 }
