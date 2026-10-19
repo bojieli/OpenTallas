@@ -1,0 +1,11 @@
+LEAF_EXACT_GATE_PASS (Codex leaf_exact4, ot-epyc5 unit oth-ubuntu-2448515-1792391800, finished 2026-10-19 00:06, Verilator 5.050)
+Source: codex/own-idxscore-reset-1018 @7ba3fc726 (every per-case sources.sha256 entry matches git show 7ba3fc726:<path>).
+Bench: rtl/test/hbm_idx_static/run_chunk_rt_equiv.sh (tb_idx_chunk_rt_equiv: retimed leaf core ot_hbm_idx_chunk_rt vs legacy systolic chunk, cycle-exact).
+  pos  (GAPK=2)  PASS checks 2337, outputs 1063, errors 0
+  gap4 (GAPK=4)  PASS checks 2349, outputs 1063, errors 0
+  qlate1 mutant  FAIL as required (2 mismatches, cyc862/1216)   fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
+  seam   mutant  FAIL as required (965 errors)                   fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
+  swap   mutant  FAIL as required (1063 errors)                  fail regex: MISMATCH|CHUNK_RT_EQUIV FAIL
+Wrapper leaf_exact_gate.sh; ot-run log leaf_exact4.otrun.log. Build objects (2.5 GB) left on ot-epyc5 only.
+Note: the leaf reset-relay replication that follows (claude/own-idxscore-leafrst-1019) changes rtl/hdc/v41x/ot_hbm_idx_chunk_rt.sv;
+these witnesses pin 7ba3fc726 and are re-run as leaf_exact5 on the new source.
