@@ -250,7 +250,7 @@
  "job": {
   "owner": "Claude:MU-DQ-CTLMCLK",
   "branch": "claude/mu-dq-ctlmclk-1019",
-  "tag": "clk1",
+  "tag": "clk2",
   "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv, MU release die (claude/mu-die-qw2-1019 base): landed parent qfd_tt_ctlm_dv_lpf_lp, COORD 0ke clock fix: (a) h16c ck_pm0/1 detached for CTS and re-driven from the ck_head net + record tap, (b) ck_hr port on the S face beside h16c ck_head, ck_core region = u_gi only (every input lands from hr; tl straight from core, COORD 0kg): 21 landings / 4,178 landing flops (was 8,943).",
   "extra_paths": [
    "rtl/test/qwen_dv",
@@ -504,5 +504,8 @@
  },
  "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
  "landed_raw_detach": true,
- "clock_note_ctlmclk": "MU-DQ-CTLMCLK 10-19 (COORD 0ke/0kg): (a) landed_raw_detach: the h16c raw SRAM clock pins ck_pm0/ck_pm1 are disconnected from ck_hr for clock_tree_synthesis (TritonCTS balances ck_hr's registers against h16c ck_head only, R 303 TT) and reconnected to the ck_head clock net after CTS, then landed_raw_tap lifts them to the record offset (+288 TT / +232 FF); (b) ck_hr port moved N x 419 -> S x 655.0 (16 um left of / 43 um below h16c ck_head at (671.2, 43.2)); (c) ck_core region = u_gi (calendar SRAMs + ROM leaf, W); the input pin-register band (N x 460-771, S ss5/ag5) is landed from hr (lp port_regions hr), tl[1087:0] leaves core directly on the S face x 43.2-410.4 under the core region. DIE GEN (dv2f18mu): ck_hr pin N->S; tl pins S x 432-655 -> 43.2-410.4; inputs pw/kok/kwd/native_ret presented +6 edges (dh/dh_user/fab/ss5/ag5 on time), every output +6 edges except tl +3 (record compiler block); inputs timed on ck_hr."
+ "clock_note_ctlmclk": "MU-DQ-CTLMCLK 10-19 (COORD 0ke/0kg): (a) landed_raw_detach: the h16c raw SRAM clock pins ck_pm0/ck_pm1 are disconnected from ck_hr for clock_tree_synthesis (TritonCTS balances ck_hr's registers against h16c ck_head only, R 303 TT) and reconnected to the ck_head clock net after CTS, then landed_raw_tap lifts them to the record offset (+288 TT / +232 FF); (b) ck_hr port moved N x 419 -> S x 655.0 (16 um left of / 43 um below h16c ck_head at (671.2, 43.2)); (c) ck_core region = u_gi (calendar SRAMs + ROM leaf, W); the input pin-register band (N x 460-771, S ss5/ag5) is landed from hr (lp port_regions hr), tl[1087:0] leaves core directly on the S face x 43.2-410.4 under the core region. DIE GEN (dv2f18mu): ck_hr pin N->S; tl pins S x 432-655 -> 43.2-410.4; inputs pw/kok/kwd/native_ret presented +6 edges (dh/dh_user/fab/ss5/ag5 on time), every output +6 edges except tl +3 (record compiler block); inputs timed on ck_hr. (d) clk2: gate 044135 measured ck_core regs over a ~560 um sink region (boundary tl band 177/154 TT/FF, hr 129/114) -> lp_region_fences.tcl fences each region root's registers to its half (core x 0-432, hr x 432-777.6).",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_tt_ctlm_dv/lp_region_fences.tcl"
+ ]
 }
