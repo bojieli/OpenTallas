@@ -24,7 +24,8 @@ partial -- dv_layer_record never counts a partial replay as a layer measurement)
        column-4 slice of the tier: dv_layer_compile ctl_path) landed at the slice pin at e - RSTOP_HOP (the compiler's
        event cycle e is the beat's line-out edge at the slice).  The same beat passes every stop between the injector
        and the slice: it is DERIVED at each intermediate slice c at e - sum(bundle age + RSTOP_HOP) over the stops (die
-       ages), with the hops field of that stop, so a cut on the line path sees it on both of its line faces.
+       ages), with the hops field of that stop, so a cut on the line path sees it on both of its line faces; the column-4
+       injector re-injects every V CTL beat BOTH ways (ot_s81sl_xr), so the copy on the other line side is derived too.
   SVCJ at <svc entry>.j: the job word (payload hex) on the j pin at the event cycle.
   WORDS (LB2-S81/EVENTS, 10-18): every event that carries `words` [[edge, value hex, mask hex]] on `ports` (the
        compiler's word encoders: QF q frames at the svc entry q pins, PV P.V stream and SVCDONE jd pulses at the svc
@@ -73,6 +74,7 @@ from pathlib import Path
 SCHEMA = 'opentallas.s81_dv.cut_replay.v1'
 RSTOP_HOP = 2                       # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop
 LINE_INJECT_COL = 4                 # dv_layer_compile ctl_path: seq_host V -> column-4 slice -> line both ways
+V_CTL_INJECT = 6                    # dv_layer_compile: a V CTL beat at the injector's vi pin -> its line out pins
 ENCODED = ('CTL', 'SVCJ')
 PIN_OFFSET = {'CTL': -RSTOP_HOP, 'SVCJ': 0}   # landed-pin cycle = event cycle + offset
 
@@ -235,35 +237,44 @@ def line_link_age(die, a, b):
 
 
 def derive_line_events(S, die):
-    """every CTL line beat seen at a schedule slice passes EVERY stop of its line direction (ot_s81sl_rstop forwards a
-    non-NX beat with hops > 1; a template beat carries hops 0 = the injector's line default, so a W-bound beat reaches
-    column 0 and an E-bound one column 7): derive its arrival at each other stop from the die's bundle ages (the
-    compiler's line model -- a stop is 2 edges, a hop is the slowest lane of the bundle), on the build"""
+    """every CTL line beat seen at a schedule slice passes EVERY stop of BOTH line directions: the column-4 injector's
+    control plane re-injects a V CTL beat on its tier line both ways (ot_s81sl_xr ci_dir 3'b011 for every V CTL beat,
+    whatever its slice mask; hops 0 = each side's line default, so the W copy reaches column 0 and the E copy column 7),
+    and ot_s81sl_rstop forwards a non-NX beat with hops > 1.  From the compiled arrival at the event's slice, derive the
+    injector's line-out edge, then the arrival at each other stop of both directions from the die's bundle ages (the
+    compiler's line model -- a stop is RSTOP_HOP edges, a hop is the slowest lane of the bundle), on the build.
+    TOK-S81-GAPS/CTL 10-19: the G8 cut_3S_ctl L0 run shows every W-bound beat on xrE_4S and every E-bound one on xrW_2S."""
     have = {(e['inst'], e['port'], e['cycle'], e['payload']) for e in S['events'] if e['kind'] == 'CTL'}
     out = []
+    W = list(range(LINE_INJECT_COL - 1, -1, -1))      # W-bound stops (arrive on ri_e)
+    E = list(range(LINE_INJECT_COL + 1, 8))           # E-bound stops (arrive on ri_w)
     for e in S['events']:
-        if e['kind'] != 'CTL' or e['dir'] != 'in' or e['port'] not in ('ri_e', 'ri_w'):
+        if e['kind'] != 'CTL' or e['dir'] != 'in' or e['port'] not in ('ri_e', 'ri_w', 'vi'):
             continue
         col, tier = int(e['inst'][4]), e['inst'][5]
-        path = list(range(LINE_INJECT_COL - 1, -1, -1)) if e['port'] == 'ri_e' else list(range(LINE_INJECT_COL + 1, 8))
-        if col not in path:
-            raise ValueError(f'CTL event {e["tag"]} at {e["inst"]}.{e["port"]} is not on a line from column '
-                             f'{LINE_INJECT_COL}')
-        t, i, arr = e['cycle'], path.index(col), {}
-        for j in range(i - 1, -1, -1):                   # upstream stops (toward the injector)
-            age, _ = line_link_age(die, f'u_s_{path[j]}{tier}', f'u_s_{path[j + 1]}{tier}')
-            t -= age + RSTOP_HOP
-            arr[path[j]] = t
-        t = e['cycle']
-        for j in range(i + 1, len(path)):                # downstream stops (toward the line end)
-            age, _ = line_link_age(die, f'u_s_{path[j - 1]}{tier}', f'u_s_{path[j]}{tier}')
-            t += age + RSTOP_HOP
-            arr[path[j]] = t
-        for c, t in arr.items():
-            d = dict(e, cycle=t, inst=f'u_s_{c}{tier}', derived_from=f'{e["inst"]}@{e["cycle"]}')
-            if (d['inst'], d['port'], d['cycle'], d['payload']) not in have:
-                have.add((d['inst'], d['port'], d['cycle'], d['payload']))
-                out.append(d)
+        hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + RSTOP_HOP
+        if e['port'] == 'vi':
+            if col != LINE_INJECT_COL:
+                raise ValueError(f'CTL event {e["tag"]} at {e["inst"]}.vi is not the column-{LINE_INJECT_COL} injector')
+            t_out = e['cycle'] - RSTOP_HOP + V_CTL_INJECT
+        else:
+            path = W if e['port'] == 'ri_e' else E
+            if col not in path:
+                raise ValueError(f'CTL event {e["tag"]} at {e["inst"]}.{e["port"]} is not on a line from column '
+                                 f'{LINE_INJECT_COL}')
+            t_out, prev = e['cycle'], LINE_INJECT_COL
+            for c in path[:path.index(col) + 1]:
+                t_out -= hop(prev, c)
+                prev = c
+        for path, port in ((W, 'ri_e'), (E, 'ri_w')):
+            t, prev = t_out, LINE_INJECT_COL
+            for c in path:
+                t += hop(prev, c)
+                prev = c
+                d = dict(e, cycle=t, inst=f'u_s_{c}{tier}', port=port, derived_from=f'{e["inst"]}@{e["cycle"]}')
+                if (d['inst'], d['port'], d['cycle'], d['payload']) not in have:
+                    have.add((d['inst'], d['port'], d['cycle'], d['payload']))
+                    out.append(d)
     return out
 
 
@@ -580,10 +591,15 @@ def gen(a):
     # strict per output lane: no unencoded traffic can be on it (a producer-gap lane, or a lane whose producer /
     # consumer instance has an unencoded event of unknown lanes)
     loose = {str(e.get('inst', '')).split('.')[0] for e in unenc_here if not e.get('producer_gap')}
+    # u_seqhost.t_host (alive / status / host read words toward the host PHY) is the off-die host face: elastic, not on
+    # the compiled timeline (dsdv_seq_host header), so its lane is never strict (TOK-S81-GAPS/CTL 10-19)
+    th = {nb for nb in die.port_bits('u_seqhost', 't_host') if nb} if 'u_seqhost' in die.inst else set()
     for b in bnd:
         if b['dir'] == 'output':
             L = die.links[b['lane']]
             b['strict'] = b['lane'] not in gap_lanes and not ({x[0] for x in L['src'] + L['dst']} & loose)
+            if th and th & {tuple(x) for x in L['src_bits'] if x}:
+                b['strict'], b['loose_why'] = False, 'host status lane (u_seqhost.t_host): off-die elastic face'
     by_kind = defaultdict(lambda: defaultdict(int))
     for r in rec_in:
         by_kind[r['kind']]['in_words'] += 1
@@ -654,8 +670,11 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
     --ks-word, default the seqhost bench's {v, user 37, pos 1000, tok 5000}).  The calendar accepts the start only on its
     start phase (ot_dsdv_fixed_issue), a reset-tree artefact of the cut: give --ks, and sweep its residue mod 4 once per
-    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 4 (the compiled V command leaves
-    vo at KS + issue + 11 = issue + 7 in layer cycles: dsdv_seq_host header, check_seqhost.py), so --t0 is set to KS + 4."""
+    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 5: KS is the f_ks LANDED edge (the
+    lane's last flop), u_seqhost's pin flop captures it one edge later (t = KS + 1), and the compiled V command leaves vo
+    at t + issue + 11 = issue + 7 in layer cycles (dsdv_seq_host header, check_seqhost.py).  TOK-S81-GAPS/CTL 10-19,
+    measured on G8 cut_3S_ctl (ks 2547): vo_n of row 8 (issue 1141) at 3700 = KS + 12 + issue; SVCJ on jw_E / jw_W one
+    edge after a KS + 4 anchor."""
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
     live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
     if live is not None:
@@ -665,7 +684,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
-    a.t0 = ks + 4
+    a.t0 = ks + 5
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
