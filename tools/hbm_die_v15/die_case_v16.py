@@ -43,6 +43,7 @@ from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import placement_coverage
+from grant_slot_bind import resolve_slot
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
@@ -511,12 +512,7 @@ def main():
 
     # ---------------- outlines of SYNTH cells ----------------
     def eslot(n):
-        s = I[n].get('slot')
-        if s:
-            return s
-        if n in slots or (n in P and isinstance(P[n], dict) and 'x' in P[n]):
-            return n
-        return None
+        return resolve_slot(n, I[n], slots, P, slot_map.get(n))
     slot_users = defaultdict(list)
     for n in inst:
         s = eslot(n)

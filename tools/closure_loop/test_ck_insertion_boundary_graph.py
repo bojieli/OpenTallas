@@ -10,6 +10,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / 'ref_tile'))
 import ck_insertion as C
+import clock_entry_constraints as E
 from test_async_gray_fifo_constraints import YOSYS, STA, fixture_lib
 
 
@@ -39,6 +40,13 @@ endmodule
                                for net in ('capture', 'launch'))}
             self.assertEqual(len(expected), 2)
             (root / 'probe.lib').write_text(fixture_lib(module))
+            entry = E.BODY[E.BODY.index('proc ot_ce_boundary_cells '):
+                           E.BODY.index('# Owner 2026-10-17 0dq')]
+            io_text = (HERE.parents[1] / 'physical/common_flow/io_ref_routed.sdc').read_text()
+            ioref = io_text[io_text.index('proc ot_ir_boundary_cells '):
+                            io_text.index('set ot_ir_bnd [ot_ir_boundary_cells]')]
+            self.assertIn(C.BOUNDARY_TCL, entry)
+            self.assertIn(C.BOUNDARY_TCL, ioref)
             script = f'''read_liberty {{{root}/probe.lib}}
 read_verilog {{{root}/mapped.v}}
 link_design boundary_probe
@@ -56,6 +64,19 @@ foreach p [all_registers -clock_pins -clock [get_clocks ck]] {{
 set hidden [find_timing_paths -from [get_ports din] -to [all_registers -data_pins]]
 if {{[llength $hidden]}} {{error "false-path witness unexpectedly timed"}}
 {C.BOUNDARY_TCL}
+set scoped $bnd
+{entry}
+{ioref}
+foreach row [list [list entry [ot_ce_boundary_cells]] [list ioref [ot_ir_boundary_cells]]] {{
+  lassign $row consumer members
+  set filtered {{}}
+  dict for {{name present}} $members {{
+    if {{[dict exists $regs $name]}} {{dict set filtered $name 1}}
+  }}
+  if {{[lsort [dict keys $filtered]] ne [lsort [dict keys $scoped]]}} {{
+    error "boundary consumer mismatch $consumer"
+  }}
+}}
 dict for {{name present}} $bnd {{puts "BOUNDARY:$name"}}
 puts ACTUAL_BOUNDARY_PASS
 exit 0
