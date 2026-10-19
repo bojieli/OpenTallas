@@ -14,8 +14,8 @@ set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_rg]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_rg] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_rg] -to [get_clocks core_clk]
-# 12 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11}
+# 14 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
+set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
@@ -74,4 +74,3 @@ set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_wr [get_ports {tkx_w_addr[*]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_wr [get_ports {tkx_w_mask[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_wr [get_ports {tkx_w_data[*]}]
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_wr ck_rg}] }
-set_case_analysis 0 [get_ports {qid[*]}]   ;# identity strap

@@ -7,7 +7,8 @@ module tb_ot_hfd_coll_q3_lp;
     wire rst_f = rst_dl[2];
     always @(posedge clk) rst_dl <= {rst_dl[1:0], rst};
     reg [1:0] fi_qid;
-    wire [1:0] li_qid = fi_qid;
+    reg [1:0] dli_qid [0:0];  wire [1:0] li_qid = fi_qid;
+    always @(posedge clk) begin : g_dli_qid integer j; dli_qid[0] <= fi_qid; for (j = 1; j <= 0; j = j + 1) dli_qid[j] <= dli_qid[j - 1]; end
     reg [0:0] fi_cfg_v;
     reg [0:0] dli_cfg_v [0:0];  wire [0:0] li_cfg_v = fi_cfg_v;
     always @(posedge clk) begin : g_dli_cfg_v integer j; dli_cfg_v[0] <= fi_cfg_v; for (j = 1; j <= 0; j = j + 1) dli_cfg_v[j] <= dli_cfg_v[j - 1]; end

@@ -614,8 +614,8 @@ proc ot_ce_apply {} {
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
 ot_ce_apply
-# ---- PL-KIT landed cluster (results/arch/landed_parent_1018/collq/ot_hfd_coll_q3_lp_record.json): 12 landings, multicycle -setup 2 -hold 3
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11}
+# ---- PL-KIT landed cluster (results/arch/landed_parent_1018/collq/ot_hfd_coll_q3_lp_record.json): 14 landings, multicycle -setup 2 -hold 3
+set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]

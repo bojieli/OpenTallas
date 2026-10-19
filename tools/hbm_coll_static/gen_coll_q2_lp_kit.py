@@ -117,11 +117,13 @@ def spec():
           "ra_rx_src", "ra_rx_tag", "ra_rr_local", "ra_rr_local_tag"]
     pins = {
         "W": ["vm_rq", "vm_rr", "ck_wr", "vm_kq"] + (TKX_W if VARIANT == "q3" else []),
-        "N": ["pr_cw_i", "pr_ccw_o", "isa_ring", "isa_lp_data", "rc_v", "rc_tag", "rc_d"] + ra[:15] + ["ck_rg"] + ra[15:]
+        # QF-COLLQ 10-18: rc_v / rc_tag (read only by u_control, region sw, S row at x 172.8) moved N -> S: on N they reached
+        # u_control 1,179 um combinationally (textbook wire_reach REFUSE > 500 um); rc_d stays on N (-> isa_lp_data on N)
+        "N": ["pr_cw_i", "pr_ccw_o", "isa_ring", "isa_lp_data", "rc_d"] + ra[:15] + ["ck_rg"] + ra[15:]
              + ["rr_v", "rr_tag", "rr_d", "ag_v", "ag_src", "ag_tag", "ag_d", "pr_ccw_i", "pr_cw_o"]
              + (TKX_OUT if VARIANT == "q3" else []),
         "E": ["inj_rd", "inj_idx", "hgi_inj_addr", "inj_d", "del_valid", "del_flit", "hgi_del_obase"],
-        "S": ["cfg_v", "cfg_target", "cfg_addr", "cfg_data", "desc_v", "desc_base", "desc_limit", "desc_loops", "launch_v",
+        "S": ["rc_v", "rc_tag", "cfg_v", "cfg_target", "cfg_addr", "cfg_data", "desc_v", "desc_base", "desc_limit", "desc_loops", "launch_v",
               "program_configured", "program_init_busy", "program_fault", "rst_n", "qid", "ck_sw", "hgi_busy", "hgi_done",
               "hgi_fault", "fault", "fault_cause", "done", "stat_cycles", "phy_up", "tx_pin_v", "tx_pin_flit", "rx_pin_v",
               "rx_pin_flit", "retry_requested"],
@@ -165,7 +167,7 @@ def spec():
         "job": {
             "owner": "Claude:PL-COLLQ",
             "branch": "claude/pl-collq-1018",
-            "tag": "lpk1",
+            "tag": "lpk2",
             "purpose": "HBM COLL q2 quadrant engine parent (SE/NW/NE) as landed regions; contains the critical "
                        "ot_hgi_coll_ctl_v5_q2 leaf: coordinator PNG review before any submit",
             "hold_merge": "critical (ot_hgi_coll_ctl_v5 prefix inside): gate + PNG review only; issuer / link_e / reduce "

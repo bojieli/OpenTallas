@@ -52,8 +52,6 @@
    "pr_ccw_o",
    "isa_ring",
    "isa_lp_data",
-   "rc_v",
-   "rc_tag",
    "rc_d",
    "ra_lp_we",
    "ra_lp_tag",
@@ -123,6 +121,8 @@
    "hgi_del_obase"
   ],
   "S": [
+   "rc_v",
+   "rc_tag",
    "cfg_v",
    "cfg_target",
    "cfg_addr",

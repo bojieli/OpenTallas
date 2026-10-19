@@ -683,8 +683,6 @@
    "pr_ccw_o",
    "isa_ring",
    "isa_lp_data",
-   "rc_v",
-   "rc_tag",
    "rc_d",
    "ra_lp_we",
    "ra_lp_tag",
@@ -754,6 +752,8 @@
    "hgi_del_obase"
   ],
   "S": [
+   "rc_v",
+   "rc_tag",
    "cfg_v",
    "cfg_target",
    "cfg_addr",
@@ -796,7 +796,7 @@
  "job": {
   "owner": "Claude:PL-COLLQ",
   "branch": "claude/pl-collq-1018",
-  "tag": "lpk1",
+  "tag": "lpk2",
   "purpose": "HBM COLL q3 quadrant engine parent (SW, TP 192) as landed regions; contains the critical ot_hgi_coll_ctl_v5_n2s1 leaf: coordinator PNG review before any submit",
   "hold_merge": "critical (ot_hgi_coll_ctl_v5 prefix inside): gate + PNG review only; issuer / link_e / reduce views missing (soft here)",
   "submit": false,

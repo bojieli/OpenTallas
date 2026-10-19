@@ -122,15 +122,14 @@
    ]
   }
  ],
- "static": [
-  "qid"
- ],
+ "static": [],
  "tb_static": {
   "qid": "2'd1"
  },
  "loose": [
   "ring_fault",
-  "writer_fault"
+  "writer_fault",
+  "qid"
  ],
  "sticky_outputs": {
   "fault": 8,
@@ -145,5 +144,6 @@
   "sim": "verilator"
  },
  "tb_stimulus": "rtl/hbm_accel/generic/collective/p2p/landed/stim_q2_lp.vh",
- "mut_child": "u_rctl"
+ "mut_child": "u_rctl",
+ "qid_landing_note": "QF-COLLQ 10-18: qid (quadrant identity, constant per die instance) is LANDED into wr/rg as a loose net instead of a case-analysed static strap: the S-face pin reached u_rctl.qid 1,146-1,200 um combinationally (textbook wire_reach REFUSE > 500 um). A constant has no schedule, so it is left out of the offset solve (lag recorded)."
 }
