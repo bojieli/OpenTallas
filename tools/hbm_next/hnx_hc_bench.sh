@@ -23,7 +23,8 @@ COMMON=(rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_r
 QSRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_q.sv $H/ot_hnx_hc_q.sv $H/ot_hnx_hgi_hc_residual_vm.sv $H/ot_hnx_hgi_hc_result_vm.sv
   $H/ot_hnx_hgi_hc_gathered_mix_reader.sv $H/ot_hnx_hc_xw_rx.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
   rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv
-  rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv "${COMMON[@]}")
+  rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv "${COMMON[@]}"
+  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 qbuild(){ # tag "-G..."
   local d=$O/obj_$1; rm -rf $d
   verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_hc_q $2 -Mdir $d -o V$1 \
