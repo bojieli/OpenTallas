@@ -16,6 +16,11 @@ the same GEN record:
     land_lag_sim.py ages --lanes fwd_lanes.json --out lane_ages.json [--die NAME]
         R_CMD / R_HR / R_SS / R_AG = lane_groups.lane_cycles of dvw_cmd_wi / dvw_hr_wi / dvw_ss_wo / dvw_ag_wo (E + 1
         landing o register), XPF_TRANSPORT_EDGES = 1 + R_HR (die_params.py rule); input of ctlm_image.py --lane-ages.
+    land_lag_sim.py xpf-check RUN_LOG --slice SLICE_DIR --lanes fwd_lanes.json --params DIE_V.params.json --out A.json
+        fail closed (exit 1) unless: the slice is lane-timed (land_lag.json, not --zero, same fwd_lanes.json), the XPF
+        probe (drive_qwc_slice_ctl.svh SMOKE_XPF) measured the hr lane, XPF_TRANSPORT_EDGES of the die sidecar ==
+        elaborated == 1 + measured == 1 + lane_cycles(dvw_hr_wi), and no landing of the tt_ctlm lanes (hr / cmd / ss /
+        ag) reported OT_QFD_LAND_FAULT.
 """
 import argparse
 import hashlib
@@ -122,6 +127,41 @@ def ages(lanes_path, die=None):
     return out
 
 
+XPF_RX = re.compile(r'SMOKE_XPF hr lane edges (-?\d+) .*XPF_TRANSPORT_EDGES elaborated (\d+)')
+CTLM_LAND = re.compile(r'^OT_QFD_LAND_FAULT \S*\.(rly_dvw_(?:hr_wi|cmd_wi|ss_wo|ag_wo)_\d+)\.', re.M)
+
+
+def xpf_check(log, slice_dir, lanes_path, params_path):
+    fails = []
+    ll = json.loads((Path(slice_dir) / 'land_lag.json').read_text())
+    sha = hashlib.sha256(Path(lanes_path).read_bytes()).hexdigest()
+    if ll.get('zero'):
+        fails.append('slice is the zero-delay netlist (land_lag_sim annotate --zero): lane ages alias by the ring depth')
+    if ll.get('lanes_sha256') != sha:
+        fails.append(f'slice lane timing from another fwd_lanes.json ({ll.get("lanes")})')
+    t = Path(log).read_text()
+    m = XPF_RX.search(t)
+    meas = elab = None
+    if not m:
+        fails.append('no SMOKE_XPF probe line in the run log')
+    else:
+        meas, elab = int(m.group(1)), int(m.group(2))
+    lanes = json.loads(Path(lanes_path).read_text())
+    hr = next((r for r in lanes['lanes'] if r['bid'] == AGE_BUSES['R_HR']), None)
+    want = 1 + LG.lane_cycles(hr) if hr else None
+    side = json.loads(Path(params_path).read_text())['masters'].get('qfd_tt_ctlm_dv', {}).get('XPF_TRANSPORT_EDGES')
+    if meas is not None and not (side == elab == 1 + meas == want):
+        fails.append(f'XPF_TRANSPORT_EDGES sidecar {side} / elaborated {elab} / 1 + measured {1 + meas} / '
+                     f'1 + lane_cycles(fwd_lanes) {want} disagree')
+    lf = sorted(set(CTLM_LAND.findall(t)))
+    if lf:
+        fails.append(f'tt_ctlm lane landings faulted (read slot epoch != rc - K): {lf}')
+    return dict(schema='opentallas.qwen.xpf-check.v1', log=str(log), slice=str(slice_dir), lanes=str(lanes_path),
+                params=str(params_path), measured_hr_lane_edges=meas, elaborated=elab, sidecar=side,
+                derived=want, hr_lane=hr and {k: hr.get(k) for k in ('n', 'E', 'E_sta', 'K')}, ctlm_land_faults=lf,
+                lag_hist=ll.get('lag_hist'), fails=fails, verdict='PASS' if not fails else 'FAIL')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
@@ -133,9 +173,23 @@ def main():
     g.add_argument('--lanes', required=True)
     g.add_argument('--out', required=True)
     g.add_argument('--die')
+    c = sp.add_parser('xpf-check')
+    c.add_argument('log')
+    c.add_argument('--slice', required=True)
+    c.add_argument('--lanes', required=True)
+    c.add_argument('--params', required=True)
+    c.add_argument('--out', required=True)
     x = ap.parse_args()
     if x.cmd == 'annotate':
         annotate(x.slice_dir, x.lanes, x.zero)
+    elif x.cmd == 'xpf-check':
+        r = xpf_check(x.log, x.slice, x.lanes, x.params)
+        Path(x.out).write_text(json.dumps(r, indent=1) + '\n')
+        print(f"XPF_CHECK {r['verdict']} measured {r['measured_hr_lane_edges']} elaborated {r['elaborated']} "
+              f"sidecar {r['sidecar']} derived {r['derived']} fails {len(r['fails'])}")
+        for f in r['fails']:
+            print('  FAIL ' + f)
+        sys.exit(0 if r['verdict'] == 'PASS' else 1)
     else:
         r = ages(x.lanes, x.die)
         Path(x.out).write_text(json.dumps(r, indent=1) + '\n')
