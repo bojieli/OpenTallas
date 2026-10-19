@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_reset_group16_safe",
+ "enable": false,
+ "reason": "each data/reset payload bit has exactly two direct registers; no extra data stage allowed"
+}
