@@ -28,6 +28,8 @@ VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 FIX=$OUT/src/results/rtl/hbm_ds_layer_tput_1018/fixtures
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_unit.py run --fix $FIX --smw $SMW --bundle $BUNDLE --work $OUT/work"
 case "$JOB" in
+  native_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING --name native_smoke --out $OUT/out/native_smoke.json" ;;
+  native_mut2) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_FIFOMUT=2 --name native_mut2 --out $OUT/out/native_mut2.json" ;;
   sram_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO --name sram_smoke --out $OUT/out/sram_smoke.json" ;;
   sram_mut1) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_FIFOMUT=1 --name sram_mut1 --out $OUT/out/sram_mut1.json" ;;
   sram_mut2) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_FIFOMUT=2 --name sram_mut2 --out $OUT/out/sram_mut2.json" ;;

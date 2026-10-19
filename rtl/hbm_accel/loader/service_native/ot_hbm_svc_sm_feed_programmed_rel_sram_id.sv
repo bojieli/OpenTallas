@@ -15,7 +15,7 @@
 //     the same +1 stage.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
 module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
- parameter integer FIFOMUT=0,PAW=11,PREL=1,
+ parameter integer NATIVE_LANDING=0,FIFOMUT=0,PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
  parameter integer LB=(LBANKS>2)?2:1
 )(
@@ -61,7 +61,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
   end
  end
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
- ot_hbm_svc_sm4pc_cdc_rel_sram_id #(.FIFOMUT(FIFOMUT),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) producer(
+ ot_hbm_svc_sm4pc_cdc_rel_sram_id #(.NATIVE_LANDING(NATIVE_LANDING),.FIFOMUT(FIFOMUT),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) producer(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),

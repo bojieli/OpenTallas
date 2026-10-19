@@ -19,7 +19,7 @@
 // (ot_hbm_svc_prefetch_overlap_owner), counting returns per landing bank; OVERLAP=0 = the Codex 14:47 behaviour (the next
 // descriptor only after the whole block has RETURNED), kept for the measured ablation.  Steady 64-row stream at
 // OVERLAP=0: 139.3 ns/epoch = 52 B/cycle/SM vs the 99 B/cycle/SM price (tb_hbm_svc_sm_stack_steady).
-module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1,
+module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_LANDING=0,FIFOMUT=0,OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1,
  parameter integer LBANKS=2, parameter integer LB=(LBANKS>2)?2:1)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -30,15 +30,30 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5
  output wire [LBANKS-1:0] block_ready,output reg block_ready_v,output reg [LB-1:0] block_ready_bank,
  output reg [15:0] block_ready_epoch,
  input wire start_v,input wire [LB-1:0] start_bank,input wire [15:0] start_epoch,
- output reg out_v,output reg [3:0] out_mask,output wire [1023:0] out_data,
- output reg [10:0] out_ordinal,output reg [LB-1:0] out_bank,output reg [15:0] out_epoch,
- output reg out_last,output wire fault,
+ output wire out_v,output wire [3:0] out_mask,output wire [1023:0] out_data,
+ output wire [10:0] out_ordinal,output wire [LB-1:0] out_bank,output wire [15:0] out_epoch,
+ output wire out_last,output wire fault,
  output wire [3:0] k_v,input wire [3:0] k_rdy,output wire [119:0] k_addr,
  output wire [15:0] k_len,output wire [67:0] k_tag,output wire [3:0] k_we,
  output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,
  input wire [3:0] kr_v,output reg [3:0] kr_rdy,input wire [67:0] kr_tag,
  input wire [15:0] kr_beat,input wire [1023:0] kr_data
 );
+ // Native leaf read data is two stream edges later; labels follow exactly.
+ reg out_v0,out_last0;reg[3:0]out_mask0;reg[10:0]out_ordinal0;
+ reg[LB-1:0]out_bank0;reg[15:0]out_epoch0;
+ localparam integer MW=33+LB;
+ reg[MW-1:0]meta_d1,meta_d2;reg[10:0]ord_d1,ord_d2;
+ wire[10:0]read_ordinal_pick=(NATIVE_LANDING!=0)?ord_d2:read_ordinal_q;
+ always @(posedge stream_clk or negedge stream_rst_n)
+  if(!stream_rst_n)begin meta_d1<=0;meta_d2<=0;ord_d1<=0;ord_d2<=0;end
+  else begin
+   meta_d1<={out_v0,out_mask0,out_ordinal0,out_bank0,out_epoch0,out_last0};meta_d2<=meta_d1;
+   ord_d1<=read_ordinal_q;ord_d2<=ord_d1;
+  end
+ assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=(NATIVE_LANDING!=0)?meta_d2:
+  {out_v0,out_mask0,out_ordinal0,out_bank0,out_epoch0,out_last0};
+
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
  reg [1:0] stack_s,stack_h;reg [2:0] sm_s;
  always @(posedge stream_clk)begin stack_s<=id_stack;sm_s<=id_sm;end
@@ -165,12 +180,21 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5
  wire [255:0] macro_data[0:7];
  generate for(g=0;g<8;g=g+1)begin:ordinal_bank
   wire [11:0] candidate={3'b0,drain_ordinal[8:3],3'(g)}+((g<drain_ordinal[2:0])?12'd8:12'd0);
+  if(NATIVE_LANDING!=0)begin:g_native
+  ot_hbm_svc_sm8_landing_boundary #(.FMUT(FIFOMUT),.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
+   .hbm_clk(hbm_fifo_clk[g/4]),.hbm_rst_n(hrst),.stream_clk(stream_bank_clk[g/4]),.stream_rst_n(srst),
+   .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
+   .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),
+   .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
+   .read_v(draining&&candidate<drain_ordinal+drain_count&&candidate<bank_total[drain_bank]),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
+  end else begin:g_sram
   ot_hbm_svc_sm8_landing_bank_sram285 #(.FMUT(FIFOMUT),.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
    .hbm_clk(hbm_fifo_clk[g/4]),.hbm_rst_n(hrst),.stream_clk(stream_bank_clk[g/4]),.stream_rst_n(srst),
    .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
    .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),
    .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
    .read_v(draining&&candidate<drain_ordinal+drain_count&&candidate<bank_total[drain_bank]),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
+  end
  end endgenerate
  integer ci;
  always @*begin
@@ -178,7 +202,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5
   for(ci=0;ci<8;ci=ci+1)if(bank_complete[ci])complete_event[bank_complete_bank[ci]][ci]=1;
  end
  generate for(g=0;g<4;g=g+1)begin:out_lane
-  assign out_data[256*g+:256]=macro_data[(read_ordinal_q[2:0]+g)%8];
+  assign out_data[256*g+:256]=macro_data[(read_ordinal_pick[2:0]+g)%8];
  end endgenerate
  integer si,sb;
  always @(posedge stream_clk or negedge srst)begin
@@ -186,10 +210,10 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5
    allocated<=0;ready_q<=0;announced<=0;stream_fault<=0;
    block_ready_v<=0;block_ready_bank<=0;block_ready_epoch<=0;
    draining<=0;drain_bank<=0;drain_ordinal<=0;read_ordinal_q<=0;drain_phase<=0;
-   out_v<=0;out_mask<=0;out_ordinal<=0;out_bank<=0;out_epoch<=0;out_last<=0;
+   out_v0<=0;out_mask0<=0;out_ordinal0<=0;out_bank0<=0;out_epoch0<=0;out_last0<=0;
    for(sb=0;sb<LBANKS;sb=sb+1)begin bank_epoch[sb]<=0;bank_total[sb]<=0;completed_q[sb]<=0;end
   end else begin
-   block_ready_v<=0;out_v<=0;out_last<=0;out_mask<=0;
+   block_ready_v<=0;out_v0<=0;out_last0<=0;out_mask0<=0;
    if(reserve_v)begin
     if(!reserve_ready||!descriptor_ok)stream_fault<=1;
     else begin
@@ -213,11 +237,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer FIFOMUT=0,OWNER_AW=5
     else begin draining<=1;drain_bank<=start_bank;drain_ordinal<=0;drain_phase<=0;ready_q[start_bank]<=0;end
    end
    if(draining&&!fault)begin
-    out_v<=1;out_bank<=drain_bank;out_epoch<=bank_epoch[drain_bank];out_ordinal<=drain_ordinal;
+    out_v0<=1;out_bank0<=drain_bank;out_epoch0<=bank_epoch[drain_bank];out_ordinal0<=drain_ordinal;
     read_ordinal_q<=drain_ordinal;drain_phase<=drain_phase==4?0:drain_phase+1'b1;
-    for(si=0;si<4;si=si+1)if(si<drain_count&&drain_ordinal+si<bank_total[drain_bank])out_mask[si]<=1;
+    for(si=0;si<4;si=si+1)if(si<drain_count&&drain_ordinal+si<bank_total[drain_bank])out_mask0[si]<=1;
     if(drain_ordinal+drain_count>=bank_total[drain_bank])begin
-     out_last<=1;draining<=0;allocated[drain_bank]<=0;
+     out_last0<=1;draining<=0;allocated[drain_bank]<=0;
     end else drain_ordinal<=drain_ordinal+drain_count;
    end
   end

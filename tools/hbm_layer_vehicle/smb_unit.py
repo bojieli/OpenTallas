@@ -217,7 +217,7 @@ def waves(R, Gn):
 
 
 # ------------------------------------------------------------------------------------------------ compile
-def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
+def compile_all(fix_root: Path, smw_root: Path, layers, mut="", native_padding=0):
     sys.path.insert(0, str(ROOT / "tools"))
     from hbm_svc_packed136_image import sector_address  # noqa: E402
     store = Store(ATT_RESERVED)                        # rows [0, 1019) reserved for the HBM-ATTGAP attention programmes
@@ -315,7 +315,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         t_launch = t_arm + 2
         rc0 = t_launch + OFF                           # absolute edge of issuer rc 0 (calibrated by the bench trace)
         kd.update(t_launch=t_launch, rc0=rc0)
-        rc = FIRST_GO
+        rc = FIRST_GO + native_padding
         prev_go, prev_len, prev_lines = None, 0, 0
         cur_abs = last_cmd_abs
         ids_rc, n_after = None, 0
@@ -335,15 +335,15 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 P = 0
                 lo = rc
                 if prev_go is not None:
-                    lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
+                    lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD + native_padding)
                 if bi == 0:
                     lo = max(lo, x_end + X_GAP - rc0 - LAT_GO - P, cur_abs + OP_GAP - rc0 - LAT_GO - P)
                 # C2: the reserve pipeline is in order; from the first routed descriptor on, every block is fetched only
                 # after the router broadcast: resident >= ids + EXP_FIRST + n x FETCH (HBM boundary, measured)
                 if kd["exp"] and (r["slot"] is not None or n_after):
                     if ids_rc is None:
-                        ids_rc = lo - EXP_FIRST - 1                    # no router record in this kind: ids just in time
-                    lo = max(lo, ids_rc + EXP_FIRST + n_after * FETCH)
+                        ids_rc = lo - EXP_FIRST - native_padding - 1                    # no router record in this kind: ids just in time
+                    lo = max(lo, ids_rc + EXP_FIRST + native_padding + n_after * (FETCH + native_padding))
                     n_after += 1
                 b["go_at"] = lo
                 b["first_cmd_abs"] = rc0 + lo + LAT_GO + P
@@ -387,7 +387,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
     assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = last_cmd_abs + DRAIN
-    budget = dict(descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
+    budget = dict(native_boundary_prefetch_padding_stream_edges=native_padding, descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
                   attention_reserved=ATT_RESERVED, store_top=store.top, store_words=PSTORE,
                   distinct_programmes=len(store.progs),
                   per_kind=[dict(name=k["name"], layer=k["layer"], descriptors=k["d1"] - k["d0"], nonexpert_blocks=k["nonexp_blocks"],
@@ -444,6 +444,7 @@ def build(work: Path, bundle: Path, defines):
     if "SMB_SRAMFIFO" in defines:
         own += [ROOT / p for p in (
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_sram_id.sv",
@@ -525,7 +526,8 @@ def cmd_run(a):
     defines = [x for x in a.define.split(",") if x]
     exe = build(work, Path(a.bundle).resolve(), defines)
     a.out_dir = work / f"run_{a.name}"
-    c = compile_all(Path(a.fix), Path(a.smw), parse_layers(a.layers), a.mut)
+    c = compile_all(Path(a.fix), Path(a.smw), parse_layers(a.layers), a.mut,
+                    native_padding=8 if "SMB_NATIVE_LANDING" in defines else 0)
     d = a.out_dir
     n = write_events(c, d)
     t0 = time.time()
