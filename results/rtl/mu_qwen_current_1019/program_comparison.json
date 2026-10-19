@@ -1,0 +1,34 @@
+{
+  "old_branch": "claude/refill-muqwreg-1019",
+  "old_receipt_commit": "2d29055b4",
+  "current_result_commit": "e6b9c55f2",
+  "cases": [
+    {
+      "name": "mu_window",
+      "equal": {
+        "program": true,
+        "program_words": true,
+        "words_per_message": true,
+        "modes": true,
+        "messages": true,
+        "compiled_span_cycles": true
+      },
+      "old_passed": false,
+      "current_passed": true
+    },
+    {
+      "name": "mu_window_ref_user0",
+      "equal": {
+        "program": true,
+        "program_words": true,
+        "words_per_message": true,
+        "modes": true,
+        "messages": true,
+        "compiled_span_cycles": true
+      },
+      "old_passed": false,
+      "current_passed": true
+    }
+  ],
+  "meaning": "Exact compiler calendar and stage words match. Current source/wrapper/real-lane parameters differ, so this isolates successful current composition without attributing causality to K alone."
+}
