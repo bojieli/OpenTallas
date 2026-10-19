@@ -1,0 +1,33 @@
+{
+  "status": "ELABORATION_COMPLETED_WITH_WARNINGS_NOT_PRODUCTION_OR_NATIVE_QUALIFICATION",
+  "source_commit": "f543b8717",
+  "host": "ot-epyc8",
+  "unit": "oth-ubuntu-1685127-1792428545",
+  "tool": "Verilator5.050 pinned by ot-run",
+  "command": "#!/bin/bash\nset -e\nmkdir -p out\nverilator --lint-only --timing -Wno-fatal --top-module qfd_dv_slice2_e_regional_lp -GSU_LT=1 -GMU_NU=4 -DOT_QFD_DV_SAFE_STORAGE rtl/qwen_dv/lp/qfd_dv_slice2_e_regional_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv rtl/qwen_dv/qfd_dv_scalar2_csafe.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_regional.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv rtl/qwen_dv/qfd_dv_su_lane_landed.sv rtl/test/full_sm_service/sram_models.sv rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/qwen_dv/qfd_dv_slice2_regional_parts.sv rtl/qwen_dv/qfd_dv_reset_tree.sv rtl/qwen_dv/qfd_dv_reset_bank.sv rtl/qwen_dv/qfd_dv_ring_delay.sv rtl/common/landed_parent/ot_pl_stream_land.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v >out/e.log 2>&1\necho REGIONAL_E_LINT_PASS\nverilator --lint-only --timing -Wno-fatal --top-module qfd_dv_slice2_w_regional_lp -GSU_LT=1 -GMU_NU=4 -DOT_QFD_DV_SAFE_STORAGE rtl/qwen_dv/lp/qfd_dv_slice2_w_regional_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv rtl/qwen_dv/qfd_dv_scalar2_csafe.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_regional.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv rtl/qwen_dv/qfd_dv_su_lane_landed.sv rtl/test/full_sm_service/sram_models.sv rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/qwen_dv/qfd_dv_slice2_w_lpf_thru.sv rtl/qwen_dv/qfd_dv_slice2_regional_parts.sv rtl/qwen_dv/qfd_dv_reset_tree.sv rtl/qwen_dv/qfd_dv_reset_bank.sv rtl/qwen_dv/qfd_dv_ring_delay.sv rtl/common/landed_parent/ot_pl_stream_land.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v >out/w.log 2>&1\necho REGIONAL_W_LINT_PASS\n",
+  "cases": {
+    "e": {
+      "exit_code": 0,
+      "sha256": "c32297ab5981909a2775a2f55d89fbb8e833270da6df48f9dae1a0d806666180",
+      "warnings": {
+        "WIDTHEXPAND": 65,
+        "WIDTHTRUNC": 50,
+        "LATCH": 4,
+        "MULTIDRIVEN": 15
+      },
+      "footer": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 10.297 MB sources in 120 modules, into 293.766 MB in 273 C++ files needing 0.000 MB\n- Verilator: Walltime 85.836 s (elab=1.229, cvt=78.559, bld=0.000); cpu 85.830 s on 1 threads; allocated 6233.578 MB\n"
+    },
+    "w": {
+      "exit_code": 0,
+      "sha256": "b0931965e350564867e1abeb1fe9aaa37d4f2487773fe6b8397437177985876a",
+      "warnings": {
+        "WIDTHEXPAND": 65,
+        "WIDTHTRUNC": 50,
+        "LATCH": 4,
+        "MULTIDRIVEN": 15
+      },
+      "footer": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 10.714 MB sources in 129 modules, into 293.766 MB in 273 C++ files needing 0.000 MB\n- Verilator: Walltime 84.401 s (elab=1.218, cvt=76.548, bld=0.000); cpu 84.383 s on 1 threads; allocated 6233.586 MB\n"
+    }
+  },
+  "warnings_scope": "No warnings waived. Width warnings and reset-partition nonoverlapping vector-block diagnostics require source/native checks; xslice local ab latch warnings sent to native-head owner. Final stream/station/native head/source production and mapped physical proofs remain pending."
+}
