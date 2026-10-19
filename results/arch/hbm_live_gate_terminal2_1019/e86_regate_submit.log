@@ -1,0 +1,65 @@
+HOUSEKEEPING: fast-forward pushed c4978a219 to origin/claude/tkm-1018
+daemon submit check at c4978a219: REFUSE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (gate-executed daemon overlay changed: tools/orfs_hold_mm.tcl, tools/textbook_lint.py; route source differs from staged snapshot: physical/common_flow/clock_entries.tcl, physical/common_flow/ot_keep_regs.tcl, physical/ref_tile/hcoll_v7_tkm_tile_e86/clock.sdc, physical/ref_tile/hcoll_v7_tkm_tile_e86/clock_entry.sdc, physical/ref_tile/hcoll_v7_tkm_tile_e86/signoff.sdc, tools/closure_loop/ck_insertion.py (+5 more) (gate-consumed; 225 unconsumed difference(s) not counted)) (fix: preserve original as unqualified; regenerate the gate for this exact source)
+exact gate-binding differences:
+  SOURCE  physical/common_flow/clock_entries.tcl: gate staged c1ee42dff, commit c4978a219 has 8de832eee
+  SOURCE  physical/common_flow/ot_keep_regs.tcl: gate staged 2729ae5b5, commit c4978a219 has d23b05eb0
+  SOURCE  physical/ref_tile/hcoll_v7_tkm_tile_e86/clock.sdc: gate staged 96f683d98, commit c4978a219 has d1ecd5dcf
+  SOURCE  physical/ref_tile/hcoll_v7_tkm_tile_e86/clock_entry.sdc: gate staged 27b481ae9, commit c4978a219 has 279074412
+  SOURCE  physical/ref_tile/hcoll_v7_tkm_tile_e86/signoff.sdc: gate staged dac61cccc, commit c4978a219 has 875f341cd
+  SOURCE  tools/closure_loop/ck_insertion.py: gate staged f827c72f1, commit c4978a219 has e42e404d4
+  SOURCE  tools/hbm_coll_static/argmax_rows.py: gate staged 343fd5914, commit c4978a219 has c22fa1dbb
+  SOURCE  tools/hbm_coll_static/row_gather_rows.py: gate staged ce28d9751, commit c4978a219 has 6fa3f603a
+  OVERLAY tools/orfs_hold_mm.tcl: gate executed 499dae030 (origin/main 12a80e2a9), daemon now ships ffa114eda; moved by: 96f1d6e0d fix: refresh numeric FF IO references after hold RC changes | e03b80922 Attach actual BW contract and fleet OpenSTA rejection witnesses | bbfdc807e Merge origin/main into claude/hcring-1019 (main hunks kept)
+  SOURCE  tools/ref_tile/layout_dump.tcl: gate staged e16128595, commit c4978a219 has 9712e34be
+  SOURCE  tools/run_abi3_physical.py: gate staged 42c0f18b2, commit c4978a219 has 6df799fba
+  OVERLAY tools/textbook_lint.py: gate executed 89d27841c (origin/main 12a80e2a9), daemon now ships f50cb0331; moved by: a6d33cc98 Prove explicit balanced reset profiles against actual mapped two-edge networks | 4edc1c4fa CLOSED-STANDS: reroute_reason kind pin_order (abutted-joint audit names the closed view; same RTL/outline/faces; new kit ordered, closed kit not) | c4e9df3fe HH-9: HC ring bank chain pin registers (structural fix of 47247cc08 FLOORPLAN_MARGIN bank_distance, no lint override)
+  SOURCE  tools/w18/corner_sta.py: gate staged 37f4efefa, commit c4978a219 has 3d9972fe5
+re-gate on the exact commit: /usr/bin/python3 /home/ubuntu/wt/hh4-e86/tools/ref_tile/pre_route_gate.py physical/ref_tile/hcoll_v7_tkm_tile_e86 --commit c4978a2197274610ccbe855502482874c70e1f5b --remote auto --cts --mem 24
+GATE INFO pin_regs: pin registers opted out: ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE INFO remote: ot-run selected ot-epyc6 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hcoll_v7_tkm_tile_e86_20261019-115537.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hcoll_v7_tkm_tile_e86_20261019-115537.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86-20261019-115537
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc6 in 758 s (gate total 5081 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1386, 'pin_rectangles': 1386, 'pin_track_checked': 1386, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 9bad17cd6bd728d1646ca811e9a9fdd8ac237050c2750d11f1f4c127fab7e54a
+GATE INFO util: synthesized std area 33181 um2 + macros 0 in core 64964: util 51%
+GATE INFO textbook: WARN ot_hgi_coll_tkm_tile_e86 cells 293,619 flops 12,694 depth 461.8 ps util 0.4272 reach 0.0 um (9.5 s)
+GATE WARN textbook.util_channel: utilisation 42.7% outside 45%-65% (std 27753 + macro 0 um2 in 64964 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 262.6..317.2 ps (spread 54.6), boundary mean 267.6; tt insertion all 208.2..255.9 ps (spread 47.7), boundary mean 212.4; ff insertion all 173.6..215.7 ps (spread 42.1), boundary mean 177.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hcoll_v7_tkm_tile_e86/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg     1201 paths, worst slack 65.8 ps (e.g. u.gt[16][2]$_DFF_P_/D)
+GATE INFO path_classes: reg->out      601 paths, worst slack 192.0 ps (e.g. up_out[273])
+GATE INFO path_classes: in->reg       299 paths, worst slack 408.0 ps (e.g. u.g_pre.s_b[219]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 6.577666189500064e-11 hold WNS 4.4190401338184415e-11
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 max: 696 undeclared timed path(s), worst 311.8 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 min: 696 undeclared timed path(s), worst 65.0 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_2 max: 696 undeclared timed path(s), worst 303.0 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_2 min: 696 undeclared timed path(s), worst 63.4 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 max: 696 undeclared timed path(s), worst 243.3 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 min: 696 undeclared timed path(s), worst 80.5 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 max: 1044 undeclared timed path(s), worst 213.7 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 min: 1044 undeclared timed path(s), worst 85.0 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_2 max: 360 undeclared timed path(s), worst 65.8 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_2 min: 360 undeclared timed path(s), worst 75.5 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_1 max: 344 undeclared timed path(s), worst 421.0 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_1 min: 344 undeclared timed path(s), worst 78.6 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_3 max: 360 undeclared timed path(s), worst 67.9 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_3 min: 360 undeclared timed path(s), worst 77.7 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_2 max: 344 undeclared timed path(s), worst 421.5 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_2 min: 344 undeclared timed path(s), worst 77.1 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_4 max: 360 undeclared timed path(s), worst 67.6 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_4 min: 360 undeclared timed path(s), worst 73.5 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_0 max: 1 undeclared timed path(s), worst 347.9 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_0 min: 1 undeclared timed path(s), worst 179.1 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_3 max: 344 undeclared timed path(s), worst 415.2 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_3 min: 344 undeclared timed path(s), worst 79.6 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: 5 register clocks (ot_entry_0,ot_entry_1,ot_entry_2,ot_entry_3,ot_entry_4): no undeclared cross-clock reg->reg setup violation under signoff.sdc
+GATE INFO clock_rule: root port:clk_r3: 3,864 sinks on the largest root; measured TT insertion 275.5 ps, FF insertion 229.6 ps, TT pin-flop spread 28.1 ps, FF pin-flop spread 26.7 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hh4-e86/physical/ref_tile/hcoll_v7_tkm_tile_e86/gate_layout/floorplan.png; density /home/ubuntu/wt/hh4-e86/physical/ref_tile/hcoll_v7_tkm_tile_e86/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 55.07% used; GRT 972 s
+PRE_ROUTE_GATE: WARN (0 fail, 1 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/hh4-e86/physical/ref_tile/hcoll_v7_tkm_tile_e86/source_binding_history/cc0739303fa0499c99303f3062ddeeea99046686e906fd69e789d495898efbef.json
+GATE: hcoll_v7_tkm_tile_e86/gate_result.json written (exact staged source binding; commit it with the kit)
+daemon submit check at 73fc9aac0: PASS: pre-route gate PASS
+REFUSED LOCALLY (ot_hgi_coll_tkm_tile_e86 has 3 earlier non-CLOSED routes (hcoll_v7_tkm_tile_e86-d4f-19e134f32, hcoll_v7_tkm_tile_e86-d4f2-21a3c7d78, hcoll_v7_tkm_tile_e86-d4f2-f8c41b5be)): REVIEW_REQUIRED: the kit geometry changed since the review (geometry_sha256 736bd3eb8b7a -> f52e67dd19c3) -- geometry_sha256 now f52e67dd19c329b639747da989165b75f29552e6c16763b722295294149cc5b8 -- review these and commit physical/ref_tile/<kit>/gate_layout/REVIEW.json: /home/ubuntu/wt/hh4-e86/physical/ref_tile/hcoll_v7_tkm_tile_e86/gate_layout/floorplan.png, /home/ubuntu/wt/hh4-e86/physical/ref_tile/hcoll_v7_tkm_tile_e86/gate_layout/density.png

@@ -1,0 +1,67 @@
+OT_MULTI_ROOT RELATED_PATH r1 -> r0 min slack=25.864588 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r0 -> r1 max slack=-11.551648 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r0 -> r1 min slack=18.501978 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r1 max slack=346.152893 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r1 min slack=21.456642 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r1 -> r2 max slack=-11.083135 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r1 -> r2 min slack=26.478153 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> r2 max slack=332.032745 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> r2 min slack=25.955154 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r3 max slack=-6.277590 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r3 min slack=19.572233 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> core max slack=295.842560 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> core min slack=85.685600 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r0 max slack=234.120895 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r0 min slack=15.634521 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r1 max slack=224.667786 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r1 min slack=22.637226 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r2 max slack=163.868027 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r2 min slack=35.274368 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r3 max slack=132.891373 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r3 min slack=48.423294 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=5 registers=12694 inputs=691 outputs=690 async_control_pins=0
+OT_ENTRIES COMP DONE tt 5 entries phi=276.3125228302845 boundary=258.23324137853274..317.68474836501457
+Took 51 seconds: source /work/hooks/post_global_route_post_grt.tcl
+write_db /work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/5_1_grt.sdc
+Elapsed time: 16:10.22[h:]min:sec. CPU time: user 3423.15 sys 100.48 (363%). Peak memory: 5142580KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb          970           5022 1df1ec5fe3ba584b373f
+5_1_grt                   .sdc                             369ff5b78056804e687b
+OT_HOLD_GUARD start: hold ws -75.63 tns -35649.1 viol 1564 (margin 25, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 3117 endpoints with hold violations.
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 6667 hold buffers.
+Took 259 seconds: repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws -24.43 (+51.19) tns -551.6 (+98.5%) viol 61, 259 s
+repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 527 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 864 hold buffers.
+Took 38 seconds: repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 25.01 (+49.44) tns 0.0 (+100.0%) viol 0, 297 s
+OT_HOLD_MM after repair: SS setup ws 2.38 / FF hold ws 25.01 ps
+OT_MULTI_ROOT RELATED_PATH r1 -> r0 max slack=357.688995 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r1 -> r0 min slack=25.201118 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r0 -> r1 max slack=2.443656 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r0 -> r1 min slack=25.104530 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r1 max slack=358.164459 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r1 min slack=24.965836 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r1 -> r2 max slack=4.610534 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r1 -> r2 min slack=25.157349 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> r2 max slack=351.862274 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> r2 min slack=24.781816 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r3 max slack=4.310719 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r2 -> r3 min slack=24.983070 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> core max slack=284.563721 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH r3 -> core min slack=100.748352 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r0 max slack=248.463303 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r0 min slack=24.613062 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r1 max slack=239.639252 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r1 min slack=26.184582 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r2 max slack=179.942291 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r2 min slack=33.557991 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r3 max slack=150.368057 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> r3 min slack=43.464981 (ordinary synchronous timing retained)
+fe1ac40239ac2a16456debd95ab95e220ff29772011babc3bc8f80e166ff010c  /srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86-20261019-115537/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/5_1_grt.odb
+a35575c91ea8b3ff3d0c6af1155fde08385bc826a114d92bb34e1b42f8f5a92e  /srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86-20261019-115537/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/4_1_cts.odb
