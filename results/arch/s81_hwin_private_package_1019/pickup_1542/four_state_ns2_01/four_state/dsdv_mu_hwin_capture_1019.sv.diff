@@ -1,0 +1,18 @@
+--- dsdv_mu_hwin_capture_1019.sv
++++ parser/dsdv_mu_hwin_capture_1019.sv
+@@ -112,6 +112,7 @@
+     wire due = rok && h_rfr && h_rts == tmr;                             // hslot's return edge: the entry retires
+     wire radv = due || (!rok && !rhold);
+     localparam integer PTR_CTL=(NSLOT+7)/8;
++    wire [6:0] global_count;
+     wire [NEV-1:0] event_due;
+     wire [PTR_CTL-1:0] pointer_due,pointer_adv,slot_step,gap_step;
+     wire [2:0] cg_step,crl_write,crm_write;
+@@ -303,7 +304,6 @@
+     end endgenerate
+     wire wv = mw_q[25];
+     wire table_empty;
+-    wire [6:0] global_count;
+     generate if(LIVE_COUNT!=0) begin:g_live_count
+         reg [SJ-1:0] count_r;
+         assign table_empty=(count_r==0); assign global_count=7'(count_r);

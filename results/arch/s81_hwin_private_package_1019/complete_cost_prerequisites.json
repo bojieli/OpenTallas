@@ -1,0 +1,145 @@
+{
+  "scope": "Complete source cost/prerequisite ledger; native complete-cost total deliberately unknown under no-synth grant",
+  "source": "9e7921b40",
+  "production_shape": {
+    "NSLOT": 47,
+    "NEV": 16,
+    "NEP": 4,
+    "NRT": 2,
+    "macro_instances": 84,
+    "macro_type": "ot_sram_1r1w_64x16_m1"
+  },
+  "namespace_increment": {
+    "FF": 0,
+    "comb": 0,
+    "clock_pins": 0,
+    "cycles": 0
+  },
+  "known_capture_proposal": {
+    "capture_FF": 1072,
+    "FF_area_um2": 312.5952,
+    "mux_bits": 1270,
+    "current_hit_predicate_instances": 148,
+    "proposed_NAND2": 3810,
+    "proposed_INV": 181,
+    "proposed_XNOR2": 888,
+    "proposed_AND2": 1086,
+    "comb_area_um2": 591.5835,
+    "partial_total_um2": 904.1787,
+    "TT_clock_fF": 508.916992,
+    "FF_clock_fF": 559.59472,
+    "claim": "explicit conservative cell reservation only, not actual mapping"
+  },
+  "all_wrapper_source_state": {
+    "baseline_event_retire_bits": 2523,
+    "candidate_event_retire_bits": 3595,
+    "unchanged_gap_bits": 58,
+    "event_retire_resettable_existing_bits": 379,
+    "gap_resettable_existing_bits": 10,
+    "added_capture_reset_pins": 0
+  },
+  "reset_tree_source_state": {
+    "regions": 760,
+    "local_FF": 760,
+    "group_FF": 24,
+    "root_FF": 1,
+    "total_FF": 785,
+    "claim": "actual elaborated declarations; source FF instances not proof of retained mapping; inherited3release stages unchanged"
+  },
+  "upstream_cost_rows": [
+    {
+      "role": "registered_WV_new_predicate_formals",
+      "source_count": 148,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "existing WV roots drive actual macroWE+OLDhit+new predicate valid; fullroot fanout audit owed"
+    },
+    {
+      "role": "registered_WADDR_new_predicate_bit_formals",
+      "source_count": 888,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "existing wa bit roots also macroWA and OLDhit; whole root audit owed"
+    },
+    {
+      "role": "registered_WDATA_new_mux_bit_inputs",
+      "source_count": 1072,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "each source bit adds capture bypass input while existingmacroWD/fd remain"
+    },
+    {
+      "role": "current_PB_RPB_predicate_bit_formals",
+      "source_count": 888,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "event PB bit drives9predicate formals; retirePB4; existing decoders and carry remain"
+    },
+    {
+      "role": "next_address_bus_bits",
+      "source_count": 102,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "17 actual unique6bit buses, carry/wrap/reset selection and macrosetup depth unmeasured"
+    },
+    {
+      "role": "next_address_mux_reservation_bits",
+      "source_count": 198,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "conservative wrapper reservation; sharing with pointerD not credited"
+    },
+    {
+      "role": "reset_control_prediction_bit_uses",
+      "source_count": 102,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "16event rr[se+1] and actualretire rr[RPTR_BASE+6*SLOT_RG], all old reset sinks retained"
+    },
+    {
+      "role": "top_control_and_root_repair",
+      "source_count": null,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "all top registered/combinational/input/tie/macro-output roots require complete transparent BUF/INV census"
+    },
+    {
+      "role": "reset_distribution_retention_repair",
+      "source_count": null,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "785sourceFF + everyterminal reset/set/D load and async assertion/release scope require native proof"
+    },
+    {
+      "role": "clock_root_distribution",
+      "source_count": 84,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "macro clock pins plus every actual retainedstdFF; macroTT/FFslew/spread and center/regional trunks unpriced"
+    },
+    {
+      "role": "PG_and_macro_access",
+      "source_count": 84,
+      "native_added_cells": null,
+      "native_area_um2": null,
+      "status": "allnative MTerm-to-ITerm identity, actualsupplyshapes/vias/OBS and signalcontactdensity unproved"
+    }
+  ],
+  "native_complete_cost_total_um2": null,
+  "native_complete_clock_fF": null,
+  "actual_std_area_um2": null,
+  "actual_outline_fit": null,
+  "prior_region_model_um": [
+    388.8,
+    604.8
+  ],
+  "prior_band_um": 54,
+  "hard_area_cap": null,
+  "prior_failures_still_open": {
+    "fanout_roots": 9,
+    "reach_pairs": 93,
+    "input_preFF_predicates": 5,
+    "macro_clock_slew_issues": 84
+  },
+  "method": "Complete source declaration inventory actual_source_census.json includes everycandidate scope; procedural declaration bits are not summed as nativeFF. Exact source use ledger retains all upstream fanins/oldconsumers. Only a separately granted mapped native diagnostic can populate unknown totals without invented mapping assumptions."
+}

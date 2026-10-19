@@ -1,0 +1,1067 @@
+{
+  "scope": "SOURCE expression/module-pin use census at full NS47/NEV16; NOT mapped native gate fanout; no synthesis run",
+  "helper_sha256": "1897b3fec1576743fd284f4622277082b05dcdeadfaba3a8f9069c5f633e00dd",
+  "instances": [
+    {
+      "path": "g_event_mem[0].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[0].pb_r",
+      "next_read_root": "g_event_mem[0].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[0].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[0].pb_r",
+      "next_read_root": "g_event_mem[0].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[1].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[1].pb_r",
+      "next_read_root": "g_event_mem[1].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[1].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[1].pb_r",
+      "next_read_root": "g_event_mem[1].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[2].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[2].pb_r",
+      "next_read_root": "g_event_mem[2].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[2].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[2].pb_r",
+      "next_read_root": "g_event_mem[2].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[3].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[3].pb_r",
+      "next_read_root": "g_event_mem[3].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[3].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[3].pb_r",
+      "next_read_root": "g_event_mem[3].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[4].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[4].pb_r",
+      "next_read_root": "g_event_mem[4].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[4].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[4].pb_r",
+      "next_read_root": "g_event_mem[4].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[5].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[5].pb_r",
+      "next_read_root": "g_event_mem[5].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[5].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[5].pb_r",
+      "next_read_root": "g_event_mem[5].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[6].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[6].pb_r",
+      "next_read_root": "g_event_mem[6].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[6].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[6].pb_r",
+      "next_read_root": "g_event_mem[6].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[7].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[7].pb_r",
+      "next_read_root": "g_event_mem[7].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[7].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[7].pb_r",
+      "next_read_root": "g_event_mem[7].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[8].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[8].pb_r",
+      "next_read_root": "g_event_mem[8].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[8].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[8].pb_r",
+      "next_read_root": "g_event_mem[8].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[9].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[9].pb_r",
+      "next_read_root": "g_event_mem[9].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[9].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[9].pb_r",
+      "next_read_root": "g_event_mem[9].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[10].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[10].pb_r",
+      "next_read_root": "g_event_mem[10].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[10].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[10].pb_r",
+      "next_read_root": "g_event_mem[10].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[11].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[11].pb_r",
+      "next_read_root": "g_event_mem[11].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[11].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[11].pb_r",
+      "next_read_root": "g_event_mem[11].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[12].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[12].pb_r",
+      "next_read_root": "g_event_mem[12].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[12].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[12].pb_r",
+      "next_read_root": "g_event_mem[12].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[13].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[13].pb_r",
+      "next_read_root": "g_event_mem[13].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[13].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[13].pb_r",
+      "next_read_root": "g_event_mem[13].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[14].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[14].pb_r",
+      "next_read_root": "g_event_mem[14].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[14].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[14].pb_r",
+      "next_read_root": "g_event_mem[14].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[15].g_early.u_payload",
+      "width": 63,
+      "AW": 6,
+      "current_read_root": "g_event_mem[15].pb_r",
+      "next_read_root": "g_event_mem[15].pb_next",
+      "macro_banks": 4,
+      "current_hit_predicates": 8,
+      "capture_FF": 63,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 4,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 8,
+        "total": 13
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 4,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 8,
+        "total": 13
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_event_mem[15].g_early.u_attr",
+      "width": 2,
+      "AW": 6,
+      "current_read_root": "g_event_mem[15].pb_r",
+      "next_read_root": "g_event_mem[15].pb_next",
+      "macro_banks": 1,
+      "current_hit_predicates": 1,
+      "capture_FF": 2,
+      "max_predicate_output_mux_loads": 2,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 1,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 1,
+        "total": 3
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 1,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 1,
+        "total": 3
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    },
+    {
+      "path": "g_retire_early.u_retire",
+      "width": 32,
+      "AW": 6,
+      "current_read_root": "rpb",
+      "next_read_root": "rpb_next",
+      "macro_banks": 2,
+      "current_hit_predicates": 4,
+      "capture_FF": 32,
+      "max_predicate_output_mux_loads": 8,
+      "wv_source_uses": {
+        "macro_write_enable_pins": 2,
+        "old_hit_valid": 1,
+        "new_current_valid_pins": 4,
+        "total": 7
+      },
+      "each_waddr_bit_source_uses": {
+        "macro_write_address_pins": 2,
+        "old_hit_compare": 1,
+        "new_current_address_pins": 4,
+        "total": 7
+      },
+      "each_wdata_bit_source_uses": {
+        "macro_write_data_pin": 1,
+        "existing_fd_FF_D": 1,
+        "new_capture_mux_data": 1,
+        "total": 3
+      },
+      "incoming_we_wa_wd_new_direct_uses": 0,
+      "new_capture_reset_pins": 0
+    }
+  ],
+  "totals": {
+    "capture_instances": 33,
+    "capture_FF": 1072,
+    "current_hit_predicates": 148,
+    "added_valid_predicate_pin_uses": 148,
+    "added_current_read_bit_predicate_pin_uses": 888,
+    "added_registered_write_address_bit_predicate_pin_uses": 888,
+    "added_registered_write_data_mux_inputs": 1072,
+    "unique_next_address_buses": 17,
+    "next_address_bits": 102,
+    "reviewed_conservative_next_address_mux_bit_reservation": 198,
+    "native_area_saving_claim": null,
+    "existing_event_retire_wrapper_register_bits": 2523,
+    "prototype_event_retire_wrapper_register_bits": 3595,
+    "unchanged_gap_wrapper_register_bits": 58
+  },
+  "shared_current_read_roots": {
+    "each_event_pb_bit": "8payload+1attr=9 current-hit address formal pins, plus unchanged decode/current pointer/control uses and prediction arithmetic; whole top-level native fanout OPEN",
+    "each_retire_rpb_bit": "4 current-hit address formal pins, plus unchanged pointer/control uses and prediction arithmetic; native OPEN"
+  },
+  "shared_next_address_roots": {
+    "each_pb_next_bit": "4payloadSRAM+1attrSRAM+2registeredOLD-hit compares=7 source uses",
+    "each_rpb_next_bit": "2retireSRAM+1registeredOLD-hit compare=3 source uses"
+  },
+  "new_upstream_control_uses": {
+    "each_adv": "SI6 next-address mux selection bits per event, expression may share original pointer-D logic; full old consumers not reduced",
+    "radv": "SI6 next-address mux selection bits; full old consumers not reduced",
+    "each_event_rr_se_plus1": "SI6 new prediction reset mux controls; original pb6+fresh1 reset FF pins retain original reset",
+    "retire_pointer_rr": "SI6 new prediction reset mux controls; original slb6+rpb6+gxb6 reset pins retain original reset",
+    "each_wrap_result": "SI6 next-address select bits, may share original same-expression logic; native sharing/copies unproven"
+  },
+  "copy_preservation": "148 distinct kept/dont_touch predicate source instances; no module keep_hierarchy attribute. Source multiplicity is not proof flatten/map preserves copies; mapped upstream and output roots must be audited before gate.",
+  "unchanged_incoming_staging": "New bypass reads only existing registered wv/waddr/wdata; incoming we/wa/wd feed same existing FFs, not new capture muxes. Macro/OLD-forward fd path retained.",
+  "remaining": "All nonclock native BUF/INV-transparent FF/comb/input/reset/macro/tie roots must be counted; original nine fanout failures/93 reachpairs/five pre-firstFF predicates remain. No native PASS or complete cost claimed.",
+  "provenance": {
+    "source_model_sha256": "acdbb9d1c027fbe06d9544073a65c64fbffe028f6326bec8824b86363eac8406",
+    "validity": "Namespace reverse-body exactness preserves expressions; actual package elaboration independently confirms84macros/148predicate source copies. Native retention unproved."
+  }
+}

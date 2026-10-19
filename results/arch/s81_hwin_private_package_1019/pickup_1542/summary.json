@@ -1,0 +1,1442 @@
+{
+  "at": "2026-10-19T15:41:30.761693-07:00",
+  "source": "06f8ca8dc",
+  "runs": [
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-sweep_11_19_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2265421-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns12/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [],
+          "scope_lines": [],
+          "may_be_live_partial": true
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns12/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 48 fires 648 expected 648 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 16457"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns12/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 48 fires 648 expected 648 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 16457"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns12/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 48 fires 648 expected 648 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 16457"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns11/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 15145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns11/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 15145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/uniform_ns11/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 15145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_11_19_01/nonuniform_short_ns11/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 12658"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-sweep_38_47_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2266257-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "sweep_38_47_01/uniform_ns39/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 156 fires 2096 expected 2096 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 51881"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/uniform_ns39/run_seed19.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [],
+          "scope_lines": [],
+          "may_be_live_partial": true
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/nonuniform_short_ns38/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 41197"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/uniform_ns38/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 50569"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/uniform_ns38/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 50569"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_38_47_01/uniform_ns38/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 152 fires 2052 expected 2052 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 50569"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-sweep_29_37_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2266282-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "sweep_29_37_01/uniform_ns30/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 120 fires 1620 expected 1620 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 40073"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/uniform_ns30/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 120 fires 1620 expected 1620 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 40073"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/uniform_ns30/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 120 fires 1620 expected 1620 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 40073"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/nonuniform_short_ns29/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 31684"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/uniform_ns29/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 38761"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/uniform_ns29/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 38761"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_29_37_01/uniform_ns29/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 116 fires 1556 expected 1556 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 38761"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-core01.log",
+      "host": "ot-epyc7",
+      "unit": "oth-ubuntu-169393-1792449348",
+      "terminal": [
+        "73"
+      ],
+      "current_terminal_exit": "73",
+      "receipts": []
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-sweep_20_28_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2265565-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "sweep_20_28_01/uniform_ns21/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 84 fires 1124 expected 1124 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 28265"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/uniform_ns21/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 84 fires 1124 expected 1124 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 28265"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/uniform_ns21/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 84 fires 1124 expected 1124 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 28265"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/nonuniform_short_ns20/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 22171"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/uniform_ns20/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 26953"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/uniform_ns20/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 26953"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_20_28_01/uniform_ns20/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 80 fires 1080 expected 1080 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 26953"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-four_state_ns47_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2266279-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "four_state_ns47_01/four_state/run_phase0.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [],
+          "scope_lines": [],
+          "may_be_live_partial": true
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-core02.log",
+      "host": "ot-epyc7",
+      "unit": "oth-ubuntu-169748-1792449371",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "core02/default/default_ns2/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/default/default_ns2/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/default/default_ns2/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/default/default_ns47/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/default/default_ns47/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/default/default_ns47/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns2_ev1/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns2_ev1/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns2_ev1/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1705"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/guarded_assert_corruption/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[8000] %Fatal: tb_dsdv_mu_hwin_early_capture.sv:176: Assertion failed in tb_dsdv_mu_hwin_early_capture.g_assert_anchor[0]: event boot count differs event0",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:176: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns47/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns47/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/ns47/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 17545"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/initial/original_assert_repro/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[1000] %Fatal: dsdv_mu_hwin.sv:527: Assertion failed in tb_dsdv_mu_hwin_early_capture.anchor.g_event_broadcast[0].g_boot_local: event boot count differs event0",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:527: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width2/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width2/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width2/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/mechanism_mut3/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[73000] %Fatal: tb_dsdv_mu_mem_early_capture.sv:15: Assertion failed in tb_dsdv_mu_mem_early_capture: EC_MEM IDENTITY edge3 ra5 old06edcba987654321 new01357cb7ff307104",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv:15: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width32/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width32/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/width32/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "EC_MEM PASS checks1031"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/mechanism_mut4/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[70000] %Fatal: tb_dsdv_mu_mem_early_capture.sv:15: Assertion failed in tb_dsdv_mu_mem_early_capture: EC_MEM IDENTITY edge0 ra63 old013546c34dd9533e new013579bdf0246801",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv:15: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/mechanism_mut1/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[76000] %Fatal: tb_dsdv_mu_mem_early_capture.sv:15: Assertion failed in tb_dsdv_mu_mem_early_capture: EC_MEM IDENTITY edge6 ra14 old01357eb3e5384b06 new06edcba987654321",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv:15: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/wrapper/mechanism_mut2/run_seed1.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "[72000] %Fatal: tb_dsdv_mu_mem_early_capture.sv:15: Assertion failed in tb_dsdv_mu_mem_early_capture: EC_MEM IDENTITY edge2 ra5 old06edcba987654321 new01357cb7ff307104",
+            "%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv:15: Verilog $stop",
+            "Aborting..."
+          ],
+          "scope_lines": [],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/matrix/base/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3817"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/matrix/base/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3817"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "core02/matrix/base/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 32 fires 432 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3817"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-four_state_ns2_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2266275-1792449383",
+      "terminal": [],
+      "current_terminal_exit": "0",
+      "receipts": [
+        {
+          "path": "four_state_ns2_01/four_state/run_mutant_PAYLOAD.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "FATAL: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:134: EARLY_X qualified head c1132 e0"
+          ],
+          "scope_lines": [
+            "EARLY_X_CAUSAL payload force c1132 valid1 fresh1",
+            "EARLY_MITER edges 1131"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase3.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1730"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1727"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase7.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1734"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase8.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1735"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase4.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1731"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_mutant_CONTROL.log",
+          "has_PASS": false,
+          "causal_or_failure_lines": [
+            "FATAL: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:123: EARLY_X source-qualified control c1132"
+          ],
+          "scope_lines": [
+            "EARLY_X_CAUSAL control force c1132 valid1 fresh1",
+            "EARLY_MITER edges 1131"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase93.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1820"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase90.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1817"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase5.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1732"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase2.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1729"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase6.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1733"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "four_state_ns2_01/four_state/run_phase1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 1728"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    },
+    {
+      "log": "/home/ubuntu/artifacts/s81-hwin-private-sweep_2_10_01.log",
+      "host": "ot-epyc8",
+      "unit": "oth-ubuntu-2266277-1792449383",
+      "terminal": [],
+      "current_terminal_exit": null,
+      "receipts": [
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns3/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 4211"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns2/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3337"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns2/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3337"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns2/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3337"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns3/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4649"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns3/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4649"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/uniform_ns3/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 12 fires 152 expected 152 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 4649"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed313_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed1_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed19_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed19_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed19.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed313.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00",
+            "MUWIN PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed313_rxshift1.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        },
+        {
+          "path": "sweep_2_10_01/nonuniform_short_ns2/run_seed1_rxshift0.log",
+          "has_PASS": true,
+          "causal_or_failure_lines": [],
+          "scope_lines": [
+            "MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0100 hslot 0000 hwin 01",
+            "MUWIN RX_EXPIRED PASS",
+            "EARLY_MITER edges 3145"
+          ],
+          "may_be_live_partial": false
+        }
+      ]
+    }
+  ],
+  "caution": "Live jobs are partial; terminal0 alone not wholephase qualification. Expected actualcausal FAIL logs retained. Default original source.sha list supplemented by frozen source_manifest defaultbench SHA; no altered benchmark."
+}

@@ -1,0 +1,9 @@
+# Fresh result owner continuation
+
+Branch codex/s81-hwin-private-package-1019, source9e7921b40/replay06f8ca8dc, base00170ccbe. Source package is frozen; do not modify RTL/bench/gold/reset/warmup/valid masks. Core01 failure and all old69e7 failures preserved. All jobs are unpinned, no deadlines, no restart/rebuild/kill. Recreate sparse worktree from branch if removed.
+
+Active remote lane /srv/opentallas-scratch/claude/s81-hwin-private-package-1019. Immutable input src_06f8ca8dc exists all5epyc; jobs landedcore02 on ep7, five sweep partitions2–10/11–19/20–28/29–37/38–47 and four_state_ns47_01 on ep8. four_state_ns2_01 is terminal0. Exact units/local logs are /home/ubuntu/artifacts/s81-hwin-private-package-1019/RUNS.json and pending_results.txt. Keep existing obj/vvp/compiled binaries. No original oldfullshape06 handling here; LEAD-S81 owns it separately.
+
+For one fresh immutable pickup, run python3 tools/hwin_private_package_1019/collect.py pickup_<actualtime>. It collects logs/source receipts only; inspect actual ot-run terminal line+each expected verdict. Live partial logs are labelled, not PASS. All46shape closure requires276legalpositive+276expected-expiry runs, sourcequal and exact gold; count perNS/program/seed/shift explicitly. Core includes default, initial, wrapper, originalmatrix, resetstress, calendarmutants, bootfaults, winner/mechanism. FullNS47 fourstate all11phase positive plus primitive/Xcausals/projectedtrace proof required, not oldjob substitution.
+
+Commit actual receipts and update README/status/manifest; no broad source rerun after pass. Root is sole merger; no native diagnostic until explicit new grant. Namespace-only result source graph/cost proposal is not native qualification. Log actualPTtime/HANDOFF/lane and concise dependency currentstate. Existing live job outputs may outlast this owner, so hand collection to freshowner rather than waiting.
