@@ -217,6 +217,36 @@ def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
         qualification='prebuild sizing only; real mapped area, native pins, CTS, route and actual global per-bit path ages unqualified')
 
 
+def hbm_native_frontend_owner_links_model():
+    """Opt-in real four-link successor; scope excludes unrepaired issuer/owner."""
+    return dict(schema="opentallas.hbm.native-owner-links.v1", candidate=True,
+        owners=4, physical_pairs=4, payload_bits=285, target_bits=1,
+        link_slots=4, slices_per_link=36, slice_width_max=8,
+        boundary_bits_per_hbm_edge=4*285, bytes_per_hbm_edge=128,
+        macs_per_cycle=0, memory_bytes_per_cycle=0,
+        runtime_ring_bits_per_link=4*285,
+        local_pointer_ff_per_link=36*4,
+        output_ff_per_link=285,
+        ring_valid_ff_per_link=4,
+        first_reset_ff_per_link=2, second_reset_ff_per_link=36,
+        qualification="MODEL; source/mapped/geometry/CDC/production deadline OPEN",
+        link_edges=2, owner_capture_lookup_validate_edges=3,
+        old_direct_pair_edge=1, added_response_hbm_edges=4,
+        candidate_issue_hbm_edges=2, candidate_reserve_stream_edges=3,
+        candidate_start_stream_edges=3, candidate_go_stream_edges=2,
+        conservative_additional_prefetch_stream_edges=12,
+        link_clock_relation="equal-frequency phase-qualified source/pair roots required",
+        static_capacity="one event per edge; no backpressure; unready target faults",
+        target_rule="pair j receives ordinal low2==j; bank select=ordinal[2]",
+        context_owner="issuer retains lower46; class descriptor197->ctx46 only in clone",
+        cohort_owner="canonical issuer/collector fresh 16-bit cohort; not replaced",
+        reach_limit_um=405, estimated_area_um2=None, measured_mass_um=None,
+        track_pitch_um=None, channel_capacity=None,
+        physical_admission="BLOCKED until actual mapped area/load and pin geometry",
+        all_models=["Qwen3-8B ROM","Qwen3-8B HBM","DeepSeek-V4.1 ROM","DeepSeek-V4.1 HBM"],
+        applicability="HBM only; ROM hardware delta zero; no token-rate gain claimed")
+
+
 def hbm_static_quant_SW_replica_model():
     """Actual SID0 datahome candidate, authorized by root before new RTL."""
     return dict(schema='opentallas.hbm-static-quant-SW-replica.v2',
