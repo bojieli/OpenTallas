@@ -35,6 +35,12 @@ GEN2e (tools/hbm_die_v16/d4g_layers/l13_int8.py) sets ENABLE_INT8 1 on all 16 SM
   price, measured 3206/2161/12422/6278 vs 3418.6/2394.6/12634.6/6490.6); static, no ready/credit; overlap = parent
   sticky schedule_fault (sim $fatal). Only new constant: reset release +2 (landing).
 
+## Gate history
+- gate 1 (b50dff17a, --cts auto): WARN util only; std 1,692 um2, 2,531 flops, depth 413 ps, TT/FF pin-flop spread 45.2/44.6 ps
+  (t2: 24.1/23.9), trial GRT overflow 0, setup +137 / hold +19 ps (t2 +94 / +38). REVIEW of the PNG: PPL put every pin in the
+  MIDDLE HALF of N and S (~10 pins/um effective) -> fixed in the kit: per-port pin_ranges over the full face + route.pin_balance
+  (group 1, M4/M5). Evidence results/arch/lhsmatt_int8_1019/gate1/. gate 2 = this kit.
+
 ## Benches (Verilator 5.050, fleet)
 - rtl/hbm_accel/sm/static/test/run_smh_int8_tile_bench.sh: lockstep vs ot_smh_static_int8 behind the exact smh_attn merge
   mux, random legal calendar, all 256 codes, reset bursts. exact PASS checked=19985 beats=13181 lines=6596;

@@ -3,7 +3,7 @@
  "block": "ot_smh_int8_tile",
  "ref_tile": true,
  "owner": "Claude:LH-SMATT/INT8",
- "purpose": "SAFE hard tile of the smh_attn ENABLE_INT8 packet-ingress adapter (COORD 0ki; GEN2e l13_int8 sets ENABLE_INT8 1 on all 16 SM): cycle-exact with ot_smh_static_int8 (low beat +2, high +3, priced), every pin registered in RTL, one 12-level logic stage, kept selects <=32 loads, no macros. Pin-bound outline (2,105 pins, N in / S out <=4.5 pins/um).",
+ "purpose": "SAFE hard tile of the smh_attn ENABLE_INT8 packet-ingress adapter (COORD 0ki; GEN2e l13_int8 sets ENABLE_INT8 1 on all 16 SM): cycle-exact with ot_smh_static_int8 (low beat +2, high +3, priced), every pin registered in RTL, one 12-level logic stage, kept selects <=32 loads, no macros. Pin-bound outline (2,105 pins, N in / S out <=4.5 pins/um). Pins spread over the FULL N/S faces (pin_ranges + pin_balance), gate-1 review: PPL had clustered them in the middle half.",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
