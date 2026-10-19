@@ -1,7 +1,7 @@
 #!/bin/bash
 # MU-KV-CTX benches (2026-10-19; FLEET only, Verilator 5.050 = the closure daemon's): KV host plane -> d2d kind-12 MU
 # context slot -> compute qfd_mu_ctx_rx -> qfd_tt_ctlm_dv OPSEG boot-context loader (mu_kvctx_bench.py, tb_mu_kvctx.sv).
-#   usage: run_mu_kvctx.sh WORK [part ...]      parts (default all): pass mut
+#   usage: run_mu_kvctx.sh WORK [part ...]      parts (default pass mut): pass mut model kboot
 #   pass  kmut 0 rmut 0: MU_KVCTX_PASS
 #   mut   kmut 1 (wrong user field) / kmut 2 (wrong slot: pair order swapped) / kmut 3 (producer off) / rmut 1 (leaf loads
 #         the wrong user): each MU_KVCTX_FAIL; the fail lines are the committed witnesses (results/rtl/mu_qwen_1018/kvctx/runs)
@@ -36,6 +36,26 @@ fi
 if want model; then
     python3 -I "$D/mu_kvctx_bench.py" --work "$W/kvctx" --model-link --verilator "$VL" --jobs 8 > "$W/kvctx_model_pass.out" 2>&1
     chk kvctx_model_pass MU_KVCTX_PASS "$(grep -m1 '^MU_KVCTX_' "$W/kvctx_model_pass.out")"
+fi
+# KV-LINKCFG-MU 10-19 part `kboot`: the KV TX calendar boot-loaded from target 11 as on the KV die (--kboot; the KV
+# sequencer's cfg_* are load-less there).  target11_mu.hex = kv_static_programme.link_cfg_words under OT_KV_MU=1 (branch
+# claude/kv-linkcfg-mu-1019); it must equal the bound d2d_cal_image_mu.svh K words.  Mutant: target11_prefix.hex = the
+# pre-fix compile (seam 2,2,2,2,2,2/11,11,9,9,9,11,11, no --mu): no MU context slot -> MU_KVCTX_FAIL.
+KB=$R/results/rtl/mu_qwen_1018/kvctx/kboot
+if want kboot; then
+    python3 -I - "$KB/target11_mu.hex" "$R/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh" <<'PY' && echo "OK   kboot_image: target11_mu.hex == d2d_cal_image_mu.svh K TX/RX + SEG2" || { echo "BAD  kboot_image: target11_mu.hex != the bound MU image"; rc=1; }
+import re, sys
+w = [int(x, 16) for x in open(sys.argv[1]).read().split()]
+t = open(sys.argv[2]).read()
+v = lambda n: int(re.search(n + r" = \d+'h([0-9a-fA-F]+);", t).group(1), 16)
+tx, rx = v('D2D_CAL_K_TX_IMG'), v('D2D_CAL_K_RX_IMG')
+want = [x for i in range(32) for x in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)] + [v('D2D_CAL_K_TX_SEG2'), v('D2D_CAL_K_RX_SEG2')]
+sys.exit(0 if w == want else 1)
+PY
+    python3 -I "$D/mu_kvctx_bench.py" --work "$W/kvctx" --kboot "$KB/target11_mu.hex" --verilator "$VL" --jobs 8 > "$W/kvctx_kboot_mu.out" 2>&1
+    chk kvctx_kboot_mu MU_KVCTX_PASS "$(grep -m1 '^MU_KVCTX_' "$W/kvctx_kboot_mu.out")"
+    python3 -I "$D/mu_kvctx_bench.py" --work "$W/kvctx" --kboot "$KB/target11_prefix.hex" --verilator "$VL" --jobs 8 > "$W/kvctx_kboot_prefix.out" 2>&1
+    chk kvctx_kboot_prefix MU_KVCTX_FAIL "$(grep -m1 '^MU_KVCTX_' "$W/kvctx_kboot_prefix.out")"
 fi
 [ $rc = 0 ] && echo "MU_KVCTX BENCHES: PASS" || echo "MU_KVCTX BENCHES: FAIL"
 exit $rc

@@ -92,8 +92,18 @@ def events_for(pb, face, res, users, ctx=True):
 B.events_for = events_for
 
 
+KBOOT = None    # --kboot HEX (KV-LINKCFG-MU 10-19): the KV TX calendar boot-loaded from this target-11 image (66 words)
+
+
+def kboot_param(hexf):
+    w = [int(x, 16) for x in Path(hexf).read_text().split()]
+    if len(w) != 66 or any(x >> 32 for x in w):
+        sys.exit(f'--kboot {hexf}: 66 target-11 words with data[63:32] = 0 expected')
+    return "-GKBOOT_IMG=2112'h" + ''.join(f'{x:08x}' for x in reversed(w))
+
+
 def build(work, vl, kmut, rmut, jobs, cmut=0):
-    d = work / (f'b_kvctx_k{kmut}_r{rmut}' + (f'_cal_c{cmut}' if CAL else ''))
+    d = work / (f'b_kvctx_k{kmut}_r{rmut}' + (f'_cal_c{cmut}' if CAL else '') + (f'_kb_{Path(KBOOT).stem}' if KBOOT else ''))
     exe = d / 'Vtb_mu_kvctx'
     if exe.exists(): return exe
     srcs = [str(ROOT / l.strip()) for l in LIST.read_text().split('\n') if l.strip() and not l.startswith('#')]
@@ -104,6 +114,8 @@ def build(work, vl, kmut, rmut, jobs, cmut=0):
            '-GCRX_SEG1=' + img_const(D2D / 'd2d_cal_image_mu.svh', 'D2D_CAL_C_RX_SEG1'),
            '-GKTX_SEG1=' + img_const(D2D / 'd2d_cal_image_mu.svh', 'D2D_CAL_K_TX_SEG1'),
            '-GCRX_MU0=' + img_const(D2D / 'd2d_cal_image.svh', 'D2D_CAL_C_RX_IMG'), '-Mdir', str(d)] + srcs
+    if KBOOT:
+        cmd[-len(srcs):-len(srcs)] = ['-GKBOOT=1', kboot_param(KBOOT)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -165,10 +177,13 @@ def main():
     ap.add_argument('--rmut', type=int, default=0)
     ap.add_argument('--cmut', type=int, default=0)
     ap.add_argument('--model-link', action='store_true', help='the original bench-edge pair (no sequencers / calendars)')
+    ap.add_argument('--kboot', help='KV-LINKCFG-MU: boot-load the KV TX calendar from this target-11 hex (CAL only)')
     ap.add_argument('--verilator', default=os.environ.get('VERILATOR', 'verilator')); ap.add_argument('--jobs', type=int, default=8)
     a = ap.parse_args()
-    global CAL
+    global CAL, KBOOT
     CAL = not a.model_link
+    KBOOT = a.kboot
+    if KBOOT and not CAL: sys.exit('--kboot needs CAL mode')
     if a.cmut and not CAL: sys.exit('--cmut needs CAL mode')
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
     e1 = B.build(work, a.verilator, 1, 0, 0, a.jobs)
@@ -177,7 +192,7 @@ def main():
     cal = O.compile_frame(16, layers=2)
     rd = work / 'rom_red'; rd.mkdir(exist_ok=True)
     (rd / f'{B.INST}.viamap.hex').write_text(O.viamap_hex(O.rom_words(cal)))
-    name = f'kvctx_k{a.kmut}_r{a.rmut}' + (f'_cal_c{a.cmut}' if CAL else '')
+    name = f'kvctx_k{a.kmut}_r{a.rmut}' + (f'_cal_c{a.cmut}' if CAL else '') + (f'_kb_{Path(KBOOT).stem}' if KBOOT else '')
     B.check_case(name, cal, B.RED_FRAMES + 1, B.S0 + B.RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, 0, fails, summ)
     # re-read the MU run's log (check_case ran it as <name>_mu)
     log = work / f'{name}_mu.log'
@@ -190,7 +205,8 @@ def main():
     summ['verdict'] = 'PASS' if not fails else 'FAIL'
     summ['fails'] = fails
     (work / f'summary_{name}.json').write_text(json.dumps(summ, indent=1, default=str))
-    print(f"MU_KVCTX_{summ['verdict']} kmut {a.kmut} rmut {a.rmut}" + (f' cal cmut {a.cmut}' if CAL else '') + ('' if not fails else ': ' + ' | '.join(fails)))
+    summ['kboot'] = KBOOT
+    print(f"MU_KVCTX_{summ['verdict']} kmut {a.kmut} rmut {a.rmut}" + (f' cal cmut {a.cmut}' if CAL else '') + (f' kboot {Path(KBOOT).name}' if KBOOT else '') + ('' if not fails else ': ' + ' | '.join(fails)))
     print(json.dumps({k: v for k, v in summ.items() if k != 'fails'}, default=str)[:4000])
     return 0 if not fails else 1
 

@@ -37,6 +37,13 @@
 module tb_mu_kvctx;
     parameter integer NU = 4, MUT = 0, OPSEG = 1, KMUT = 0, RMUT = 0, LINK = 14;
     parameter integer CAL = 0, CMUT = 0;
+    // KBOOT 1 (KV-LINKCFG-MU 2026-10-19, CAL only): the KV TX calendar is loaded as on the KV DIE -- by boot image target 11
+    //   (kv_static_programme.link_cfg_words, KBOOT_IMG = its 66 words, word a at [32*a +: 32]) in the boot dispatcher's
+    //   LINKCFG write order (qkd_static_kv_boot_dispatch: a = 2i -> TX entry i, a = 2i+1 -> RX entry i, a = 64 / 65 -> TX / RX
+    //   segment-1 base, one registered write an edge), NOT by the sequencer u_kseq (whose cfg_* are load-less on the die).
+    //   The token-run base write (bwe) stays the bench's model of the sequencer's post-admission base switch.
+    parameter integer KBOOT = 0;
+    parameter [66*32-1:0] KBOOT_IMG = '0;
     parameter [31:0] CRX_SEG1 = 32'd0, KTX_SEG1 = 32'd0;     // token-run segment-1 bases (the images' D2D_CAL_*_SEG1)
     parameter [1023:0] CRX_MU0 = 1024'd0;                   // CMUT 1: the MU 0 C RX image
     reg ck = 1'b0;
@@ -98,13 +105,26 @@ module tb_mu_kvctx;
         .cal_ready(ks_rdy), .running(), .layer(), .adm_done(), .tok_start(), .fault(ks_f));
     // C RX cfg: the face sequencer's writes (CMUT 1: the same writes carrying the MU 0 image's entries); bwe = the bench's
     // token-run base write (cfg_addr[5] = 1), on an edge where both sequencers are idle (after cal_ready)
+    // KBOOT: the dispatcher's target-11 write stream (from reset release; done long before edge 150)
+    reg  [6:0]   kb_i = 0; reg kb_txwe = 0, kb_rxwe = 0; reg [5:0] kb_a = 0; reg [31:0] kb_d = 0;
+    always @(posedge ck) begin
+        kb_txwe <= 1'b0; kb_rxwe <= 1'b0;
+        if (rst_n && KBOOT != 0 && kb_i < 7'd66) begin
+            kb_d <= KBOOT_IMG[32 * kb_i +: 32];
+            kb_a <= (kb_i < 7'd64) ? {1'b0, kb_i[5:1]} : 6'b100000;
+            kb_txwe <= (kb_i < 7'd64) ? !kb_i[0] : (kb_i == 7'd64);
+            kb_rxwe <= (kb_i < 7'd64) ? kb_i[0] : (kb_i == 7'd65);
+            kb_i <= kb_i + 7'd1;
+        end
+    end
+    wire         kt_we = KBOOT ? kb_txwe : ks_txwe;  wire [5:0] kt_a = KBOOT ? kb_a : ks_a;  wire [31:0] kt_d = KBOOT ? kb_d : ks_d;
     wire [31:0]  crx_d = bwe ? CRX_SEG1 : (CMUT == 1 && !cs_a[5]) ? CRX_MU0[32 * cs_a[4:0] +: 32] : cs_d;
     wire         crv, ktv, crf, ktf, crr, ktr; wire [2:0] crp, ktp; wire [3:0] crk, ktk; wire [4:0] crb, ktb;
     ot_qwen_d2d_cal #(.NE(32)) u_crx (.ck(ck), .rst_n(rst_n), .cfg_we(cs_rxwe | bwe), .cfg_addr(bwe ? 6'h20 : cs_a),
         .cfg_data(crx_d), .start(kcal), .start_seg(1'b1), .halt(khalt), .ev_v(crv), .ev_port(crp), .ev_kind(crk),
         .ev_beat(crb), .running(crr), .fault(crf));
-    ot_qwen_d2d_cal #(.NE(32)) u_ktx (.ck(ck), .rst_n(rst_n), .cfg_we(ks_txwe | bwe), .cfg_addr(bwe ? 6'h20 : ks_a),
-        .cfg_data(bwe ? KTX_SEG1 : ks_d), .start(kcal), .start_seg(1'b1), .halt(khalt), .ev_v(ktv), .ev_port(ktp),
+    ot_qwen_d2d_cal #(.NE(32)) u_ktx (.ck(ck), .rst_n(rst_n), .cfg_we(kt_we | bwe), .cfg_addr(bwe ? 6'h20 : kt_a),
+        .cfg_data(bwe ? KTX_SEG1 : kt_d), .start(kcal), .start_seg(1'b1), .halt(khalt), .ev_v(ktv), .ev_port(ktp),
         .ev_kind(ktk), .ev_beat(ktb), .running(ktr), .fault(ktf));
     wire         k_ctx = ktv && ktp == 3'd1 && ktk == 4'd12;          // KV TX: the record port's context send slot
     wire         c_ctx_ev = crv && crp == 3'd1 && crk == 4'd12;       // C RX: a context arrival (pin edge r)
@@ -184,7 +204,7 @@ module tb_mu_kvctx;
             sk_mu_b = pair2 ? 2'd3 : 2'd0; sk_ref_b = pair2 ? 2'd3 : 2'd0; pair2 = 0;
             kcal = 0; khalt = 0; bwe = 0;
             if (CAL && cyc + 1 == 150) begin
-                if (!cs_rdy || !ks_rdy) $fatal(1, "sequencer images not loaded by edge 150");
+                if (!cs_rdy || !ks_rdy || (KBOOT != 0 && kb_i != 7'd66)) $fatal(1, "sequencer / boot images not loaded by edge 150");
                 bwe = 1;
             end
             while (have && ec == cyc + 1) begin

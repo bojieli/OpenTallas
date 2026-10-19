@@ -1,0 +1,24 @@
+{
+ "lane": "KV-LINKCFG-MU 2026-10-19",
+ "compiler": "tools/qwen_kv_die/kv_static_programme.py link_calendar + link_cfg_words (branch claude/kv-linkcfg-mu-1019)",
+ "files": {
+  "target11_mu.hex": {
+   "env": "OT_KV_MU=1",
+   "die_stages": "2,2,2,3,2,2/11,11,9,9,9,9,9 (read from d2d_cal_image_mu.svh D2D_TXDP_C record)",
+   "mu": true,
+   "k_tx_seg2": 9,
+   "equals": "d2d_cal_image_mu.svh K TX/RX + SEG2"
+  },
+  "target11_prefix.hex": {
+   "env": "OT_KV_MU=1, LINK_ARGS forced to the pre-fix compile",
+   "die_stages": "2,2,2,2,2,2/11,11,9,9,9,11,11",
+   "mu": false,
+   "k_tx_seg2": 8,
+   "role": "mutant: what target 11 loaded before the fix (11 of 66 words differ from the MU image)"
+  }
+ },
+ "sha256": {
+  "target11_mu.hex": "64772e27fcedd92080cc91fc175affc6c303f5139177ac0f8235590da93f320c",
+  "target11_prefix.hex": "613b83677b46914bd2f910fc8f571a1ab31a6d5ff9d7378bab51701e7ea90184"
+ }
+}
