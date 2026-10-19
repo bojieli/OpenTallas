@@ -32,293 +32,293 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 475.2 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(516.24 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 516.24 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(557.28 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 557.28 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(598.32 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 598.32 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(639.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 639.36 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 680.4 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(721.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 721.44 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(762.48 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 762.48 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(803.52 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 803.52 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(844.56 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 844.56 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(885.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 885.6 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(926.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 926.64 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(967.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 967.68 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1008.72 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1008.72 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1049.76 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1049.76 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1090.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1090.8 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1131.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1131.84 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1172.88 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1172.88 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1213.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1213.92 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(336.96 * $dbu)}] [expr {round(1254.96 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 336.96 1254.96 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 475.2 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(516.24 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 516.24 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(557.28 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 557.28 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(598.32 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 598.32 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(639.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 639.36 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 680.4 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(721.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 721.44 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(762.48 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 762.48 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(803.52 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 803.52 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(844.56 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 844.56 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(885.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 885.6 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(926.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 926.64 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(967.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 967.68 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1008.72 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1008.72 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1049.76 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1049.76 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1090.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1090.8 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1131.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1131.84 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1172.88 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1172.88 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1213.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1213.92 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient MY; $i setLocation [expr {round(587.52 * $dbu)}] [expr {round(1254.96 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 587.52 1254.96 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 475.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(516.24 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 516.24 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(557.28 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 557.28 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(598.32 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 598.32 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(639.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 639.36 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 680.4 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(721.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 721.44 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(762.48 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 762.48 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(803.52 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 803.52 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(844.56 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 844.56 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(885.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 885.6 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(926.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 926.64 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(967.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 967.68 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1008.72 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1008.72 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1049.76 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1049.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1090.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1090.8 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1131.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1131.84 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1172.88 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1172.88 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1213.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1213.92 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(838.08 * $dbu)}] [expr {round(1254.96 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 838.08 1254.96 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 475.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(516.24 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 516.24 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(557.28 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 557.28 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(598.32 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 598.32 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(639.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 639.36 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 680.4 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(721.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 721.44 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(762.48 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 762.48 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(803.52 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 803.52 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(844.56 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 844.56 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(885.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 885.6 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(926.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 926.64 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(967.68 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 967.68 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1008.72 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1008.72 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1049.76 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1049.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1090.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1090.8 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1131.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1131.84 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1172.88 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1172.88 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1213.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1213.92 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(1088.64 * $dbu)}] [expr {round(1254.96 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1088.64 1254.96 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?0??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(403.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 403.92 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?1??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(473.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 473.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?2??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(542.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 542.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?3??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(611.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 611.28 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?4??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 680.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?5??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(749.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 749.52 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?6??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(818.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 818.64 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?7??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(887.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 887.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?8??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(956.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 956.88 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?9??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1026.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1026.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?10??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1095.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1095.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?11??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1164.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1164.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?12??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1233.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1233.36 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?13??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1302.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1302.48 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?14??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1371.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1371.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*u_output?g_bank?15??*}]
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1440.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 345.6 1440.72 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?0??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(403.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 403.92 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?1??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(473.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 473.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?2??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(542.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 542.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?3??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(611.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 611.28 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?4??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 680.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?5??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(749.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 749.52 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?6??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(818.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 818.64 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?7??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(887.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 887.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?8??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(956.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 956.88 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?9??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1026.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1026.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?10??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1095.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1095.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?11??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1164.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1164.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?12??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1233.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1233.36 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?13??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1302.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1302.48 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?14??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1371.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1371.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?0??u_group?g_bank?15??*}]
+$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1440.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 561.6 1440.72 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?0??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(403.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 403.92 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?1??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(473.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 473.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?2??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(542.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 542.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?3??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(611.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 611.28 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?4??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 680.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?5??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(749.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 749.52 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?6??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(818.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 818.64 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?7??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(887.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 887.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?8??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(956.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 956.88 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?9??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1026.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1026.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?10??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1095.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1095.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?11??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1164.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1164.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?12??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1233.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1233.36 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?13??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1302.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1302.48 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?14??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1371.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1371.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?1??u_group?g_bank?15??*}]
+$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1440.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 820.8 1440.72 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?0??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(403.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 403.92 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?1??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(473.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 473.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?2??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(542.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 542.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?3??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(611.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 611.28 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?4??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 680.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?5??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(749.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 749.52 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?6??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(818.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 818.64 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?7??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(887.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 887.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?8??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(956.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 956.88 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?9??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1026.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1026.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?10??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1095.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1095.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?11??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1164.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1164.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?12??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1233.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1233.36 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?13??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1302.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1302.48 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?14??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1371.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1371.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?2??u_group?g_bank?15??*}]
+$i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1440.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1440.72 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?0??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(403.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 403.92 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?1??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(473.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 473.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?2??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(542.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 542.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?3??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(611.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 611.28 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?4??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(680.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 680.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?5??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(749.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 749.52 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?6??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(818.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 818.64 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?7??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(887.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 887.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?8??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(956.88 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 956.88 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?9??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1026.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1026.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?10??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1095.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1095.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?11??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1164.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1164.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?12??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1233.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1233.36 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?13??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1302.48 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1302.48 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?14??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1371.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1371.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {*g_operand?3??u_group?g_bank?15??*}]
+$i setOrient R0; $i setLocation [expr {round(1252.8 * $dbu)}] [expr {round(1440.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1252.8 1440.72 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?0?*u_sfu}]
 $i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 43.2 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?1?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 432.0 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 518.4 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?2?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 820.8 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(993.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 993.6 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?3?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 1209.6 MY"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(1468.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 1468.8 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?4?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 302.4 1382.4 R0"
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(1512.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 345.6 1512.0 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?5?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 561.6 1382.4 R0"
+$i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(1512.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 648.0 1512.0 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?6?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 1382.4 MY"
+$i setOrient MY; $i setLocation [expr {round(907.2 * $dbu)}] [expr {round(1512.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 907.2 1512.0 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?7?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 1382.4 MY"
+$i setOrient MY; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(1512.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1209.6 1512.0 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?8?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(1512.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1512.0 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?9?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 432.0 R0"
+$i setOrient R0; $i setLocation [expr {round(1512.0 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1512.0 518.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?10?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 820.8 R0"
+$i setOrient R0; $i setLocation [expr {round(1512.0 * $dbu)}] [expr {round(993.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1512.0 993.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?11?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 1209.6 R0"
+$i setOrient R0; $i setLocation [expr {round(1512.0 * $dbu)}] [expr {round(1468.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1512.0 1468.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?12?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 302.4 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 345.6 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?13?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 561.6 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 648.0 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?14?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 43.2 MY"
+$i setOrient MY; $i setLocation [expr {round(907.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 907.2 43.2 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?15?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 43.2 MY"
+$i setOrient MY; $i setLocation [expr {round(1209.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1209.6 43.2 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 96} { error "ref_tile place: expected 96 macros, netlist has $nb" }
