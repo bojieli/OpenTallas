@@ -1,0 +1,71 @@
+{
+  "qwen": {
+    "signal_nets": 206,
+    "signal_rectangles": 820,
+    "complete_vias": 408,
+    "via_enclosure_rectangles": 816,
+    "via_cut_rectangles": 408,
+    "PG_rectangles": 44,
+    "OBS_reservations": 6,
+    "all_native_metal_cut_boxes": 2088,
+    "native_encoder_objects": 1272,
+    "neighbor_pairs_within_200nm": 21521,
+    "same_layer_cross_net_positive_overlaps": 0,
+    "PG_components": {
+      "VDD": 22,
+      "VSS": 22
+    },
+    "OBS_intersection_pairs": 1680
+  },
+  "sc2": {
+    "signal_nets": 437,
+    "signal_rectangles": 2181,
+    "complete_vias": 870,
+    "via_enclosure_rectangles": 1740,
+    "via_cut_rectangles": 870,
+    "PG_rectangles": 77,
+    "OBS_reservations": 6,
+    "all_native_metal_cut_boxes": 4868,
+    "native_encoder_objects": 3128,
+    "neighbor_pairs_within_200nm": 47515,
+    "same_layer_cross_net_positive_overlaps": 0,
+    "PG_components": {
+      "VDD": 39,
+      "VSS": 38
+    },
+    "OBS_intersection_pairs": 3561
+  },
+  "payload_bytes": {
+    "inventory_json": 27655323,
+    "model_json": 5587392,
+    "tech_lef": 20141,
+    "control_input": 318159
+  },
+  "total_encoder_objects": 4407,
+  "A2_measured": {
+    "rectangles": 477,
+    "vias": 130,
+    "encoder_objects": 607,
+    "elapsed_s": 0.79,
+    "peak_KiB": 249580,
+    "staged_disk_B": 6988074,
+    "native_invocations": 33
+  },
+  "resource_proposal": {
+    "encoder_object_ratio_to_A2": 7.260296540362439,
+    "linear_object_scaled_peak_KiB": 1812025,
+    "linear_object_scaled_disk_B": 50735490,
+    "CPU": 1,
+    "RAM_GiB": 4,
+    "disk_GiB": 2,
+    "placement": "unpinned ot-run after ROOT grant and actual measured host memory/disk admission",
+    "engines": 3,
+    "native_invocations": 9,
+    "wall_deadline": null,
+    "engine_plan": [
+      "Qwen full master: global + full-outline ROI",
+      "SC2 full master: global + full-outline ROI",
+      "unchanged four controls: global + four control ROIs"
+    ]
+  }
+}
