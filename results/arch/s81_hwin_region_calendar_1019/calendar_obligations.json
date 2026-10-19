@@ -1,0 +1,138 @@
+{
+  "scope": "Model dependencies, not proof completion",
+  "source": "1e057b7bf",
+  "items": [
+    {
+      "element": "event SRAM read",
+      "current": "pbi, registered OLD data, current/previous write forwarding",
+      "required": "capture actual head63+attr2, retain wv/address/forwarding identity",
+      "status": "Qualified early-wdata bypass needed at2-slot D4; raw cache mutant wrong"
+    },
+    {
+      "element": "event okay/fresh",
+      "current": "evld and pe&vld&~fd; fresh=!adv && !(pe&rec_slot)",
+      "required": "capture okay/fresh/pointer and revalidate at compare/fire",
+      "status": "OPEN occupied record, advance and overwrite generation proof"
+    },
+    {
+      "element": "event equality",
+      "current": "eqn <= fresh && due==tm_event",
+      "required": "captured due vs captured_time+1 for zero-date; otherwise priced target offset",
+      "status": "47-slot first-read readiness fits D49; this is not full RTL proof"
+    },
+    {
+      "element": "event late fault",
+      "current": "ltn <= fresh && sign(due-tm_event); lt uses current fresh",
+      "required": "preserve first observable late edge, not merely equal-event date",
+      "status": "OPEN newly fresh already-late head, timestamp wrap and reset"
+    },
+    {
+      "element": "event advance",
+      "current": "fire || (!ok&&!hold)",
+      "required": "same generation as current head; no repeated fire/stale pointer",
+      "status": "OPEN all2..47phase first/last/wrap, sameedge record/fire"
+    },
+    {
+      "element": "fired vector",
+      "current": "fd <- (fd || fire&pe) && !rec_slot",
+      "required": "head generation and priority retained",
+      "status": "OPEN same-slot record clear versus fire set"
+    },
+    {
+      "element": "output payload",
+      "current": "HEAD_STAGE captures head_word alongside select lookahead",
+      "required": "retime head34 and all endpoint selects together",
+      "status": "OPEN winning payload same generation, no extra output date claim"
+    },
+    {
+      "element": "TX winner",
+      "current": "highest numbered active event per endpoint",
+      "required": "retain event priority after added stage",
+      "status": "OPEN multi-event collision plus winning payload dates"
+    },
+    {
+      "element": "replay",
+      "current": "replay enable from attr, per-endpoint winner",
+      "required": "retain land/ab/user and priority",
+      "status": "OPEN MUT3/MUT4 original dated witnesses must remain"
+    },
+    {
+      "element": "output collision",
+      "current": "raw nsc/nsr pairs -> fq1 -> sticky fault",
+      "required": "same set of event decisions and existing fault pipeline",
+      "status": "OPEN no silently shifted collision flag"
+    },
+    {
+      "element": "retirement SRAM",
+      "current": "registered timestamp h_rts, current rpb",
+      "required": "own local capture and compare-time horizon",
+      "status": "OPEN original due edge or fully priced new due ABI"
+    },
+    {
+      "element": "retirement pointer",
+      "current": "radv=due || (!rok&&!rhold)",
+      "required": "generation/fresh hold and rpb/rp equivalence",
+      "status": "OPEN skipped entries and simultaneous record"
+    },
+    {
+      "element": "valid vector",
+      "current": "(vld && !(due&rp)) || rec_slot",
+      "required": "single semantic event ordering, no extended membership by accident",
+      "status": "Abstract retire100/start101 collision retained"
+    },
+    {
+      "element": "global/event counts",
+      "current": "count += rec_slot - due",
+      "required": "all copies reflect same original event generation",
+      "status": "OPEN count equality after reset/record/retire"
+    },
+    {
+      "element": "RX match",
+      "current": "rt valid compares eu/ep of vld entries",
+      "required": "align returned payload/valid with exact outstanding image",
+      "status": "OPEN before/on/after retirement tag and user reuse"
+    },
+    {
+      "element": "start admission",
+      "current": "st && on_cal && !col && !udup && legal first config",
+      "required": "preserve slot, user identity and timer phase",
+      "status": "OPEN addingretireedge changes occupancy; never claimjust+1output"
+    },
+    {
+      "element": "boot MC/MW face",
+      "current": "five predicate bits decode before first physical FF",
+      "required": "decode registered MC/MW payload/valid; align all21/24bitpayload and selector",
+      "status": "52bit stage reserved; source generation and boot fault date OPEN"
+    },
+    {
+      "element": "boot selector",
+      "current": "cfg_sel lookahead accounts preceding selector write",
+      "required": "carry exact transaction and selected event",
+      "status": "OPEN adjacent selector/D/attribute words, MC+MW traffic"
+    },
+    {
+      "element": "boot eligibility",
+      "current": "idle=!armed && table_empty",
+      "required": "same armed/count generation; no accepting stale idle",
+      "status": "Post-arm retirement does not by itself make idle; retain actual armed gate"
+    },
+    {
+      "element": "D/gap/RL limits",
+      "current": "D>=nw+2; gap>=nw+2; D<=RL-2",
+      "required": "every altered date rederive min/max envelopes",
+      "status": "OPEN production mu_cfg manifest; original fixture dates unchanged"
+    },
+    {
+      "element": "reset/restart",
+      "current": "root/group/local release edges1/2/3; plain payload qualified by valid",
+      "required": "all new context invalid until exact inherited release and coherent read",
+      "status": "OPEN arbitrary SRAM/payload init, occupied restart, no extra reset edge free"
+    },
+    {
+      "element": "parent/compiler/token",
+      "current": "real start, windows, returned tags, C/PINPIPE and slot period",
+      "required": "derive actual production schedule deltas before any date rewrite",
+      "status": "SU token/MU rate/parent die costs NULL"
+    }
+  ]
+}
