@@ -26,11 +26,25 @@
 // violation (missing/duplicate/late Q seat, malformed dd word, dr group collision, EMB while busy, unknown command)
 // is a sticky fault.  All internal slots are one edge later than at qfd_native59_compute_service's pins.
 // MUT (bench mutants, must FAIL): 1 Q lane packing e^1, 2 KV lane address ^1, 3 EMB code word k^1,
-// 4 legacy Q window from vm_q_start (Q beat 0 one link slot late against the compiled calendar, F1).
+// 4 legacy Q window from vm_q_start (Q beat 0 one link slot late against the compiled calendar, F1),
+// 5 (MU, = MU-TOK-KV m7) user 3's records carry user tag 0, 6 (MU) the filler epoch sequence never advances.
+// D2D USER (MU-DQ-D2DUSER 10-19, NU > 1; NU = 1 is the block above on every edge): the user of a native context /
+//   request is native_position[17:16] (qfd_tt_ctlm_dv: the user of the latest head start; positions are < 8192).  The
+//   operation's epoch -- carried by the D2D CMD / Q records out and checked on the RESULT / STATUS records back (the
+//   unchanged record endpoint compares the full epoch) and by the KVN x3 identity -- is
+//     user 0: the HOST epoch (the face's single context; must be a user-0 MU epoch, [1:0] = 0) -> user 0 is
+//             bit-identical to NU = 1;
+//     user u > 0: {seq14[u], u}, seq14[u] = MU_SEQ0 at the user's first L0 context, +1 at each later L0 context (stage
+//             1): the mirror of the HOST allocator's per-user sequence (ot_qwen_tp8_token_epoch_allocator_mu, INITIAL
+//             _EPOCH[15:2] = MU_SEQ0).  A filler context of a layer > 0 before the user's first L0 is a fault.
+//   The KV die serves user epoch[1:0] (MU-ADOPT-KV, HBM row 64 + l + 256 u).  Context checks: qfd_native59_command_
+//   context_mu (HOST token / position match for user 0 only).  No port, no edge: the stamp is on the context edge.
 module qfd_native59_dv_service #(
  parameter integer MUT=0,CODEC_MUT=0,
  // LAND_EDGES=0 profile is not allowed: production must supply the measured W5..E5 return-chain landing edge count.
- parameter integer NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8
+ parameter integer NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
+ // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
+ parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -81,11 +95,36 @@ module qfd_native59_dv_service #(
  wire native_context=p_lcv&&p_stage>=1&&p_stage<=36;
  wire begin_slot,request_slot,context_fault,active;
  wire[58:0]begin_tag,request_tag;wire[19:0]base;
- qfd_native59_command_context u_context(
- .ck(ck),.rst_n(rst_n),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
- .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(p_pos),
- .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(p_pos),
- .service_active(active),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
+ // ---------------------------------------------------------------- D2D user (MU-DQ-D2DUSER, NU > 1; see the header)
+ localparam integer MU=(NU>1)?1:0;
+ wire[1:0]c_user=MU?p_pos[17:16]:2'd0;
+ wire[17:0]c_pos=MU?{2'b00,p_pos[15:0]}:p_pos;
+ reg[13:0]fseq[0:3];reg[3:0]fstart;reg mu_fault;
+ wire c_l0=p_stage==6'd1;
+ wire[13:0]c_seq=(fstart[c_user]&&c_l0&&MUT!=6)?fseq[c_user]+14'd1:fseq[c_user];
+ wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
+ wire[15:0]c_epoch=(MU==0||c_user==2'd0)?p_he:{c_seq,c_tag};
+ integer fu;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
+  else if(MU!=0&&native_context&&c_user!=2'd0)begin
+   fseq[c_user]<=c_seq;if(c_l0)fstart[c_user]<=1'b1;
+   if({1'b0,c_user}>=3'(NU)||(!c_l0&&!fstart[c_user]))mu_fault<=1'b1;
+  end
+ generate if(MU==0)begin:g_ctx1
+  qfd_native59_command_context u_context(
+  .ck(ck),.rst_n(rst_n),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
+  .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(p_pos),
+  .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(p_pos),
+  .service_active(active),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
+ end else begin:g_ctxmu
+  qfd_native59_command_context_mu #(.NU(NU)) u_context(
+  .ck(ck),.rst_n(rst_n),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
+  .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(c_pos),
+  .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(c_pos),
+  .service_active(active),.ctx_user(c_user),.ctx_epoch(c_epoch),
+  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
+ end endgenerate
  // ---------------------------------------------------------------- dd word decode
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
  wire dd_q=dd_v&&dd_kind==2'd0,dd_kv=dd_v&&(dd_kind==2'd1||dd_kind==2'd2);
@@ -103,6 +142,7 @@ module qfd_native59_dv_service #(
  // 8 x 16384-b runtime $shift writes + the 512-b $shiftx read).  Same function as the per-lane loop it replaces: each
  // lane l decodes its element qe_l once; seat e takes the data of the HIGHEST hitting lane (the old loop's last write
  // wins); q_in_bad = a hit on a seat already seen this epoch, or two lanes of one word on the same seat.
+ reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // MU-DQ-D2DUSER: restored (lost in the e28fa950f merge: the file did not elaborate)
  wire[16383:0]qbuf_n;wire[511:0]qseen_n,qdup;
  wire[71:0]qe_all;wire[7:0]qhit_any,qhi_bad;
  genvar gl,ge;
@@ -187,7 +227,7 @@ module qfd_native59_dv_service #(
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;
  ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1))u_formatter(
- .clk(ck),.rst_n(rst_n),.epoch_begin(native_context),.epoch_pos(p_pos),
+ .clk(ck),.rst_n(rst_n),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
  .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_slot(p_kvs),.word_index(p_kvi),
@@ -213,7 +253,7 @@ module qfd_native59_dv_service #(
  wire visibility_fault=p_cs&&!visibility_seen;
  reg dv_fault;
  qfd_native59_static_service u_service(
- .ck(ck),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault),
+ .ck(ck),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault),
  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),
  .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
  .q_slot(p_qs),.q_slot_beat(p_qb),.q_v(q[523]),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
@@ -268,11 +308,12 @@ module qfd_native59_dv_service #(
   else if(dd_form_bad||q_in_bad||kv_in_bad||q_miss||(g0&&g1)||(emb_go&&emb_act)||cmd_bad)dv_fault<=1;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)fault<=0;
-  else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault;
+  else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
  initial begin
   if(NATIVE_PROFILE!=0&&LAND_QUALIFIED!=1)$fatal(1,"native service requires the measured dr landing edge contract");
   if(LAND_EDGES<2)$fatal(1,"LAND_EDGES must include the slice pin register and VM write");
-  if(MUT<0||MUT>4)$fatal(1,"qfd_native59_dv_service: MUT undefined");
+  if(MUT<0||MUT>6||(MUT>=5&&NU<2))$fatal(1,"qfd_native59_dv_service: MUT undefined");
+  if(NU<1||NU>4)$fatal(1,"qfd_native59_dv_service: NU %0d outside 1..4",NU);
  end
 endmodule
 
@@ -315,4 +356,62 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8)(
    end
    if(visibility_slot&&(!active||!(&issued)||!(&covered)||(|pending)))fault<=1;
   end
+endmodule
+
+// qfd_native59_command_context_mu (in this file so every native59 source list stays valid) -- MU-DQ-D2DUSER (10-19, Qwen ROM 4 users): drop-in successor of
+// qfd_native59_command_context for qfd_native59_dv_service at NU > 1 (the original file is untouched and still binds
+// at NU = 1).  Same ports plus ctx_user / ctx_epoch.
+//   ctx_user  = the user of the head segment that drives the native context / request (qfd_tt_ctlm_dv native_pos[17:16],
+//               the head-start user: 0 on the face's dh start, the calendar's cmd_user on a LOCAL SEG start).
+//   ctx_epoch = the epoch this user's records carry: user 0 = the HOST epoch (the face's single context, unchanged);
+//               filler u = {seq14[u], u} (the service's per-user mirror of the HOST allocator's sequence,
+//               ot_qwen_tp8_token_epoch_allocator_mu).  The D2D attention records (CMD / Q out, RESULT / STATUS back)
+//               carry it, so the KV die reads the user from epoch[1:0] (MU-ADOPT-KV convention, KV row 64+l+256u).
+// Differences from the single-user block (NU > 1 only):
+//   * begin_tag epoch = ctx_epoch (user 0: host_epoch, so user 0 is bit-identical to the single-user block);
+//   * the HOST-tag token / position match (host_tag[36:19] / [18:6] vs the context) and host_epoch == context epoch are
+//     checked for user 0 only: the closed face carries the latency user's HOST context only (MU OPEN item "filler
+//     initial context"); a filler's identity is the head's per-user bank (qfd_tt_ctlm_dv tok_b / pos_b) -- compiled;
+//   * NEW: user 0's HOST epoch must be a user-0 MU epoch (host_epoch[1:0] == 0), and the request's user must be the
+//     context's user (the head segment that asks for attention is the one whose context opened the operation).
+// Every other check of the original is kept unchanged.  Static schedule: checks only fault, never stall.
+module qfd_native59_command_context_mu #(parameter integer NU=4)(
+ input wire ck,rst_n,
+ input wire host_epoch_valid,host_fused_capability,input wire [15:0] host_epoch,
+ input wire [58:0] host_tag,input wire [1:0] host_generation,
+ input wire context_v,input wire [5:0] context_stage,
+ input wire [17:0] context_token,context_position,
+ input wire [379:0] native_cmd,input wire [5:0] command_stage,
+ input wire [17:0] command_token,command_position,
+ input wire service_active,
+ input wire [1:0] ctx_user,input wire [15:0] ctx_epoch,
+ output wire begin_slot,output wire [58:0] begin_tag,
+ output wire request_slot,output wire [58:0] request_tag,
+ output wire [19:0] result_base_word,output reg fault
+);
+ localparam [379:0] TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
+ reg valid,cap;reg [1:0] generation;reg [58:0] context_tag;reg [1:0] ctx_u;
+ wire host0=ctx_user==2'd0;
+ assign begin_slot=context_v;
+ assign begin_tag={ctx_epoch,context_stage,context_token,context_position[12:0],6'd0};
+ assign request_slot=native_cmd[0];
+ assign request_tag={context_tag[58:43],command_stage,command_token,command_position[12:0],6'd0};
+ assign result_base_word=native_cmd[299:280];
+ always @(posedge ck or negedge rst_n)begin
+  if(!rst_n)begin valid<=0;cap<=0;generation<=0;context_tag<=0;ctx_u<=0;fault<=0;end
+  else begin
+   if(context_v)begin
+    if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
+       (host0&&(host_tag[36:19]!=context_token||host_tag[18:6]!=context_position||host_epoch[1:0]!=2'd0))||
+       service_active||!host_epoch_valid||!host_fused_capability||(valid&&begin_tag==context_tag)||context_stage<1||context_stage>36||context_token>=151936||context_position>=8192)fault<=1;
+    valid<=1;cap<=host_fused_capability;generation<=host_generation;context_tag<=begin_tag;ctx_u<=ctx_user;
+   end
+   if(request_slot)begin
+    if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
+       (ctx_u==2'd0&&(host_tag[36:19]!=context_tag[36:19]||host_tag[18:6]!=context_tag[18:6]||host_epoch!=context_tag[58:43]))||
+       ctx_user!=ctx_u||host_generation!=generation||!valid||context_v||!host_epoch_valid||!cap||!host_fused_capability||request_tag!=context_tag||command_position>=8192||native_cmd!=TEMPLATE)fault<=1;
+   end
+  end
+ end
+ initial if(NU<2||NU>4)$fatal(1,"qfd_native59_command_context_mu: NU %0d outside 2..4 (NU 1 binds qfd_native59_command_context)",NU);
 endmodule
