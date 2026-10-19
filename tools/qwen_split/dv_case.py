@@ -70,6 +70,15 @@ WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
 # one regional clock / reset per re-ported master (the pre-DV multi-root pins fold onto them)
 WCOL_REN = {'rsi': 'rst_n'}
+# MU-DQ-DHUSER 10-19 (COORD 0kg item 2: no constant strap on qfd_tt_ctlm_dv.dh_user): on the multi-user die
+# (OT_QWEN_MU_NU > 1) the die-level observer qfd_sys_face_mu_dhobs (= qfd_sys_face_mu_dhuser NU, OPSEG 0, compiled lists
+# from mu_opcal.dhobs_lists) sits in the channel between tt_ctlm's N face (its dh / dh_user pins) and native59, joins the
+# face's seq_dh bus as a third endpoint (the same landed hops as tt_ctlm.dh: dh_user names the h_start on the edge
+# tt_ctlm samples it) and drives tt_ctlm.dh_user directly (one 2-b wire, no relay).  Its res_user / mu_fault stay open
+# outputs (strict bind: output_open is not a failure; no die consumer port exists on the closed face / the ctlm today).
+DHOBS = ('mu_dhobs', 'qfd_sys_face_mu_dhobs', 'rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv')
+DHOBS_WH = (43.2, 43.2)          # outline (um): ~60 flops + the 45-entry stage list; 187 + 6 pins on its faces
+DHOBS_GAP = 17.28                # above tt_ctlm's N face (the tt_ctlm | native59 channel is 108 um)
 
 
 def _load(env):
@@ -153,6 +162,49 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
             assign_pins(M, m, v.Master, byn[inst], mst, src, peers, partition_master)
     m.setdefault('q3h', {})['dv_wcol_rebind'] = rec
     return rec
+
+
+def _dhobs_inst(v, m, M, keep):
+    """MU-DQ-DHUSER: the observer instance on the MU die (None on a single-user die or without tt_ctlm.dh_user).
+    Placed in the tt_ctlm | native59 channel, its E edge 86.4 um W of tt_ctlm's NE corner (the dh pins sit at the E end of
+    tt_ctlm's N face, dh_user near its middle); OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
+    nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
+    tt = next((i for i in keep if i.name == 'tt_ctlm'), None)
+    if nu <= 1 or tt is None:
+        return None
+    w, h = DHOBS_WH
+    xy = os.environ.get('OT_SPLIT_DV_DHOBS_XY', '').strip()
+    if xy:
+        x, y = (float(z) for z in xy.split(','))
+    else:
+        x, y = tt.x + tt.w - 86.4 - w, tt.y + tt.h + DHOBS_GAP
+    x, y = round(round(x / 0.216) * 0.216, 3), round(y, 3)
+    hit = [i.name for i in keep if x < i.x + i.w - 1e-3 and i.x < x + w - 1e-3 and y < i.y + i.h - 1e-3 and i.y < y + h - 1e-3]
+    if hit:
+        raise ValueError(f'dv: {DHOBS[0]} at ({x}, {y}) {w} x {h} overlaps {hit[:6]}')
+    i = v.Inst(DHOBS[0], DHOBS[1], x, y, w, h, orient='R0', kind=tt.kind, region=tt.region, domain=tt.domain)
+    keep.append(i)
+    m.setdefault('q3h', {})['dv_dhobs'] = dict(inst=DHOBS[0], master=DHOBS[1], rtl=DHOBS[2], xy=[x, y], wh=[w, h], nu=nu,
+                                                rule='COORD 0kg: tt_ctlm.dh_user driven by the MU observer (no strap)')
+    return i
+
+
+def _dhobs_buses(m, out, dh_crt, has):
+    """the observer's die nets: a third endpoint on the face's seq_dh bus (whole 187 b; the observer reads [43:0]) and
+    its dh_user -> tt_ctlm.dh_user (2 b, direct).  Fail closed if the seq_dh bus, the ports or the clock / reset are
+    missing: the MU die must never fall back to an undriven / tied dh_user."""
+    n_ = DHOBS[0]
+    j = next((k for k, b in enumerate(out) if b[0] == 'dvw_sys_face_seq_dh'), None)
+    miss = [p for p in (('sys_face', 'seq_dh'), ('tt_ctlm', 'dh'), ('tt_ctlm', 'dh_user'), (n_, 'seq_dh'), (n_, 'dh_user'))
+            if not has(*p)]
+    if j is None or miss or len(dh_crt) != 2:
+        raise ValueError(f'dv: {n_}: seq_dh bus {"found" if j is not None else "MISSING"}, missing ports {miss}, '
+                         f'clock / reset {sorted(dh_crt.values())}')
+    b0, c0, n0, e0 = out[j]
+    out[j] = (b0, c0, n0, list(e0) + [(n_, 'seq_dh')])
+    out.append((f'dvw_{n_}_dh_user', 'spine_local', 2, [(n_, 'dh_user'), ('tt_ctlm', 'dh_user')]))
+    m['q3h']['dv_dhobs'].update(seq_dh_bus=b0, dh_user_bus=f'dvw_{n_}_dh_user', clock_reset=dict(
+        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())), open_outputs=['res_user', 'mu_fault'])
 
 
 def apply_dv(v, m):
@@ -498,6 +550,9 @@ def apply_dv(v, m):
             continue                       # the relay planner places the lane relays itself
         else:
             raise ValueError(f'dv: instance {n} ({d["m"]}) not in the q3h model')
+    dhobs = _dhobs_inst(v, m, M, keep)
+    if dhobs is not None:
+        by[dhobs.name] = dhobs
     m['insts'][:] = keep
     names = {i.name for i in keep}
     # final placement gate (fail closed): no two instances overlap
@@ -514,6 +569,7 @@ def apply_dv(v, m):
         raise ValueError(f'dv: {len(ovl)} overlapping instances {ovl[:8]}')
     # ---- buses
     out, dropped, partial = [], {}, []
+    dh_crt = {}
     slices = sorted(n for n in names if n.startswith('dvs_'))
     for bid, cl, bits, eps in m['buses']:
         if cl in ('clock_trunk', 'reset'):
@@ -528,6 +584,11 @@ def apply_dv(v, m):
                 e2 += [(s, 'ck') for s in slices if not any(x == s for x, _ in e2)]
             if bid == 'rst_field':
                 e2 += [(s, 'rst_n') for s in slices]
+            if dhobs is not None and any(e[0] == 'tt_ctlm' and (cl == 'reset' or e[1].startswith('ck')) for e in e2):
+                k_ = 'ck' if cl == 'clock_trunk' else 'rst_n'
+                if (dhobs.name, k_) not in dh_crt:          # tt_ctlm's FIRST clock / reset net (it folds onto one)
+                    e2.append((dhobs.name, k_))
+                    dh_crt[(dhobs.name, k_)] = bid
             if len(e2) > 1:
                 out.append((bid, cl, bits, e2))
             continue
@@ -612,7 +673,7 @@ def apply_dv(v, m):
     if FX and os.environ.get('OT_SPLIT_DV_WCOL_RTL', '1') != '0':
         from qwen_split.source_pin_plan import rtl_ports
         root = Path(__file__).resolve().parents[2]
-        for inst, (mst, src) in list(WCOL_RTL.items()) + list(WCOL_VIEW.items()):
+        for inst, (mst, src) in list(WCOL_RTL.items()) + list(WCOL_VIEW.items()) + [(DHOBS[0], DHOBS[1:])]:
             if inst not in names:
                 continue
             rp = rtl_ports(root / src, mst)
@@ -666,6 +727,8 @@ def apply_dv(v, m):
                 out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
+        if dhobs is not None:
+            _dhobs_buses(m, out, dh_crt, has)
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)

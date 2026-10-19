@@ -1,0 +1,5 @@
+TB_DHOBS PASS h_starts 1800 periods 40 (dh_user = res_user = 0, mu_fault 0)
+- /srv/opentallas-scratch/claude/mu-dq-dhuser/bench/src/results/rtl/mu_qwen_1018/dhobs/tb_dhobs.sv:52: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 158us; walltime 0.041 s; speed 3.858 ms/s
+- Verilator: cpu 0.041 s on 1 threads; allocated 7 MB
