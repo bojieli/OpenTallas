@@ -9,7 +9,7 @@
    8,
    3,
    1,
-   9
+   10
   ],
   "K": [
    24,
@@ -447,9 +447,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 0,
-   "arrive": 653,
-   "rx_out": 655,
-   "wr": 641
+   "arrive": 654,
+   "rx_out": 656,
+   "wr": 642
   },
   {
    "seg": 0,
@@ -459,9 +459,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 1,
-   "arrive": 654,
-   "rx_out": 656,
-   "wr": 642
+   "arrive": 655,
+   "rx_out": 657,
+   "wr": 643
   },
   {
    "seg": 0,
@@ -471,9 +471,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 2,
-   "arrive": 655,
-   "rx_out": 657,
-   "wr": 643
+   "arrive": 656,
+   "rx_out": 658,
+   "wr": 644
   },
   {
    "seg": 0,
@@ -483,9 +483,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 3,
-   "arrive": 656,
-   "rx_out": 658,
-   "wr": 644
+   "arrive": 657,
+   "rx_out": 659,
+   "wr": 645
   },
   {
    "seg": 0,
@@ -870,6 +870,18 @@
    "arrive": 2437,
    "rx_out": 2439,
    "wr": 2425
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2401,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 30,
+   "arrive": 2436,
+   "rx_out": 2438,
+   "wr": 2424
   },
   {
    "seg": 0,
@@ -2115,9 +2127,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 0,
-   "arrive": 925,
-   "rx_out": 927,
-   "wr": 913
+   "arrive": 926,
+   "rx_out": 928,
+   "wr": 914
   },
   {
    "seg": 1,
@@ -2127,9 +2139,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 1,
-   "arrive": 926,
-   "rx_out": 928,
-   "wr": 914
+   "arrive": 927,
+   "rx_out": 929,
+   "wr": 915
   },
   {
    "seg": 1,
@@ -2139,9 +2151,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 2,
-   "arrive": 927,
-   "rx_out": 929,
-   "wr": 915
+   "arrive": 928,
+   "rx_out": 930,
+   "wr": 916
   },
   {
    "seg": 1,
@@ -2151,9 +2163,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 3,
-   "arrive": 928,
-   "rx_out": 930,
-   "wr": 916
+   "arrive": 929,
+   "rx_out": 931,
+   "wr": 917
   },
   {
    "seg": 1,
@@ -2538,6 +2550,18 @@
    "arrive": 2709,
    "rx_out": 2711,
    "wr": 2697
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2673,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 30,
+   "arrive": 2708,
+   "rx_out": 2710,
+   "wr": 2696
   },
   {
    "seg": 1,

@@ -134,7 +134,8 @@ class Programme(unittest.TestCase):
     def test_token_period_is_padded_and_every_launch_is_legal(self):
         ph = self.die['phase']
         self.assertEqual(ph['token_period_core'] % 768, 0)
-        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600
+        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600;
+        # QLB-C4 10-18: SC_TX 2 (dv2f14bq) -> attn_kv X 5 -> 7 on L1..L35 + L0 -215 (was -217): +72 -> 249,461 -> 249,600
         self.assertEqual(ph['token_period_core'], 249600)
         # HKV-DIE 10-19: current pair (compute dv2f14bq SC_TX 2: L1 X 5 -> 7, +2 edges x 36 layers; KV landed codec) =
         # unpadded 249,461 (was 249,389) -> still 249,600

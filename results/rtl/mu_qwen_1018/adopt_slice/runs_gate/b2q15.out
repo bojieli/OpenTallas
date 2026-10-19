@@ -1,0 +1,7 @@
+# case b2q15 host regular-crane 2026-10-19T04:39:39-07:00 commit 549e8e808256d8cc3d7d337799727f2be775fcdd Verilator 5.050 2026-07-01 rev v5.050
+bench2 (q) MUT=15: FAIL 0/512
+    S0AG stn_busy still set at the end (1000000000)
+    L8 kc3 scaled: 128/128 mismatches, first [0] got 0xbfb53de2 exp 0xc0a68dd6
+    L8 kc1 unscaled: 128/128 mismatches, first [0] got None exp 0xc4ee3341
+    L7 gate/up kc2: 256/256 mismatches, first [0] got None exp 0x4217096f
+# exit 1

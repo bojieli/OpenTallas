@@ -1,0 +1,497 @@
+{
+ "source": "dv2f18mu out/case/fwd_lanes.json (sha256 d04b7d31688b...), seam lanes only",
+ "lanes": [
+  {
+   "bid": "lnk_native_tx_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_0",
+   "cal": -1575,
+   "group": "record:C.tx_slot",
+   "bundle": "C.tx_slot",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_tx_slot_kind",
+   "cl": "spine_local",
+   "bits": 4,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_kind_0",
+   "cal": -1575,
+   "group": "record:C.tx_slot",
+   "bundle": "C.tx_slot",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_tx_slot_beat",
+   "cl": "spine_local",
+   "bits": 5,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_beat_0",
+   "cal": -1575,
+   "group": "record:C.tx_slot",
+   "bundle": "C.tx_slot",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_tx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_v_0",
+   "cal": 1577,
+   "group": "record:C.tx_record",
+   "bundle": "C.tx_record",
+   "G_reset_tree": 1597,
+   "R0_reset_tree": 20,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_tx_payload",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 1,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_payload_0",
+   "cal": 1577,
+   "group": "record:C.tx_record",
+   "bundle": "C.tx_record",
+   "G_reset_tree": 1597,
+   "R0_reset_tree": 20,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_rx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_v_0",
+   "cal": -1575,
+   "group": "record:C.rx_record",
+   "bundle": "C.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_rx_payload",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 2,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_rx_payload_0"
+   ],
+   "landing": "rly_lnk_rx_payload_1",
+   "cal": -1575,
+   "group": "record:C.rx_record",
+   "bundle": "C.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_rx_payload__fo1",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_rx_payload__fo1_0",
+    "rly_lnk_rx_payload__fo1_1"
+   ],
+   "landing": "rly_lnk_rx_payload__fo1_2",
+   "cal": 0,
+   "group": "record:SF.rx_record",
+   "bundle": "SF.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 21,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_rx_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_0",
+   "cal": -1575,
+   "group": "record:C.rx_record",
+   "bundle": "C.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_rx_slot_kind",
+   "cl": "spine_local",
+   "bits": 4,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_kind_0",
+   "cal": -1575,
+   "group": "record:C.rx_record",
+   "bundle": "C.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_native_rx_slot_beat",
+   "cl": "spine_local",
+   "bits": 5,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_beat_0",
+   "cal": -1575,
+   "group": "record:C.rx_record",
+   "bundle": "C.rx_record",
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_kv_x3_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r54",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_kv_x3_slot_0",
+    "rly_lnk_kv_x3_slot_1"
+   ],
+   "landing": "rly_lnk_kv_x3_slot_2",
+   "cal": -1575,
+   "G_reset_tree": 21,
+   "R0_reset_tree": 1596,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_x3",
+   "cl": "spine_local",
+   "bits": 524,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_x3_0"
+   ],
+   "landing": "rly_lnk_x3_1",
+   "cal": 1577,
+   "group": "record:C.x3_record",
+   "bundle": "C.x3_record",
+   "G_reset_tree": 1597,
+   "R0_reset_tree": 20,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_x3_identity",
+   "cl": "spine_local",
+   "bits": 59,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_x3_identity_0"
+   ],
+   "landing": "rly_lnk_x3_identity_1",
+   "cal": 1577,
+   "group": "record:C.x3_record",
+   "bundle": "C.x3_record",
+   "G_reset_tree": 1597,
+   "R0_reset_tree": 20,
+   "reset_calendar_root": "__declared_calendar__"
+  },
+  {
+   "bid": "lnk_x3_generation",
+   "cl": "spine_local",
+   "bits": 2,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r54",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "land plan (die STA)",
+   "K_basis": "post-reset-tree: (total E + G - R0) mod 8 with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)",
+   "stations": [
+    "rly_lnk_x3_generation_0"
+   ],
+   "landing": "rly_lnk_x3_generation_1",
+   "cal": 1577,
+   "group": "record:C.x3_record",
+   "bundle": "C.x3_record",
+   "G_reset_tree": 1597,
+   "R0_reset_tree": 20,
+   "reset_calendar_root": "__declared_calendar__"
+  }
+ ]
+}

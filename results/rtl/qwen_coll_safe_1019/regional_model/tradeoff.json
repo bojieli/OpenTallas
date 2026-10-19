@@ -1,0 +1,194 @@
+{
+  "schema": "opentallas.safe_collective.regional_model.v1",
+  "status": "MODEL_ONLY_NO_IMPLEMENTATION_OR_GATE_ADOPTION",
+  "rows": [
+    {
+      "variant": "current",
+      "LU": 53,
+      "LS": 378,
+      "spans": {
+        "AR256": 797,
+        "ARGMAX1": 446,
+        "AR256x2": 1537,
+        "AR256x2_ARGMAX1": 1545
+      },
+      "P_R_banks_per_ring": 2,
+      "P_R_total_macro_area_um2": 57596.832,
+      "token_added_cycles": 0,
+      "token_cycles": 249577,
+      "added_cycles_percent": 0.0,
+      "throughput_loss_percent": 0.0
+    },
+    {
+      "variant": "A_unqualified_E2_target",
+      "LU": 61,
+      "LS": 386,
+      "spans": {
+        "AR256": 821,
+        "ARGMAX1": 462,
+        "AR256x2": 1577,
+        "AR256x2_ARGMAX1": 1585
+      },
+      "P_R_banks_per_ring": 2,
+      "P_R_total_macro_area_um2": 57596.832,
+      "token_added_cycles": 1744,
+      "token_cycles": 251321,
+      "added_cycles_percent": 0.6987823397188042,
+      "throughput_loss_percent": 0.6939332566717465
+    },
+    {
+      "variant": "B_gated_final_capture_model",
+      "LU": 65,
+      "LS": 390,
+      "spans": {
+        "AR256": 833,
+        "ARGMAX1": 470,
+        "AR256x2": 1597,
+        "AR256x2_ARGMAX1": 1605
+      },
+      "P_R_banks_per_ring": 4,
+      "P_R_total_macro_area_um2": 115193.664,
+      "token_added_cycles": 2616,
+      "token_cycles": 252193,
+      "added_cycles_percent": 1.0481735095782063,
+      "throughput_loss_percent": 1.037300797405162
+    }
+  ],
+  "landing_lane_widths": [
+    150,
+    150,
+    150,
+    150,
+    152,
+    152,
+    152,
+    152,
+    154,
+    153,
+    153,
+    153,
+    139,
+    139,
+    139,
+    138
+  ],
+  "total_bundle_bits": 2376,
+  "target_A_payload_state_bits": 11880,
+  "target_A_full_metadata_state": "UNDEFINED UNTIL INDEPENDENT RTL/SAFETY QUALIFICATION; payload count is not total",
+  "concrete_B_FIRST1_state_upper_bits": 23252,
+  "concrete_B_FIRST0_state_upper_bits": 23220,
+  "concrete_B_ICG_latches_FIRST1": 144,
+  "concrete_B_local_SRAM_macro_area_um2": 0,
+  "B_W180_measured_mapped_state_bits": 1746,
+  "B_W180_measured_area_um2": 616.2237,
+  "B_W180_measured_area_source": "SAFE-QW-LAND 62708ac8f W180; ff0368257 reset fix rebench live; smaller widths unmeasured",
+  "B_added_P_R_macros": 4,
+  "B_added_P_R_storage_bits": 69888,
+  "B_added_P_R_macro_area_um2": 57596.832,
+  "note": "A targets four crossings x2 added edges; B models x3 final-capture increments. Neither is an observed integrated calendar; root phase, startup, first operation and steady workloads require proof.",
+  "core_cmd_free_boundary": {
+    "status": "MODEL_ONLY_NO_LIVE_SOURCE_RETIMING",
+    "source_owner": "ot_coll_tp8_static cmd_free_next via qfd_io_collective_static",
+    "consumers": "ot_coll_cmd_issue -> ot_qwen_fixed_issue available/end_ok; qfd_seq_su_collective_calendar wraps same issuer",
+    "use": "Compiled-cycle issue is unconditional; availability/end_ok only set sticky fault",
+    "existing_semantics": "combinational one-edge-next availability compensates existing command-pin capture",
+    "blind_capture": "INVALID: adds one status-age edge and can false-fault legal free transition",
+    "predictor_option": {
+      "capture_edges_added": 1,
+      "lookahead_transitions": 2,
+      "new_boundary_flops": 1,
+      "command_payload_cycles_added_if_proved": 0,
+      "mapped_area": "UNMEASURED",
+      "proof": "two-step state includes current pin-command and external command; actual root-age alignment required"
+    },
+    "delayed_diagnostic_option": {
+      "capture_edges_added": 1,
+      "diagnostic_edges_added": 1,
+      "command_payload_cycles_added": 0,
+      "completion_guard": "must include pending end/status fault",
+      "shared_issuer_source_change": "requires coordination; not implemented"
+    },
+    "clock_warning": "10190 soft sinks/large-outline advisory; actual TT/FF pin spread and linked references decide acceptance"
+  },
+  "core_fault_boundary": {
+    "status": "MODEL_ONLY_NO_LIVE_RETIMING",
+    "current": "five sticky fault_code flops; combinational fault reduction",
+    "boundary_depth": "shallow reduction, independent of six-level cmd_free",
+    "optional_capture_if_physical_reach_requires": {
+      "bundle_bits": 6,
+      "new_flops": 6,
+      "diagnostic_edges_added": 1,
+      "command_payload_cycles_added": 0,
+      "alignment": "capture fault and all5cause bits together",
+      "completion_guard": "wait last source fault plus all regional return and capture ages"
+    },
+    "regional_fault_age": "implementation must enumerate every TX/RX abort/cause/PHY loss source/destination age; not zero by assumption"
+  },
+  "shared_32x64_option": {
+    "status": "UNQUALIFIED_COMPOSITION_OPTION_ONLY",
+    "macro_source": "b65718325",
+    "geometry_source": "7549fae73",
+    "wrapper_source": "e0d4d194a",
+    "macro_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+    "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+    "model_sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "native_macro_shape_um": [
+      31.968,
+      17.28
+    ],
+    "native_macro_area_um2": 552.40704,
+    "native_pins_W": 103,
+    "native_pins_E": 102,
+    "native_pins_per_um_W": 5.960648148148148,
+    "native_pins_per_um_E": 5.902777777777778,
+    "banks_per_logical_546": 9,
+    "upper_padding_zero_mask_bits": 30,
+    "raw_area_per_logical_546_um2": 4971.6633600000005,
+    "B_logical_banks": 8,
+    "B_useful_widths": [
+      546,
+      546,
+      546,
+      546,
+      514,
+      514,
+      514,
+      514
+    ],
+    "B_native_banks": 72,
+    "B_useful_capacity_bits": 135680,
+    "B_native_capacity_bits": 147456,
+    "B_native_padding_capacity_bits": 11776,
+    "B_per_bank_padding_bits_P": 30,
+    "B_per_bank_padding_bits_R": 62,
+    "B_ninth_R_bank_observability": "rr_rd[513] dynamic xe_q feeds rf_e, out_err and f_ar; no dummy keep",
+    "width_aware_wrapper_source": "PENDING_FINAL_SEAM_SOURCE; e0d4d194a generic546alias currently implemented",
+    "B_total_raw_macro_area_um2": 39773.306880000004,
+    "group_reservation_shape_um": [
+      302.4,
+      172.8
+    ],
+    "B_gross_group_reservation_um2": 418037.76,
+    "current4groups_raw_area_um2": 19886.653440000002,
+    "B_added4groups_raw_area_um2": 19886.653440000002,
+    "B_added4groups_SRAM_bits": 73728,
+    "native_latency": "1 synchronous edge, true1R1W, read-before-write",
+    "composition_added_edges_analytical": 0,
+    "integrated_calendar_status": "LU65/LS390 unchanged by composition alone ONLY IF exact native latency/collision/phase witnesses pass",
+    "source_clock_contract": "Current wrapper scalar clk fans9 actual g_bank[0..8].u_m.clk sinks; no9clock vector override or proven regional interception",
+    "B_P_R_macro_clock_pin_references": 72,
+    "B_all_core_clock_pin_references": 86,
+    "B_logical_top_clock_ports_if_scalar_groups": 22,
+    "B_top_ports_if_independent_native_roots": 86,
+    "qualification": "Wrapper unit/fullwidth goldens, native72bank production, per-pin TT/FF clock arrivals, reset, PG/viaescape and GRT/DRC pin access all pending; old5widebank proof is unrelated",
+    "old_wide_shape_um": [
+      177.768,
+      81
+    ],
+    "old_wide_W_pins": 826,
+    "old_wide_E_pins": 825,
+    "old_wide_W_pins_per_um": 10.197530864197532,
+    "old_wide_E_pins_per_um": 10.185185185185185,
+    "old_wide_escape_status": "10.2pins/um raw-face density; independent escape proof pending"
+  }
+}

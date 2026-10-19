@@ -24,7 +24,8 @@
 // =====================================================================================================================
 module qfd_dv_slice #(
     parameter integer MUT = 0,
-    parameter integer SU_TLS = 1     // SU lanes' tapped line on their SRAM ring (qfd_dv_su8_entries TLS)
+    parameter integer SU_TLS = 1,    // SU lanes' tapped line on their SRAM ring (qfd_dv_su8_entries TLS)
+    parameter integer HD_W130 = 0    // S-QSLICE 10-18 (opt-in, heads bench): qfd_dv_heads LEAF_W130
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -219,7 +220,7 @@ module qfd_dv_slice #(
     reg  [64*32-1:0] xt_f;                       // stream BF16 -> the 64-lane write {bf16, 16'h0}
     always @(*) for (l = 0; l < 64; l = l + 1) xt_f[32*l +: 32] = {xt_d[16*l +: 16] ^ ((MUT == 9) ? 16'd1 : 16'd0), 16'h0000};
     wire hd_fault;
-    qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(rst), .sid(sid_q), .xpf(hr_q[71:0]), .gi({hr_q[450:72], hr_q[451]}),
+    qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0), .LEAF_W130(HD_W130)) u_hd (.ck(ck), .rst_n(rst), .sid(sid_q), .xpf(hr_q[71:0]), .gi({hr_q[450:72], hr_q[451]}),
         .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f), .fe_i(xt_bad),
         .n_d(n_d), .s_d(s_d), .fault(hd_fault));
     // ------------------------------------------------------------------ VM write merge (16-el and 1-el sources)

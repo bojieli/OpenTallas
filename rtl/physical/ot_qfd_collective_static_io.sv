@@ -10,7 +10,7 @@ module qfd_collective_static_io #(
  // kits use TOK_REG=1; latency-neutral by construction); LX0..2 = die-level PHY-side lane cycles on SerDes face j that
  // the rx calendar must absorb (forwarded lanes + landing between io_collective and io_serdes_j: E_tx(peer port) +
  // E_rx(own port) from the die GEN fwd_lanes.json); the face then expects the peer frame at PHY = PS + LXj.
- parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0
+ parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0,SAFE=0
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -211,13 +211,65 @@ module qfd_collective_static_io #(
  end else assign pr=phy_rx[f*597+:PW];
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
- qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG))u_face(
+`ifdef OT_QFD_SAFE_FACE_HARD
+ // Fixed source-bound profiles. A different calendar needs regenerated views.
+ initial if(!SAFE || TOK_REG!=1 || LU!=53 || LS!=378 || PU!=20 || PS!=339 ||
+            RU!=5 || RS0!=0 || RS1!=0 || RS2!=5 || LX0!=11 || LX1!=0 || LX2!=10)
+   $error("SAFE hard faces require the exact dv2f18dh2 calendar profile");
+ if(f==0)begin:g_safe_p
+ qfd_coll_face_p_safe u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec0(face_ck[f*11+6]),.codec1(face_ck[f*11+7]),.codec2(face_ck[f*11+8]),.codec3(face_ck[f*11+9]),.codec4(face_ck[f*11+10]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end
+ if(f==1)begin:g_safe_r
+ qfd_coll_face_r_safe u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec0(face_ck[f*11+6]),.codec1(face_ck[f*11+7]),.codec2(face_ck[f*11+8]),.codec3(face_ck[f*11+9]),.codec4(face_ck[f*11+10]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end
+ if(f==2)begin:g_safe_s0
+ qfd_coll_face_s0_safe u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec0(face_ck[f*11+6]),.codec1(face_ck[f*11+7]),.codec2(face_ck[f*11+8]),.codec3(face_ck[f*11+9]),.codec4(face_ck[f*11+10]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end
+ if(f==3)begin:g_safe_s1
+ qfd_coll_face_s1_safe u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec0(face_ck[f*11+6]),.codec1(face_ck[f*11+7]),.codec2(face_ck[f*11+8]),.codec3(face_ck[f*11+9]),.codec4(face_ck[f*11+10]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end
+ if(f==4)begin:g_safe_s2
+ qfd_coll_face_s2_safe u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec0(face_ck[f*11+6]),.codec1(face_ck[f*11+7]),.codec2(face_ck[f*11+8]),.codec3(face_ck[f*11+9]),.codec4(face_ck[f*11+10]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end
+`else
+ qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG),.SAFE(SAFE))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
  .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
  .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
  .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
  .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+`endif
  end endgenerate
  // The fixed die-name collective LU/LS defines and this parent must agree.
  initial if(SIX_FIVE && (PU!=20 || !SHARED_UCIE))$error("six_five (r10 200MHz block stage) requires the actual 20-core-edge registered-pin PHY calendar and the single 1043 boundary");

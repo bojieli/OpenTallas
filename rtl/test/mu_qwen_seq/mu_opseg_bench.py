@@ -36,6 +36,8 @@ Checks (PASS needs all; positive cases):
      the AMAX emit of the same token-start segment.  The result reaches ss5 (the ctlm ss_q capture edge) at the RTL-derived
      edge mu_opcal.RES_SSQ after the emit's issue edge (W5 cmd_q, root merge + TOK to W5, slice st, ctlm pin register),
      and tok_b is written mu_opcal.BANK_WR later (exact model; no ambiguity margin).
+  C8 (MU-DQ-D2DUSER) native_pos[17:16] = the user of the latest head start on every edge (the D2D user carrier to
+     native59), every filler's starts carried; 0 on every edge of the NU 1 reference;
 Bench witnesses (mut 0 RTL, compiled-model mutants; each must FAIL C7): --emb-t 16 (the pre-fix image: EMB at T = 16,
 compiler assertion bypassed), --res-skew 1 (the result one edge later than derived: the EMB at EMB_T is exactly the first
 edge that sees it).
@@ -43,7 +45,7 @@ Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
 check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
-(neg_ctx).
+(neg_ctx), 32 head-start user not carried on native_pos[17:16] (C8, red).
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -97,10 +99,13 @@ def run(work, exe, name, events, ncyc, romdir):
     if r.returncode != 0: sys.exit(f'RUN FAILED {name}: {r.stdout[-2000:]} {r.stderr[-2000:]}')
     out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf')}
     out['end'] = None
+    out['ctxu'] = None
     for ln in lg.read_text().split('\n'):
         p = ln.split()
         if not p: continue
         c, k = int(p[0]), p[1]
+        if k == 'CTXU_ERR': continue
+        if k == 'CTXU': out['ctxu'] = tuple(int(x) for x in p[2:6]); continue
         if k == 'CMD': out['cmd'].append((c, int(p[2]), int(p[3], 16)))
         elif k == 'EMB': out['emb'].append((c, int(p[2]), int(p[3], 16)))
         elif k == 'SEG': out['seg'].append((c, int(p[2]), int(p[3], 16), int(p[4], 16), int(p[5], 16)))
@@ -285,6 +290,12 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         return v
     bad = [(c, u, cst_at(c + 1), stage_of(u, c)) for c, u, b, t, p in g_seg if cst_at(c + 1) != stage_of(u, c)]
     if bad: fails.append(f'{name} C6 head running stage wrong at {len(bad)} ME starts, e.g. {bad[:3]}')
+    # C8 (MU-DQ-D2DUSER): native_pos[17:16] carries the head-start user on every edge (0 in the NU 1 reference), and every
+    # filler's starts were carried
+    for n, r, need in (('solo', sol, False), ('mu', mu, True)):
+        cu = r['ctxu']
+        if cu is None or cu[0] != 0 or (need and min(cu[1:]) == 0):
+            fails.append(f'{name} C8 {n} native_pos user carrier: (bad, starts u1, u2, u3) = {cu}')
     # measured rates (token-start segment starts of each user in the last full frame inside the run)
     meas = {}
     if nfr >= 2 and S0 + 2 * H + K < end_cut:
@@ -295,7 +306,7 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
     summ[name] = dict(H=H, T=cal['T'], ncyc=ncyc, K=K, C=C, starts=len(st_got), starts_per_user={u: sum(1 for x in st_got if x[1] == u) for u in range(NU)},
                       fires=len(g_cmd), fires_per_user={u: sum(1 for x in g_cmd if x[1] == u) for u in range(NU)},
                       emb=len(g_emb), seg=len(g_seg), c7_filler_emb=len(g7), c7_bad=len(bad7), c7_user0=c7_u0,
-                      emb_t=seg0, res_lat=RES_LAT + RES_SKEW, leaf_entries=len(L), head_identity_window=[S0, hcut],
+                      emb_t=seg0, c8_ctxu_mu=mu['ctxu'], res_lat=RES_LAT + RES_SKEW, leaf_entries=len(L), head_identity_window=[S0, hcut],
                       measured_frame1=meas, compiled=[dict(user=x['user'], tokens_per_frame=x['tokens_per_frame'], tok_s=round(x['tok_s'], 1)) for x in cal['users']])
 
 

@@ -1,0 +1,15 @@
+[near] XT1 PASS mode=nominal lead=8 gap=4 exact 64/64 {"qkv": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 237, "last_final": 244, "round_period": null, "exact": "8/8"}, "o": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 189, "last_final": 228, "round_period": [16, 16], "exact": "24/24"}, "gu": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 429, "last_final": 436, "round_period": null, "exact": "8/8"}, "down": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 221, "last_final": 324, "round_period": [48, 48], "exact": "24/24"}}
+[far] XT1 FAIL mode=nominal lead=8 gap=4 exact 0/64 {"qkv": {"d_head": 16, "d_clu": 220, "first_rs": 236, "first_final": 292, "last_final": 299, "round_period": null, "exact": "0/8"}, "o": {"d_head": 16, "d_clu": 220, "first_rs": 236, "first_final": 244, "last_final": 283, "round_period": [16, 16], "exact": "0/24"}, "gu": {"d_head": 16, "d_clu": 220, "first_rs": 236, "first_final": 484, "last_final": 491, "round_period": null, "exact": "0/8"}, "down": {"d_head": 16, "d_clu": 220, "first_rs": 236, "first_final": 276, "last_final": 379, "round_period": [48, 48], "exact": "0/24"}}
+  ERR qkv word 0 (round 0 block 0 j 0) at 427: fault 0 data mismatch
+  ERR qkv word 1 (round 0 block 0 j 1) at 428: fault 0 data mismatch
+  ERR qkv word 2 (round 0 block 0 j 2) at 429: fault 0 data mismatch
+  ERR qkv word 3 (round 0 block 0 j 3) at 430: fault 0 data mismatch
+  ERR qkv word 4 (round 0 block 0 j 4) at 431: fault 0 data mismatch
+  ERR qkv word 5 (round 0 block 0 j 5) at 432: fault 0 data mismatch
+  ERR qkv word 6 (round 0 block 0 j 6) at 433: fault 0 data mismatch
+  ERR qkv word 7 (round 0 block 0 j 7) at 434: fault 0 data mismatch
+  ERR o word 0 (round 0 block 0 j 0) at 1924: fault 0 data mismatch
+  ERR o word 1 (round 0 block 0 j 1) at 1925: fault 0 data mismatch
+  ERR o word 2 (round 0 block 0 j 2) at 1926: fault 0 data mismatch
+  ERR o word 3 (round 0 block 0 j 3) at 1927: fault 0 data mismatch
+RESULT XT1N FAIL mode=nominal near=64/64 far=0/64

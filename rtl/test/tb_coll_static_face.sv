@@ -18,7 +18,7 @@
 // ---------------------------------------------------------------------------
 module tb_coll_static_face #(
     parameter integer FW = 546, PHY = 339, L = 376, R = 0, PEER_R = 0,
-    parameter integer XS = 0, PHI = 0, NW = 240, START = 80, TOK_REG = 1
+    parameter integer XS = 0, PHI = 0, NW = 240, START = 80, TOK_REG = 1, SAFE = 0
 ) ();
     localparam integer PW = FW + 51;
     localparam real T = 0.8333333;
@@ -84,7 +84,7 @@ module tb_coll_static_face #(
     wire [1:0] ptslot, prslot;
     genvar f;
     generate for (f = 0; f < 2; f = f + 1) begin : g_face
-        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG)) u_face (
+        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG), .SAFE(SAFE)) u_face (
             .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
             .codec_ck({5{lck}}), .rst_n(rst_n),
             .tx_slot(send[f]), .peer_slot(send[1 - f]), .tx_valid(send[f]), .tx_data(f == 0 ? txd0 : txd1),

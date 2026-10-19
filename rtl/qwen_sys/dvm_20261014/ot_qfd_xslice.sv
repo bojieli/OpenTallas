@@ -288,6 +288,7 @@ endmodule
 //   r_p[i] (7 b) = {en, pos[5:0]}: element i of the line at slot position pos; a disabled element answers 0 (a pooled
 //   line is the OR of the two tiles' answers).  q_bad: an enabled element was not written in this epoch.
 // --------------------------------------------------------------------------------------------------------------------
+`ifndef OT_DV_HEADS_HARD   // S-QSLICE 10-18: heads cluster build: the leaf is a hard child (LEF / LIB), not RTL
 module ot_qfd_xs_leaf #(
     parameter integer EXTERNAL_WD_CAPTURE = 0, // opt-in: WD already captured by actual external512b masters
     parameter integer FILL_PIPE = 0,     // opt-in: separate input/output fill registers (+1 edge per leaf hop)
@@ -534,6 +535,7 @@ module ot_qfd_xs_leaf #(
         end
     always @(posedge clk) q <= {l3, asm_d[ft]};
 endmodule
+`endif
 
 
 

@@ -62,19 +62,22 @@
      "bus": "d2d_rom.native_tx_slot -> native59.tx_slot",
      "stages": 1,
      "age": 2,
-     "width": 1
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_tx_slot_kind -> native59.tx_slot_kind",
      "stages": 1,
      "age": 2,
-     "width": 4
+     "width": 4,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_tx_slot_beat -> native59.tx_slot_beat",
      "stages": 1,
      "age": 2,
-     "width": 5
+     "width": 5,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
@@ -168,25 +171,45 @@
      "bus": "native59.x3 -> d2d_rom.x3",
      "stages": 2,
      "age": 2,
-     "width": 524
+     "width": 524,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "native59.x3_identity -> d2d_rom.x3_identity",
      "stages": 2,
      "age": 2,
-     "width": 59
+     "width": 59,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "native59.x3_generation -> d2d_rom.x3_generation",
      "stages": 2,
      "age": 2,
-     "width": 2
+     "width": 2,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
    "consistent": true,
    "ages": [
     2
+   ]
+  },
+  "C.x3_slot": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "d2d_rom.kv_x3_slot -> native59.kv_x3_slot",
+     "stages": 3,
+     "age": 3,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 3,
+   "consistent": true,
+   "ages": [
+    3
    ]
   },
   "K.rx_record": {

@@ -1,0 +1,685 @@
+{
+  "schema": "opentallas.safe_collective.core_grid.v1",
+  "verdict": "PASS_GEOMETRY_ONLY",
+  "blocks": [
+    {
+      "inst": "*g_sring?0?*u_m",
+      "origin_um": [
+        259.2,
+        43.2
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 437,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_sring0",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        43.980000000000004
+      ],
+      "child_clock_um": [
+        259.212,
+        43.980000000000004
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*g_sring?1?*u_m",
+      "origin_um": [
+        259.2,
+        259.2
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          259200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 437,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_sring1",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        259.97999999999996
+      ],
+      "child_clock_um": [
+        259.212,
+        259.97999999999996
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*g_sring?2?*u_m",
+      "origin_um": [
+        259.2,
+        475.2
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          475200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 437,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_sring2",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        475.97999999999996
+      ],
+      "child_clock_um": [
+        259.212,
+        475.97999999999996
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*g_sring?3?*u_m",
+      "origin_um": [
+        259.2,
+        691.2
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          691200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 437,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_sring3",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        691.98
+      ],
+      "child_clock_um": [
+        259.212,
+        691.98
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*g_sring?4?*u_m",
+      "origin_um": [
+        259.2,
+        907.2
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          907200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 437,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_sring4",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        907.98
+      ],
+      "child_clock_um": [
+        259.212,
+        907.98
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*u_pring*g_b?0?*u_m",
+      "origin_um": [
+        259.2,
+        129.6
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          129600
+        ],
+        "layers": {
+          "M4": {
+            "pins": 1651,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pring0",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        130.38
+      ],
+      "child_clock_um": [
+        259.212,
+        130.38
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*u_pring*g_b?1?*u_m",
+      "origin_um": [
+        259.2,
+        345.6
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          345600
+        ],
+        "layers": {
+          "M4": {
+            "pins": 1651,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pring1",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        346.38
+      ],
+      "child_clock_um": [
+        259.212,
+        346.38
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*u_rring*g_b?0?*u_m",
+      "origin_um": [
+        259.2,
+        561.6
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          561600
+        ],
+        "layers": {
+          "M4": {
+            "pins": 1651,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_rring0",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        562.38
+      ],
+      "child_clock_um": [
+        259.212,
+        562.38
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*u_rring*g_b?1?*u_m",
+      "origin_um": [
+        259.2,
+        777.6
+      ],
+      "orient": "R0",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          259200,
+          777600
+        ],
+        "layers": {
+          "M4": {
+            "pins": 1651,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_rring1",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        778.38
+      ],
+      "child_clock_um": [
+        259.212,
+        778.38
+      ],
+      "raw_clock_manhattan_um": 259.212
+    },
+    {
+      "inst": "*g_xf?0?*u_fs",
+      "origin_um": [
+        43.2,
+        43.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_xfold0",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        224.64
+      ],
+      "child_clock_um": [
+        141.948,
+        224.598
+      ],
+      "raw_clock_manhattan_um": 141.98999999999998
+    },
+    {
+      "inst": "*g_xf?1?*u_fs",
+      "origin_um": [
+        43.2,
+        259.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          259200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_xfold1",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        440.64
+      ],
+      "child_clock_um": [
+        141.948,
+        440.59799999999996
+      ],
+      "raw_clock_manhattan_um": 141.99000000000004
+    },
+    {
+      "inst": "*g_xf?2?*u_fs",
+      "origin_um": [
+        43.2,
+        475.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          475200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_xfold2",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        656.64
+      ],
+      "child_clock_um": [
+        141.948,
+        656.598
+      ],
+      "raw_clock_manhattan_um": 141.99000000000004
+    },
+    {
+      "inst": "*g_xf?3?*u_fs",
+      "origin_um": [
+        43.2,
+        691.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          691200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_xfold3",
+      "side": "W",
+      "root_nominal_um": [
+        0,
+        872.6400000000001
+      ],
+      "child_clock_um": [
+        141.948,
+        872.5980000000001
+      ],
+      "raw_clock_manhattan_um": 141.99000000000004
+    },
+    {
+      "inst": "*g_pf?0?*u_fs",
+      "origin_um": [
+        475.2,
+        43.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          475200,
+          43200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pfold0",
+      "side": "E",
+      "root_nominal_um": [
+        734.4,
+        224.64
+      ],
+      "child_clock_um": [
+        573.948,
+        224.598
+      ],
+      "raw_clock_manhattan_um": 160.49399999999997
+    },
+    {
+      "inst": "*g_pf?1?*u_fs",
+      "origin_um": [
+        475.2,
+        259.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          475200,
+          259200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pfold1",
+      "side": "E",
+      "root_nominal_um": [
+        734.4,
+        440.64
+      ],
+      "child_clock_um": [
+        573.948,
+        440.59799999999996
+      ],
+      "raw_clock_manhattan_um": 160.49400000000003
+    },
+    {
+      "inst": "*g_pf?2?*u_fs",
+      "origin_um": [
+        475.2,
+        475.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          475200,
+          475200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pfold2",
+      "side": "E",
+      "root_nominal_um": [
+        734.4,
+        656.64
+      ],
+      "child_clock_um": [
+        573.948,
+        656.598
+      ],
+      "raw_clock_manhattan_um": 160.49400000000003
+    },
+    {
+      "inst": "*g_pf?3?*u_fs",
+      "origin_um": [
+        475.2,
+        691.2
+      ],
+      "orient": "R0",
+      "lef": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice.lef",
+      "lef_sha256": "c7b436e126ee9890dbcfeed2a894ecb9a32009d1c21119bd3156c294eeaee0b4",
+      "tracks": {
+        "orient": "R0",
+        "origin_nm": [
+          475200,
+          691200
+        ],
+        "layers": {
+          "M5": {
+            "pins": 2,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M4": {
+            "pins": 355,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M6": {
+            "pins": 288,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "root": "clk_pfold3",
+      "side": "E",
+      "root_nominal_um": [
+        734.4,
+        872.6400000000001
+      ],
+      "child_clock_um": [
+        573.948,
+        872.5980000000001
+      ],
+      "raw_clock_manhattan_um": 160.49400000000003
+    }
+  ],
+  "max_nominal_raw_clock_manhattan_um": 259.212,
+  "all_17_origins_on_43_2": true,
+  "all_17_orientations_R0": true,
+  "actual_pin_placement_route_native_clock_timing_qualification": "PENDING_GATE"
+}

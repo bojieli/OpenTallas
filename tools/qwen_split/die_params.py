@@ -21,9 +21,13 @@ elaboration until the compiler assigns the value from the die as built:
         fail closed (exit 1): (a) every die master whose RTL traps a sentinel-default parameter (a generate-if whose body
         raises $error / $fatal or instantiates a *NOT_COMPILED* / *__set_* trap module) must get that parameter from the
         sidecar, with a non-sentinel value; (b) XPF_TRANSPORT_EDGES == 1 + the hr lane cycles re-derived from die.v (+
-        fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero).
+        fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero); (e) MU-DQ-TXDP: TXDP == the compiler's TXD C
+        for THIS die's seam stages re-derived from die.v + fwd_lanes.json (record_bundles.seam_stages), and the image's
+        recorded compute die stages == those stages.
 """
+import os
 import argparse
+import ast
 import json
 import re
 import sys
@@ -36,8 +40,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import lane_groups as LG  # noqa: E402
 
 TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
+TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
+COLL_MASTER = 'qfd_collective_static_io_production'
 D2D_MASTER = 'qfd_d2d_static'
+DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
+DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
@@ -64,9 +72,15 @@ def xpf_transport_edges(hr_rows):
     rows = [dict(bid=bid, kind='direct' if r is None else ('fwd' if r.get('E') is not None else 'plain'),
                  n=None if r is None else r.get('n'), E=None if r is None else r.get('E'),
                  K=None if r is None else r.get('K'), lane_cycles=ages[bid]) for bid, r in hr_rows]
+    # Q-XPF 10-18: a land-plan lane (E_sta > 2) is reproduced by a netlist bench only with its lane timing
+    # (tools/qwen_split/land_lag_sim.py annotate: LAG = E_sta - 2); the zero-delay netlist aliases E by the ring depth
+    # D 4 when E_sta > 3 (dv2f14bi hr: E 18 reads as 14 -> XPF 20 measured as 16).  The value assigned is the plan's.
+    lag = {bid: max(0, int(r.get('E_sta') or 2) - 2) for bid, r in hr_rows if r is not None and r.get('E') is not None}
     return HR_PIN_REG + age, dict(XPF_TRANSPORT_EDGES=HR_PIN_REG + age, hr_pin_register=HR_PIN_REG, lane_cycles=age,
                                   buses=rows, rule='1 (hr pin register) + lane_groups.lane_cycles(hr bus): fwd E + 1, '
-                                                   'plain n, direct 0')
+                                                   'plain n, direct 0',
+                                  sim_lag=lag, bench_rule='measure with land_lag_sim.py annotate (LAG = E_sta - 2) + '
+                                  'xpf-check: 1 + measured == XPF; the zero-delay netlist aliases when E_sta > D - 1')
 
 
 def txdp_from_image(path=IMAGE):
@@ -86,11 +100,45 @@ def gen_params(insts, hr_rows, image=IMAGE):
     """the GEN's assignments: insts = [(name, master)] of the die model -> {master: {param: value, _source}}."""
     masters = {mst for _, mst in insts}
     out, rec = {}, {}
+    if COLL_MASTER in masters:
+        # SAFE-QW-COLL: physical faces use core pin registers. Their calendar
+        # compensates KC/L by one edge, so the published transport age is unchanged.
+        out[COLL_MASTER] = dict(TOK_REG=1, _source='SAFE-QW-COLL: registered face pins; KC/L compensated, no added cycle')
     if TT_MASTER in masters:
         T, r = xpf_transport_edges(hr_rows)
-        out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
-                              f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])})")
+        out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, STAGE_ME=TT_STAGE_ME,
+                              _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
+                              f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])}); "
+                              'Q-DIE14: STAGE_ME 1 = the QLB-PROG deployment image (one image runs every stage)')
         rec['xpf'] = r
+    # MU-DIE-QW 10-19 (owner 0kc: the release die is the multi-user die): OT_QWEN_MU_NU = users (2..4) elaborates the MU
+    # RTL on this die: tt_ctlm NU + OPSEG 1 (MU-QW-B1 option 2: in-cluster op-start leaf, calendar qfd_dv_cmd_cal_mu) and
+    # the slices' per-user LM-head argmax MU_NU (MU-ADOPT-SLICE; the slice2_e / slice2_wh kits are gated at MU_NU 4).
+    # Strides stay the RTL defaults = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE / DV_PIDX_STRIDE / UTAG_LSB.
+    nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
+    if nu > 1:
+        if not 2 <= nu <= 4:
+            raise ValueError(f'OT_QWEN_MU_NU {nu} outside 2..4')
+        src = f'MU-DIE-QW: OT_QWEN_MU_NU={nu} (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)'
+        if TT_MASTER in masters:
+            out[TT_MASTER].update(NU=nu, OPSEG=1)
+            out[TT_MASTER]['_source'] += '; ' + src
+        for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e'):
+            if sm in masters:
+                out[sm] = dict(MU_NU=nu, _source=src)
+        rec['mu'] = dict(nu=nu, opseg=1)
+        if 'qfd_sys_face' in masters:
+            # MU-DQ-SYSFACE (COORD 0kg (a)): qfd_sys_face #(MU 1) = MU d2d image (ot_qwen_d2d_cal_seq_dies_mu.sv) + filler
+            # head contexts accepted by user on tt_native_pos[17:16]; the die stand-in view stays the MU 0 rs3 view until mu1 closes
+            out['qfd_sys_face'] = dict(MU=1, _source='MU-DQ-SYSFACE 57d2bf14c: MU d2d image + filler head contexts '
+                                       '(view of record pending mu1 re-close: STAND-IN)')
+            rec['mu']['sys_face_mu'] = 1
+        if DHOBS_MASTER in masters:
+            # NU from the die; the compiled lists are the RTL defaults (384-b / 128-b vectors: no sidecar literal), checked
+            # against mu_opcal.dhobs_lists by audit (e)
+            out[DHOBS_MASTER] = dict(NU=nu, _source='MU-DQ-DHUSER (COORD 0kg): tt_ctlm.dh_user observer, OPSEG 0; NS / '
+                                     'USER_SEQ / STG_SEQ / RES_SEQ = RTL defaults = mu_opcal.dhobs_lists(compile_frame(16))')
+            rec['dhobs'] = dict(nu=nu)
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
@@ -99,6 +147,16 @@ def gen_params(insts, hr_rows, image=IMAGE):
 
 
 # ------------------------------------------------------------------------------------------------------------ RTL traps
+def dhobs_check(mod, frame=16):
+    """(e) the observer's RTL default lists == the compiled 4-user calendar's (mu_opcal.dhobs_lists): a drift between the
+    face's T image and the observer's list would raise mu_fault on the die.  -> list of failures."""
+    from qwen_static_schedule import mu_opcal as O
+    want = O.dhobs_lists(O.compile_frame(frame))
+    env = mod.env()
+    return [f'{DHOBS_MASTER}.{k} = {env.get(k)!r} (RTL default) != {want[k]:#x} compiled (mu_opcal.dhobs_lists F{frame})'
+            for k in DHOBS_LISTS if env.get(k) != want[k]]
+
+
 def trapped_params(mod):
     """sentinel-default parameters a module traps on: identifiers of a generate-if condition whose body raises."""
     import die_port_bind as DPB
@@ -144,6 +202,12 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
+        if mst == COLL_MASTER and prm.get(mst, {}).get('TOK_REG') != 1:
+            fails.append(f'{COLL_MASTER}.TOK_REG must be 1 (registered physical face pins)')
+        if mst == DHOBS_MASTER:
+            fails += dhobs_check(mods[mst])
+            if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):
+                fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
         tp = trapped_params(mods[mst])
         if not tp:
             continue
@@ -195,6 +259,10 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         if T is not None and got is not None and int(got) != T:
             fails.append(f'{TT_MASTER}.XPF_TRANSPORT_EDGES {got} != {T} re-derived from die.v (1 hr reg + lane cycles '
                          f'{xr["lane_cycles"]})')
+    # (b2) Q-DIE14: tt_ctlm runs the QLB-PROG deployment image (ctlm_image.py) -> STAGE_ME must be 1 (as built 0 starts
+    # the layer programme in stage 0 and faults 'start while active' in stage 1)
+    if tt and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
+        fails.append(f'{TT_MASTER}.STAGE_ME = {prm.get(TT_MASTER, {}).get("STAGE_ME")} (the deployment image needs {TT_STAGE_ME})')
     # (c) TXDP == the committed production image
     tr = None
     if any(mst == D2D_MASTER for mst, _ in ins.values()):
@@ -205,6 +273,38 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                 fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != image D2D_TXDP_C {v:#010x}')
         except ValueError as e:
             fails.append(str(e))
+    # (e) MU-DQ-TXDP 10-19 (COORD 0ki): TXDP against THIS die's seam as built.  The compute seam stages are re-derived
+    # from die.v + fwd_lanes.json (record_bundles.seam_stages: tx_slot / rx_record / kv_x3_slot / tx_record / x3_record
+    # lane cycles); the compiler's TXD C (d2d_link_calendar.producer_txd + PINREG_EXT) for those stages must equal the
+    # bound TXDP, and the image must have been compiled for those stages (its RX calendar depends on them).  dv2f18mu
+    # landed kv_x3_slot at E 2 (3 cycles) and bound the CS_X3S 2 image's 0x09010308: the seam co-sim faulted (KVN abort).
+    if tr is not None:
+        import record_bundles as RB
+        import d2d_link_calendar as DLC
+        st, srec, sprob = RB.seam_stages(die_v, lanes)
+        tr['seam'] = srec
+        if sprob:
+            fails.extend(f'TXDP seam: {x}' for x in sprob)
+        else:
+            want = seam_txd_c(st)
+            wv = DLC.txdp_word(want)
+            tr.update(seam_txd_c=want, seam_txdp=wv, seam_stages=RB.seam_stages_str(st))
+            got = prm.get(D2D_MASTER, {}).get('TXDP')
+            if got is not None and int(got) != wv:
+                fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != {wv:#010x} = TXD C {want} compiled for THIS die\'s '
+                             f'seam (stages {RB.seam_stages_str(st)}): recompile the pair image with D2D_DIE_STAGES='
+                             f'{RB.seam_stages_str(st)}/<KV seam> tools/qwen_split/d2d_cal_image_production.sh and re-GEN')
+            img = tr.get('die_stages')
+            try:
+                ist = ast.literal_eval(img) if img else None
+            except (ValueError, SyntaxError):
+                ist = None
+            if not isinstance(ist, dict):
+                fails.append(f'TXDP seam: image {tr["image"]} records no die stages (cannot prove it was compiled for this seam)')
+            else:
+                bad = {k: (ist.get(k), v) for k, v in st.items() if ist.get(k) != v}
+                if bad:
+                    fails.append(f'image {tr["image"]} compiled for another compute seam: (image, die) {bad}')
     # (d) the layer compiler's TXD for THIS die (tools/qwen_layerbench/layer_compile.py manifest on this die's table):
     # the image's die stages must be this die's seam ages, else the D2D calendar is compiled for another die
     if compiled and tr is not None:

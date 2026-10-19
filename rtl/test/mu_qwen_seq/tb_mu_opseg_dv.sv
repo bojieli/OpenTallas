@@ -31,6 +31,9 @@ module tb_mu_opseg_dv;
     integer fd, lg, cyc, ncyc, ec, ek, r, pre = 0;
     reg [186:0] ev; reg have; reg [1023:0] evf, lgf; reg flt_l = 0; reg [23:0] sua_l = 0; reg [5:0] cst_l = 0;
     reg [55:0] dc_l = 0; reg opf_l = 0; reg [3:0] lfc_l = 0; reg [1:0] eu_l = 0, su_l = 0;
+    // MU-DQ-D2DUSER C8: native_pos[17:16] = the user of the latest head start (0 on a face ME start, the calendar's
+    // cmd_user on a LOCAL SEG start), derived here from the logged starts, not from the dut's register
+    reg sg_l = 0; reg [1:0] xu_l = 0; integer cu_bad = 0, cu_n1 = 0, cu_n2 = 0, cu_n3 = 0;
     initial begin
         if (!$value$plusargs("EV=%s", evf)) $fatal(1, "+EV");
         if (!$value$plusargs("LOG=%s", lgf)) $fatal(1, "+LOG");
@@ -53,6 +56,15 @@ module tb_mu_opseg_dv;
                                        dut.l_first, dut.l_cnt);
             if (dut.u_cal.fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, dut.u_cal.fault_code);
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
+            if (dut.st_h) begin
+                xu_l = sg_l ? su_l : 2'd0;
+                if (xu_l == 2'd1) cu_n1 = cu_n1 + 1; if (xu_l == 2'd2) cu_n2 = cu_n2 + 1; if (xu_l == 2'd3) cu_n3 = cu_n3 + 1;
+            end
+            if (nps[17:16] !== ((NU > 1) ? xu_l : 2'd0)) begin
+                cu_bad = cu_bad + 1;
+                if (cu_bad <= 3) $fdisplay(lg, "%0d CTXU_ERR carried %0d want %0d", cyc, nps[17:16], xu_l);
+            end
+            sg_l = dut.c_seg;
             cst_l = cst; dc_l = dc; opf_l = dut.op_fault; lfc_l = dut.l_fcode;
             flt_l = dut.u_cal.fault; sua_l = dut.su_acc; hd_l = hd;
             // the user of a LOCAL EMB / SEG entry: the calendar's cmd_user on the edge it issued (c_emb / c_seg), one edge
@@ -74,6 +86,7 @@ module tb_mu_opseg_dv;
             if (have && ec <= cyc) $fatal(1, "event file not sorted at cycle %0d", ec);
             cyc = cyc + 1;
             if (cyc >= ncyc) begin
+                $fdisplay(lg, "%0d CTXU %0d %0d %0d %0d", cyc, cu_bad, cu_n1, cu_n2, cu_n3);
                 $fdisplay(lg, "%0d END %0d %b %0d %0d %b", cyc, dut.u_cal.fault, dut.u_cal.fault_code, dut.start_fault,
                           dut.op_fault, dut.l_fcode);
                 $fclose(lg);

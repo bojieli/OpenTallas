@@ -8,7 +8,7 @@
 // Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
 // CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
 module ot_qwen_static_slot_ctl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0
 )(
     input wire clk,
     input wire rst_n, epoch_begin,
@@ -30,7 +30,7 @@ module ot_qwen_static_slot_ctl #(
     output reg epoch_abort,
     output reg [7:0] fault_cause
 );
-    reg [63:0] written;
+    wire [63:0] written;
     reg v1,v2,v3,v4,cmd_wv;
     reg cmd_ov;
     reg [5:0] cmd_ws;
@@ -57,7 +57,24 @@ module ot_qwen_static_slot_ctl #(
     wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
         (written[cmd_ws] && !(v1 && s1==cmd_ws)));
     wire unread_slot=v1 && !written[s1] && !(cmd_wv && cmd_ws==s1);
-    wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,v3 && !p_tx_up,
+    wire phy_fault;
+    if(SAFE)begin:g_phy_pin
+        reg up_q;
+        reg launched_q;
+        always @(posedge clk)up_q<=p_tx_up;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)launched_q<=0;else launched_q<=v3 && !epoch_abort && !epoch_begin;
+        // Sample PHY-up at the actual TX launch edge, then report the loss
+        // one edge later. This is diagnostic latency, never an issue gate.
+`ifdef OT_COLL_MUT_PHY_DROP
+        assign phy_fault=1'b0;
+`else
+        assign phy_fault=launched_q && !up_q;
+`endif
+    end else begin:g_phy_direct
+        assign phy_fault=v3 && !p_tx_up;
+    end
+    wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,phy_fault,
                           rv && !ev,ev && !rv,slot_bad,crc_bad};
     // Payload registers have no reset/epoch enable. Validity controls their
     // observation; clocked pin registers stay real while reset fanout is small.
@@ -68,22 +85,25 @@ module ot_qwen_static_slot_ctl #(
         p_tx_flit<={tx_crc,body};
         rx_flit<=rf[FW-1:0];
     end
+    if(!SAFE)begin:g_original_control
+    reg[63:0]written_q;
+    assign written=written_q;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
-            written<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;s1<=0;s2<=0;s3<=0;s4<=0;e1<=0;e2<=0;e3<=0;
+            written_q<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;s1<=0;s2<=0;s3<=0;s4<=0;e1<=0;e2<=0;e3<=0;
             rv<=0;ev<=0;es<=0;re<=0;
             p_tx_v<=0;rx_v<=0;
             epoch_abort<=0;fault_cause<=0;
         end else if(epoch_begin)begin
-            written<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+            written_q<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
             p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
         end else begin
             cmd_wv<=wr_v && !epoch_abort;
-            if(cmd_wv && !epoch_abort)written[cmd_ws]<=1'b1;
+            if(cmd_wv && !epoch_abort)written_q[cmd_ws]<=1'b1;
             // Every compiled read consumes exactly one publication, including
             // a concurrent write/read of an empty slot. A later lap requires
             // another write; stale contents with a good CRC cannot qualify.
-            if(v1 && !epoch_abort)written[s1]<=1'b0;
+            if(v1 && !epoch_abort)written_q[s1]<=1'b0;
             v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
             s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
             // Always issue at the compiled edge. PHY-up is a fault observation.
@@ -96,6 +116,46 @@ module ot_qwen_static_slot_ctl #(
             if(!epoch_abort)begin
                 fault_cause<=fault_cause|new_fault;
                 if(|new_fault)epoch_abort<=1'b1;
+            end
+        end
+    end
+    end else begin:g_safe_control
+        wire [8:0] rs;
+        ot_qwen_slot_reset_copies #(.COPIES(9))u_reset(.clk(clk),.rst_n(rst_n),.released(rs));
+        // Validity owns observation. Metadata has no reset or long reset net.
+        always @(posedge clk)begin
+            s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
+            es<=rx_expect_slot;re<=epoch;
+        end
+        for(genvar b=0;b<8;b=b+1)begin:g_written
+            reg[7:0]written_q;
+            assign written[b*8+:8]=written_q;
+            always @(posedge clk or negedge rs[b])begin
+                if(!rs[b])written_q<=0;
+                else if(epoch_begin)written_q<=0;
+                else begin
+                    if(cmd_wv && !epoch_abort && cmd_ws[5:3]==b)written_q[cmd_ws[2:0]]<=1'b1;
+                    if(v1 && !epoch_abort && s1[5:3]==b)written_q[s1[2:0]]<=1'b0;
+                end
+            end
+        end
+        always @(posedge clk or negedge rs[8])begin
+            if(!rs[8])begin
+                cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+                p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+            end else if(epoch_begin)begin
+                cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+                p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+            end else begin
+                cmd_wv<=wr_v && !epoch_abort;
+                v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
+                p_tx_v<=v3 && !epoch_abort;
+                rv<=p_rx_v;ev<=rx_expect_v;
+                rx_v<=ev && rv && !slot_bad && !crc_bad && !epoch_abort;
+                if(!epoch_abort)begin
+                    fault_cause<=fault_cause|new_fault;
+                    if(|new_fault)epoch_abort<=1'b1;
+                end
             end
         end
     end
@@ -112,7 +172,7 @@ endmodule
 // Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
 // CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
 module ot_qwen_static_slot_link #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0
 )(
     input wire [4:0] ck,
     input wire rst_n, epoch_begin,
@@ -150,7 +210,19 @@ module ot_qwen_static_slot_link #(
             .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
             .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
     end
-    ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW)) u_ctl (
+    ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW),.SAFE(SAFE)) u_ctl (
         .clk(ck[0]),.q_data(rd[FW-1:0]),
         .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch), .wr_v(wr_v), .wr_observed_v(wr_observed_v), .wr_slot(wr_slot), .rd_v(rd_v), .rd_slot(rd_slot), .rx_expect_v(rx_expect_v), .rx_expect_slot(rx_expect_slot), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .epoch_abort(epoch_abort), .fault_cause(fault_cause));
+endmodule
+
+// Same two-edge release depth as ot_reset_sync, with kept local copies.
+module ot_qwen_slot_reset_copies #(parameter integer COPIES=1)(
+    input wire clk,rst_n,output wire[COPIES-1:0]released
+);
+    for(genvar k=0;k<COPIES;k=k+1)begin:g_copy
+        (* async_reg="true", keep="true", dont_touch="true" *)reg[1:0]reset_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)reset_q<=0;else reset_q<={reset_q[0],1'b1};
+        assign released[k]=reset_q[1];
+    end
 endmodule
