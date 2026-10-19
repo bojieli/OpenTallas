@@ -1,5 +1,5 @@
 {
-  "schema": "opentallas.int8.cts_exact_kit.v4",
+  "schema": "opentallas.int8.cts_exact_kit.v5",
   "source_commit": "da40a2a46037798be54f7a3bc70a52dc430798af",
   "placement_commit": "121b7ec9a243affe1bcaa04ae87aa5899f5c53c7",
   "pg_packet_commit": "a92a40171",
@@ -11,23 +11,23 @@
     "input/netlist.v": "ab5ee0ce1cbef6b233dbab2974585301b625a60d41f8bf96c5ed2c409ce55eed",
     "input/die_constant_cells.tcl": "9d1cd491b0cb3f1d37ed91b3ff985e02ab905bef686faefe661a6e6ba709bcde",
     "input/pdn.tcl": "dda37066c5cfd4a4031bce7a2b8e3972308035b5b7b161e1716beab7a41c4011",
-    "kit/check_results.py": "be182ed2f2e7f5989634438c0d900a05c495b7bf638359977403d753b5e64fdb",
+    "kit/check_results.py": "47e4c3f00be4fcee4448991a3236be6d25a9dd1be4550c41aab4bd5450c8b67f",
     "kit/constraints.sdc": "d192a6f102eca63267c43cc42a07fc89e4db9fe9592502180002f9687e77e53e",
-    "kit/cts_only.tcl": "d2548e259edcea813734f013db2b0bfc53e1dd06ffc8caddbaf18d40dd1b7eeb",
+    "kit/cts_only.tcl": "fedc6b9fdd580d31ea2d7f40a0af5894938faa55678092b14a50071c4082b120",
     "kit/dft/__init__.py": "fe1151f8253ee95b4a5ecd66d61b001e25ac8121d82ef94f52c49cf110523204",
     "kit/dft/liberty.py": "debb83069aa0b0461e326e20ad191c3bbd432615829357e94fb8d5227f9a5c99",
     "kit/export_metal.py": "ce9a675284f3c08863ad63ff8a2512857f43d1fa3f713143ccdc6437acb990e8",
     "kit/export_raw.py": "31b5bb6e2a2781bf9649bce8c88f938b7af3bb838b7571a7a09f16c0113417f3",
-    "kit/ff_replay.tcl": "295ca31029f483ef2f3ec0c2607aaf78fd16069e7baf3e650a7957872f78a3a7",
+    "kit/ff_replay.tcl": "4cf49a81f0ac953d22f36c339f1993b5be813f76a1d46a6751b31a738cfae6a7",
     "kit/lib_SHA256SUMS": "6e5afb1a8e1246588bd38d36e70424766b754c5f5c670dfa9a17794db03398d4",
     "kit/libs_FF.tcl": "ec1dfb0ab701e360b30065307ed7227ef3bc6b02976c975e5bc851ef5a467eab",
     "kit/libs_TT.tcl": "831ef51009c4a93e24d19de90d453d3c0782ed20ddcb05e4cbeedb1f5feb173f",
     "kit/pg_test_receipt.json": "160fbdb95f6c8c07ab0eff1911f37f56deab5426b79ecf4f9c82cf45340a9eba",
     "kit/platform_SHA256SUMS": "7a6a0b430afebfb8796df0b0707b96d9754c1ce93a02322f3b5db4c9cced3944",
     "kit/prove_metal_readonly.py": "416b0d80e9726dde3dabd51c471f466488578395891929df333661f6fa577f34",
-    "kit/report_timing.tcl": "5c4ff210584a5ce6f82462cfcd57acee350f9ab997ce9079ad8aa34aba748ad2",
-    "kit/run.sh": "f6dd91c0de6dbcd2e8a11b5b6568f0c5d61c3e665b190f7b48148b3f1193c279",
-    "kit/validate_inputs.py": "e5ed7ef6ca1cb7960f1ec6cc7f5e5be0112cf11f9ffaaeb4c169f8e72f2b7c72",
+    "kit/report_timing.tcl": "fcbaa1f9839f68efb22bdc1330c46b6a019f2702debd7b7dc25a03d3b6aaf8b6",
+    "kit/run.sh": "3257bd39248a72be7574d80e5dfe4300c03e1fb7cf5afdd5aea150e43f6d723a",
+    "kit/validate_inputs.py": "cbca525596e294840319332a07486c49cb3947f999e8cda1e5b3a34ed8e7c85f",
     "kit/vendor/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
     "kit/vendor/clone_export.py": "1d90a47180b4c08610263192a9a321f489271642ecb720c24f6fc726e63ec980",
     "kit/vendor/export_clone_raw.py": "dd185c2afaba1d70795723489c1a15a92630801306e541077a3924e409dcbed3",
@@ -55,7 +55,14 @@
     "kit/pg_audit.original.log": "14986f8b11224bb19cbe5c4ce1e69076c577efa4dfb337e5fcfd60540ded2e68",
     "kit/pg_domains.log": "2b107da31584a678158cb9b2814e60a4e7ebfcb4df9844995a313af2b79367c1",
     "kit/pg_audit.clone.log": "890267d81ad56daac995779e92d6a150d0c0ae51c78e8ae02131ed3b1fb49496",
-    "kit/pg_preserve.log": "c80a735e02cb51add7e9f310bb678e11ded9e6a5eddea415ee2e3902ff99987c"
+    "kit/pg_preserve.log": "c80a735e02cb51add7e9f310bb678e11ded9e6a5eddea415ee2e3902ff99987c",
+    "kit/metric_smoke.tcl": "c2c9e3bb5d3edc72ad9603cf1d950d75b3fac4da74e7ad0860391291486b4afb",
+    "kit/metric_smoke_receipt.json": "1ff38ee8b6c28c798d553ceca3b0a32d4edfc58505a7f6cb43c45d92e026b299",
+    "kit/metric_clock_pins_TT.tsv": "0ea25b4c3feef4dfcfb5483e552bb072e2c3bf69f046979991ba0c2ec117b76d",
+    "kit/metric_smoke_TT.log": "edac0c74b7c5f5fee6a6f1174f9549904333c512844c7af9c77331c964414181",
+    "kit/metric_clock_pins_FF.tsv": "f24672818ff45fe55a4fc8b415b82dc9fa47a0b1183cb7fe86a7a10eae38b9d5",
+    "kit/metric_smoke_FF.log": "5f5fb04470dc02af9094349d92086cf65404d81c24ff97ea10cc47b12315dc01",
+    "kit/metric_ot_run.log": "a87118e6fdadee2ed81c93ea36e8e1f285b8f6d7b0fa0520524378ed4f2d2992"
   },
   "provenance": {
     "conductor_graph": "39021a45e clone_export/prove_metal geometry unchanged; remove clone mutation and old DEF comparison",
@@ -65,5 +72,7 @@
     "signal_identity": "independent raw native endpoint partition checker; native Liberty ff clock roles; no name-based clock exemptions",
     "render": "121b7ec9a plot.py actual-box method expanded to original/new cells, ties, FF centroid, BTerms, rows, die and exact area-intersection bins"
   },
-  "predecessor_kit_commit": "b37fe4aa1"
+  "predecessor_kit_commit": "ae2b36fac",
+  "metric_smoke_receipt_sha256": "1ff38ee8b6c28c798d553ceca3b0a32d4edfc58505a7f6cb43c45d92e026b299",
+  "checkpoint_contract": "PG_MASTER_CENSUS+placement identity before immutable checkpoint; reports/exports replay it read-only; distinct final publication only after every required proof; no CTS retry"
 }

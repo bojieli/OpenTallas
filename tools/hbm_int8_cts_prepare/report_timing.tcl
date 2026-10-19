@@ -1,5 +1,6 @@
 # Native clock-family active-edge wire arrival, same API as ck_insertion39021.
 source /work/kit/vendor/clock_family.tcl
+ot_cf_refresh
 report_units
 check_setup -verbose
 report_checks -unconstrained -path_delay min_max -format full_clock_expanded -group_path_count 30

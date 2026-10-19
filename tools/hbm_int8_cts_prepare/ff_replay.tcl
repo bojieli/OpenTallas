@@ -1,6 +1,6 @@
 # Read-only FF placement-RC sensitivity/hold replay of exact emitted CTS ODB.
 source /work/kit/libs_FF.tcl
-read_db /work/output/cts_only.odb
+read_db /work/output/cts_checkpoint.odb
 source $p/setRC.tcl
 source /work/kit/constraints.sdc
 source /work/kit/vendor/native_pg_binding.tcl

@@ -1,0 +1,5 @@
+NEGATIVE VALIDATOR CONTROLS ONLY. No runtime launch or successor authorization created.
+old_grant_stage: EXPECTED_REFUSAL rc=1: AssertionError: ROOT CTS-only authorization absent
+wrong_candidate: EXPECTED_REFUSAL rc=1: AssertionError: wrong candidate
+wrong_manifest_hash: EXPECTED_REFUSAL rc=1: AssertionError: ROOT exact kit fingerprint absent
+missing_metric_receipt_authorization: EXPECTED_REFUSAL rc=1: AssertionError: ROOT metric smoke approval absent

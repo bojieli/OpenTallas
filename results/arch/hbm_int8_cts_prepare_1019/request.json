@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.bounded_cts_request.v1",
-  "status": "PREPARED_NO_CTS_ROOT_GRANT_REQUIRED",
-  "candidate": "smh_int8_safe_tie_t1_cts1",
+  "status": "READONLY_METRIC_SMOKE_PASS_NEW_ROOT_GRANT_REQUIRED",
+  "candidate": "smh_int8_safe_tie_t1_cts2",
   "source_commit": "da40a2a46037798be54f7a3bc70a52dc430798af",
   "placement_commit": "121b7ec9a243affe1bcaa04ae87aa5899f5c53c7",
   "remote_snapshot": "ot-epyc8:/srv/opentallas-scratch/claude/hbm-int8-tie-place-1019",
@@ -9,7 +9,7 @@
   "odb_sha256": "95dcd07da7a966ccf351a556ed952bf6460c5a81570b846f88786396adb86341",
   "mapped_sha256": "8e4fdb42a22d755e7efb9cfcdf1ac0efe1563ee500d177e2d8e810fd15b85d27",
   "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
-  "allowed_stage": "CTS_ONLY",
+  "allowed_stage": "INT8_CTS_ONLY_CHECKPOINT_V2",
   "forbidden": [
     "synthesis",
     "placement_restart",
@@ -70,5 +70,8 @@
     "prepare_proc": "ot_pg_prepare $block",
     "state": "MASTER_MTERM_COMPLETENESS_a92a40171_PINNED_ROOT_REVIEW_REQUIRED"
   },
-  "root_grant": null
+  "root_grant": null,
+  "predecessor_failed_kit_commit": "ae2b36fac",
+  "manifest_sha256": "7b62e11204f7e04412ac4ae24d109d5ee09ad57bf6b760bff7c041168d0f6ba4",
+  "metric_smoke_receipt_sha256": "1ff38ee8b6c28c798d553ceca3b0a32d4edfc58505a7f6cb43c45d92e026b299"
 }

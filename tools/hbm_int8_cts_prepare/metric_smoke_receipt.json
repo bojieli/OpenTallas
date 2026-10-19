@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.int8.metric_smoke.v1",
+  "status": "READONLY_NATIVE_TT_FF_PASS",
+  "native_pins_per_corner": 2782,
+  "placed_odb_sha256": "95dcd07da7a966ccf351a556ed952bf6460c5a81570b846f88786396adb86341",
+  "fleet_host": "ot-epyc8",
+  "fleet_unit": "oth-ubuntu-1815054-1792443105",
+  "ot_run_actual_exit": 0,
+  "scope": "Original placed ODB, propagated unbuffered physical clock; API smoke only, no CTS/repair/ODB writes or timing qualification.",
+  "api_inputs_sha256": {
+    "report_timing.tcl": "fcbaa1f9839f68efb22bdc1330c46b6a019f2702debd7b7dc25a03d3b6aaf8b6",
+    "metric_smoke.tcl": "c2c9e3bb5d3edc72ad9603cf1d950d75b3fac4da74e7ad0860391291486b4afb",
+    "vendor/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
+    "constraints.sdc": "d192a6f102eca63267c43cc42a07fc89e4db9fe9592502180002f9687e77e53e",
+    "libs_TT.tcl": "831ef51009c4a93e24d19de90d453d3c0782ed20ddcb05e4cbeedb1f5feb173f",
+    "libs_FF.tcl": "ec1dfb0ab701e360b30065307ed7227ef3bc6b02976c975e5bc851ef5a467eab"
+  },
+  "witness_sha256": {
+    "metric_clock_pins_TT.tsv": "0ea25b4c3feef4dfcfb5483e552bb072e2c3bf69f046979991ba0c2ec117b76d",
+    "metric_smoke_TT.log": "edac0c74b7c5f5fee6a6f1174f9549904333c512844c7af9c77331c964414181",
+    "metric_clock_pins_FF.tsv": "f24672818ff45fe55a4fc8b415b82dc9fa47a0b1183cb7fe86a7a10eae38b9d5",
+    "metric_smoke_FF.log": "5f5fb04470dc02af9094349d92086cf65404d81c24ff97ea10cc47b12315dc01",
+    "metric_ot_run.log": "a87118e6fdadee2ed81c93ea36e8e1f285b8f6d7b0fa0520524378ed4f2d2992"
+  },
+  "measurements": {
+    "TT": {
+      "rows": 2782,
+      "wire_arrival_min_report_units": 2566.3571370644054,
+      "wire_arrival_max_report_units": 3170.0873164391505
+    },
+    "FF": {
+      "rows": 2782,
+      "wire_arrival_min_report_units": 2744.0001491862195,
+      "wire_arrival_max_report_units": 3389.8248787970388
+    }
+  }
+}

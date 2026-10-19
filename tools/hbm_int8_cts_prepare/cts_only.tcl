@@ -51,15 +51,19 @@ foreach inst [$block getInsts] {
 }
 set_propagated_clock [all_clocks]
 estimate_parasitics -placement
+# Immutable checkpoint precedes every optional reporting API. Distinct from publication.
+set mapping [ot_pg_prepare $block]
+ot_pg_assert_all_native $block $mapping
+write_db /work/output/cts_checkpoint.odb
+write_verilog /work/output/cts_checkpoint.v
+set fd [open /work/output/checkpoint.status w]
+puts $fd "INT8_PG_CHECKED_CTS_CHECKPOINT_V1 sinks=2782 inserted=$added PG_MASTER_CENSUS_PASS PLACEMENT_IDENTITY_PASS"
+close $fd
+puts "INT8_PG_CHECKED_CTS_CHECKPOINT_V1 inserted=$added NO_GRT_NO_ROUTE"
 source /work/kit/report_timing.tcl
 report_clock_properties [all_clocks]
 report_clock_skew
 report_checks -path_delay max -format full_clock_expanded -group_path_count 30
 report_checks -path_delay min -format full_clock_expanded -group_path_count 30
 report_check_types -max_slew -max_capacitance -max_fanout -violators
-# Refresh after every possible insertion/master change and before publication.
-set mapping [ot_pg_prepare $block]
-ot_pg_assert_all_native $block $mapping
-write_db /work/output/cts_only.odb
-write_verilog /work/output/cts_only.v
 puts "INT8_BOUNDED_CTS_ONLY_FINISHED inserted=$added NO_GRT_NO_ROUTE"

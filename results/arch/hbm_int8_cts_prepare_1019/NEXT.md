@@ -1,1 +1,1 @@
-Final source-only CTS kit pins a92a40171 master-MTerm-complete helper and causal receipts. Manifest SHA256 18d09b9ff84ebe8ff6259b0bd156f1a27dda1306c79aecae0e9004160461ff21. No native execution or grant. ROOT must grant this exact fingerprint before one isolated diagnostic CTS-only run, then personally review postCTS PNGs and native checklist.
+Source-only successor: read METRIC_CHECKPOINT_REVIEW.md. Native TT/FF metric smoke PASS, no successor CTS. ROOT exact new manifest + metric receipt + stage INT8_CTS_ONLY_CHECKPOINT_V2 grant required. Old ae2b36fac grant is invalid.
