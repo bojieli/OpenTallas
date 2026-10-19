@@ -1741,6 +1741,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS

@@ -262,6 +262,27 @@ def landed_raw_targets(spec, root):
     return out
 
 
+def landed_pre_cts_tcl(spec, root):
+    """pre_cts.tcl lines a LANDED cluster needs BEFORE clock_entries.tcl wraps CTS (ONE landed-parent hard-child clock
+    mechanism for every landed parent: S81 SerDes column, HBM pslice, Qwen tt_ctlm).  clock_entries.tcl admits a hard
+    child's clock pin as a region-root sink only for masters in ::ot_ce_counts and, for a raw SRAM clock pin, keys in
+    ::ot_ce_landed_raw; both were set only by clock_entry.sdc (post-CTS), and write_sdc drops Tcl variables, so every
+    real landed kit failed "CTS source must reach only standard-cell clock pins" (TW-HBM-PSLICE pslice_c5_lp real3,
+    b895c55d9; the unit flows set the dict by hand).  [] for every other kit (byte-identical)."""
+    if not landed_cluster(spec):
+        return []
+    counts = {}
+    for ch in spec.get('children', []):
+        m = Path(ch['view']).name
+        counts[m] = counts.get(m, 0) + int(ch.get('count', 1))
+    out = ['set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']']
+    raw = landed_raw_targets(spec, root)
+    if raw:
+        out.append('set ::ot_ce_landed_raw [dict create ' + ' '.join(
+            f'{{{k}}} {{ref {v["ref"]}}}' for k, v in sorted(raw.items())) + ']')
+    return out
+
+
 def landed_raw_tcl(spec, root):
     """pre_cts.tcl lines that arm landed_raw_tap.tcl ([] without raw child clock pins: kits byte-identical)"""
     targets = landed_raw_targets(spec, root)
