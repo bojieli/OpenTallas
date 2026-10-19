@@ -13,7 +13,7 @@ for i,r in enumerate(rs):
 area=sum(r['w']*r['h'] for r in rs)
 # Exact f4c frame dependence: 8 SM columns across,4 tiles/column;2 half-dies,4 tile rows/column.
 # Reproduced from plan_p4.sm_dims/plan_f4c; retain baseline non-SM service band.
-baseW=23889.44;baseH=32123.52
+baseW,baseH=d["baseline_die_um"]
 cases=[]
 for tw,th in [(630.72,2203.2),(630.72,2246.4),(630.72,2289.6),(673.92,2203.2)]:
  fw=baseW+32*(tw-630.72);fh=baseH+8*(th-2203.2)
