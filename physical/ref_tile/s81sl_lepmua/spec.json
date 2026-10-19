@@ -156,23 +156,23 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.045,
   "pin_balance": {
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
   },
   "macro_halo_um": 10.8,
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.03
  },
- "structural_change": "MU-S81b 10-19: hardened master of the copy-A-only multi-user end-slice link endpoint for the stages with NO copy B (the 51 non-duplicated stage groups; host-less ends s_0S / s_0N / s_7S): new parameter-free top ot_s81sl_lep_mu_a = ot_s81sl_lep_core MU_EN 1, AB_EN 0, HOST_EN 0 (no host, l*_st or pair-B ports: no tied pad, no constant output). = s81sl_lepnh + user-tag TX window / RX strip (spare XB/XQ bits, 0 wires, 0 cycles) + landing port to dsdv_mu_land. Outline, 10 TX SRAM placement, W lane face and S clock/reset face = s81sl_lepnh; landing on N, ring + mu_c / mu_rt on E (as s81sl_lepmu). Faces: W 2,228 (4.69/um), N 2,211 (4.65/um), E 2,274 (4.79/um), S 4. Clock: region roots by 2-D k-means (clock_split_km.tcl, as s81sl_lepmu), K 8 for half the SRAM / flop mass. MU-S81-2/RX 10-19 (CTS gates: setup into rid failed, lepmua -70.8 ps on 560 paths: rpc -> 8:1 RX row mux -> tag / land decode -> 1,103-bit select fanout; lepmu -575 ps on 600 paths: + pair-B mux and ~300 um): MU_EN 1 RX rebuilt with 0 added cycles -- show-ahead head register per RX lane (hd <= we[rp_nx] ? dq : mem[rp_nx], pointer copy + increment per column group, pop pair-local), a land bit pre-decoded per FIFO row at write (lane 0 XB/XQ ring beat, lane 1 tag && land), rid = one AO222 per bit {cut-through A, cut-through B, replay} with the selects duplicated per 69-bit column group (keep); rpb from nz flops only. MU_EN 0 logic untouched (lep / lep_nh generic netlists equal up to yosys auto-net numbering). Bench tb_s81sl_lep_mu gains a RETURN phase (dies A / B -> the A/B master over pairs A and B, cut-through + landed) and mutant STALEHD. Kit: lep c12b5663c fixes -- pin_reg_split, pin_ranges (l*_f, sl_f, fault at the SW corner beside the fault collector), reset_landing 2 stages; 5 SRAM rows re-pitched 51.84 -> 73.44 (y 75.6 .. 369.36): 4 REAL std-cell channels (22.1 um between halos) cross the full width (old gate 20261019-003639: GRT congestion extra iterations with NDR disabling 2.5 h+; std cells only in the centre channel, W/E bands and N/S bands, halos closing every inter-row gap); N/S bands 65 / 64.8 um; same outline.",
+ "structural_change": "MU-S81b 10-19: hardened master of the copy-A-only multi-user end-slice link endpoint for the stages with NO copy B (the 51 non-duplicated stage groups; host-less ends s_0S / s_0N / s_7S): new parameter-free top ot_s81sl_lep_mu_a = ot_s81sl_lep_core MU_EN 1, AB_EN 0, HOST_EN 0 (no host, l*_st or pair-B ports: no tied pad, no constant output). = s81sl_lepnh + user-tag TX window / RX strip (spare XB/XQ bits, 0 wires, 0 cycles) + landing port to dsdv_mu_land. Outline, 10 TX SRAM placement, W lane face and S clock/reset face = s81sl_lepnh; landing on N, ring + mu_c / mu_rt on E (as s81sl_lepmu). Faces: W 2,228 (4.69/um), N 2,211 (4.65/um), E 2,274 (4.79/um), S 4. Clock: region roots by 2-D k-means (clock_split_km.tcl, as s81sl_lepmu), K 8 for half the SRAM / flop mass. MU-S81-2/RX 10-19 (CTS gates: setup into rid failed, lepmua -70.8 ps on 560 paths: rpc -> 8:1 RX row mux -> tag / land decode -> 1,103-bit select fanout; lepmu -575 ps on 600 paths: + pair-B mux and ~300 um): MU_EN 1 RX rebuilt with 0 added cycles -- show-ahead head register per RX lane (hd <= we[rp_nx] ? dq : mem[rp_nx], pointer copy + increment per column group, pop pair-local), a land bit pre-decoded per FIFO row at write (lane 0 XB/XQ ring beat, lane 1 tag && land), rid = one AO222 per bit {cut-through A, cut-through B, replay} with the selects duplicated per 69-bit column group (keep); rpb from nz flops only. MU_EN 0 logic untouched (lep / lep_nh generic netlists equal up to yosys auto-net numbering). Bench tb_s81sl_lep_mu gains a RETURN phase (dies A / B -> the A/B master over pairs A and B, cut-through + landed) and mutant STALEHD. Kit: lep c12b5663c fixes -- pin_reg_split, pin_ranges (l*_f, sl_f, fault at the SW corner beside the fault collector), reset_landing 2 stages; 5 SRAM rows re-pitched 51.84 -> 73.44 (y 75.6 .. 369.36): 4 REAL std-cell channels (22.1 um between halos) cross the full width (old gate 20261019-003639: GRT congestion extra iterations with NDR disabling 2.5 h+; std cells only in the centre channel, W/E bands and N/S bands, halos closing every inter-row gap); N/S bands 65 / 64.8 um; same outline. CODEX takeover: shared TXRP=1 read pipeline register, +1 TX lane edge; io_hold_margin 0.03, hold_margin 0.045. No change to static in-die pin sampling; compiler must price the off-die edge.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered as s81sl_lep / s81sl_lepnh (ro / li / ml_rd land in pin flops, ri / lo / ml_wd / mu_rt / fault leave flops); recipe pin_regs would add an unpriced stage."
  },
  "job": {
   "owner": "Claude:MU-S81-2/RX",
-  "branch": "claude/mu-s81-2-rx-1019",
+  "branch": "codex/mu-endpoints-txrp-1019",
   "tag": "s81sl_lepmua",
   "purpose": "MU-S81b: multi-user copy-A-only end-slice link endpoint (HOST_EN 0, AB_EN 0) for the 51 non-duplicated stage groups to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [

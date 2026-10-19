@@ -163,23 +163,23 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.045,
   "pin_balance": {
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
   },
   "macro_halo_um": 10.8,
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.03
  },
- "structural_change": "MU-S81-2/HOSTEP 10-19: NEW hardened master of the HOST-PLANE multi-user end-slice link endpoint for s_7N on the non-duplicated dies: parameter-free top ot_s81sl_lep_mu_h = ot_s81sl_lep_core MU_EN 1, AB_EN 0, HOST_EN 1 (no pair-B ports: no tied pad, no constant output) = s81sl_lepmua + the host plane of s81sl_lep (t_host 77 / t_kd 54 in -> THOST / TKD frames; HOST / KS frames -> f_host 515 / f_ks 53; f_lf 4 from l0_st / l1_st / l*_f). Same core, cycles and SDC as lepmua / lep. Kit = s81sl_lepmua (MU-S81-2/RX: 475.2 square, 5 SRAM rows at 73.44 pitch with 4 full-width std-cell channels, K 8 k-means clock roots, pin_reg_split, reset_landing 2, io_hold 0.025) + the s81sl_lep host-face fixes of c12b5663c (dedicated launch flop per f_host / f_ks / f_lf pin via pin_reg_split; f_lf pin flop at the corner beside its l*_st / l*_f inputs). Host plane on the S face (N carries the landing at 4.65/um and E the ring at 4.79/um: +703 host pins would put either over 6/um; S had 4 pins): S 711 pins (1.50/um). The fault / f_lf collector corner is SW: l0_f / l1_f / l0_st / l1_st at the W-face bottom 3-20 um, sl_f / fault / f_lf at the S-face west end 3-20 um. Faces: W 2,232 (4.70/um), N 2,211 (4.65/um), E 2,274 (4.79/um), S 711. Pin-flop merge check: the only identical-D flops at pins are rxv_r[1:0] (both W); the host plane has none (fh_d / fk_d have their own enables, mwd loads every cycle); RX column-group pointer copies are (* keep *) regs.",
+ "structural_change": "MU-S81-2/HOSTEP 10-19: NEW hardened master of the HOST-PLANE multi-user end-slice link endpoint for s_7N on the non-duplicated dies: parameter-free top ot_s81sl_lep_mu_h = ot_s81sl_lep_core MU_EN 1, AB_EN 0, HOST_EN 1 (no pair-B ports: no tied pad, no constant output) = s81sl_lepmua + the host plane of s81sl_lep (t_host 77 / t_kd 54 in -> THOST / TKD frames; HOST / KS frames -> f_host 515 / f_ks 53; f_lf 4 from l0_st / l1_st / l*_f). Same core, cycles and SDC as lepmua / lep. Kit = s81sl_lepmua (MU-S81-2/RX: 475.2 square, 5 SRAM rows at 73.44 pitch with 4 full-width std-cell channels, K 8 k-means clock roots, pin_reg_split, reset_landing 2, io_hold 0.025) + the s81sl_lep host-face fixes of c12b5663c (dedicated launch flop per f_host / f_ks / f_lf pin via pin_reg_split; f_lf pin flop at the corner beside its l*_st / l*_f inputs). Host plane on the S face (N carries the landing at 4.65/um and E the ring at 4.79/um: +703 host pins would put either over 6/um; S had 4 pins): S 711 pins (1.50/um). The fault / f_lf collector corner is SW: l0_f / l1_f / l0_st / l1_st at the W-face bottom 3-20 um, sl_f / fault / f_lf at the S-face west end 3-20 um. Faces: W 2,232 (4.70/um), N 2,211 (4.65/um), E 2,274 (4.79/um), S 711. Pin-flop merge check: the only identical-D flops at pins are rxv_r[1:0] (both W); the host plane has none (fh_d / fk_d have their own enables, mwd loads every cycle); RX column-group pointer copies are (* keep *) regs. CODEX takeover: shared TXRP=1 read pipeline register, +1 TX lane edge; io_hold_margin 0.03, hold_margin 0.045. No change to static in-die pin sampling; compiler must price the off-die edge.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered as s81sl_lep / s81sl_lepmua (ro / li / ml_rd / t_host / t_kd / mu_c land in pin flops, ri / lo / ml_wd / mu_rt / f_host / f_ks / f_lf / fault leave flops); recipe pin_regs would add an unpriced stage."
  },
  "job": {
   "owner": "Claude:MU-S81-2/HOSTEP",
-  "branch": "claude/mu-s81-2-hostep-1019",
+  "branch": "codex/mu-endpoints-txrp-1019",
   "tag": "s81sl_lepmuh",
   "purpose": "MU-S81-2/HOSTEP: host-plane multi-user end-slice link endpoint (s_7N of non-duplicated dies; MU_EN 1, AB_EN 0, HOST_EN 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
