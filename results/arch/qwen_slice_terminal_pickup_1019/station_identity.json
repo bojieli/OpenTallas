@@ -1,0 +1,1698 @@
+{
+  "r10_e": {
+    "unit": "1881564-1792433616",
+    "work": "prod_station_r10_e",
+    "source": "src_station_scalar_r10",
+    "terminal_scope": "Oct 19 11:13:36 ot-epyc5 systemd[5784]: Started oth-ubuntu-1881564-1792433616.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=2 python3 rtl/test/qwen_dv/dv_bench2.py a c f g k q m o n e --mut 0 --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r10_e --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:40:43 ot-epyc5 systemd[5784]: oth-ubuntu-1881564-1792433616.scope: Consumed 1h 44min 38.666s CPU time over 27min 6.800s wall clock time, 24.2G memory peak.\n",
+    "files": {
+      "prod_station_r10_e/m0/obj2_n2_nu4_f2_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "b412e4cb76751a0c2c27613cffe125ea2c12e86f547fa3bd2d569556ef6357ce",
+        "bytes": 232254
+      },
+      "prod_station_r10_e/m0/c.ev": {
+        "sha256": "d210b3dfb79158e29d5c1130d7585ab42f809a24b87cbb20c9cdb0b6f15b0584",
+        "bytes": 34310
+      },
+      "prod_station_r10_e/m0/o_legal_g30.log": {
+        "sha256": "a3dc5b3324e888f8d274fa02bc896bc0d9244e5232b2aaa08da17277d709e92d",
+        "bytes": 87
+      },
+      "prod_station_r10_e/m0/q.ev": {
+        "sha256": "bdf0cafd13a057f736c5010fb622101d82747a7ffb4267b15578e2837c51ccdb",
+        "bytes": 40050
+      },
+      "prod_station_r10_e/m0/o_legal_g30.ev": {
+        "sha256": "eba3ea193cf9602b500252cd7af4fa548044b61d0989ff7007e71469eace9ac5",
+        "bytes": 6528
+      },
+      "prod_station_r10_e/m0/o_ovl_g4.ev": {
+        "sha256": "be9b688f70e0063d1d20f65733901f84a98de37f07a4d955cdb6534587e607c3",
+        "bytes": 6528
+      },
+      "prod_station_r10_e/m0/n_legal.log": {
+        "sha256": "fe4962e0f60766561f046d25e3ced6b8017321dfb7eabd8c797e2241603e8844",
+        "bytes": 379
+      },
+      "prod_station_r10_e/m0/g.ev": {
+        "sha256": "22e39db29e1950796696a440d596306a9983a0861a9f92a9a87f16cc4e65ad58",
+        "bytes": 28678
+      },
+      "prod_station_r10_e/m0/a.ev": {
+        "sha256": "21fb72272790004488b55eadbb3c4d1a8d95047e9a2427c09c4aa2368b418998",
+        "bytes": 285599
+      },
+      "prod_station_r10_e/m0/f.log": {
+        "sha256": "0551bf55d7d7db65266af025c1c164a07ec942aa5c269e62650e56d833b21e4e",
+        "bytes": 525
+      },
+      "prod_station_r10_e/m0/n_mixed.ev": {
+        "sha256": "5377cee11338f94b8577894c135aa5cf7659fc80bff95687ca14f40a3ad0ea16",
+        "bytes": 13118
+      },
+      "prod_station_r10_e/m0/e.log": {
+        "sha256": "afa0dda1d9ffe62e8e6507e6f230e5f695d578090e930d69c4c8ec17531d23f6",
+        "bytes": 19183
+      },
+      "prod_station_r10_e/m0/q.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r10_e/m0/g.log": {
+        "sha256": "fff5543fa09fc8b4515a1dc6ed8618fba164f7b6474a9248115fc99eabad55b0",
+        "bytes": 30503
+      },
+      "prod_station_r10_e/m0/o_ovl_g4.log": {
+        "sha256": "fcbc874a35e375a94ea255f473cc6cbc4506f543a61a93c4720373d383533d53",
+        "bytes": 87
+      },
+      "prod_station_r10_e/m0/k.ev": {
+        "sha256": "aef18cff51efc4777f1bd98684a2974eb6f3040df4fc5442e517daafcb0de07a",
+        "bytes": 40046
+      },
+      "prod_station_r10_e/m0/n_legal.ev": {
+        "sha256": "451f7b60ab1e4779f882937f88616ad5f74203688f317fe610a01f1944769bde",
+        "bytes": 13118
+      },
+      "prod_station_r10_e/m0/a.log": {
+        "sha256": "41cef44e5d2506e575e707c1c3a24f4d76bfc83e02bbb54417883e35f91f0888",
+        "bytes": 7055
+      },
+      "prod_station_r10_e/m0/m_g18_s21.log": {
+        "sha256": "61572dc794314ef4186107ba507d7a07c45d9123442e29afbccb15de3daaae22",
+        "bytes": 1286
+      },
+      "prod_station_r10_e/m0/m_g18_s21.ev": {
+        "sha256": "c4f1d3947dc199b05150b516ecffdab4bf6851f733ca377e4422a61008ed87e5",
+        "bytes": 207813
+      },
+      "prod_station_r10_e/m0/c.log": {
+        "sha256": "7471b3018fec10864302de2cfdfe2d5812781de5e6b615945fa674f36ba9210c",
+        "bytes": 8191
+      },
+      "prod_station_r10_e/m0/k.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r10_e/m0/f.ev": {
+        "sha256": "dac7a9c99fc3ead454c39f5727b9f63b34357c43a6371dd4305706df5778a086",
+        "bytes": 58541
+      },
+      "prod_station_r10_e/m0/e.ev": {
+        "sha256": "ca8a1c1a04d0c939ef31247c17fad0a90015d919fda6a57d75b8c3a79fa21a77",
+        "bytes": 17883
+      },
+      "prod_station_r10_e/m0/n_mixed.log": {
+        "sha256": "0f02a8929a72afcc58275dc1f9f522e57580b46d5438463ecfb7ff804a7cf6a6",
+        "bytes": 379
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r10_e/m0/obj2_n2_nu4_f2_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "ebc966f62cac2531ce62fe6d0d41013a3f8bbc30b967322bbd0376a868bdce4f",
+        "bytes": 63208256
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "r10_w": {
+    "unit": "1881741-1792433616",
+    "work": "prod_station_r10_w",
+    "source": "src_station_scalar_r10",
+    "terminal_scope": "Oct 19 11:13:36 ot-epyc5 systemd[5784]: Started oth-ubuntu-1881741-1792433616.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=1 python3 rtl/test/qwen_dv/dv_bench2.py a c f g k q m o n e --mut 0 --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r10_w --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:40:49 ot-epyc5 systemd[5784]: oth-ubuntu-1881741-1792433616.scope: Consumed 1h 44min 57.818s CPU time over 27min 12.944s wall clock time, 24.1G memory peak.\n",
+    "files": {
+      "prod_station_r10_w/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "f20c58f97afb7479ab0933556c33cd78f057da8dff0c22ad338eec1bb20e8387",
+        "bytes": 232254
+      },
+      "prod_station_r10_w/m0/c.ev": {
+        "sha256": "d210b3dfb79158e29d5c1130d7585ab42f809a24b87cbb20c9cdb0b6f15b0584",
+        "bytes": 34310
+      },
+      "prod_station_r10_w/m0/o_legal_g30.log": {
+        "sha256": "a3dc5b3324e888f8d274fa02bc896bc0d9244e5232b2aaa08da17277d709e92d",
+        "bytes": 87
+      },
+      "prod_station_r10_w/m0/q.ev": {
+        "sha256": "bdf0cafd13a057f736c5010fb622101d82747a7ffb4267b15578e2837c51ccdb",
+        "bytes": 40050
+      },
+      "prod_station_r10_w/m0/o_legal_g30.ev": {
+        "sha256": "eba3ea193cf9602b500252cd7af4fa548044b61d0989ff7007e71469eace9ac5",
+        "bytes": 6528
+      },
+      "prod_station_r10_w/m0/o_ovl_g4.ev": {
+        "sha256": "be9b688f70e0063d1d20f65733901f84a98de37f07a4d955cdb6534587e607c3",
+        "bytes": 6528
+      },
+      "prod_station_r10_w/m0/n_legal.log": {
+        "sha256": "fe4962e0f60766561f046d25e3ced6b8017321dfb7eabd8c797e2241603e8844",
+        "bytes": 379
+      },
+      "prod_station_r10_w/m0/g.ev": {
+        "sha256": "22e39db29e1950796696a440d596306a9983a0861a9f92a9a87f16cc4e65ad58",
+        "bytes": 28678
+      },
+      "prod_station_r10_w/m0/a.ev": {
+        "sha256": "21fb72272790004488b55eadbb3c4d1a8d95047e9a2427c09c4aa2368b418998",
+        "bytes": 285599
+      },
+      "prod_station_r10_w/m0/f.log": {
+        "sha256": "0551bf55d7d7db65266af025c1c164a07ec942aa5c269e62650e56d833b21e4e",
+        "bytes": 525
+      },
+      "prod_station_r10_w/m0/n_mixed.ev": {
+        "sha256": "5377cee11338f94b8577894c135aa5cf7659fc80bff95687ca14f40a3ad0ea16",
+        "bytes": 13118
+      },
+      "prod_station_r10_w/m0/e.log": {
+        "sha256": "afa0dda1d9ffe62e8e6507e6f230e5f695d578090e930d69c4c8ec17531d23f6",
+        "bytes": 19183
+      },
+      "prod_station_r10_w/m0/q.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r10_w/m0/g.log": {
+        "sha256": "fff5543fa09fc8b4515a1dc6ed8618fba164f7b6474a9248115fc99eabad55b0",
+        "bytes": 30503
+      },
+      "prod_station_r10_w/m0/o_ovl_g4.log": {
+        "sha256": "fcbc874a35e375a94ea255f473cc6cbc4506f543a61a93c4720373d383533d53",
+        "bytes": 87
+      },
+      "prod_station_r10_w/m0/k.ev": {
+        "sha256": "aef18cff51efc4777f1bd98684a2974eb6f3040df4fc5442e517daafcb0de07a",
+        "bytes": 40046
+      },
+      "prod_station_r10_w/m0/n_legal.ev": {
+        "sha256": "451f7b60ab1e4779f882937f88616ad5f74203688f317fe610a01f1944769bde",
+        "bytes": 13118
+      },
+      "prod_station_r10_w/m0/a.log": {
+        "sha256": "41cef44e5d2506e575e707c1c3a24f4d76bfc83e02bbb54417883e35f91f0888",
+        "bytes": 7055
+      },
+      "prod_station_r10_w/m0/m_g18_s21.log": {
+        "sha256": "61572dc794314ef4186107ba507d7a07c45d9123442e29afbccb15de3daaae22",
+        "bytes": 1286
+      },
+      "prod_station_r10_w/m0/m_g18_s21.ev": {
+        "sha256": "c4f1d3947dc199b05150b516ecffdab4bf6851f733ca377e4422a61008ed87e5",
+        "bytes": 207813
+      },
+      "prod_station_r10_w/m0/c.log": {
+        "sha256": "7471b3018fec10864302de2cfdfe2d5812781de5e6b615945fa674f36ba9210c",
+        "bytes": 8191
+      },
+      "prod_station_r10_w/m0/k.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r10_w/m0/f.ev": {
+        "sha256": "dac7a9c99fc3ead454c39f5727b9f63b34357c43a6371dd4305706df5778a086",
+        "bytes": 58541
+      },
+      "prod_station_r10_w/m0/e.ev": {
+        "sha256": "ca8a1c1a04d0c939ef31247c17fad0a90015d919fda6a57d75b8c3a79fa21a77",
+        "bytes": 17883
+      },
+      "prod_station_r10_w/m0/n_mixed.log": {
+        "sha256": "0f02a8929a72afcc58275dc1f9f522e57580b46d5438463ecfb7ff804a7cf6a6",
+        "bytes": 379
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r10_w/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "97137470033a4b82e6a3edbdac6b85eacba6d2f7f68676682b7cc3b72271fd78",
+        "bytes": 63208256
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "r10_m14": {
+    "unit": "1881556-1792433616",
+    "work": "prod_station_r10_m14",
+    "source": "src_station_scalar_r10",
+    "terminal_scope": "Oct 19 11:13:36 ot-epyc5 systemd[5784]: Started oth-ubuntu-1881556-1792433616.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=1 python3 rtl/test/qwen_dv/dv_bench2.py k --mut 14 --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r10_m14 --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:38:27 ot-epyc5 systemd[5784]: oth-ubuntu-1881556-1792433616.scope: Consumed 1h 43min 17.987s CPU time over 24min 50.675s wall clock time, 24.1G memory peak.\n",
+    "files": {
+      "prod_station_r10_m14/m14/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "4687fce91fba9dab913f934dc4c86fed19c8afb1ea703a32bf14162c405b8041",
+        "bytes": 234559
+      },
+      "prod_station_r10_m14/m14/k.ev": {
+        "sha256": "aef18cff51efc4777f1bd98684a2974eb6f3040df4fc5442e517daafcb0de07a",
+        "bytes": 40046
+      },
+      "prod_station_r10_m14/m14/k.log": {
+        "sha256": "325de8e45a32f107811c7a11c6bc32a049bd8c74c0d338500104bd2eebba78eb",
+        "bytes": 8809
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r10_m14/m14/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "05846da0ad17bd61bd8ad32c26d21dc9503fe7de427363922124121df2bb1dbc",
+        "bytes": 63208256
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "r10_m15": {
+    "unit": "1881523-1792433616",
+    "work": "prod_station_r10_m15",
+    "source": "src_station_scalar_r10",
+    "terminal_scope": "Oct 19 11:13:36 ot-epyc5 systemd[5784]: Started oth-ubuntu-1881523-1792433616.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=1 python3 rtl/test/qwen_dv/dv_bench2.py q --mut 15 --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r10_m15 --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:39:00 ot-epyc5 systemd[5784]: oth-ubuntu-1881523-1792433616.scope: Consumed 1h 43min 41.827s CPU time over 25min 24.111s wall clock time, 24.2G memory peak.\n",
+    "files": {
+      "prod_station_r10_m15/m15/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "4ec624029605d7a1c8efa57f7b7e836649821e51842e0120123316d237501d47",
+        "bytes": 234559
+      },
+      "prod_station_r10_m15/m15/q.ev": {
+        "sha256": "bdf0cafd13a057f736c5010fb622101d82747a7ffb4267b15578e2837c51ccdb",
+        "bytes": 40050
+      },
+      "prod_station_r10_m15/m15/q.log": {
+        "sha256": "fa836e2e67bdd59546102e35b91a622afb185e6791ac43f3ad25e74d1087d7fe",
+        "bytes": 2937
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_scalar_r10/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r10_m15/m15/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "f08c2cc51dcf2a3a336066091442858870a440c3c88388b57654e5575a3e7ac6",
+        "bytes": 63208256
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "r8_e": {
+    "unit": "1833894-1792432760",
+    "work": "prod_station_r8_e",
+    "source": "src_station_math_r8",
+    "terminal_scope": "Oct 19 10:59:20 ot-epyc5 systemd[5784]: Started oth-ubuntu-1833894-1792432760.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=2 python3 rtl/test/qwen_dv/dv_bench2.py a c f g k q m o n e --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r8_e --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:26:16 ot-epyc5 systemd[5784]: oth-ubuntu-1833894-1792432760.scope: Consumed 1h 24min 43.369s CPU time over 26min 56.296s wall clock time, 33.8G memory peak.\n",
+    "files": {
+      "prod_station_r8_e/m0/obj2_n2_nu4_f2_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "b7d442008c6b68413c18aed66dd6130b6d8c651a867663ac41bc2683426a8bb1",
+        "bytes": 377726
+      },
+      "prod_station_r8_e/m0/c.ev": {
+        "sha256": "d210b3dfb79158e29d5c1130d7585ab42f809a24b87cbb20c9cdb0b6f15b0584",
+        "bytes": 34310
+      },
+      "prod_station_r8_e/m0/o_legal_g30.log": {
+        "sha256": "a3dc5b3324e888f8d274fa02bc896bc0d9244e5232b2aaa08da17277d709e92d",
+        "bytes": 87
+      },
+      "prod_station_r8_e/m0/q.ev": {
+        "sha256": "bdf0cafd13a057f736c5010fb622101d82747a7ffb4267b15578e2837c51ccdb",
+        "bytes": 40050
+      },
+      "prod_station_r8_e/m0/o_legal_g30.ev": {
+        "sha256": "eba3ea193cf9602b500252cd7af4fa548044b61d0989ff7007e71469eace9ac5",
+        "bytes": 6528
+      },
+      "prod_station_r8_e/m0/o_ovl_g4.ev": {
+        "sha256": "be9b688f70e0063d1d20f65733901f84a98de37f07a4d955cdb6534587e607c3",
+        "bytes": 6528
+      },
+      "prod_station_r8_e/m0/n_legal.log": {
+        "sha256": "fe4962e0f60766561f046d25e3ced6b8017321dfb7eabd8c797e2241603e8844",
+        "bytes": 379
+      },
+      "prod_station_r8_e/m0/g.ev": {
+        "sha256": "22e39db29e1950796696a440d596306a9983a0861a9f92a9a87f16cc4e65ad58",
+        "bytes": 28678
+      },
+      "prod_station_r8_e/m0/a.ev": {
+        "sha256": "21fb72272790004488b55eadbb3c4d1a8d95047e9a2427c09c4aa2368b418998",
+        "bytes": 285599
+      },
+      "prod_station_r8_e/m0/f.log": {
+        "sha256": "0551bf55d7d7db65266af025c1c164a07ec942aa5c269e62650e56d833b21e4e",
+        "bytes": 525
+      },
+      "prod_station_r8_e/m0/n_mixed.ev": {
+        "sha256": "5377cee11338f94b8577894c135aa5cf7659fc80bff95687ca14f40a3ad0ea16",
+        "bytes": 13118
+      },
+      "prod_station_r8_e/m0/e.log": {
+        "sha256": "afa0dda1d9ffe62e8e6507e6f230e5f695d578090e930d69c4c8ec17531d23f6",
+        "bytes": 19183
+      },
+      "prod_station_r8_e/m0/q.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r8_e/m0/g.log": {
+        "sha256": "fff5543fa09fc8b4515a1dc6ed8618fba164f7b6474a9248115fc99eabad55b0",
+        "bytes": 30503
+      },
+      "prod_station_r8_e/m0/o_ovl_g4.log": {
+        "sha256": "fcbc874a35e375a94ea255f473cc6cbc4506f543a61a93c4720373d383533d53",
+        "bytes": 87
+      },
+      "prod_station_r8_e/m0/k.ev": {
+        "sha256": "aef18cff51efc4777f1bd98684a2974eb6f3040df4fc5442e517daafcb0de07a",
+        "bytes": 40046
+      },
+      "prod_station_r8_e/m0/n_legal.ev": {
+        "sha256": "451f7b60ab1e4779f882937f88616ad5f74203688f317fe610a01f1944769bde",
+        "bytes": 13118
+      },
+      "prod_station_r8_e/m0/a.log": {
+        "sha256": "41cef44e5d2506e575e707c1c3a24f4d76bfc83e02bbb54417883e35f91f0888",
+        "bytes": 7055
+      },
+      "prod_station_r8_e/m0/m_g18_s21.log": {
+        "sha256": "61572dc794314ef4186107ba507d7a07c45d9123442e29afbccb15de3daaae22",
+        "bytes": 1286
+      },
+      "prod_station_r8_e/m0/m_g18_s21.ev": {
+        "sha256": "c4f1d3947dc199b05150b516ecffdab4bf6851f733ca377e4422a61008ed87e5",
+        "bytes": 207813
+      },
+      "prod_station_r8_e/m0/c.log": {
+        "sha256": "7471b3018fec10864302de2cfdfe2d5812781de5e6b615945fa674f36ba9210c",
+        "bytes": 8191
+      },
+      "prod_station_r8_e/m0/k.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r8_e/m0/f.ev": {
+        "sha256": "dac7a9c99fc3ead454c39f5727b9f63b34357c43a6371dd4305706df5778a086",
+        "bytes": 58541
+      },
+      "prod_station_r8_e/m0/e.ev": {
+        "sha256": "ca8a1c1a04d0c939ef31247c17fad0a90015d919fda6a57d75b8c3a79fa21a77",
+        "bytes": 17883
+      },
+      "prod_station_r8_e/m0/n_mixed.log": {
+        "sha256": "0f02a8929a72afcc58275dc1f9f522e57580b46d5438463ecfb7ff804a7cf6a6",
+        "bytes": 379
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+        "bytes": 10861
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+        "bytes": 513635
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r8_e/m0/obj2_n2_nu4_f2_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "fb606ab59d2b3282f14ed81670ff0e2b012cd662427b5a117331e1b4ea0c3eb4",
+        "bytes": 114885648
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "r8_w": {
+    "unit": "1833891-1792432760",
+    "work": "prod_station_r8_w",
+    "source": "src_station_math_r8",
+    "terminal_scope": "Oct 19 10:59:20 ot-epyc5 systemd[5784]: Started oth-ubuntu-1833891-1792432760.scope - [systemd-run] /usr/bin/env PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:/usr/local/bin:/usr/bin:/bin DV2_SAFE_RESET=1 DV2_SAFE_AMAX_RESET=1 DV2_SAFE_SCALAR_RESET=1 DV2_SAFE_CFG=1 DV2_SAFE_STATION_CFG=1 DV2_SAFE_STATION_MATH=1 DV2_SAFE_STREAM_RESET=1 DV2_NATIVE_SRAM=1 DV2_MU_NU=4 DV2_FACE=1 python3 rtl/test/qwen_dv/dv_bench2.py a c f g k q m o n e --work /srv/opentallas-scratch/claude/codex-safe-qw-slice/prod_station_r8_w --vflags \"-DOT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1\".\nOct 19 11:26:29 ot-epyc5 systemd[5784]: oth-ubuntu-1833891-1792432760.scope: Consumed 1h 25min 733ms CPU time over 27min 9.168s wall clock time, 33.8G memory peak.\n",
+    "files": {
+      "prod_station_r8_w/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb__verFiles.dat": {
+        "sha256": "ada701bce811cdfe162dd5886fcd9e1175bad18076e7b8d6d08e6620354af20a",
+        "bytes": 377726
+      },
+      "prod_station_r8_w/m0/c.ev": {
+        "sha256": "d210b3dfb79158e29d5c1130d7585ab42f809a24b87cbb20c9cdb0b6f15b0584",
+        "bytes": 34310
+      },
+      "prod_station_r8_w/m0/o_legal_g30.log": {
+        "sha256": "a3dc5b3324e888f8d274fa02bc896bc0d9244e5232b2aaa08da17277d709e92d",
+        "bytes": 87
+      },
+      "prod_station_r8_w/m0/q.ev": {
+        "sha256": "bdf0cafd13a057f736c5010fb622101d82747a7ffb4267b15578e2837c51ccdb",
+        "bytes": 40050
+      },
+      "prod_station_r8_w/m0/o_legal_g30.ev": {
+        "sha256": "eba3ea193cf9602b500252cd7af4fa548044b61d0989ff7007e71469eace9ac5",
+        "bytes": 6528
+      },
+      "prod_station_r8_w/m0/o_ovl_g4.ev": {
+        "sha256": "be9b688f70e0063d1d20f65733901f84a98de37f07a4d955cdb6534587e607c3",
+        "bytes": 6528
+      },
+      "prod_station_r8_w/m0/n_legal.log": {
+        "sha256": "fe4962e0f60766561f046d25e3ced6b8017321dfb7eabd8c797e2241603e8844",
+        "bytes": 379
+      },
+      "prod_station_r8_w/m0/g.ev": {
+        "sha256": "22e39db29e1950796696a440d596306a9983a0861a9f92a9a87f16cc4e65ad58",
+        "bytes": 28678
+      },
+      "prod_station_r8_w/m0/a.ev": {
+        "sha256": "21fb72272790004488b55eadbb3c4d1a8d95047e9a2427c09c4aa2368b418998",
+        "bytes": 285599
+      },
+      "prod_station_r8_w/m0/f.log": {
+        "sha256": "0551bf55d7d7db65266af025c1c164a07ec942aa5c269e62650e56d833b21e4e",
+        "bytes": 525
+      },
+      "prod_station_r8_w/m0/n_mixed.ev": {
+        "sha256": "5377cee11338f94b8577894c135aa5cf7659fc80bff95687ca14f40a3ad0ea16",
+        "bytes": 13118
+      },
+      "prod_station_r8_w/m0/e.log": {
+        "sha256": "afa0dda1d9ffe62e8e6507e6f230e5f695d578090e930d69c4c8ec17531d23f6",
+        "bytes": 19183
+      },
+      "prod_station_r8_w/m0/q.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r8_w/m0/g.log": {
+        "sha256": "fff5543fa09fc8b4515a1dc6ed8618fba164f7b6474a9248115fc99eabad55b0",
+        "bytes": 30503
+      },
+      "prod_station_r8_w/m0/o_ovl_g4.log": {
+        "sha256": "fcbc874a35e375a94ea255f473cc6cbc4506f543a61a93c4720373d383533d53",
+        "bytes": 87
+      },
+      "prod_station_r8_w/m0/k.ev": {
+        "sha256": "aef18cff51efc4777f1bd98684a2974eb6f3040df4fc5442e517daafcb0de07a",
+        "bytes": 40046
+      },
+      "prod_station_r8_w/m0/n_legal.ev": {
+        "sha256": "451f7b60ab1e4779f882937f88616ad5f74203688f317fe610a01f1944769bde",
+        "bytes": 13118
+      },
+      "prod_station_r8_w/m0/a.log": {
+        "sha256": "41cef44e5d2506e575e707c1c3a24f4d76bfc83e02bbb54417883e35f91f0888",
+        "bytes": 7055
+      },
+      "prod_station_r8_w/m0/m_g18_s21.log": {
+        "sha256": "61572dc794314ef4186107ba507d7a07c45d9123442e29afbccb15de3daaae22",
+        "bytes": 1286
+      },
+      "prod_station_r8_w/m0/m_g18_s21.ev": {
+        "sha256": "c4f1d3947dc199b05150b516ecffdab4bf6851f733ca377e4422a61008ed87e5",
+        "bytes": 207813
+      },
+      "prod_station_r8_w/m0/c.log": {
+        "sha256": "7471b3018fec10864302de2cfdfe2d5812781de5e6b615945fa674f36ba9210c",
+        "bytes": 8191
+      },
+      "prod_station_r8_w/m0/k.log": {
+        "sha256": "ea43b1a92d6105ec0f41bfba04a862c01600ee1f9dfcabe8a9630ad526f616e3",
+        "bytes": 6471
+      },
+      "prod_station_r8_w/m0/f.ev": {
+        "sha256": "dac7a9c99fc3ead454c39f5727b9f63b34357c43a6371dd4305706df5778a086",
+        "bytes": 58541
+      },
+      "prod_station_r8_w/m0/e.ev": {
+        "sha256": "ca8a1c1a04d0c939ef31247c17fad0a90015d919fda6a57d75b8c3a79fa21a77",
+        "bytes": 17883
+      },
+      "prod_station_r8_w/m0/n_mixed.log": {
+        "sha256": "0f02a8929a72afcc58275dc1f9f522e57580b46d5438463ecfb7ff804a7cf6a6",
+        "bytes": 379
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+        "bytes": 10861
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_fpu.sv": {
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vreduce.sv": {
+        "sha256": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+        "bytes": 10619
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_lane.sv": {
+        "sha256": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "bytes": 23355
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_lane_t.sv": {
+        "sha256": "9a88cff528da77bb02d0977e6100600c1a6d62650f17ad57ce545ea6f24ac3c4",
+        "bytes": 21043
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+        "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+        "bytes": 3866
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/lib/ot_rst_pipe.sv": {
+        "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "bytes": 2057
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/physical/ot_hdc_vred_pending_guard.sv": {
+        "sha256": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+        "bytes": 829
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv": {
+        "sha256": "a69200d0865587ed33cccdee1f8588ac19d74fb571cf98bfd53cd2759b092cae",
+        "bytes": 7491
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv": {
+        "sha256": "df86a8d134b1b91d0b7164ee9e84c4e3af002c4f7f3cb23ce1c71cdd2cec2225",
+        "bytes": 9358
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_heads.sv": {
+        "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+        "bytes": 10522
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_reset_bank.sv": {
+        "sha256": "b7e8512aa1f6d99e2c493b208525cbbaafb4349dc94de9ab216da0ae270e03ba",
+        "bytes": 736
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv": {
+        "sha256": "ac6ff7547568e0d8aec0ac1e36e027f60bbaf516462e021841f398e4decd7414",
+        "bytes": 52007
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "bytes": 7978
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_slice2_rsafe.sv": {
+        "sha256": "831f937ad543ff3032981c28be23706358f214874d378660d20f8f2ba465ac87",
+        "bytes": 118650
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+        "bytes": 513635
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_stream_rsafe.sv": {
+        "sha256": "0ac5783f0de76a09dcb998b51621400d91ca0b7adec3a3bceb6ca4a5f7d07a2b",
+        "bytes": 25654
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_su8_entries.sv": {
+        "sha256": "61e426cf315fc4cdeadc8a859898ac0defc6fac93520182aaab9420d7ceefc98",
+        "bytes": 29160
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_su_lane.sv": {
+        "sha256": "21217c306def39e94cf37508813dd7ef4b4643baad559b43c0720e80fcd93198",
+        "bytes": 13512
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_dv/qfd_dv_vm.sv": {
+        "sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+        "bytes": 14511
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+        "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+        "bytes": 72502
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/full_sm_service/sram_models.sv": {
+        "sha256": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+        "bytes": 1168
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/hbm_rf_visibility/scale_sram_model.sv": {
+        "sha256": "70abddf8c679a5613f8943cf02b19c3682eb47434acbc785103bd77a24828294",
+        "bytes": 499
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/qwen_dv/safe_storage/native_collision_checker.sv": {
+        "sha256": "22f6714cfc2a06b471c4619848f4c6a44c8fb021bf2e303f802782c83f93a87a",
+        "bytes": 551
+      },
+      "/srv/opentallas-scratch/claude/codex-safe-qw-slice/src_station_math_r8/rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+        "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+        "bytes": 11179
+      }
+    },
+    "binaries": {
+      "prod_station_r8_w/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1_stm1_stcfg1_stmath1_ns1/DOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1/Vtb": {
+        "sha256": "61c2ce003bcbe88b779df59f9c78713cfbd6c17d90db39172f196c74c9398735",
+        "bytes": 114885648
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "cfg_positive": {
+    "unit": "1895606-1792433774",
+    "work": "cfg_station_r10",
+    "source": "src_station_cfg_r10",
+    "terminal_scope": "Oct 19 11:16:15 ot-epyc5 systemd[5784]: Started oth-ubuntu-1895606-1792433774.scope - [systemd-run] /usr/bin/env DV2_SAFE_STATION_MATH=1 bash rtl/test/qwen_dv/safe_storage/run_station_cfg.sh /srv/opentallas-scratch/claude/codex-safe-qw-slice/cfg_station_r10 0.\nOct 19 11:29:19 ot-epyc5 systemd[5784]: oth-ubuntu-1895606-1792433774.scope: Consumed 26min 59.295s CPU time over 13min 4.853s wall clock time, 4.9G memory peak.\n",
+    "files": {
+      "cfg_station_r10/obj0/Vtb_station_cfg__verFiles.dat": {
+        "sha256": "5d477ee486e9aba5a3837c56a247b17d903b5cc6623950aec8c54c2c7b6a5d74",
+        "bytes": 31909
+      },
+      "cfg_station_r10/obj1/Vtb_station_cfg__verFiles.dat": {
+        "sha256": "1fc7d676c1900ad820f15e733c54f5c847428ba797536adc40135b4466bc6d3d",
+        "bytes": 31909
+      },
+      "cfg_station_r10/build0.log": {
+        "sha256": "1bc5357475107490e67f1a9aacf8c86b79d3a0b6571688330af8e19ca47c16c2",
+        "bytes": 19018
+      },
+      "cfg_station_r10/build1.log": {
+        "sha256": "8842295c04fc8ca418fa015ab5e3004fb5eec273bb629121a3ddbb34ee6e265b",
+        "bytes": 19018
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "rtl/test/qwen_dv/safe_storage/tb_station_cfg.sv": {
+        "sha256": "1f84efd8f773e7cff3c62896d14d28ce3e6083aff479213fa6ab0b8e0fd3bc58",
+        "bytes": 1625
+      }
+    },
+    "binaries": {
+      "cfg_station_r10/obj0/Vtb_station_cfg": {
+        "sha256": "5aa73bd32433660692a6e8b81a375f3c427a3da3b884ded26dd9f37acd3b7043",
+        "bytes": 15921832
+      },
+      "cfg_station_r10/obj1/Vtb_station_cfg": {
+        "sha256": "153a170161b8c6e29988ae739081bebfa2df78d02e988e4a4ab31327df09431b",
+        "bytes": 15921832
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  },
+  "cfg_mutant": {
+    "unit": "1895580-1792433774",
+    "work": "cfg_station_r10",
+    "source": "src_station_cfg_r10",
+    "terminal_scope": "Oct 19 11:16:15 ot-epyc5 systemd[5784]: Started oth-ubuntu-1895580-1792433774.scope - [systemd-run] /usr/bin/env DV2_SAFE_STATION_MATH=1 bash rtl/test/qwen_dv/safe_storage/run_station_cfg.sh /srv/opentallas-scratch/claude/codex-safe-qw-slice/cfg_station_r10 1.\nOct 19 11:29:45 ot-epyc5 systemd[5784]: oth-ubuntu-1895580-1792433774.scope: Consumed 27min 3.381s CPU time over 13min 30.638s wall clock time, 4.7G memory peak.\n",
+    "files": {
+      "cfg_station_r10/obj0/Vtb_station_cfg__verFiles.dat": {
+        "sha256": "5d477ee486e9aba5a3837c56a247b17d903b5cc6623950aec8c54c2c7b6a5d74",
+        "bytes": 31909
+      },
+      "cfg_station_r10/obj1/Vtb_station_cfg__verFiles.dat": {
+        "sha256": "1fc7d676c1900ad820f15e733c54f5c847428ba797536adc40135b4466bc6d3d",
+        "bytes": 31909
+      },
+      "cfg_station_r10/build0.log": {
+        "sha256": "1bc5357475107490e67f1a9aacf8c86b79d3a0b6571688330af8e19ca47c16c2",
+        "bytes": 19018
+      },
+      "cfg_station_r10/build1.log": {
+        "sha256": "8842295c04fc8ca418fa015ab5e3004fb5eec273bb629121a3ddbb34ee6e265b",
+        "bytes": 19018
+      }
+    },
+    "source_inputs": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": {
+        "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+        "bytes": 19505384
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv": {
+        "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+        "bytes": 7968
+      },
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt": {
+        "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+        "bytes": 3224
+      },
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+        "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "bytes": 6659
+      },
+      "rtl/common/landed_parent/ot_pl_land.sv": {
+        "sha256": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+        "bytes": 11195
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395
+      },
+      "rtl/hdc/ot_hdc_fastfp.sv": {
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092
+      },
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+        "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "bytes": 13769
+      },
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758
+      },
+      "rtl/hdc/ot_hdc_prefix.sv": {
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803
+      },
+      "rtl/hdc/ot_hdc_sfu.sv": {
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751
+      },
+      "rtl/hdc/ot_hdc_sfu_q.sv": {
+        "sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+        "bytes": 27820
+      },
+      "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+        "sha256": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+        "bytes": 27006
+      },
+      "rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+        "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+        "bytes": 1017
+      },
+      "rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+        "sha256": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+        "bytes": 2500
+      },
+      "rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+        "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+        "bytes": 571791
+      },
+      "rtl/test/qwen_dv/safe_storage/tb_station_cfg.sv": {
+        "sha256": "1f84efd8f773e7cff3c62896d14d28ce3e6083aff479213fa6ab0b8e0fd3bc58",
+        "bytes": 1625
+      }
+    },
+    "binaries": {
+      "cfg_station_r10/obj0/Vtb_station_cfg": {
+        "sha256": "5aa73bd32433660692a6e8b81a375f3c427a3da3b884ded26dd9f37acd3b7043",
+        "bytes": 15921832
+      },
+      "cfg_station_r10/obj1/Vtb_station_cfg": {
+        "sha256": "153a170161b8c6e29988ae739081bebfa2df78d02e988e4a4ab31327df09431b",
+        "bytes": 15921832
+      }
+    },
+    "verdict": "UNKNOWN: original stdout not persisted in work directory; build completion and scope end do not imply functional PASS"
+  }
+}

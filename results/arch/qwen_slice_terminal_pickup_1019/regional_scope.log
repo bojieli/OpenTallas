@@ -1,0 +1,2 @@
+Oct 19 11:22:33 ot-epyc8 systemd[15066]: Started oth-ubuntu-1080786-1792434153.scope - [systemd-run] /usr/bin/bash -c "python3 diag_tools/reset_census.py out/netlist.json --top qfd_dv_slice2_w_regional_lp --expand-kept-hierarchy --out diag/full_reset_census.json > diag/full_reset_summary.log".
+Oct 19 11:23:48 ot-epyc8 systemd[15066]: oth-ubuntu-1080786-1792434153.scope: Consumed 1min 15.576s CPU time over 1min 15.592s wall clock time, 14.6G memory peak.
