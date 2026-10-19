@@ -534,7 +534,7 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
-        if n in ("rc_cal_spine_hold", "balanced_reset_profile"):
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
             # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
             # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
             kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
@@ -551,6 +551,11 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
                     "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
                     "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            elif n == "single_clock_contract":
+                hit = bool(sp.get("single_clock_contract"))
+                rows.append(dict(requires=n, ok=not hit, text="single_clock_contract: " + (
+                    "kit carries single_clock_contract: ot_single_clock_check now runs in MM sync, re-gate" if hit else
+                    "no single_clock_contract: ot_single_clock_check is never defined, verdict unchanged")))
             else:
                 hit = bool((sp.get("reset_landing") or {}).get("first_copies")) if isinstance(sp.get("reset_landing"),
                                                                                              dict) else False

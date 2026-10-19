@@ -241,6 +241,32 @@ RULE_COMMITS = {
         what="RC-IOREF: FF I/O references re-measured under the calibrated hold RC (and again after restore) inside "
              "ot_rc_cal_hold; gate CTS hold repair differs only for spine clusters under OT_HOLD_MM; never a gate FAIL "
              "rule; route hold repair targets change in either direction"),
+    # e03b80922 (SINGLE-CLOCK BW contract): ot_mm_sync_link_periods now calls ot_single_clock_check, a proc that exists
+    # only in kits whose spec carries single_clock_contract (single_clock_contract.guard); it can raise (wrong root,
+    # unowned virtual clock, period mismatch), never relax -> tightening scoped by requires=single_clock_contract.
+    "e03b80922d812ab1d803f3c4c9313e74f5eeba9b": dict(
+        kind="tightening", rule="single-clock-contract", requires="single_clock_contract", paths=("tools/orfs_hold_mm.tcl",),
+        what="SINGLE-CLOCK: MM link-period sync runs ot_single_clock_check when the kit defines it (spec "
+             "single_clock_contract); other kits never define the proc -> unchanged"),
+    "c0b7b4d66a11c2125ad0d1ecac53454604b54cc6": dict(
+        kind="tightening", rule="single-clock-contract", requires="single_clock_contract",
+        paths=("physical/common_flow/io_ref_routed.sdc",),
+        what="SINGLE-CLOCK: io_ref_routed.sdc runs ot_single_clock_check when the kit defines it (spec "
+             "single_clock_contract); other kits never define the proc -> unchanged"),
+    # b7aff0fb8 / a6dc6094a (CLOCK-FAMILY ordinary roots): with no generated clock family (ot_cf_master empty) the
+    # family helpers fall back to the pre-family all_registers / legacy ot_ir_arr ownership query, which the strict
+    # family query could refuse ('wrong/ambiguous clock ownership') on check-only macro entries; generated-family kits run
+    # the same code.  a6dc6094a only makes that rename idempotent when the SDC is re-sourced after an RC refresh (the
+    # second source used to raise).  ck_insertion: ot_cf_root is the identity for ordinary roots.  -> relaxing.
+    "b7aff0fb8961b5ac15a3ea8d8551aa62db9facd9": dict(
+        kind="relaxing", rule="clock-family-ordinary",
+        paths=("physical/common_flow/clock_family.tcl", "physical/common_flow/io_ref_routed.sdc",
+               "tools/closure_loop/ck_insertion.py"),
+        what="CLOCK-FAMILY: ordinary roots (no generated family) use the pre-family all_registers ownership query "
+             "again; generated families unchanged; an ownership FAIL can only disappear"),
+    "a6dc6094abd587d675adc438a0247d115bd63862": dict(
+        kind="relaxing", rule="clock-family-ordinary", paths=("physical/common_flow/io_ref_routed.sdc",),
+        what="CLOCK-FAMILY: re-sourcing io_ref_routed.sdc after an RC refresh no longer raises on the legacy rename"),
     # a6d33cc98 (BALANCED-RESET): textbook_lint gains balanced_reset_proof, active only with --balanced-reset-profile,
     # which pre_route_gate passes only when spec.reset_landing.first_copies is set.  For such a kit a proved two-edge
     # landing skips the rst_land_max FAIL (relaxing) but a refused proof is a new FAIL (tightening); every kit without
