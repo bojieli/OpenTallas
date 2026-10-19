@@ -1,0 +1,67 @@
+[
+  {
+    "control": "connected_inverter_output",
+    "verdict": "REFUSED",
+    "reason": "connected inverter output clkload100"
+  },
+  {
+    "control": "data_net_load",
+    "verdict": "REFUSED",
+    "reason": "signal partition ('I', '$abc$36464$auto$blifparse.cc:397:parse_blif$38699', 'Y')"
+  },
+  {
+    "control": "enable_extra_native_pin",
+    "verdict": "REFUSED",
+    "reason": "new unary pin shape clkload100"
+  },
+  {
+    "control": "latch_class",
+    "verdict": "REFUSED",
+    "reason": "new sequential/unknown cell clkload100"
+  },
+  {
+    "control": "unknown_master",
+    "verdict": "REFUSED",
+    "reason": "new sequential/unknown cell clkload100"
+  },
+  {
+    "control": "missing_native_pin",
+    "verdict": "REFUSED",
+    "reason": "pin inventory clkload100"
+  },
+  {
+    "control": "invalid_cap_class",
+    "verdict": "REFUSED",
+    "reason": "missing/invalid native clock input capacitance clkload100"
+  },
+  {
+    "control": "wrong_cap_unit",
+    "verdict": "REFUSED",
+    "reason": "wrong native capacitance unit clkload100"
+  },
+  {
+    "control": "nonidentity_function",
+    "verdict": "REFUSED",
+    "reason": "new nonidentity function clkload100"
+  },
+  {
+    "control": "original_data_rewire",
+    "verdict": "REFUSED",
+    "reason": "signal partition ('I', '$abc$36464$auto$blifparse.cc:397:parse_blif$38699', 'Y')"
+  },
+  {
+    "control": "original_cell_move",
+    "verdict": "REFUSED",
+    "reason": "placement/orient $abc$36464$auto$blifparse.cc:397:parse_blif$38700"
+  },
+  {
+    "control": "BTerm_geometry",
+    "verdict": "REFUSED",
+    "reason": "BTerm geometry"
+  },
+  {
+    "control": "ordinary_net_metadata",
+    "verdict": "REFUSED",
+    "reason": "ordinary net metadata ('I', '$abc$36464$auto$blifparse.cc:397:parse_blif$38699', 'Y')"
+  }
+]

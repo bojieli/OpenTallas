@@ -1,0 +1,3349 @@
+{
+  "schema": "int8.checkpoint.identity.successor.v1",
+  "checkpoint_identity_PASS": true,
+  "qualification": "checkpoint/unqualified; no route, boundary or release qualification",
+  "original_cells": 10370,
+  "new_cells": 253,
+  "tree_cells": 143,
+  "load_cells": 110,
+  "original_clock_sinks": 2782,
+  "ordinary_endpoints_checked": 31048,
+  "new_native_area_um2": 75.85974,
+  "new_TT_input_cap_fF": 530.839298,
+  "rows": [
+    {
+      "instance": "clkbuf_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 1,
+      "output_net": [
+        11528
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_0_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11529
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_1_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11530
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_2_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11531
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_3_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11532
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_4_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11533
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_5_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11534
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_6_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11535
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_3_7_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11528,
+      "output_net": [
+        11536
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_0__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11529,
+      "output_net": [
+        11537
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_10__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11534,
+      "output_net": [
+        11547
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_11__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11534,
+      "output_net": [
+        11548
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_12__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11535,
+      "output_net": [
+        11549
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_13__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11535,
+      "output_net": [
+        11550
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_14__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11536,
+      "output_net": [
+        11551
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_15__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11536,
+      "output_net": [
+        11552
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_1__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11529,
+      "output_net": [
+        11538
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_2__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11530,
+      "output_net": [
+        11539
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_3__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11530,
+      "output_net": [
+        11540
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_4__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11531,
+      "output_net": [
+        11541
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_5__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11531,
+      "output_net": [
+        11542
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_6__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11532,
+      "output_net": [
+        11543
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_7__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11532,
+      "output_net": [
+        11544
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_8__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11533,
+      "output_net": [
+        11545
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_4_9__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11533,
+      "output_net": [
+        11546
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11410
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_100_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11510
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_101_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11511
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_102_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11512
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_103_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11513
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_104_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11514
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_105_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11515
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_106_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11516
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_107_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11517
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_108_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11518
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_109_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11519
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_10_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [
+        11420
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_110_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11520
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_111_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11521
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_112_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11522
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_113_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11523
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_114_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11524
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_115_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11525
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_116_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11526
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_117_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11527
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_11_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11421
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_12_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11422
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_13_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11423
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_14_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11424
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_15_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11425
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_16_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [
+        11426
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_17_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [
+        11427
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_18_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11428
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_19_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11429
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_1_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11411
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_20_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11430
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_21_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [
+        11431
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_22_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11432
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_23_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11433
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_24_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11434
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_25_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11435
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_26_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11436
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_27_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11437
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_28_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11438
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_29_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11542,
+      "output_net": [
+        11439
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_2_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11412
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_30_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [
+        11440
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_31_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11441
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_32_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11442
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_33_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11443
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_34_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11444
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_35_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11445
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_36_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11446
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_37_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11447
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_38_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11448
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_39_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11449
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_3_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11537,
+      "output_net": [
+        11413
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_40_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11450
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_41_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11451
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_42_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11452
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_43_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11453
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_44_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11454
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_45_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11455
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_46_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11456
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_47_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11550,
+      "output_net": [
+        11457
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_48_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11458
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_49_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11459
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_4_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11414
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_50_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11460
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_51_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11461
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_52_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11462
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_53_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11463
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_54_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11552,
+      "output_net": [
+        11464
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_55_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11465
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_56_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11466
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_57_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11467
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_58_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11468
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_59_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11469
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_5_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11415
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_60_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11470
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_61_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11471
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_62_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11472
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_63_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11473
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_64_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11474
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_65_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [
+        11475
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_66_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11476
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_67_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [
+        11477
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_68_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11478
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_69_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11479
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_6_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [
+        11416
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_70_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11480
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_71_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11481
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_72_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11482
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_73_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11483
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_74_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11484
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_75_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11485
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_76_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11486
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_77_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11487
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_78_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11548,
+      "output_net": [
+        11488
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_79_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11489
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_7_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11417
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_80_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11490
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_81_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11491
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_82_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11492
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_83_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11493
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_84_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11494
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_85_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [
+        11495
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_86_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11496
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_87_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11497
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_88_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11498
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_89_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11539,
+      "output_net": [
+        11499
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_8_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11418
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_90_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11500
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_91_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11501
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_92_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11502
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_93_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11503
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_94_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [
+        11504
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_95_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11505
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_96_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11546,
+      "output_net": [
+        11506
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_97_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11507
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_98_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11543,
+      "output_net": [
+        11508
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_99_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [
+        11509
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkbuf_leaf_9_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "TREE",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [
+        11419
+      ],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11538,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload1",
+      "master": "CKINVDCx12_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11540,
+      "output_net": [],
+      "native_TT_input_cap_fF": 7.21805,
+      "native_area_um2": 0.37908
+    },
+    {
+      "instance": "clkload10",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11412,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload100",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11472,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload101",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11473,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload102",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11475,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload103",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11456,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload104",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11459,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload105",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11460,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload106",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11461,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload107",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11462,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload108",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11463,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload109",
+      "master": "INVxp33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11464,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.275723,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload11",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11413,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload12",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11525,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload13",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11526,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload14",
+      "master": "CKINVDCx11_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11527,
+      "output_net": [],
+      "native_TT_input_cap_fF": 6.83522,
+      "native_area_um2": 0.37908
+    },
+    {
+      "instance": "clkload15",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11414,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload16",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11415,
+      "output_net": [],
+      "native_TT_input_cap_fF": 3.70158,
+      "native_area_um2": 0.32076
+    },
+    {
+      "instance": "clkload17",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11418,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload18",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11419,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload19",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11421,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload2",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11541,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload20",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11523,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload21",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11499,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload22",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11514,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload23",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11517,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload24",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11518,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload25",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11519,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload26",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11520,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload27",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11521,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload28",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11522,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload29",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11509,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload3",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11544,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload30",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11510,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload31",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11512,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload32",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11513,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload33",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11515,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload34",
+      "master": "INVx6_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11416,
+      "output_net": [],
+      "native_TT_input_cap_fF": 3.48244,
+      "native_area_um2": 0.11664
+    },
+    {
+      "instance": "clkload35",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11420,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload36",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11426,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload37",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11427,
+      "output_net": [],
+      "native_TT_input_cap_fF": 4.88588,
+      "native_area_um2": 0.32076
+    },
+    {
+      "instance": "clkload38",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11428,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload39",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11429,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11545,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload40",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11430,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload41",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11433,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload42",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11439,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload43",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11422,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload44",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11423,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload45",
+      "master": "INVx4_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11424,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.33645,
+      "native_area_um2": 0.08748
+    },
+    {
+      "instance": "clkload46",
+      "master": "INVx4_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11425,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.33645,
+      "native_area_um2": 0.08748
+    },
+    {
+      "instance": "clkload47",
+      "master": "INVx1_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11507,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.619928,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload48",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11508,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload49",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11434,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload5",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11547,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload50",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11435,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload51",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11436,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload52",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11437,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload53",
+      "master": "INVx6_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11440,
+      "output_net": [],
+      "native_TT_input_cap_fF": 3.48244,
+      "native_area_um2": 0.11664
+    },
+    {
+      "instance": "clkload54",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11496,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload55",
+      "master": "INVx8_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11497,
+      "output_net": [],
+      "native_TT_input_cap_fF": 4.61057,
+      "native_area_um2": 0.1458
+    },
+    {
+      "instance": "clkload56",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11498,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload57",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11500,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload58",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11501,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload59",
+      "master": "INVxp33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11502,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.275723,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload6",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11549,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload60",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11503,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload61",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11476,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload62",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11478,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload63",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11480,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload64",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11481,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload65",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11482,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload66",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11483,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload67",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11505,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload68",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11506,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload69",
+      "master": "INVx6_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11489,
+      "output_net": [],
+      "native_TT_input_cap_fF": 3.48244,
+      "native_area_um2": 0.11664
+    },
+    {
+      "instance": "clkload7",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11551,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload70",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11490,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload71",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11492,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload72",
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "positive",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11493,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.35026,
+      "native_area_um2": 0.4374
+    },
+    {
+      "instance": "clkload73",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11494,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload74",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11495,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload75",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11468,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload76",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11469,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload77",
+      "master": "INVxp33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11470,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.275723,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload78",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11485,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload79",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11486,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload8",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11410,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload80",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11487,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload81",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11488,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload82",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11441,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload83",
+      "master": "INVx1_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11443,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.619928,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload84",
+      "master": "INVx1_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11444,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.619928,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload85",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11446,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload86",
+      "master": "INVx1_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11447,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.619928,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload87",
+      "master": "INVxp33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11474,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.275723,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload88",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11477,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload89",
+      "master": "INVx3_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11448,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.76686,
+      "native_area_um2": 0.0729
+    },
+    {
+      "instance": "clkload9",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11411,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    },
+    {
+      "instance": "clkload90",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11449,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload91",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11450,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload92",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11451,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload93",
+      "master": "INVx5_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11453,
+      "output_net": [],
+      "native_TT_input_cap_fF": 2.90749,
+      "native_area_um2": 0.10206
+    },
+    {
+      "instance": "clkload94",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11454,
+      "output_net": [],
+      "native_TT_input_cap_fF": 4.5117,
+      "native_area_um2": 0.34992
+    },
+    {
+      "instance": "clkload95",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11455,
+      "output_net": [],
+      "native_TT_input_cap_fF": 4.5117,
+      "native_area_um2": 0.34992
+    },
+    {
+      "instance": "clkload96",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11457,
+      "output_net": [],
+      "native_TT_input_cap_fF": 3.70158,
+      "native_area_um2": 0.32076
+    },
+    {
+      "instance": "clkload97",
+      "master": "INVxp67_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11465,
+      "output_net": [],
+      "native_TT_input_cap_fF": 0.443164,
+      "native_area_um2": 0.04374
+    },
+    {
+      "instance": "clkload98",
+      "master": "INVx8_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11467,
+      "output_net": [],
+      "native_TT_input_cap_fF": 4.61057,
+      "native_area_um2": 0.1458
+    },
+    {
+      "instance": "clkload99",
+      "master": "INVx2_ASAP7_75t_R",
+      "kind": "LOAD",
+      "polarity": "inverting",
+      "input_pin": "A",
+      "output_pin": "Y",
+      "input_net": 11471,
+      "output_net": [],
+      "native_TT_input_cap_fF": 1.19281,
+      "native_area_um2": 0.05832
+    }
+  ],
+  "policy": "only positive unary combinational TREE cells; genuine unary identity/inverting LOAD cells with truly open output and priced native input capacitance/area; graph rooted at exact source clk and native FF clock roles, no instance-name classification",
+  "inputs_sha256": {
+    "../hbm-int8-cts-v2-run-1019/output/pre_native/raw.json": "2c0c31ea97ce5b69b861b9a401886ca1cb1553186470e2f4f3142eab2f818093",
+    "../hbm-int8-cts-v2-run-1019/output/native/raw.json": "054610bffb147ec5ed89d3f4923dd8e29784afa3ff31b4cbd8a710057a0652ff",
+    "../hbm-int8-cts-v2-run-1019/output/pre_native/positions.json": "81f6ce018879f908a0bbf21684ec2a278a072bdd046007dd5ccc0527c0b9072e",
+    "../hbm-int8-cts-v2-run-1019/output/native/positions.json": "94758b272126b8dda78874184bb55f0021b32bfc7abf1f083a45c1fc66bc668a",
+    "../hbm-int8-cts-v2-run-1019/input/native_libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "../hbm-int8-cts-v2-run-1019/input/native_libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "../hbm-int8-cts-v2-run-1019/input/native_libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "../hbm-int8-cts-v2-run-1019/input/native_libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "../hbm-int8-cts-v2-run-1019/input/native_libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+  }
+}
