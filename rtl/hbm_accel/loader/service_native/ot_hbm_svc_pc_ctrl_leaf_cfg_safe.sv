@@ -43,8 +43,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     output wire pc_fault,output reg[5:0]owner_fault_split
 );
     // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
-    wire lrst_n;
-    ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(lrst_n));
+    // Identical-depth KEPT relay copies release on the existing edge. Region
+    // zero owns accounting and the AQ port; the remaining copies stay local
+    // to return capture, native K, native KR, metadata, PHY, and diagnostics.
+    // Region seven is spare; regions 8..39 reserve same-edge AQ bank resets.
+    wire [39:0] region_rst_n;
+    wire lrst_n=region_rst_n[0];
+    ot_rst_relay #(.REGIONS(40)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
     // Native PHY-return pin capture: valid and all payload bits enter flops
     // together before response FIFO accounting/address/identity logic. This
     // adds one HBM edge before block-ready; normal on-die calendars do not
@@ -53,8 +58,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     generate if(RREG!=0)begin:g_phy_return
         reg v;reg [255:0]data;
         always @(posedge clk) data<=dram_rdata;
-        always @(posedge clk or negedge lrst_n)
-            if(!lrst_n) v<=1'b0; else v<=dram_rvalid;
+        always @(posedge clk or negedge region_rst_n[1])
+            if(!region_rst_n[1]) v<=1'b0; else v<=dram_rvalid;
         assign ret_v=v;assign ret_data=data;
     end else begin:g_raw_phy_return
         assign ret_v=dram_rvalid;assign ret_data=dram_rdata;
@@ -104,11 +109,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_h9b #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(lrst_n),
+        ot_hbm_svc_ring_h9b #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
           .in_v(kv_q&&k_rdy_seen),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
           .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
           .cnt(n),.cnt_next(nn),.fault(kfront_fault));
-        always @(posedge clk)if(!lrst_n)begin kv_q<=0;k_rdy_seen<=0;k_rdy_q<=0;end
+        always @(posedge clk)if(!region_rst_n[2])begin kv_q<=0;k_rdy_seen<=0;k_rdy_q<=0;end
           else begin kv_q<=k_v;k_rdy_seen<=k_rdy_q;k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
         assign k_rdy=k_rdy_q;
     end else begin:g_raw_k
@@ -119,9 +124,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     assign j_v=head_valid&&!sticky&&!pc_fault;
     generate if(KRREG!=0)begin:g_krreg
         reg ready_q;
-        always @(posedge clk)if(!lrst_n)ready_q<=0;else ready_q<=kr_rdy;
+        always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<=kr_rdy;
         ot_hbm_svc_pin_skid2_h9 #(.WIDTH(277)) u_skid(
-            .clk(clk),.rst_n(lrst_n),.in_v(j_v),.in_r(j_rdy),
+            .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
             .out_v(kr_v),.out_r(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
     end else begin:g_raw_kr
@@ -131,8 +136,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
     generate if(OREG!=0)begin:g_oreg
         reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
-        always @(posedge clk or negedge lrst_n)
-            if(!lrst_n)begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
+        always @(posedge clk or negedge region_rst_n[5])
+            if(!region_rst_n[5])begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
         always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
         assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
         assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
@@ -145,7 +150,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // Internal sticky traffic kill retains its original edge; pins follow one
     // diagnostic edge later, as on the released native controller.
     reg[5:0]fault_detail;
-    always @(posedge clk)if(!lrst_n)begin fault_detail<=0;owner_fault_split<=0;end
+    always @(posedge clk)if(!region_rst_n[6])begin fault_detail<=0;owner_fault_split<=0;end
     else begin
       owner_fault_split<=fault_detail;
       if(i_v&&!legal)fault_detail[0]<=1;
@@ -181,14 +186,34 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[255:0]qh[0:3],qe[0:3];
     reg[3:0]mf_v;reg[QW-3:0]mf_addr[0:3];reg[78:0]mf_data[0:3];
     wire[QW-1:0]next_rp=cv?rp+1'b1:rp,next_ep=posted?ep+1'b1:ep;
-    wire[78:0]mh=(mf_v[rp[1:0]]&&mf_addr[rp[1:0]]==rp[QW-1:2])?mf_data[rp[1:0]]:qh[rp[1:0]][78:0];
-    wire[78:0]me=(mf_v[ep[1:0]]&&mf_addr[ep[1:0]]==ep[QW-1:2])?mf_data[ep[1:0]]:qe[ep[1:0]][78:0];
+    wire[78:0]mh,me;
+    // Select each bank's forwarding source first. Then a local two-bit
+    // selector sees only one <=16-bit four-way mux: <=32 mux inputs per bit.
+    // Five independently KEPT copies track the real pointers on the same edge;
+    // canonicalisation preserves the flop cells even though values coincide.
+    for(genvar s=0;s<5;s=s+1)begin:META_SELECT
+      localparam integer LO=16*s;
+      localparam integer BITS=(79-LO<16)?79-LO:16;
+      (* keep = "true", dont_touch = "true" *) reg[1:0]rp_sel,ep_sel;
+      always @(posedge clk or negedge region_rst_n[4])
+        if(!region_rst_n[4])begin rp_sel<=0;ep_sel<=0;end
+        else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];end
+      wire[BITS-1:0]hbank[0:3],ebank[0:3];
+      for(genvar b=0;b<4;b=b+1)begin:FORWARD
+        assign hbank[b]=(mf_v[b]&&mf_addr[b]==rp[QW-1:2])?
+          mf_data[b][LO+:BITS]:qh[b][LO+:BITS];
+        assign ebank[b]=(mf_v[b]&&mf_addr[b]==ep[QW-1:2])?
+          mf_data[b][LO+:BITS]:qe[b][LO+:BITS];
+      end
+      assign mh[LO+:BITS]=hbank[rp_sel];
+      assign me[LO+:BITS]=ebank[ep_sel];
+    end
     assign queue_head=mh[63:0];assign queue_post=me[63:0];assign qrow_post=me[78:64];
     for(genvar b=0;b<4;b=b+1)begin:METADATA
       wire[1:0]j=2'(b)-wp[1:0];wire we=accepted&&{1'b0,j}<length;
       wire[QW-1:0]wa=wp+QW'(j);
       wire[78:0]wd={incoming[29:15],i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+j)^incoming[16:15]),incoming[11:7],i_tag,4'(j),i_wstrb};
-      always @(posedge clk or negedge lrst_n)if(!lrst_n)mf_v[b]<=0;else mf_v[b]<=we;
+      always @(posedge clk or negedge region_rst_n[4])if(!region_rst_n[4])mf_v[b]<=0;else mf_v[b]<=we;
       always @(posedge clk)begin mf_addr[b]<=wa[QW-1:2];mf_data[b]<=wd;end
       ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
         .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
