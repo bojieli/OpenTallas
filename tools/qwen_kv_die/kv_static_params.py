@@ -516,7 +516,8 @@ def schedule_check(sched, tile, bound=None, plan_paths_=None, table_paths_=None,
     F('PVFIN_START_ALIGN', 'pvfin start vs pair result trunks: D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) != 0',
       [dict(pair=p, skew=v, pvfst=A['pvfst'], pvp=A['pvp'][p], PV_LEAD=A['PV_LEAD'])
        for p, v in enumerate(A['pvfin_start_align']) if v != 0],
-      'pad the shorter side (pvfst 65 b or the 534-b pvp trunk) once PV_LEAD is met; moot while PV_LEAD fails')
+      'generator: kv_k_rt_eq.equalize_pvfin_start pads ks_pvfst / the shorter ks_pvp trunk (OT_KV_PVFIN_ALIGN, default 1); '
+      'a post-station change needs re-equalising')
     F('F_DLY', f'attention face: 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) = {A["F_DLY"]} != the tile F_DLY {tile["F_DLY"]}',
       [dict(F_DLY=A['F_DLY'], fin=A['fin'], pvfst=A['pvfst'], PV_LEAD=A['PV_LEAD'])] if A['F_DLY'] != tile['F_DLY'] else [],
       'unpaddable (path longer than the tile value): boot-programmable F_DLY at the re-harden')
