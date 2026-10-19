@@ -14,10 +14,13 @@ LANE LATENCY (die edges added between a client port and the bank port, per direc
               N = the landing's station count from its note, E = (K - ceil(N/2)) mod 8 in 1..8 from the K straps the
               die binds -> the latency the netlist will actually have; 'NO_E placeholder' K is reported as such)
 REQUIRED ROUND TRIP of a client on bank b:  RT_b = BANK + PIN + lane(rq) + lane(rr).
-  (1) EQUAL: a fixed-latency client has ONE round-trip parameter, so RT_b must be the same for every bank it reads
-      (the die pads the short lanes: required padding per lane is reported);
+  SCALAR param (one round trip for the client):
+  (1) EQUAL: RT_b must be the same for every bank it reads (the die pads the short lanes: padding per lane reported);
   (2) PARAM: param == ref + (max_b RT_b - ref_rt), ref/ref_rt = the value the RTL header states and the round trip it
       was designed for (rule table RULES below; a param absent from the contract takes the RTL default).
+  PER-BANK VECTOR param (contract params value is a list, element b = bank index b = the bank instance's last digit;
+  the client captures each bank's answer on its own edge, so no lane padding is needed -- cheaper than padding wide
+  data lanes when the spread is large): element b == ref + (RT_b - ref_rt) for every bank b.
 Clients behind a SHARE (a request mux in front of a bank group) are checked through the share: the share's own rule
 gives its excess over its reference, and the downstream client adds that excess plus its own lanes to the share.
 Clients without a fixed capture (fire-and-forget writers) and hub/calendar ports are listed as INFO, not checked.
@@ -192,6 +195,20 @@ def check(c):
         if not rts:
             row['status'] = 'FAIL'; row['bad'].append('no return path traced'); rows.append(row); continue
         need = max(rts)
+        vec = I[ci].get('params', {}).get(pname)
+        if isinstance(vec, list) and ref is not None:
+            row.update(have=vec, want=[None] * len(vec))
+            for p in ps:
+                bi = int(re.sub(r'\D', '', p['bank'][-1]) or 0)
+                w = ref + p['rt'] - ref_rt
+                if bi < len(vec):
+                    row['want'][bi] = w
+                if bi >= len(vec) or int(vec[bi]) != w:
+                    row['bad'].append(f'{ci}.{pname}[{bi}] = {vec[bi] if bi < len(vec) else None}, bank {p["bank"]} needs {w}')
+            if rule[1] == 'share':
+                excess[ci] = need - ref_rt
+            row['status'] = 'FAIL' if row['bad'] else 'PASS'
+            rows.append(row); continue
         if len(rts) > 1:
             row['bad'].append(f'unequal round trip across banks {rts}: pad lanes to {need} '
                               f'({", ".join(sorted({p["bank"] + "+" + str(need - p["rt"]) for p in ps if p["rt"] != need}))})')

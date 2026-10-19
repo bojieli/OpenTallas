@@ -38,6 +38,10 @@ def test():
     assert status(contract(10, 2, 1))[:2] == ('PASS', 10)                                      # 6 + 1 + 2 + 1
     st, want, s = status(contract(10, 2, 1, bank2_extra=1))                                    # unequal lanes -> pad
     assert st == 'FAIL' and want == 11 and s['unequal'] == 1
+    c = contract(10, 2, 1, bank2_extra=3); c['instances']['xl']['params']['RD_LAT'] = [10, 13]   # per-bank vector
+    assert status(c)[0] == 'PASS'
+    c['instances']['xl']['params']['RD_LAT'] = [10, 12]
+    assert status(c)[0] == 'FAIL'
     print('test_d4g_bank_latency PASS')
 
 
