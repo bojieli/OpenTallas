@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HH-2 2026-10-19: golden of tb_pv_merge (ot_hbm_sm_pv_merge, LV 4, PUBLISH 1).
   gen   STIM.hex [seed]      64 chunks x 16 FP32 lanes (entry e chunk j at line e*8+j)
-  check STIM.hex RUN.log     binary-counter merge in RNE FP32 (numpy), fold 0 <- 0 + 1, publication words; prints
+  check STIM.hex RUN.log [tight]   binary-counter merge in RNE FP32 (numpy), fold 0 <- 0 + 1, publication words; prints
                              'PVM PASS checked=N' or 'PVM FAIL mismatches=M'
 Merge order (the RTL's): chunk c merges stack[k] + v while bit k of c is set (carry chain), then rests in stack[k];
 the flush adds the set levels of n from level 0 up: acc = stack[k] + acc (k = 0: + 0).  Values are normal and nonzero,
@@ -45,7 +45,7 @@ def merge(ch):
     return acc
 
 
-def check(stim, log):
+def check(stim, log, tight=False):
     ch = [lanes(int(l, 16)) for l in open(stim).read().split()]
     node, tag = {}, {}
     for e in range(8):
@@ -54,6 +54,9 @@ def check(stim, log):
     exp_pv = {(tag[e], word(node[e])) for e in range(8)}
     fold = (node[0] + node[1]).astype(F)
     pubn = {0: fold, **{e: node[e] for e in range(2, 8)}}
+    if tight:   # (0<-0+1) (2<-2+3) (4<-4+5) (2<-2+4); publish 2, 0, 6, 7
+        n23, n45 = (node[2] + node[3]).astype(F), (node[4] + node[5]).astype(F)
+        pubn = {0: fold, 2: (n23 + n45).astype(F), 6: node[6], 7: node[7]}
     exp_pub = {(e, w, tag[e], int(pubn[e].view(np.uint32)[w])) for e in pubn for w in range(16)}
     got_pv, got_pub, done = set(), set(), None
     for ln in open(log):
@@ -69,13 +72,13 @@ def check(stim, log):
     mism = len(exp_pv ^ got_pv) + len(exp_pub ^ got_pub)
     if done is None:
         mism += 1
-    elif done["fault"] != "0" or done["pv"] != "8" or done["pub"] != str(16 * 7):
+    elif done["fault"] != "0" or done["pv"] != "8" or done["pub"] != str(16 * len(pubn)):
         mism += 1
     n = len(exp_pv) * 16 + len(exp_pub)
     if mism:
         print(f"PVM FAIL mismatches={mism} (pv {len(exp_pv ^ got_pv)}, pub {len(exp_pub ^ got_pub)}, done {done})")
         return 1
-    print(f"PVM PASS checked={n} (8 runs of 1..8 chunks, fold 0<-0+1, 7 publications; {done})")
+    print(f"PVM PASS checked={n} (8 runs of 1..8 chunks, {'tight fold calendar' if tight else 'fold 0<-0+1'}, {len(pubn)} publications; {done})")
     return 0
 
 
@@ -83,4 +86,4 @@ if __name__ == "__main__":
     if sys.argv[1] == "gen":
         gen(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 19)
     else:
-        sys.exit(check(sys.argv[2], sys.argv[3]))
+        sys.exit(check(sys.argv[2], sys.argv[3], len(sys.argv) > 4 and sys.argv[4] == "tight"))

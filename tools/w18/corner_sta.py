@@ -84,6 +84,13 @@ def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = (),
     vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
+    # PF-HARDCHILD-VERDICT (S81-CAPC 2026-10-19): the sign-off SDC's PINFLOP reference (physical/qwen_die_masters/
+    # pinflop_ref.tcl (b)) counts a hard child's clock pin at pin arrival + the ETM's internal insertion, read from
+    # ADDITIONAL_LIBS / OT_PF_MACRO_LIBS.  The route sets ADDITIONAL_LIBS; this verdict session set neither, so a
+    # wires-only parent was referenced to the RAW child clock pin (~insertion before the child flops) and failed the
+    # verdict at the reference the route had closed against (s81sl_capc d8836674d: route FF +27.6, verdict -158.2).
+    pf = (f"set ::env(OT_PF_MACRO_LIBS) [list {' '.join(f'/src/{m}/{Path(m).name}_{corner}.lib' for m in macros)}]"
+          if macros else "")
     check = "max" if corner in SETUP_CORNERS else "min"
     post = "\n".join(f"read_sdc /src/{p}" for p in post_sdc)
     return f"""
@@ -92,6 +99,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef{vt_lefs}
 {mlefs}
 {libs}
 {mlibs}
+{pf}
 read_db {base}/6_final.odb
 set ::ot_ce_corner {corner}
 read_sdc {base}/{sdc_name}

@@ -19,7 +19,22 @@ module ot_hbm_sm_pv_merge #(
     // TURNREG 1 (HH-12 2026-10-19, smh_pvm gate: setup -341 ps at 770 ps on bp -> 8:1 entry-state mux -> operand select ->
     // 1,024-bit operand mux -> adder decode): the turn entry's state is registered one cycle ahead (entry nb = bp+1 is
     // only written at its own turn, 8 cycles earlier, so the copy equals e_*[r] exactly).  Cycle-identical; 0 = old form.
-    parameter integer TURNREG=0
+    parameter integer TURNREG=0,
+    // SAFE 1 (HBM-PVM-SAFE 2026-10-19, smh_pvm route r3 NEEDS_RTL TT -125 / FF -18: macro rd_out -> operand mux -> adder
+    // A1 decode/compare in one cycle; fd1 -> 3-way write mux -> macro wd_in; flop delay line fw_a/fw_v): structural form.
+    //  (a) OPERAND REGISTERS: the operand mux lands in oa/ob/ov and the adders start from registers; the result register
+    //      vreg is dropped (the adder's own y is read at the entry's next turn), so a merge turn stays exactly 8 cycles
+    //      (1 operand + ALAT 7) and the merge stream is cycle-identical.
+    //  (b) adders without datapath reset (ot_hdc_fp32_add_lat DRST 0: only valid bits reset; ~7k reset loads removed).
+    //  (c) stack write data = ev ? sum : y (2:1 on one registered select; the other sources are all y).  Equal to the
+    //      3-way priority mux on every non-faulting schedule (ev never coincides with a fold write-back, a finish or a
+    //      chain write: each is a sticky fault or excluded by the turn logic).
+    //  (d) fold write-back tracker = 8-slot ring indexed by a free-running counter (written at the add issue, read 8
+    //      cycles later at the same slot) instead of the fw_a / fw_v flop delay lines.
+    //  Schedule cost: a fold's sum is written ALAT + 3 cycles after its request (was ALAT + 2).  A fold may name as b a
+    //  node whose write-back lands in the request cycle (b is read one cycle later); a and publication must follow the
+    //  write-back by >= 1 cycle.  Qwen h128 calendar: publication of node 0 moves from F0 + 22 to F0 + 23 (+1 cycle a block).
+    parameter integer SAFE=0
 )(
     input wire clk, rst_n,
     input wire ev,
@@ -45,6 +60,7 @@ module ot_hbm_sm_pv_merge #(
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
     initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
+    initial if(SAFE!=0 && (SAFE!=1 || TURNREG!=1))$fatal(1,"PV merge SAFE 1 requires TURNREG 1");
     genvar l;
     wire publish_request=PUBLISH ? pub_start : 1'b0;
     wire fold_request=PUBLISH ? fold_start : 1'b0;
@@ -53,7 +69,12 @@ module ot_hbm_sm_pv_merge #(
     reg [511:0] fold_a_data;
     reg [ALAT:0] fw_v;                                 // fold sum in flight (bit k: issued k cycles ago)
     reg [2:0] fw_a [0:ALAT];
-    wire fold_write=fw_v[ALAT-1];                      // the add issued ALAT cycles ago: my holds its sum this cycle
+    // SAFE 1: the ring slot read this cycle holds the add issued ALAT + 1 cycles ago (operand register + ALAT)
+    reg [2:0] fr_c;                                    // free-running ring index
+    reg [7:0] fr_v;                                    // ring: fold add issued at this slot
+    reg [2:0] fr_a [0:7];                              // ring: its entry
+    wire fold_write=SAFE ? fr_v[fr_c] : fw_v[ALAT-1];  // the add issued ALAT (+1) cycles ago: my holds its sum this cycle
+    wire [2:0] fold_waddr=SAFE ? fr_a[fr_c] : fw_a[ALAT-1];
     wire finish;
     wire [2:0] finish_slot;
     wire [5:0] stack_read_addr;
@@ -87,12 +108,31 @@ module ot_hbm_sm_pv_merge #(
     reg             mv;
     wire [L*32-1:0] my;
     wire [L-1:0]    mf;
-    reg  [L*32-1:0] vreg;                             // adder result, back at the entry's next turn
-    generate for (l = 0; l < L; l = l + 1) begin : g_madd
-        ot_gpu_fadd #(.LAT(ALAT)) u_m (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma[32*l +: 32]), .b(mb[32*l +: 32]),
-                                       .y(my[32*l +: 32]), .fault(mf[l]));
+    reg  [L*32-1:0] vreg;                             // adder result, back at the entry's next turn (SAFE 0)
+    wire [L*32-1:0] vres;                             // the result read at the entry's next turn
+    generate if (SAFE) begin : g_safe
+        // (a) operand registers: the adders start from flops; y is the result at the entry's next turn
+        reg [L*32-1:0] oa, ob;
+        reg            ov;
+        always @(posedge clk) begin oa <= ma; ob <= mb; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) ov <= 1'b0; else ov <= mv;
+        for (l = 0; l < L; l = l + 1) begin : g_madd
+            wire [1:0] er;
+            wire       vo;
+            // (b) DRST 0: no reset on the adder datapath (valid bits only)
+            ot_hdc_fp32_add_lat #(.LAT(ALAT), .DRST(0)) u_m (.clk(clk), .rst_n(rst_n), .valid_in(ov), .a(oa[32*l +: 32]),
+                .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
+            assign mf[l] = vo && (er != 2'd0);
+        end
+        assign vres = my;
+    end else begin : g_base
+        for (l = 0; l < L; l = l + 1) begin : g_madd
+            ot_gpu_fadd #(.LAT(ALAT)) u_m (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma[32*l +: 32]), .b(mb[32*l +: 32]),
+                                           .y(my[32*l +: 32]), .fault(mf[l]));
+        end
+        always @(posedge clk) vreg <= my;
+        assign vres = vreg;
     end endgenerate
-    always @(posedge clk) vreg <= my;
     // turn logic (combinational) for entry r = bp
     wire [2:0] r = bp;
     // turn state of entry r (TURNREG 1: registered at nb one cycle earlier; 0: read through the 8:1 entry mux)
@@ -123,8 +163,9 @@ module ot_hbm_sm_pv_merge #(
     assign finish_slot=e_tag[r][2:0];
     assign stack_read_addr=publish_request ? {pub_slot,3'd7} : fold_request ? {((MUT==4) ? fold_b : fold_a),3'd7} : fd0 ? {fb0,3'd7} : sr_a;
     assign stack_write_en=sw_ce || (PUBLISH && finish) || fold_write;
-    assign stack_write_addr=fold_write ? {fw_a[ALAT-1],3'd7} : (PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
-    assign stack_write_data=fold_write ? my : (PUBLISH && finish) ? vreg : sw_d;
+    assign stack_write_addr=fold_write ? {fold_waddr,3'd7} : (PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
+    // (c) SAFE: ev ? sum : y (the fold, finish and chain writes all store y); base: the 3-way priority mux
+    assign stack_write_data=SAFE ? (ev ? sum : my) : fold_write ? my : (PUBLISH && finish) ? vreg : sw_d;
 
     wire       ev_first = tag_d[TAGW-2], ev_last = tag_d[TAGW-3];
     wire [7:0] ev_c = ev_first ? 8'd0 : t_n8;
@@ -137,12 +178,12 @@ module ot_hbm_sm_pv_merge #(
             if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
             else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
         end else if (t_busy && !t_fl) begin
-            if (t_ck) begin mv = 1'b1; ma = st_rd; mb = vreg; end
-            else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vreg; end
+            if (t_ck) begin mv = 1'b1; ma = st_rd; mb = vres; end
+            else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vres; end
         end else if (t_busy && t_fl && t_klt) begin
             mv = 1'b1;
-            if (t_nk) begin ma = st_rd; mb = t_k0 ? {L*32{1'b0}} : vreg; end
-            else begin ma = (t_k0 || (MUT == 2 && t_kl1)) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}}; end
+            if (t_nk) begin ma = st_rd; mb = t_k0 ? {L*32{1'b0}} : vres; end
+            else begin ma = (t_k0 || (MUT == 2 && t_kl1)) ? {L*32{1'b0}} : vres; mb = {L*32{1'b0}}; end
         end
     end
     integer i;
@@ -171,7 +212,7 @@ module ot_hbm_sm_pv_merge #(
             end
         end
     end
-    always @(posedge clk) if (finish) begin pv_y <= vreg; pv_tag <= e_tag[r]; end
+    always @(posedge clk) if (finish) begin pv_y <= vres; pv_tag <= e_tag[r]; end
     // The unused level7 stores one final512bit node for each logical slot.
     // Publication shares the existing1R1W macro after the merge is quiescent.
     // Macro read -> buffer capture -> first scalar is exactly2edges. Requests
@@ -187,14 +228,15 @@ module ot_hbm_sm_pv_merge #(
             fw_v<={fw_v[ALAT-1:0],fd1};
             if(fold_request)begin
                 fa0<=fold_a;fb0<=fold_b;
-                if(!node_valid[fold_a] || !node_valid[fold_b] || node_pending[fold_a] || node_pending[fold_b] ||
+                if(!node_valid[fold_a] || !node_valid[fold_b] || node_pending[fold_a] ||
+                   (node_pending[fold_b] && !(SAFE && fold_write && fold_waddr==fold_b)) ||
                    fold_a==fold_b || ev || (|e_busy) || publish_request || pub_d0 || pub_d1 || pub_active || fd0)fold_fault<=1;
                 node_pending[fold_a]<=1'b1;
             end
             if(fd0)fa1<=fa0;
             if(fd1 && (ev || (|e_busy)))fold_fault<=1;
             if(fold_write)begin
-                node_pending[fw_a[ALAT-1]]<=1'b0;
+                node_pending[fold_waddr]<=1'b0;
                 if(sw_ce || (PUBLISH && finish))fold_fault<=1;
             end
             if(publish_request && node_pending[pub_slot])fold_fault<=1;
@@ -205,6 +247,11 @@ module ot_hbm_sm_pv_merge #(
         fw_a[0]<=fa1;
         for(fk=1;fk<=ALAT;fk=fk+1)fw_a[fk]<=fw_a[fk-1];
     end
+    // (d) SAFE fold ring: slot fr_c is read (write-back of the add issued 8 cycles ago) and rewritten (this cycle's issue)
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin fr_c<=3'd0;fr_v<=8'd0;end
+        else begin fr_c<=fr_c+3'd1;fr_v[fr_c]<=fd1;end
+    always @(posedge clk) if(fd1)fr_a[fr_c]<=fa1;
     reg [TAGW-1:0] node_tag[0:7];
     reg pub_d0,pub_d1,pub_active,pub_fault;
     reg [2:0] slot0,slot1;

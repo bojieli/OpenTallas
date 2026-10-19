@@ -1,0 +1,161 @@
+{
+ "name": "smh_pvm_ref_s1",
+ "top": "ot_hbm_sm_pv_merge",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv"
+ ],
+ "defines": [],
+ "params": {
+  "TAGW": 16,
+  "LV": 4,
+  "PUBLISH": 1,
+  "TURNREG": 1,
+  "SAFE": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 11400,
+ "pg_layer": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "ev",
+   "sum",
+   "tag_d"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "pv_v",
+   "pv_y",
+   "pv_tag"
+  ],
+  "W": [
+   "pub_start",
+   "pub_slot",
+   "fold_start",
+   "fold_a",
+   "fold_b",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_tag",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware"
+  }
+ },
+ "job": {
+  "owner": "Claude:HBM-PVM-SAFE",
+  "branch": "claude/hbm-pvm-safe-1019",
+  "tag": "s1",
+  "purpose": "HBM-PVM-SAFE 10-19 structural SAFE redesign of smh_pvm (ot_hbm_sm_pv_merge, attn leaf band of rp4a) after route smh_pvm_ref_r4-r3-f63e66b4c NEEDS_RTL TT -125.42 / FF -17.57 / DRC 0. Classified (TT): macro rd_out -> operand mux -> adder A1 decode/compare u_ca -125 (456 paths, 14 lv); fd1 -> 3-way write mux -> macro wd_in -49 (18 lv); ev pin reg -> operand mux -> u_ca -21 (21 lv). FF hold: adder pass-through stages (u_cb->u_cd, s2->u_cc) -17.6 with 40 ps leaf skew, fw_a delay line. Fixes: SAFE 1 = operand registers before the 16 adders (result register vreg dropped: merge turn stays 8 cycles, cycle-identical), adders DRST 0 (no datapath reset: ~7k reset loads gone), write data ev ? sum : y (2:1, one registered select), fold tracker 8-slot ring (no fw_a/fw_v delay line). Floorplan: outline 259.2 x 172.8 (1.5:1, was 373.68 x 146.88 = 2.54:1) from synthesis area, SRAM on the 43.2 lattice at (43.2, 43.2) with 43.2 / 44.7 um channels on its W / E pin faces, full-width std-cell bands N and S. Schedule: fold write-back +1 cycle (pub of node 0 F0+22 -> F0+23 in the Qwen h128 calendar), handed to TW5-HBM-DIE / HBM-REPRICE3.",
+  "benches": [
+   {
+    "name": "pvm_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_exact 0 1 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_safe_1019/bench/exact.log"
+   },
+   {
+    "name": "pvm_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_tight 0 1 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_safe_1019/bench/tight.log"
+   },
+   {
+    "name": "pvm_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_mut1 1 1 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_safe_1019/bench/mut1.log"
+   },
+   {
+    "name": "pvm_mut4",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_mut4 4 1 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_safe_1019/bench/mut4.log"
+   },
+   {
+    "name": "pvm_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_mut5 5 1 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_safe_1019/bench/mut5.log"
+   },
+   {
+    "name": "pvm_pubearly",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_pubearly 0 1 1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_safe_1019/bench/pubearly.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/sm/attn/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/smh_pvm_ref_s1/views",
+  "record_to": "results/rtl/ref_tile/smh_pvm_ref_s1"
+ },
+ "layer_cap": "M5",
+ "outline": {
+  "w": 259.2,
+  "h": 172.8
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
