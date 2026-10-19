@@ -1,0 +1,131 @@
+{
+  "status": "MODEL_SOURCE_GRANT_REQUIRED",
+  "source_revision": "5f2ce19bc",
+  "source_files": 29,
+  "current": {
+    "root": "qkd_host_root_admission",
+    "root_parameters": {
+      "ENABLE_SERVICE": 1,
+      "ENABLE_NATIVE": 1,
+      "ENABLE_TOKEN": 1,
+      "NL": 2
+    },
+    "HOST_MU": 0,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "NW": 18,
+    "PLB": 13,
+    "MQ": 1
+  },
+  "proposed": {
+    "HOST_MU": 1,
+    "NSLOT": 4,
+    "ENG_CTX": 4,
+    "NW": 18,
+    "PLB": 11,
+    "MQ": 4,
+    "default_off": true,
+    "scalar_defaults_byte_identical_required": true
+  },
+  "new_contract_gap": {
+    "producer": "ot_host_if_pb2_observed raw step/retire/CQ position plus slot8",
+    "consumer": "qkd_host_post_collector_mu indexes position[17:16]",
+    "witness_positions": [
+      17,
+      17,
+      17,
+      17
+    ],
+    "witness_slots": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "consumer_UIDs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "actual_RTL_failure_trace": null,
+    "fix_plan": "private checked slot UID, preserve public CQ ABI"
+  },
+  "source_costs": {
+    "scheduler_declared_slot_table_bits_SU": 177,
+    "scheduler_declared_slot_table_bits_MU": 708,
+    "MODE0_live_slot_record_bits_each": 145,
+    "endpoint_same_port_internal_NBA_candidate_bits_SU": 785,
+    "endpoint_same_port_internal_NBA_candidate_bits_MU": 1305,
+    "endpoint_source_delta_bits": 520,
+    "health_state_floor_bits_SU": 59,
+    "health_state_floor_bits_MU": 236,
+    "native_FF_delta": null,
+    "synthesis_area_delta_um2": null,
+    "clock_cap_delta_fF": null,
+    "copy_fixedpoint_cost": null
+  },
+  "storage": {
+    "prompt_bits_SU": 147456,
+    "prompt_bits_MU": 147456,
+    "prompt_positions_per_user_SU": 8192,
+    "prompt_positions_per_user_MU": 2048,
+    "KV_context_positions_per_user": 8192,
+    "event_queue_depth": 16,
+    "event_width": 116,
+    "event_bits": 1856,
+    "issue_queue_depth": 4,
+    "terminal_queue_depth": 4,
+    "POST_queue_depth": 4,
+    "SRAM_requirement": "runtime indexed >2048 bits must use SRAM; existing prompt already macro-backed; no proposed new table exceeds this per structure"
+  },
+  "boundaries": {
+    "HC_bits": 182,
+    "TAG_bits": 59,
+    "TK_bits": 93,
+    "native_request_position_bits": 18,
+    "additional_UID_transport_bits": 0,
+    "additional_retained_request_export_bits": 1,
+    "UID_adapter_registered_bits": 0,
+    "health_distribution_boundary_cost": null,
+    "route_tracks": null,
+    "fanout_native": null,
+    "all_driver_cap": 32,
+    "wire_limit_um": 405
+  },
+  "schedule": {
+    "generated_scheduler_source_II_lowerbound_edges": 4,
+    "prompt_scheduler_source_II_lowerbound_edges": 9,
+    "full_accept_II_edges": null,
+    "SU_latency_delta_edges": null,
+    "MU_token_latency_edges": null,
+    "aggregate_tokens_per_second": null,
+    "host_return_inherited_calendar_price_edges": 135,
+    "price_is_integrated_measurement": false,
+    "event_reservation": "ev_n+mq_n<14 before issue",
+    "maximum_event_occupancy_measured": null,
+    "external_DMA_service_budget": null,
+    "native_request_reservations": 1,
+    "target_static_calendar": true,
+    "backpressure_added": false
+  },
+  "retirement_obligations": [
+    "per-context terminal covers last KV/VM/collective/shared return operation",
+    "POST release_seen global register ownership across overlapping users",
+    "last-user/cancel/recovery/wrap real global drains",
+    "accepted terminal identity not latest grant",
+    "health continuous veto plus consume/drain raw completion",
+    "success word0 VALID immutable after offer",
+    "rawPOR retained health/owner/CQ/DMA/cache context matched across PLL/warm"
+  ],
+  "qualification": {
+    "RTL_changed": false,
+    "generator_changed": false,
+    "RTL_simulated": false,
+    "EDA_run": false,
+    "full_token_rerun": false,
+    "native_qualified": false,
+    "source_arithmetic_checks": "PASS",
+    "contract_cases": 9
+  }
+}

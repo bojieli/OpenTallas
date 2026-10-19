@@ -1,0 +1,133 @@
+{
+  "kind": "SOURCE_GUARDED_ARITHMETIC_ONLY_NO_RTL_SIM",
+  "current": {
+    "die_MU": 1,
+    "HOST_MU": 0,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "NW": 18,
+    "PLB": 13,
+    "MQ": 1
+  },
+  "target": {
+    "HOST_MU": 1,
+    "NSLOT": 4,
+    "ENG_CTX": 4,
+    "NW": 18,
+    "PLB": 11,
+    "MQ": 4
+  },
+  "users": [
+    {
+      "slot": 0,
+      "raw_observer_pos": 17,
+      "HC_pos": 17,
+      "epoch": 28,
+      "TAG_user": 0,
+      "scalar_endpoint_accept_range": true,
+      "MU_endpoint_user": 0,
+      "MU_endpoint_range_and_epoch": true,
+      "existing_MU_POST_issue_user": 0,
+      "existing_MU_POST_retire_user": 0,
+      "existing_MU_POST_CQ_user": 0,
+      "POST_uid_agrees": true,
+      "proposed_checked_slot_uid": 0,
+      "proposed_adapter_pos": 17
+    },
+    {
+      "slot": 1,
+      "raw_observer_pos": 17,
+      "HC_pos": 65553,
+      "epoch": 29,
+      "TAG_user": 1,
+      "scalar_endpoint_accept_range": false,
+      "MU_endpoint_user": 1,
+      "MU_endpoint_range_and_epoch": true,
+      "existing_MU_POST_issue_user": 0,
+      "existing_MU_POST_retire_user": 0,
+      "existing_MU_POST_CQ_user": 0,
+      "POST_uid_agrees": false,
+      "proposed_checked_slot_uid": 1,
+      "proposed_adapter_pos": 65553
+    },
+    {
+      "slot": 2,
+      "raw_observer_pos": 17,
+      "HC_pos": 131089,
+      "epoch": 30,
+      "TAG_user": 2,
+      "scalar_endpoint_accept_range": false,
+      "MU_endpoint_user": 2,
+      "MU_endpoint_range_and_epoch": true,
+      "existing_MU_POST_issue_user": 0,
+      "existing_MU_POST_retire_user": 0,
+      "existing_MU_POST_CQ_user": 0,
+      "POST_uid_agrees": false,
+      "proposed_checked_slot_uid": 2,
+      "proposed_adapter_pos": 131089
+    },
+    {
+      "slot": 3,
+      "raw_observer_pos": 17,
+      "HC_pos": 196625,
+      "epoch": 31,
+      "TAG_user": 3,
+      "scalar_endpoint_accept_range": false,
+      "MU_endpoint_user": 3,
+      "MU_endpoint_range_and_epoch": true,
+      "existing_MU_POST_issue_user": 0,
+      "existing_MU_POST_retire_user": 0,
+      "existing_MU_POST_CQ_user": 0,
+      "POST_uid_agrees": false,
+      "proposed_checked_slot_uid": 3,
+      "proposed_adapter_pos": 196625
+    }
+  ],
+  "checks": [
+    {
+      "case": "valid_uid0",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "case": "valid_uid1",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "case": "valid_uid2",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "case": "valid_uid3",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "case": "wrong_epoch",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "wrong_tag",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "out_of_range_slot",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "out_of_range_position",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "raw_public_abi_used_as_encoded",
+      "accepted": false,
+      "expected": false
+    }
+  ]
+}

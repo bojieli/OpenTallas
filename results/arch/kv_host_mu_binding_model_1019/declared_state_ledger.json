@@ -1,0 +1,5591 @@
+[
+  {
+    "source": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "name": "committed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "name": "commit_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/physical/ot_qwen_host_ctl.sv",
+    "name": "ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/physical/ot_qwen_host_ctl.sv",
+    "name": "req_q",
+    "width": 61,
+    "depth": 1,
+    "bits": 61,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/physical/ot_qwen_host_ctl.sv",
+    "name": "pr_q",
+    "width": 143,
+    "depth": 1,
+    "bits": 143,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/physical/ot_qwen_host_ctl.sv",
+    "name": "tk_q",
+    "width": 744,
+    "depth": 1,
+    "bits": 744,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "wd",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "agree_c",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "all_done_c",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "any_fault_c",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "agree_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "all_done_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "any_fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_v",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_old",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_now",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_t0",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_seen",
+    "width": 8,
+    "depth": 4,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_tv",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_tok",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_val",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "m_last",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "v_n",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "tv_n",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "seen_n",
+    "width": 8,
+    "depth": 4,
+    "bits": 32,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "tok_n",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "val_n",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "gk",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "gnew",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "f_die",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "f_dis",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "f_ovf",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "r_v",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "r_g",
+    "width": 2,
+    "depth": 8,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "r_tok",
+    "width": 18,
+    "depth": 8,
+    "bits": 144,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "r_val",
+    "width": 32,
+    "depth": 8,
+    "bits": 256,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "hit",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "first",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "cap_tok",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "name": "cap_val",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "pb_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "abort_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "service_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "block_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "epoch_fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "req_q",
+    "width": 61,
+    "depth": 1,
+    "bits": 61,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "pr_q",
+    "width": 143,
+    "depth": 1,
+    "bits": 143,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "tk_q",
+    "width": 744,
+    "depth": 1,
+    "bits": 744,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "role_q",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "services_q",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "name": "faults_q",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+    "name": "recovery_reset_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+    "name": "mu_out_n",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+    "name": "cnt",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "role_q",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_irq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_we",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_waddr",
+    "width": null,
+    "depth": 1,
+    "bits": null,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_wdata",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_re",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_raddr",
+    "width": null,
+    "depth": 1,
+    "bits": null,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pb_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_eng_done",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "completion_armed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_eng_next_token",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_eng_cycles",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_eng_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "clear_ack",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_arr_rst_n",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_cfg_users",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_cfg_prompt_len",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_cfg_gen_len",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pr_re",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pr_user",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_pr_pos",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_tok_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_tok_user",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_tok_pos",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_tok_id",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_users_done",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "name": "pin_arr_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "enable",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sq_base",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cq_base",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "msi_addr",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sq_log",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cq_log",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sq_tail",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sq_head",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cq_head",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cq_tail",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cq_phase",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "irq_status",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "irq_mask",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "msi_data",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "msi_en",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sticky_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sticky_dma",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_cycles",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_busy",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_tokens",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_steps",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_reqs",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_msis",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_rd",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_wr",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "c_cqfull",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ev_ovf",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "i_st",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "inflight",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_inf",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "mq_slot",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "mq_w",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "mq_r",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "mq_n",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "mu_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "pb_wait_edges",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "b_st",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "b_err",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "b_cnt",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_st",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_tag",
+    "width": 16,
+    "depth": 4,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_plen",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_max",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_pos",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_ngen",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_tok",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_eos",
+    "width": 1,
+    "depth": 4,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_eos0",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_eos1",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "sl_t",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "evq",
+    "width": 116,
+    "depth": 16,
+    "bits": 1856,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ev_w",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ev_r",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ev_n",
+    "width": 5,
+    "depth": 1,
+    "bits": 5,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ep_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "ep_d",
+    "width": 116,
+    "depth": 1,
+    "bits": 116,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dp_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dp_d",
+    "width": 116,
+    "depth": 1,
+    "bits": 116,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "batch_go",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "batch_n",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "rmux",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "rr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "own_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "own",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "pick_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "pick",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "cand",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "b_ok",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "d_st",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dsc0",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dsc1",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dsc2",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "dsc3",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "pr_i",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "pr_word",
+    "width": 64,
+    "depth": 1,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "name": "err_st",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "hc_q",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "legacy_q",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "image_ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "cr_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rdone",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rfault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "kq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "cq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "cbq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "kfq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "hq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "epoch_valid_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rtag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rvv",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rcy",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rg",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rcause",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "rt",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "issued",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "credit",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "done_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "released_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "released_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "released_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "release_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "release_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "release_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "trace_counter",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "job_trace",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "cycles_q",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "value_q",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "job_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "gen_q",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "token_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "pos_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "next_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "name": "cause_q",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "name": "recovery_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "name": "recovery_required",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "name": "recovery_start",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "rx_seq",
+    "width": 16,
+    "depth": 8,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "tx_seq",
+    "width": 16,
+    "depth": 8,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "request_queued",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "request_ack",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "cancel_ack",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "request_abort",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "terminal_send",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "result_send",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "result_return",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "request_ack_tag",
+    "width": 472,
+    "depth": 1,
+    "bits": 472,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "cancel_ack_tag",
+    "width": 472,
+    "depth": 1,
+    "bits": 472,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "request_ack_gen",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "cancel_ack_gen",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "terminal_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "result_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "accepted_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "accepted_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "result_word",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "last_recovery",
+    "width": 2,
+    "depth": 8,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "recovery_sent",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "choice",
+    "width": 4,
+    "depth": 8,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "last_allocation",
+    "width": 81,
+    "depth": 8,
+    "bits": 648,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "allocation_sent",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "name": "d",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "did_q",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "die_capture",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "role_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "die_sampled",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "rv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "tc",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "rd",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cd",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "lt",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "lk",
+    "width": 10,
+    "depth": 1,
+    "bits": 10,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "lb",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "q",
+    "width": 512,
+    "depth": 4,
+    "bits": 2048,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "wp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "rp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "count",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cq",
+    "width": 182,
+    "depth": 4,
+    "bits": 728,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "credits",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "seq_tx",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "seq_rx",
+    "width": 128,
+    "depth": 1,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "seq_seen",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "lready",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "biv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "startup_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "lepoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "bepoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "last_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "last_ready",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "begin_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "begin_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "epoch_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "permit_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "permit_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "permit_sent",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "peer_permit",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "abort_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "abort_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "request_ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_valid_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_low",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_dq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "terminal_ack_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "drain_q",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_token_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_position_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_token_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_position_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_generation_q",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocated_generation_q",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_tag_q",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocator_fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "local_emitted",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "allocator_sampled",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "wrap_vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "wrap_dq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "wrap_rq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "wrap_tq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "peer_epoch_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "peer_last_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "grant_wait",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "request_accepted",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "cancel_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "job_token",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "job_position",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "job_generation",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "retained_request",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "retained_allocated_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "reset_abort_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "active_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "active_epoch_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "active_service_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "dst",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "active",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "last_tk",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "last_kst",
+    "width": 10,
+    "depth": 1,
+    "bits": 10,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "last_boot",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "name": "sent_once",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "rearm",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "cancel_acknowledged",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_generation",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_done",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "terminal_cohort_required",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "recovery_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "reset_witness",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "train_witness",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "selected",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "selected_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "selected_generation",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "selected_done",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "name": "selected_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "owned",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "issued",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "retired",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "cq_needed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "cq_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "terminal_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "client",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "slot",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "pos",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "token",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "release_seen",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "name": "release_required",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "name": "next_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "name": "grant_delivered",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "name": "grant_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "name": "terminal_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+    "name": "terminal_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+    "name": "participant_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "hc_q",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "legacy_q",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "image_ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "cr_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rdone",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rfault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "kq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "cq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "cbq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "kfq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "hq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "epoch_valid_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rtag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rvv",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rcy",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rg",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rcause",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rt",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_act",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_pend",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_iss",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_seen",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_done",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_epoch",
+    "width": 16,
+    "depth": 4,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_trace",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_next",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_val",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_cyc",
+    "width": 32,
+    "depth": 4,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_tok",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "c_pos",
+    "width": 13,
+    "depth": 4,
+    "bits": 52,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "q_u",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "wp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "ip",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "rp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "n_q",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "n_i",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "credit",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "skip_drained",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "cause_q",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "trace_counter",
+    "width": 32,
+    "depth": 1,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "released_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "released_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "released_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "release_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "release_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "name": "release_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv",
+    "name": "recovery_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv",
+    "name": "recovery_required",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv",
+    "name": "recovery_start",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tq_tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tq_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tq_w",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tq_r",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tq_n",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "al_v",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "term_v",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "al_tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "term_tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "al_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "term_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "al_last",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "al_last_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "rx_seq",
+    "width": 16,
+    "depth": 8,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "tx_seq",
+    "width": 16,
+    "depth": 8,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "request_queued",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "request_ack",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "cancel_ack",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "request_abort",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "terminal_send",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "result_send",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "result_return",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "request_ack_tag",
+    "width": 472,
+    "depth": 1,
+    "bits": 472,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "cancel_ack_tag",
+    "width": 472,
+    "depth": 1,
+    "bits": 472,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "request_ack_gen",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "cancel_ack_gen",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "result_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "result_word",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "last_recovery",
+    "width": 2,
+    "depth": 8,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "recovery_sent",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "choice",
+    "width": 4,
+    "depth": 8,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "last_allocation",
+    "width": 81,
+    "depth": 8,
+    "bits": 648,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "allocation_sent",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "name": "d",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "rr",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "u_granted",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "rr_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "job_tok",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "job_pos",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "job_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "u_ep",
+    "width": 16,
+    "depth": 4,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "pe_seen",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "pe_last",
+    "width": 14,
+    "depth": 4,
+    "bits": 56,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "did_q",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "die_capture",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "role_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "die_sampled",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "rv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "tc",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "rd",
+    "width": 512,
+    "depth": 1,
+    "bits": 512,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cd",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "lt",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "lk",
+    "width": 10,
+    "depth": 1,
+    "bits": 10,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "lb",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "q",
+    "width": 512,
+    "depth": 4,
+    "bits": 2048,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "wp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "rp",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "count",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cq",
+    "width": 182,
+    "depth": 4,
+    "bits": 728,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "credits",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "seq_tx",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "seq_rx",
+    "width": 128,
+    "depth": 1,
+    "bits": 128,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "seq_seen",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "lready",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "biv",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "startup_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "lepoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "bepoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "last_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "last_ready",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "begin_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "begin_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "epoch_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "permit_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "permit_busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "permit_sent",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "peer_permit",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "abort_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "abort_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "request_ready_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_valid_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_low",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_dq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "terminal_ack_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "drain_q",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_epoch_q",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_token_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_position_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_token_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_position_q",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_generation_q",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocated_generation_q",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_tag_q",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocator_fault_q",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "local_emitted",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "allocator_sampled",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "wrap_vq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "wrap_dq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "wrap_rq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "wrap_tq",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "peer_epoch_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "peer_last_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "grant_wait",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "request_accepted",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "cancel_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "reset_abort_seen",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "active_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "active_epoch_valid",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "active_service_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "busy",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "dst",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "active",
+    "width": 182,
+    "depth": 1,
+    "bits": 182,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "last_tk",
+    "width": 93,
+    "depth": 1,
+    "bits": 93,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "last_kst",
+    "width": 10,
+    "depth": 1,
+    "bits": 10,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "last_boot",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "name": "sent_once",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "cancel_acknowledged",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "ab",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "coh",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "tp",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "t_coh",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "t_done",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "t_fault",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pp",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "lt_v",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "t_tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "t_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "ack_tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "ack_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "tq",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "tw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "tr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "tn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pq",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "gap",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "lf",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "rc",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "last_ack_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "last_ack_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "recovery_active",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "reset_witness",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "train_witness",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "sel",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "su",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "stag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "sgen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "sdone",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "sfault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "name": "pmask",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "owned",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "issued",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "retired",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "cq_needed",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "cq_seen",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "terminal_seen",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "tag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "client",
+    "width": 16,
+    "depth": 4,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "slot",
+    "width": 8,
+    "depth": 4,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pos",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "token",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "release_seen",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "release_required",
+    "width": 8,
+    "depth": 4,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "last_alloc",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "last_alloc_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pq",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pr_v",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pr_tag",
+    "width": 59,
+    "depth": 1,
+    "bits": 59,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "pr_gen",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "name": "f",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "seq",
+    "width": 14,
+    "depth": 4,
+    "bits": 56,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "ubusy",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "udeliv",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "a_epoch",
+    "width": 16,
+    "depth": 4,
+    "bits": 64,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "a_token",
+    "width": 18,
+    "depth": 4,
+    "bits": 72,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "a_pos",
+    "width": 13,
+    "depth": 4,
+    "bits": 52,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "a_gen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "g_epoch",
+    "width": 16,
+    "depth": 1,
+    "bits": 16,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "g_token",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "g_position",
+    "width": 18,
+    "depth": 1,
+    "bits": 18,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "g_generation",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "g_user",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "grant_pending",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "terminal_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "wl",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "idf",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "name": "tacc",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "act",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "disp",
+    "width": 4,
+    "depth": 1,
+    "bits": 4,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "acc",
+    "width": 8,
+    "depth": 4,
+    "bits": 32,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "ctag",
+    "width": 59,
+    "depth": 4,
+    "bits": 236,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "cgen",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "dq",
+    "width": 2,
+    "depth": 4,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "dw",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "dr",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "dn",
+    "width": 3,
+    "depth": 1,
+    "bits": 3,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "shown",
+    "width": 2,
+    "depth": 1,
+    "bits": 2,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "idf",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "tacc",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "terminal_consumed",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "credit",
+    "width": 8,
+    "depth": 1,
+    "bits": 8,
+    "NBA_LHS_in_source": true,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  },
+  {
+    "source": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "name": "participant_fault",
+    "width": 1,
+    "depth": 1,
+    "bits": 1,
+    "NBA_LHS_in_source": false,
+    "interpretation": "declaration/NBA candidate; synthesis and context-dependent pruning unmeasured"
+  }
+]
