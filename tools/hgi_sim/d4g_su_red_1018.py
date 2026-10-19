@@ -75,7 +75,7 @@ def reducer_bound(words, row_words=None, width=1):
 # issue block per edge), the 128-word aligned csum8 subtree reaches the reducer PT edges later as ONE operand; the
 # reducer then does the pairwise tree over block subtrees (LOAD/ADD_EXT per arriving block + ADD_TREE above the pairs).
 # A row shorter than 128 occupies one block (masked +0 / invalid lanes; no row packing priced).
-PT_EDGES = 70          # measured by the pretree bench (tb_hbm_su_red_pretree: tree_cmd edge E -> tree_x at qcore rc_x)
+PT_EDGES = 81          # (HBM-PRETREE 10-19: 70 -> 81, node operand register x 11 nodes on the path) measured by the pretree bench (tb_hbm_su_red_pretree: tree_cmd edge E -> tree_x at qcore rc_x)
 PT_BLOCK = 128
 
 

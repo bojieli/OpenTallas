@@ -63,8 +63,8 @@ module ot_hbm_su_static_pgslice #(
  parameter integer PG_RSYNC=0,
  // PRETREE (HH-6 / HBM-SURED 2026-10-18; default 0 = unchanged): the SU reducer ingress widening. tree_cmd {v,max,
  //   cntB5,cntA5} at edge E takes ALL 32 lanes' ro_x of the issue block (quarter words 16G..16G+15 = half A, 64+16G..+15 =
- //   half B; lanes >= the half's count are padding) into ot_hbm_su_red_pretree_s (clk_ctl): two golden csum8 16-word subtrees on tree_o, registered at E+50
- //   (LAT 6). The quarter core joins the four slices (qcore_r5 PRETREE). One block per edge; no stall.
+ //   half B; lanes >= the half's count are padding) into ot_hbm_su_red_pretree_s (clk_ctl): two golden csum8 16-word subtrees on tree_o, registered at E+58
+ //   (LAT 6 + node operand register OPR 1). The quarter core joins the four slices (qcore_r5 PRETREE). One block per edge; no stall.
  parameter integer PRETREE=0
 )(
  input wire pg_clk,

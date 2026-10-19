@@ -1,6 +1,6 @@
 #!/bin/bash
 # HH-6 / HBM-SURED 10-18: SU reducer pre-tree bench on Verilator 5.050 (the closure daemon's version).
-# usage: su_pretree_run.sh OUT [MUT]   (MUT 0 PASS; 1,3,4 pretree_s, 512 late operand, 1024 join pairing: must FAIL)
+# usage: su_pretree_run.sh OUT [MUT]   (MUT 0 PASS; 1,3,4,5 pretree_s, 512 late operand, 1024 join pairing: must FAIL)
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); mut=${2:-0}; mkdir -p "$out"

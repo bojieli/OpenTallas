@@ -6,7 +6,7 @@
 // word order}; lane n of slice G = quarter word (n<16 ? 16G+n : 64+16G+n-16). Expected: every EXPORT scalar
 // {red_cmd edge, tag, value} = hdc_golden_v41.csum / canonical max; scalar_valid must rise exactly SCL edges after the
 // EXPORT command edge, in order, and no FAULT anywhere.  MUT: 1,3,4 pretree_s mutants (chunk order, max ignored, padding
-// off by one); 512 qcore late tree operand; 1024 join pairing (pretree_j MUT 2).
+// off by one, 5 lane-3 delay line one edge short); 512 qcore late tree operand; 1024 join pairing (pretree_j MUT 2).
 module tb_hbm_su_red_pretree;
  parameter integer MUT=0, SCL=11;
  parameter integer N=4096, NX=64;
@@ -28,7 +28,7 @@ module tb_hbm_su_red_pretree;
    localparam integer WD=(n<16)?16*g+n:64+16*g+(n-16);
    assign rx[n*32+:32]=ro_xq[WD*32+:32]; assign rv[n]=ro_vq[WD];
   end
-  ot_hbm_su_red_pretree_s #(.LAT(6),.MUT((MUT==1||MUT==3||MUT==4)?MUT:0)) u_s(.clk(clk),.rst_n(rst_n),.tree_cmd(tree_cmd[12*g+:12]),
+  ot_hbm_su_red_pretree_s #(.LAT(6),.MUT((MUT==1||MUT==3||MUT==4||MUT==5)?MUT:0)) u_s(.clk(clk),.rst_n(rst_n),.tree_cmd(tree_cmd[12*g+:12]),
    .ro_x(rx),.ro_v(rv),.tree_o(slice_t[g*67+:67]),.fault(sf[g]));
  end
  wire red_sv, red_rf_v, cfault; wire [31:0] red_tag, red_x; wire [4*32-1:0] rf_bword; wire [4*9-1:0] rf_bcmd; wire [255:0] rf_dsec;

@@ -25,7 +25,7 @@
 // PRETREE (HH-6 / HBM-SURED 2026-10-18; default 0 = unchanged): slice_t = the four pgslices' pre-tree outputs
 //   (ot_hbm_su_red_pretree_s); ot_hbm_su_red_pretree_j joins them (pin register + 3 node levels) into the quarter's
 //   128-word csum8 subtree. A reducer command with osel=1, red_cmd[5]=1, red_cmd[6]=0 takes that subtree as its external
-//   operand (rc_x) -- issued at E+PT_RED for the block whose tree_cmd was at E (PT_RED 69 at LAT 6, bench-measured);
+//   operand (rc_x) -- issued at E+PT_RED for the block whose tree_cmd was at E (PT_RED 80 at LAT 6 + node OPR 1, bench-measured; 69 before HBM-PRETREE 10-19);
 //   ops 0 LOAD / 1 ADD_EXT / 3 MAX_EXT as for a lane operand. FAULT: an operand taken while the subtree is not valid,
 //   a join adder error. MUT 512: tree operand taken one edge late; 1024: join pairing (s0+s2),(s1+s3).
 module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1,PRETREE=0)(
