@@ -599,3 +599,41 @@ class PinRegsGate(unittest.TestCase):
             g = PG.Gate()
             PG.check_pin_regs(g, kd, {}, now=late)
             self.assertEqual([i["severity"] for i in g.items], ["INFO"])
+
+
+class PlacePickGenblk(unittest.TestCase):
+    """QF-A0 10-18: a spec hard-child path whose Yosys genblkN number drifted still places the ONE matching instance;
+    no match (or an ambiguous one) fails and lists the real instance names."""
+
+    def _run(self, insts, pat):
+        import shutil
+        import subprocess
+        if not shutil.which("tclsh"):
+            self.skipTest("tclsh absent")
+        place = RT.gen_place({"name": "t"}, [{"master": "M", "inst": pat, "orient": "R0", "x": 0, "y": 0}])
+        fake = ["proc mk {n} { proc ::i_$n {args} [list return $n]; return i_$n }"]
+        tcl = (place[place.index("proc ot_ref_strip"):place.index("set ot_ref_by")]
+               + place[place.index("set ot_ref_used"):place.index("set ot_ref_n 0")]
+               + "\n".join(fake) + "\n"
+               + "set by [dict create M [list " + " ".join("[mk {%s}]" % i for i in insts) + "]]\n"
+               + "rename ot_ref_strip _s; proc ot_ref_strip {n} { if {[info commands ::$n] ne {}} { set n [$n] }; return [_s $n] }\n"
+               + "if {[catch {puts PICK=[ot_ref_strip [ot_ref_pick $by M {%s}]]} e]} { puts ERR=$e }\n" % pat)
+        return subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True).stdout
+
+    def test_genblk_drift_unique(self):
+        out = self._run(["a.genblk5.g_ndh.u_node"], "a.genblk4.g_ndh.u_node")
+        self.assertIn("PICK=a.genblk5.g_ndh.u_node", out)
+        self.assertIn("genblk numbering normalised", out)
+
+    def test_exact_still_wins(self):
+        self.assertIn("PICK=a.genblk4.u", self._run(["a.genblk5.u", "a.genblk4.u"], "a.genblk4.u"))
+
+    def test_mismatch_lists_names(self):
+        out = self._run(["a.genblk5.g_x.u_node"], "a.genblk4.g_ndh.u_node")
+        self.assertIn("ERR=ref_tile place: no unplaced instance", out)
+        self.assertIn("a.genblk5.g_x.u_node", out)
+
+    def test_ambiguous_fails(self):
+        out = self._run(["a.genblk5.u", "a.genblk6.u"], "a.genblk4.u")
+        self.assertIn("ERR=", out)
+        self.assertIn("2 genblk-normalised matches", out)
