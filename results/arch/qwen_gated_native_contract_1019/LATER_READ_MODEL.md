@@ -26,7 +26,9 @@ drop offending legal cases. Per-case static compiler constraints would need
 actual source authority and independent admission evidence.
 
 A genuine D8 model can retain all observed cases after the extra read edge:
-maximum age4.125T, minimum overwrite gap3.875T. This is an architectural
+minimum write→read age1.25T, maximum write→read age4.125T, and minimum
+read→next-overwrite gap3.875T. Setup age and hold retention are separate
+quantities. This is an architectural
 comparison, not a D8 implementation: current RTL expressly permits D4/AW2
 only. D8 needs eight write/read banks, 16 bank ICGs plus the FIRST1 gate,
 period8T bank clocks, modulo16 epoch/counters, four K bits and a fourth strap
@@ -65,8 +67,16 @@ current unadopted TX+7/RX+6 model if that crossing uses this landing. Which
 of four full-width crossing classes uses it, and resulting LU/LS/token costs,
 requires actual parent composition. This packet does not add an arbitrary
 cycle to the headline or imply that the existing final capture can be removed.
+The complete parent LU/LS/token delta is explicitly null; no numerical
+headline is inferred from the partial crossing model.
 
 All budgets retain60/25ps uncertainty and150/100ps cross-root reserves.
 Root phase, production legal K, native arc bounds, reset/abort manifest and
 physical admission remain null/refused. ROOT reviews this model before new
 source or a physical gate.
+
+`fleet_gapclarity.log` is the final four-test PASS, unit
+`oth-ubuntu-2460865-1792432716` on ot-epyc6 in
+`/srv/opentallas-scratch/claude/qw-gated-native-contract-gapclarity-1019`.
+It separately asserts the1.25T minimum write→read setup age and3.875T
+minimum read→next-overwrite hold gap.

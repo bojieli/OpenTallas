@@ -14044,7 +14044,9 @@
   "deeper_D8_uniform_later_read": {
    "extra_receiver_edges": 1,
    "extra_initial_fill_source_edges": 4,
+   "minimum_write_to_read_age_T": 1.25,
    "minimum_overwrite_gap_T": 3.875,
+   "complete_parent_LU_LS_token_delta": null,
    "single_W180": {
     "D": 8,
     "W": 180,

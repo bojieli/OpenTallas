@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits   803 GB (avail 675, growth 113, headroom 0, waiters 0/0 GB) load 121/128 running 32 disk 351 GB 
+ot-run: ot-epyc5       admits  1081 GB (avail 817, growth 61, headroom 0, waiters 0/0 GB) load 83/128 running 9 disk 995 GB 
+ot-run: ot-epyc6       admits   835 GB (avail 690, growth 105, headroom 0, waiters 0/0 GB) load 18/128 running 9 disk 5996 GB 
+ot-run: ot-epyc7       admits  1070 GB (avail 819, growth 70, headroom 0, waiters 0/0 GB) load 35/96 running 20 disk 6426 GB 
+ot-run: ot-epyc8       admits  1210 GB (avail 960, growth 113, headroom 0, waiters 0/0 GB) load 43/128 running 30 disk 216 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-gated-native-contract-gapclarity-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-gated-native-contract-gapclarity-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2460865-1792432716 after 0 s
+{"schema": "opentallas.qwen.gated_native_contract.MODEL.v1", "status": "SOURCE_EDGE_MODEL_PASS_PHYSICAL_ADMISSION_REFUSED", "source_commit": "6b61a90c197f8248a026ca4937c9aebd9ff7dccb", "tools_commit": "59835e962", "source_model_checks": 1536, "behavioral_checks": 199008, "scenario_count": 384, "banks": 4, "K": [0, 1, 2, 3, 4, 5, 6, 7], "parent_phase_guarantee": null, "native_liberty_arc_bounds": null, "compiled_reset_epoch_manifest": null, "native_clock_family_receipt": null, "cold_warm_abort_production_manifest": null, "reserves_ps": {"crossroot_setup": 150, "crossroot_hold": 100, "setup_uncertainty": 60, "hold_uncertainty": 25}, "current_direct_D4_E2_ideal_setup_ps": -1.6666666666666288, "minimum_candidate_ideal_setup_ps": -1.6666666666666572, "nonpositive_candidate_ideal_setup_bank_cases": 64, "minimum_candidate_ideal_hold_ps": 604.1666666666667}
+test_actual_all_K_and_failclosed_physical_admission (__main__.Contract.test_actual_all_K_and_failclosed_physical_admission) ... ok
+test_missing_bank_rejected (__main__.Contract.test_missing_bank_rejected) ... ok
+test_test_enable_source_mutation_rejected (__main__.Contract.test_test_enable_source_mutation_rejected) ... ok
+test_wrong_declared_edge_rejected (__main__.Contract.test_wrong_declared_edge_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.078s
+
+OK
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2460865-1792432716): exit 0

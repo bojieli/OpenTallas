@@ -22,6 +22,8 @@ class Contract(unittest.TestCase):
         self.assertEqual(c['uniform_later_read_D4']['negative_ideal_hold_bank_cases'],192)
         self.assertEqual(c['deeper_D8_uniform_later_read']['single_W180']['total_state'],3298)
         self.assertEqual(c['deeper_D8_uniform_later_read']['split_W108']['total_state'],2029)
+        self.assertEqual(c['deeper_D8_uniform_later_read']['minimum_write_to_read_age_T'],1.25)
+        self.assertEqual(c['deeper_D8_uniform_later_read']['minimum_overwrite_gap_T'],3.875)
 
     def changed(self, change):
         with tempfile.TemporaryDirectory() as td:
