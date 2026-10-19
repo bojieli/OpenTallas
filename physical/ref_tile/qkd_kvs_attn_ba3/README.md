@@ -15,3 +15,5 @@ SAFE checklist before gate:
 8. PASS: static schedule; no added cycle, no credits/backpressure, no timing masks.
 
 Critical-prefix list checked: no match for qkd_kvs_attn_ba3 or top qkd_kvs_attn_fl_ba3. B1 failure still requires coordinator packet/review as directed by parent.
+
+Pin packing local check: grouped PPL at four tracks stranded slots on the S face. Replaced groups with per-bus disjoint pin_ranges and balanced literal placement over the full face; raw pin count/slot and die outline unchanged. Original local refusal preserved in attn_b2_recovery/gate_pinfit_fail.log.
