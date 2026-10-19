@@ -115,6 +115,34 @@ def mat(rng, rows, split):
     return dict(w=w, x=x, s=s, parts=parts, y=B.fbits(y))
 
 
+FIX = {}                                              # QW-REALSTG: --fixture npz (dv_layer_fixture.py)
+
+
+def real_mat(name, split):
+    """real int8 rows / BF16 scales / matvec input of the fixture (TP8 die 0 cut of the recorded ISA golden)"""
+    pre = '' if name in ('qkv', 'gu') else f'{name}_'
+    w, x, sc = FIX[pre + 'w'].astype(F), FIX[pre + 'x'].astype(F), FIX[pre + 's'].astype(F)
+    if name in ('o', 'down'):                         # the ISA all-reduces RAW o / down partials (FastDieMachine: no
+        sc = np.ones(len(sc), dtype=F)                # scale); the post-TP scale is the residual's pscale after the AR,
+                                                      # so the station's BTAB row scale must be BF16 1.0 (exact)
+    if 'split' in FIX and int(FIX['split']) != split:
+        raise SystemExit(f'fixture split {int(FIX["split"])} != ownership split {split}')
+    parts = B.l6_parts(w, x, split)
+    y = G.mul(G.matvec(w, x, split), sc)
+    return dict(w=w, x=x, s=sc, parts=parts, y=B.fbits(y))
+
+
+def gold_y(gm, errs):
+    """the bench's hdc_golden y vs the ISA golden's VM rows (fixture gold_y), bit-exact"""
+    if 'gold_y' not in FIX:
+        return 0, 0, 'isa_gold=none'
+    g = B.fbits(FIX['gold_y'].astype(F))
+    o = int(np.sum(g == gm['y']))
+    if o != len(g):
+        errs.append(f'ISA gold y: bench golden differs from the ISA golden in {len(g) - o}/{len(g)} rows')
+    return int(o == len(g)), 1, f'isa_gold_words={o}/{len(g)}'
+
+
 def drive(ev, low, parts):
     """the tile-delivery contract: far words at d['far'][j], near words SK earlier; L9 receiver parts 0..3, sender
     4..7; L8 parts 0..3 (lo = p0 far + p1 near on rs_s, hi = p3 far + p2 near on rs_n); L7 lower pair block bl[0]
@@ -221,7 +249,7 @@ def calibrate(work, seed):
 # ------------------------------------------------------------------------------------------------ runs
 def run_vm(work, name, ages, rng, mutant):
     m = D.ownership()[name]
-    gm = mat(rng, m['blocks'][-1]['rows'][1], m['split'])
+    gm = real_mat(name, m['split']) if FIX else mat(rng, m['blocks'][-1]['rows'][1], m['split'])
     lay = M.btab_layout(D.ownership())
     tabs = M.btab_stream(lay, {name: gm['s']})
     ev = LB.Events()
@@ -239,13 +267,18 @@ def run_vm(work, name, ages, rng, mutant):
     log = LB.run(work, f'{name}_{mutant or "m0"}', ev, t + 100)
     errs = B2.status_ok2(log)
     ok, n = check_vm(low, dd_by_slice(log), gm['y'], errs, name)
-    return ok, n, errs, dict(stn=len(low['stn']), slices=sorted(low['expected_vm']))
+    go, gn, ginfo = gold_y(gm, errs)
+    last = max(f for d in low['deliveries'] for f in d['far'])
+    return ok + go, n + gn, errs, dict(stn=len(low['stn']), slices=sorted(low['expected_vm']), isa_gold=ginfo,
+                                       delivery_span_cycles=last - base,
+                                       span_note='VM-landing ops have no output pin: span = last tile word consumed - '
+                                                 'first lowered edge (station drain = stn_ages); exactness by readback')
 
 
 def run_od(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
-    gms = {n: mat(rng, 4096, own[n]['split']) for n in ('o', 'down')}
+    gms = {n: (real_mat(n, own[n]['split']) if FIX else mat(rng, 4096, own[n]['split'])) for n in ('o', 'down')}
     tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()})
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
@@ -294,13 +327,16 @@ def run_od(work, ages, rng, mutant):
         gap.append(dict(message=n, cmd_tag=x['cc_word'] & 0xFFFFFFFF, words=256,
                         tag_mismatch=sum(1 for tg in tags if tg != (x['cc_word'] & 0xFFFFFFFF)),
                         last_set=sum(lasts), last_on_final=lasts[-1] if lasts else None))
+    arc = [c for c in ar if c >= base]
+    span = (max(arc) - base) if arc else None
     others = sorted({nm for nm in log if nm.endswith('CC') and nm != 'S0CC'})
     n_ += 1
     if others:
         errs.append(f'XC: cc words on {others} (only dvs_W5 reaches io_collective)')
     else:
         ok += 1
-    return ok, n_, errs, dict(collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
+    return ok, n_, errs, dict(span_cycles=span, isa_gold='TP8-gold-only (TP8 partial, split 256; no TP4 value)' if FIX
+                              else 'none', collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
                               stn={n: len(l['stn']) for n, l in lows.items()})
 
 
@@ -413,6 +449,7 @@ def main():
     ap.add_argument('--mutant')
     ap.add_argument('--ages', default=None)
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--fixture', help='npz of real operands + ISA gold (tools/qwen_layerbench/dv_layer_fixture.py)')
     a = ap.parse_args()
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
@@ -420,6 +457,9 @@ def main():
         return calibrate(work, a.seed)
     if a.mutant and a.mutant not in MUTANTS[a.run]:
         raise SystemExit(f'mutant {a.mutant} not defined for {a.run}')
+    if a.fixture:
+        z = np.load(a.fixture)
+        FIX.update({k: z[k] for k in z.files})
     ages = M.load_ages(a.ages or M.STN_AGES)
     rng = np.random.default_rng(a.seed)
     try:
@@ -428,7 +468,8 @@ def main():
         print(f'DV_LOWER_MAT {a.run} REFUSED mutant={a.mutant or 0}: {e}')
         return 1
     v = 'PASS' if ok == n and not errs else 'FAIL'
-    print(f'DV_LOWER_MAT {a.run} {v} {ok}/{n} mutant={a.mutant or 0} {json.dumps(info)}')
+    print(f'DV_LOWER_MAT {a.run} {v} {ok}/{n} mutant={a.mutant or 0} fixture={Path(a.fixture).name if a.fixture else 0} '
+          f'{json.dumps(info)}')
     for e in errs[:10]:
         print('   ', e)
     return 0 if v == 'PASS' else 1

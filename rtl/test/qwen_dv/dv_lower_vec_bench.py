@@ -218,6 +218,33 @@ def calibrate(work, seed):
 
 
 # ------------------------------------------------------------------------------------------------ runs
+def measured_span(base, cycles):
+    """measured span = last checked output edge seen in the RTL log - the first lowered edge (base)"""
+    return f'span_cycles={max(cycles) - base if cycles else None}'
+
+
+def gold_check(fx, mine):
+    """QW-REALSTG: the bench's own hdc_golden expectation vs the ISA golden's stage output in the fixture (TP4 ISA
+    golden re-executed by tools/qwen_layerbench/dv_layer_fixture.py): bit-exact, else the check fails"""
+    res = {}
+    for k, v in mine.items():
+        if k in fx:
+            a, b = B.fbits(np.asarray(v, dtype=F)), B.fbits(fx[k].astype(F))
+            res[k] = (int(np.sum(a == b)), len(b)) if len(a) == len(b) else (0, len(b))
+    words = sum(n for _, n in res.values())
+    return dict(res=res, info=f'isa_gold_words={sum(o for o, _ in res.values())}/{words}' if res else 'isa_gold=none')
+
+
+def fold_gold(gold, ok, n, errs):
+    for k, (o, m) in gold['res'].items():
+        n += 1
+        if o == m:
+            ok += 1
+        else:
+            errs.append(f'ISA gold {k}: bench golden differs from the ISA golden in {m - o}/{m} words')
+    return ok, n
+
+
 def golden_res(x, t, ps, root):
     xn = G.add(G.mul(t, ps), x)
     eps = np.array([root['eps']], dtype=np.uint32).view(F)[0]
@@ -232,7 +259,11 @@ def run_resid(work, lw, rng, tag):
     x[rng.integers(0, 4096, 8)] *= F(50)
     x = (x * np.repeat(F(10.0) ** rng.uniform(-1.5, 1.5, 32).astype(F), 128)).astype(F)
     tv = (rng.standard_normal(4096) * 0.3 * np.repeat(F(10.0) ** rng.uniform(-1, 1, 32).astype(F), 128)).astype(F)
+    fx = lw.get('_fix') or {}
+    if 'x' in fx:                                      # QW-REALSTG: real stage operands (dv_layer_fixture.py)
+        x, tv = fx['x'].astype(F), fx['t'].astype(F)
     xn, r = golden_res(x, tv, consts['ps1'], lw['expected']['root'])
+    gold = gold_check(fx, dict(gold_x=xn, gold_r=np.array([r], dtype=F)))
     ev = LB.Events()
     imgs = bench_words(lw)
     t = boot(ev, imgs)
@@ -272,6 +303,7 @@ def run_resid(work, lw, rng, tag):
         ok += 1
     n += 1
     e5 = e5_words(log)
+    span = measured_span(base, [c for c in e5 if base <= c < rb_at[0]] + [c for (_, c) in ps if c >= base])
     hb = bf16_bits(xn)
     bad = []
     for xw in lw['expected']['x']:
@@ -300,7 +332,8 @@ def run_resid(work, lw, rng, tag):
             ok += 1
         elif len(errs) == before:
             errs.append(f'slice {s} readback: {len(got)} elements')
-    return ok, n, errs, f'r={exp:#010x} x_words={len(lw["expected"]["x"])} psums={len(want)}'
+    ok, n = fold_gold(gold, ok, n, errs)
+    return ok, n, errs, f'r={exp:#010x} x_words={len(lw["expected"]["x"])} psums={len(want)} {span} {gold["info"]}'
 
 
 def run_qk(work, lw, rng, tag):
@@ -308,6 +341,9 @@ def run_qk(work, lw, rng, tag):
     vm, roles = lw['vm'], lw['qkv_roles']
     qkv = (rng.standard_normal(768) * np.repeat(rng.uniform(0.5, 4.0, 6), 128)).astype(F)
     r = F(rng.uniform(0.3, 3.0))
+    fx = lw.get('_fix') or {}
+    if 'qkv' in fx:                                    # QW-REALSTG: real stage operands
+        qkv, r = fx['qkv'].astype(F), F(fx['r'][0])
     ev = LB.Events()
     t = boot(ev, bench_words(lw))
     for s in sorted(roles):
@@ -336,6 +372,12 @@ def run_qk(work, lw, rng, tag):
         for i in range(128):
             want[(kind, a0 + i)] = int(B.fbits(out)[i])
     dd = dd_words(log)
+    span = measured_span(base, [c for c, _, _ in dd if c >= base])
+    gw = {}
+    if 'gold_q' in fx:
+        vals = lambda k, m: np.array([want[(k, i)] for i in range(m)], dtype=np.uint32).view(F)
+        gw = dict(gold_q=vals(0, 512), gold_k=vals(1, 128), gold_v=vals(2, 128))
+    gold = gold_check(fx, gw)
     got = {}
     for c, k, lst in dd:
         for a, v in lst:
@@ -363,7 +405,8 @@ def run_qk(work, lw, rng, tag):
         ok += 1
     if len(got) != len(want):
         errs.append(f'{len(got)} D2D elements, want {len(want)}')
-    return ok, n, errs, f'q heads 4 / k / v, d2d words={len(edges)}'
+    ok, n = fold_gold(gold, ok, n, errs)
+    return ok, n, errs, f'q heads 4 / k / v, d2d words={len(edges)} {span} {gold["info"]}'
 
 
 def run_silu(work, lw, rng, tag):
@@ -371,6 +414,9 @@ def run_silu(work, lw, rng, tag):
     gu = (rng.standard_normal((N, 256)) * 2.5).astype(F)
     gu[0, :8] = F([-100.0, -88.5, -20.0, 0.0, 95.0, 1e-30, -1e-30, 40.0])
     r = F(rng.uniform(0.3, 3.0))
+    fx = lw.get('_fix') or {}
+    if 'gu' in fx:                                     # QW-REALSTG: real stage operands (no injected corner values)
+        gu, r = fx['gu'].astype(F).reshape(N, 256), F(fx['r'][0])
     ev = LB.Events()
     t = boot(ev, bench_words(lw))
     for s in range(N):
@@ -381,8 +427,10 @@ def run_silu(work, lw, rng, tag):
     log = LB.run(work, f'run_{tag}', ev, end)
     errs = B2.status_ok2(log)
     act = np.concatenate([G.mul(G.silu(G.mul(gu[s, :128], r)), G.mul(gu[s, 128:], r)) for s in range(N)])
+    gold = gold_check(fx, dict(gold_act=act))
     hb = bf16_bits(act)
     e5 = e5_words(log)
+    span = measured_span(base, [c for c in e5 if c >= base])
     bad = []
     for xw in lw['expected']['x']:
         c = base + xw['edge_e5']
@@ -397,7 +445,8 @@ def run_silu(work, lw, rng, tag):
                     f'{nx} x words at E5')
     else:
         ok = 1
-    return ok, 1, errs, f'act words={len(lw["expected"]["x"])}'
+    ok, n = fold_gold(gold, ok, 1, errs)
+    return ok, n, errs, f'act words={len(lw["expected"]["x"])} {span} {gold["info"]}'
 
 
 def dr_word(beat, vals):
@@ -442,18 +491,28 @@ def run_attn(work, lw, rng, tag):
     return ok, 1, errs, info
 
 
-def main_run(work, mode, mutant, seed, ages, ar_order='slice'):
+def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
     rng = np.random.default_rng(seed)
     consts = consts_for(rng)
+    fix = {}
+    if fixture:                                        # QW-REALSTG: real stage operands + ISA gold outputs
+        z = np.load(fixture)
+        fix = {k: z[k] for k in z.files}
+        for k in ('ps1', 'ps2', 'q_norm', 'k_norm'):
+            if k in fix:
+                consts[k] = fix[k].astype(F)
+        if 'pos' in fix:
+            consts['pos'] = int(fix['pos'])
     lw = V.lower_vec(mode, mutant, ages=ages, consts=consts, ar_order=ar_order)
     (work / f'lowering_{mode}.json' if not mutant else work / f'lowering_{mode}_{mutant}.json').write_text(
         json.dumps(lw, indent=1) + '\n')
     lw['_consts'] = consts
+    lw['_fix'] = fix
     tag = f'{mode}_{mutant or "m0"}'
     ok, n, errs, info = dict(resid=run_resid, qk=run_qk, silu=run_silu, attn=run_attn)[mode](work, lw, rng, tag)
     verdict = 'PASS' if ok == n and not errs else 'FAIL'
     print(f'DV_LOWER_VEC {mode} {verdict} {ok}/{n} mutant={mutant or 0} commands={len(lw["commands"])} '
-          f'collisions={len(lw["collisions"])} {info}')
+          f'collisions={len(lw["collisions"])} ar_order={ar_order} fixture={Path(fixture).name if fixture else 0} {info}')
     for e in errs[:10]:
         print('   ', e)
     return 0 if verdict == 'PASS' else 1
@@ -468,13 +527,14 @@ def main():
                     help='residual AR return order; row matches the production collective')
     ap.add_argument('--ages', help='vec_ages.json (default: the committed one)')
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--fixture', help='npz of real stage operands + ISA gold (tools/qwen_layerbench/dv_layer_fixture.py)')
     a = ap.parse_args()
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     if a.mode == 'calibrate':
         return calibrate(work, a.seed)
     ages = V.load_ages(a.ages) if a.ages else None
-    return main_run(work, a.mode, a.mutant, a.seed, ages, a.ar_order)
+    return main_run(work, a.mode, a.mutant, a.seed, ages, a.ar_order, a.fixture)
 
 
 if __name__ == '__main__':
