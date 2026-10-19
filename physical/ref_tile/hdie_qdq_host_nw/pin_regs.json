@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_qdq_host_static",
- "enable": false,
- "reason": "HBMA-QDQ 10-17: with PIN_BOUNDARY=1 IO_REGS=1 the RTL registers every pin: rr enters rr_q (transport registered_boundary), cfg/desc/launch enter the F20 target capture flops, rq/wq/beat_done/record_done leave transport registers, program_active/program_done/configured leave calendar/target registers, fault leaves the host fault_q flop, rst_n reaches only two ot_rst_relay collars; a kit flop stage would add a redundant edge to the priced +2 (IO_REGS) schedule"
-}

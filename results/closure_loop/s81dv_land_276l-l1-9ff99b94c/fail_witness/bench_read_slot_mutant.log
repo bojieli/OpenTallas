@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81dv_land_276l-l1-9ff99b94c bench bench_read_slot_mutant host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/s81dv_land_276l-l1-9ff99b94c log cl/bench_read_slot_mutant.a1b1.log captured 2026-10-18T07:28:35-07:00
-# fail_regex 'LAND_BENCH FAIL dsfd_dvland_276l mut_sel'
-mut_sel FAIL sweep 0/36 slip-fault 4 {'host_hf_ht_60hop_E28/w276': [89, 97], 'seqhost_jw_jd_33hop_E16/w276': [49, 57], 'seqhost_cw_23hop_E12/w276': [34, 42], 'xtier_tv_16hop_E9/w276': [24]}
-BENCH PASS /srv/opentallas-scratch/claude/closure-loop/s81dv_land_276l-l1-9ff99b94c/bench_sel/bench.json
-LAND_BENCH FAIL dsfd_dvland_276l mut_sel D=8 KW=6 sweep 0/36 slip-fault 4/4 latency {'host_hf_ht_60hop_E28/w276': [89, 97], 'seqhost_jw_jd_33hop_E16/w276': [49, 57], 'seqhost_cw_23hop_E12/w276': [34, 42], 'xtier_tv_16hop_E9/w276': [24]}

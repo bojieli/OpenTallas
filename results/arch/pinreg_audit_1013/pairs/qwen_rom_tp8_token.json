@@ -1,3 +1,0 @@
-{"basis": "tools/qwen_rom_fulldie_b3r2.py relay_token_cost: 217 ME ops per AR token wait on the longest bd (head chain + corridor + tap), in-block tree, tws (block word -> tree top) and ord chains; hub <-> stack link 2 x 36 traversals per token (results/rtl/qwen_dietop_takeover_20261006/observed_relay_token_cost.json); 216,713 cycles per AR token (results/rtl/qwen_elements_final_20261007/elements.json); kvn / io / sequencer / cdc / crom / d2d are not on the per-op chain (not priced: null)",
- "cycles_per_token": 216713,
- "classes": {"^(corridor|head_chain|tap|tree_block|tree_spine|spine_local)": 217, "^(stack_local|lnk)": 72, "^(kvn|io|sequencer|cdc_core|hbm_cdc|crom|d2d_fdi|phy_dfi)": null}}

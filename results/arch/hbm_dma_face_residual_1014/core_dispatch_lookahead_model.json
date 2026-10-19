@@ -1,9 +1,0 @@
-{
-  "checks": 300000,
-  "result": "PASS",
-  "contract": "precompute DS+1,DS+stride,DS+stride+1 modulo32 at existing descriptorFIFO writeedge; dispatch selects registeredentry; original FIFO reset/occupancy and same-edge NBAoldentry semantics retained",
-  "new_FF_estimate": 384,
-  "edges_added": 0,
-  "oldcore": "untouched immutable legacy reference",
-  "causal_peak_instrumentation": "count actual boundaryrequest minus response eachlegacy lane, including producer pipelines; no boundassumed"
-}

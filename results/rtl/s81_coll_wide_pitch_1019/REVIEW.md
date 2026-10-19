@@ -42,31 +42,68 @@ behavior and blackbox from the unchanged compiler core plus explicit lead
 geometry. Signal terminal area, PG, obstruction and orientation inventories
 must be independently reconstructed from generated views before use. The
 access region has no new storage/compute; core array dimensions remain fixed.
-Conservative longest added access lead is H-coreH=14.1888367394um, assuming
-core anchored against one edge. This is an analytical upper bound for the
-extra vertical jog, not measured extracted internal interconnect. Existing
-core horizontal wiring is already priced by the compiler model.
+The original fff717128 claim that H-coreH=14.1888367394um bounds the
+terminal displacement was wrong. This correction preserves the original core
+at offset(0,0), including its original 437 abstract boundary anchors; it does not
+invent a translated internal core or shift its existing power connectivity.
+`model.json/anchor_geometry/one_to_one_anchors` gives every exact pin name,
+face, old terminal, preserved abstract anchor, new terminal, and displacement.
+All old centers follow0.780+k*0.096; new centers follow0.780+k*0.192 independently
+on W/E. Maximum displacement is20.928um (W index218), not14.18884um. Clock
+index0 remains at0.780um and has zero displacement. The source LEF does not represent internal core metal or prove a physical
+core connection at these anchors. This table preserves the original abstract
+interface; it cannot manufacture transistor-layout provenance. All437 names are unique;
+the script checks the source LEF against the formula rather than assuming it.
 
-For each corner, M4 R=0.0180365kohm/um, C=0.178475fF/um gives added capacitance
-2.5323526371fF per terminal and delay d=0.38*r*c*L^2 +
-max(calibrated INV4 R, output R)*C. We deliberately charge BOTH independently
-adverse clock and data leads: CQ/setup/hold/minperiod add2d, output intrinsic
-slew addsd, minimum pulse adds2d. This is more conservative than bb61ae67c's
-one-lead CQ/setup and unchanged hold rule. TT/FF d=2.5571/1.8530ps; proposed
-CQ420.3095/349.7497ps, setup33.3703/28.4008ps, hold26.7144/23.3783ps,
-minperiod386.0000/321.7392ps. SS remains reported sensitivity, CQ531.7402ps;
-acceptance remains TT setup and FF hold. No scalar analytical number proves
-parent timing, clock insertion or native closure. Native FF capture/TT launch,
-clock waveform and actual IO-load tables must be rechecked on generated views.
+This exact endpoint table is a MODEL correction, not a realizable internal
+routing proof. In particular, distinct vertical leads cannot simply share an
+edge track. The actual separated multilayer topology, its vias and detours
+are unknown;20.928um bounds vertical displacement only and is NOT an upper
+bound on routed length. Generation is explicitly BLOCKED until that topology
+is supplied, every route length is charged, and ROOT reviews it. No access,
+PG continuity, minimum-area, primitive or client-array closure is claimed.
 
-Every nonclock contact is charged one full-swing access capacitance for read
-and write energy; this intentionally upper-bounds activity, including repair
-and unused inputs. Clock terminal adds the same capacitance; no energy saving
-is claimed. Ten payload clock pins contribute TT118.781526fF before any CTS;
-original ten pins were93.458fF. The existing five credit pins and twenty gearbox
-clock contacts stay separately sourced; no clock contacts disappear because
-the two gearbox clocks tie to one source. Input-slew-dependent internal lead
-behavior and leakage change with the paid outline are explicit model assumptions.
+The corrected provisional straight-access budget uses the frozen calibration:
+M4 R=0.0180365kohm/um, C=0.178475fF/um, L=20.928um,
+Caccess=3.7351248fF, and d=0.38*R*C*L^2+max(INV4_R,output_R)*Caccess.
+It retains the deliberately conservative two-adverse-lead scalar convention:
+CQ/setup/hold/minperiod/minpulse add2d, output intrinsic slew addsd. Clock and
+every input are provisionally charged the maximum access capacitance even
+though their individual endpoint displacement can be smaller or zero. This
+is conditional pricing for straight access, not physical timing signoff.
+
+| Quantity | TT | FF | SS sensitivity |
+| --- | ---: | ---: | ---: |
+| Access delay d, ps |3.94411619|2.90568392|5.82730294|
+| CQ, ps |423.08353148|351.85503224|535.72708012|
+| Setup, ps |36.14441115|30.50613892|51.45514704|
+| Hold, ps |29.48849176|25.48358838|41.72862646|
+| Minimum period, ps |388.77407883|323.84444524|491.98779021|
+| Minimum pulse, ps |160.24257096|133.02459880|203.78787961|
+| Intrinsic output slew, ps |31.34149434|25.07154553|41.21716469|
+| Input capacitance, fF |4.35505280|4.41884080|4.31389080|
+| Clock capacitance, fF |13.08092480|14.10832480|12.41888480|
+| Read energy, fJ |1241.16496422|1469.39162110|1031.86742742|
+| Write energy, fJ |1676.42742822|2004.03901438|1377.90108630|
+
+Compared with fff717128, the provisional per-terminal capacitance rises by
+1.202772163fF. CQ/setup/hold/period/pulse rise by2.77407716ps TT,
+2.10529232ps FF and3.98691192ps SS. Ten payload clocks now budget130.809248fF
+at TT versus118.781526fF. All436 nonclock contacts still pay one full-swing
+maximum access capacitance on both read and write. Passive routing adds no
+devices, so calibrated core leakage remains38090.4912nW per macro; no leakage
+reduction or fabricated-layout qualification is claimed. Actual lead metal,
+vias and activity may require repricing before generation. Existing core
+geometry, cell inventory, mask/repair/OLD collision and registered-read
+semantics, outline, family counts and zero proposed cycle change are unchanged.
+
+The model enumerates113 proposed M4 PG rectangles (57VDD/56VSS), width0.096um,
+pitch0.768um per net, with alternating0.384um offset, x0.300..173.820um.
+It also records full-outline M1/M2/M3 OBS and M4 body OBSx0.072..174.048um.
+These preserve the source abstract construction while extending its height;
+they are dimensioned allocations, not proof of internal or parent PG contact.
+No obstructed track is counted as available signal escape. Complete lead
+separation and PG/via/OBS interaction must be solved before generation.
 
 ## Escape and physical proof plan
 
@@ -120,8 +157,9 @@ pin-to-producer reach model. Parent fit remains NULL; even old561.6 COLL plus
 larger family cannot inherit that old stand-in slot. Full row utilization,
 clock position, channel tracks, PG and complete parent repack remain open.
 
-Before generation: ROOT reviews electrical assumptions (including conservative
-2-lead hold/pulse), actual plan and source provenance. Then isolated distinct
+Before generation: an owner must supply realizable separated internal leads,
+price their real lengths/vias, and obtain ROOT electrical/source review. The
+current endpoint-only model is BLOCKED for generation. Only then isolate distinct
 family generation plus function/repair/masked-write/OLD collision/disabled-read
 miter and causal wrong-address/mask/read-age/repair mutants on fleet. Existing
 views remain byte-identical. Only after these pass should native access and

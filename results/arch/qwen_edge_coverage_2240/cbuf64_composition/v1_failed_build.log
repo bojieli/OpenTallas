@@ -1,8 +1,0 @@
-%Error-PINNOTFOUND: rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv:208:124: Parameter not found: 'RED_ENTRIES'
-  208 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LT(LT), .LOFF(LOFF), .RD(RD), .RED_ENTRIES(RED_ENTRIES)) u_su (
-      |                                                                                                                            ^~~~~~~~~~~
-                                                                                 : ... Location of instance's module declaration
-   24 | module ot_hdc_vstream #(
-      |        ^~~~~~~~~~~~~~
-                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
-%Error: Exiting due to 1 error(s)

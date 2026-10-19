@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbfd_rly_136_we_rr-rr-bc7e14737 bench bench_neg_bit0_mutant host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_we_rr-rr-bc7e14737 log cl/bench_neg_bit0_mutant.a1b1.log captured 2026-10-19T03:32:48-07:00
-# fail_regex 'RLY_RR_BENCH FAIL [1-9]\\d* errors'
-Verilator 5.050 2026-07-01 rev v5.050
-RLY_RR_BENCH FAIL 19994 errors 0 rso_errors 19994 row_errors in 20000 words (hbfd_rly_136_WE_rr W=136) release_edges=3 window_words=5 row_window_words=5 row_releases=2 delay4_checks=19988

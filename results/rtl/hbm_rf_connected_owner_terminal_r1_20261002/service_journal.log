@@ -1,4 +1,0 @@
-Oct 02 05:41:34 ubuntu systemd[1537]: Started /usr/bin/taskset --cpu-list 24-27 /usr/bin/python3 /home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_rf_connected_gate.py --proposal /home/ubuntu/OpenTallas-hbm-rf-service/results/uarch/hbm_rf_visibility_fence_20261002/prepared_gate_runner_r2.json --go /tmp/hbm-native-connected-parent-20261002-r1_GO.json --go-commit 858f084a5caaed97f24046e58187d8eee7514adb --out /tmp/hbm-native-connected-parent-20261002-r1.
-Oct 02 05:45:53 ubuntu systemd[1537]: hbm-native-connected-parent-20261002-r1.service: Main process exited, code=exited, status=1/FAILURE
-Oct 02 05:45:53 ubuntu systemd[1537]: hbm-native-connected-parent-20261002-r1.service: Failed with result 'exit-code'.
-Oct 02 05:45:53 ubuntu systemd[1537]: hbm-native-connected-parent-20261002-r1.service: Consumed 4min 21.486s CPU time.

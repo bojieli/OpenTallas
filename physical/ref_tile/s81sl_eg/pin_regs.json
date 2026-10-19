@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81sl_eg",
- "enable": false,
- "reason": "ot_s81sl_eg registers every input in a pin flop (iv_q/ic_q/hh_q/kk_q/dd_q/eps_q/sc_q) and launches every output from a flop (g_v/g_c/g/fault) in RTL; the bench-measured fixed latency already includes them, and io_flop_at_pins places them at the faces. A flow-added stage would double them (+2 cycles) with no timing purpose."
-}

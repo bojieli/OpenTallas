@@ -1,5 +1,0 @@
-slice_smoke: /srv/opentallas-scratch/claude/layerbench-qwen-1018/smoke/k_attn/tb_qwk_slice_attn.sv: 25 inputs (5 clock, 1 reset), 14 outputs
-SMOKE_PASS qwk_slice_attn MUT=0 edges 5048
-RESET_DET ports 14 nondet 0 undeclared_nondet 0
-SMOKE_RESET_DETERMINISTIC qwk_slice_attn (every output, except the declared SMOKE_UNRESET_OK ones listed in reset_det_m0.txt)
-SMOKE_RESULT PASS qwk_slice_attn MUT=0

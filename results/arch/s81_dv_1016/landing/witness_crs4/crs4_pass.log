@@ -1,7 +1,0 @@
-ot-run: ot-epyc4       admits    95 GB (avail 325, growth 258, headroom 0, waiters 0/0 GB) load 58/128 running 30 disk 115 GB 
-ot-run: ot-epyc5       admits   -33 GB (avail 233, growth 256, headroom 0, waiters 3/192 GB) load 64/128 running 21 disk 2571 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-298729-1792330612 after 1 s
-base PASS sweep 20/20 slip-fault 8/8 {"aligned_dL_80": {"K": 3, "G": 4, "E": 1, "offsets": [-5]}, "halfT": {"K": 3, "G": 4, "E": 1, "offsets": [-5]}, "lanes03_far_900": {"K": 4, "G": 4, "E": 2, "offsets": [-4]}, "spread_16hop": {"K": 4, "G": 2, "E": 4, "offsets": [-2]}} off-E [-6]
-CRS4_BENCH PASS base sweep 20/20 slip-fault 8/8 off-E [-6] /srv/opentallas-scratch/claude/s81die7-crs4/run/crs4_pass/crs4_base.json
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-298729-1792330612): exit 0

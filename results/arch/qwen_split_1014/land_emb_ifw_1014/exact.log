@@ -1,5 +1,0 @@
-PASS qkd_land_emb: 989 link words identical to ot_qfd_emb_strip (28 scale, 1 status), 24 boot writes, 1948 static reads (281 corrected); last word at cycle 30259 (chain) vs 1366 (monolith) for 60 fetches
-- /srv/opentallas-scratch/codex/q-host-bind-1014/rtl/test/qwen_kv_die/tb_qkd_land_emb_ifw.sv:187: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 29us; walltime 0.234 s; speed 121.914 us/s
-- Verilator: cpu 0.234 s on 1 threads; allocated 8 MB

@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     admits   400 GB (avail 627, growth 48, headroom 64, waiters 0/0 GB) load 30/128 running 13 disk 904 GB
-ot-run: ot-epyc4       admits   747 GB (avail 974, growth 20, headroom 48, waiters 0/0 GB) load 33/128 running 9 disk 746 GB
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/head-r4-1014-pm/ready
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/head-r4-1014-pm/ready
-ot-run: -> ot-epyc4
-HEAD_NATIVE_FAIL checks=3515 errors=858
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-304186-1792017643): exit 0

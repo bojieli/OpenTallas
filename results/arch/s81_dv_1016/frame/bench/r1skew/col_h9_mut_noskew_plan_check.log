@@ -1,9 +1,0 @@
-COVERAGE row 1 segments [] of 4
-COVERAGE row 3 segments [] of 4
-COVERAGE row 5 segments [] of 4
-PLAN_MISMATCH predicted 12 ret words, got 6; first diff ((354, 3, (0, 0, 4), 1192624899, 0), (356, 4, (0, 1, 4), 3345564651, 0))
-FAULT edge 290 status 11 lx 0
-FAULT edge 291 status 11 lx 0
-FAULT edge 292 status 11 lx 0
-FAULT edge 293 status 11 lx 0
-FRAME_BENCH FAIL col_h9 errors=8 words=6 rows=6
