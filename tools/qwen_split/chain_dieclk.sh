@@ -13,7 +13,10 @@ cp $S/tools/hbm_die_v15/die_clock_tree.py $D/tools/hbm_die_v15/
 [ -s $C/floorplan_pdn.odb ] || { echo "no $C/floorplan_pdn.odb"; exit 1; }
 DC_FLOORPLAN=floorplan_pdn.odb bash $D/tools/die_clock/qwen_compute_dieclk.sh prep $D $C $R/libs || exit 1
 grep -q 'QCLK_CLKRX .* missing 0 ' $D/clkrx_ports.log || { echo "clk_rx LEF lacks die.v pll ports (GEN bug, STA-0201): $(grep -h QCLK_CLKRX $D/clkrx_ports.log | head -1 | cut -c1-300)"; exit 1; }
-bash $D/tools/die_clock/qwen_compute_dieclk.sh spine $D $V || exit 1
+# QW-GEN2 10-19: OT_DIE_CLOCK_MODE=regional = landed-regions standard (bbe250fb5: local region trees + ONE forwarded UNPADDED
+# spine, per-region judge, regional_verdict.json); default spine = the GEN16 pad-balanced spine (dv2f18dh2 FAIL, kept for A/B)
+M=${OT_DIE_CLOCK_MODE:-spine}; case $M in spine|regional) ;; *) echo "OT_DIE_CLOCK_MODE $M unknown"; exit 1;; esac
+bash $D/tools/die_clock/qwen_compute_dieclk.sh $M $D $V || exit 1
 [ -s $D/$V/tt/clock.odb ] && [ -s $D/$V/tt/manifest.json ] || { echo "no clock.odb / manifest"; exit 1; }
 AF=$(ls $D/$V/ff/arrivals_ff.tsv 2>/dev/null) || { echo "no FF arrivals"; exit 1; }
 python3 $D/tools/die_clock/dieclk_sta_lat.py --clocks $R/libs/clocks_tt.tcl --arrivals $D/$V/tt/arrivals_tt.tsv --col late \
