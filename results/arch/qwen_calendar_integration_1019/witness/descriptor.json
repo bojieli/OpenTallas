@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.qwen.playhead-calendar.v1",
+  "source": {
+    "lowerer_sha256": "86dd4262c4b779ded8d007ece3261bc98c2af557afb2b84f68c83166fec490c9",
+    "programme_sha256": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45",
+    "phase_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "production_bound": false,
+    "embed_word0_parameter": 300,
+    "head_word0_parameter": 300,
+    "prefix_pw_sha256": "84bba13453c3547be994e66ee3488468c0b82e8d2a8d840cd327e473a0a20216",
+    "prefix_dw_sha256": "5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928",
+    "cap1_production": false,
+    "reason": "source-lowered body; provider phase and head/finalnorm payload unbound"
+  },
+  "source_sha256": "acd2855e0fc837ea1dc1fe8c45518b2ce4f24611f2a8a057f119f06da1df1179",
+  "entries": 867,
+  "rows": 217,
+  "entry_count_bits": 10,
+  "physical_macros": 2,
+  "descriptor": [
+    4846238589098394467,
+    67,
+    4456854,
+    31195456,
+    52166657,
+    0,
+    5567293564360065024,
+    0
+  ],
+  "ranges": {
+    "embed": {
+      "first": 0,
+      "count": 67
+    },
+    "decode": {
+      "first": 68,
+      "count": 406
+    },
+    "head": {
+      "first": 476,
+      "count": 320
+    },
+    "boot": {
+      "first": 796,
+      "count": 1
+    },
+    "init": {
+      "first": 800,
+      "count": 67
+    }
+  },
+  "fetch_capture_extra_edges": 1,
+  "production_bound": false,
+  "qualification": "source calendar playback only; actual cap1/phase/head payload bindings required"
+}

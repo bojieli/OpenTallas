@@ -1,0 +1,12 @@
+{
+  "scope": "default-off finite calendar into actual cal_mu scheduler",
+  "calendar_roms": {"count": 2, "native": "ot_rom_4096x266_m8", "entries_per_read": 4, "entry_bits": 128},
+  "entry_count_bits": 10,
+  "calendar_capacity_entries": 1023,
+  "fetch_extra_edges_vs_sram": 1,
+  "legacy_default": 0,
+  "tables": {"ROMs_per_slice": 4, "slices": 12, "read_slots_per_stage_user": 88, "reserved_edges": 93},
+  "runtime_flow_control": false,
+  "physical_adoption": false,
+  "open": ["actual cap1 body", "head/finalnorm payload", "provider phase", "native physical timing", "full token"]
+}
