@@ -232,9 +232,54 @@
   "verdict": "INFEASIBLE with 8 closed lane units: hard macros alone are 848467 um2 = 74% of the 632 x 1,824 frame (rp4lp: 35%); a 632-um width holds ONE 337-um lane unit across, so 8 units stack to >3,200 um",
   "die_delta_mm2_at_this_outline": 304.7,
   "levers": [
-   "shared 4-lane x store (one SRAM set with 4 read words; SRAM is 15.6k of the 47.7k um2 xs view): ~-94k um2 per leaf, ~-48 mm2 die",
-   "lanes on the block-dot column only (BF16 tcc kept at 1 lane): -104k um2 per leaf, ~-53 mm2 die",
-   "P = 3"
+   "(a) P=4, shared 4-lane x store hnx_xs4: ~839.8 mm2",
+   "(a)+(b) P=4 lanes on the block-dot column only, BF16 column 1 lane: ~718.7 mm2",
+   "(P3a) P=3 + shared 3-lane x store: ~743.8 mm2"
+  ]
+ },
+ "lever_table": {
+  "basis": "DIE f4c_t5 frame 693.0 mm2 at tile 630.72 x 1814.4 (1.1444 mm2); die = 693.0 + 256 x (tile - 1.1444); reticle 858, Phase-1 budget 752; tile = tile hard / 0.441 (hard fill of the gated base outline) except base (gated outline). ESTIMATES until gates measure; tok/s requested from HBM-NEXT-CMTP (lane file).",
+  "rows": [
+   {
+    "option": "base: P=4, 8 separate closed x stores",
+    "leaf_hard_um2": 393814,
+    "tile_hard_um2": 848864,
+    "tile_mm2": 1.922,
+    "die_mm2": 892.1,
+    "fits_reticle_858": false,
+    "within_phase1_752": false,
+    "note": "GATED outline 889.92 x 2160 (gate 1 running)"
+   },
+   {
+    "option": "(a) P=4, shared 4-lane x store hnx_xs4",
+    "leaf_hard_um2": 348128,
+    "tile_hard_um2": 757493,
+    "tile_mm2": 1.718,
+    "die_mm2": 839.8,
+    "fits_reticle_858": true,
+    "within_phase1_752": false,
+    "note": "PROG-adopted base; xs4 outline 501.12 x 289.44 (kit gated), tile from base hard fill 0.441 (estimate until the xs4 view closes)"
+   },
+   {
+    "option": "(a)+(b) P=4 lanes on the block-dot column only, BF16 column 1 lane",
+    "leaf_hard_um2": 243852,
+    "tile_hard_um2": 548940,
+    "tile_mm2": 1.245,
+    "die_mm2": 718.7,
+    "fits_reticle_858": true,
+    "within_phase1_752": true,
+    "note": "owner decision: drops BF16 multi-query lanes"
+   },
+   {
+    "option": "(P3a) P=3 + shared 3-lane x store",
+    "leaf_hard_um2": 265448,
+    "tile_hard_um2": 592131,
+    "tile_mm2": 1.343,
+    "die_mm2": 743.8,
+    "fits_reticle_858": true,
+    "within_phase1_752": true,
+    "note": "owner decision; xs3 ~0.78 x xs4 (12 macros)"
+   }
   ]
  }
 }
