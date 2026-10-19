@@ -43,6 +43,8 @@ def main():
                 dn = rn = f'i{i}_{name}'
                 text += [f'reg {rng} {dn}=0;']
                 drive += [f'{dn} = {{16{{$random}}}};']
+                if name in ('chain_a', 'slice_ack', 'acks', 'chain_c', 'chain_fault_i'):
+                    drive += [f'{dn}=0;']
                 if name == 'ing':
                     drive += [f'{dn}[33:2] = $urandom_range(0,127); {dn}[1:0]=3;']
             else:
