@@ -7,14 +7,14 @@
 // s, PCs 4H..4H+3 to quadrant (s,H)), delivered ONLY on each design's row-0 key_slot edges (171 per record).
 // Checks on EVERY edge, against the old design delayed by the documented latency: row-0 service beats and the beats
 // of every row (+2, all 4 quadrants identical), every score field of every lane (+4), every TX flit (+2 + CHAIN),
-// done (+2), no fault in either. The old design is also checked against the exact oracle (hnx_idxq_vectors.py): every
+// done (+2 + CHAIN: done is the frame's last instruction, and the new frame is CHAIN edges longer), no fault in either. The old design is also checked against the exact oracle (hnx_idxq_vectors.py): every
 // score of every row and every row's 512 records (golden set, score payload), 64 flits per row.
 // Mutants (one build; new design only): +MUT=2 key bit flip on the live beat 100, +MUT=3 quadrant halves swapped on
 // the key lines, +MUT=4 quadrant 1 replay buffer bypassed (replay_v forced 0), +MUT=6 link row slots dropped, +MUT=7
 // every row on selector 0, +MUT=8 quadrant 2 calendar copy at pitch + 1; compiler mutant: new programme --score-chain 13.
 module tb_hnx_idxq_lockstep;
  parameter integer TP=192,RANK=191,NKEYS=5456,CHAIN=6,MAXR=6,WSEC=4096;
- localparam integer RW=$clog2(TP),GB=(TP==192?0:1),DK=2,DS=4,DTX=2+CHAIN,DD=2;
+ localparam integer RW=$clog2(TP),GB=(TP==192?0:1),DK=2,DS=4,DTX=2+CHAIN,DD=2+CHAIN;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0;reg[7:0]paddr=0;reg[255:0]pdo=0,pdn=0;reg[11:0]len_o=0,len_n=0;
  integer frame_rank=RANK,frame_nkeys=NKEYS,rows=1,pitch=0,qstr=512,wstr=8,mutation=0;
