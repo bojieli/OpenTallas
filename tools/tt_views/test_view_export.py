@@ -179,6 +179,70 @@ class Sequence(unittest.TestCase):
         self.assertEqual(ve.ws_ps("OT_WS max 1.15e-11 min -2e-12"), (11.5, -2.0))
 
 
+# RLYH0-NE 2026-10-19: qfd_rlyh0_128_NE_65x30 east pin column (default closing-bloat abstract vs exact shapes)
+LEF_HEAD = """VERSION 5.8 ;
+MACRO t
+  SIZE 64.776 BY 30.216 ;
+  PIN b[115]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  64.692 11.76 64.776 11.784 ;
+    END
+  END b[115]
+  PIN b[116]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  64.692 11.856 64.776 11.88 ;
+    END
+  END b[116]
+  OBS
+    LAYER M4 ;
+"""
+CLOSED_OBS = "     RECT  64.716 11.808 64.757 12.792 ;\n  END\nEND t\n"   # merged landings: wide, 0.024 from b[115]
+EXACT_OBS = "     RECT  64.716 11.808 64.757 11.832 ;\n  END\nEND t\n"   # the real min-width landing
+
+
+class ExactAbstract(unittest.TestCase):
+    def run_choose(self, default_obs, exact_obs):
+        calls = []
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            (out / "t.lef").write_text(LEF_HEAD + default_obs)
+
+            def fake_run(cmd, **kw):
+                calls.append(cmd)
+                (out / f"t{ve.EXACT_LEF_SUFFIX}").write_text(LEF_HEAD + exact_obs)
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            real, ve.subprocess.run = ve.subprocess.run, fake_run
+            try:
+                rec = ve.choose_abstract(out, "t", out, "img")
+            finally:
+                ve.subprocess.run = real
+            tcl = (out / "export_exact_abstract.tcl").read_text() if calls else ""
+            return rec, (out / "t.lef").read_text(), calls, (out / f"t{ve.EXACT_LEF_SUFFIX}").exists(), tcl
+
+    def test_clean_default_kept_without_extra_session(self):
+        rec, lef, calls, side, tcl = self.run_choose(EXACT_OBS, EXACT_OBS)
+        self.assertEqual((rec["mode"], rec["default_pin_access_violations"], calls, side), ("default", 0, [], False))
+
+    def test_blocked_pin_takes_exact_abstract(self):
+        rec, lef, calls, side, tcl = self.run_choose(CLOSED_OBS, EXACT_OBS)
+        self.assertEqual((rec["mode"], rec["default_pin_access_violations"], rec["exact_pin_access_violations"]),
+                         ("exact", 1, 0))
+        self.assertIn("11.832", lef)
+        self.assertIn("write_abstract_lef -bloat_factor 0", tcl)
+        self.assertFalse(side)
+
+    def test_exact_no_better_keeps_default(self):
+        rec, lef, calls, side, tcl = self.run_choose(CLOSED_OBS, CLOSED_OBS)
+        self.assertEqual((rec["mode"], len(calls), side), ("default", 1, False))
+        self.assertIn("12.792", lef)
+
+
 @unittest.skipUnless(os.environ.get("OT_VIEW_EXPORT_ORFS") and shutil.which("docker"),
                      "set OT_VIEW_EXPORT_ORFS / OT_VIEW_EXPORT_NAME to a closed loop route on this host")
 class ReexportMatchesVerdict(unittest.TestCase):
