@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "verdict": "PASS",
+  "counts": {
+    "cells": 30237,
+    "drivers": 30535,
+    "logical_endpoints": 57401,
+    "roles": {
+      "comb": 24674,
+      "ff": 5417,
+      "input": 298,
+      "static": 146
+    }
+  },
+  "max_allowed": 32,
+  "max_loads": 32,
+  "max_nonliteral_loads": 32,
+  "violations": [],
+  "canonical_nontransparent_violators": 0,
+  "transparent_output_violators": 0,
+  "unphysicalized_literals": [],
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "disconnected_clock_load_outputs": 255,
+  "diagnostic_provenance": {
+    "raw_export_sha256": "b04167c328ef83585e7116d3ee05ad7b3325b9809672d87d6354b5f01e979c48",
+    "source_odb_sha256": "22e4a3d00d57b5d0b9c69e92bd26b4ca351b95b179f3fce416c065a34e79821a",
+    "collector_sha256": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "replay_sha256": "71bc198a519b148225c86148da2665095c218a8625f24a37d189297e33b6be69",
+    "libraries": [
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    ],
+    "physical_omissions": {
+      "instance_pg_pins": 196864,
+      "top_pg_pins": 2
+    }
+  }
+}

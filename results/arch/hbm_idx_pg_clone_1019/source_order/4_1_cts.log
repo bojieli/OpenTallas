@@ -1,0 +1,791 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 5417 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 5417.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 43.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 277.
+[INFO CTS-0024]  Normalized sink region: [(2.36663, 2.44783), (92.5785, 92.8364)].
+[INFO CTS-0025]     Width:  90.2119.
+[INFO CTS-0026]     Height: 90.3885.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 139
+    Sub-region size: 90.2119 X 45.1943
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 70
+    Sub-region size: 45.1059 X 45.1943
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 35
+    Sub-region size: 45.1059 X 22.5971
+[INFO CTS-0034]     Segment length (rounded): 12.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 22.5530 X 22.5971
+[INFO CTS-0034]     Segment length (rounded): 12.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 22.5530 X 11.2986
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 277.
+[INFO CTS-0018]     Created 322 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 322 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:5, 5:1, 6:6, 7:3, 8:5, 9:6, 10:1, 11:2, 12:8, 13:4, 14:5, 15:5, 16:9, 17:17, 18:38, 19:46, 20:49, 21:42, 22:24, 23:12, 24:6, 25:7, 26:2, 27:4, 28:1, 29:1..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 5672
+[INFO CTS-0100]  Leaf buffers 277
+[INFO CTS-0101]  Average sink wire length 171.57 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 255
+[INFO CTS-0500] Runtime: 4.68s
+QDM PINFLOP reference: 633 input pin flops (0 hard-child clock pins at +insertion), median arrival 192.483704 (range 172.317673 .. 194.860138)
+QDM reference pin g_fan32.u_banks.g_bank[11].u_payload/ct[4]$_DFF_P_/CLK clock arrival max 192.483704 min 146.235657 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 146.235657 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_LINK_BUDGET clock core_clk T 833.333 L 176.2 (157.6..194.9 clock_latency) skew 150 link 114 -> S 254.7 R 254.7; in max 518.7 out max 518.7
+OT_LINK_BUDGET ports in:core_clk 296 out:core_clk 2032 async_pins_excluded 292
+Took 14 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 15695.08 um^2
+[INFO DPL-0007] Movable instances area: 3453.17 um^2
+[INFO DPL-0008] Fixed instances area within core: 61.03 um^2
+[INFO DPL-0009] Utilization: 22.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 27316 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        996 |       100 |       896
+        1 |       1084 |        90 |       994
+        2 |       1203 |        85 |      1118
+        3 |       1154 |        86 |      1068
+        4 |       1219 |        87 |      1132
+        5 |       1124 |        76 |      1033
+        6 |       1067 |        71 |       996
+        7 |        940 |        70 |       870
+        8 |        874 |        58 |       792
+        9 |        945 |        53 |       754
+       10 |        825 |        65 |       730
+       20 |        255 |        25 |       230
+       30 |        249 |        15 |       234
+       40 |        111 |         7 |       104
+       50 |         20 |         2 |        18
+       52 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 52.
+[INFO DPL-0500] Runtime: 2.38s
+Placement Analysis
+---------------------------------
+total displacement        949.2 u
+average displacement        0.0 u
+max displacement            5.8 u
+original HPWL          177808.3 u
+legalized HPWL         178130.4 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=323 clock buffers=322
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hdie_col_idx256_1019/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 633 input pin flops (0 hard-child clock pins at +insertion), median arrival 157.7062 (range 139.9801 .. 160.1448)
+QDM reference pin g_fan32.u_banks.g_bank[5].u_payload/ca[11]$_DFF_P_/CLK clock arrival max 157.7062 min 147.1038 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 147.1038 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/.ot_mm/ff_ioref_last.sdc (loop default, appended last)
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 2665 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 147.3 min 134.9 max 160.1 n 2665 boundary
+OT_IOREF_PF search: pinflop_ref.tcl (hold-pad chains, hard children)
+OT_IOREF_PF core_clk input pin flops 633 mean 153.2
+OT_IOREF_PF 0 input delays re-referenced (ports 0)
+OT_HOLD_MM sync: SS setup ws 39.10 / FF hold ws -17.52 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.37s
+OT_HM_GUARD: margin 30 kept: 5287 endpoints in margin, ~5319 buffers, +2.7 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -17.52 tns -201.6 viol 15 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 5287 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -17.522 | -201.607 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       10 |       0 |      18 |            0 |    +0.0% | -14.064 | -57.533 | g_fan32.u_banks.g_bank[1].u_payload/cv$_DFF_PN0_/RESETN
+       20 |       0 |      36 |            0 |    +0.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       30 |       0 |      40 |            0 |    +0.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       40 |       0 |      50 |            0 |    +0.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       50 |       0 |      60 |            0 |    +0.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       60 |       0 |      76 |            0 |    +0.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       70 |       0 |      90 |            0 |    +0.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       80 |       0 |     106 |            0 |    +0.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       90 |       0 |     118 |            0 |    +0.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      100 |       0 |     136 |            0 |    +0.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      110 |       0 |     156 |            0 |    +0.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      120 |       0 |     174 |            0 |    +0.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      130 |       0 |     192 |            0 |    +0.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      140 |       0 |     212 |            0 |    +0.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      150 |       0 |     226 |            0 |    +0.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      160 |       0 |     238 |            0 |    +0.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      170 |       0 |     250 |            0 |    +0.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      180 |       0 |     266 |            0 |    +0.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      190 |       0 |     286 |            0 |    +0.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      200 |       0 |     306 |            0 |    +0.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      210 |       0 |     326 |            0 |    +0.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      220 |       0 |     346 |            0 |    +0.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      230 |       0 |     366 |            0 |    +0.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      240 |       0 |     386 |            0 |    +0.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      250 |       0 |     406 |            0 |    +0.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      260 |       0 |     426 |            0 |    +0.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      270 |       0 |     446 |            0 |    +0.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      280 |       0 |     466 |            0 |    +1.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      290 |       0 |     486 |            0 |    +1.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      300 |       0 |     505 |            0 |    +1.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      310 |       0 |     525 |            0 |    +1.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      320 |       0 |     545 |            0 |    +1.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      330 |       0 |     565 |            0 |    +1.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      340 |       0 |     585 |            0 |    +1.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      350 |       0 |     602 |            0 |    +1.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      360 |       0 |     621 |            0 |    +1.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      370 |       0 |     640 |            0 |    +1.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      380 |       0 |     659 |            0 |    +1.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      390 |       0 |     678 |            0 |    +1.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      400 |       0 |     696 |            0 |    +1.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      410 |       0 |     716 |            0 |    +1.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      420 |       0 |     735 |            0 |    +1.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      430 |       0 |     753 |            0 |    +1.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      440 |       0 |     770 |            0 |    +1.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      450 |       0 |     785 |            0 |    +1.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      460 |       0 |     804 |            0 |    +1.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      470 |       0 |     824 |            0 |    +1.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      480 |       0 |     844 |            0 |    +1.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      490 |       0 |     861 |            0 |    +1.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      500 |       0 |     877 |            0 |    +1.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      510 |       0 |     895 |            0 |    +1.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      520 |       0 |     915 |            0 |    +1.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      530 |       0 |     930 |            0 |    +1.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      540 |       0 |     950 |            0 |    +2.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      550 |       0 |     967 |            0 |    +2.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      560 |       0 |     984 |            0 |    +2.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      570 |       0 |    1002 |            0 |    +2.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      580 |       0 |    1018 |            0 |    +2.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      590 |       0 |    1036 |            0 |    +2.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      600 |       0 |    1056 |            0 |    +2.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      610 |       0 |    1073 |            0 |    +2.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      620 |       0 |    1089 |            0 |    +2.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      630 |       0 |    1107 |            0 |    +2.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      640 |       0 |    1126 |            0 |    +2.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      650 |       0 |    1141 |            0 |    +2.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      660 |       0 |    1156 |            0 |    +2.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      670 |       0 |    1172 |            0 |    +2.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      680 |       0 |    1183 |            0 |    +2.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      690 |       0 |    1197 |            0 |    +2.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      700 |       0 |    1212 |            0 |    +2.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      710 |       0 |    1222 |            0 |    +2.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      720 |       0 |    1233 |            0 |    +2.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      730 |       0 |    1245 |            0 |    +2.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      740 |       0 |    1255 |            0 |    +2.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      750 |       0 |    1263 |            0 |    +2.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      760 |       0 |    1273 |            0 |    +2.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      770 |       0 |    1283 |            0 |    +2.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      780 |       0 |    1290 |            0 |    +2.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      790 |       0 |    1299 |            0 |    +2.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      800 |       0 |    1309 |            0 |    +2.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      810 |       0 |    1319 |            0 |    +2.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      820 |       0 |    1328 |            0 |    +2.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      830 |       0 |    1337 |            0 |    +2.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      840 |       0 |    1347 |            0 |    +2.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      850 |       0 |    1356 |            0 |    +2.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      860 |       0 |    1366 |            0 |    +2.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      870 |       0 |    1376 |            0 |    +2.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      880 |       0 |    1386 |            0 |    +2.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      890 |       0 |    1396 |            0 |    +2.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      900 |       0 |    1406 |            0 |    +2.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      910 |       0 |    1416 |            0 |    +2.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      920 |       0 |    1426 |            0 |    +3.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      930 |       0 |    1436 |            0 |    +3.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      940 |       0 |    1446 |            0 |    +3.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      950 |       0 |    1455 |            0 |    +3.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      960 |       0 |    1462 |            0 |    +3.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      970 |       0 |    1471 |            0 |    +3.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      980 |       0 |    1481 |            0 |    +3.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+      990 |       0 |    1490 |            0 |    +3.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1000 |       0 |    1500 |            0 |    +3.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1010 |       0 |    1510 |            0 |    +3.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1020 |       0 |    1520 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1030 |       0 |    1529 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1040 |       0 |    1538 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1050 |       0 |    1547 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1060 |       0 |    1557 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1070 |       0 |    1565 |            0 |    +3.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1080 |       0 |    1573 |            0 |    +3.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1090 |       0 |    1583 |            0 |    +3.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1100 |       0 |    1593 |            0 |    +3.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1110 |       0 |    1602 |            0 |    +3.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1120 |       0 |    1611 |            0 |    +3.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1130 |       0 |    1619 |            0 |    +3.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1140 |       0 |    1627 |            0 |    +3.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1150 |       0 |    1637 |            0 |    +3.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1160 |       0 |    1647 |            0 |    +3.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1170 |       0 |    1655 |            0 |    +3.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1180 |       0 |    1664 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1190 |       0 |    1671 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1200 |       0 |    1679 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1210 |       0 |    1689 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1220 |       0 |    1698 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1230 |       0 |    1707 |            0 |    +3.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1240 |       0 |    1716 |            0 |    +3.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1250 |       0 |    1725 |            0 |    +3.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1260 |       0 |    1735 |            0 |    +3.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1270 |       0 |    1744 |            0 |    +3.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1280 |       0 |    1751 |            0 |    +3.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1290 |       0 |    1760 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1300 |       0 |    1770 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1310 |       0 |    1777 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1320 |       0 |    1784 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1330 |       0 |    1791 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1340 |       0 |    1799 |            0 |    +3.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1350 |       0 |    1808 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1360 |       0 |    1816 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1370 |       0 |    1824 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1380 |       0 |    1831 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1390 |       0 |    1839 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1400 |       0 |    1847 |            0 |    +3.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1410 |       0 |    1856 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1420 |       0 |    1866 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1430 |       0 |    1875 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1440 |       0 |    1884 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1450 |       0 |    1892 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1460 |       0 |    1901 |            0 |    +3.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1470 |       0 |    1908 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1480 |       0 |    1915 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1490 |       0 |    1923 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1500 |       0 |    1931 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1510 |       0 |    1940 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1520 |       0 |    1949 |            0 |    +4.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1530 |       0 |    1958 |            0 |    +4.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1540 |       0 |    1966 |            0 |    +4.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1550 |       0 |    1975 |            0 |    +4.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1560 |       0 |    1984 |            0 |    +4.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1570 |       0 |    1992 |            0 |    +4.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1580 |       0 |    2001 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1590 |       0 |    2008 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1600 |       0 |    2017 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1610 |       0 |    2026 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1620 |       0 |    2035 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1630 |       0 |    2042 |            0 |    +4.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1640 |       0 |    2049 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1650 |       0 |    2057 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1660 |       0 |    2063 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1670 |       0 |    2069 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1680 |       0 |    2076 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1690 |       0 |    2082 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1700 |       0 |    2090 |            0 |    +4.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1710 |       0 |    2098 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1720 |       0 |    2104 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1730 |       0 |    2111 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1740 |       0 |    2121 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1750 |       0 |    2129 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1760 |       0 |    2136 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1770 |       0 |    2144 |            0 |    +4.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1780 |       0 |    2154 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1790 |       0 |    2162 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1800 |       0 |    2170 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1810 |       0 |    2179 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1820 |       0 |    2186 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1830 |       0 |    2193 |            0 |    +4.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1840 |       0 |    2202 |            0 |    +4.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1850 |       0 |    2210 |            0 |    +4.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1860 |       0 |    2219 |            0 |    +4.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1870 |       0 |    2228 |            0 |    +4.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1880 |       0 |    2237 |            0 |    +4.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1890 |       0 |    2245 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1900 |       0 |    2251 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1910 |       0 |    2260 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1920 |       0 |    2268 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1930 |       0 |    2277 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1940 |       0 |    2283 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1950 |       0 |    2288 |            0 |    +4.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1960 |       0 |    2294 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1970 |       0 |    2299 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1980 |       0 |    2305 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     1990 |       0 |    2313 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2000 |       0 |    2319 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2010 |       0 |    2328 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2020 |       0 |    2333 |            0 |    +4.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2030 |       0 |    2339 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2040 |       0 |    2347 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2050 |       0 |    2356 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2060 |       0 |    2365 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2070 |       0 |    2373 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2080 |       0 |    2382 |            0 |    +4.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2090 |       0 |    2391 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2100 |       0 |    2398 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2110 |       0 |    2405 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2120 |       0 |    2410 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2130 |       0 |    2418 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2140 |       0 |    2426 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2150 |       0 |    2431 |            0 |    +5.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2160 |       0 |    2437 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2170 |       0 |    2442 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2180 |       0 |    2448 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2190 |       0 |    2454 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2200 |       0 |    2462 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2210 |       0 |    2470 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2220 |       0 |    2478 |            0 |    +5.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2230 |       0 |    2486 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2240 |       0 |    2492 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2250 |       0 |    2500 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2260 |       0 |    2508 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2270 |       0 |    2516 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2280 |       0 |    2524 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2290 |       0 |    2529 |            0 |    +5.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2300 |       0 |    2536 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2310 |       0 |    2542 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2320 |       0 |    2548 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2330 |       0 |    2555 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2340 |       0 |    2562 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2350 |       0 |    2570 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2360 |       0 |    2575 |            0 |    +5.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2370 |       0 |    2581 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2380 |       0 |    2588 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2390 |       0 |    2594 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2400 |       0 |    2599 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2410 |       0 |    2605 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2420 |       0 |    2613 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2430 |       0 |    2620 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2440 |       0 |    2626 |            0 |    +5.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2450 |       0 |    2633 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2460 |       0 |    2639 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2470 |       0 |    2647 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2480 |       0 |    2655 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2490 |       0 |    2663 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2500 |       0 |    2671 |            0 |    +5.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2510 |       0 |    2680 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2520 |       0 |    2689 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2530 |       0 |    2696 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2540 |       0 |    2704 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2550 |       0 |    2713 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2560 |       0 |    2718 |            0 |    +5.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2570 |       0 |    2727 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2580 |       0 |    2736 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2590 |       0 |    2745 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2600 |       0 |    2754 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2610 |       0 |    2763 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2620 |       0 |    2769 |            0 |    +5.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2630 |       0 |    2776 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2640 |       0 |    2782 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2650 |       0 |    2791 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2660 |       0 |    2801 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2670 |       0 |    2810 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2680 |       0 |    2817 |            0 |    +5.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2690 |       0 |    2825 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2700 |       0 |    2832 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2710 |       0 |    2840 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2720 |       0 |    2847 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2730 |       0 |    2854 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2740 |       0 |    2863 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2750 |       0 |    2868 |            0 |    +5.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2760 |       0 |    2876 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2770 |       0 |    2884 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2780 |       0 |    2892 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2790 |       0 |    2900 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2800 |       0 |    2906 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2810 |       0 |    2914 |            0 |    +6.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2820 |       0 |    2920 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2830 |       0 |    2930 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2840 |       0 |    2938 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2850 |       0 |    2945 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2860 |       0 |    2953 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2870 |       0 |    2959 |            0 |    +6.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2880 |       0 |    2967 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2890 |       0 |    2976 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2900 |       0 |    2985 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2910 |       0 |    2995 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2920 |       0 |    3002 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2930 |       0 |    3011 |            0 |    +6.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2940 |       0 |    3019 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2950 |       0 |    3026 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2960 |       0 |    3030 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2970 |       0 |    3039 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2980 |       0 |    3047 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     2990 |       0 |    3054 |            0 |    +6.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3000 |       0 |    3063 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3010 |       0 |    3073 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3020 |       0 |    3081 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3030 |       0 |    3087 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3040 |       0 |    3094 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3050 |       0 |    3102 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3060 |       0 |    3108 |            0 |    +6.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3070 |       0 |    3117 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3080 |       0 |    3126 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3090 |       0 |    3135 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3100 |       0 |    3143 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3110 |       0 |    3149 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3120 |       0 |    3157 |            0 |    +6.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3130 |       0 |    3165 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3140 |       0 |    3171 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3150 |       0 |    3181 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3160 |       0 |    3189 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3170 |       0 |    3196 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3180 |       0 |    3202 |            0 |    +6.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3190 |       0 |    3208 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3200 |       0 |    3217 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3210 |       0 |    3224 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3220 |       0 |    3230 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3230 |       0 |    3236 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3240 |       0 |    3244 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3250 |       0 |    3253 |            0 |    +6.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3260 |       0 |    3260 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3270 |       0 |    3267 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3280 |       0 |    3273 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3290 |       0 |    3281 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3300 |       0 |    3288 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3310 |       0 |    3294 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3320 |       0 |    3300 |            0 |    +6.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3330 |       0 |    3308 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3340 |       0 |    3316 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3350 |       0 |    3322 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3360 |       0 |    3330 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3370 |       0 |    3337 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3380 |       0 |    3344 |            0 |    +6.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3390 |       0 |    3353 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3400 |       0 |    3362 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3410 |       0 |    3369 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3420 |       0 |    3378 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3430 |       0 |    3384 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3440 |       0 |    3389 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3450 |       0 |    3396 |            0 |    +7.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3460 |       0 |    3406 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3470 |       0 |    3414 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3480 |       0 |    3422 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3490 |       0 |    3429 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3500 |       0 |    3437 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3510 |       0 |    3444 |            0 |    +7.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3520 |       0 |    3453 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3530 |       0 |    3462 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3540 |       0 |    3467 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3550 |       0 |    3475 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3560 |       0 |    3480 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3570 |       0 |    3485 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3580 |       0 |    3492 |            0 |    +7.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3590 |       0 |    3498 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3600 |       0 |    3504 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3610 |       0 |    3508 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3620 |       0 |    3515 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3630 |       0 |    3523 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3640 |       0 |    3529 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3650 |       0 |    3536 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3660 |       0 |    3543 |            0 |    +7.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3670 |       0 |    3552 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3680 |       0 |    3560 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3690 |       0 |    3567 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3700 |       0 |    3574 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3710 |       0 |    3582 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3720 |       0 |    3588 |            0 |    +7.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3730 |       0 |    3592 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3740 |       0 |    3600 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3750 |       0 |    3607 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3760 |       0 |    3610 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3770 |       0 |    3618 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3780 |       0 |    3624 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3790 |       0 |    3630 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3800 |       0 |    3635 |            0 |    +7.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3810 |       0 |    3644 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3820 |       0 |    3650 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3830 |       0 |    3657 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3840 |       0 |    3665 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3850 |       0 |    3671 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3860 |       0 |    3677 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3870 |       0 |    3682 |            0 |    +7.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3880 |       0 |    3688 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3890 |       0 |    3695 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3900 |       0 |    3704 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3910 |       0 |    3712 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3920 |       0 |    3718 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3930 |       0 |    3724 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3940 |       0 |    3728 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3950 |       0 |    3733 |            0 |    +7.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3960 |       0 |    3741 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3970 |       0 |    3747 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3980 |       0 |    3755 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     3990 |       0 |    3762 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4000 |       0 |    3771 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4010 |       0 |    3778 |            0 |    +7.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4020 |       0 |    3785 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4030 |       0 |    3790 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4040 |       0 |    3796 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4050 |       0 |    3804 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4060 |       0 |    3810 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4070 |       0 |    3818 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4080 |       0 |    3826 |            0 |    +7.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4090 |       0 |    3833 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4100 |       0 |    3836 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4110 |       0 |    3844 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4120 |       0 |    3852 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4130 |       0 |    3859 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4140 |       0 |    3866 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4150 |       0 |    3871 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4160 |       0 |    3878 |            0 |    +8.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4170 |       0 |    3884 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4180 |       0 |    3890 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4190 |       0 |    3898 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4200 |       0 |    3906 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4210 |       0 |    3913 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4220 |       0 |    3919 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4230 |       0 |    3925 |            0 |    +8.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4240 |       0 |    3931 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4250 |       0 |    3936 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4260 |       0 |    3943 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4270 |       0 |    3951 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4280 |       0 |    3957 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4290 |       0 |    3962 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4300 |       0 |    3968 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4310 |       0 |    3973 |            0 |    +8.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4320 |       0 |    3981 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4330 |       0 |    3989 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4340 |       0 |    3992 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4350 |       0 |    3997 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4360 |       0 |    4004 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4370 |       0 |    4009 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4380 |       0 |    4015 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4390 |       0 |    4024 |            0 |    +8.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4400 |       0 |    4032 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4410 |       0 |    4040 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4420 |       0 |    4050 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4430 |       0 |    4055 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4440 |       0 |    4060 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4450 |       0 |    4067 |            0 |    +8.4% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4460 |       0 |    4075 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4470 |       0 |    4081 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4480 |       0 |    4089 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4490 |       0 |    4096 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4500 |       0 |    4101 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4510 |       0 |    4108 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4520 |       0 |    4113 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4530 |       0 |    4120 |            0 |    +8.5% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4540 |       0 |    4128 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4550 |       0 |    4132 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4560 |       0 |    4140 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4570 |       0 |    4145 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4580 |       0 |    4153 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4590 |       0 |    4162 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4600 |       0 |    4165 |            0 |    +8.6% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4610 |       0 |    4171 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4620 |       0 |    4178 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4630 |       0 |    4186 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4640 |       0 |    4191 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4650 |       0 |    4197 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4660 |       0 |    4203 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4670 |       0 |    4208 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4680 |       0 |    4213 |            0 |    +8.7% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4690 |       0 |    4219 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4700 |       0 |    4224 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4710 |       0 |    4230 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4720 |       0 |    4234 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4730 |       0 |    4239 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4740 |       0 |    4246 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4750 |       0 |    4254 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4760 |       0 |    4257 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4770 |       0 |    4261 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4780 |       0 |    4263 |            0 |    +8.8% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4790 |       0 |    4269 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4800 |       0 |    4272 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4810 |       0 |    4278 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4820 |       0 |    4282 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4830 |       0 |    4291 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4840 |       0 |    4295 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4850 |       0 |    4300 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4860 |       0 |    4306 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4870 |       0 |    4313 |            0 |    +8.9% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4880 |       0 |    4318 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4890 |       0 |    4324 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4900 |       0 |    4332 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4910 |       0 |    4339 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4920 |       0 |    4345 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4930 |       0 |    4348 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4940 |       0 |    4353 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4950 |       0 |    4359 |            0 |    +9.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4960 |       0 |    4364 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4970 |       0 |    4370 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4980 |       0 |    4379 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     4990 |       0 |    4384 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5000 |       0 |    4391 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5010 |       0 |    4399 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5020 |       0 |    4402 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5030 |       0 |    4407 |            0 |    +9.1% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5040 |       0 |    4412 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5050 |       0 |    4419 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5060 |       0 |    4422 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5070 |       0 |    4425 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5080 |       0 |    4429 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5090 |       0 |    4431 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5100 |       0 |    4437 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5110 |       0 |    4442 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5120 |       0 |    4446 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5130 |       0 |    4452 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5140 |       0 |    4456 |            0 |    +9.2% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5150 |       0 |    4460 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5160 |       0 |    4463 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5170 |       0 |    4468 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5180 |       0 |    4472 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5190 |       0 |    4474 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5200 |       0 |    4476 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5210 |       0 |    4480 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5220 |       0 |    4482 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5230 |       0 |    4485 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5240 |       0 |    4487 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5250 |       0 |    4489 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5260 |       0 |    4490 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5270 |       0 |    4491 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+     5280 |       0 |    4493 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+    final |       0 |    4494 |            0 |    +9.3% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 4494 hold buffers.
+[INFO RSZ-0506] Runtime: 50.73s
+Took 51 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws 7.19 (+24.71) tns 0.0 (+100.0%) viol 0, 51 s
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 131 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   7.192 |   0.000 | g_fan32.u_banks.g_bank[12].u_payload/cv$_DFF_PN0_/RESETN
+       10 |       0 |      18 |            0 |    +0.0% |   9.808 |   0.000 | g_fan32.u_banks.g_bank[3].u_payload/cv$_DFF_PN0_/RESETN
+       20 |       0 |      34 |            0 |    +0.1% |  27.408 |   0.000 | prm[1190]
+       30 |       0 |      44 |            0 |    +0.1% |  27.512 |   0.000 | prm[1010]
+       40 |       0 |      54 |            0 |    +0.1% |  27.684 |   0.000 | prm[934]
+       50 |       0 |      64 |            0 |    +0.1% |  27.828 |   0.000 | prm[1507]
+       60 |       0 |      74 |            0 |    +0.1% |  27.988 |   0.000 | prm[914]
+       70 |       0 |      84 |            0 |    +0.2% |  28.196 |   0.000 | prm[887]
+       80 |       0 |      94 |            0 |    +0.2% |  28.423 |   0.000 | prm[973]
+       90 |       0 |     104 |            0 |    +0.2% |  28.612 |   0.000 | pw_data[129]
+      100 |       0 |     114 |            0 |    +0.2% |  28.796 |   0.000 | prm[1148]
+      110 |       0 |     124 |            0 |    +0.2% |  29.201 |   0.000 | prm[1510]
+      120 |       0 |     134 |            0 |    +0.3% |  29.523 |   0.000 | prm[964]
+      130 |       0 |     144 |            0 |    +0.3% |  29.754 |   0.000 | prm[857]
+    final |       0 |     146 |            0 |    +0.3% |  30.005 |   0.000 | pw_data[108]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 146 hold buffers.
+[INFO RSZ-0506] Runtime: 1.73s
+OT_HOLD_GUARD chunk 2: hold ws 30.01 (+22.81) tns 0.0 (+0.0%) viol 0, 52 s
+OT_HOLD_MM after repair: SS setup ws 44.45 / FF hold ws 30.01 ps
+detailed_placement
+[INFO DPL-0006] Core area: 15695.08 um^2
+[INFO DPL-0007] Movable instances area: 3791.43 um^2
+[INFO DPL-0008] Fixed instances area within core: 61.03 um^2
+[INFO DPL-0009] Utilization: 24.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 31956 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        681 |       173 |       508
+        1 |        247 |        45 |       202
+        2 |        172 |        20 |       152
+        3 |        185 |        13 |       172
+        4 |        142 |        10 |       132
+        5 |        152 |        14 |       138
+        6 |         98 |         8 |        90
+        7 |        112 |        10 |       102
+        8 |        123 |        11 |       112
+        9 |         84 |         6 |        78
+       10 |         91 |        11 |        80
+       20 |         70 |         8 |        62
+       30 |         95 |         9 |        74
+       40 |        305 |        26 |       275
+       50 |        331 |        35 |       296
+       60 |        150 |        15 |       135
+       70 |         44 |         5 |        39
+       80 |         50 |         7 |        43
+       90 |        154 |        17 |       137
+      100 |        129 |        15 |       114
+      110 |         65 |         6 |        59
+      120 |         23 |         3 |        20
+      124 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 124.
+[INFO DPL-0500] Runtime: 7.65s
+Placement Analysis
+---------------------------------
+total displacement       2655.9 u
+average displacement        0.1 u
+max displacement            5.9 u
+original HPWL          179933.4 u
+legalized HPWL         181976.0 u
+delta HPWL                    1 %
+
+Took 8 seconds: detailed_placement
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 3852 um^2 25% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/4_cts.sdc
+Elapsed time: 2:01.66[h:]min:sec. CPU time: user 158.78 sys 13.85 (141%). Peak memory: 802680KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          121            783 bcb7f84490edcfb6fc29

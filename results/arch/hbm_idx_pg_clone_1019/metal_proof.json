@@ -1,0 +1,34 @@
+{
+  "signal_net_records_identical": true,
+  "schema": "opentallas.pg_conductor_clone.v1",
+  "shapes": 1973260,
+  "via_instances": 33945,
+  "cuts_checked": 1696320,
+  "grid_dbu": 1,
+  "grid_offenders": [],
+  "via_enclosure_contact_failures": [],
+  "vdd_vss_same_layer_shorts": [],
+  "pg_terminal_count": 196864,
+  "pg_terminals_not_entirely_connected_to_matching_supply_bpins": [],
+  "wrong_supply_reachable": [],
+  "supply_bpin_component_counts": {
+    "GROUND": 1,
+    "POWER": 1
+  },
+  "def_section_changes": {
+    "COMPONENTS": false,
+    "PINS": false,
+    "SPECIALNETS": true,
+    "NETS": true,
+    "VIAS": false,
+    "REGIONS": false,
+    "BLOCKAGES": false,
+    "FILLS": false,
+    "NONDEFAULTRULES": false
+  },
+  "specialnet_geometry_unchanged": true,
+  "geometry_contact_PASS": true,
+  "source_def_sha256": "609ae26296d0854751a356924d01792863a3a137cf8e68957b23e998ca30a06e",
+  "clone_def_sha256": "39dfd29aa1823e43b7a62e4a01696b768f90b5cc82d41d8466630bf56c9c3093",
+  "entire_def_outside_nets_and_specialnets_identical": true
+}

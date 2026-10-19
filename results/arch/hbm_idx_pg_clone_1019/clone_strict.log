@@ -1,0 +1,6406 @@
+{
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "canonical_nontransparent_violators": 0,
+  "counts": {
+    "cells": 30237,
+    "drivers": 30535,
+    "logical_endpoints": 57401,
+    "roles": {
+      "comb": 24674,
+      "ff": 5417,
+      "input": 298,
+      "static": 146
+    }
+  },
+  "disconnected_outputs": [
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25238
+          ],
+          "pin": "cell:clkload0/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload0/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25239
+          ],
+          "pin": "cell:clkload1/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload1/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25240
+          ],
+          "pin": "cell:clkload2/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload2/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "8.38928",
+            "fall_capacitance": "8.38928",
+            "rise_capacitance": "8.38544"
+          },
+          "nets": [
+            25243
+          ],
+          "pin": "cell:clkload3/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload3/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "8.38928",
+            "fall_capacitance": "8.38928",
+            "rise_capacitance": "8.38544"
+          },
+          "nets": [
+            25244
+          ],
+          "pin": "cell:clkload4/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload4/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25245
+          ],
+          "pin": "cell:clkload5/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload5/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25247
+          ],
+          "pin": "cell:clkload6/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload6/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx11_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.33283",
+            "fall_capacitance": "6.32565",
+            "rise_capacitance": "6.33283"
+          },
+          "nets": [
+            25248
+          ],
+          "pin": "cell:clkload7/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload7/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25249
+          ],
+          "pin": "cell:clkload8/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload8/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25250
+          ],
+          "pin": "cell:clkload9/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload9/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25251
+          ],
+          "pin": "cell:clkload10/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload10/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25253
+          ],
+          "pin": "cell:clkload11/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload11/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25254
+          ],
+          "pin": "cell:clkload12/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload12/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25256
+          ],
+          "pin": "cell:clkload13/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload13/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25257
+          ],
+          "pin": "cell:clkload14/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload14/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25259
+          ],
+          "pin": "cell:clkload15/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload15/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx11_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.33283",
+            "fall_capacitance": "6.32565",
+            "rise_capacitance": "6.33283"
+          },
+          "nets": [
+            25260
+          ],
+          "pin": "cell:clkload16/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload16/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25261
+          ],
+          "pin": "cell:clkload17/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload17/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25262
+          ],
+          "pin": "cell:clkload18/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload18/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25264
+          ],
+          "pin": "cell:clkload19/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload19/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "11.9453",
+            "fall_capacitance": "11.9283",
+            "rise_capacitance": "11.9453"
+          },
+          "nets": [
+            25265
+          ],
+          "pin": "cell:clkload20/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload20/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx11_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.33283",
+            "fall_capacitance": "6.32565",
+            "rise_capacitance": "6.33283"
+          },
+          "nets": [
+            25266
+          ],
+          "pin": "cell:clkload21/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload21/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx11_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.33283",
+            "fall_capacitance": "6.32565",
+            "rise_capacitance": "6.33283"
+          },
+          "nets": [
+            25267
+          ],
+          "pin": "cell:clkload22/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload22/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            24947
+          ],
+          "pin": "cell:clkload23/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload23/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24948
+          ],
+          "pin": "cell:clkload24/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload24/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24950
+          ],
+          "pin": "cell:clkload25/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload25/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24951
+          ],
+          "pin": "cell:clkload26/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload26/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            24952
+          ],
+          "pin": "cell:clkload27/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload27/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24953
+          ],
+          "pin": "cell:clkload28/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload28/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24954
+          ],
+          "pin": "cell:clkload29/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload29/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25206
+          ],
+          "pin": "cell:clkload30/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload30/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25210
+          ],
+          "pin": "cell:clkload31/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload31/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25211
+          ],
+          "pin": "cell:clkload32/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload32/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx13_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "7.46672",
+            "fall_capacitance": "7.46302",
+            "rise_capacitance": "7.46672"
+          },
+          "nets": [
+            25212
+          ],
+          "pin": "cell:clkload33/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload33/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25213
+          ],
+          "pin": "cell:clkload34/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload34/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25214
+          ],
+          "pin": "cell:clkload35/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload35/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25215
+          ],
+          "pin": "cell:clkload36/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload36/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25216
+          ],
+          "pin": "cell:clkload37/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload37/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25217
+          ],
+          "pin": "cell:clkload38/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload38/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25218
+          ],
+          "pin": "cell:clkload39/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload39/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25219
+          ],
+          "pin": "cell:clkload40/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload40/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25220
+          ],
+          "pin": "cell:clkload41/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload41/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25221
+          ],
+          "pin": "cell:clkload42/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload42/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25222
+          ],
+          "pin": "cell:clkload43/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload43/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25223
+          ],
+          "pin": "cell:clkload44/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload44/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24955
+          ],
+          "pin": "cell:clkload45/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload45/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            24956
+          ],
+          "pin": "cell:clkload46/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload46/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24958
+          ],
+          "pin": "cell:clkload47/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload47/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24961
+          ],
+          "pin": "cell:clkload48/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload48/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            24963
+          ],
+          "pin": "cell:clkload49/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload49/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24964
+          ],
+          "pin": "cell:clkload50/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload50/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24965
+          ],
+          "pin": "cell:clkload51/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload51/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24966
+          ],
+          "pin": "cell:clkload52/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload52/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24968
+          ],
+          "pin": "cell:clkload53/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload53/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25203
+          ],
+          "pin": "cell:clkload54/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload54/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25204
+          ],
+          "pin": "cell:clkload55/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload55/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25205
+          ],
+          "pin": "cell:clkload56/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload56/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.70158",
+            "fall_capacitance": "3.70158",
+            "rise_capacitance": "3.70008"
+          },
+          "nets": [
+            25185
+          ],
+          "pin": "cell:clkload57/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload57/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25187
+          ],
+          "pin": "cell:clkload58/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload58/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.70158",
+            "fall_capacitance": "3.70158",
+            "rise_capacitance": "3.70008"
+          },
+          "nets": [
+            25188
+          ],
+          "pin": "cell:clkload59/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload59/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25189
+          ],
+          "pin": "cell:clkload60/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload60/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25190
+          ],
+          "pin": "cell:clkload61/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload61/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25191
+          ],
+          "pin": "cell:clkload62/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload62/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25192
+          ],
+          "pin": "cell:clkload63/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload63/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25193
+          ],
+          "pin": "cell:clkload64/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload64/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25194
+          ],
+          "pin": "cell:clkload65/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload65/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.70158",
+            "fall_capacitance": "3.70158",
+            "rise_capacitance": "3.70008"
+          },
+          "nets": [
+            25195
+          ],
+          "pin": "cell:clkload66/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload66/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25207
+          ],
+          "pin": "cell:clkload67/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload67/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.88588",
+            "fall_capacitance": "4.88544",
+            "rise_capacitance": "4.88588"
+          },
+          "nets": [
+            25208
+          ],
+          "pin": "cell:clkload68/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload68/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25165
+          ],
+          "pin": "cell:clkload69/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload69/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25168
+          ],
+          "pin": "cell:clkload70/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload70/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25169
+          ],
+          "pin": "cell:clkload71/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload71/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25196
+          ],
+          "pin": "cell:clkload72/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload72/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25197
+          ],
+          "pin": "cell:clkload73/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload73/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25198
+          ],
+          "pin": "cell:clkload74/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload74/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25199
+          ],
+          "pin": "cell:clkload75/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload75/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25201
+          ],
+          "pin": "cell:clkload76/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload76/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25202
+          ],
+          "pin": "cell:clkload77/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload77/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24960
+          ],
+          "pin": "cell:clkload78/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload78/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24962
+          ],
+          "pin": "cell:clkload79/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload79/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24967
+          ],
+          "pin": "cell:clkload80/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload80/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24971
+          ],
+          "pin": "cell:clkload81/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload81/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24972
+          ],
+          "pin": "cell:clkload82/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload82/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            24973
+          ],
+          "pin": "cell:clkload83/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload83/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            24975
+          ],
+          "pin": "cell:clkload84/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload84/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24976
+          ],
+          "pin": "cell:clkload85/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload85/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.5117",
+            "fall_capacitance": "4.5117",
+            "rise_capacitance": "4.50993"
+          },
+          "nets": [
+            24977
+          ],
+          "pin": "cell:clkload86/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload86/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            24978
+          ],
+          "pin": "cell:clkload87/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload87/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24980
+          ],
+          "pin": "cell:clkload88/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload88/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24974
+          ],
+          "pin": "cell:clkload89/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload89/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24981
+          ],
+          "pin": "cell:clkload90/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload90/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24982
+          ],
+          "pin": "cell:clkload91/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload91/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24983
+          ],
+          "pin": "cell:clkload92/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload92/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24984
+          ],
+          "pin": "cell:clkload93/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload93/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24985
+          ],
+          "pin": "cell:clkload94/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload94/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24986
+          ],
+          "pin": "cell:clkload95/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload95/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24988
+          ],
+          "pin": "cell:clkload96/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload96/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24989
+          ],
+          "pin": "cell:clkload97/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload97/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24993
+          ],
+          "pin": "cell:clkload98/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload98/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24994
+          ],
+          "pin": "cell:clkload99/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload99/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            24969
+          ],
+          "pin": "cell:clkload100/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload100/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24970
+          ],
+          "pin": "cell:clkload101/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload101/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25007
+          ],
+          "pin": "cell:clkload102/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload102/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25008
+          ],
+          "pin": "cell:clkload103/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload103/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25009
+          ],
+          "pin": "cell:clkload104/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload104/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25010
+          ],
+          "pin": "cell:clkload105/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload105/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25164
+          ],
+          "pin": "cell:clkload106/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload106/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            24995
+          ],
+          "pin": "cell:clkload107/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload107/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25001
+          ],
+          "pin": "cell:clkload108/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload108/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25002
+          ],
+          "pin": "cell:clkload109/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload109/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25003
+          ],
+          "pin": "cell:clkload110/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload110/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25004
+          ],
+          "pin": "cell:clkload111/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload111/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25005
+          ],
+          "pin": "cell:clkload112/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload112/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25006
+          ],
+          "pin": "cell:clkload113/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload113/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25134
+          ],
+          "pin": "cell:clkload114/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload114/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25135
+          ],
+          "pin": "cell:clkload115/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload115/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25136
+          ],
+          "pin": "cell:clkload116/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload116/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25137
+          ],
+          "pin": "cell:clkload117/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload117/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25138
+          ],
+          "pin": "cell:clkload118/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload118/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25139
+          ],
+          "pin": "cell:clkload119/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload119/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25140
+          ],
+          "pin": "cell:clkload120/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload120/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25184
+          ],
+          "pin": "cell:clkload121/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload121/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25141
+          ],
+          "pin": "cell:clkload122/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload122/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25142
+          ],
+          "pin": "cell:clkload123/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload123/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25170
+          ],
+          "pin": "cell:clkload124/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload124/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25171
+          ],
+          "pin": "cell:clkload125/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload125/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25176
+          ],
+          "pin": "cell:clkload126/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload126/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25177
+          ],
+          "pin": "cell:clkload127/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload127/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25178
+          ],
+          "pin": "cell:clkload128/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload128/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25179
+          ],
+          "pin": "cell:clkload129/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload129/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25180
+          ],
+          "pin": "cell:clkload130/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload130/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25181
+          ],
+          "pin": "cell:clkload131/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload131/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25186
+          ],
+          "pin": "cell:clkload132/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload132/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25117
+          ],
+          "pin": "cell:clkload133/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload133/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25118
+          ],
+          "pin": "cell:clkload134/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload134/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25121
+          ],
+          "pin": "cell:clkload135/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload135/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25130
+          ],
+          "pin": "cell:clkload136/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload136/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25131
+          ],
+          "pin": "cell:clkload137/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload137/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25132
+          ],
+          "pin": "cell:clkload138/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload138/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.70158",
+            "fall_capacitance": "3.70158",
+            "rise_capacitance": "3.70008"
+          },
+          "nets": [
+            25116
+          ],
+          "pin": "cell:clkload139/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload139/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25120
+          ],
+          "pin": "cell:clkload140/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload140/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25122
+          ],
+          "pin": "cell:clkload141/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload141/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25123
+          ],
+          "pin": "cell:clkload142/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload142/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.70158",
+            "fall_capacitance": "3.70158",
+            "rise_capacitance": "3.70008"
+          },
+          "nets": [
+            25125
+          ],
+          "pin": "cell:clkload143/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload143/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25126
+          ],
+          "pin": "cell:clkload144/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload144/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25127
+          ],
+          "pin": "cell:clkload145/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload145/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25128
+          ],
+          "pin": "cell:clkload146/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload146/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25144
+          ],
+          "pin": "cell:clkload147/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload147/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25145
+          ],
+          "pin": "cell:clkload148/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload148/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25167
+          ],
+          "pin": "cell:clkload149/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload149/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25172
+          ],
+          "pin": "cell:clkload150/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload150/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25146
+          ],
+          "pin": "cell:clkload151/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload151/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25147
+          ],
+          "pin": "cell:clkload152/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload152/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25156
+          ],
+          "pin": "cell:clkload153/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload153/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25111
+          ],
+          "pin": "cell:clkload154/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload154/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25112
+          ],
+          "pin": "cell:clkload155/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload155/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25113
+          ],
+          "pin": "cell:clkload156/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload156/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25115
+          ],
+          "pin": "cell:clkload157/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload157/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25129
+          ],
+          "pin": "cell:clkload158/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload158/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25103
+          ],
+          "pin": "cell:clkload159/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload159/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25104
+          ],
+          "pin": "cell:clkload160/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload160/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25106
+          ],
+          "pin": "cell:clkload161/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload161/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25107
+          ],
+          "pin": "cell:clkload162/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload162/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25108
+          ],
+          "pin": "cell:clkload163/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload163/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25109
+          ],
+          "pin": "cell:clkload164/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload164/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25110
+          ],
+          "pin": "cell:clkload165/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload165/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx1_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.619928",
+            "fall_capacitance": "0.619647",
+            "rise_capacitance": "0.619928"
+          },
+          "nets": [
+            24991
+          ],
+          "pin": "cell:clkload166/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload166/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            24992
+          ],
+          "pin": "cell:clkload167/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload167/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            24996
+          ],
+          "pin": "cell:clkload168/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload168/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25038
+          ],
+          "pin": "cell:clkload169/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload169/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25039
+          ],
+          "pin": "cell:clkload170/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload170/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25040
+          ],
+          "pin": "cell:clkload171/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload171/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25027
+          ],
+          "pin": "cell:clkload172/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload172/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25028
+          ],
+          "pin": "cell:clkload173/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload173/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25030
+          ],
+          "pin": "cell:clkload174/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload174/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25032
+          ],
+          "pin": "cell:clkload175/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload175/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25033
+          ],
+          "pin": "cell:clkload176/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload176/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25035
+          ],
+          "pin": "cell:clkload177/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload177/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25037
+          ],
+          "pin": "cell:clkload178/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload178/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            24999
+          ],
+          "pin": "cell:clkload179/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload179/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25011
+          ],
+          "pin": "cell:clkload180/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload180/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25012
+          ],
+          "pin": "cell:clkload181/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload181/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25013
+          ],
+          "pin": "cell:clkload182/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload182/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25014
+          ],
+          "pin": "cell:clkload183/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload183/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25015
+          ],
+          "pin": "cell:clkload184/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload184/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25019
+          ],
+          "pin": "cell:clkload185/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload185/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25020
+          ],
+          "pin": "cell:clkload186/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload186/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25021
+          ],
+          "pin": "cell:clkload187/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload187/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25022
+          ],
+          "pin": "cell:clkload188/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload188/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25023
+          ],
+          "pin": "cell:clkload189/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload189/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25159
+          ],
+          "pin": "cell:clkload190/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload190/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25161
+          ],
+          "pin": "cell:clkload191/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload191/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24997
+          ],
+          "pin": "cell:clkload192/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload192/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            24998
+          ],
+          "pin": "cell:clkload193/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload193/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25016
+          ],
+          "pin": "cell:clkload194/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload194/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25018
+          ],
+          "pin": "cell:clkload195/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload195/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25025
+          ],
+          "pin": "cell:clkload196/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload196/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25026
+          ],
+          "pin": "cell:clkload197/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload197/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25029
+          ],
+          "pin": "cell:clkload198/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload198/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25031
+          ],
+          "pin": "cell:clkload199/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload199/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25036
+          ],
+          "pin": "cell:clkload200/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload200/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25042
+          ],
+          "pin": "cell:clkload201/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload201/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25043
+          ],
+          "pin": "cell:clkload202/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload202/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25044
+          ],
+          "pin": "cell:clkload203/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload203/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25047
+          ],
+          "pin": "cell:clkload204/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload204/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25048
+          ],
+          "pin": "cell:clkload205/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload205/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25049
+          ],
+          "pin": "cell:clkload206/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload206/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25050
+          ],
+          "pin": "cell:clkload207/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload207/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx4_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.33645",
+            "fall_capacitance": "2.33645",
+            "rise_capacitance": "2.3361"
+          },
+          "nets": [
+            25051
+          ],
+          "pin": "cell:clkload208/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload208/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25053
+          ],
+          "pin": "cell:clkload209/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload209/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25054
+          ],
+          "pin": "cell:clkload210/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload210/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.852045",
+            "fall_capacitance": "0.850973",
+            "rise_capacitance": "0.852045"
+          },
+          "nets": [
+            25055
+          ],
+          "pin": "cell:clkload211/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload211/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.852045",
+            "fall_capacitance": "0.850973",
+            "rise_capacitance": "0.852045"
+          },
+          "nets": [
+            25057
+          ],
+          "pin": "cell:clkload212/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload212/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.852045",
+            "fall_capacitance": "0.850973",
+            "rise_capacitance": "0.852045"
+          },
+          "nets": [
+            25058
+          ],
+          "pin": "cell:clkload213/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload213/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx6_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "3.48244",
+            "fall_capacitance": "3.48142",
+            "rise_capacitance": "3.48244"
+          },
+          "nets": [
+            25052
+          ],
+          "pin": "cell:clkload214/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload214/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25060
+          ],
+          "pin": "cell:clkload215/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload215/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25061
+          ],
+          "pin": "cell:clkload216/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload216/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25062
+          ],
+          "pin": "cell:clkload217/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload217/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25064
+          ],
+          "pin": "cell:clkload218/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload218/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25065
+          ],
+          "pin": "cell:clkload219/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload219/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25067
+          ],
+          "pin": "cell:clkload220/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload220/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25153
+          ],
+          "pin": "cell:clkload221/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload221/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25154
+          ],
+          "pin": "cell:clkload222/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload222/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25155
+          ],
+          "pin": "cell:clkload223/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload223/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25024
+          ],
+          "pin": "cell:clkload224/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload224/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25148
+          ],
+          "pin": "cell:clkload225/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload225/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25149
+          ],
+          "pin": "cell:clkload226/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload226/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25150
+          ],
+          "pin": "cell:clkload227/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload227/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25097
+          ],
+          "pin": "cell:clkload228/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload228/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25099
+          ],
+          "pin": "cell:clkload229/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload229/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25100
+          ],
+          "pin": "cell:clkload230/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload230/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx9p33_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.17715",
+            "fall_capacitance": "6.17665",
+            "rise_capacitance": "6.17715"
+          },
+          "nets": [
+            25101
+          ],
+          "pin": "cell:clkload231/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload231/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25102
+          ],
+          "pin": "cell:clkload232/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload232/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25093
+          ],
+          "pin": "cell:clkload233/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload233/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25095
+          ],
+          "pin": "cell:clkload234/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload234/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25096
+          ],
+          "pin": "cell:clkload235/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload235/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25071
+          ],
+          "pin": "cell:clkload236/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload236/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25072
+          ],
+          "pin": "cell:clkload237/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload237/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25077
+          ],
+          "pin": "cell:clkload238/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload238/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25070
+          ],
+          "pin": "cell:clkload239/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload239/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25073
+          ],
+          "pin": "cell:clkload240/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload240/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "CKINVDCx11_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "6.83522",
+            "fall_capacitance": "6.83372",
+            "rise_capacitance": "6.83522"
+          },
+          "nets": [
+            25074
+          ],
+          "pin": "cell:clkload241/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload241/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx24_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.35026",
+            "fall_capacitance": "2.35026",
+            "rise_capacitance": "2.34978"
+          },
+          "nets": [
+            25076
+          ],
+          "pin": "cell:clkload242/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload242/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx8_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "4.61057",
+            "fall_capacitance": "4.60787",
+            "rise_capacitance": "4.61057"
+          },
+          "nets": [
+            25082
+          ],
+          "pin": "cell:clkload243/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload243/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25083
+          ],
+          "pin": "cell:clkload244/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload244/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx5_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "2.90749",
+            "fall_capacitance": "2.90749",
+            "rise_capacitance": "2.90695"
+          },
+          "nets": [
+            25084
+          ],
+          "pin": "cell:clkload245/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload245/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25086
+          ],
+          "pin": "cell:clkload246/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload246/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25092
+          ],
+          "pin": "cell:clkload247/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload247/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25080
+          ],
+          "pin": "cell:clkload248/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload248/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25081
+          ],
+          "pin": "cell:clkload249/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload249/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25085
+          ],
+          "pin": "cell:clkload250/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload250/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx4f_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.00419",
+            "fall_capacitance": "1.00375",
+            "rise_capacitance": "1.00419"
+          },
+          "nets": [
+            25088
+          ],
+          "pin": "cell:clkload251/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload251/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx3_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "fall_capacitance": "1.76686",
+            "rise_capacitance": "1.76574"
+          },
+          "nets": [
+            25089
+          ],
+          "pin": "cell:clkload252/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload252/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "INVx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "1.19281",
+            "fall_capacitance": "1.19161",
+            "rise_capacitance": "1.19281"
+          },
+          "nets": [
+            25090
+          ],
+          "pin": "cell:clkload253/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload253/Y",
+      "transparent": true
+    },
+    {
+      "direction": "output",
+      "disconnected": true,
+      "master": "BUFx2_ASAP7_75t_R",
+      "physical_input_pins": [
+        {
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ],
+          "native_capacitance": {
+            "capacitance": "0.534279",
+            "fall_capacitance": "0.53423",
+            "rise_capacitance": "0.534279"
+          },
+          "nets": [
+            25091
+          ],
+          "pin": "cell:clkload254/A",
+          "role": "data"
+        }
+      ],
+      "pin": "cell:clkload254/Y",
+      "transparent": true
+    }
+  ],
+  "literal_load_excess": [],
+  "max_allowed": 32,
+  "max_loads": 32,
+  "max_nonliteral_loads": 32,
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "top": "ot_hbm_static_cfg_collar_idx256",
+  "transparent_output_violators": 0,
+  "unphysicalized_literals": [],
+  "verdict": "PASS",
+  "violations": []
+}
+IDX_FINAL_RAW_NATIVE_REPLAY PASS
