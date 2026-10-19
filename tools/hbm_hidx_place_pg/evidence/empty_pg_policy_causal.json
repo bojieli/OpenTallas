@@ -1,0 +1,125 @@
+{
+  "actual_empty_rows_PASS": 2,
+  "causal_refusals": [
+    {
+      "name": "one_",
+      "mutant": "iterms",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED iterms"
+    },
+    {
+      "name": "one_",
+      "mutant": "bterms",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED bterms"
+    },
+    {
+      "name": "one_",
+      "mutant": "swires",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED swires"
+    },
+    {
+      "name": "one_",
+      "mutant": "signal_wire_shapes",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED signal_wire_shapes"
+    },
+    {
+      "name": "one_",
+      "mutant": "vias",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED vias"
+    },
+    {
+      "name": "one_",
+      "mutant": "contacts",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED contacts"
+    },
+    {
+      "name": "one_",
+      "mutant": "native_pin_cap_fF",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED native_pin_cap_fF"
+    },
+    {
+      "name": "one_",
+      "mutant": "external_cap_fF",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED external_cap_fF"
+    },
+    {
+      "name": "one_",
+      "mutant": "signal_wire",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED signal_wire"
+    },
+    {
+      "name": "one_",
+      "mutant": "role",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "EMPTY_PG_NAME_ROLE_REFUSED"
+    },
+    {
+      "name": "zero_",
+      "mutant": "iterms",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED iterms"
+    },
+    {
+      "name": "zero_",
+      "mutant": "bterms",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED bterms"
+    },
+    {
+      "name": "zero_",
+      "mutant": "swires",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED swires"
+    },
+    {
+      "name": "zero_",
+      "mutant": "signal_wire_shapes",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED signal_wire_shapes"
+    },
+    {
+      "name": "zero_",
+      "mutant": "vias",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED vias"
+    },
+    {
+      "name": "zero_",
+      "mutant": "contacts",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED contacts"
+    },
+    {
+      "name": "zero_",
+      "mutant": "native_pin_cap_fF",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED native_pin_cap_fF"
+    },
+    {
+      "name": "zero_",
+      "mutant": "external_cap_fF",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED external_cap_fF"
+    },
+    {
+      "name": "zero_",
+      "mutant": "signal_wire",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "NONEMPTY_IMPLICIT_PG_REFUSED signal_wire"
+    },
+    {
+      "name": "zero_",
+      "mutant": "role",
+      "verdict": "CAUSAL_REFUSAL",
+      "reason": "EMPTY_PG_NAME_ROLE_REFUSED"
+    }
+  ]
+}

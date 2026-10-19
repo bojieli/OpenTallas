@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/work/kit/report_readonly.py", line 7, in <module>
+    assert len(set(mapping.values()))==11145 and set(mapping.values())==set(orig['cells'])
+AssertionError

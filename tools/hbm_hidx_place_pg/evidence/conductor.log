@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/work/output/../kit/prove_metal_readonly.py", line 5, in <module>
+    with gzip.open('metal.json.gz','rt') as f:j=json.load(f)
+  File "/usr/lib/python3.10/gzip.py", line 58, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.10/gzip.py", line 174, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'metal.json.gz'

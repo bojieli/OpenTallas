@@ -1,0 +1,72 @@
+{
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "canonical_nontransparent_violators": 0,
+  "counts": {
+    "cells": 11145,
+    "drivers": 11450,
+    "logical_endpoints": 22839,
+    "roles": {
+      "comb": 8241,
+      "ff": 2904,
+      "input": 305
+    }
+  },
+  "diagnostic_provenance": {
+    "collector_sha256": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "comparison_scope": "placement-only physical candidate diagnostic API; not NEW-kit activation",
+    "elapsed_seconds": 5.960864663000393,
+    "input_manifest_sha256": "2752248bdc7f48be0ca33984cd2c3bb449b86ece46dd3dfcfec96085c0dfbb36",
+    "libraries": [
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    ],
+    "pg_only_instances": [],
+    "pg_only_native_master_pins": {},
+    "physical_omissions": {
+      "instance_pg_pins": 22290,
+      "top_pg_pins": 2
+    },
+    "raw_export_sha256": "e8503cce725bccf7340b07f645429b983e34b93c4e9eaaa371d302853412fbce",
+    "replay_sha256": "ba6b52aa9f02e69633e279683d3f93686746a0f3967b526d7e47a8ccf8e5f1f4",
+    "source_odb": "/work/output/pg_checkpoint.odb",
+    "source_odb_sha256": "70042afe82ff76fc2657f45fb6c2a89f91eed2993add8e9dc89f2fc612fc88a6"
+  },
+  "disconnected_outputs": [],
+  "literal_load_excess": [],
+  "max_allowed": 32,
+  "max_loads": 27,
+  "max_nonliteral_loads": 27,
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "top": "hidx_coupon1",
+  "transparent_output_violators": 0,
+  "unphysicalized_literals": [],
+  "verdict": "PASS",
+  "violating_roots": [],
+  "violations": []
+}

@@ -1,0 +1,35 @@
+ot-run: ot-epyc4       admits  1125 GB (avail 844, growth 50, headroom 0, waiters 0/0 GB) load 33/128 running 15 disk 401 GB 
+ot-run: ot-epyc5       admits   577 GB (avail 461, growth 25, headroom 0, waiters 0/0 GB) load 42/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1237 GB (avail 930, growth 63, headroom 0, waiters 0/0 GB) load 30/128 running 18 disk 5715 GB 
+ot-run: ot-epyc7       admits   992 GB (avail 752, growth 58, headroom 0, waiters 0/0 GB) load 27/96 running 20 disk 6272 GB 
+ot-run: ot-epyc8       admits  1056 GB (avail 852, growth 113, headroom 0, waiters 0/0 GB) load 21/128 running 15 disk 93 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-132964-1792446937 after 1 s
+input/canonical/all.lib: OK
+input/canonical/cells.lef: OK
+input/canonical/invbuf_FF.lib: OK
+input/canonical/netlist.json: OK
+input/canonical/netlist.v: OK
+input/canonical/ports.csv: OK
+input/canonical/seq_FF.lib: OK
+input/canonical/tech.lef: OK
+input/coupon.sdc: OK
+input/identifier_escape_map.json.gz: OK
+input/netlist.json.gz: OK
+input/netlist.v.gz: OK
+input/pin_geometry_model.json: OK
+kit/export_metal.py: OK
+kit/export_raw.py: OK
+kit/lib_SHA256SUMS: OK
+kit/libs_FF.tcl: OK
+kit/libs_TT.tcl: OK
+kit/place.py: OK
+kit/platform_SHA256SUMS: OK
+kit/prove_metal_readonly.py: OK
+kit/run.sh: OK
+kit/vendor/native_pg_binding.tcl: OK
+kit/vendor/strict_contract.py: OK
+kit/vendor/strict_replay.py: OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-132964-1792446937): exit 1

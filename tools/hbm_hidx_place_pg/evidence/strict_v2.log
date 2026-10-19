@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/work/kit/vendor/strict_replay.py", line 22, in <module>
+    mod=raw['modules']['ot_smh_int8_tile_safe']; removed=Counter(); physical=[]
+KeyError: 'ot_smh_int8_tile_safe'

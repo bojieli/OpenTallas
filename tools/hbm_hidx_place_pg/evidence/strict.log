@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/work/kit/vendor/strict_replay.py", line 13, in <module>
+    import strict_contract as S
+  File "/work/kit/vendor/strict_contract.py", line 19, in <module>
+    from dft.liberty import _parse_groups, _read_text, _strip_heavy, parse_function, expr_vars, evaluate
+ModuleNotFoundError: No module named 'dft'

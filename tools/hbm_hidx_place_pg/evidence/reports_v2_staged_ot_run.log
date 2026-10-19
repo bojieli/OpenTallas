@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1123 GB (avail 843, growth 52, headroom 0, waiters 0/0 GB) load 36/128 running 15 disk 400 GB 
+ot-run: ot-epyc5       admits   568 GB (avail 454, growth 45, headroom 0, waiters 0/0 GB) load 60/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1253 GB (avail 934, growth 56, headroom 0, waiters 0/0 GB) load 35/128 running 17 disk 5713 GB 
+ot-run: ot-epyc7       admits   992 GB (avail 752, growth 58, headroom 0, waiters 0/0 GB) load 23/96 running 21 disk 6272 GB 
+ot-run: ot-epyc8       admits  1188 GB (avail 924, growth 92, headroom 0, waiters 0/0 GB) load 22/128 running 17 disk 88 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-548961-1792447099 after 0 s
+output/pg_checkpoint.odb: OK
+output/placement_checkpoint.odb: OK
+output/pg_checkpoint.v: OK
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-548961-1792447099): exit 1

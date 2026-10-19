@@ -1,0 +1,38 @@
+{
+  "verdict": "GEOMETRY_PASS_ROUTE_ACCESS_OPEN",
+  "outline_um": [
+    140.4,
+    140.4
+  ],
+  "all_legal_rows": 504,
+  "actual_occupied_band_um": [
+    56.16,
+    84.24
+  ],
+  "central_rows": 104,
+  "cells": 11145,
+  "area_um2": 1651.185,
+  "contacts": 2609,
+  "fullface_counts": {
+    "W": 653,
+    "N": 652,
+    "E": 652,
+    "S": 652
+  },
+  "max_contacts_per_1um": {
+    "W": 6,
+    "N": 6,
+    "E": 6,
+    "S": 6
+  },
+  "actual_track_center_alignment_errors": [],
+  "pin_area_um2": 0.002304,
+  "min_area_um2": 0.002,
+  "manhattan_outline_bound_um": 280.8,
+  "routed_access": "OPEN: no route authorized; grid/rectangle/density are actual native geometry only",
+  "cts": "NOT RUN",
+  "clock_sinks": 2904,
+  "reset_endpoints": 0,
+  "cold_priming_edges": 2,
+  "all_signal_network_identity": "PASS"
+}

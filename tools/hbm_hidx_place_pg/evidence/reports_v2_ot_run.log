@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  1123 GB (avail 843, growth 50, headroom 0, waiters 0/0 GB) load 37/128 running 15 disk 400 GB 
+ot-run: ot-epyc5       admits   568 GB (avail 455, growth 45, headroom 0, waiters 0/0 GB) load 52/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1253 GB (avail 934, growth 55, headroom 0, waiters 0/0 GB) load 33/128 running 17 disk 5714 GB 
+ot-run: ot-epyc7       admits   993 GB (avail 753, growth 58, headroom 0, waiters 0/0 GB) load 23/96 running 21 disk 6272 GB 
+ot-run: ot-epyc8       admits  1173 GB (avail 909, growth 88, headroom 0, waiters 0/0 GB) load 22/128 running 16 disk 89 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-place-pg-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-470721-1792447073 after 1 s
+/usr/bin/bash: kit/reports_v2/run.sh: No such file or directory
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-470721-1792447073): exit 127
