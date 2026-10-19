@@ -1,0 +1,179 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 18% = (macros/children 32063 + std 7780) / outline 218350 um2 (lattice/channel-bound gate-rule exception (placement verification required): Full-width central std band y248.4..291.6 (384.48 wide, 43.2 lattice, 22.41/24.84 channels). Measured sizing centralv15 (37290b741): 39843.3 inst - 32063.2 macro = 7780.1 um2 std = 46.8%. Approval: codex coordinator ROOT 09:43 sizing-only for this central band geometry; ROOT 09:50 permits area-record updates within 40-60% same geometry (Claude S81-MUEP 10-19).)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf).",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_mu_hwin_cb_20261019-112833.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_mu_hwin_cb_20261019-112833.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_cb-20261019-112833",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 180 s (gate total 5404 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 353, 'pin_rectangles': 353, 'pin_track_checked': 353, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 f95f9cbb246bcb0253cc7a40627955ebe7008a97bda57144e4b91bd7c0ecab5d",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 7513 um2 + macros 32063 in core 214263: util 10% (std-cell density 10.4% of placeable 71975 um2; total fill 18.5%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_boot_enable: dsdv_mu_boot_enable survives synthesis (150 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_retire_due: dsdv_mu_retire_due survives synthesis (16 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_retire_advance: dsdv_mu_retire_advance survives synthesis (6 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_slot_step: dsdv_mu_slot_step survives synthesis (9 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_record: dsdv_mu_record survives synthesis (6 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_decode24: dsdv_mu_decode24 survives synthesis (32 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_fire_flag: dsdv_mu_fire_flag survives synthesis (96 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_cfg_bad: dsdv_mu_cfg_bad survives synthesis (4 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_phase_action: dsdv_mu_phase_action survives synthesis (3 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS dsdv_mu_hwin cells 50,465 flops 10,379 depth 526.8 ps util 0.186 reach 0.2 um (3.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 421.1..575.8 ps (spread 154.7), boundary mean 485.4; tt insertion all 318.4..476.8 ps (spread 158.4), boundary mean 367.5; ff insertion all 256.8..421.8 ps (spread 165.0), boundary mean 296.8; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dsdv_mu_hwin_cb/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    300 paths, worst slack -371.0 ps (e.g. u_ot_pr_core.ltn[1]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      300 paths, worst slack 451.2 ps (e.g. u_ot_pr_core.g_event_broadcast[14].ts_r[4]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -3.710395324318938e-10 hold WNS 3.869313203175295e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 10,463 sinks on the largest root; measured TT insertion 476.8 ps, FF insertion 421.8 ps, TT pin-flop spread 22.1 ps, FF pin-flop spread 21.0 ps; WARN: insertion 476.8 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-muep-hwin-1019/physical/ref_tile/dsdv_mu_hwin_cb/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-muep-hwin-1019/physical/ref_tile/dsdv_mu_hwin_cb/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 18% = (hard macros 32063.2 + synthesized std cells 7798.2) / outline 218350.1 um2; pin demand per face: S 0 pins over 0.0/388.8 um (0%), N 0 pins over 0.0/388.8 um (0%), W 371 pins over 31.3/561.6 um (6%), E 126 pins over 15.1/561.6 um (3%) (pin-bound: measured lattice/channel band: 9788.400 um2, density 58.93%, outside approved 0.000 um2)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 12.41% used; GRT 3147 s",
+   "fix": ""
+  }
+ ]
+}

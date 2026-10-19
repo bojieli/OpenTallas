@@ -1,0 +1,923 @@
+{
+ "name": "dsdv_mu_hwin_cb",
+ "top": "dsdv_mu_hwin",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv"
+ ],
+ "params": {
+  "NSLOT": 47,
+  "NEV": 16,
+  "NEP": 4,
+  "NRT": 2,
+  "MUT": 0,
+  "HEAD_STAGE": 1,
+  "COMPACT_PTR": 1,
+  "CHECK_STAGE": 1,
+  "LIVE_COUNT": 1,
+  "RAW_SELECT": 1,
+  "LOCAL_BOOT": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 7780.1,
+ "pins": {
+  "W": [
+   "f_ks",
+   "mu_c",
+   "mu_rc",
+   "mu_rt",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "f_mc",
+   "f_mw",
+   "t_wf"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "dsdv_mu_boot_enable",
+   "dsdv_mu_retire_due",
+   "dsdv_mu_retire_advance",
+   "dsdv_mu_slot_step",
+   "dsdv_mu_record",
+   "dsdv_mu_decode24",
+   "dsdv_mu_fire_flag",
+   "dsdv_mu_cfg_bad",
+   "dsdv_mu_phase_action"
+  ]
+ },
+ "structural_change": "CODEX HWIN structural SRAM redesign: 16 independent event payload SRAMs (63b due+pos+user) with independent attribute SRAMs; gap and retire timestamp in SRAM. 64x16 true1R1W macros banked84total, registered write ports and previous-write forwarding. Due precomputed at record, final comparator registered due==tm+1. Binary shadow address pointers drive only bank read pins. Kept reset-distinct identity copies <=16entries, per-event reset regions. Remaining parallel identities1457b; fd752bits are fired-state vectors. No extra output edge or change to D>=nw+2. Inactive events enabled only by offset bootword; parameter-free die master16rows. Outline pin/halo constrained475.2x432, macros on43.2grid with10.8halo. Regions successor: same-edge reset-distinct per-event time/wrap/config/address state, per24 RX identity pin copies, registered per12-bit one-hot output selects and endpoint-local collision reductions. All latency edges preserved; strict fanout and actual sizing remain measured gate checks. Central-band geometry successor:8columns x11rows, centralrow skipped for full-width y248.4..291.6 register band. Clock and reset on W beside band; no RTL/reset/data-edge changes. Production parent-fit and measured wire/clock/timing remain owed. HEAD_STAGE=1 captures each fresh head payload unconditionally beside its existing registered winner; output edge and minimum D unchanged. Prune standard rows to the full-width declared band before tapcell. GPL-only row envelope restores full paid physical core and all 84 fixed macro placements before downstream stages. COMPACT_PTR1 uses two reset-distinct same-edge binary pointer copies for two decoder halves. CHECK_STAGE1 evaluates exact next configuration state into local validation flags, preserving first-start fault edge. Default CHECK_STAGE0 remains the direct reference; low/high invalidD fixtures and47slot wrap compare all outputs/faults every cycle.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
+ },
+ "job": {
+  "owner": "Claude:MU-S81-2",
+  "branch": "codex/mu-hwin-central-1019",
+  "tag": "dsdv_mu_hwin_cb",
+  "purpose": "HWIN centralband structural geometry, same event edges; physical proof required",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_ph",
+   "results/rtl/codex_mu_hwin_sram16_1019"
+  ],
+  "benches": [
+   {
+    "name": "hwin_exact",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_kit_bench.sh {RUN}/hwin_exact base",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "pass_regex": "^MUWIN PASS$",
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
+   },
+   {
+    "name": "hwin_badrt_faults",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_kit_bench.sh {RUN}/hwin_badrt badrt",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "pass_regex": "^MUWIN BADRT PASS \\(fault raised\\)$"
+   },
+   {
+    "name": "hwin_mut_abdrop",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_kit_bench.sh {RUN}/hwin_mut3 mut3",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "fail_regex": "^ERR c\\d+ ev[01] start\\d+ mu_c [0-9a-f]+$",
+    "fail_witness": "results/rtl/codex_mu_hwin_sram16_1019/mut3.log"
+   },
+   {
+    "name": "hwin_mut_replayen",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_kit_bench.sh {RUN}/hwin_mut4 mut4",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "fail_regex": "^ERR c\\d+ ev2 start\\d+ mu_rc [0-9a-f]+$",
+    "fail_witness": "results/rtl/codex_mu_hwin_sram16_1019/mut4.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_mu_hwin_cb/views",
+  "record_to": "results/rtl/ref_tile/dsdv_mu_hwin_cb"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": false,
+ "keep_pin_regs": true,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.u_payload.g_bank?2?.u_m",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.u_payload.g_bank?3?.u_m",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.u_attr.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.u_payload.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.u_payload.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.u_payload.g_bank?2?.u_m",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.u_payload.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.u_attr.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.u_payload.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.u_payload.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.u_attr.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.u_payload.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.u_attr.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.u_payload.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.u_payload.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.u_payload.g_bank?2?.u_m",
+   "at": [
+    302.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.u_payload.g_bank?3?.u_m",
+   "at": [
+    345.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.u_payload.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.u_payload.g_bank?1?.u_m",
+   "at": [
+    129.6,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.u_payload.g_bank?2?.u_m",
+   "at": [
+    172.8,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.u_attr.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.u_payload.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.u_payload.g_bank?1?.u_m",
+   "at": [
+    345.6,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.u_payload.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.u_payload.g_bank?3?.u_m",
+   "at": [
+    86.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.u_payload.g_bank?1?.u_m",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.u_payload.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.u_payload.g_bank?3?.u_m",
+   "at": [
+    302.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.u_payload.g_bank?2?.u_m",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.u_payload.g_bank?3?.u_m",
+   "at": [
+    172.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.u_attr.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.u_payload.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.u_payload.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.u_payload.g_bank?2?.u_m",
+   "at": [
+    345.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.u_payload.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.u_attr.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.u_payload.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.u_payload.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.u_attr.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.u_payload.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.u_attr.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.u_payload.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.u_payload.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.u_payload.g_bank?2?.u_m",
+   "at": [
+    302.4,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.u_payload.g_bank?3?.u_m",
+   "at": [
+    345.6,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.u_payload.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.u_payload.g_bank?1?.u_m",
+   "at": [
+    129.6,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.u_payload.g_bank?2?.u_m",
+   "at": [
+    172.8,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.u_attr.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.u_payload.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.u_payload.g_bank?1?.u_m",
+   "at": [
+    345.6,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.u_payload.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.u_payload.g_bank?3?.u_m",
+   "at": [
+    86.4,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.u_payload.g_bank?1?.u_m",
+   "at": [
+    216.0,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.u_payload.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.u_payload.g_bank?3?.u_m",
+   "at": [
+    302.4,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    518.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 561.6
+ },
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "why": "Full-width central std band y248.4..291.6 (384.48 wide, 43.2 lattice, 22.41/24.84 channels). Measured sizing centralv15 (37290b741): 39843.3 inst - 32063.2 macro = 7780.1 um2 std = 46.8%. Approval: codex coordinator ROOT 09:43 sizing-only for this central band geometry; ROOT 09:50 permits area-record updates within 40-60% same geometry (Claude S81-MUEP 10-19).",
+   "lattice_um": 43.2,
+   "min_channel_um": 22.41,
+   "std_band_util": 0.4684116401565943,
+   "approved_by": "codex coordinator",
+   "std_band_y_um": [
+    248.4,
+    291.6
+   ]
+  }
+ },
+ "pin_ranges": {
+  "ck": [
+   266.0,
+   274.0
+  ],
+  "rst_n": [
+   274.0,
+   282.0
+  ]
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_cb/hwin_gpl_row_envelope.tcl",
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/dsdv_mu_hwin_cb/hwin_gpl_row_envelope.tcl"
+ }
+}

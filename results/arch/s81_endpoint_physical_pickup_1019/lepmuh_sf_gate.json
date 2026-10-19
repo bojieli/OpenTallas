@@ -1,0 +1,173 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 27% = (macros/children 62464 + std 8544) / outline 266872 um2 (lattice/channel-bound gate-rule exception (placement verification required): Full-width std band y259.2..291.6 (470.88 wide, 43.2 lattice, 22.41 min channel), 20 SRAM macros unchanged. Std 8544.5 um2 (measured txscopev12 synth_host d37b5dae1: 71008.5 inst - 62464 macro) = 56.0%. Approval: codex coordinator ROOT 09:50 sizing-only for this geometry, area updates within 40-60% same geometry (Claude S81-MUEP 10-19).)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered as s81sl_lep / s81sl_lepmua (ro / li / ml_rd / t_host / t_kd / mu_c land in pin flops, ri / lo / ml_wd / mu_rt / f_host / f_ks / f_lf / fault leave flops); recipe pin_regs would add an unpriced stage.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81sl_lepmuh_sf_20261019-113211.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81sl_lepmuh_sf_20261019-113211.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81sl_lepmuh_sf-20261019-113211",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 72 s (gate total 3603 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 7424, 'pin_rectangles': 7424, 'pin_track_checked': 7424, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 5290bfd6dbb6ead862aea2c5846b739c4972f3ebf6118ce02b8abdf42ed372eb",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 8662 um2 + macros 62464 in core 262412: util 7% (std-cell density 6.6% of placeable 130989 um2; total fill 27.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_sram_showahead_hit5: ot_sram_showahead_hit5 survives synthesis (20 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_rx_control: ot_s81sl_lep_rx_control survives synthesis (9 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_host_event: ot_s81sl_lep_host_event survives synthesis (18 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_tx_push: ot_s81sl_lep_tx_push survives synthesis (20 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_host_enable: ot_s81sl_lep_host_enable survives synthesis (13 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_stamp: ot_s81sl_lep_stamp survives synthesis (5 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_host_hold8: ot_s81sl_lep_host_hold8 survives synthesis (10 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_key_hold8: ot_s81sl_lep_key_hold8 survives synthesis (7 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81sl_lep_host_preserve: ot_s81sl_lep_host_preserve survives synthesis (10 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81sl_lep_mu_h cells 54,364 flops 18,298 depth 358.4 ps util 0.2705 reach 111.8 um (1.2 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 18,298 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 18,318 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,318 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 18,318 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,318 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-muep-lep-1019/physical/ref_tile/s81sl_lepmuh_sf/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "measured_band_fill",
+   "message": "missing actual placed-cell/row occupancy evidence",
+   "fix": "fix actual placement/row envelope; preserve this failed receipt"
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 27% = (hard macros 62464.0 + synthesized std cells 8516.8) / outline 266872.3 um2; pin demand per face: S 705 pins over 472.5/475.2 um (99%), N 2211 pins over 473.0/475.2 um (100%), W 2322 pins over 559.3/561.6 um (100%), E 2362 pins over 559.3/561.6 um (100%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}

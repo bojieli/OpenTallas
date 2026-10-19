@@ -1,0 +1,4412 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_cb-20261019-112833/routes/gate/work/orfs/results/asap7/opentallas_dsdv_mu_hwin_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 10403
+  },
+  "boundary": {
+   "n": 726,
+   "mean": 485.4,
+   "min": 472.1,
+   "max": 495.6
+  },
+  "all": {
+   "n": 10403,
+   "mean": 483.2,
+   "min": 421.1,
+   "max": 575.8
+  },
+  "errors": [],
+  "macros": {
+   "n": 84,
+   "nets": 51,
+   "max_per_net": 2,
+   "reg_mean": 483.2,
+   "max_slew": 492.9,
+   "max_late": 92.6,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+     "arr": 548.4,
+     "slew": 410.0,
+     "late": 65.2,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+     "arr": 553.6,
+     "slew": 354.4,
+     "late": 70.4,
+     "net": "clknet_leaf_4_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+     "arr": 560.1,
+     "slew": 419.6,
+     "late": 76.9,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+     "arr": 548.3,
+     "slew": 423.0,
+     "late": 65.1,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+     "arr": 533.0,
+     "slew": 329.6,
+     "late": 49.8,
+     "net": "clknet_leaf_48_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+     "arr": 438.0,
+     "slew": 68.7,
+     "late": -45.2,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+     "arr": 431.6,
+     "slew": 66.2,
+     "late": -51.6,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+     "arr": 455.4,
+     "slew": 116.9,
+     "late": -27.8,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+     "arr": 460.0,
+     "slew": 113.1,
+     "late": -23.2,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+     "arr": 442.9,
+     "slew": 72.2,
+     "late": -40.3,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+     "arr": 465.9,
+     "slew": 146.2,
+     "late": -17.3,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+     "arr": 460.9,
+     "slew": 115.2,
+     "late": -22.3,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+     "arr": 464.1,
+     "slew": 112.2,
+     "late": -19.1,
+     "net": "clknet_leaf_9_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+     "arr": 480.0,
+     "slew": 210.4,
+     "late": -3.2,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+     "arr": 449.4,
+     "slew": 113.8,
+     "late": -33.8,
+     "net": "clknet_leaf_18_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+     "arr": 530.5,
+     "slew": 332.4,
+     "late": 47.3,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+     "arr": 470.5,
+     "slew": 142.4,
+     "late": -12.7,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+     "arr": 462.4,
+     "slew": 115.1,
+     "late": -20.8,
+     "net": "clknet_leaf_21_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+     "arr": 488.2,
+     "slew": 210.5,
+     "late": 5.0,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+     "arr": 471.4,
+     "slew": 144.6,
+     "late": -11.8,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+     "arr": 530.1,
+     "slew": 332.8,
+     "late": 46.9,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+     "arr": 490.3,
+     "slew": 240.6,
+     "late": 7.1,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+     "arr": 520.3,
+     "slew": 330.5,
+     "late": 37.1,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+     "arr": 482.7,
+     "slew": 188.5,
+     "late": -0.5,
+     "net": "clknet_leaf_17_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+     "arr": 528.2,
+     "slew": 322.8,
+     "late": 45.0,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+     "arr": 530.4,
+     "slew": 361.0,
+     "late": 47.2,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+     "arr": 498.5,
+     "slew": 240.7,
+     "late": 15.3,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+     "arr": 531.8,
+     "slew": 325.2,
+     "late": 48.6,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+     "arr": 540.5,
+     "slew": 362.9,
+     "late": 57.3,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+     "arr": 562.7,
+     "slew": 462.3,
+     "late": 79.5,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+     "arr": 541.9,
+     "slew": 355.7,
+     "late": 58.7,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+     "arr": 565.8,
+     "slew": 457.0,
+     "late": 82.6,
+     "net": "clknet_leaf_16_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+     "arr": 538.3,
+     "slew": 353.3,
+     "late": 55.1,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+     "arr": 540.1,
+     "slew": 363.4,
+     "late": 56.9,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+     "arr": 514.7,
+     "slew": 275.2,
+     "late": 31.5,
+     "net": "clknet_leaf_24_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+     "arr": 550.1,
+     "slew": 389.0,
+     "late": 66.9,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+     "arr": 522.8,
+     "slew": 324.4,
+     "late": 39.6,
+     "net": "clknet_leaf_40_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+     "arr": 552.0,
+     "slew": 423.5,
+     "late": 68.8,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+     "arr": 534.1,
+     "slew": 323.0,
+     "late": 50.9,
+     "net": "clknet_leaf_37_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+     "arr": 528.9,
+     "slew": 292.7,
+     "late": 45.7,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+     "arr": 541.9,
+     "slew": 392.9,
+     "late": 58.7,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+     "arr": 538.3,
+     "slew": 392.4,
+     "late": 55.1,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+     "arr": 522.7,
+     "slew": 311.6,
+     "late": 39.5,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+     "arr": 538.3,
+     "slew": 379.5,
+     "late": 55.1,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+     "arr": 508.0,
+     "slew": 294.4,
+     "late": 24.8,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+     "arr": 512.5,
+     "slew": 281.1,
+     "late": 29.3,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+     "arr": 519.0,
+     "slew": 291.5,
+     "late": 35.8,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+     "arr": 518.7,
+     "slew": 262.3,
+     "late": 35.5,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+     "arr": 480.9,
+     "slew": 184.7,
+     "late": -2.3,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+     "arr": 462.0,
+     "slew": 145.2,
+     "late": -21.2,
+     "net": "clknet_leaf_50_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+     "arr": 458.6,
+     "slew": 98.6,
+     "late": -24.6,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+     "arr": 467.4,
+     "slew": 150.1,
+     "late": -15.8,
+     "net": "clknet_leaf_42_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+     "arr": 497.8,
+     "slew": 264.1,
+     "late": 14.6,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+     "arr": 478.4,
+     "slew": 191.9,
+     "late": -4.8,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+     "arr": 508.8,
+     "slew": 261.2,
+     "late": 25.6,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+     "arr": 446.0,
+     "slew": 100.5,
+     "late": -37.2,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+     "arr": 470.6,
+     "slew": 154.9,
+     "late": -12.6,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+     "arr": 454.4,
+     "slew": 100.9,
+     "late": -28.8,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+     "arr": 453.2,
+     "slew": 100.1,
+     "late": -30.0,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+     "arr": 445.6,
+     "slew": 99.1,
+     "late": -37.6,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+     "arr": 443.6,
+     "slew": 72.7,
+     "late": -39.6,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+     "arr": 468.0,
+     "slew": 162.0,
+     "late": -15.2,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+     "arr": 456.6,
+     "slew": 102.7,
+     "late": -26.6,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+     "arr": 447.9,
+     "slew": 70.5,
+     "late": -35.3,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+     "arr": 436.9,
+     "slew": 47.4,
+     "late": -46.3,
+     "net": "clknet_leaf_3_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+     "arr": 445.9,
+     "slew": 74.5,
+     "late": -37.3,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+     "arr": 442.5,
+     "slew": 72.0,
+     "late": -40.7,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+     "arr": 434.8,
+     "slew": 71.0,
+     "late": -48.4,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+     "arr": 435.3,
+     "slew": 72.4,
+     "late": -47.9,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+     "arr": 431.1,
+     "slew": 41.3,
+     "late": -52.1,
+     "net": "clknet_leaf_33_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+     "arr": 433.0,
+     "slew": 28.1,
+     "late": -50.2,
+     "net": "clknet_leaf_31_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+     "arr": 436.1,
+     "slew": 40.8,
+     "late": -47.1,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+     "arr": 426.4,
+     "slew": 40.4,
+     "late": -56.8,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+     "arr": 421.1,
+     "slew": 40.7,
+     "late": -62.1,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+     "arr": 426.6,
+     "slew": 27.5,
+     "late": -56.6,
+     "net": "clknet_leaf_5_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+     "arr": 436.9,
+     "slew": 65.9,
+     "late": -46.3,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+     "arr": 432.3,
+     "slew": 46.0,
+     "late": -50.9,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+     "arr": 427.5,
+     "slew": 42.9,
+     "late": -55.7,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+     "arr": 434.1,
+     "slew": 30.8,
+     "late": -49.1,
+     "net": "clknet_leaf_28_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+     "arr": 446.6,
+     "slew": 66.3,
+     "late": -36.6,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+     "arr": 554.0,
+     "slew": 390.4,
+     "late": 70.8,
+     "net": "clknet_leaf_12_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+     "arr": 572.7,
+     "slew": 492.9,
+     "late": 89.5,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+     "arr": 545.2,
+     "slew": 391.7,
+     "late": 62.0,
+     "net": "clknet_leaf_15_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+     "arr": 575.8,
+     "slew": 487.6,
+     "late": 92.6,
+     "net": "clknet_leaf_16_ck"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 726,
+    "mean": 485.4,
+    "min": 472.1,
+    "max": 495.6
+   },
+   "all": {
+    "n": 10403,
+    "mean": 483.2,
+    "min": 421.1,
+    "max": 575.8
+   },
+   "refs": {
+    "ot_sram_1r1w_64x16_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 84
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 726,
+     "mean": 485.4,
+     "min": 472.1,
+     "max": 495.6
+    },
+    "all": {
+     "n": 10319,
+     "mean": 483.1,
+     "min": 470.2,
+     "max": 495.9
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 10403
+  },
+  "boundary": {
+   "n": 726,
+   "mean": 367.5,
+   "min": 355.1,
+   "max": 377.2
+  },
+  "all": {
+   "n": 10403,
+   "mean": 365.6,
+   "min": 318.4,
+   "max": 476.8
+  },
+  "errors": [],
+  "macros": {
+   "n": 84,
+   "nets": 51,
+   "max_per_net": 2,
+   "reg_mean": 365.6,
+   "max_slew": 503.3,
+   "max_late": 111.2,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+     "arr": 449.3,
+     "slew": 418.8,
+     "late": 83.7,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+     "arr": 451.7,
+     "slew": 358.3,
+     "late": 86.1,
+     "net": "clknet_leaf_4_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+     "arr": 460.5,
+     "slew": 428.6,
+     "late": 94.9,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+     "arr": 449.2,
+     "slew": 431.9,
+     "late": 83.6,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+     "arr": 431.4,
+     "slew": 333.3,
+     "late": 65.8,
+     "net": "clknet_leaf_48_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+     "arr": 335.8,
+     "slew": 66.1,
+     "late": -29.8,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+     "arr": 329.5,
+     "slew": 63.4,
+     "late": -36.1,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+     "arr": 354.2,
+     "slew": 115.7,
+     "late": -11.4,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+     "arr": 358.7,
+     "slew": 111.8,
+     "late": -6.9,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+     "arr": 340.7,
+     "slew": 69.9,
+     "late": -24.9,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+     "arr": 365.0,
+     "slew": 147.5,
+     "late": -0.6,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+     "arr": 359.5,
+     "slew": 114.0,
+     "late": -6.1,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+     "arr": 361.8,
+     "slew": 111.1,
+     "late": -3.8,
+     "net": "clknet_leaf_9_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+     "arr": 379.1,
+     "slew": 212.6,
+     "late": 13.5,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+     "arr": 347.1,
+     "slew": 112.8,
+     "late": -18.5,
+     "net": "clknet_leaf_18_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+     "arr": 430.4,
+     "slew": 338.3,
+     "late": 64.8,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+     "arr": 369.6,
+     "slew": 143.5,
+     "late": 4.0,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+     "arr": 359.7,
+     "slew": 114.1,
+     "late": -5.9,
+     "net": "clknet_leaf_21_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+     "arr": 387.0,
+     "slew": 212.7,
+     "late": 21.4,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+     "arr": 370.4,
+     "slew": 145.8,
+     "late": 4.8,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+     "arr": 429.6,
+     "slew": 338.7,
+     "late": 64.0,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+     "arr": 389.8,
+     "slew": 244.7,
+     "late": 24.2,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+     "arr": 420.2,
+     "slew": 336.4,
+     "late": 54.6,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+     "arr": 380.6,
+     "slew": 189.3,
+     "late": 15.0,
+     "net": "clknet_leaf_17_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+     "arr": 427.8,
+     "slew": 328.4,
+     "late": 62.2,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+     "arr": 430.7,
+     "slew": 368.7,
+     "late": 65.1,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+     "arr": 397.6,
+     "slew": 244.9,
+     "late": 32.0,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+     "arr": 431.2,
+     "slew": 331.0,
+     "late": 65.6,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+     "arr": 440.9,
+     "slew": 370.6,
+     "late": 75.3,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+     "arr": 463.0,
+     "slew": 470.9,
+     "late": 97.4,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+     "arr": 441.7,
+     "slew": 363.3,
+     "late": 76.1,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+     "arr": 466.3,
+     "slew": 465.5,
+     "late": 100.7,
+     "net": "clknet_leaf_16_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+     "arr": 438.3,
+     "slew": 360.7,
+     "late": 72.7,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+     "arr": 440.1,
+     "slew": 371.1,
+     "late": 74.5,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+     "arr": 411.9,
+     "slew": 278.0,
+     "late": 46.3,
+     "net": "clknet_leaf_24_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+     "arr": 450.0,
+     "slew": 396.2,
+     "late": 84.4,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+     "arr": 420.9,
+     "slew": 328.0,
+     "late": 55.3,
+     "net": "clknet_leaf_40_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+     "arr": 452.7,
+     "slew": 432.5,
+     "late": 87.1,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+     "arr": 432.1,
+     "slew": 326.5,
+     "late": 66.5,
+     "net": "clknet_leaf_37_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+     "arr": 428.5,
+     "slew": 297.3,
+     "late": 62.9,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+     "arr": 442.2,
+     "slew": 400.1,
+     "late": 76.6,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+     "arr": 438.7,
+     "slew": 399.6,
+     "late": 73.1,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+     "arr": 423.0,
+     "slew": 317.2,
+     "late": 57.4,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+     "arr": 438.8,
+     "slew": 386.4,
+     "late": 73.2,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+     "arr": 407.9,
+     "slew": 298.9,
+     "late": 42.3,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+     "arr": 412.5,
+     "slew": 284.9,
+     "late": 46.9,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+     "arr": 418.8,
+     "slew": 296.2,
+     "late": 53.2,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+     "arr": 417.9,
+     "slew": 265.1,
+     "late": 52.3,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+     "arr": 379.7,
+     "slew": 187.3,
+     "late": 14.1,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+     "arr": 360.0,
+     "slew": 144.9,
+     "late": -5.6,
+     "net": "clknet_leaf_50_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+     "arr": 356.8,
+     "slew": 97.7,
+     "late": -8.8,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+     "arr": 365.6,
+     "slew": 150.1,
+     "late": -0.0,
+     "net": "clknet_leaf_42_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+     "arr": 397.3,
+     "slew": 266.6,
+     "late": 31.7,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+     "arr": 378.0,
+     "slew": 194.8,
+     "late": 12.4,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+     "arr": 408.2,
+     "slew": 264.0,
+     "late": 42.6,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+     "arr": 345.2,
+     "slew": 99.7,
+     "late": -20.4,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+     "arr": 369.0,
+     "slew": 155.3,
+     "late": 3.4,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+     "arr": 352.9,
+     "slew": 100.1,
+     "late": -12.7,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+     "arr": 351.7,
+     "slew": 99.3,
+     "late": -13.9,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+     "arr": 344.7,
+     "slew": 98.2,
+     "late": -20.9,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+     "arr": 341.9,
+     "slew": 69.2,
+     "late": -23.7,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+     "arr": 367.3,
+     "slew": 162.7,
+     "late": 1.7,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+     "arr": 355.3,
+     "slew": 102.1,
+     "late": -10.3,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+     "arr": 345.7,
+     "slew": 66.8,
+     "late": -19.9,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+     "arr": 333.9,
+     "slew": 43.5,
+     "late": -31.7,
+     "net": "clknet_leaf_3_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+     "arr": 344.3,
+     "slew": 71.1,
+     "late": -21.3,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+     "arr": 340.7,
+     "slew": 68.4,
+     "late": -24.9,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+     "arr": 333.6,
+     "slew": 67.3,
+     "late": -32.0,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+     "arr": 334.1,
+     "slew": 68.8,
+     "late": -31.5,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+     "arr": 328.7,
+     "slew": 36.6,
+     "late": -36.9,
+     "net": "clknet_leaf_33_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+     "arr": 330.9,
+     "slew": 22.3,
+     "late": -34.7,
+     "net": "clknet_leaf_31_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+     "arr": 333.5,
+     "slew": 34.3,
+     "late": -32.1,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+     "arr": 323.8,
+     "slew": 33.8,
+     "late": -41.8,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+     "arr": 318.4,
+     "slew": 34.1,
+     "late": -47.2,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+     "arr": 324.7,
+     "slew": 21.8,
+     "late": -40.9,
+     "net": "clknet_leaf_5_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+     "arr": 334.9,
+     "slew": 63.1,
+     "late": -30.7,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+     "arr": 329.6,
+     "slew": 40.1,
+     "late": -36.0,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+     "arr": 324.6,
+     "slew": 36.6,
+     "late": -41.0,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+     "arr": 331.8,
+     "slew": 25.4,
+     "late": -33.8,
+     "net": "clknet_leaf_28_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+     "arr": 344.6,
+     "slew": 63.5,
+     "late": -21.0,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+     "arr": 451.9,
+     "slew": 394.7,
+     "late": 86.3,
+     "net": "clknet_leaf_12_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+     "arr": 473.4,
+     "slew": 503.3,
+     "late": 107.8,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+     "arr": 443.1,
+     "slew": 396.0,
+     "late": 77.5,
+     "net": "clknet_leaf_15_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+     "arr": 476.8,
+     "slew": 497.9,
+     "late": 111.2,
+     "net": "clknet_leaf_16_ck"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 726,
+    "mean": 367.5,
+    "min": 355.1,
+    "max": 377.2
+   },
+   "all": {
+    "n": 10403,
+    "mean": 365.6,
+    "min": 318.4,
+    "max": 476.8
+   },
+   "refs": {
+    "ot_sram_1r1w_64x16_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 84
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 726,
+     "mean": 367.5,
+     "min": 355.1,
+     "max": 377.2
+    },
+    "all": {
+     "n": 10319,
+     "mean": 365.4,
+     "min": 352.8,
+     "max": 377.6
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 10403
+  },
+  "boundary": {
+   "n": 726,
+   "mean": 296.8,
+   "min": 285.1,
+   "max": 306.1
+  },
+  "all": {
+   "n": 10403,
+   "mean": 295.2,
+   "min": 256.8,
+   "max": 421.8
+  },
+  "errors": [],
+  "macros": {
+   "n": 84,
+   "nets": 51,
+   "max_per_net": 2,
+   "reg_mean": 295.2,
+   "max_slew": 525.8,
+   "max_late": 126.6,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+     "arr": 393.8,
+     "slew": 438.3,
+     "late": 98.6,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+     "arr": 392.3,
+     "slew": 369.6,
+     "late": 97.1,
+     "net": "clknet_leaf_4_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+     "arr": 404.6,
+     "slew": 448.5,
+     "late": 109.4,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+     "arr": 393.8,
+     "slew": 451.9,
+     "late": 98.6,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+     "arr": 372.4,
+     "slew": 343.9,
+     "late": 77.2,
+     "net": "clknet_leaf_48_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+     "arr": 274.9,
+     "slew": 68.3,
+     "late": -20.3,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+     "arr": 268.7,
+     "slew": 65.3,
+     "late": -26.5,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+     "arr": 294.3,
+     "slew": 120.3,
+     "late": -0.9,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+     "arr": 298.7,
+     "slew": 116.1,
+     "late": 3.5,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+     "arr": 280.0,
+     "slew": 72.3,
+     "late": -15.2,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+     "arr": 305.9,
+     "slew": 154.9,
+     "late": 10.7,
+     "net": "clknet_leaf_19_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+     "arr": 299.5,
+     "slew": 118.5,
+     "late": 4.3,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+     "arr": 301.1,
+     "slew": 115.0,
+     "late": 5.9,
+     "net": "clknet_leaf_9_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+     "arr": 320.4,
+     "slew": 222.1,
+     "late": 25.2,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+     "arr": 286.5,
+     "slew": 116.9,
+     "late": -8.7,
+     "net": "clknet_leaf_18_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+     "arr": 373.2,
+     "slew": 353.4,
+     "late": 78.0,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+     "arr": 310.3,
+     "slew": 150.7,
+     "late": 15.1,
+     "net": "clknet_leaf_20_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+     "arr": 298.9,
+     "slew": 118.2,
+     "late": 3.7,
+     "net": "clknet_leaf_21_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+     "arr": 328.1,
+     "slew": 222.2,
+     "late": 32.9,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+     "arr": 311.1,
+     "slew": 153.1,
+     "late": 15.9,
+     "net": "clknet_leaf_27_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+     "arr": 372.3,
+     "slew": 353.8,
+     "late": 77.1,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+     "arr": 331.9,
+     "slew": 256.9,
+     "late": 36.7,
+     "net": "clknet_leaf_10_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+     "arr": 363.2,
+     "slew": 351.4,
+     "late": 68.0,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+     "arr": 320.6,
+     "slew": 196.1,
+     "late": 25.4,
+     "net": "clknet_leaf_17_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+     "arr": 370.3,
+     "slew": 343.1,
+     "late": 75.1,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+     "arr": 374.5,
+     "slew": 386.3,
+     "late": 79.3,
+     "net": "clknet_leaf_14_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+     "arr": 339.6,
+     "slew": 257.1,
+     "late": 44.4,
+     "net": "clknet_leaf_26_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+     "arr": 373.6,
+     "slew": 345.8,
+     "late": 78.4,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+     "arr": 384.5,
+     "slew": 388.3,
+     "late": 89.3,
+     "net": "clknet_leaf_11_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+     "arr": 407.2,
+     "slew": 490.8,
+     "late": 112.0,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+     "arr": 384.9,
+     "slew": 380.7,
+     "late": 89.7,
+     "net": "clknet_leaf_25_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+     "arr": 410.5,
+     "slew": 485.2,
+     "late": 115.3,
+     "net": "clknet_leaf_16_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+     "arr": 381.6,
+     "slew": 378.1,
+     "late": 86.4,
+     "net": "clknet_leaf_22_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+     "arr": 383.6,
+     "slew": 388.8,
+     "late": 88.4,
+     "net": "clknet_leaf_23_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+     "arr": 352.1,
+     "slew": 287.3,
+     "late": 56.9,
+     "net": "clknet_leaf_24_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+     "arr": 393.3,
+     "slew": 413.5,
+     "late": 98.1,
+     "net": "clknet_leaf_32_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+     "arr": 362.0,
+     "slew": 338.4,
+     "late": 66.8,
+     "net": "clknet_leaf_40_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+     "arr": 397.3,
+     "slew": 452.5,
+     "late": 102.1,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+     "arr": 373.0,
+     "slew": 337.0,
+     "late": 77.8,
+     "net": "clknet_leaf_37_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+     "arr": 370.7,
+     "slew": 311.6,
+     "late": 75.5,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+     "arr": 386.0,
+     "slew": 417.5,
+     "late": 90.8,
+     "net": "clknet_leaf_38_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+     "arr": 382.5,
+     "slew": 417.0,
+     "late": 87.3,
+     "net": "clknet_leaf_49_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+     "arr": 366.4,
+     "slew": 332.8,
+     "late": 71.2,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+     "arr": 382.6,
+     "slew": 403.3,
+     "late": 87.4,
+     "net": "clknet_leaf_41_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+     "arr": 351.0,
+     "slew": 313.3,
+     "late": 55.8,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+     "arr": 355.0,
+     "slew": 297.9,
+     "late": 59.8,
+     "net": "clknet_leaf_47_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+     "arr": 361.6,
+     "slew": 310.3,
+     "late": 66.4,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+     "arr": 359.3,
+     "slew": 276.7,
+     "late": 64.1,
+     "net": "clknet_leaf_0_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+     "arr": 320.7,
+     "slew": 196.8,
+     "late": 25.5,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+     "arr": 299.9,
+     "slew": 150.2,
+     "late": 4.7,
+     "net": "clknet_leaf_50_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+     "arr": 296.3,
+     "slew": 102.2,
+     "late": 1.1,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+     "arr": 305.6,
+     "slew": 155.6,
+     "late": 10.4,
+     "net": "clknet_leaf_42_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+     "arr": 339.7,
+     "slew": 278.5,
+     "late": 44.5,
+     "net": "clknet_leaf_39_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+     "arr": 319.7,
+     "slew": 204.6,
+     "late": 24.5,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+     "arr": 350.2,
+     "slew": 275.4,
+     "late": 55.0,
+     "net": "clknet_leaf_36_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+     "arr": 285.5,
+     "slew": 104.4,
+     "late": -9.7,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+     "arr": 309.2,
+     "slew": 162.1,
+     "late": 14.0,
+     "net": "clknet_leaf_1_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+     "arr": 292.8,
+     "slew": 104.8,
+     "late": -2.4,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+     "arr": 291.5,
+     "slew": 103.9,
+     "late": -3.7,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+     "arr": 285.0,
+     "slew": 102.7,
+     "late": -10.2,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+     "arr": 281.0,
+     "slew": 70.6,
+     "late": -14.2,
+     "net": "clknet_leaf_46_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+     "arr": 308.2,
+     "slew": 169.9,
+     "late": 13.0,
+     "net": "clknet_leaf_35_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+     "arr": 295.3,
+     "slew": 106.8,
+     "late": 0.1,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+     "arr": 284.5,
+     "slew": 68.1,
+     "late": -10.7,
+     "net": "clknet_leaf_2_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+     "arr": 272.1,
+     "slew": 43.7,
+     "late": -23.1,
+     "net": "clknet_leaf_3_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+     "arr": 283.6,
+     "slew": 72.7,
+     "late": -11.6,
+     "net": "clknet_leaf_34_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+     "arr": 279.7,
+     "slew": 69.8,
+     "late": -15.5,
+     "net": "clknet_leaf_45_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+     "arr": 273.2,
+     "slew": 68.6,
+     "late": -22.0,
+     "net": "clknet_leaf_44_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+     "arr": 273.7,
+     "slew": 70.2,
+     "late": -21.5,
+     "net": "clknet_leaf_43_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+     "arr": 267.3,
+     "slew": 36.2,
+     "late": -27.9,
+     "net": "clknet_leaf_33_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+     "arr": 269.2,
+     "slew": 20.4,
+     "late": -26.0,
+     "net": "clknet_leaf_31_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+     "arr": 271.8,
+     "slew": 32.6,
+     "late": -23.4,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+     "arr": 262.2,
+     "slew": 32.1,
+     "late": -33.0,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+     "arr": 256.8,
+     "slew": 32.4,
+     "late": -38.4,
+     "net": "clknet_leaf_6_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+     "arr": 263.1,
+     "slew": 19.8,
+     "late": -32.1,
+     "net": "clknet_leaf_5_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+     "arr": 274.1,
+     "slew": 65.0,
+     "late": -21.1,
+     "net": "clknet_leaf_7_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+     "arr": 268.0,
+     "slew": 39.1,
+     "late": -27.2,
+     "net": "clknet_leaf_30_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+     "arr": 263.0,
+     "slew": 35.2,
+     "late": -32.2,
+     "net": "clknet_leaf_29_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+     "arr": 270.0,
+     "slew": 24.0,
+     "late": -25.2,
+     "net": "clknet_leaf_28_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+     "arr": 283.7,
+     "slew": 65.4,
+     "late": -11.5,
+     "net": "clknet_leaf_8_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+     "arr": 392.9,
+     "slew": 406.5,
+     "late": 97.7,
+     "net": "clknet_leaf_12_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+     "arr": 418.4,
+     "slew": 525.8,
+     "late": 123.2,
+     "net": "clknet_leaf_13_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+     "arr": 384.2,
+     "slew": 407.8,
+     "late": 89.0,
+     "net": "clknet_leaf_15_ck"
+    },
+    {
+     "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+     "arr": 421.8,
+     "slew": 520.2,
+     "late": 126.6,
+     "net": "clknet_leaf_16_ck"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 726,
+    "mean": 296.8,
+    "min": 285.1,
+    "max": 306.1
+   },
+   "all": {
+    "n": 10403,
+    "mean": 295.2,
+    "min": 256.8,
+    "max": 421.8
+   },
+   "refs": {
+    "ot_sram_1r1w_64x16_m1": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 84
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 726,
+     "mean": 296.8,
+     "min": 285.1,
+     "max": 306.1
+    },
+    "all": {
+     "n": 10319,
+     "mean": 294.9,
+     "min": 282.6,
+     "max": 307.1
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 84,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": true,
+  "outliers": [
+   {
+    "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 410 ps > 120; tt slew 419 ps > 120; ff slew 438 ps > 120; ff 99 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 354 ps > 120; tt slew 358 ps > 120; ff slew 370 ps > 120; ff 97 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 420 ps > 120; tt slew 429 ps > 120; ff slew 448 ps > 120; ff 109 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 423 ps > 120; tt slew 432 ps > 120; ff slew 452 ps > 120; ff 99 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 330 ps > 120; tt slew 333 ps > 120; ff slew 344 ps > 120; ff 77 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+    "why": "ff slew 120 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 146 ps > 120; tt slew 148 ps > 120; ff slew 155 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 210 ps > 120; tt slew 213 ps > 120; ff slew 222 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 332 ps > 120; tt slew 338 ps > 120; ff slew 353 ps > 120; ff 78 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 142 ps > 120; tt slew 144 ps > 120; ff slew 151 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 210 ps > 120; tt slew 213 ps > 120; ff slew 222 ps > 120; ff 33 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 145 ps > 120; tt slew 146 ps > 120; ff slew 153 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 333 ps > 120; tt slew 339 ps > 120; ff slew 354 ps > 120; ff 77 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 241 ps > 120; tt slew 245 ps > 120; ff slew 257 ps > 120; ff 37 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 330 ps > 120; tt slew 336 ps > 120; ff slew 351 ps > 120; ff 68 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 188 ps > 120; tt slew 189 ps > 120; ff slew 196 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 323 ps > 120; tt slew 328 ps > 120; ff slew 343 ps > 120; ff 75 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 361 ps > 120; tt slew 369 ps > 120; ff slew 386 ps > 120; ff 79 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 241 ps > 120; tt slew 245 ps > 120; ff slew 257 ps > 120; ff 44 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 325 ps > 120; tt slew 331 ps > 120; ff slew 346 ps > 120; ff 78 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 363 ps > 120; tt slew 371 ps > 120; ff slew 388 ps > 120; ff 89 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 462 ps > 120; tt slew 471 ps > 120; ff slew 491 ps > 120; ff 112 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 356 ps > 120; tt slew 363 ps > 120; ff slew 381 ps > 120; ff 90 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 457 ps > 120; tt slew 466 ps > 120; ff slew 485 ps > 120; ff 115 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 353 ps > 120; tt slew 361 ps > 120; ff slew 378 ps > 120; ff 86 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 363 ps > 120; tt slew 371 ps > 120; ff slew 389 ps > 120; ff 88 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 275 ps > 120; tt slew 278 ps > 120; ff slew 287 ps > 120; ff 57 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 389 ps > 120; tt slew 396 ps > 120; ff slew 414 ps > 120; ff 98 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 324 ps > 120; tt slew 328 ps > 120; ff slew 338 ps > 120; ff 67 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 424 ps > 120; tt slew 432 ps > 120; ff slew 452 ps > 120; ff 102 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 323 ps > 120; tt slew 326 ps > 120; ff slew 337 ps > 120; ff 78 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 293 ps > 120; tt slew 297 ps > 120; ff slew 312 ps > 120; ff 76 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 393 ps > 120; tt slew 400 ps > 120; ff slew 418 ps > 120; ff 91 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 392 ps > 120; tt slew 400 ps > 120; ff slew 417 ps > 120; ff 87 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 312 ps > 120; tt slew 317 ps > 120; ff slew 333 ps > 120; ff 71 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 380 ps > 120; tt slew 386 ps > 120; ff slew 403 ps > 120; ff 87 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 294 ps > 120; tt slew 299 ps > 120; ff slew 313 ps > 120; ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+    "why": "ss slew 281 ps > 120; tt slew 285 ps > 120; ff slew 298 ps > 120; ff 60 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 292 ps > 120; tt slew 296 ps > 120; ff slew 310 ps > 120; ff 66 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 262 ps > 120; tt slew 265 ps > 120; ff slew 277 ps > 120; ff 64 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 185 ps > 120; tt slew 187 ps > 120; ff slew 197 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 145 ps > 120; tt slew 145 ps > 120; ff slew 150 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 150 ps > 120; tt slew 150 ps > 120; ff slew 156 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+    "why": "ss slew 264 ps > 120; tt slew 267 ps > 120; ff slew 278 ps > 120; ff 44 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+    "why": "ss slew 192 ps > 120; tt slew 195 ps > 120; ff slew 205 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+    "why": "ss slew 261 ps > 120; tt slew 264 ps > 120; ff slew 275 ps > 120; ff 55 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 155 ps > 120; tt slew 155 ps > 120; ff slew 162 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+    "why": "ss slew 162 ps > 120; tt slew 163 ps > 120; ff slew 170 ps > 120"
+   },
+   {
+    "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+    "why": "ss slew 390 ps > 120; tt slew 395 ps > 120; ff slew 406 ps > 120; ff 98 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+    "why": "ss slew 493 ps > 120; tt slew 503 ps > 120; ff slew 526 ps > 120; ff 123 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+    "why": "ss slew 392 ps > 120; tt slew 396 ps > 120; ff slew 408 ps > 120; ff 89 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+    "why": "ss slew 488 ps > 120; tt slew 498 ps > 120; ff slew 520 ps > 120; ff 127 ps after the register mean > 30"
+   }
+  ]
+ },
+ "env": {
+  "CK_SS_MEAN": 485,
+  "CK_SS_ALL_MEAN": 483,
+  "CK_SS_MIN": 472,
+  "CK_SS_ALL_MIN": 421,
+  "CK_SS_MAX": 496,
+  "CK_SS_ALL_MAX": 576,
+  "CK_TT_MEAN": 368,
+  "CK_TT_ALL_MEAN": 366,
+  "CK_TT_MIN": 355,
+  "CK_TT_ALL_MIN": 318,
+  "CK_TT_MAX": 377,
+  "CK_TT_ALL_MAX": 477,
+  "CK_FF_MEAN": 297,
+  "CK_FF_ALL_MEAN": 295,
+  "CK_FF_MIN": 285,
+  "CK_FF_ALL_MIN": 257,
+  "CK_FF_MAX": 306,
+  "CK_FF_ALL_MAX": 422,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_cb-20261019-112833/routes/gate/work/orfs/results/asap7/opentallas_dsdv_mu_hwin_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 10403
+    },
+    "boundary": {
+     "n": 726,
+     "mean": 485.4,
+     "min": 472.1,
+     "max": 495.6
+    },
+    "all": {
+     "n": 10403,
+     "mean": 483.2,
+     "min": 421.1,
+     "max": 575.8
+    },
+    "errors": [],
+    "macros": {
+     "n": 84,
+     "nets": 51,
+     "max_per_net": 2,
+     "reg_mean": 483.2,
+     "max_slew": 492.9,
+     "max_late": 92.6,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+       "arr": 548.4,
+       "slew": 410.0,
+       "late": 65.2,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+       "arr": 553.6,
+       "slew": 354.4,
+       "late": 70.4,
+       "net": "clknet_leaf_4_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+       "arr": 560.1,
+       "slew": 419.6,
+       "late": 76.9,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+       "arr": 548.3,
+       "slew": 423.0,
+       "late": 65.1,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+       "arr": 533.0,
+       "slew": 329.6,
+       "late": 49.8,
+       "net": "clknet_leaf_48_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+       "arr": 438.0,
+       "slew": 68.7,
+       "late": -45.2,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+       "arr": 431.6,
+       "slew": 66.2,
+       "late": -51.6,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+       "arr": 455.4,
+       "slew": 116.9,
+       "late": -27.8,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+       "arr": 460.0,
+       "slew": 113.1,
+       "late": -23.2,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+       "arr": 442.9,
+       "slew": 72.2,
+       "late": -40.3,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+       "arr": 465.9,
+       "slew": 146.2,
+       "late": -17.3,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+       "arr": 460.9,
+       "slew": 115.2,
+       "late": -22.3,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+       "arr": 464.1,
+       "slew": 112.2,
+       "late": -19.1,
+       "net": "clknet_leaf_9_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+       "arr": 480.0,
+       "slew": 210.4,
+       "late": -3.2,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+       "arr": 449.4,
+       "slew": 113.8,
+       "late": -33.8,
+       "net": "clknet_leaf_18_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+       "arr": 530.5,
+       "slew": 332.4,
+       "late": 47.3,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+       "arr": 470.5,
+       "slew": 142.4,
+       "late": -12.7,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+       "arr": 462.4,
+       "slew": 115.1,
+       "late": -20.8,
+       "net": "clknet_leaf_21_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+       "arr": 488.2,
+       "slew": 210.5,
+       "late": 5.0,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+       "arr": 471.4,
+       "slew": 144.6,
+       "late": -11.8,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+       "arr": 530.1,
+       "slew": 332.8,
+       "late": 46.9,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+       "arr": 490.3,
+       "slew": 240.6,
+       "late": 7.1,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+       "arr": 520.3,
+       "slew": 330.5,
+       "late": 37.1,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+       "arr": 482.7,
+       "slew": 188.5,
+       "late": -0.5,
+       "net": "clknet_leaf_17_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+       "arr": 528.2,
+       "slew": 322.8,
+       "late": 45.0,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+       "arr": 530.4,
+       "slew": 361.0,
+       "late": 47.2,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+       "arr": 498.5,
+       "slew": 240.7,
+       "late": 15.3,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+       "arr": 531.8,
+       "slew": 325.2,
+       "late": 48.6,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+       "arr": 540.5,
+       "slew": 362.9,
+       "late": 57.3,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+       "arr": 562.7,
+       "slew": 462.3,
+       "late": 79.5,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+       "arr": 541.9,
+       "slew": 355.7,
+       "late": 58.7,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+       "arr": 565.8,
+       "slew": 457.0,
+       "late": 82.6,
+       "net": "clknet_leaf_16_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+       "arr": 538.3,
+       "slew": 353.3,
+       "late": 55.1,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+       "arr": 540.1,
+       "slew": 363.4,
+       "late": 56.9,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+       "arr": 514.7,
+       "slew": 275.2,
+       "late": 31.5,
+       "net": "clknet_leaf_24_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+       "arr": 550.1,
+       "slew": 389.0,
+       "late": 66.9,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+       "arr": 522.8,
+       "slew": 324.4,
+       "late": 39.6,
+       "net": "clknet_leaf_40_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+       "arr": 552.0,
+       "slew": 423.5,
+       "late": 68.8,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+       "arr": 534.1,
+       "slew": 323.0,
+       "late": 50.9,
+       "net": "clknet_leaf_37_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+       "arr": 528.9,
+       "slew": 292.7,
+       "late": 45.7,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+       "arr": 541.9,
+       "slew": 392.9,
+       "late": 58.7,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+       "arr": 538.3,
+       "slew": 392.4,
+       "late": 55.1,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+       "arr": 522.7,
+       "slew": 311.6,
+       "late": 39.5,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+       "arr": 538.3,
+       "slew": 379.5,
+       "late": 55.1,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+       "arr": 508.0,
+       "slew": 294.4,
+       "late": 24.8,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+       "arr": 512.5,
+       "slew": 281.1,
+       "late": 29.3,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+       "arr": 519.0,
+       "slew": 291.5,
+       "late": 35.8,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+       "arr": 518.7,
+       "slew": 262.3,
+       "late": 35.5,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+       "arr": 480.9,
+       "slew": 184.7,
+       "late": -2.3,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+       "arr": 462.0,
+       "slew": 145.2,
+       "late": -21.2,
+       "net": "clknet_leaf_50_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+       "arr": 458.6,
+       "slew": 98.6,
+       "late": -24.6,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+       "arr": 467.4,
+       "slew": 150.1,
+       "late": -15.8,
+       "net": "clknet_leaf_42_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+       "arr": 497.8,
+       "slew": 264.1,
+       "late": 14.6,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+       "arr": 478.4,
+       "slew": 191.9,
+       "late": -4.8,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+       "arr": 508.8,
+       "slew": 261.2,
+       "late": 25.6,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+       "arr": 446.0,
+       "slew": 100.5,
+       "late": -37.2,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+       "arr": 470.6,
+       "slew": 154.9,
+       "late": -12.6,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+       "arr": 454.4,
+       "slew": 100.9,
+       "late": -28.8,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+       "arr": 453.2,
+       "slew": 100.1,
+       "late": -30.0,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+       "arr": 445.6,
+       "slew": 99.1,
+       "late": -37.6,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+       "arr": 443.6,
+       "slew": 72.7,
+       "late": -39.6,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+       "arr": 468.0,
+       "slew": 162.0,
+       "late": -15.2,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+       "arr": 456.6,
+       "slew": 102.7,
+       "late": -26.6,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+       "arr": 447.9,
+       "slew": 70.5,
+       "late": -35.3,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+       "arr": 436.9,
+       "slew": 47.4,
+       "late": -46.3,
+       "net": "clknet_leaf_3_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+       "arr": 445.9,
+       "slew": 74.5,
+       "late": -37.3,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+       "arr": 442.5,
+       "slew": 72.0,
+       "late": -40.7,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+       "arr": 434.8,
+       "slew": 71.0,
+       "late": -48.4,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+       "arr": 435.3,
+       "slew": 72.4,
+       "late": -47.9,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+       "arr": 431.1,
+       "slew": 41.3,
+       "late": -52.1,
+       "net": "clknet_leaf_33_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+       "arr": 433.0,
+       "slew": 28.1,
+       "late": -50.2,
+       "net": "clknet_leaf_31_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+       "arr": 436.1,
+       "slew": 40.8,
+       "late": -47.1,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+       "arr": 426.4,
+       "slew": 40.4,
+       "late": -56.8,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+       "arr": 421.1,
+       "slew": 40.7,
+       "late": -62.1,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+       "arr": 426.6,
+       "slew": 27.5,
+       "late": -56.6,
+       "net": "clknet_leaf_5_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+       "arr": 436.9,
+       "slew": 65.9,
+       "late": -46.3,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+       "arr": 432.3,
+       "slew": 46.0,
+       "late": -50.9,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+       "arr": 427.5,
+       "slew": 42.9,
+       "late": -55.7,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+       "arr": 434.1,
+       "slew": 30.8,
+       "late": -49.1,
+       "net": "clknet_leaf_28_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+       "arr": 446.6,
+       "slew": 66.3,
+       "late": -36.6,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+       "arr": 554.0,
+       "slew": 390.4,
+       "late": 70.8,
+       "net": "clknet_leaf_12_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+       "arr": 572.7,
+       "slew": 492.9,
+       "late": 89.5,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+       "arr": 545.2,
+       "slew": 391.7,
+       "late": 62.0,
+       "net": "clknet_leaf_15_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+       "arr": 575.8,
+       "slew": 487.6,
+       "late": 92.6,
+       "net": "clknet_leaf_16_ck"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 726,
+      "mean": 485.4,
+      "min": 472.1,
+      "max": 495.6
+     },
+     "all": {
+      "n": 10403,
+      "mean": 483.2,
+      "min": 421.1,
+      "max": 575.8
+     },
+     "refs": {
+      "ot_sram_1r1w_64x16_m1": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 84
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 726,
+       "mean": 485.4,
+       "min": 472.1,
+       "max": 495.6
+      },
+      "all": {
+       "n": 10319,
+       "mean": 483.1,
+       "min": 470.2,
+       "max": 495.9
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 10403
+    },
+    "boundary": {
+     "n": 726,
+     "mean": 367.5,
+     "min": 355.1,
+     "max": 377.2
+    },
+    "all": {
+     "n": 10403,
+     "mean": 365.6,
+     "min": 318.4,
+     "max": 476.8
+    },
+    "errors": [],
+    "macros": {
+     "n": 84,
+     "nets": 51,
+     "max_per_net": 2,
+     "reg_mean": 365.6,
+     "max_slew": 503.3,
+     "max_late": 111.2,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+       "arr": 449.3,
+       "slew": 418.8,
+       "late": 83.7,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+       "arr": 451.7,
+       "slew": 358.3,
+       "late": 86.1,
+       "net": "clknet_leaf_4_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+       "arr": 460.5,
+       "slew": 428.6,
+       "late": 94.9,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+       "arr": 449.2,
+       "slew": 431.9,
+       "late": 83.6,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+       "arr": 431.4,
+       "slew": 333.3,
+       "late": 65.8,
+       "net": "clknet_leaf_48_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+       "arr": 335.8,
+       "slew": 66.1,
+       "late": -29.8,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+       "arr": 329.5,
+       "slew": 63.4,
+       "late": -36.1,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+       "arr": 354.2,
+       "slew": 115.7,
+       "late": -11.4,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+       "arr": 358.7,
+       "slew": 111.8,
+       "late": -6.9,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+       "arr": 340.7,
+       "slew": 69.9,
+       "late": -24.9,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+       "arr": 365.0,
+       "slew": 147.5,
+       "late": -0.6,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+       "arr": 359.5,
+       "slew": 114.0,
+       "late": -6.1,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+       "arr": 361.8,
+       "slew": 111.1,
+       "late": -3.8,
+       "net": "clknet_leaf_9_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+       "arr": 379.1,
+       "slew": 212.6,
+       "late": 13.5,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+       "arr": 347.1,
+       "slew": 112.8,
+       "late": -18.5,
+       "net": "clknet_leaf_18_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+       "arr": 430.4,
+       "slew": 338.3,
+       "late": 64.8,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+       "arr": 369.6,
+       "slew": 143.5,
+       "late": 4.0,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+       "arr": 359.7,
+       "slew": 114.1,
+       "late": -5.9,
+       "net": "clknet_leaf_21_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+       "arr": 387.0,
+       "slew": 212.7,
+       "late": 21.4,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+       "arr": 370.4,
+       "slew": 145.8,
+       "late": 4.8,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+       "arr": 429.6,
+       "slew": 338.7,
+       "late": 64.0,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+       "arr": 389.8,
+       "slew": 244.7,
+       "late": 24.2,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+       "arr": 420.2,
+       "slew": 336.4,
+       "late": 54.6,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+       "arr": 380.6,
+       "slew": 189.3,
+       "late": 15.0,
+       "net": "clknet_leaf_17_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+       "arr": 427.8,
+       "slew": 328.4,
+       "late": 62.2,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+       "arr": 430.7,
+       "slew": 368.7,
+       "late": 65.1,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+       "arr": 397.6,
+       "slew": 244.9,
+       "late": 32.0,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+       "arr": 431.2,
+       "slew": 331.0,
+       "late": 65.6,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+       "arr": 440.9,
+       "slew": 370.6,
+       "late": 75.3,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+       "arr": 463.0,
+       "slew": 470.9,
+       "late": 97.4,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+       "arr": 441.7,
+       "slew": 363.3,
+       "late": 76.1,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+       "arr": 466.3,
+       "slew": 465.5,
+       "late": 100.7,
+       "net": "clknet_leaf_16_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+       "arr": 438.3,
+       "slew": 360.7,
+       "late": 72.7,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+       "arr": 440.1,
+       "slew": 371.1,
+       "late": 74.5,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+       "arr": 411.9,
+       "slew": 278.0,
+       "late": 46.3,
+       "net": "clknet_leaf_24_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+       "arr": 450.0,
+       "slew": 396.2,
+       "late": 84.4,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+       "arr": 420.9,
+       "slew": 328.0,
+       "late": 55.3,
+       "net": "clknet_leaf_40_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+       "arr": 452.7,
+       "slew": 432.5,
+       "late": 87.1,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+       "arr": 432.1,
+       "slew": 326.5,
+       "late": 66.5,
+       "net": "clknet_leaf_37_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+       "arr": 428.5,
+       "slew": 297.3,
+       "late": 62.9,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+       "arr": 442.2,
+       "slew": 400.1,
+       "late": 76.6,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+       "arr": 438.7,
+       "slew": 399.6,
+       "late": 73.1,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+       "arr": 423.0,
+       "slew": 317.2,
+       "late": 57.4,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+       "arr": 438.8,
+       "slew": 386.4,
+       "late": 73.2,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+       "arr": 407.9,
+       "slew": 298.9,
+       "late": 42.3,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+       "arr": 412.5,
+       "slew": 284.9,
+       "late": 46.9,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+       "arr": 418.8,
+       "slew": 296.2,
+       "late": 53.2,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+       "arr": 417.9,
+       "slew": 265.1,
+       "late": 52.3,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+       "arr": 379.7,
+       "slew": 187.3,
+       "late": 14.1,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+       "arr": 360.0,
+       "slew": 144.9,
+       "late": -5.6,
+       "net": "clknet_leaf_50_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+       "arr": 356.8,
+       "slew": 97.7,
+       "late": -8.8,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+       "arr": 365.6,
+       "slew": 150.1,
+       "late": -0.0,
+       "net": "clknet_leaf_42_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+       "arr": 397.3,
+       "slew": 266.6,
+       "late": 31.7,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+       "arr": 378.0,
+       "slew": 194.8,
+       "late": 12.4,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+       "arr": 408.2,
+       "slew": 264.0,
+       "late": 42.6,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+       "arr": 345.2,
+       "slew": 99.7,
+       "late": -20.4,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+       "arr": 369.0,
+       "slew": 155.3,
+       "late": 3.4,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+       "arr": 352.9,
+       "slew": 100.1,
+       "late": -12.7,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+       "arr": 351.7,
+       "slew": 99.3,
+       "late": -13.9,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+       "arr": 344.7,
+       "slew": 98.2,
+       "late": -20.9,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+       "arr": 341.9,
+       "slew": 69.2,
+       "late": -23.7,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+       "arr": 367.3,
+       "slew": 162.7,
+       "late": 1.7,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+       "arr": 355.3,
+       "slew": 102.1,
+       "late": -10.3,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+       "arr": 345.7,
+       "slew": 66.8,
+       "late": -19.9,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+       "arr": 333.9,
+       "slew": 43.5,
+       "late": -31.7,
+       "net": "clknet_leaf_3_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+       "arr": 344.3,
+       "slew": 71.1,
+       "late": -21.3,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+       "arr": 340.7,
+       "slew": 68.4,
+       "late": -24.9,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+       "arr": 333.6,
+       "slew": 67.3,
+       "late": -32.0,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+       "arr": 334.1,
+       "slew": 68.8,
+       "late": -31.5,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+       "arr": 328.7,
+       "slew": 36.6,
+       "late": -36.9,
+       "net": "clknet_leaf_33_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+       "arr": 330.9,
+       "slew": 22.3,
+       "late": -34.7,
+       "net": "clknet_leaf_31_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+       "arr": 333.5,
+       "slew": 34.3,
+       "late": -32.1,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+       "arr": 323.8,
+       "slew": 33.8,
+       "late": -41.8,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+       "arr": 318.4,
+       "slew": 34.1,
+       "late": -47.2,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+       "arr": 324.7,
+       "slew": 21.8,
+       "late": -40.9,
+       "net": "clknet_leaf_5_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+       "arr": 334.9,
+       "slew": 63.1,
+       "late": -30.7,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+       "arr": 329.6,
+       "slew": 40.1,
+       "late": -36.0,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+       "arr": 324.6,
+       "slew": 36.6,
+       "late": -41.0,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+       "arr": 331.8,
+       "slew": 25.4,
+       "late": -33.8,
+       "net": "clknet_leaf_28_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+       "arr": 344.6,
+       "slew": 63.5,
+       "late": -21.0,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+       "arr": 451.9,
+       "slew": 394.7,
+       "late": 86.3,
+       "net": "clknet_leaf_12_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+       "arr": 473.4,
+       "slew": 503.3,
+       "late": 107.8,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+       "arr": 443.1,
+       "slew": 396.0,
+       "late": 77.5,
+       "net": "clknet_leaf_15_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+       "arr": 476.8,
+       "slew": 497.9,
+       "late": 111.2,
+       "net": "clknet_leaf_16_ck"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 726,
+      "mean": 367.5,
+      "min": 355.1,
+      "max": 377.2
+     },
+     "all": {
+      "n": 10403,
+      "mean": 365.6,
+      "min": 318.4,
+      "max": 476.8
+     },
+     "refs": {
+      "ot_sram_1r1w_64x16_m1": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 84
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 726,
+       "mean": 367.5,
+       "min": 355.1,
+       "max": 377.2
+      },
+      "all": {
+       "n": 10319,
+       "mean": 365.4,
+       "min": 352.8,
+       "max": 377.6
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 10403
+    },
+    "boundary": {
+     "n": 726,
+     "mean": 296.8,
+     "min": 285.1,
+     "max": 306.1
+    },
+    "all": {
+     "n": 10403,
+     "mean": 295.2,
+     "min": 256.8,
+     "max": 421.8
+    },
+    "errors": [],
+    "macros": {
+     "n": 84,
+     "nets": 51,
+     "max_per_net": 2,
+     "reg_mean": 295.2,
+     "max_slew": 525.8,
+     "max_late": 126.6,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+       "arr": 393.8,
+       "slew": 438.3,
+       "late": 98.6,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+       "arr": 392.3,
+       "slew": 369.6,
+       "late": 97.1,
+       "net": "clknet_leaf_4_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+       "arr": 404.6,
+       "slew": 448.5,
+       "late": 109.4,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+       "arr": 393.8,
+       "slew": 451.9,
+       "late": 98.6,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+       "arr": 372.4,
+       "slew": 343.9,
+       "late": 77.2,
+       "net": "clknet_leaf_48_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_attr.g_bank[0].u_m/clk",
+       "arr": 274.9,
+       "slew": 68.3,
+       "late": -20.3,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[0].u_m/clk",
+       "arr": 268.7,
+       "slew": 65.3,
+       "late": -26.5,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+       "arr": 294.3,
+       "slew": 120.3,
+       "late": -0.9,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[2].u_m/clk",
+       "arr": 298.7,
+       "slew": 116.1,
+       "late": 3.5,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[3].u_m/clk",
+       "arr": 280.0,
+       "slew": 72.3,
+       "late": -15.2,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+       "arr": 305.9,
+       "slew": 154.9,
+       "late": 10.7,
+       "net": "clknet_leaf_19_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[0].u_m/clk",
+       "arr": 299.5,
+       "slew": 118.5,
+       "late": 4.3,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[1].u_m/clk",
+       "arr": 301.1,
+       "slew": 115.0,
+       "late": 5.9,
+       "net": "clknet_leaf_9_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+       "arr": 320.4,
+       "slew": 222.1,
+       "late": 25.2,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[3].u_m/clk",
+       "arr": 286.5,
+       "slew": 116.9,
+       "late": -8.7,
+       "net": "clknet_leaf_18_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+       "arr": 373.2,
+       "slew": 353.4,
+       "late": 78.0,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+       "arr": 310.3,
+       "slew": 150.7,
+       "late": 15.1,
+       "net": "clknet_leaf_20_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[1].u_m/clk",
+       "arr": 298.9,
+       "slew": 118.2,
+       "late": 3.7,
+       "net": "clknet_leaf_21_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+       "arr": 328.1,
+       "slew": 222.2,
+       "late": 32.9,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+       "arr": 311.1,
+       "slew": 153.1,
+       "late": 15.9,
+       "net": "clknet_leaf_27_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+       "arr": 372.3,
+       "slew": 353.8,
+       "late": 77.1,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+       "arr": 331.9,
+       "slew": 256.9,
+       "late": 36.7,
+       "net": "clknet_leaf_10_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+       "arr": 363.2,
+       "slew": 351.4,
+       "late": 68.0,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+       "arr": 320.6,
+       "slew": 196.1,
+       "late": 25.4,
+       "net": "clknet_leaf_17_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+       "arr": 370.3,
+       "slew": 343.1,
+       "late": 75.1,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+       "arr": 374.5,
+       "slew": 386.3,
+       "late": 79.3,
+       "net": "clknet_leaf_14_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+       "arr": 339.6,
+       "slew": 257.1,
+       "late": 44.4,
+       "net": "clknet_leaf_26_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+       "arr": 373.6,
+       "slew": 345.8,
+       "late": 78.4,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+       "arr": 384.5,
+       "slew": 388.3,
+       "late": 89.3,
+       "net": "clknet_leaf_11_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+       "arr": 407.2,
+       "slew": 490.8,
+       "late": 112.0,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+       "arr": 384.9,
+       "slew": 380.7,
+       "late": 89.7,
+       "net": "clknet_leaf_25_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+       "arr": 410.5,
+       "slew": 485.2,
+       "late": 115.3,
+       "net": "clknet_leaf_16_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+       "arr": 381.6,
+       "slew": 378.1,
+       "late": 86.4,
+       "net": "clknet_leaf_22_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+       "arr": 383.6,
+       "slew": 388.8,
+       "late": 88.4,
+       "net": "clknet_leaf_23_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+       "arr": 352.1,
+       "slew": 287.3,
+       "late": 56.9,
+       "net": "clknet_leaf_24_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+       "arr": 393.3,
+       "slew": 413.5,
+       "late": 98.1,
+       "net": "clknet_leaf_32_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+       "arr": 362.0,
+       "slew": 338.4,
+       "late": 66.8,
+       "net": "clknet_leaf_40_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+       "arr": 397.3,
+       "slew": 452.5,
+       "late": 102.1,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+       "arr": 373.0,
+       "slew": 337.0,
+       "late": 77.8,
+       "net": "clknet_leaf_37_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+       "arr": 370.7,
+       "slew": 311.6,
+       "late": 75.5,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+       "arr": 386.0,
+       "slew": 417.5,
+       "late": 90.8,
+       "net": "clknet_leaf_38_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+       "arr": 382.5,
+       "slew": 417.0,
+       "late": 87.3,
+       "net": "clknet_leaf_49_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+       "arr": 366.4,
+       "slew": 332.8,
+       "late": 71.2,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+       "arr": 382.6,
+       "slew": 403.3,
+       "late": 87.4,
+       "net": "clknet_leaf_41_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+       "arr": 351.0,
+       "slew": 313.3,
+       "late": 55.8,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+       "arr": 355.0,
+       "slew": 297.9,
+       "late": 59.8,
+       "net": "clknet_leaf_47_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+       "arr": 361.6,
+       "slew": 310.3,
+       "late": 66.4,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+       "arr": 359.3,
+       "slew": 276.7,
+       "late": 64.1,
+       "net": "clknet_leaf_0_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+       "arr": 320.7,
+       "slew": 196.8,
+       "late": 25.5,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+       "arr": 299.9,
+       "slew": 150.2,
+       "late": 4.7,
+       "net": "clknet_leaf_50_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_attr.g_bank[0].u_m/clk",
+       "arr": 296.3,
+       "slew": 102.2,
+       "late": 1.1,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+       "arr": 305.6,
+       "slew": 155.6,
+       "late": 10.4,
+       "net": "clknet_leaf_42_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+       "arr": 339.7,
+       "slew": 278.5,
+       "late": 44.5,
+       "net": "clknet_leaf_39_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+       "arr": 319.7,
+       "slew": 204.6,
+       "late": 24.5,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+       "arr": 350.2,
+       "slew": 275.4,
+       "late": 55.0,
+       "net": "clknet_leaf_36_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_attr.g_bank[0].u_m/clk",
+       "arr": 285.5,
+       "slew": 104.4,
+       "late": -9.7,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+       "arr": 309.2,
+       "slew": 162.1,
+       "late": 14.0,
+       "net": "clknet_leaf_1_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[1].u_m/clk",
+       "arr": 292.8,
+       "slew": 104.8,
+       "late": -2.4,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[2].u_m/clk",
+       "arr": 291.5,
+       "slew": 103.9,
+       "late": -3.7,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[3].u_m/clk",
+       "arr": 285.0,
+       "slew": 102.7,
+       "late": -10.2,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_attr.g_bank[0].u_m/clk",
+       "arr": 281.0,
+       "slew": 70.6,
+       "late": -14.2,
+       "net": "clknet_leaf_46_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+       "arr": 308.2,
+       "slew": 169.9,
+       "late": 13.0,
+       "net": "clknet_leaf_35_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[1].u_m/clk",
+       "arr": 295.3,
+       "slew": 106.8,
+       "late": 0.1,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[2].u_m/clk",
+       "arr": 284.5,
+       "slew": 68.1,
+       "late": -10.7,
+       "net": "clknet_leaf_2_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[3].u_m/clk",
+       "arr": 272.1,
+       "slew": 43.7,
+       "late": -23.1,
+       "net": "clknet_leaf_3_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_attr.g_bank[0].u_m/clk",
+       "arr": 283.6,
+       "slew": 72.7,
+       "late": -11.6,
+       "net": "clknet_leaf_34_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[0].u_m/clk",
+       "arr": 279.7,
+       "slew": 69.8,
+       "late": -15.5,
+       "net": "clknet_leaf_45_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[1].u_m/clk",
+       "arr": 273.2,
+       "slew": 68.6,
+       "late": -22.0,
+       "net": "clknet_leaf_44_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[2].u_m/clk",
+       "arr": 273.7,
+       "slew": 70.2,
+       "late": -21.5,
+       "net": "clknet_leaf_43_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[7].u_payload.g_bank[3].u_m/clk",
+       "arr": 267.3,
+       "slew": 36.2,
+       "late": -27.9,
+       "net": "clknet_leaf_33_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_attr.g_bank[0].u_m/clk",
+       "arr": 269.2,
+       "slew": 20.4,
+       "late": -26.0,
+       "net": "clknet_leaf_31_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[0].u_m/clk",
+       "arr": 271.8,
+       "slew": 32.6,
+       "late": -23.4,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[1].u_m/clk",
+       "arr": 262.2,
+       "slew": 32.1,
+       "late": -33.0,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[2].u_m/clk",
+       "arr": 256.8,
+       "slew": 32.4,
+       "late": -38.4,
+       "net": "clknet_leaf_6_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[8].u_payload.g_bank[3].u_m/clk",
+       "arr": 263.1,
+       "slew": 19.8,
+       "late": -32.1,
+       "net": "clknet_leaf_5_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_attr.g_bank[0].u_m/clk",
+       "arr": 274.1,
+       "slew": 65.0,
+       "late": -21.1,
+       "net": "clknet_leaf_7_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[0].u_m/clk",
+       "arr": 268.0,
+       "slew": 39.1,
+       "late": -27.2,
+       "net": "clknet_leaf_30_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[1].u_m/clk",
+       "arr": 263.0,
+       "slew": 35.2,
+       "late": -32.2,
+       "net": "clknet_leaf_29_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[2].u_m/clk",
+       "arr": 270.0,
+       "slew": 24.0,
+       "late": -25.2,
+       "net": "clknet_leaf_28_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.g_event_mem[9].u_payload.g_bank[3].u_m/clk",
+       "arr": 283.7,
+       "slew": 65.4,
+       "late": -11.5,
+       "net": "clknet_leaf_8_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+       "arr": 392.9,
+       "slew": 406.5,
+       "late": 97.7,
+       "net": "clknet_leaf_12_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+       "arr": 418.4,
+       "slew": 525.8,
+       "late": 123.2,
+       "net": "clknet_leaf_13_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+       "arr": 384.2,
+       "slew": 407.8,
+       "late": 89.0,
+       "net": "clknet_leaf_15_ck"
+      },
+      {
+       "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+       "arr": 421.8,
+       "slew": 520.2,
+       "late": 126.6,
+       "net": "clknet_leaf_16_ck"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 726,
+      "mean": 296.8,
+      "min": 285.1,
+      "max": 306.1
+     },
+     "all": {
+      "n": 10403,
+      "mean": 295.2,
+      "min": 256.8,
+      "max": 421.8
+     },
+     "refs": {
+      "ot_sram_1r1w_64x16_m1": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 84
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 726,
+       "mean": 296.8,
+       "min": 285.1,
+       "max": 306.1
+      },
+      "all": {
+       "n": 10319,
+       "mean": 294.9,
+       "min": 282.6,
+       "max": 307.1
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 84,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": true,
+    "outliers": [
+     {
+      "pin": "u_ot_pr_core.g_event_mem[0].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 410 ps > 120; tt slew 419 ps > 120; ff slew 438 ps > 120; ff 99 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 354 ps > 120; tt slew 358 ps > 120; ff slew 370 ps > 120; ff 97 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 420 ps > 120; tt slew 429 ps > 120; ff slew 448 ps > 120; ff 109 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 423 ps > 120; tt slew 432 ps > 120; ff slew 452 ps > 120; ff 99 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[0].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 330 ps > 120; tt slew 333 ps > 120; ff slew 344 ps > 120; ff 77 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[10].u_payload.g_bank[1].u_m/clk",
+      "why": "ff slew 120 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[11].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 146 ps > 120; tt slew 148 ps > 120; ff slew 155 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[11].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 210 ps > 120; tt slew 213 ps > 120; ff slew 222 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[12].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 332 ps > 120; tt slew 338 ps > 120; ff slew 353 ps > 120; ff 78 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 142 ps > 120; tt slew 144 ps > 120; ff slew 151 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 210 ps > 120; tt slew 213 ps > 120; ff slew 222 ps > 120; ff 33 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[12].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 145 ps > 120; tt slew 146 ps > 120; ff slew 153 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[13].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 333 ps > 120; tt slew 339 ps > 120; ff slew 354 ps > 120; ff 77 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 241 ps > 120; tt slew 245 ps > 120; ff slew 257 ps > 120; ff 37 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 330 ps > 120; tt slew 336 ps > 120; ff slew 351 ps > 120; ff 68 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 188 ps > 120; tt slew 189 ps > 120; ff slew 196 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[13].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 323 ps > 120; tt slew 328 ps > 120; ff slew 343 ps > 120; ff 75 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[14].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 361 ps > 120; tt slew 369 ps > 120; ff slew 386 ps > 120; ff 79 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 241 ps > 120; tt slew 245 ps > 120; ff slew 257 ps > 120; ff 44 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 325 ps > 120; tt slew 331 ps > 120; ff slew 346 ps > 120; ff 78 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 363 ps > 120; tt slew 371 ps > 120; ff slew 388 ps > 120; ff 89 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[14].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 462 ps > 120; tt slew 471 ps > 120; ff slew 491 ps > 120; ff 112 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[15].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 356 ps > 120; tt slew 363 ps > 120; ff slew 381 ps > 120; ff 90 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 457 ps > 120; tt slew 466 ps > 120; ff slew 485 ps > 120; ff 115 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 353 ps > 120; tt slew 361 ps > 120; ff slew 378 ps > 120; ff 86 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 363 ps > 120; tt slew 371 ps > 120; ff slew 389 ps > 120; ff 88 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[15].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 275 ps > 120; tt slew 278 ps > 120; ff slew 287 ps > 120; ff 57 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[1].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 389 ps > 120; tt slew 396 ps > 120; ff slew 414 ps > 120; ff 98 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 324 ps > 120; tt slew 328 ps > 120; ff slew 338 ps > 120; ff 67 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 424 ps > 120; tt slew 432 ps > 120; ff slew 452 ps > 120; ff 102 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 323 ps > 120; tt slew 326 ps > 120; ff slew 337 ps > 120; ff 78 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[1].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 293 ps > 120; tt slew 297 ps > 120; ff slew 312 ps > 120; ff 76 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[2].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 393 ps > 120; tt slew 400 ps > 120; ff slew 418 ps > 120; ff 91 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 392 ps > 120; tt slew 400 ps > 120; ff slew 417 ps > 120; ff 87 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 312 ps > 120; tt slew 317 ps > 120; ff slew 333 ps > 120; ff 71 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 380 ps > 120; tt slew 386 ps > 120; ff slew 403 ps > 120; ff 87 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[2].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 294 ps > 120; tt slew 299 ps > 120; ff slew 313 ps > 120; ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[3].u_attr.g_bank[0].u_m/clk",
+      "why": "ss slew 281 ps > 120; tt slew 285 ps > 120; ff slew 298 ps > 120; ff 60 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 292 ps > 120; tt slew 296 ps > 120; ff slew 310 ps > 120; ff 66 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 262 ps > 120; tt slew 265 ps > 120; ff slew 277 ps > 120; ff 64 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 185 ps > 120; tt slew 187 ps > 120; ff slew 197 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[3].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 145 ps > 120; tt slew 145 ps > 120; ff slew 150 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 150 ps > 120; tt slew 150 ps > 120; ff slew 156 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[1].u_m/clk",
+      "why": "ss slew 264 ps > 120; tt slew 267 ps > 120; ff slew 278 ps > 120; ff 44 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[2].u_m/clk",
+      "why": "ss slew 192 ps > 120; tt slew 195 ps > 120; ff slew 205 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[4].u_payload.g_bank[3].u_m/clk",
+      "why": "ss slew 261 ps > 120; tt slew 264 ps > 120; ff slew 275 ps > 120; ff 55 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[5].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 155 ps > 120; tt slew 155 ps > 120; ff slew 162 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_event_mem[6].u_payload.g_bank[0].u_m/clk",
+      "why": "ss slew 162 ps > 120; tt slew 163 ps > 120; ff slew 170 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.u_gap.g_bank[0].u_m/clk",
+      "why": "ss slew 390 ps > 120; tt slew 395 ps > 120; ff slew 406 ps > 120; ff 98 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.u_gap.g_bank[1].u_m/clk",
+      "why": "ss slew 493 ps > 120; tt slew 503 ps > 120; ff slew 526 ps > 120; ff 123 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.u_retire.g_bank[0].u_m/clk",
+      "why": "ss slew 392 ps > 120; tt slew 396 ps > 120; ff slew 408 ps > 120; ff 89 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ot_pr_core.u_retire.g_bank[1].u_m/clk",
+      "why": "ss slew 488 ps > 120; tt slew 498 ps > 120; ff slew 520 ps > 120; ff 127 ps after the register mean > 30"
+     }
+    ]
+   },
+   "env": {
+    "CK_SS_MEAN": 485,
+    "CK_SS_ALL_MEAN": 483,
+    "CK_SS_MIN": 472,
+    "CK_SS_ALL_MIN": 421,
+    "CK_SS_MAX": 496,
+    "CK_SS_ALL_MAX": 576,
+    "CK_TT_MEAN": 368,
+    "CK_TT_ALL_MEAN": 366,
+    "CK_TT_MIN": 355,
+    "CK_TT_ALL_MIN": 318,
+    "CK_TT_MAX": 377,
+    "CK_TT_ALL_MAX": 477,
+    "CK_FF_MEAN": 297,
+    "CK_FF_ALL_MEAN": 295,
+    "CK_FF_MIN": 285,
+    "CK_FF_ALL_MIN": 257,
+    "CK_FF_MAX": 306,
+    "CK_FF_ALL_MAX": 422,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

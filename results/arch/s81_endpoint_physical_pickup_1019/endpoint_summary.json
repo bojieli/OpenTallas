@@ -1,0 +1,160 @@
+{
+  "odb": "/work/results/asap7/opentallas_dsdv_mu_hwin_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "1e98599886f1917d8886108e992d9ec6c3bd26f4a0f2395abebcf0f14d39e9c8",
+  "roots": 49834,
+  "roles": {
+    "comb": 38000,
+    "ff": 10319,
+    "macro": 1344,
+    "input": 171
+  },
+  "max_count_by_role": {
+    "ff": 60,
+    "comb": 40,
+    "macro": 2,
+    "input": 10428
+  },
+  "over32_nonclock": [
+    {
+      "driver": {
+        "pin": "_48969_/Y",
+        "master": "AO21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          196.0125,
+          263.3795
+        ],
+        "net": "_19861_"
+      },
+      "count": 40,
+      "reach_um": 7.56699999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.crl\\[5\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          183.665,
+          266.085
+        ],
+        "net": "_01976_"
+      },
+      "count": 35,
+      "reach_um": 20.787999999999982
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.gn\\[4\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          193.601,
+          278.235
+        ],
+        "net": "_00766_"
+      },
+      "count": 33,
+      "reach_um": 136.91449999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          193.655,
+          266.625
+        ],
+        "net": "u_ot_pr_core.nw\\[0\\]"
+      },
+      "count": 58,
+      "reach_um": 18.52049999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[1\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          192.521,
+          267.435
+        ],
+        "net": "_03397_"
+      },
+      "count": 60,
+      "reach_um": 18.001999999999953
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[2\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          192.845,
+          270.675
+        ],
+        "net": "_03398_"
+      },
+      "count": 58,
+      "reach_um": 20.774
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[3\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          194.303,
+          265.545
+        ],
+        "net": "_03399_"
+      },
+      "count": 54,
+      "reach_um": 17.111500000000007
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[4\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          189.497,
+          269.865
+        ],
+        "net": "_03400_"
+      },
+      "count": 39,
+      "reach_um": 18.083999999999975
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[5\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          193.007,
+          267.705
+        ],
+        "net": "_01875_"
+      },
+      "count": 46,
+      "reach_um": 15.027999999999963
+    }
+  ],
+  "over405_nonclock": 45,
+  "macros": 84,
+  "macro_masters": {
+    "ot_sram_1r1w_64x16_m1": 84
+  },
+  "scope": "Exact saved GRT ODB, uncapped logical sink pins through BUF/INV; Manhattan endpoint reach is a geometric lower bound, not stage path or routed wire length; macro contacts report MPin objects, not detailed escape/PG connectivity qualification"
+}

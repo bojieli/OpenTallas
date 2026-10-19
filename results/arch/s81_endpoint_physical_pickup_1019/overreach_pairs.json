@@ -1,0 +1,2327 @@
+[
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].pb_r\\[0\\]$_DFFE_PN0P_/QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        244.469,
+        255.285
+      ],
+      "net": "_01049_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.g_bank\\[0\\].u_m/r_addr_in[0]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        43.212,
+        44.172
+      ],
+      "net": "net31087"
+    },
+    "manhattan_um": 412.37
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].pb_r\\[1\\]$_DFFE_PN0P_/QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        243.335,
+        253.665
+      ],
+      "net": "_02479_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.g_bank\\[0\\].u_m/r_addr_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        43.212,
+        44.268
+      ],
+      "net": "net31086"
+    },
+    "manhattan_um": 409.52
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[0\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        65.513,
+        271.755
+      ],
+      "net": "_04814_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[0]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        345.612,
+        90.156
+      ],
+      "net": "net30956"
+    },
+    "manhattan_um": 461.69800000000004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[0\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        65.513,
+        271.755
+      ],
+      "net": "_04814_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[0]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        259.212,
+        46.956
+      ],
+      "net": "net31066"
+    },
+    "manhattan_um": 418.49799999999993
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[10\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.875,
+        249.615
+      ],
+      "net": "_04804_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[11\\].u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        347.244
+      ],
+      "net": "net19859"
+    },
+    "manhattan_um": 406.702
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[10\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.875,
+        249.615
+      ],
+      "net": "_04804_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.844
+      ],
+      "net": "net31097"
+    },
+    "manhattan_um": 427.444
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[10\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.875,
+        249.615
+      ],
+      "net": "_04804_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.044
+      ],
+      "net": "net30979"
+    },
+    "manhattan_um": 470.644
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[10\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.875,
+        249.615
+      ],
+      "net": "_04804_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        433.644
+      ],
+      "net": "net23162"
+    },
+    "manhattan_um": 449.902
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[11\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.447,
+        253.125
+      ],
+      "net": "_04803_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        433.74
+      ],
+      "net": "net31068"
+    },
+    "manhattan_um": 450.916
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[11\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.447,
+        253.125
+      ],
+      "net": "_04803_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[11\\].u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        347.34
+      ],
+      "net": "net19872"
+    },
+    "manhattan_um": 407.71599999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[11\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.447,
+        253.125
+      ],
+      "net": "_04803_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.14
+      ],
+      "net": "net31070"
+    },
+    "manhattan_um": 478.486
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[11\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.447,
+        253.125
+      ],
+      "net": "_04803_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.94
+      ],
+      "net": "net23158"
+    },
+    "manhattan_um": 435.286
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[12\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        57.035,
+        251.775
+      ],
+      "net": "_04802_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[12]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        433.836
+      ],
+      "net": "net31071"
+    },
+    "manhattan_um": 445.774
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[12\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        57.035,
+        251.775
+      ],
+      "net": "_04802_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[12]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        45.036
+      ],
+      "net": "net31238"
+    },
+    "manhattan_um": 427.252
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[12\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        57.035,
+        251.775
+      ],
+      "net": "_04802_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[12]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.236
+      ],
+      "net": "net23152"
+    },
+    "manhattan_um": 470.452
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[13\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.739,
+        253.665
+      ],
+      "net": "_04801_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[13]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        45.132
+      ],
+      "net": "net31239"
+    },
+    "manhattan_um": 430.342
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[13\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.739,
+        253.665
+      ],
+      "net": "_04801_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[13]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.332
+      ],
+      "net": "net31073"
+    },
+    "manhattan_um": 473.54200000000003
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[13\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.739,
+        253.665
+      ],
+      "net": "_04801_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[13]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        433.932
+      ],
+      "net": "net31072"
+    },
+    "manhattan_um": 445.27600000000007
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[14\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.821,
+        251.505
+      ],
+      "net": "_04800_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        434.028
+      ],
+      "net": "net23013"
+    },
+    "manhattan_um": 448.45000000000005
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[14\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.821,
+        251.505
+      ],
+      "net": "_04800_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.428
+      ],
+      "net": "net23143"
+    },
+    "manhattan_um": 472.20399999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[14\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.821,
+        251.505
+      ],
+      "net": "_04800_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        45.228
+      ],
+      "net": "net23145"
+    },
+    "manhattan_um": 429.004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[14\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.821,
+        251.505
+      ],
+      "net": "_04800_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[11\\].u_payload.g_bank\\[0\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        347.628
+      ],
+      "net": "net19906"
+    },
+    "manhattan_um": 405.24999999999994
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[15\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        52.013,
+        249.345
+      ],
+      "net": "_04799_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        88.524
+      ],
+      "net": "net30966"
+    },
+    "manhattan_um": 472.756
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[15\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        52.013,
+        249.345
+      ],
+      "net": "_04799_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        45.324
+      ],
+      "net": "net23140"
+    },
+    "manhattan_um": 429.55600000000004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[15\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        52.013,
+        249.345
+      ],
+      "net": "_04799_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        434.124
+      ],
+      "net": "net30967"
+    },
+    "manhattan_um": 453.514
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[15\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        52.013,
+        249.345
+      ],
+      "net": "_04799_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[11\\].u_payload.g_bank\\[0\\].u_m/wd_in[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        347.724
+      ],
+      "net": "net19919"
+    },
+    "manhattan_um": 410.31399999999996
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[16\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.015,
+        250.155
+      ],
+      "net": "_04798_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[0]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        302.412,
+        46.956
+      ],
+      "net": "net30834"
+    },
+    "manhattan_um": 455.596
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[16\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        50.015,
+        250.155
+      ],
+      "net": "_04798_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[0]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        345.612,
+        435.756
+      ],
+      "net": "net30812"
+    },
+    "manhattan_um": 481.198
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[17\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        71.237,
+        250.425
+      ],
+      "net": "_04797_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        432.78
+      ],
+      "net": "net23131"
+    },
+    "manhattan_um": 475.066
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[17\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        71.237,
+        250.425
+      ],
+      "net": "_04797_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        43.98
+      ],
+      "net": "net30836"
+    },
+    "manhattan_um": 455.956
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[18\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.281,
+        250.425
+      ],
+      "net": "_04796_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.076
+      ],
+      "net": "net23127"
+    },
+    "manhattan_um": 472.81600000000003
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[18\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.281,
+        250.425
+      ],
+      "net": "_04796_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        432.876
+      ],
+      "net": "net23126"
+    },
+    "manhattan_um": 492.11799999999994
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[18\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.281,
+        250.425
+      ],
+      "net": "_04796_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[15\\].u_payload.g_bank\\[1\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        234.348,
+        476.076
+      ],
+      "net": "net30837"
+    },
+    "manhattan_um": 405.718
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[19\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        68.861,
+        249.615
+      ],
+      "net": "_04795_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.172
+      ],
+      "net": "net30814"
+    },
+    "manhattan_um": 457.33000000000004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[19\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        68.861,
+        249.615
+      ],
+      "net": "_04795_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        432.972
+      ],
+      "net": "net30789"
+    },
+    "manhattan_um": 478.44399999999996
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[1\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        82.307,
+        270.675
+      ],
+      "net": "_04813_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.18
+      ],
+      "net": "net30958"
+    },
+    "manhattan_um": 465.13599999999997
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[1\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        82.307,
+        270.675
+      ],
+      "net": "_04813_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        43.98
+      ],
+      "net": "net23192"
+    },
+    "manhattan_um": 421.93600000000004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[20\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.065,
+        249.075
+      ],
+      "net": "_04794_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.268
+      ],
+      "net": "net30816"
+    },
+    "manhattan_um": 471.49
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[20\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.065,
+        249.075
+      ],
+      "net": "_04794_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.068
+      ],
+      "net": "net23118"
+    },
+    "manhattan_um": 493.876
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[20\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        54.065,
+        249.075
+      ],
+      "net": "_04794_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[15\\].u_payload.g_bank\\[1\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        234.348,
+        476.268
+      ],
+      "net": "net30815"
+    },
+    "manhattan_um": 407.476
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[21\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.525,
+        250.155
+      ],
+      "net": "_04793_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.364
+      ],
+      "net": "net23115"
+    },
+    "manhattan_um": 473.014
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[21\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.525,
+        250.155
+      ],
+      "net": "_04793_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.164
+      ],
+      "net": "net23114"
+    },
+    "manhattan_um": 493.432
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[21\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.525,
+        250.155
+      ],
+      "net": "_04793_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[15\\].u_payload.g_bank\\[1\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        234.348,
+        476.364
+      ],
+      "net": "net30838"
+    },
+    "manhattan_um": 407.032
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[22\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        68.159,
+        251.505
+      ],
+      "net": "_04792_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[6]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.26
+      ],
+      "net": "net23111"
+    },
+    "manhattan_um": 477.544
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[22\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        68.159,
+        251.505
+      ],
+      "net": "_04792_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[6]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.46
+      ],
+      "net": "net23110"
+    },
+    "manhattan_um": 459.634
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[23\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        77.717,
+        254.745
+      ],
+      "net": "_04791_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[7]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.356
+      ],
+      "net": "net23108"
+    },
+    "manhattan_um": 464.842
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[23\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        77.717,
+        254.745
+      ],
+      "net": "_04791_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[7]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.556
+      ],
+      "net": "net23109"
+    },
+    "manhattan_um": 453.22
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[24\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.739,
+        251.775
+      ],
+      "net": "_04790_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[8]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.452
+      ],
+      "net": "net23105"
+    },
+    "manhattan_um": 489.88599999999997
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[24\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.739,
+        251.775
+      ],
+      "net": "_04790_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[8]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.652
+      ],
+      "net": "net30968"
+    },
+    "manhattan_um": 472.132
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[25\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        57.035,
+        252.585
+      ],
+      "net": "_04789_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[9]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.548
+      ],
+      "net": "net30841"
+    },
+    "manhattan_um": 487.876
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[25\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        57.035,
+        252.585
+      ],
+      "net": "_04789_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[9]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.748
+      ],
+      "net": "net30839"
+    },
+    "manhattan_um": 471.54999999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[26\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        51.041,
+        250.965
+      ],
+      "net": "_04788_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.844
+      ],
+      "net": "net30878"
+    },
+    "manhattan_um": 475.828
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[26\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        51.041,
+        250.965
+      ],
+      "net": "_04788_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.644
+      ],
+      "net": "net30880"
+    },
+    "manhattan_um": 495.586
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[26\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        51.041,
+        250.965
+      ],
+      "net": "_04788_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[15\\].u_payload.g_bank\\[1\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        234.348,
+        476.844
+      ],
+      "net": "net30879"
+    },
+    "manhattan_um": 409.18600000000004
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[27\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.415,
+        253.125
+      ],
+      "net": "_04787_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        44.94
+      ],
+      "net": "net30790"
+    },
+    "manhattan_um": 473.518
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[27\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        55.415,
+        253.125
+      ],
+      "net": "_04787_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[11]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.74
+      ],
+      "net": "net30819"
+    },
+    "manhattan_um": 489.14799999999997
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[28\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        72.749,
+        252.585
+      ],
+      "net": "_04786_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[12]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.836
+      ],
+      "net": "net23090"
+    },
+    "manhattan_um": 472.44999999999993
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[28\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        72.749,
+        252.585
+      ],
+      "net": "_04786_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[12]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        45.036
+      ],
+      "net": "net23086"
+    },
+    "manhattan_um": 455.548
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[29\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        72.371,
+        252.315
+      ],
+      "net": "_04785_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[13]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        433.932
+      ],
+      "net": "net30881"
+    },
+    "manhattan_um": 473.194
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[29\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        72.371,
+        252.315
+      ],
+      "net": "_04785_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[13]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        45.132
+      ],
+      "net": "net30842"
+    },
+    "manhattan_um": 455.56
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[2\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        81.497,
+        268.785
+      ],
+      "net": "_04812_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.076
+      ],
+      "net": "net23188"
+    },
+    "manhattan_um": 420.76
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[2\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        81.497,
+        268.785
+      ],
+      "net": "_04812_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.276
+      ],
+      "net": "net23186"
+    },
+    "manhattan_um": 463.96
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[30\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.741,
+        251.235
+      ],
+      "net": "_04784_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[15\\].u_payload.g_bank\\[1\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        234.348,
+        477.228
+      ],
+      "net": "net30882"
+    },
+    "manhattan_um": 406.6
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[30\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.741,
+        251.235
+      ],
+      "net": "_04784_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[1\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        434.028
+      ],
+      "net": "net30969"
+    },
+    "manhattan_um": 493.0
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[30\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        53.741,
+        251.235
+      ],
+      "net": "_04784_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[1\\].u_m/wd_in[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        45.228
+      ],
+      "net": "net30883"
+    },
+    "manhattan_um": 473.014
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[31\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        327.629,
+        255.555
+      ],
+      "net": "_04783_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.g_bank\\[1\\].u_m/wd_in[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        104.748,
+        45.324
+      ],
+      "net": "net31240"
+    },
+    "manhattan_um": 433.112
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[3\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        78.905,
+        269.055
+      ],
+      "net": "_04811_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.172
+      ],
+      "net": "net30959"
+    },
+    "manhattan_um": 423.526
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[3\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        78.905,
+        269.055
+      ],
+      "net": "_04811_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.372
+      ],
+      "net": "net31031"
+    },
+    "manhattan_um": 466.726
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[3\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        78.905,
+        269.055
+      ],
+      "net": "_04811_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        432.972
+      ],
+      "net": "net23020"
+    },
+    "manhattan_um": 405.76
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[4\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        77.015,
+        270.405
+      ],
+      "net": "_04810_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[0\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        320.748,
+        433.068
+      ],
+      "net": "net23178"
+    },
+    "manhattan_um": 406.396
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[4\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        77.015,
+        270.405
+      ],
+      "net": "_04810_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.468
+      ],
+      "net": "net30960"
+    },
+    "manhattan_um": 469.86999999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[4\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        77.015,
+        270.405
+      ],
+      "net": "_04810_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.268
+      ],
+      "net": "net23181"
+    },
+    "manhattan_um": 426.66999999999996
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[5\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        81.713,
+        269.865
+      ],
+      "net": "_04809_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.364
+      ],
+      "net": "net23649"
+    },
+    "manhattan_um": 421.336
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[5\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        81.713,
+        269.865
+      ],
+      "net": "_04809_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.564
+      ],
+      "net": "net30920"
+    },
+    "manhattan_um": 464.53600000000006
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[6\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        91.973,
+        269.865
+      ],
+      "net": "_04808_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[6]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.66
+      ],
+      "net": "net30963"
+    },
+    "manhattan_um": 454.17999999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[6\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        91.973,
+        269.865
+      ],
+      "net": "_04808_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[6]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.46
+      ],
+      "net": "net23643"
+    },
+    "manhattan_um": 410.98
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[7\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        82.793,
+        267.165
+      ],
+      "net": "_04807_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[7]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.756
+      ],
+      "net": "net31067"
+    },
+    "manhattan_um": 460.56399999999996
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[7\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        82.793,
+        267.165
+      ],
+      "net": "_04807_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[7]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.556
+      ],
+      "net": "net23174"
+    },
+    "manhattan_um": 417.36400000000003
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[8\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        93.917,
+        270.675
+      ],
+      "net": "_04806_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[8]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.852
+      ],
+      "net": "net31236"
+    },
+    "manhattan_um": 452.8539999999999
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[8\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        93.917,
+        270.675
+      ],
+      "net": "_04806_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[8]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.652
+      ],
+      "net": "net23170"
+    },
+    "manhattan_um": 409.654
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[9\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        95.321,
+        269.325
+      ],
+      "net": "_04805_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[3\\].u_payload.g_bank\\[0\\].u_m/wd_in[9]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        363.948,
+        87.948
+      ],
+      "net": "net30964"
+    },
+    "manhattan_um": 450.00399999999996
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[0\\].u_payload.wdata\\[9\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        95.321,
+        269.325
+      ],
+      "net": "_04805_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[0\\].u_m/wd_in[9]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        277.548,
+        44.748
+      ],
+      "net": "net23632"
+    },
+    "manhattan_um": 406.804
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[33\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        371.855,
+        288.225
+      ],
+      "net": "_05879_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[1]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        475.98
+      ],
+      "net": "net31091"
+    },
+    "manhattan_um": 498.062
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[34\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        371.693,
+        288.495
+      ],
+      "net": "_05878_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[2]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.076
+      ],
+      "net": "net31092"
+    },
+    "manhattan_um": 497.726
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[35\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        371.855,
+        289.035
+      ],
+      "net": "_05877_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[3]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.172
+      ],
+      "net": "net31093"
+    },
+    "manhattan_um": 497.444
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[36\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        288.479,
+        287.685
+      ],
+      "net": "_05876_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[4]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.268
+      ],
+      "net": "net31352"
+    },
+    "manhattan_um": 415.51399999999995
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[37\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        315.263,
+        286.605
+      ],
+      "net": "_05875_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[5]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.364
+      ],
+      "net": "net31353"
+    },
+    "manhattan_um": 443.47399999999993
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[39\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        323.795,
+        282.555
+      ],
+      "net": "_05873_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[7]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.556
+      ],
+      "net": "net31235"
+    },
+    "manhattan_um": 456.248
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[40\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        367.049,
+        290.385
+      ],
+      "net": "_05872_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[8]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.652
+      ],
+      "net": "net31094"
+    },
+    "manhattan_um": 491.768
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[41\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        352.901,
+        289.845
+      ],
+      "net": "_05871_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[9]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.748
+      ],
+      "net": "net31095"
+    },
+    "manhattan_um": 478.256
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.wdata\\[42\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "signal": "SIGNAL",
+      "xy": [
+        355.439,
+        289.845
+      ],
+      "net": "_05870_"
+    },
+    "sink": {
+      "pin": "u_ot_pr_core.g_event_mem\\[14\\].u_payload.g_bank\\[2\\].u_m/wd_in[10]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        61.548,
+        476.844
+      ],
+      "net": "net31096"
+    },
+    "manhattan_um": 480.89
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[2\\].u_m/rd_out[14]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        345.612,
+        46.092
+      ],
+      "net": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.raw\\[46\\]"
+    },
+    "sink": {
+      "pin": "_64578_/B",
+      "master": "OR2x6_ASAP7_75t_R",
+      "role": "comb",
+      "signal": "SIGNAL",
+      "xy": [
+        122.364,
+        251.811
+      ],
+      "net": "net32123"
+    },
+    "manhattan_um": 428.967
+  },
+  {
+    "driver": {
+      "pin": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.g_bank\\[2\\].u_m/rd_out[15]",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "role": "macro",
+      "signal": "SIGNAL",
+      "xy": [
+        345.612,
+        46.188
+      ],
+      "net": "u_ot_pr_core.g_event_mem\\[1\\].u_payload.raw\\[47\\]"
+    },
+    "sink": {
+      "pin": "_64565_/A",
+      "master": "AND2x4_ASAP7_75t_R",
+      "role": "comb",
+      "signal": "SIGNAL",
+      "xy": [
+        123.606,
+        251.214
+      ],
+      "net": "net32122"
+    },
+    "manhattan_um": 427.03200000000004
+  }
+]
