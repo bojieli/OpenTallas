@@ -1,0 +1,4 @@
+FUNCTIONAL_CHAIN_FIRST_OBSERVED_EDGE 8
+FUNCTIONAL_PASS four-state cold, truth, stopped clock, pulse, reassert, ownership
+PHYSICAL_TIMING_NULL TT FF minCQ recovery removal pulsewidth phase POR age
+bench.v:32: $finish called at 2070 (1ps)

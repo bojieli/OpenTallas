@@ -1,0 +1,4968 @@
+{
+ "TT": {
+  "BUFx12f_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "Y": {
+     "function": [
+      "\"A\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "368.64"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"A\""
+       ],
+       "timing_type": [
+        "combinational"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "A": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "2.34288"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  },
+  "INVx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "Y": {
+     "function": [
+      "\"!A\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "46.08"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"A\""
+       ],
+       "timing_type": [
+        "combinational"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "A": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.619928"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "QN": {
+     "function": [
+      "\"IQN\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "46.08"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "rising_edge"
+       ],
+       "timing_sense": [
+        "non_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "CLK": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.462899"
+     ],
+     "max_capacitance": [],
+     "clock": [
+      "true"
+     ],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "D": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.561679"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "RESETN": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.73979"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "SETN": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "1.07945"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "ff": "ff (IQN,IQNN) {\n      clear : \"!SETN\";\n      clear_preset_var1 : L;\n      clear_preset_var2 : L;\n      clocked_on : \"CLK\";\n      next_state : \"!D\";\n      power_down_function : \"(!VDD) + (VSS)\";\n      preset : \"!RESETN\";\n    }"
+  },
+  "TIEHIx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+   "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "H": {
+     "function": [
+      "\"1\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  }
+ },
+ "FF": {
+  "BUFx12f_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "Y": {
+     "function": [
+      "\"A\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "368.64"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"A\""
+       ],
+       "timing_type": [
+        "combinational"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.76,
+           11.52,
+           23.04,
+           46.08,
+           92.16,
+           184.32,
+           368.64
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "A": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "2.60175"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  },
+  "INVx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "Y": {
+     "function": [
+      "\"!A\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "46.08"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"A\""
+       ],
+       "timing_type": [
+        "combinational"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "A": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.683716"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "QN": {
+     "function": [
+      "\"IQN\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [
+      "46.08"
+     ],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "rising_edge"
+       ],
+       "timing_sense": [
+        "non_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "negative_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "clear"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_fall",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "fall_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "preset"
+       ],
+       "timing_sense": [
+        "positive_unate"
+       ],
+       "tables": [
+        {
+         "type": "cell_rise",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        },
+        {
+         "type": "rise_transition",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           0.72,
+           1.44,
+           2.88,
+           5.76,
+           11.52,
+           23.04,
+           46.08
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "CLK": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.503152"
+     ],
+     "max_capacitance": [],
+     "clock": [
+      "true"
+     ],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "D": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.623429"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        },
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "RESETN": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "0.802909"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "SETN": {
+     "function": [],
+     "direction": [
+      "input"
+     ],
+     "capacitance": [
+      "1.16446"
+     ],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": [
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "recovery_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"CLK\""
+       ],
+       "timing_type": [
+        "removal_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_hold_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"RESETN\""
+       ],
+       "timing_type": [
+        "non_seq_setup_rising"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "rise_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ],
+          "index_2": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "related_pin": [
+        "\"SETN\""
+       ],
+       "timing_type": [
+        "min_pulse_width"
+       ],
+       "timing_sense": [],
+       "tables": [
+        {
+         "type": "fall_constraint",
+         "axes": {
+          "index_1": [
+           5.0,
+           10.0,
+           20.0,
+           40.0,
+           80.0,
+           160.0,
+           320.0
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "ff": "ff (IQN,IQNN) {\n      clear : \"!SETN\";\n      clear_preset_var1 : L;\n      clear_preset_var2 : L;\n      clocked_on : \"CLK\";\n      next_state : \"!D\";\n      power_down_function : \"(!VDD) + (VSS)\";\n      preset : \"!RESETN\";\n    }"
+  },
+  "TIEHIx1_ASAP7_75t_R": {
+   "source": "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/inputs/native_libs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+   "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+   "units": {
+    "time_unit": [
+     "\"1ps\""
+    ],
+    "capacitive_load_unit": [
+     "1,ff)"
+    ]
+   },
+   "pins": {
+    "H": {
+     "function": [
+      "\"1\""
+     ],
+     "direction": [
+      "output"
+     ],
+     "capacitance": [],
+     "max_capacitance": [],
+     "clock": [],
+     "timing_table_domains": []
+    }
+   },
+   "ff": null
+  }
+ }
+}

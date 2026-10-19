@@ -1,0 +1,11 @@
+{
+  "prebuild_unit": "oth-ubuntu-155947-1792448860",
+  "prebuild_host": "ot-epyc7",
+  "admission": "unpinned ot-run 2GB/1thread",
+  "measured_MemAvailable_MB": 828367,
+  "measured_tmp_free_KB": 526823756,
+  "inventory": "station.v, native_equation_adapter.v, bench.v; Icarus 4-state compile only; no Verilator/Yosys/OpenROAD",
+  "actual_compiler_maxrss_kb": 15556,
+  "simulation_unit": "oth-ubuntu-2262565-1792448926",
+  "source_compile_runtime": "No process/address-space ulimit or arbitrary timeout applied to actual simulation."
+}

@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1068 GB (avail 812, growth 64, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 412 GB 
+ot-run: ot-epyc5       admits   647 GB (avail 510, growth 19, headroom 0, waiters 0/0 GB) load 32/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1263 GB (avail 941, growth 54, headroom 0, waiters 0/0 GB) load 28/128 running 15 disk 5715 GB 
+ot-run: ot-epyc7       admits  1083 GB (avail 808, growth 46, headroom 0, waiters 0/0 GB) load 16/96 running 14 disk 6271 GB 
+ot-run: ot-epyc8       admits  1255 GB (avail 935, growth 45, headroom 0, waiters 0/0 GB) load 19/128 running 10 disk 63 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-minimum-source-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-minimum-source-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2262565-1792448926 after 0 s
+[{"name": "baseline", "rc": 0, "witness_sha256": "15a4055911cb25cd9f0c7fdc19a9021159a10cf606888617edfc475887959f0b"}, {"name": "mut_inverted_QN", "rc": 1, "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"}, {"name": "mut_missing_stage", "rc": 1, "witness_sha256": "814e6a6ad3e1e5f05be841fdf2f3a03b289f2ebc9c2b9d0a2a950a58779c52f9"}, {"name": "mut_clock_only_assertion", "rc": 1, "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"}, {"name": "mut_ownership", "rc": 1, "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"}]
+rss_kb 15556
+python3: can't open file '/srv/opentallas-scratch/claude/hbm-reset-minimum-source-1019/compose.py': [Errno 2] No such file or directory
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2262565-1792448926): exit 2

@@ -1,0 +1,33 @@
+{
+  "status": "FUNCTIONAL_PASS_PHYSICAL_PHASE_HOLD",
+  "runs": [
+    {
+      "name": "baseline",
+      "rc": 0,
+      "witness_sha256": "15a4055911cb25cd9f0c7fdc19a9021159a10cf606888617edfc475887959f0b"
+    },
+    {
+      "name": "mut_inverted_QN",
+      "rc": 1,
+      "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"
+    },
+    {
+      "name": "mut_missing_stage",
+      "rc": 1,
+      "witness_sha256": "814e6a6ad3e1e5f05be841fdf2f3a03b289f2ebc9c2b9d0a2a950a58779c52f9"
+    },
+    {
+      "name": "mut_clock_only_assertion",
+      "rc": 1,
+      "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"
+    },
+    {
+      "name": "mut_ownership",
+      "rc": 1,
+      "witness_sha256": "1238ef0c1635d8868cde3b459a5aaf16db21ae82282ec1868fbddb9ba12ea377"
+    }
+  ],
+  "wall_s": 0.08112382888793945,
+  "child_maxrss_kb": 15556,
+  "tool": "Icarus Verilog version 12.0 (stable) ()"
+}

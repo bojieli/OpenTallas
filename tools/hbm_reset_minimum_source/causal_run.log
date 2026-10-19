@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  1067 GB (avail 812, growth 65, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 412 GB 
+ot-run: ot-epyc5       admits   649 GB (avail 511, growth 19, headroom 0, waiters 0/0 GB) load 47/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1262 GB (avail 940, growth 54, headroom 0, waiters 0/0 GB) load 25/128 running 15 disk 5715 GB 
+ot-run: ot-epyc7       admits  1083 GB (avail 809, growth 38, headroom 0, waiters 0/0 GB) load 15/96 running 13 disk 6271 GB 
+ot-run: ot-epyc8       admits  1252 GB (avail 933, growth 46, headroom 0, waiters 0/0 GB) load 18/128 running 10 disk 63 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-minimum-source-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-minimum-source-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-159543-1792448973 after 0 s
+[{'mutant': 'reach406', 'refused': 'REACH'}, {'mutant': 'fanout33', 'refused': 'FANOUT'}, {'mutant': 'ownership_swap', 'refused': 'OWNERSHIP'}, {'mutant': 'omitted_row_offset', 'refused': 'ROW_OFFSET'}]
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-159543-1792448973): exit 0

@@ -1,0 +1,58 @@
+{
+  "status": "SOURCE_COMPOSITION_PASS_PHYSICAL_PHASE_HOLD",
+  "stations": 2263,
+  "boundary": 810,
+  "downstream": 2983,
+  "full_HBM_pin_population": 3793,
+  "row_heads_in_boundary": 455,
+  "native_counts": {
+    "native_FF": 5514,
+    "native_INV": 5514,
+    "native_BUF": 2263,
+    "native_TIEHI": 2263,
+    "native_area_um2": 3024.3148200000005,
+    "native_PG_bindings": 31108
+  },
+  "clock_and_native_load_cost": {
+    "TT": {
+      "all_new_clock_pin_cap_fF": 7854.362526000001,
+      "source_PLL_extra_BUF_A_cap_fF": 2.34288,
+      "all_new_FF_RESETN_cap_fF": 4079.2020599999996,
+      "all_new_FF_SETN_D_tie_cap_fF": 7500.636303,
+      "max_clock_driver_native_pin_cap_fF": 7.954438000000001,
+      "boundary_pin_caps": "NULL: exact frozen downstream master Liberty must be bound; no zero substituted",
+      "all_routed_wire_caps": null
+    },
+    "FF": {
+      "all_new_clock_pin_cap_fF": 8662.140378,
+      "source_PLL_extra_BUF_A_cap_fF": 2.60175,
+      "all_new_FF_RESETN_cap_fF": 4427.240226,
+      "all_new_FF_SETN_D_tie_cap_fF": 8139.626193,
+      "max_clock_driver_native_pin_cap_fF": 8.811554000000001,
+      "boundary_pin_caps": "NULL: exact frozen downstream master Liberty must be bound; no zero substituted",
+      "all_routed_wire_caps": null
+    }
+  },
+  "census_scope": "COMPLETE NEW SOURCE EQUATION and 810 external boundary contacts; original native mapped downstream all-driver census OPEN",
+  "max_source_transparent_loads": 19,
+  "driver_rows": 10040,
+  "conditional_max_face_edges": 362,
+  "actual_compiler_POR_age": null,
+  "actual_TT_FF_phase_minCQ_recovery_removal": null,
+  "causal_checks": {
+    "reach406_refused": true,
+    "fanout33_refused": true,
+    "omitted_row_offset_refused": true,
+    "ownership_swap_refused": true
+  },
+  "sha256": {
+    "station.v": "a62682b4fa468662c42fdf9e4e18dbad1418bd6b0d18e00634f2d0c9588b9924",
+    "native_equation_adapter.v": "409c0dca7996c611d0c82c9d2997e4f4a7a1d921fdcf7c8c5ecc29892a17b7e8",
+    "native_lib_roles.json": "b7b2e6d6b12c9e273a37995ac05094c09a3e48c1cbba3734c693f9edc14ffe36",
+    "prototype_model.json": "a09450425e69749a277f33ea978e21b293952eee1fdaa190c2660181d0709b85",
+    "compressed_topology.json": "ba73678f522cfb0d5cef6e0abc4aa59902dcfc92987bdecbd91893aa52d7dd01",
+    "compressed_topology_report.json": "44667901f7591771d7b6c4227aba9df0f8ba26e0c1876f8a30374b38552a16d8",
+    "row_ownership.json": "ff8ac0236fef8fbfef8f71a215d78b0a85362f02ba86ac0c879e12d2e2b0264c",
+    "sinks.json": "3cee4163d9374adedd41be3ab9774212c9d4034bfc24c890cb8ffc2e22af7de9"
+  }
+}
