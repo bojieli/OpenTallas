@@ -172,6 +172,14 @@ def trapped_params(mod):
     return out
 
 
+
+def seam_txd_c(st):
+    """DIE_PARAM_AUDIT (e): the compiler's TXD C (d2d_link_calendar.producer_txd + PINREG_EXT) for the compute seam stages
+    st (record_bundles.seam_stages).  tools/qwen_layerbench/layer_compile.py must compile the same vector (QW-L1SEAM test)."""
+    import d2d_link_calendar as DLC
+    full = dict(st, **{k: 0 for k in DLC.STAGE_NAMES if k not in st})
+    return [x + q for x, q in zip(DLC.producer_txd(full)['C'], DLC.PINREG_EXT['C'])]
+
 def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, compiled=None):
     import die_port_bind as DPB
     import lane_latency_audit as LLA
@@ -272,8 +280,7 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         if sprob:
             fails.extend(f'TXDP seam: {x}' for x in sprob)
         else:
-            full = dict(st, **{k: 0 for k in DLC.STAGE_NAMES if k not in st})
-            want = [x + q for x, q in zip(DLC.producer_txd(full)['C'], DLC.PINREG_EXT['C'])]
+            want = seam_txd_c(st)
             wv = DLC.txdp_word(want)
             tr.update(seam_txd_c=want, seam_txdp=wv, seam_stages=RB.seam_stages_str(st))
             got = prm.get(D2D_MASTER, {}).get('TXDP')

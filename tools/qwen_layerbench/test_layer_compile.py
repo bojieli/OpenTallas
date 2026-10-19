@@ -12,6 +12,8 @@ import layer_compile as C          # noqa: E402
 import die_relay_stages as DRS     # noqa: E402
 import die_relay_check as DRC      # noqa: E402
 import d2d_link_calendar as L      # noqa: E402
+import record_bundles as RB        # noqa: E402
+import die_params as DP            # noqa: E402
 
 RTL = """
 module src (input wire ck, output wire [3:0] o, output wire v);
@@ -62,7 +64,8 @@ def table(design, buses):
 
 
 def bus(si, sp, di, dp, st, age=None, w=1):
-    b = dict(id=DRS.bus_id(si, sp, di, dp), src=dict(inst=si, port=sp), dst=dict(inst=di, port=dp), width=w, stages=st, domain='stream_1p2')
+    b = dict(id=DRS.bus_id(si, sp, di, dp), src=dict(inst=si, port=sp), dst=dict(inst=di, port=dp), width=w, stages=st,
+             domain='stream_1p2', bid=f'lnk_{sp}')
     if age is not None:
         b.update(age_edges=age, age_basis='n=1 landed lane: E = K')
     return b
@@ -106,7 +109,11 @@ class Compile(unittest.TestCase):
         k += [bus('d2d_kv', 'rx_payload', 'kvs_attn', 'rx_payload', 11)]
         k += [bus('kvs_attn', p, 'd2d_kv', p, 11) for p in ('attn__tx_valid', 'attn__tx_payload')]
         T = {'qwen_compute': table('qwen_compute', c), 'qwen_kv': table('qwen_kv', k)}
-        ba = C.bundle_ages(T)
+        with self.assertRaises(SystemExit):                               # compute ages never from hop counts
+            C.bundle_ages(T)
+        # the as-built seam (record_bundles lane cycles; F5: rx_v direct 0, payload landed 2)
+        seam = {(b['src']['inst'], b['src']['port'], b['dst']['inst']): b.get('age_edges', b['stages']) for b in c}
+        ba = C.bundle_ages(T, seam)
         self.assertFalse(ba['C.rx_record']['consistent'])                 # rx_v direct, payload landed E 2 (F5)
         self.assertEqual(ba['C.rx_record']['age'], 2)
         self.assertFalse(ba['K.rx_record']['consistent'])                 # 9 vs 11 (F6)
@@ -127,6 +134,79 @@ class Compile(unittest.TestCase):
         g = {x['id']: x for x in d['groups']}
         self.assertEqual(g['L1']['start'], {x['id']: x for x in tp['groups']}['L1']['start'] - 10)
         self.assertEqual(d['totals']['cycles'], tp['totals']['cycles'] - 5)
+
+
+LT = ROOT / 'results/rtl/qwen_layer_tput_1018'
+# dv2f18dh2 (0d4c9808f): compute seam cut from the GEN die.v + fwd_lanes.json, the die's netlist relay table
+# (netlist_relay_stages.py) and its die.v.params.json
+FXS = LT / 'fixtures/dv2f18dh2_seam'
+
+
+class SeamOneSource(unittest.TestCase):
+    """QW-L1SEAM 10-19: layer_compile and the strict bind (DIE_PARAM_AUDIT (e) / RECORD_BUNDLE_AUDIT) read the compute
+    D2D seam from ONE source, record_bundles.seam_stages(die.v, fwd_lanes.json).  dv2f18dh2: layer_compile counted relay
+    HOPS (one-frame landings = 1) and asked TXDP C [6,3,1,10] + flagged C.rx_record ages [1,2], while the bind PASSED
+    [8,3,1,10].  Any divergence of selectors, stage map, ages or TXD formula fails here."""
+
+    def test_selectors_and_stage_map_are_record_bundles(self):
+        for b in RB.COMPILER_BUNDLES:
+            self.assertEqual(C.BUNDLES[b], ('qwen_compute', [(s, sp, d) for s, sp, d, _ in RB.BUNDLES[b]]), b)
+        for b, mem in RB.SEAM_SINGLE.items():
+            self.assertEqual(C.BUNDLES[b], ('qwen_compute', [(s, sp, d) for s, sp, d, _ in mem]), b)
+        self.assertEqual(sorted(b for b, (d, _) in C.BUNDLES.items() if d == 'qwen_compute'),
+                         sorted(list(RB.COMPILER_BUNDLES) + list(RB.SEAM_SINGLE)))
+        self.assertEqual({k: v for k, v in C.STAGE_OF.items() if k[:2] in ('CS', 'SC')}, dict(RB.SEAM_STAGE_OF))
+        self.assertEqual((C.N59_TX, C.N59_X3, C.PINREG_EXT), (L.N59_TX, L.N59_X3, L.PINREG_EXT))
+
+    def tables(self):
+        k = [bus('d2d_kv', p, 'kvs_attn', p, 9) for p in ('att_rx_v', 'att_rx_kind', 'att_rx_beat', 'att_tx_slot', 'att_tx_kind',
+                                                          'att_tx_beat', 'rx_payload')]
+        k += [bus('kvs_attn', p, 'd2d_kv', p, 11) for p in ('attn__tx_valid', 'attn__tx_payload')]
+        return {'qwen_compute': DRS.Table(DRS.load(FXS / 'relay_stages.json')), 'qwen_kv': table('qwen_kv', k)}
+
+    def test_dv2f18dh2_compiler_equals_strict_bind(self):
+        st, per_key, _ = C.compute_seam(FXS / 'die.v')
+        bind_st, _, probs = RB.seam_stages(FXS / 'die.v', FXS / 'fwd_lanes.json')     # the strict-bind call
+        self.assertEqual(probs, [])
+        self.assertEqual(st, bind_st)
+        self.assertEqual(st, dict(CS_TXS=2, CS_RXV=2, CS_RXP=2, CS_X3S=3, SC_TX=2, SC_X3=2))
+        T = self.tables()
+        ba = C.bundle_ages(T, per_key)
+        for b in C.COMPUTE_SEAM:
+            self.assertTrue(ba[b]['consistent'], (b, ba[b]['ages']))
+        self.assertEqual(ba['C.rx_record']['ages'], [2])
+        S = C.compile_stages(ba)
+        self.assertEqual({k: S[k] for k in st}, st)
+        txd_c = C.txd_of(S)[1]['C']
+        self.assertEqual(txd_c, DP.seam_txd_c(bind_st))                                # DIE_PARAM_AUDIT (e) formula
+        self.assertEqual(txd_c, [8, 3, 1, 10])
+        bound = json.loads((FXS / 'die.v.params.json').read_text())['masters']['qfd_d2d_static']['TXDP']
+        self.assertEqual(L.txdp_word(txd_c), int(bound))                                # 0x0a010308, the GEN's TXDP
+        # the hop counts layer_compile used before: one-frame landings read 1 -> [6,3,1,10] + a false torn rx_record
+        hops = {(b['src']['inst'], b['src']['port'], b['dst']['inst']): b['stages'] for b in T['qwen_compute'].doc['buses']}
+        self.assertEqual((hops[('d2d_rom', 'native_rx_v', 'native59')], hops[('d2d_rom', 'rx_payload', 'native59')],
+                          hops[('d2d_rom', 'native_tx_slot', 'native59')]), (1, 2, 1))
+        # the exporter's own ages are torn too (n > 1: E, n = 1: K) -> die_relay_check on the raw table FAILS ...
+        raw = T['qwen_compute'].doc
+        self.assertIn('C.rx_record', [n for n, _ in DRC.DRB.torn(raw)])
+        # ... and on the seam-annotated table (record_bundles ages) the compiled schedule (whole bundles) PASSES
+        doc, diff = C.annotate_seam_ages(raw, per_key)
+        self.assertTrue(diff)
+        sched = {m['bus']: m['stages'] + ba[b]['age'] - m['age'] for b in C.COMPUTE_SEAM for m in ba[b]['members']}
+        self.assertEqual(DRC.check(doc, DRS.compiled(doc, 'unit', scheduled=sched))['verdict'], 'PASS')
+
+    def test_torn_seam_fails_closed(self):
+        txt = (FXS / 'die.v').read_text()
+        ln = next(x for x in txt.splitlines() if ' rly_lnk_native_rx_v_0 ' in x)
+        mut = ln.replace('.k1(n_ftk_lnk_native_rx_v_hi)', '.k1(n_ftk_lnk_native_rx_v_lo)')
+        self.assertNotEqual(mut, ln)
+        fl = json.loads((FXS / 'fwd_lanes.json').read_text())
+        fl['lanes'] = [r for r in fl['lanes'] if r['bid'] != 'lnk_native_rx_v']       # E from the (mutated) K straps
+        with tempfile.TemporaryDirectory() as t:
+            (Path(t) / 'die.v').write_text(txt.replace(ln, mut))
+            (Path(t) / 'fwd_lanes.json').write_text(json.dumps(fl))
+            with self.assertRaises(SystemExit):
+                C.compute_seam(Path(t) / 'die.v')
 
 
 if __name__ == '__main__':

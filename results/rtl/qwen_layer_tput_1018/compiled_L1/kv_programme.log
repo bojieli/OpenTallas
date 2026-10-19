@@ -1,2 +1,2 @@
-/usr/bin/python3 tools/qwen_static_kv/layer_roots_from_link.py /home/ubuntu/wt/qlb-c4-1018/results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/program /home/ubuntu/wt/qlb-c4-1018/results/rtl/qwen_layer_tput_1018/compiled_L1/kv_programme
-LAYER_ROOTS PASS T=8192 rel={'ctrl_go': 514, 'kgo': 514, 'vgo': 1366, 'attention_issue': 617, 'attention_run': 621, 'writer_start': 653, 'link_start': 3, 'expected_quiet': 2406} l0_base=272 token_cycles=246359
+/usr/bin/python3 tools/qwen_static_kv/layer_roots_from_link.py /home/ubuntu/scratch/qw-l1seam/compiled_L1/d2d/program /home/ubuntu/scratch/qw-l1seam/compiled_L1/kv_programme
+LAYER_ROOTS PASS T=8192 rel={'ctrl_go': 514, 'kgo': 514, 'vgo': 1366, 'attention_issue': 617, 'attention_run': 621, 'writer_start': 654, 'link_start': 3, 'expected_quiet': 2406} l0_base=272 token_cycles=246359
