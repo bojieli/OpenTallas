@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsfd_dvland_512",
+ "enable": false,
+ "reason": "pin-order-only re-kit of a CLOSED landing (REFILL-0400/PO-LINK 10-19): rs is the block's regional reset, already released synchronously on ck at the region's calendar edge R0 (ot_s81_land.sv epoch contract: rc counts ck edges from the release, wc is cleared while ck_f is stopped); a 2-stage kit landing would shift R0 by 2 edges and with it the compile-time landing latency E = K + R0 - G of every lane, a calendar change outside a pin-order fix. 8 sinks: wc (AW+1 = 3, ck_f) + rc (KW = 3) + warm + fault (ck); the closed view routed the same."
+}
