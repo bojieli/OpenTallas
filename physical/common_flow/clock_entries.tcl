@@ -26,6 +26,18 @@ proc ot_ce_raw_memory_sink {inst pin source} {
   dict set ::ot_ce_raw_memory_seen $name 1
   return 1
 }
+# AD-HBM-COLLP 10-18: a landed hard child's clock pin may carry only timing checks (a capture domain with no clk->Q arc
+# on the ETM, e.g. the COLL writer's clk_rgx_data* landing captures); OpenSTA does not infer it as a register clock pin
+# (all_registers -clock_pins), but it is a Liberty clock pin and an ordinary sink of its region root.
+proc ot_ce_check_only_clock_pin {pin} {
+  set lc [get_lib_cells -quiet -of_objects [get_cells -quiet -of_objects $pin]]
+  if {[llength $lc] != 1} {return 0}
+  set name [get_property $pin lib_pin_name]
+  foreach lp [get_lib_pins -quiet -of_objects $lc] {
+    if {[get_property $lp name] eq $name} {return [expr {[get_property $lp is_clock] == 1}]}
+  }
+  return 0
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_ce_cts_orig
   proc clock_tree_synthesis {args} {
@@ -60,7 +72,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # pin is an ordinary sink of its region root (the post-CTS SDC measures it at the child's flops)
             if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
                 && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
-                && [get_full_name $pin] in $regnames} {continue}
+                && ([get_full_name $pin] in $regnames || [ot_ce_check_only_clock_pin $pin])} {continue}
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }

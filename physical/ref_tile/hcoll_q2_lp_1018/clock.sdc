@@ -445,11 +445,32 @@ proc ot_ce_apply {} {
   # boundary population once per apply/current corner, never across calls.
   set boundary_cells {}; set boundary_cells_ready 0
   set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]
+  set ot_ce_hard_cells {}
+  foreach cell [get_cells -quiet -hierarchical *] {
+    if {[dict exists $::ot_ce_counts [get_property $cell ref_name]]} {lappend ot_ce_hard_cells $cell}
+  }
   # Each glue root owns a real CTS tree. Measure every propagated standard-cell
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
     set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    set ot_ce_pin_seen [dict create]
+    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}
+    foreach cell $ot_ce_hard_cells {
+      set master [get_property $cell ref_name]
+      dict for {key corners} $::ot_ce_refs {
+        if {[string first "$master/" $key] != 0} continue
+        set pin [get_pins -quiet "[get_full_name $cell]/[string range $key [string length "$master/"] end]"]
+        if {[llength $pin] != 1 || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue
+        foreach c [get_property $pin clocks] {
+          if {[get_full_name $c] eq [get_full_name $clock]} {
+            lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1
+            puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"
+            break
+          }
+        }
+      }
+    }
     if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
     set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]
     foreach pin $pins {

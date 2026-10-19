@@ -1058,7 +1058,36 @@ def landed_body():
         ('      if {![dict exists $::ot_ce_refs $key]} continue\n',
          '      if {![dict exists $::ot_ce_refs $key] || $::ot_ce_landed_cluster} continue\n'),
         ('  set boundary_cells {}; set boundary_cells_ready 0\n',
-         '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'),
+         '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'
+         '  set ot_ce_hard_cells {}\n'
+         '  foreach cell [get_cells -quiet -hierarchical *] {\n'
+         '    if {[dict exists $::ot_ce_counts [get_property $cell ref_name]]} {lappend ot_ce_hard_cells $cell}\n'
+         '  }\n'),
+        # AD-HBM-COLLP 10-18: a hard child's CHECK-ONLY clock pins (capture domains whose ETM has setup/hold arcs but no
+        # clk->Q arc, e.g. the COLL writer's clk_rgx_data*/clk_meta/clk_tkw landing captures) are not inferred register
+        # clock pins in OpenSTA (all_registers -clock_pins needs a regClkToQ arc), so they were never measured and the
+        # landed count failed closed (47 of 54).  Add every bound child clock pin that this root's clock reaches.
+        ('    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n',
+         '    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    set ot_ce_pin_seen [dict create]\n'
+         '    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}\n'
+         '    foreach cell $ot_ce_hard_cells {\n'
+         '      set master [get_property $cell ref_name]\n'
+         '      dict for {key corners} $::ot_ce_refs {\n'
+         '        if {[string first "$master/" $key] != 0} continue\n'
+         '        set pin [get_pins -quiet "[get_full_name $cell]/[string range $key [string length "$master/"] end]"]\n'
+         '        if {[llength $pin] != 1 || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue\n'
+         '        foreach c [get_property $pin clocks] {\n'
+         '          if {[get_full_name $c] eq [get_full_name $clock]} {\n'
+         '            lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1\n'
+         '            puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"\n'
+         '            break\n'
+         '          }\n'
+         '        }\n'
+         '      }\n'
+         '    }\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n'),
         ('    set arrivals {}; set measured {}; set total 0.0\n',
          '    set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]\n'),
         ('      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }\n'

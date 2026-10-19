@@ -50,14 +50,29 @@ endmodule
 '''
 
 
-def view(root):
+# AD-HBM-COLLP 10-18: a CHECK-ONLY child clock pin (setup/hold arcs, no clk->Q: a landing-capture domain) is not an
+# inferred register clock pin in OpenSTA (all_registers -clock_pins); the landed body must still reach and measure it
+ETM_CHECK_ONLY = ETM.replace('    pin(Q)', '''    pin(CLK2) { direction : input; clock : true; capacitance : 1; }
+    pin(D2) { direction : input; capacitance : 1;
+      timing() { related_pin : "CLK2"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); } fall_constraint(scalar) { values("20"); } }
+      timing() { related_pin : "CLK2"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); } fall_constraint(scalar) { values("10"); } } }
+    pin(Q)''')
+LEF_CHECK_ONLY = LEF.replace('PIN Q ', '''PIN CLK2 DIRECTION INPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 0.1 0.7 0.2 0.8 ; END END CLK2
+PIN D2 DIRECTION INPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 0.1 1.0 0.2 1.1 ; END END D2
+PIN Q ''')
+
+
+def view(root, check_only=False):
     v = root / 'hard'
     v.mkdir()
     for c in CE.CORNERS:
-        (v / f'hard_{c}.lib').write_text(ETM.replace('hard_tt', 'hard_' + c))
-    (v / 'hard.lef').write_text(LEF)
-    (v / 'insertion.json').write_text(json.dumps(dict(lib_clock_pin='CLK', clock='ck', **{
-        c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS})))
+        (v / f'hard_{c}.lib').write_text((ETM_CHECK_ONLY if check_only else ETM).replace('hard_tt', 'hard_' + c))
+    (v / 'hard.lef').write_text(LEF_CHECK_ONLY if check_only else LEF)
+    rec = dict(lib_clock_pin='CLK', clock='ck', **{c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS})
+    if check_only:
+        rec['clock_measurements'] = dict(CLK=dict(rec), CLK2=dict(rec, lib_clock_pin='CLK2', **{
+            c: dict(boundary=dict(n=4, min=60, mean=70, max=80)) for c in CE.CORNERS}))
+    (v / 'insertion.json').write_text(json.dumps(rec))
     return v
 
 
@@ -166,13 +181,14 @@ class LandedClusterOpenroad(unittest.TestCase):
     def run_flow(self, mutant=''):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
-            view(w)
+            view(w, mutant == 'check_only')
             s = spec(w)
             s['children'][0]['view'] = 'hard'
             s['landed_record'] = 'top_lp_record.json'
             if mutant == 'two_children':
                 s['children'][0]['count'] = 2
-            rtl = RTL.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
+            rtl = RTL if mutant != 'check_only' else RTL.replace('.D(d), .Q(hq)', '.CLK2(ck_ra), .D(d), .D2(d), .Q(hq)')
+            rtl = rtl.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
             entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
             if mutant == 'leaf_tile_body':
@@ -229,6 +245,14 @@ puts "LANDED_RESULT PASS"
         self.assertIn('OT_MULTI_ROOT RELATED_PATH core -> rb max', out)
         self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
         self.assertIn('OT_LP_LAND_SDC 1 of 1 landings constrained', out)
+        self.assertIn('LANDED_RESULT PASS', out)
+
+    def test_check_only_child_clock_pin_reached(self):
+        rc, out = self.run_flow('check_only')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertIn('OT_LANDED CHECK_CLOCK_PIN ck_ra h/CLK2', out)
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=70')
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK wire=[\d.eE+-]+ R=100')
         self.assertIn('LANDED_RESULT PASS', out)
 
     def test_mutants_fail_closed(self):
