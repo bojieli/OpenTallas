@@ -4,6 +4,7 @@ import collections, gzip, hashlib, json, math, pathlib, re, subprocess
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 BASE = 'results/arch/qwen_cluster_1017/q_cluster16/'
+SOURCE_REV = 'c672ee40ff58ad02d870ee3a540a4dadd9be16f7'
 def blob(rev, path):
     return subprocess.check_output(['git', '-C', str(ROOT), 'show', rev+':'+path])
 def load(rev, path):
@@ -112,13 +113,13 @@ for v in incumbent['reach_violations']:
 source_inputs={}
 for path in ['rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv',
              'rtl/physical/qcluster/qfd_c_land_safe.sv','tools/qwen_cluster/qc_safe_graph.py']:
-    current=(ROOT/path).read_bytes()
+    current=(ROOT/path).read_bytes();assert current==blob(SOURCE_REV,path)
     old=subprocess.run(['git','-C',str(ROOT),'show','ac8e4c483:'+path],capture_output=True)
     historical=old.stdout if old.returncode==0 else None
     source_inputs[path]=dict(current_sha256=digest(current),
         ac8e4c483_sha256=digest(historical) if historical is not None else None,
         current_equals_historical=current==historical,
-        source_revision=str(subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD']).decode().strip()))
+        source_revision=SOURCE_REV)
 gen=load('eb0ee1e0b','results/arch/qwen_gen2_integration_1019/land_owed_rA.json')
 genlinks=gen if isinstance(gen,list) else gen.get('links',gen.get('owed',[]))
 out=dict(schema='opentallas.cb16.parent_contract.v1',model_only=True,release_ready=False,
