@@ -1,0 +1,17 @@
+{
+ "mut": 22,
+ "cases": [
+  "neg_coll"
+ ],
+ "emb_t": null,
+ "res_skew": 0,
+ "neg_coll": {
+  "want_edge": 6469,
+  "opf": [],
+  "raised": false
+ },
+ "verdict": "FAIL",
+ "fails": [
+  "neg_coll: required fault not raised at ~6469 (opf log [])"
+ ]
+}

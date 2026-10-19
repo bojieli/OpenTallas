@@ -87,7 +87,13 @@ module ot_host_if_pb2_observed #(
     //   descriptor w0 [47:32] prompt length / [63:48] max new tokens (16 b each); prompt tokens two per word
     //   ([31:0], [63:32]); w3 [31:0] EOS id 0, [63:32] EOS id 1.  Completion w0 [47:32] position[15:0],
     //   [63:48] token[15:0]; w1 [47:32] tokens generated[15:0], [63:48] token[31:16].  FMT 0: the layout above.
-    parameter integer FMT     = 0
+    parameter integer FMT     = 0,
+    // MU-QWEN-HOST 10-18 (opt-in; 0 = the reviewed one-step form, bit/cycle-identical): 1 = up to NSLOT steps
+    // outstanding, at most one per slot (a user's next step needs its fed-back token), MODE 0 with ENG_CTX == NSLOT.
+    // The engine (ot_qfd_pkgctl MU 1) retires steps in issue order with a one-edge eng_done pulse; an in-flight
+    // FIFO names the retired slot, so every next-token return and CQ entry carries its user.  A done with no step
+    // outstanding is a sticky fault (static schedule: never a stall).
+    parameter integer MU_OUT  = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -208,6 +214,16 @@ module ot_host_if_pb2_observed #(
     localparam [2:0] I_IDLE = 0, I_CLR = 1, I_RD = 2, I_WAIT = 3, I_GO = 4, I_RUN = 5, I_PB_WAIT = 6;
     reg [2:0]    i_st;
     reg          inflight;
+    // MU_OUT state (unused, constant and removed when MU_OUT == 0)
+    localparam integer MQ  = (MU_OUT != 0) ? NSLOT : 1;
+    localparam integer MQB = (MQ > 1) ? $clog2(MQ) : 1;
+    reg [NSLOT-1:0] sl_inf;              // slot has a step outstanding
+    reg [SB-1:0] mq_slot [0:MQ-1];       // in-flight slots in issue order
+    reg [MQB-1:0] mq_w, mq_r;
+    reg [MQB:0]   mq_n;
+    reg           mu_fault;              // done with no step outstanding
+    initial if (MU_OUT != 0 && (MODE != 0 || ENG_CTX != NSLOT || NSLOT < 2 || (NSLOT & (NSLOT - 1)) != 0))
+        $fatal(1, "MU_OUT needs MODE 0, ENG_CTX == NSLOT, NSLOT a power of two >= 2");
     reg [7:0] pb_wait_edges;
     localparam [1:0] B_IDLE = 0, B_RST = 1, B_RUN = 2;
     reg [1:0]    b_st;
@@ -307,7 +323,7 @@ module ot_host_if_pb2_observed #(
         endcase
         for (si = 0; si < NSLOT; si = si + 1) begin
             if (s_araddr[11:2] == 10'h040 + 2 * si)
-                rmux = {sl_pos[si], 13'd0, inflight && (eng_slot == si), sl_st[si]};
+                rmux = {sl_pos[si], 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), sl_st[si]};
             if (s_araddr[11:2] == 10'h041 + 2 * si)
                 rmux = {sl_tag[si], sl_ngen[si]};
         end
@@ -327,13 +343,14 @@ module ot_host_if_pb2_observed #(
         pick_v = 1'b0; pick = {SB{1'b0}};
         for (k = NSLOT - 1; k >= 0; k = k - 1) begin
             cand = rr + k[SB-1:0];
-            if (sl_st[cand] == SL_RUN) begin pick_v = 1'b1; pick = cand; end
+            if (sl_st[cand] == SL_RUN && !(MU_OUT != 0 && sl_inf[cand])) begin pick_v = 1'b1; pick = cand; end
         end
         if (ENG_CTX == 1 && own_v && sl_st[own] == SL_RUN) begin pick_v = 1'b1; pick = own; end
     end
-    wire          step_done = (MODE == 0) && inflight && eng_done && !eng_start;
-    wire [NW-1:0] d_pos  = eng_pos;
-    wire [SB-1:0] d_slot = eng_slot;
+    wire [SB-1:0] mq_head = mq_slot[mq_r];
+    wire          step_done = (MODE == 0) && ((MU_OUT != 0) ? (eng_done && mq_n != 0) : (inflight && eng_done && !eng_start));
+    wire [SB-1:0] d_slot = (MU_OUT != 0) ? mq_head : eng_slot;
+    wire [NW-1:0] d_pos  = (MU_OUT != 0) ? sl_pos[mq_head] : eng_pos;
     wire          d_gen  = d_pos + 1'b1 >= sl_plen[d_slot];                  // output is a generated token
     wire [NW-1:0] d_ngen = sl_ngen[d_slot] + 1'b1;
     wire          d_eos  = sl_eos[d_slot] && (eng_next_token == sl_eos0[d_slot] || eng_next_token == sl_eos1[d_slot]);
@@ -402,6 +419,8 @@ module ot_host_if_pb2_observed #(
             d_st <= D_IDLE; dw <= 0; dsc0 <= 0; dsc1 <= 0; dsc2 <= 0; dsc3 <= 0; ev_ovf <= 1'b0; pr_i <= 0; pr_word <= 0; err_st <= 0;
             ev_w <= 0; ev_r <= 0; ev_n <= 0;
             pb_wait_edges <= 0; i_st <= I_IDLE; inflight <= 1'b0; rr <= 0; own_v <= 1'b0; own <= 0;
+            sl_inf <= 0; mq_w <= 0; mq_r <= 0; mq_n <= 0; mu_fault <= 1'b0;
+            for (j = 0; j < MQ; j = j + 1) mq_slot[j] <= 0;
             eng_start <= 1'b0; eng_token <= 0; eng_pos <= 0; eng_slot <= 0; kv_base <= 0; eng_clr_req <= 1'b0;
             b_st <= B_IDLE; b_err <= 0; b_cnt <= 0;
             arr_rst_n <= 1'b0; cfg_users <= 0; cfg_prompt_len <= 0; cfg_gen_len <= 0;
@@ -577,7 +596,8 @@ module ot_host_if_pb2_observed #(
             if (MODE == 0) begin
                 case (i_st)
                     I_IDLE:
-                        if (pick_v && enable && ev_n < EQD - 2) begin
+                        // MU_OUT: room for the event of every outstanding step and of this one
+                        if (pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
                             eng_slot <= pick;
                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
                             if (ENG_CTX == 1 && (!own_v || own != pick)) begin
@@ -599,6 +619,10 @@ module ot_host_if_pb2_observed #(
                     I_GO: begin
                         eng_start <= 1'b1; inflight <= 1'b1; c_steps <= c_steps + 1'b1;
                         rr <= eng_slot + 1'b1;
+                        if (MU_OUT != 0) begin                // outstanding: retire below, issue the next slot now
+                            sl_inf[eng_slot] <= 1'b1; mq_slot[mq_w] <= eng_slot; mq_w <= mq_w + 1'b1;
+                            i_st <= I_IDLE;
+                        end else
                         i_st <= I_RUN;
                     end
                     I_RUN:
@@ -615,6 +639,20 @@ module ot_host_if_pb2_observed #(
                         end
                     default: i_st <= I_IDLE;
                 endcase
+                // MU_OUT retire, in issue order (the FIFO head); a different slot from any issue this edge
+                if (MU_OUT != 0) begin
+                    if (step_done) begin
+                        sl_pos[d_slot] <= d_pos + 1'b1;
+                        sl_tok[d_slot] <= eng_next_token;
+                        if (d_gen) sl_ngen[d_slot] <= d_ngen;
+                        if (d_last) sl_st[d_slot] <= SL_DRAIN;
+                        sl_inf[d_slot] <= 1'b0;
+                        mq_r <= mq_r + 1'b1;
+                    end
+                    if (eng_done && mq_n == 0) begin mu_fault <= 1'b1; sticky_fault <= 1'b1; irq_status[1] <= 1'b1; end
+                    mq_n <= mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+                    inflight <= (mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+                end
             end
 
             // ---- MODE 1: batches on the ROM array
@@ -657,7 +695,7 @@ module ot_host_if_pb2_observed #(
     // -- event pushes ---------------------------------------------------------------------
     always @(*) begin
         ep_v = 1'b0; ep_d = {EVW{1'b0}};
-        if (MODE == 0 && i_st == I_RUN && step_done && (d_gen || eng_fault)) begin
+        if (MODE == 0 && (MU_OUT != 0 || i_st == I_RUN) && step_done && (d_gen || eng_fault)) begin
             ep_v = 1'b1;
             ep_d = ev(d_last ? EV_LAST : EV_TOKEN, d_last ? d_stat : ST_OK, {{(8-SB){1'b0}}, d_slot},
                       sl_tag[d_slot], d_pos, eng_next_token,
@@ -690,7 +728,7 @@ module ot_host_if_pb2_observed #(
   if(!rst_n)begin cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
   else begin
    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=eh_kind;cq_status<=eh_st;
-   step_retire_v<=step_done&&i_st==I_RUN;step_retire_cq<=d_gen||eng_fault;step_retire_client_tag<=sl_tag[d_slot];step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=eng_next_token;
+   step_retire_v<=step_done&&(MU_OUT!=0||i_st==I_RUN);step_retire_cq<=d_gen||eng_fault;step_retire_client_tag<=sl_tag[d_slot];step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=eng_next_token;
    step_issue_v<=eng_start;step_client_tag<=sl_tag[eng_slot];step_slot<=8'(eng_slot);step_pos<=18'(eng_pos);
    host_idle<=!inflight&&i_st==I_IDLE&&d_st==D_IDLE&&ev_n==0&&!m_arvalid&&!m_rready&&!m_awvalid&&!m_wvalid&&!m_bready&&sq_head==sq_tail;
   end

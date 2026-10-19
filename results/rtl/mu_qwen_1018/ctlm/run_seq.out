@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits   -98 GB (avail 185, growth 254, headroom 0, waiters 10/288 GB) load 133/128 running 35 disk 550 GB 
+ot-run: ot-epyc5       admits    65 GB (avail 393, growth 347, headroom 0, waiters 4/720 GB) load 316/128 running 52 disk 671 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-bench/mu-adopt-ctlm-1019/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-bench/mu-adopt-ctlm-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2782137-1792394166 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   seq: MU_SEQ BENCHES: PASS
+MU_CTLM BENCHES: PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2782137-1792394166): exit 0

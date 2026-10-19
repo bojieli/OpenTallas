@@ -40,6 +40,7 @@ module tb_coll_tp8_static_links #(
     // gave serdes2_txv E 6 vs serdes2_tx E 5); LXj = the calendar's absorbed lane cycles (parent opt-in); TOKREG = face form
     parameter integer ET0 = 0, ET1 = 0, ET2 = 0, ER0 = 0, ER1 = 0, ER2 = 0, EV2 = 0,
     parameter integer TOKREG = 0, LX0 = 0, LX1 = 0, LX2 = 0,
+    parameter integer ISSUE_DEPTH = 8,            // MU-QWEN 10-18: stage-program rows of the bench issuer (<= 31)
     // Q-COLLCAL 10-18 (+define+OT_TP8S_REAL_LANES): the die lanes are the REAL forwarded half-cycle lanes + landings
     // (rtl/qwen_split/qfd_fwd_lane.sv: ot_qfd_lane_st hop 0 + half-cycle stations, ot_qfd_land ring D 4 read at rc - K)
     // with the frame counts N and K straps of the die GEN (case/coll_lane_latency.json): per SerDes port j the TX data /
@@ -127,7 +128,7 @@ module tb_coll_tp8_static_links #(
             assign imode[g] = scmd[16]; assign iwords[g*16 +: 16] = scmd[15:0];
             assign idone[g] = 1'b0;
 `else
-            ot_coll_cmd_issue #(.DEPTH(8), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
+            ot_coll_cmd_issue #(.DEPTH(ISSUE_DEPTH), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
                 .pw_data(pw_d), .start(stage_start), .cmd_free(cfree[g]), .cmd_v(icv[g]), .cmd_mode(imode[g]),
                 .cmd_words(iwords[g*16 +: 16]), .cmd_tag(itag[g*TAGW +: TAGW]), .active(iact[g]), .done(idone[g]),
                 .fault(ifl[g]));

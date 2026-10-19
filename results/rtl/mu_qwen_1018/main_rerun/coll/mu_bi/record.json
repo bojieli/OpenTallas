@@ -1,0 +1,1035 @@
+{
+  "schema": "opentallas.qwen.tp8.collective.static_links.v1",
+  "ranks": 8,
+  "latu": 53,
+  "lats": 378,
+  "kc": 4,
+  "kw": 2,
+  "phy_ucie": 20,
+  "phy_serdes": 339,
+  "xu": 0,
+  "xs": 0,
+  "phi": 0,
+  "die_name_master": true,
+  "production_parent": true,
+  "relays": [
+    5,
+    0,
+    0,
+    5
+  ],
+  "shared_ucie": true,
+  "six_five": true,
+  "FDI_phase_ticks": 0,
+  "unsafe_shared_calendar": false,
+  "mutant": null,
+  "sequencer_face": false,
+  "plusargs": [],
+  "real_lanes": {
+    "NT0": 3,
+    "KT0": 2,
+    "NTV0": 3,
+    "KTV0": 2,
+    "NR0": 3,
+    "KR0": 2,
+    "NRV0": 2,
+    "KRV0": 2,
+    "NT1": 0,
+    "KT1": 0,
+    "NTV1": 0,
+    "KTV1": 0,
+    "NR1": 0,
+    "KR1": 0,
+    "NRV1": 0,
+    "KRV1": 0,
+    "NT2": 8,
+    "KT2": 7,
+    "NTV2": 10,
+    "KTV2": 7,
+    "NR2": 8,
+    "KR2": 6,
+    "NRV2": 8,
+    "KRV2": 6
+  },
+  "real_lanes_source": "results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json",
+  "lane_meas": {
+    "mu_window": [
+      "TP8SL_LANE die0 port0 tx N 3/3 K 2/2 meas 3 | rx(die2 port2) N 8/8 K 6/6 meas 7",
+      "TP8SL_LANE die0 port1 tx N 0/0 K 0/0 meas 0 | rx(die4 port1) N 0/0 K 0/0 meas 0",
+      "TP8SL_LANE die0 port2 tx N 8/10 K 7/7 meas 8 | rx(die6 port0) N 3/2 K 2/2 meas 3"
+    ],
+    "mu_window_ref_user0": [
+      "TP8SL_LANE die0 port0 tx N 3/3 K 2/2 meas 3 | rx(die2 port2) N 8/8 K 6/6 meas 7",
+      "TP8SL_LANE die0 port1 tx N 0/0 K 0/0 meas 0 | rx(die4 port1) N 0/0 K 0/0 meas 0",
+      "TP8SL_LANE die0 port2 tx N 8/10 K 7/7 meas 8 | rx(die6 port0) N 3/2 K 2/2 meas 3"
+    ]
+  },
+  "compiled_calendar": {
+    "rule": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+    "KC": 4,
+    "KW": 2,
+    "PS": 339,
+    "PU": 20,
+    "RU": 5,
+    "RS": [
+      0,
+      0,
+      5
+    ],
+    "ports": {
+      "0": {
+        "LX": 11,
+        "R": 0,
+        "R_peer": 5,
+        "L_min": 378
+      },
+      "1": {
+        "LX": 0,
+        "R": 0,
+        "R_peer": 0,
+        "L_min": 362
+      },
+      "2": {
+        "LX": 10,
+        "R": 5,
+        "R_peer": 0,
+        "L_min": 377
+      }
+    },
+    "LS": 378,
+    "LU": 53,
+    "binding_port": 0,
+    "rtl_default_LS": 376,
+    "delta_vs_default": 2
+  },
+  "die_lanes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "valid_skew_port2": 0,
+  "tok_reg": 1,
+  "calendar_lane_cycles": [
+    11,
+    0,
+    10
+  ],
+  "duty50": true,
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "expect_fail": false,
+  "production": true,
+  "issuer_depth": 31,
+  "stage_start": 40,
+  "cmd_pin_stages": 1,
+  "modelled": "PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
+  "mechanism": "compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/backpressure; observed validity, CRC and publication are fault-only checks",
+  "cases": [
+    {
+      "name": "mu_window",
+      "kind": "pos",
+      "passed": true,
+      "messages": 30,
+      "words_per_message": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 99,
+          "first_slot": 100,
+          "first_out": 641,
+          "last_out": 896
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 1623,
+          "first_slot": 1624,
+          "first_out": 2165,
+          "last_out": 2420
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 3010,
+          "first_slot": 3011,
+          "first_out": 3552,
+          "last_out": 3807
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 3750,
+          "first_slot": 3751,
+          "first_out": 4292,
+          "last_out": 4547
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 5226,
+          "first_slot": 5227,
+          "first_out": 5768,
+          "last_out": 6023
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 6658,
+          "first_slot": 6659,
+          "first_out": 7200,
+          "last_out": 7455
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 9896,
+          "first_slot": 9897,
+          "first_out": 10438,
+          "last_out": 10693
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 12112,
+          "first_slot": 12113,
+          "first_out": 12654,
+          "last_out": 12909
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 12852,
+          "first_slot": 12853,
+          "first_out": 13394,
+          "last_out": 13649
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 14312,
+          "first_slot": 14313,
+          "first_out": 14854,
+          "last_out": 15109
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 15395,
+          "first_slot": 15396,
+          "first_out": 15937,
+          "last_out": 16192
+        },
+        {
+          "msg": 11,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 16782,
+          "first_slot": 16783,
+          "first_out": 17324,
+          "last_out": 17579
+        },
+        {
+          "msg": 12,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 17522,
+          "first_slot": 17523,
+          "first_out": 18064,
+          "last_out": 18319
+        },
+        {
+          "msg": 13,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 18998,
+          "first_slot": 18999,
+          "first_out": 19540,
+          "last_out": 19795
+        },
+        {
+          "msg": 14,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 20065,
+          "first_slot": 20066,
+          "first_out": 20607,
+          "last_out": 20862
+        },
+        {
+          "msg": 15,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 20805,
+          "first_slot": 20806,
+          "first_out": 21347,
+          "last_out": 21602
+        },
+        {
+          "msg": 16,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 22281,
+          "first_slot": 22282,
+          "first_out": 22823,
+          "last_out": 23078
+        },
+        {
+          "msg": 17,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 23668,
+          "first_slot": 23669,
+          "first_out": 24210,
+          "last_out": 24465
+        },
+        {
+          "msg": 18,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 24408,
+          "first_slot": 24409,
+          "first_out": 24950,
+          "last_out": 25205
+        },
+        {
+          "msg": 19,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 25884,
+          "first_slot": 25885,
+          "first_out": 26426,
+          "last_out": 26681
+        },
+        {
+          "msg": 20,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 26951,
+          "first_slot": 26952,
+          "first_out": 27493,
+          "last_out": 27748
+        },
+        {
+          "msg": 21,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 27691,
+          "first_slot": 27692,
+          "first_out": 28233,
+          "last_out": 28488
+        },
+        {
+          "msg": 22,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 29167,
+          "first_slot": 29168,
+          "first_out": 29709,
+          "last_out": 29964
+        },
+        {
+          "msg": 23,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 30554,
+          "first_slot": 30555,
+          "first_out": 31096,
+          "last_out": 31351
+        },
+        {
+          "msg": 24,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 31294,
+          "first_slot": 31295,
+          "first_out": 31836,
+          "last_out": 32091
+        },
+        {
+          "msg": 25,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 32770,
+          "first_slot": 32771,
+          "first_out": 33312,
+          "last_out": 33567
+        },
+        {
+          "msg": 26,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 33837,
+          "first_slot": 33838,
+          "first_out": 34379,
+          "last_out": 34634
+        },
+        {
+          "msg": 27,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 34577,
+          "first_slot": 34578,
+          "first_out": 35119,
+          "last_out": 35374
+        },
+        {
+          "msg": 28,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 36053,
+          "first_slot": 36054,
+          "first_out": 36595,
+          "last_out": 36850
+        },
+        {
+          "msg": 29,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 37440,
+          "first_slot": 37441,
+          "first_out": 37982,
+          "last_out": 38237
+        }
+      ],
+      "program_words": [
+        [
+          0,
+          "0000010000000006"
+        ],
+        [
+          1,
+          "0000000000000000"
+        ],
+        [
+          2,
+          "00000100000005fa"
+        ],
+        [
+          3,
+          "0000000000000001"
+        ],
+        [
+          4,
+          "0000010000000b65"
+        ],
+        [
+          5,
+          "0000000000000002"
+        ],
+        [
+          6,
+          "0000010000000e49"
+        ],
+        [
+          7,
+          "0000000000000003"
+        ],
+        [
+          8,
+          "000001000000140d"
+        ],
+        [
+          9,
+          "0000000000000004"
+        ],
+        [
+          10,
+          "00000100000019a5"
+        ],
+        [
+          11,
+          "0000000000000005"
+        ],
+        [
+          12,
+          "000001000000264b"
+        ],
+        [
+          13,
+          "0000000000000006"
+        ],
+        [
+          14,
+          "0000010000002ef3"
+        ],
+        [
+          15,
+          "0000000000000007"
+        ],
+        [
+          16,
+          "00000100000031d7"
+        ],
+        [
+          17,
+          "0000000000000008"
+        ],
+        [
+          18,
+          "000001000000378b"
+        ],
+        [
+          19,
+          "0000000000000009"
+        ],
+        [
+          20,
+          "0000010000003bc6"
+        ],
+        [
+          21,
+          "000000000000000a"
+        ],
+        [
+          22,
+          "0000010000004131"
+        ],
+        [
+          23,
+          "000000000000000b"
+        ],
+        [
+          24,
+          "0000010000004415"
+        ],
+        [
+          25,
+          "000000000000000c"
+        ],
+        [
+          26,
+          "00000100000049d9"
+        ],
+        [
+          27,
+          "000000000000000d"
+        ],
+        [
+          28,
+          "0000010000004e04"
+        ],
+        [
+          29,
+          "000000000000000e"
+        ],
+        [
+          30,
+          "00000100000050e8"
+        ],
+        [
+          31,
+          "000000000000000f"
+        ],
+        [
+          32,
+          "00000100000056ac"
+        ],
+        [
+          33,
+          "0000000000000010"
+        ],
+        [
+          34,
+          "0000010000005c17"
+        ],
+        [
+          35,
+          "0000000000000011"
+        ],
+        [
+          36,
+          "0000010000005efb"
+        ],
+        [
+          37,
+          "0000000000000012"
+        ],
+        [
+          38,
+          "00000100000064bf"
+        ],
+        [
+          39,
+          "0000000000000013"
+        ],
+        [
+          40,
+          "00000100000068ea"
+        ],
+        [
+          41,
+          "0000000000000014"
+        ],
+        [
+          42,
+          "0000010000006bce"
+        ],
+        [
+          43,
+          "0000000000000015"
+        ],
+        [
+          44,
+          "0000010000007192"
+        ],
+        [
+          45,
+          "0000000000000016"
+        ],
+        [
+          46,
+          "00000100000076fd"
+        ],
+        [
+          47,
+          "0000000000000017"
+        ],
+        [
+          48,
+          "00000100000079e1"
+        ],
+        [
+          49,
+          "0000000000000018"
+        ],
+        [
+          50,
+          "0000010000007fa5"
+        ],
+        [
+          51,
+          "0000000000000019"
+        ],
+        [
+          52,
+          "00000100000083d0"
+        ],
+        [
+          53,
+          "000000000000001a"
+        ],
+        [
+          54,
+          "00000100000086b4"
+        ],
+        [
+          55,
+          "000000000000001b"
+        ],
+        [
+          56,
+          "0000010000008c78"
+        ],
+        [
+          57,
+          "000000000000001c"
+        ],
+        [
+          58,
+          "00000100000091e3"
+        ],
+        [
+          59,
+          "000000000000001d"
+        ],
+        [
+          60,
+          "00020000000092e6"
+        ],
+        [
+          61,
+          "0000000000000000"
+        ],
+        [
+          62,
+          "434c001f000092e6"
+        ]
+      ],
+      "compiled_span_cycles": 38138,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "cmd_bad": "0",
+        "coll_fault": "00000000",
+        "issuer_fault": "00000000",
+        "die_fault": "00000000",
+        "words_out": "61440",
+        "meas_lu": "53",
+        "meas_ls": "378",
+        "pr_overlap": "0",
+        "issuer_done": "00000000"
+      }
+    },
+    {
+      "name": "mu_window_ref_user0",
+      "kind": "pos",
+      "passed": true,
+      "messages": 11,
+      "words_per_message": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 99,
+          "first_slot": 100,
+          "first_out": 641,
+          "last_out": 896
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 2315,
+          "first_slot": 2316,
+          "first_out": 2857,
+          "last_out": 3112
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 6985,
+          "first_slot": 6986,
+          "first_out": 7527,
+          "last_out": 7782
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 9201,
+          "first_slot": 9202,
+          "first_out": 9743,
+          "last_out": 9998
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 13871,
+          "first_slot": 13872,
+          "first_out": 14413,
+          "last_out": 14668
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 16087,
+          "first_slot": 16088,
+          "first_out": 16629,
+          "last_out": 16884
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 20757,
+          "first_slot": 20758,
+          "first_out": 21299,
+          "last_out": 21554
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 22973,
+          "first_slot": 22974,
+          "first_out": 23515,
+          "last_out": 23770
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 27643,
+          "first_slot": 27644,
+          "first_out": 28185,
+          "last_out": 28440
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 29859,
+          "first_slot": 29860,
+          "first_out": 30401,
+          "last_out": 30656
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 34529,
+          "first_slot": 34530,
+          "first_out": 35071,
+          "last_out": 35326
+        }
+      ],
+      "program_words": [
+        [
+          0,
+          "0000010000000006"
+        ],
+        [
+          1,
+          "0000000000000000"
+        ],
+        [
+          2,
+          "00000100000008ae"
+        ],
+        [
+          3,
+          "0000000000000001"
+        ],
+        [
+          4,
+          "0000010000001aec"
+        ],
+        [
+          5,
+          "0000000000000002"
+        ],
+        [
+          6,
+          "0000010000002394"
+        ],
+        [
+          7,
+          "0000000000000003"
+        ],
+        [
+          8,
+          "00000100000035d2"
+        ],
+        [
+          9,
+          "0000000000000004"
+        ],
+        [
+          10,
+          "0000010000003e7a"
+        ],
+        [
+          11,
+          "0000000000000005"
+        ],
+        [
+          12,
+          "00000100000050b8"
+        ],
+        [
+          13,
+          "0000000000000006"
+        ],
+        [
+          14,
+          "0000010000005960"
+        ],
+        [
+          15,
+          "0000000000000007"
+        ],
+        [
+          16,
+          "0000010000006b9e"
+        ],
+        [
+          17,
+          "0000000000000008"
+        ],
+        [
+          18,
+          "0000010000007446"
+        ],
+        [
+          19,
+          "0000000000000009"
+        ],
+        [
+          20,
+          "0000010000008684"
+        ],
+        [
+          21,
+          "000000000000000a"
+        ],
+        [
+          22,
+          "0002000000008787"
+        ],
+        [
+          23,
+          "0000000000000000"
+        ],
+        [
+          62,
+          "434c000c00008787"
+        ]
+      ],
+      "compiled_span_cycles": 35227,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "cmd_bad": "0",
+        "coll_fault": "00000000",
+        "issuer_fault": "00000000",
+        "die_fault": "00000000",
+        "words_out": "22528",
+        "meas_lu": "53",
+        "meas_ls": "378",
+        "pr_overlap": "0",
+        "issuer_done": "00000000"
+      }
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+    "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+    "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+    "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+    "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+    "rtl/physical/ot_qfd_coll_static_face.sv": "8fd24c68fade5e17681022fb1d59e9a39fd7dddd9dd47722c2fd1c680c97402a",
+    "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+    "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "3eefb7edf6efd3544811cd0236d654dccd0ad3410e7e8a320dd13e055edb1fc9",
+    "rtl/physical/ot_qfd_collective_static_io_production.sv": "323c3acb8c99a9362f0c1a6d2b6eb5f29f177fd7925620a9251ef53c5e23b511",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+    "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+    "rtl/rom/ot_coll_static_linkcal.sv": "504a41b54f540f7275e90b60411ec9e73661ce9522c449101df4a645a2ae2fff",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/qwen_split/qfd_fwd_lane.sv": "ec554f032302c4a85469f278ec47b76e04ffdd2d084e8b8f788bbb265c34d031",
+    "rtl/test/tb_coll_tp8_static_links.sv": "708d911b6375dd5749a8658eb8013fc3ea2837f64cf0b8d403dccba6fab6895c"
+  },
+  "helper_sha256": {
+    "tools/qwen_coll_tp8_static_links_bench.py": "2ec5da260824fba169ae0e094a0aaeecfe781a5d594d945af6b87e6f3b581723",
+    "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+    "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/qwen_split/lane_groups.py": "bcbce0311ac613f0c5653bbffd2fc3b9543a6a1b6e2103043c33aa8da45bf4cd"
+  },
+  "executable_sha256": "27f3a7ea153b3260c7bd6bdd0695b470cfd23e39c91d576659f83f0ed98a8d07",
+  "native_layer_qualified": false,
+  "physical_qualified": false
+}
