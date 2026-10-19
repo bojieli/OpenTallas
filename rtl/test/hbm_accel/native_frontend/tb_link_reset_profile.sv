@@ -7,6 +7,12 @@ module tb_link_reset_profile;
  for(genvar q=0;q<4;q=q+1)begin:g_clock
   always #0.512 if(en[q])clk[q]=~clk[q];
   always @(posedge clk[q] or negedge rst_n)if(!rst_n)edges[q]=0;else edges[q]=edges[q]+1;
+  always @(posedge rst_n)begin #1.0;if(dut.g_link[q].u_link.first_rst!==0||dut.g_link[q].u_link.ctrl_rst!==0)$fatal(1,"FAIL reset released without clock");end
+  always @(posedge clk[q] or negedge rst_n)begin #0.02;
+   if(!rst_n&&dut.g_link[q].u_link.ctrl_rst!==0)$fatal(1,"FAIL reset ctrl async");
+   if(rst_n&&edges[q]==1&&dut.g_link[q].u_link.ctrl_rst!==0)$fatal(1,"FAIL reset ctrl early");
+   if(rst_n&&edges[q]>=2&&dut.g_link[q].u_link.ctrl_rst!==1)$fatal(1,"FAIL reset ctrl late");
+  end
   for(genvar k=0;k<48;k=k+1)begin:g_prove
    always @(posedge clk[q] or negedge rst_n)begin
     #0.02;
