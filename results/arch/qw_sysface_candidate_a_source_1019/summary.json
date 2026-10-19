@@ -1,0 +1,88 @@
+{
+  "scope": "PRIVATE_SOURCE_PROOF_ONLY",
+  "source_frozen_revision": "ff05d759bd0370d41fa671b755233e91670f7fe0",
+  "source_frozen_file_sha256": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+  "model_packet": "a56ac2caf",
+  "ports": {
+    "clock": 1,
+    "async_reset": 1,
+    "other_input_bits": 677,
+    "retained_state_bits": 145,
+    "output_bits_including_derived_epoch": 161,
+    "record_bits": 548
+  },
+  "new_state_bits": 0,
+  "new_clock_loads": 0,
+  "new_reset_loads": 0,
+  "new_schedule_edges": 0,
+  "production_bound": false,
+  "native_qualified": false,
+  "publication_ownership_changed": false,
+  "formal": {
+    "kind": "combinational exact next-state miter",
+    "arbitrary_inputs": 677,
+    "arbitrary_present_state": 145,
+    "binary_reset_unconstrained": true,
+    "all_output_bits": 161,
+    "assumptions": [],
+    "variables": 13739,
+    "clauses": 35660,
+    "result": "PASS"
+  },
+  "four_state": {
+    "simulator": "Icarus Verilog11",
+    "initial_suite_cases": 43365,
+    "directed_suite_cases": 66092,
+    "control_combinations": 65536,
+    "active_head_cases": 232,
+    "active_image_cases": 324,
+    "all_four_state_combinations_exhausted": false,
+    "result": "PASS"
+  },
+  "holds": [
+    "native TT/FF/depth/fanout",
+    "29,314 unbound PG terminals",
+    "96nm local contact pitch /10.417 per um",
+    "production producer/calendar/firstuse binding77fc",
+    "subsequent actual publication ownership"
+  ],
+  "causal_controls": {
+    "reset_fault": {
+      "exit": 1,
+      "witness_case": 43353,
+      "log": "logs_controls/reset_fault.log"
+    },
+    "sticky_accept": {
+      "exit": 1,
+      "witness_case": 2710,
+      "log": "logs_controls/sticky_accept.log"
+    },
+    "image_active": {
+      "exit": 1,
+      "witness_case": 3361,
+      "log": "logs_controls/image_active.log"
+    },
+    "early_valid": {
+      "exit": 1,
+      "witness_case": 0,
+      "log": "logs_controls/early_valid.log"
+    },
+    "head_cause": {
+      "exit": 1,
+      "witness_case": 3394,
+      "log": "logs_controls/head_cause.log"
+    },
+    "begin_active": {
+      "exit": 1,
+      "witness_case": 3405,
+      "log": "logs_controls/begin_active.log"
+    },
+    "reserved": {
+      "exit": 1,
+      "witness_case": 1078,
+      "log": "logs/mutant.log"
+    }
+  },
+  "candidate_sha256": "00790c6c8a0994f75e95450660c05a2ad78d5742cd694f44ee3bb78e25a14e72",
+  "formal_boundary": "Binary exact next-state cones; independent actual sequential DUT async reset/unknown reset four-state checks. No async2sync."
+}

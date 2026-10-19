@@ -1,0 +1,89 @@
+ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
+
+  ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] -- <command...>
+  ot-run --selftest [HOST]   proves on HOST (default: every host) that a command runs and returns ITS exit status, and
+                             that a request that cannot be admitted fails non-zero with NOT RUN (never a silent 0)
+  ot-run --status          one line: per host, the largest request it admits now, MemAvailable, load1/cores, waiters;
+                           and the host the next 16-thread job would get
+
+Asks every host for `ot-heavy-reconcile --free` (free_gb = the largest request `ot-heavy` admits there now, by the same
+arithmetic; queued waiters are reported separately), drops hosts with less than --disk GB (default 20) free under --dir (or
+where --dir does not exist), and among the hosts that can admit --mem takes the one with the lowest
+(load1 + threads of the units started in the last 90 s + this job's threads) / cores  (v4, owner 2026-10-13 17:55: the
+128-core hosts fill evenly before either passes 1.0 x cores).  A host with fewer than 48 cores never gets a job of more
+than 8 threads (--threads, default 16) while a larger host that can admit it still has cores.  Then it runs
+ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
+It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
+--pick prints an eligible host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+NO LOAD HOLD (v6, owner 2026-10-18 ~01:05 "NEVER hold jobs on CPU load; keep the fleet busy"; memory is the only
+admission limit): CPU load only ORDERS the hosts that admit a request now (least loaded first); it never holds, delays or
+excludes a job.  The v5 client-side hold (load1 > 1.5 x cores) is gone; OT_RUN_NO_LOAD_HOLD is accepted and ignored.
+Probes report load as cpu_load1 (load1 from older probes is read too).
+REBALANCE (v6): when no host admits the request now and more than one host qualifies (by --dir / --disk / --hosts),
+the job waits on the host with the most planned free memory (or on the chosen host, when it lost an admission race)
+for at most REQUEUE_S (300 s), then is cancelled there
+(never started) and placed again on whichever qualifying host admits it, so a queue on one host drains into memory
+freed on another.  Data locality is kept: only hosts that have --dir qualify; --hosts pins.  --max-wait bounds the whole.
+Immediate eligibility uses admit_gb (the actual atomic ot-heavy admission capacity), not free_gb after subtracting
+unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue.
+Queue candidates must have enough total physical RAM after mandatory headroom for the request.
+--priority die: a die-level job (die STA / GEN / GRT / die chain; owner 2026-10-15 23:50, 2026-10-18). On the host it
+                 waits with OT_HEAVY_PRIO=die and is admitted AHEAD of tile gates and benches: a non-die request yields
+                 only while a waiting die job fits the host NOW (it starts within seconds); a die job that does not fit
+                 never holds memory idle (DIE-FIRST v2, ot-heavy-reconcile).  ot-run also sets it for commands matching
+                 DIE_RE (see die_like()).
+--max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
+
+Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
+status ONLY when the remote side reported both the start (ot-heavy "admitted ... OT_RUN_START") and the exit of the
+command.  Anything else -- ssh dropped, waiter killed, cd failed, no memory within --max-wait -- is a non-zero status and
+a last stderr line "ot-run: NOT RUN ..." / "ot-run: NOT COMPLETED ...".  The last stderr line of a real run is
+"ot-run: RAN on <host>: exit <n>".  Read that line when the call sits in a pipe (`| tail` hides the status).
+A killed ot-run (timeout, Ctrl-C) cancels its waiter on the host, so the command cannot start later with nobody
+listening; a command that already started is left running and the message says so.
+SPILL (v8, FLEET-NEW2 2026-10-19: at 02:25 ot-epyc4 had 14 waiters / 364 GB and ot-epyc5 4 / 652 GB while ot-epyc6/7
+admitted >1.1 TB each: every waiter named a --dir that existed on ONE host, so REBALANCE (len(qualifying) > 1) never
+applied): when no host that has --dir admits the request now, ot-run copies the lane root (the --dir's
+/srv/opentallas-scratch*/claude/<lane> directory, else --dir itself; <= OT_RUN_SPILL_MAX_GB, default 40, no absolute
+symlink or /srv path in the command outside it) from the queue host to a big EPYC that admits the request NOW (same choose():
+die jobs avoid throughput/Zen-3 hosts; tile work goes to throughput hosts first; a lane root holding -march=native builds
+spills only to AVX-512 hosts), runs it there, and copies every file the run wrote back to the source host
+(tar --keep-newer-files both ways, so newer files on either side are never clobbered).  The copy carries a marker
+(.ot-run-spill-copy): normal placement ignores marked copies, so later jobs of the lane never run on stale data
+without a fresh sync.  --hosts (explicit pin), --no-spill or OT_RUN_NO_SPILL=1 disable it.
+SPILL v10 (OTRUN-SPILL 2026-10-19, MU-SLICE-GATE bug: "SPILL copy FAILED" yet the job ran on the spill host and its result
+was never copied back): (1) GNU tar 1.35 with --keep-newer-files fails every directory that already exists, so every spill
+of a lane to a host holding an earlier copy "failed" -- that error is now forgiven for paths that are directories, all
+others still fail; (2) the marker is written BEFORE extraction, so a failed/partial copy is never a normal data host
+(v8 left it unmarked and the next re-place ran the job there with no copy-back); an unmarked lane root on the spill host
+is refused (real data); (3) per-lane flock around extraction, copy retried 3x, back-copy retried 4x and the dst stamp is
+removed only after a successful back-copy; (4) a pending record (~/.local/state/ot-run/spill_pending/<tag>.json) outlives
+a killed client: `ot-run --spill-sweep [--dry-run]` (started detached by job clients at most every 10 min) copies the
+outputs back once the client is gone and the unit has ended; failures go to spill_stuck.log.
+OT_SCRATCH (v8): the job's environment carries OT_SCRATCH = the host's /srv/opentallas-scratch* volume with the most
+free space; put NEW lane / job / die-chain directories under $OT_SCRATCH/claude/<lane>.
+RE-PLACE (v9, FLEET-NEW2 2026-10-19): a client whose hosts are not pinned (--hosts) re-places its unstarted waiter every
+REQUEUE_S (120 s, OT_RUN_REQUEUE_S) and re-reads HOSTS / HOST_ROLE / HOST_MAX_DIE / NO_AVX512 and held_hosts from this
+file each time, so waiters move to hosts that admit now -- including hosts added after the client started (replaces
+lanes/fleet-new2/move_waiter.sh for clients started with v9 or later).
+DIE CAP (v9): HOST_MAX_DIE[h] bounds the die-level jobs (running + queued) on h; ot-epyc8 (small disk) takes tile work
+plus at most ONE die chain.  A die job skips a full capped host; when every qualifying host is full it waits and
+re-places (never fails, except --max-wait).
+v10 PLACEMENT (FLEET-PLACE 2026-10-19, owner: epyc6/8 at ~35/128 while epyc5/7 were CPU-busy with idle RAM; the S81 MU
+die case waited ~90 min on the epyc8 DIE CAP):
+  COMPLEMENTARY: among hosts that admit a request NOW, score() weighs CPU headroom (1 - projected load / cores) against
+  memory headroom ((admits - request) / RAM) by the job's GB per thread -- memory-heavy few-thread builds/GRT/STA go to
+  idle RAM even on a CPU-busy host, CPU-heavy jobs to idle cores.  Nothing is held.
+  DISK ADMISSION replaces the die count cap: a die job needs --disk (default DIE_DISK_GB 60) free scratch under --dir after
+  DIE_DISK_GB per die job already running there (hosts with < 2 TB free); HOST_MAX_DIE is empty.  When every host with
+  --dir lacks the scratch, the die job SPILLS (die lanes up to OT_RUN_SPILL_MAX_DIE_GB 400; tile lanes 40).
+  INCREMENTAL SPILL: only directories/files the spill host lacks or holds older travel (manifests of both sides).
+  Host side (ot-heavy-reconcile v10): growth charged capped at GROWTH_CAP_FRAC (0.10) x RAM.
+SIGNAL SENDER (v7, FLEET-143 2026-10-18: two agent `pkill -f 'ot-run --mem 24'`-style kills at 23:58 and 00:22 PDT
+cancelled ~30 gates of OTHER lanes, which reported "ot-run exit 143"): every SIGTERM/SIGINT/SIGHUP is taken with
+sigtimedwait, so the message names the SENDER (pid + command line), and one line goes to ~/.local/state/ot-run/signals.log.
+  ot-run --cancel SUBSTR [--all-dirs]   SIGTERMs the local ot-run clients whose arguments contain SUBSTR -- the ONLY way an
+                         agent stops its own ot-run jobs besides `kill <exact pid>`.  It refuses (lists, kills nothing,
+                         exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
+                         take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
+

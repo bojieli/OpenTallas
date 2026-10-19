@@ -1,0 +1,6 @@
+read_verilog -formal proof.sv
+hierarchy -top proof
+proc
+flatten
+opt_clean
+sat -verify -prove ok 1 -show-inputs -show-outputs

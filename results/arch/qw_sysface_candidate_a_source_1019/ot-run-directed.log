@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-epyc6       admits  1252 GB (avail 933, growth 55, headroom 0, waiters 0/0 GB) load 30/128 running 17 disk 5714 GB 
+ot-run: ot-epyc7       admits   994 GB (avail 753, growth 58, headroom 0, waiters 0/0 GB) load 22/96 running 20 disk 6272 GB 
+ot-run: ot-epyc8       admits  1190 GB (avail 921, growth 88, headroom 0, waiters 0/0 GB) load 21/128 running 16 disk 90 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-133942-1792447045 after 0 s
+DIRECTED_ALL_OUTPUT_4STATE_PASS cases=66092 controls=65536 active_head=232 active_image=324
+tb_directed.sv:67: $finish called at 132184000 (1ps)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-133942-1792447045): exit 0

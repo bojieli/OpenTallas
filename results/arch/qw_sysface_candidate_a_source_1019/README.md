@@ -1,0 +1,35 @@
+# SYSFACE Candidate A private source proof
+
+**Source proof PASS, private component only.** `candidate_a.sv` contains a separately named `qfd_host_native_context_rx_candidate_a`; no production source, default parameter, binding, helper, calendar or macro changed. The original full 548-bit receiver has 677 non-clock/reset input bits, 145 retained state bits, and 161 output bits including the derived 16-bit host epoch. Candidate A adds zero state, clock/reset loads or schedule edges. It does not duplicate the publication OR; that requires a subsequent exact native ownership step.
+
+## Exact source and implementation
+
+The original full source is `input/qkd_context_records.sv`, SHA256 `94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f`, independently matched against frozen revision `ff05d759bd0370d41fa671b755233e91670f7fe0`. `original.sv` is the literal receiver module extracted from that file. Model a56ac2caf and terminal a0ab17388 describe this frozen diagnostic source. The locally observed origin/main ref `efae17de2128f3813aff8cf76226e8be8d60ea97` has context-source SHA256 `c5592a70fd70235272ef5d1c1f07cf9396722b43ec8cde80f64fd58c8e1d5282`; it is a separate identity, not the proved source and not a claim about the latest remote main.
+
+Candidate A builds sixteen raw inverted predicates from the original nine structure, four image, and three receive/activity/BEGIN conditions. Explicit pairwise OR levels form a balanced tree. The final receive predicate applies `!== 1'b0` to that tree, matching the original receive guard's case-inequality checks; intermediate unknowns are retained. No input is coerced, masked or declared irrelevant. In four-state logic, an invalid predicate or unknown makes the original conjunction `!== 1'b1` true; the OR of inverted raw predicates `!== 1'b0` has the same result.
+
+The receive acceptance decision remains **`if (bad_receive || fault)`**, including the original prior fault operand. This matters when prior fault is X or Z: Verilog procedural `if` takes its else path for an unknown condition. The proof does not reinterpret that behavior as a refusal. Only the sticky fault assignment removes the redundant receive-only prior-fault term, since the six-cause tree already contains prior fault. Six causes are prior fault, BEGIN while active, actual rx/slot case mismatch, a bad receive in a receive slot, retained-image change while active, and a bad head context in stages1..36. Non-fault assignments retain their original source order, including late image invalidation after a receive acceptance. No mixed-age pipeline or reset abstraction was added.
+
+## Arbitrary two-state transition proof
+
+`make_bench.py` reproducibly generates `proof.sv` from the two actual module texts. It splits each retained register into an arbitrary present-state wire and next-state register, defaults next state to present state, and changes only nonblocking-assignment left sides to next-state names. All right sides still read present state, so original nonblocking priority and retention are represented literally. The derived epoch uses the resulting next host tag. `proof.ys` uses formal read/proc/flatten and SAT only, with no mapping, ABC, Liberty, implementation synthesis or timing run.
+
+The SAT miter leaves all **677 inputs, all 145 matched present-state bits, and binary rst_n unconstrained**. All 161 post-transition output bits compare equal: **PASS**, 13,739 variables /35,660 clauses. No initial-state, reachability, valid-input or reset-release assumptions narrow this proof. It proves binary next-state/reset-value equivalence, not an analog reset event or all four-state histories. Actual asynchronous assertion and unknown-reset event behavior are independently checked on the sequential DUTs below; no async2sync conversion occurs.
+
+## Actual four-state sequential DUT checks
+
+Icarus Verilog11 executes the original and candidate sequential modules. The bench deposits identical arbitrary retained state into both full DUTs and compares **every output with case equality**, after each tested clock or asynchronous reset event. It preserves unknown output values; it does not ignore invalid cycles or retained fields.
+
+- Initial suite: **43,365 PASS** comparisons, including every one of 677 input bits and 145 state bits at 0/1/X/Z, all64 head stages,20,000 arbitrary binary state/input trials,20,000 structured X/Z perturbation trials, asynchronous reset before a clock, early valid immediately after release, and 0/1/X/Z reset events.
+- Directed frontier suite: **66,092 PASS** comparisons. All **65,536** combinations of receive_slot/rx_v/BEGIN/ready/cap/head-valid/native-active plus prior fault at0/1/X/Z are exercised. A further232 cases activate the real head consumer across all64 stages and every head tuple bit, and324 mutate each installed-image tuple bit while native execution is active and receive is disabled.
+- Total: **109,457 actual all-output four-state comparisons**. This finite coverage is not an exhaustive enumeration of all822 state/input bits in four-state logic. Binary arbitrary-input/state coverage is supplied by SAT, separately scoped above.
+
+Causal controls alter the actual candidate DUT, never the checker or wrapper. Reserved-field omission changes actual acceptance/valid/fault outputs at case1078; its raw failure is `logs/mutant.log`. Additional sticky-acceptance, head, BEGIN-active, retained-image-active, reset-fault and early-valid mutants have separate committed actual mismatch logs and nonzero DUT exits under `logs_controls/`. A control counts only if its raw log contains `DUT_MISMATCH`; shell status alone is insufficient.
+
+## Resources and preserved execution
+
+All simulation, compilation and formal work ran via unpinned ot-run automatic placement,1 CPU/1GB memory/1GB disk, on ot-epyc7 under `/srv/opentallas-scratch/claude/sysface-candidate-a-source-1019`. Source and harness inventory was33KB before directed extensions. Initial build0.01s/7792KiB peak RSS; initial simulation27.51s/7940KiB; formal0.19s/39932KiB; directed simulation2.99s/7808KiB. Raw version, input hashes, time receipts and ot-run admission/completion logs are included. Original launch with `--remote auto` was rejected by this installed client's CLI before any job started; the refusal is preserved, and its documented default automatic placement was used without a host pin. No failed DUT proof was repaired or overwritten.
+
+## Remaining closure
+
+This packet grants no timing, depth, area reduction, fanout, PG, route or native qualification. Actual mapping can reshape the balanced tree and must be audited. The old terminal failure remains TT setup−57.924ps and833.5ps/28levels, one39-load publication root,29,314 unbound native PG terminals, and local96nm contact spacing/10.417 per um. Production producer/calendar/first-use binding referenced by77fc3afbc remains unqualified. No source activation or implementation gate is authorized by this packet. Publication duplication, exact reset/clock/fanout ownership and any later physical redesign remain separate steps.

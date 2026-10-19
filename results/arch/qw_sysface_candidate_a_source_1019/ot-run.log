@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-epyc6       admits  1245 GB (avail 928, growth 55, headroom 0, waiters 0/0 GB) load 35/128 running 17 disk 5714 GB 
+ot-run: ot-epyc7       admits   993 GB (avail 753, growth 58, headroom 0, waiters 0/0 GB) load 25/96 running 20 disk 6272 GB 
+ot-run: ot-epyc8       admits  1058 GB (avail 853, growth 113, headroom 0, waiters 0/0 GB) load 21/128 running 15 disk 92 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-candidate-a-source-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-133710-1792446964 after 0 s
+ALL_OUTPUT_4STATE_PASS cases=43365 outputs=161 retained_state=145 inputs=677
+tb.sv:57: $finish called at 86738000 (1ps)
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 8fd7ec883e, time: 0.18s, user: 0.18s, system: 0.01s, MEM: 37.47 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 85% 1x sat (0 sec), 5% 2x read_verilog (0 sec), ...
+DUT_MISMATCH case=1078 inputs=1833f12340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003579bde02468acf122469048d00000a800e031234abcdef01234567890200150000e state=0891a000015001c022469579bde02468acf12 old=0091a000015001c022469579bde02468acf131234 new=1891a000015001c022469579bde02468acf121234
+FATAL: tb.sv:41: 
+       Time: 2158000  Scope: tb.check
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-133710-1792446964): exit 0
