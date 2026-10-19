@@ -99,6 +99,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_banked_class #(
  assign program_active=NATIVE_CACHE_SAFE!=0?active_tail[1]:calendar_active;
  assign program_done=NATIVE_CACHE_SAFE!=0?done_tail[1]:calendar_done;
  wire[134:0]programme;wire cache_busy;
+ wire inj_f=programme_leaf.inj_f; // Debug only; application fault already includes this sticky state.
  wire cfg0_we,cfg1_we;wire[9:0]bank_cfg_addr;wire[255:0]bank_cfg_data;
  wire[108:0]request0,request1,token0,token1;wire[134:0]row0,row1;wire[8:0]ok0,ok1;
  wire[84:0]app_command_envelope;

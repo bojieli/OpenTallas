@@ -35,13 +35,25 @@ module tb_hbm_svg_rel_sm;
   .configured(cp_cfgd),.fault(cp_fault),.active(cp_active));
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
+ `ifdef SMB_BANKED_CLASS
+ wire[84:0]command_envelope;reg[15:0]run_cohort=0;
+ always @(posedge stream or negedge srst)if(!srst)run_cohort<=0;else if(run_v)run_cohort<=run_cohort+1'b1;
+ `endif
  `ifdef SMB_SRAMFIFO
- ot_hbm_svc_sm_group_rel_sram_id #(.NATIVE_CACHE_SAFE(`ifdef SMB_NATIVE_CACHE_SAFE 1 `else 0 `endif),.ATTENTION(`ifdef SMB_ATTENTION 1 `else 0 `endif),.NATIVE_RETURN(`ifdef SMB_NATIVE_RETURN 1 `else 0 `endif),.RETURN_MUT(`ifdef SMB_RETURN_MUT `SMB_RETURN_MUT `else 0 `endif),.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
+ `ifdef SMB_BANKED_CLASS
+ ot_hbm_svc_sm_group_rel_banked_class #(.CLASS_ENABLE(1),.ID_COHORT(1),
+ `else
+ ot_hbm_svc_sm_group_rel_sram_id #(
+ `endif
+.NATIVE_CACHE_SAFE(`ifdef SMB_NATIVE_CACHE_SAFE 1 `else 0 `endif),.ATTENTION(`ifdef SMB_ATTENTION 1 `else 0 `endif),.NATIVE_RETURN(`ifdef SMB_NATIVE_RETURN 1 `else 0 `endif),.RETURN_MUT(`ifdef SMB_RETURN_MUT `SMB_RETURN_MUT `else 0 `endif),.NATIVE_LANDING(`ifdef SMB_NATIVE_LANDING 1 `else 0 `endif),.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
  `else
  ot_hbm_svc_sm_group_rel_id #(
  `endif
 .LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
   `ifdef SMB_SRAMFIFO
+  `ifdef SMB_BANKED_CLASS
+  .program_core_clk(stream),.program_bank_clk({2{stream}}),.ids_cohort(run_cohort),.sm_command_envelope(command_envelope),
+  `endif
   .return_pair_clk({4{stream}}),.return_local_clk({4{stream}}),.return_pair_hbm_clk({4{hbm}}),
   `endif
   .id_stack(2'd0),.id_sm(3'd0),

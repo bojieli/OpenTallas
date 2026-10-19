@@ -217,11 +217,12 @@ def waves(R, Gn):
 
 
 # ------------------------------------------------------------------------------------------------ compile
-def compile_all(fix_root: Path, smw_root: Path, layers, mut="", native_padding=0, command_extra=0):
+def compile_all(fix_root: Path, smw_root: Path, layers, mut="", native_padding=0, command_extra=0, calendar_extra=0, read_admission=None):
     sys.path.insert(0, str(ROOT / "tools"))
     from hbm_svc_packed136_image import sector_address  # noqa: E402
-    command_latency = LAT_GO + command_extra
-    busy_gap = BUSY + command_extra
+    command_latency = LAT_GO + command_extra + calendar_extra
+    read_latency = LAT_GO if read_admission is None else read_admission
+    busy_gap = BUSY + command_extra + calendar_extra
     store = Store(ATT_RESERVED)                        # rows [0, 1019) reserved for the HBM-ATTGAP attention programmes
     descs, mem, xw_ev, ids_ev, ing = [], {}, [], [], []
     kinds, report = [], []
@@ -339,7 +340,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut="", native_padding=0
                 if prev_go is not None:
                     lo = max(lo, prev_go + prev_len + busy_gap, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD + native_padding)
                 if bi == 0:
-                    lo = max(lo, x_end + X_GAP - rc0 - LAT_GO - P, cur_abs + OP_GAP - rc0 - LAT_GO - P)
+                    lo = max(lo, x_end + X_GAP - rc0 - read_latency - P, cur_abs + OP_GAP - rc0 - read_latency - P)
                 # C2: the reserve pipeline is in order; from the first routed descriptor on, every block is fetched only
                 # after the router broadcast: resident >= ids + EXP_FIRST + n x FETCH (HBM boundary, measured)
                 if kd["exp"] and (r["slot"] is not None or n_after):
@@ -389,7 +390,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut="", native_padding=0
     assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = last_cmd_abs + DRAIN
-    budget = dict(go_to_command_stream_edges=command_latency, read_admission_calibration_stream_edges=LAT_GO, final_completion_tail_stream_edges=command_extra, native_boundary_prefetch_padding_stream_edges=native_padding, descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
+    budget = dict(go_to_command_stream_edges=command_latency, read_admission_calibration_stream_edges=read_latency, final_completion_tail_stream_edges=command_extra + calendar_extra, native_boundary_prefetch_padding_stream_edges=native_padding, descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
                   attention_reserved=ATT_RESERVED, store_top=store.top, store_words=PSTORE,
                   distinct_programmes=len(store.progs),
                   per_kind=[dict(name=k["name"], layer=k["layer"], descriptors=k["d1"] - k["d0"], nonexpert_blocks=k["nonexp_blocks"],
@@ -463,6 +464,17 @@ def build(work: Path, bundle: Path, defines):
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_sram_id.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_sram_id.sv",
             "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1.v")]
+    if "SMB_BANKED_CLASS" in defines:
+        own += [ROOT / p for p in (
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel_class.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_banked_class.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_banked_class.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_command_class_guard.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv")]
     names = {Path(p).name for p in sm}
     files = sm + [p for p in svc + own if p.name not in names] + [ROOT / TB]
     vl = os.environ.get("VERILATOR") or os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
@@ -542,7 +554,9 @@ def cmd_run(a):
     c = compile_all(Path(a.fix), Path(a.smw), parse_layers(a.layers), a.mut,
                     # Conservative independent path sum: HBM ingress/bridge4 + reserve2 + completion2 + read3.
                     native_padding=(11 if "SMB_NATIVE_LANDING" in defines else 0) + (7 if "SMB_NATIVE_RETURN" in defines else 0) + (4 if "SMB_NATIVE_CACHE_SAFE" in defines else 0),
-                    command_extra=2 if "SMB_NATIVE_CACHE_SAFE" in defines else 0)
+                    command_extra=2 if "SMB_NATIVE_CACHE_SAFE" in defines else 0,
+                    calendar_extra=2 if "SMB_BANKED_CLASS" in defines else 0,
+                    read_admission=8 if "SMB_BANKED_CLASS" in defines else None)
     d = a.out_dir
     n = write_events(c, d)
     t0 = time.time()
