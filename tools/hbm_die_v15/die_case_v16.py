@@ -301,7 +301,9 @@ def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ck
     for d, ends in nets.items():
         # HBM-RSTROW (coordinator 0jp): a relay-row reset hop (hbfd_rly_*_rr.rso -> next station rs) is a forest edge
         # too: same reach / buried checks as a hbfd_rrl driver.
-        row = d[0] in pl and d[1] == 'rso' and master_of(d[0]).endswith('_rr')
+        # LH-RSTHOP: a forest reach hop hosted in a lane relay station (hbfd_rly_*_rf/_rrf.rfo) is a forest driver too.
+        row = d[0] in pl and ((d[1] == 'rso' and master_of(d[0]).endswith(('_rr', '_rrf')))
+                              or (d[1] == 'rfo' and master_of(d[0]).endswith(('_rf', '_rrf'))))
         if d[0] not in pl or not (master_of(d[0]).startswith('hbfd_rrl') or row):
             continue
         n_row += row * (len(ends) - 1)

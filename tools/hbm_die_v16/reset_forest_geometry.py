@@ -79,6 +79,56 @@ class Geometry:
         self.rgrid.blk[:] = self.grid.blk
         for rect in overflown:   # homes only (empty unless --overfly-masters)
             self.block_rect(*rect)
+        # LH-RSTHOP 10-19 (opt-in, set_hosts): reach hops co-located in placed lane relay stations (hbfd_rly_*_rf/_rrf).
+        self.hosts, self.host_bins, self.host_mode, self.host_dom, self.host_used = [], {}, None, None, set()
+        self.HBIN = 100.0
+
+    def set_hosts(self, hosts, mode):
+        """LH-RSTHOP: hosts = [dict(inst, dom, rfi=(x, y), rfo=(x, y), home=(x, y), w, h)] -- placed lane relay stations
+        that may carry ONE forest reach hop each (rfi -> rfo, one registered stage, the station's own regional clock).
+        mode 'prefer': a chain stage is hosted when a station lies on the routed path within the hop budget, else a free
+        home; 'fallback': free homes first, a host only where no legal free home exists.  Hosted edges keep the
+        conservative hop budget (reach - 2 relay radii - 2 GRID) on the assumed i/o-face-middle pins, so the real kit pins
+        (anywhere on a <= 64.8 um station) stay inside the 405 um reach."""
+        self.hosts, self.host_mode = hosts, mode
+        for k, h in enumerate(hosts):
+            for xy in (h['rfi'], h['rfo']):
+                self.host_bins.setdefault((int(xy[0] // self.HBIN), int(xy[1] // self.HBIN)), set()).add(k)
+
+    def _hosts_near(self, xy, r):
+        out = set()
+        for i in range(int((xy[0] - r) // self.HBIN), int((xy[0] + r) // self.HBIN) + 1):
+            for j in range(int((xy[1] - r) // self.HBIN), int((xy[1] + r) // self.HBIN) + 1):
+                out |= self.host_bins.get((i, j), set())
+        return sorted(out)
+
+    def host_hop(self, point, end, points, run, lim, near=60.0):
+        """LH-RSTHOP: reserve an unused same-domain host station near the routed path (farthest path point first) whose
+        rfi is within lim of point and whose rfo strictly progresses toward end; None if there is none."""
+        if not self.hosts or self.host_dom is None:
+            return None
+        here = md(point, end)
+        idx = [i for i in range(1, len(points) - 1) if run[i] <= lim]
+        for i in reversed(idx):
+            best = None
+            for k in self._hosts_near(points[i], near):
+                h = self.hosts[k]
+                if h['dom'] != self.host_dom or h['inst'] in self.host_used:
+                    continue
+                if md(point, h['rfi']) > lim or md(h['rfo'], end) >= here - GRID:
+                    continue
+                d = md(points[i], h['rfi'])
+                if d <= near and (best is None or d < best[0]):
+                    best = (d, h)
+            if best:
+                h = best[1]
+                tile = dict(kind='host', inst=h['inst'], home=h['home'], w=h['w'], h=h['h'],
+                            pins={'rst_n_in': h['rfi'], 'rfi': h['rfi'], 'rst_n': h['rfo'], 'rfo': h['rfo']})
+                self._before_last = bytes(self.grid.blk)
+                self.reserved[len(self.reserved)] = tile
+                self.host_used.add(h['inst'])
+                return tile
+        return None
 
     def block_rect(self, x0, y0, x1, y1):
         # Mark centers whose complete largest-relay rectangle intersects the
@@ -187,6 +237,8 @@ class Geometry:
         assert self.reserved[k] is tile
         self.grid.blk[:] = self._before_last
         del self.reserved[k]
+        if tile.get('kind') == 'host':
+            self.host_used.discard(tile['inst'])
 
     def snapshot(self):
         """Undo point for a speculative plan (alternative regional-root homes)."""
@@ -195,6 +247,7 @@ class Geometry:
     def restore(self, snap):
         self.grid.blk[:] = snap[0]
         self.reserved = dict(snap[1])
+        self.host_used = {t['inst'] for t in self.reserved.values() if t.get('kind') == 'host'}
 
     def root_sites(self, point, rings=(0., 200., 405., 810., 1215., 1620., 2430., 3240.), per_ring=8):
         """Alternative regional-root target points: the sink centroid first, then rings around it.
@@ -217,10 +270,14 @@ class Geometry:
         return self.relay['hop' if kind.startswith('pad') else kind]
 
     def centre(self, tile):
+        if tile['kind'] == 'host':
+            return tile['home'][0] + tile['w'] / 2, tile['home'][1] + tile['h'] / 2
         w, h, _ = self.relay_lef(tile['kind'])
         return tile['home'][0] + w / 2, tile['home'][1] + h / 2
 
     def tile_pin(self, tile, p):
+        if tile['kind'] == 'host':
+            return tile['pins'][p]
         x, y = self.relay_lef(tile['kind'])[2][p]
         return tile['home'][0] + x, tile['home'][1] + y
 
@@ -257,7 +314,7 @@ class Geometry:
             return tile
         raise GeometryError(f'no legal {kind} home near {point} satisfying reset reach')
 
-    def chain(self, source, target):
+    def chain(self, source, target, src_host=False):
         """Return reserved hop tiles excluding the already reserved target.
 
         Grid routing permits overflight with a STRICT bounded blocked run;
@@ -265,11 +322,13 @@ class Geometry:
         staging is conservative and refuses a path if it cannot place a stage.
         """
         end = self.tile_pin(target, 'rst_n_in')
-        if md(source, end) <= self.reach:
+        # LH-RSTHOP: an edge out of a hosted hop (assumed rfo pin) keeps the hop budget, not the full reach
+        lim = self.budget if src_host else self.reach
+        if md(source, end) <= lim:
             return []
         out = []
         point = source
-        while md(point, end) > self.reach:
+        while md(point, end) > lim:
             a, b = self.grid.cell(*point), self.grid.cell(*end)
             # Leave room for the current relay reservation and endpoint pin offsets; never use the clock router's 3x
             # fallback.  FOREST2: route first on the PLACEMENT grid (reserved relays count as blocked, so every free
@@ -286,9 +345,17 @@ class Geometry:
             run = [0.0]
             for p, q in zip(points, points[1:]):
                 run.append(run[-1] + md(p, q))
+            # LH-RSTHOP: out of a hosted hop the stage input must stay within the hop budget (pin offset = radius)
+            cap = self.budget if lim > self.budget else self.budget - self.radius
             options = [i for i in range(1, len(points) - 1)
-                       if run[i] <= self.budget and self.grid.free(path[i - 1])]
-            if options:
+                       if run[i] <= cap and self.grid.free(path[i - 1])]
+            hop_lim = min(lim, self.budget)
+            t = None
+            if self.host_mode == 'prefer':
+                t = self.host_hop(point, end, points, run, hop_lim)
+            if t is not None:
+                pass
+            elif options:
                 t = self.reserve('hop', points[options[-1]], max_distance=0)
             else:
                 # FOREST2: the routed cells within the budget are all OCCUPIED by earlier relay reservations (wires
@@ -302,16 +369,21 @@ class Geometry:
                                             max_distance=max(GRID, self.budget - run[i]))
                     except GeometryError:
                         continue
-                    if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end):
+                    if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end) and md(point, self.tile_pin(cand, 'rst_n_in')) <= lim:
                         t = cand
                         break
                     self.unreserve(cand)
+                if t is None and self.host_mode == 'fallback':
+                    t = self.host_hop(point, end, points, run, hop_lim)
                 if t is None:
                     raise GeometryError(f'no legal reset relay within routed reach from {point}')
             out.append(t)
             point = self.tile_pin(t, 'rst_n')
+            lim = self.budget if t['kind'] == 'host' else self.reach
         all_pins = [source] + [self.tile_pin(t, 'rst_n') for t in out]
         inputs = [self.tile_pin(t, 'rst_n_in') for t in out] + [end]
-        if any(md(p, q) > self.reach for p, q in zip(all_pins, inputs)):
+        hosted = [src_host] + [t['kind'] == 'host' for t in out]
+        into = [t['kind'] == 'host' for t in out] + [False]
+        if any(md(p, q) > (self.budget if (a or b) else self.reach) for p, q, a, b in zip(all_pins, inputs, hosted, into)):
             raise GeometryError('internal reset hop exceeds reach')
         return out

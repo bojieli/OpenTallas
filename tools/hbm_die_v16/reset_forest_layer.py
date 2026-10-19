@@ -32,6 +32,10 @@ def log(*a):
 CB0, CB1 = 14970.0, 18831.0
 SRC = 'rtl/hbm_accel/die_glue/hbfd_rrl.sv'
 DEPS = ['rtl/lib/ot_rst_relay.sv']
+# LH-RSTHOP 10-19: reach hops hosted in lane relay stations (hbfd_rly_<W>_<flow>_rf / _rrf, one rfi -> rfo flop)
+RF_SRC = 'rtl/hbm_accel/die_glue/hbfd_rly_rf_masters.sv'
+RF_DEPS = ['rtl/hbm_accel/die_glue/ot_hbm_rly_rf.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv',
+           'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 
 
 def load(p):
@@ -42,13 +46,35 @@ MAX_PAD = 128  # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbf
 
 
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
-          survey=None, relay_rows=False, overfly=None):
+          survey=None, relay_rows=False, overfly=None, host_hops=None):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
         raise GeometryError('input already contains reset forest instances; use pre-forest contract')
     g = Geometry(manifest, views, relay_views, reach, overfly=overfly)
     W, H = manifest['die_um']
+    host_use = {}
+    if host_hops:
+        # LH-RSTHOP (coordinator 0jp A, structural H.RST answer): every placed lane relay station (hbfd_rly_<W>_<flow>,
+        # 21.6-64.8 um, at <= 405 um pitch along every channel) may host ONE forest reach hop on its own regional clock.
+        ckdom = {x['instance']: x['domain'] for x in c['clock_resets'] if x['kind'] == 'clock' and x['port'] == 'ck'}
+        hosts, skipped = [], collections.Counter()
+        for n, v in sorted(c['instances'].items()):
+            m = reset_rows.BASE.match(v['master'])
+            if not m:
+                continue
+            if n not in g.pl or n not in ckdom:
+                skipped['unplaced_or_no_ck'] += 1
+                continue
+            wb, pv = int(m.group(1)), g.pl[n]
+            try:
+                rfi, rfo = g.pin(n, 'i', wb // 2, wb), g.pin(n, 'o', wb // 2, wb)
+            except GeometryError:
+                skipped['pin'] += 1
+                continue
+            hosts.append(dict(inst=n, dom=ckdom[n], rfi=rfi, rfo=rfo, home=(pv['x'], pv['y']), w=pv['w'], h=pv['h']))
+        g.set_hosts(hosts, host_hops)
+        log('host stations', len(hosts), dict(collections.Counter(h['dom'] for h in hosts)), dict(skipped))
     tiles, edges, clocks, ports, drop = [], [], [], [], []
     report = dict(schema='opentallas.hbm.reset_forest.v2', reach_um=reach, fanout_cap=fanout,
                   domains={}, geometry_gate='PASS', reach_gate='PASS', physical_signoff='OPEN', native_complete=False,
@@ -58,6 +84,9 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                   compiler_requirement='bind age constants after physical clock/phase proof; no runtime scheduling/backpressure',
                   age_reference='ideal common-phase RTL edge model; physical recovery/removal and arrival phases OPEN',
                   homes={}, root_alternatives=[], consumed_lef_sha256=g.hashes)
+    if host_hops:
+        report['host_hops'] = dict(mode=host_hops, stations=len(g.hosts),
+                                   stations_by_domain=dict(collections.Counter(h['dom'] for h in g.hosts)))
 
     def zone(xy):
         x, y = xy
@@ -86,6 +115,10 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             t['kind'] = f'pad{n}'
 
     def emit(t, dom, tag, note):
+        if t['kind'] == 'host':   # LH-RSTHOP: the station itself is the stage (remastered _rf/_rrf below)
+            host_use[t['inst']] = dom
+            t['name'] = t['inst']
+            return t['inst']
         n = f'rrf_{tag}_{len(tiles) + 1:06d}'
         t['name'] = n
         x, y = t['home']
@@ -97,6 +130,10 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         return n
 
     def edge(src, dst, dom):
+        if src[0] in host_use and src[1] == 'rst_n':
+            src = [src[0], 'rfo']
+        if dst[0] in host_use and dst[1] == 'rst_n_in':
+            dst = [dst[0], 'rfi']
         edges.append(dict(src=src, dst=dst, bits=1, clock=dom,
                           basis='source-bound regional synchronous reset forest; fixed release age'))
 
@@ -117,7 +154,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                                                           md(g.tile_pin(n[0], 'rst_n'), rin)))[:4]:
             snap = g.snapshot()
             try:
-                pre = g.chain(g.tile_pin(psrc, 'rst_n'), root)
+                pre = g.chain(g.tile_pin(psrc, 'rst_n'), root, src_host=psrc['kind'] == 'host')
                 break
             except GeometryError as e:
                 g.restore(snap)
@@ -180,7 +217,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             for src, src_age in tries:   # nearest nodes first, the root last; reach budget unchanged
                 snap = g.snapshot()
                 try:
-                    chain = g.chain(g.tile_pin(src, 'rst_n'), leaf)
+                    chain = g.chain(g.tile_pin(src, 'rst_n'), leaf, src_host=src['kind'] == 'host')
                     break
                 except GeometryError as e:
                     g.restore(snap)   # a failed chain may have reserved part of its hops
@@ -208,6 +245,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             xy = g.pin(*ref)
             sinks[(x['domain'], x['source'][1])].append((ref, xy))
     for (dom, por), S in sorted(sinks.items()):
+        g.host_dom = dom
         source = g.pin('hb_ckgen', por)
         ingress = g.reserve('sync', source, targets=[('rst_n_in', source)])
         distributed_source = g.tile_pin(ingress, 'rst_n')
@@ -284,6 +322,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             if len(e['source']) != 2 or len(e['sink']) != 2 or e['bits'] != 1:
                 raise GeometryError('bridge reset must be an unsliced scalar edge')
             bridges[e['source'][0]].append(e['sink'])
+    g.host_dom = 'stream'
     for src, dsts in sorted(bridges.items()):
         source = g.pin(src, 'bridge_rst_n')
         paths = []
@@ -330,6 +369,22 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         if any(h > reach for h in hops):
             raise GeometryError(f'{sum(h > reach for h in hops)} relay-row reset hops exceed the reach')
         remaster = fin['remaster']
+    if host_use:
+        # LH-RSTHOP: hosting stations -> _rf (base) / _rrf (already a row-reset _rr driver); rfi is the one added input,
+        # driven by the forest edge (d4g_relay_splice checks it)
+        byinst = {x['inst']: x for x in remaster}
+        for n, dom in sorted(host_use.items()):
+            x = byinst.get(n)
+            if x is None:
+                old = c['instances'][n]['master']
+                x = dict(inst=n, old=old, master=old + '_rf')
+                remaster.append(x)
+            else:
+                x['master'] = x['master'] + 'f'
+            x.update(source=RF_SRC, rtl_deps=list(RF_DEPS), added_inputs=['rfi'])
+        report['host_hops'].update(hosted=len(host_use), hosted_by_domain=dict(collections.Counter(host_use.values())),
+                                   masters=dict(collections.Counter(x['master'] for x in remaster
+                                                                    if x['inst'] in host_use)))
     if survey:
         raise GeometryError(f'{len(survey)} reset sinks have no reachable leaf home (survey: see report unhomable)')
     if mut_skew:
@@ -370,12 +425,15 @@ def main():
     ap.add_argument('--overfly-masters', default=None,
                     help='LH-GEN2CD 10-19: regex of placed masters (<= 64.8 um tiles, e.g. lane-row relays) that reset wires overfly '
                          '(routing budget) while still blocking homes; default none')
+    ap.add_argument('--host-hops', choices=('prefer', 'fallback'), default=None,
+                    help='LH-RSTHOP 10-19: forest reach hops hosted in placed lane relay stations (remastered '
+                         'hbfd_rly_*_rf/_rrf, one rfi->rfo flop on the station clock); default off')
     a = ap.parse_args()
     try:
         survey = [] if a.survey else None
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
                           a.reach, a.fanout, a.zones, a.mut_skew, max_root_tries=a.max_root_tries, survey=survey,
-                          relay_rows=a.relay_rows, overfly=a.overfly_masters)
+                          relay_rows=a.relay_rows, overfly=a.overfly_masters, host_hops=a.host_hops)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
                                            physical_signoff='OPEN', problems=[str(e)], unhomable=survey or []), indent=2) + '\n')
@@ -385,6 +443,10 @@ def main():
                            for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'), Path(__file__).with_name('reset_rows.py'),
                                      Path(__file__).resolve().parents[2] / SRC,
                                      Path(__file__).resolve().parents[2] / DEPS[0])}
+    if a.host_hops:
+        for q in [RF_SRC] + RF_DEPS[:1]:
+            p = Path(__file__).resolve().parents[2] / q
+            rep['input_sha256'][str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
     a.out.write_text(json.dumps(spec) + '\n')
     rep['layer_sha256'] = hashlib.sha256(a.out.read_bytes()).hexdigest()
     a.report.write_text(json.dumps(rep, indent=2) + '\n')
