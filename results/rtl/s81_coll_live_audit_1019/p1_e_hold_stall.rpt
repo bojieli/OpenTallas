@@ -1,0 +1,6 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=stalled: chunk 4 gained 0.00 ps / 0.0% TNS
+chunks (wns_ps tns_ps viol_endpoints): {-120.7 -215325.1 6516.0} {-113.7 -69206.9 2841.0} {-113.7 -1114.4 118.0} {-113.7 -113.7 1.0} {-113.7 -113.7 1.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+I2O            1    -113.7  ck -> tf
+top pin groups (class start -> end, bus indices folded):
+      1    -113.7  I2O ck -> tf

@@ -1,0 +1,74 @@
+{
+  "status": "BOUNDED_READ_ONLY_AUDIT_NO_STOP_AUTHORIZATION",
+  "captured_utc": "2026-10-19T17:51:44Z..17:52:54Z",
+  "source": {
+    "old_w": {
+      "source_start_commit": "c531449dfa4bf1fc9be9baefe2f06c729dad632f",
+      "source_snapshot_sha256": "f0bddcbc3d591b6b447f1aa382c6d722749c82d0620c60e5d2d59ae0880de80b",
+      "archive_sha256": "93c955654c0ba690e857e6ab5e65448b6d979859e76940ab83e8a42ac810572c",
+      "manifest_sha256": "077479c3235ec1a3365bffdff0f60aab64aeb33ef7c496db2a364db247957473",
+      "remote_host": "ot-epyc8",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813"
+    },
+    "p1_w": {
+      "source_start_commit": "07f31b7da135f40ee5d5a98110acfa11a1a4a34b",
+      "source_snapshot_sha256": "2f7da7c58a2b0fe4f0ab2e5bfb2c3646294b1d23cbf9c98a02df39cefd9a1cc6",
+      "archive_sha256": "ebab2c61a59eb5d083a19e720f41b1f1317784f71ccf07fadcead5047ce7d305",
+      "manifest_sha256": "66e2e05a6e1c378d6cab22f4dd34031d8e7ca73f4f5c0112517409e5f19c1847",
+      "remote_host": "ot-epyc8",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-092651"
+    },
+    "p1_e": {
+      "source_start_commit": "07f31b7da135f40ee5d5a98110acfa11a1a4a34b",
+      "source_snapshot_sha256": "fe6920f9e247ac6581e285b4e5f6b4ff6ba5153642f4f96e1be1e4f90eb57c8a",
+      "archive_sha256": "55a93d86da0caa2e40345fe9cb212b839227e58f42d02157403785e3dfdd2177",
+      "manifest_sha256": "bd070f2323781d5e45d24396fc903985d64d78b078c0b05683071a9bbe17ab92",
+      "remote_host": "ot-epyc8",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_e_ltr-20261019-092651"
+    }
+  },
+  "old_w": {
+    "local_client": 717394,
+    "container": "a74679d0aba72cc0b8eac92abfc576d0f9f47f555cdd7eac10d041074cb47866",
+    "first_CTS_stage": "FAIL10:07OT_SPINE nolegal site471006257310 after50663clockcells",
+    "current_stage": "makegrt automatically repeats failedCTS dependency; not actual globalrouting",
+    "repeat_iteration": 9,
+    "repeat_log_mtime_utc": "2026-10-19T17:29:27Z",
+    "repeat_last_spread_ps": 135.8,
+    "repeat_clockcells": 50663,
+    "openroad_pid": 3878391,
+    "cpu_percent": 108,
+    "CTS_ODB": false,
+    "stop_choice": "report toROOT; specificoldWstop warranted by knownstagefailure/identicalrepeat; NOactiontaken"
+  },
+  "p1_w": {
+    "local_client": 1883886,
+    "container": "a22f5bd2482da5cd98121edaefc9cfcfefeb6cd73a6ad09504607f2398560f90",
+    "guard_stage": "NEEDS_RTL chunk3 WNS/TNS unchanged",
+    "guard_worst_path": "ck -> tf",
+    "guard_wns_ps": -56.7,
+    "guard_tns_ps": -56.7,
+    "after_repair_SS_setup_ps": -429.56,
+    "after_repair_FF_hold_ps": -38.55,
+    "DPL_phase2_iteration": 730,
+    "DPL_negotiation_illegal_cells": 70763,
+    "DPL_phase2_start_illegal_cells": 71135,
+    "CTS_ODB": false,
+    "interpretation": "Timingguard stalled but legalization slowlyprogressing; negotiationcount not final placementverdict"
+  },
+  "p1_e": {
+    "local_client": 1883887,
+    "container": "bc74f8b102c188ecc74fe8c334c5b6e014d0521f15f3ffe95a24d597162d7130",
+    "guard_stage": "NEEDS_RTL chunk4 WNS/TNS unchanged",
+    "guard_worst_path": "ck -> tf",
+    "guard_wns_ps": -113.7,
+    "guard_tns_ps": -113.7,
+    "after_repair_SS_setup_ps": -475.76,
+    "after_repair_FF_hold_ps": -118.37,
+    "DPL_phase2_iteration": 470,
+    "DPL_negotiation_illegal_cells": 84504,
+    "CTS_ODB": false,
+    "interpretation": "Negotiationoscillates near84400; stillactive, count not finalplacementverdict"
+  },
+  "all_three": "adoptionblocked bysource_safety/unusedtf/native/slotdebts; no duplicate/retry/source edit/stop bythisaudit"
+}

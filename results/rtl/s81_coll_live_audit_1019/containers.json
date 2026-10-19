@@ -1,0 +1,125 @@
+[
+  {
+    "id": "a74679d0aba72cc0b8eac92abfc576d0f9f47f555cdd7eac10d041074cb47866",
+    "name": "/gate_grt_dscoll_lane_w_ltr-20261019-075813",
+    "state": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3878279,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-19T17:07:10.492815808Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "image": "openroad/orfs:latest",
+    "cmd": [
+      "bash",
+      "-lc",
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt"
+    ],
+    "matched_mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813/src",
+        "Destination": "/src",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813/routes/gate/work/orfs",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ]
+  },
+  {
+    "id": "bc74f8b102c188ecc74fe8c334c5b6e014d0521f15f3ffe95a24d597162d7130",
+    "name": "/gate_cts_dscoll_lane_e_ltr-20261019-092651",
+    "state": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3901244,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-19T16:29:41.176884214Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "image": "openroad/orfs:latest",
+    "cmd": [
+      "bash",
+      "-lc",
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts"
+    ],
+    "matched_mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_e_ltr-20261019-092651/src",
+        "Destination": "/src",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_e_ltr-20261019-092651/routes/gate/work/orfs",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ]
+  },
+  {
+    "id": "a22f5bd2482da5cd98121edaefc9cfcfefeb6cd73a6ad09504607f2398560f90",
+    "name": "/gate_cts_dscoll_lane_w_ltr-20261019-092651",
+    "state": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3901168,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-19T16:29:41.077505073Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "image": "openroad/orfs:latest",
+    "cmd": [
+      "bash",
+      "-lc",
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts"
+    ],
+    "matched_mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-092651/src",
+        "Destination": "/src",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-092651/routes/gate/work/orfs",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ]
+  }
+]

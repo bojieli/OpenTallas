@@ -1,0 +1,383 @@
+{
+  "captured_utc": "2026-10-19T17:51:44.321139+00:00",
+  "runs": [
+    {
+      "run": "dscoll_lane_w_ltr-20261019-075813",
+      "logs": [
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_5_place_dp.log",
+          "bytes": 13462,
+          "mtime_utc": "2026-10-19T15:13:36.265111+00:00",
+          "last_lines": [
+            "legalized HPWL        1538280.1 u",
+            "delta HPWL                    1 %",
+            "",
+            "Took 115 seconds: detailed_placement",
+            "[INFO FLW-0012] Placement violations .",
+            "estimate_parasitics -placement",
+            "Took 6 seconds: estimate_parasitics -placement",
+            "Report metrics stage 3, detailed place...",
+            "",
+            "==========================================================================",
+            "detailed place report_design_area",
+            "--------------------------------------------------------------------------",
+            "Design area 62857 um^2 24% utilization.",
+            "write_db /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_5_place_dp.odb",
+            "write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc",
+            "Elapsed time: 5:47.57[h:]min:sec. CPU time: user 373.64 sys 19.08 (112%). Peak memory: 948936KB.",
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          347            926 f30499e90d8420b993ee"
+          ],
+          "last_table_rows": [
+            "      110 |    1072634 |     50774 |    511044",
+            "      120 |    1072481 |     50745 |    510920",
+            "      130 |    1072463 |     50731 |    510916",
+            "      140 |    1072399 |     50717 |    510866",
+            "      150 |    1072395 |     50715 |    510864",
+            "      160 |    1072391 |     50713 |    510862",
+            "      170 |    1072374 |     50718 |    510840",
+            "      180 |    1072410 |     50716 |    510878",
+            "      190 |    1072357 |     50708 |    510833",
+            "      197 |    1072336 |     50704 |    510816",
+            "      400 |    1072336 |     50704 |    510816",
+            "      403 |    1072336 |     50704 |    510816"
+          ],
+          "last_timing_lines": [
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/2_floorplan.sdc"
+          ],
+          "recent_phase_lines": [
+            "[INFO DPL-1102] Legalizing using negotiation legalizer.",
+            "[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically ",
+            "[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.",
+            "[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):",
+            "Iteration | Violations |    Cells |    Sites",
+            "[WARNING DPL-0700] Negotiation phase 1: violations stuck at 1072336 for 3 consecutive iterations.",
+            "Negotiation phase 2: isolation point active, 1000 iterations.",
+            "[WARNING DPL-0702] Negotiation phase 2: violations stuck at 1072336 for 3 consecutive iterations. Using diamond search for 50704 remaining illegal cells.",
+            "[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 50704",
+            "legalized HPWL        1538280.1 u"
+          ]
+        },
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.log",
+          "bytes": 3868,
+          "mtime_utc": "2026-10-19T17:07:06.558170+00:00",
+          "last_lines": [
+            "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
+            "source /work/hooks/pre_cts_ot_cts_fix.tcl",
+            "REF_TILE spine: child insertion targets ",
+            "clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75",
+            "OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64",
+            "OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)",
+            "OT_SPINE iter 0 (coarse) leaves 1979 sinks 15713 cells 3964 leaf arrival 359.7..558.6 ps (spread 198.9) pad 60.0 / 14.0 ps",
+            "OT_SPINE iter 1 (coarse) leaves 1979 sinks 15713 cells 7927 leaf arrival 496.7..557.9 ps (spread 61.2) pad 65.2 / 14.0 ps",
+            "OT_SPINE iter 2 (fine) leaves 1979 sinks 15713 cells 9879 leaf arrival 516.9..557.9 ps (spread 41.0) pad 65.2 / 3.0 ps",
+            "OT_SPINE iter 3 (fine) leaves 1979 sinks 15713 cells 21094 leaf arrival 540.7..713.8 ps (spread 173.1) pad 65.2 / 16.4 ps",
+            "OT_SPINE iter 4 (fine) leaves 1979 sinks 15713 cells 29812 leaf arrival 674.6..769.1 ps (spread 94.5) pad 65.2 / 16.6 ps",
+            "OT_SPINE iter 5 (fine) leaves 1979 sinks 15713 cells 36145 leaf arrival 738.3..798.8 ps (spread 60.5) pad 65.2 / 16.8 ps",
+            "OT_SPINE iter 6 (fine) leaves 1979 sinks 15713 cells 39333 leaf arrival 768.8..825.1 ps (spread 56.3) pad 65.2 / 16.9 ps",
+            "OT_SPINE iter 7 (fine) leaves 1979 sinks 15713 cells 42188 leaf arrival 794.8..859.1 ps (spread 64.3) pad 65.2 / 17.0 ps",
+            "OT_SPINE iter 8 (fine) leaves 1979 sinks 15713 cells 45931 leaf arrival 828.0..902.2 ps (spread 74.2) pad 65.2 / 17.1 ps",
+            "OT_SPINE iter 9 (fine) leaves 1979 sinks 15713 cells 50663 leaf arrival 870.6..1006.4 ps (spread 135.8) pad 65.2 / 17.5 ps",
+            "Error: cts.tcl, 36 OT_SPINE: no legal site near 471006 257310",
+            "Elapsed time: 1:53:29.55[h:]min:sec. CPU time: user 6943.55 sys 67.66 (102%). Peak memory: 1544892KB."
+          ],
+          "last_table_rows": [],
+          "last_timing_lines": [
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc"
+          ],
+          "recent_phase_lines": []
+        },
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.tmp.log",
+          "bytes": 3704,
+          "mtime_utc": "2026-10-19T17:29:27.154044+00:00",
+          "last_lines": [
+            "read_sdc -mode ff /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc",
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc",
+            "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
+            "source /work/hooks/pre_cts_ot_cts_fix.tcl",
+            "REF_TILE spine: child insertion targets ",
+            "clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75",
+            "OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64",
+            "OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)",
+            "OT_SPINE iter 0 (coarse) leaves 1979 sinks 15713 cells 3964 leaf arrival 359.7..558.6 ps (spread 198.9) pad 60.0 / 14.0 ps",
+            "OT_SPINE iter 1 (coarse) leaves 1979 sinks 15713 cells 7927 leaf arrival 496.7..557.9 ps (spread 61.2) pad 65.2 / 14.0 ps",
+            "OT_SPINE iter 2 (fine) leaves 1979 sinks 15713 cells 9879 leaf arrival 516.9..557.9 ps (spread 41.0) pad 65.2 / 3.0 ps",
+            "OT_SPINE iter 3 (fine) leaves 1979 sinks 15713 cells 21094 leaf arrival 540.7..713.8 ps (spread 173.1) pad 65.2 / 16.4 ps",
+            "OT_SPINE iter 4 (fine) leaves 1979 sinks 15713 cells 29812 leaf arrival 674.6..769.1 ps (spread 94.5) pad 65.2 / 16.6 ps",
+            "OT_SPINE iter 5 (fine) leaves 1979 sinks 15713 cells 36145 leaf arrival 738.3..798.8 ps (spread 60.5) pad 65.2 / 16.8 ps",
+            "OT_SPINE iter 6 (fine) leaves 1979 sinks 15713 cells 39333 leaf arrival 768.8..825.1 ps (spread 56.3) pad 65.2 / 16.9 ps",
+            "OT_SPINE iter 7 (fine) leaves 1979 sinks 15713 cells 42188 leaf arrival 794.8..859.1 ps (spread 64.3) pad 65.2 / 17.0 ps",
+            "OT_SPINE iter 8 (fine) leaves 1979 sinks 15713 cells 45931 leaf arrival 828.0..902.2 ps (spread 74.2) pad 65.2 / 17.1 ps",
+            "OT_SPINE iter 9 (fine) leaves 1979 sinks 15713 cells 50663 leaf arrival 870.6..1006.4 ps (spread 135.8) pad 65.2 / 17.5 ps"
+          ],
+          "last_table_rows": [],
+          "last_timing_lines": [
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc"
+          ],
+          "recent_phase_lines": []
+        }
+      ],
+      "cts_odb_exists": false
+    },
+    {
+      "run": "dscoll_lane_w_ltr-20261019-092651",
+      "logs": [
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-092651/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_5_place_dp.log",
+          "bytes": 13725,
+          "mtime_utc": "2026-10-19T16:36:22.292926+00:00",
+          "last_lines": [
+            "original HPWL         1952483.0 u",
+            "legalized HPWL        1966058.2 u",
+            "delta HPWL                    1 %",
+            "",
+            "Took 81 seconds: detailed_placement",
+            "[INFO FLW-0012] Placement violations .",
+            "estimate_parasitics -placement",
+            "Report metrics stage 3, detailed place...",
+            "",
+            "==========================================================================",
+            "detailed place report_design_area",
+            "--------------------------------------------------------------------------",
+            "Design area 66433 um^2 21% utilization.",
+            "write_db /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_5_place_dp.odb",
+            "write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc",
+            "Elapsed time: 4:10.78[h:]min:sec. CPU time: user 270.64 sys 12.71 (112%). Peak memory: 750748KB.",
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          250            733 26c5729775f7e59dd15d"
+          ],
+          "last_table_rows": [
+            "      110 |     873373 |     40387 |    416577",
+            "      120 |     873477 |     40403 |    416665",
+            "      130 |     873336 |     40378 |    416549",
+            "      140 |     873326 |     40380 |    416537",
+            "      150 |     873244 |     40360 |    416475",
+            "      160 |     873245 |     40365 |    416471",
+            "      170 |     873261 |     40369 |    416483",
+            "      180 |     873203 |     40355 |    416439",
+            "      190 |     873179 |     40349 |    416421",
+            "      196 |     873171 |     40347 |    416415",
+            "      400 |     873171 |     40347 |    416415",
+            "      403 |     873171 |     40347 |    416415"
+          ],
+          "last_timing_lines": [
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/2_floorplan.sdc"
+          ],
+          "recent_phase_lines": [
+            "[INFO DPL-1102] Legalizing using negotiation legalizer.",
+            "[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically ",
+            "[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.",
+            "[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):",
+            "Iteration | Violations |    Cells |    Sites",
+            "[WARNING DPL-0700] Negotiation phase 1: violations stuck at 873171 for 3 consecutive iterations.",
+            "Negotiation phase 2: isolation point active, 1000 iterations.",
+            "[WARNING DPL-0702] Negotiation phase 2: violations stuck at 873171 for 3 consecutive iterations. Using diamond search for 40347 remaining illegal cells.",
+            "[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 40346",
+            "legalized HPWL        1966058.2 u"
+          ]
+        },
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-092651/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.tmp.log",
+          "bytes": 214456,
+          "mtime_utc": "2026-10-19T17:51:42.610487+00:00",
+          "last_lines": [
+            "      560 |    1266525 |     71053 |    551278",
+            "      570 |    1266314 |     70930 |    551190",
+            "      580 |    1266419 |     70959 |    551266",
+            "      590 |    1266383 |     71001 |    551188",
+            "      600 |    1266299 |     70921 |    551184",
+            "      610 |    1266384 |     71004 |    551186",
+            "      620 |    1266284 |     70870 |    551220",
+            "      630 |    1266235 |     70863 |    551178",
+            "      640 |    1266361 |     70973 |    551194",
+            "      650 |    1266250 |     70894 |    551162",
+            "      660 |    1266212 |     70878 |    551140",
+            "      670 |    1266219 |     70879 |    551146",
+            "      680 |    1266173 |     70805 |    551174",
+            "      690 |    1266179 |     70843 |    551142",
+            "      700 |    1266151 |     70801 |    551156",
+            "      710 |    1266212 |     70874 |    551144",
+            "      720 |    1266119 |     70791 |    551134",
+            "      730 |    1266091 |     70763 |    551134"
+          ],
+          "last_table_rows": [
+            "      620 |    1266284 |     70870 |    551220",
+            "      630 |    1266235 |     70863 |    551178",
+            "      640 |    1266361 |     70973 |    551194",
+            "      650 |    1266250 |     70894 |    551162",
+            "      660 |    1266212 |     70878 |    551140",
+            "      670 |    1266219 |     70879 |    551146",
+            "      680 |    1266173 |     70805 |    551174",
+            "      690 |    1266179 |     70843 |    551142",
+            "      700 |    1266151 |     70801 |    551156",
+            "      710 |    1266212 |     70874 |    551144",
+            "      720 |    1266119 |     70791 |    551134",
+            "      730 |    1266091 |     70763 |    551134"
+          ],
+          "last_timing_lines": [
+            "OT_HOLD_GUARD chunk 1: hold ws -57.10 (+40.20) tns -31012.6 (+67.4%) viol 1016, 651 s",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "[INFO RSZ-0046] Found 4403 endpoints with hold violations.",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "[WARNING RSZ-0064] Unable to repair all hold checks within margin.",
+            "[INFO RSZ-0032] Inserted 11168 hold buffers.",
+            "Took 403 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "OT_HOLD_GUARD chunk 2: hold ws -56.71 (+0.39) tns -56.7 (+99.8%) viol 1, 1054 s",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "[INFO RSZ-0046] Found 232 endpoints with hold violations.",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "[INFO RSZ-0032] Inserted 248 hold buffers.",
+            "Took 9 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "OT_HOLD_GUARD chunk 3: hold ws -56.71 (+0.00) tns -56.7 (+0.0%) viol 1, 1063 s",
+            "OT_HOLD_STALL NEEDS_RTL (stalled: chunk 3 gained 0.00 ps / 0.0% TNS): I2O=1@-57 -> /work/reports/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/ot_hold_stall_cts.rpt",
+            "OT_HOLD_MM after repair: SS setup ws -429.56 / FF hold ws -38.55 ps"
+          ],
+          "recent_phase_lines": [
+            "Took 403 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "Took 9 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "[INFO DPL-1102] Legalizing using negotiation legalizer.",
+            "[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically ",
+            "[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.",
+            "[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):",
+            "Iteration | Violations |    Cells |    Sites",
+            "Negotiation phase 2: isolation point active, 1000 iterations."
+          ]
+        }
+      ],
+      "cts_odb_exists": false
+    },
+    {
+      "run": "dscoll_lane_e_ltr-20261019-092651",
+      "logs": [
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_e_ltr-20261019-092651/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/3_5_place_dp.log",
+          "bytes": 13678,
+          "mtime_utc": "2026-10-19T16:36:25.517889+00:00",
+          "last_lines": [
+            "original HPWL         2032146.4 u",
+            "legalized HPWL        2047113.0 u",
+            "delta HPWL                    1 %",
+            "",
+            "Took 89 seconds: detailed_placement",
+            "[INFO FLW-0012] Placement violations .",
+            "estimate_parasitics -placement",
+            "Report metrics stage 3, detailed place...",
+            "",
+            "==========================================================================",
+            "detailed place report_design_area",
+            "--------------------------------------------------------------------------",
+            "Design area 66427 um^2 21% utilization.",
+            "write_db /work/results/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/3_5_place_dp.odb",
+            "write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/3_place.sdc",
+            "Elapsed time: 4:11.01[h:]min:sec. CPU time: user 271.08 sys 13.41 (113%). Peak memory: 746936KB.",
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          251            729 8800a65bf3d6ad2e9f5d"
+          ],
+          "last_table_rows": [
+            "      110 |     894705 |     41742 |    426603",
+            "      120 |     894596 |     41716 |    426520",
+            "      130 |     894595 |     41724 |    426511",
+            "      140 |     894479 |     41701 |    426418",
+            "      150 |     894510 |     41694 |    426456",
+            "      160 |     894440 |     41682 |    426398",
+            "      170 |     894424 |     41680 |    426384",
+            "      180 |     894403 |     41677 |    426366",
+            "      186 |     894402 |     41676 |    426366",
+            "      400 |     894400 |     41676 |    426364",
+            "      410 |     894402 |     41676 |    426366",
+            "      419 |     894406 |     41676 |    426370"
+          ],
+          "last_timing_lines": [
+            "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/2_floorplan.sdc"
+          ],
+          "recent_phase_lines": [
+            "[INFO DPL-1102] Legalizing using negotiation legalizer.",
+            "[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically ",
+            "[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.",
+            "[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):",
+            "Iteration | Violations |    Cells |    Sites",
+            "[WARNING DPL-0700] Negotiation phase 1: violations stuck at 894402 for 3 consecutive iterations.",
+            "Negotiation phase 2: isolation point active, 1000 iterations.",
+            "[WARNING DPL-0702] Negotiation phase 2: violations stuck at 894406 for 3 consecutive iterations. Using diamond search for 41676 remaining illegal cells.",
+            "[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 41675",
+            "legalized HPWL        2047113.0 u"
+          ]
+        },
+        {
+          "file": "/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_e_ltr-20261019-092651/routes/gate/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/4_1_cts.tmp.log",
+          "bytes": 279370,
+          "mtime_utc": "2026-10-19T17:51:04.234929+00:00",
+          "last_lines": [
+            "      320 |    1544510 |     84812 |    632975",
+            "      330 |    1544367 |     84741 |    632903",
+            "      340 |    1544110 |     84670 |    632717",
+            "      350 |    1544168 |     84606 |    632839",
+            "      360 |    1543899 |     84609 |    632567",
+            "      370 |    1543868 |     84550 |    632595",
+            "      380 |    1543823 |     84591 |    632509",
+            "      390 |    1543741 |     84529 |    632489",
+            "      399 |    1543754 |     84568 |    632463",
+            "Negotiation phase 2: isolation point active, 1000 iterations.",
+            "      400 |    1543740 |     84534 |    632483",
+            "      410 |    1543583 |     84471 |    632389",
+            "      420 |    1543487 |     84435 |    632329",
+            "      430 |    1543424 |     84468 |    632233",
+            "      440 |    1543534 |     84570 |    632241",
+            "      450 |    1543393 |     84433 |    632237",
+            "      460 |    1543453 |     84483 |    632247",
+            "      470 |    1543476 |     84504 |    632249"
+          ],
+          "last_table_rows": [
+            "      370 |    1543868 |     84550 |    632595",
+            "      380 |    1543823 |     84591 |    632509",
+            "      390 |    1543741 |     84529 |    632489",
+            "      399 |    1543754 |     84568 |    632463",
+            "      400 |    1543740 |     84534 |    632483",
+            "      410 |    1543583 |     84471 |    632389",
+            "      420 |    1543487 |     84435 |    632329",
+            "      430 |    1543424 |     84468 |    632233",
+            "      440 |    1543534 |     84570 |    632241",
+            "      450 |    1543393 |     84433 |    632237",
+            "      460 |    1543453 |     84483 |    632247",
+            "      470 |    1543476 |     84504 |    632249"
+          ],
+          "last_timing_lines": [
+            "OT_HOLD_GUARD chunk 2: hold ws -113.66 (+0.00) tns -1114.4 (+98.4%) viol 118, 1586 s",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "[INFO RSZ-0046] Found 1399 endpoints with hold violations.",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "[WARNING RSZ-0064] Unable to repair all hold checks within margin.",
+            "[INFO RSZ-0032] Inserted 2437 hold buffers.",
+            "Took 84 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "OT_HOLD_GUARD chunk 3: hold ws -113.66 (+0.00) tns -113.7 (+89.8%) viol 1, 1670 s",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "[INFO RSZ-0046] Found 39 endpoints with hold violations.",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "[WARNING RSZ-0064] Unable to repair all hold checks within margin.",
+            "[INFO RSZ-0032] Inserted 17 hold buffers.",
+            "OT_HOLD_GUARD chunk 4: hold ws -113.66 (+0.00) tns -113.7 (+0.0%) viol 1, 1674 s",
+            "OT_HOLD_STALL NEEDS_RTL (stalled: chunk 4 gained 0.00 ps / 0.0% TNS): I2O=1@-114 -> /work/reports/asap7/opentallas_dsfd_coll_lane_e_asap7_ref_gate/base/ot_hold_stall_cts.rpt",
+            "OT_HOLD_MM after repair: SS setup ws -475.76 / FF hold ws -118.37 ps"
+          ],
+          "recent_phase_lines": [
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "Took 84 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000",
+            "Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint",
+            "[INFO DPL-1102] Legalizing using negotiation legalizer.",
+            "[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically ",
+            "[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.",
+            "[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):",
+            "Iteration | Violations |    Cells |    Sites",
+            "Negotiation phase 2: isolation point active, 1000 iterations."
+          ]
+        }
+      ],
+      "cts_odb_exists": false
+    }
+  ]
+}
