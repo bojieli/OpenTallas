@@ -111,8 +111,15 @@ def load_ds(kv_dir: Path, layer: int, rank=0):
     return rec, src
 
 
-def plan_d4g(rec):
-    """per-SM ops [(name, kind, kv4, rows, nrun, sm_index)] for the d4g 16-SM W2 split (module doc)."""
+def plan_d4g(rec, sub=0):
+    """per-SM ops [(name, kind, kv4, rows, nrun, sm_index, k)] for the d4g 16-SM W2 split (module doc).
+
+    sub (HBM-ATTGAP 10-19): rows per SUB-RUN (a multiple of 8 dividing the SM's 8 x nrun rows; 0 = one op per SM).  An
+    SM then runs its QK and its PV as consecutive sub-runs of `sub` rows (k = 0, 1, ..): every sub-run of a kind has the
+    SAME calendar (a canonical line stream from a block start, relative tags/rows; results placed by the smw writer
+    table), so ONE resident copy of the QK and of the PV programme serves all of them (programme SRAM 1,024 words).  A
+    PV sub-run publishes the node of its sub/8 chunks: an aligned golden subtree, so the cross-SM merge runs over
+    sub-run nodes in position order padded to next_pow2(chunks) / (sub/8) -- the golden tree."""
     T8, T = len(rec["rows8"]), len(rec["K"])
     nch = -(-T // 8)
     nrun = 1
@@ -125,9 +132,50 @@ def plan_d4g(rec):
         if not all((r >= T8) == bool(kv4) for r in range(r0, r1)):
             raise SystemExit(f"SM {s}: run [{r0},{r1}) mixes SM-KV8 and SM-KV4 rows")
         rows = list(range(r0, r1))
-        ops.append((f"qk_{SM_NAMES[s]}", "qk", kv4, rows, 0, s))
-        ops.append((f"pv_{SM_NAMES[s]}", "pv", kv4, rows, nrun, s))
+        if not sub:
+            ops.append((f"qk_{SM_NAMES[s]}", "qk", kv4, rows, 0, s, 0))
+            ops.append((f"pv_{SM_NAMES[s]}", "pv", kv4, rows, nrun, s, 0))
+            continue
+        if sub % 8 or (8 * nrun) % sub:
+            raise SystemExit(f"sub-run {sub} rows must be a multiple of 8 dividing {8 * nrun}")
+        parts = [rows[i:i + sub] for i in range(0, len(rows), sub)]
+        for k, pr in enumerate(parts):
+            ops.append((f"qk_{SM_NAMES[s]}_k{k}", "qk", kv4, pr, 0, s, k))
+        for k, pr in enumerate(parts):
+            ops.append((f"pv_{SM_NAMES[s]}_k{k}", "pv", kv4, pr, sub // 8, s, k))
     return ops, nrun
+
+
+def merge_pad(rec, ops):
+    """golden pad of the cross-SM merge: next_pow2(chunks) / (chunks a PV node)."""
+    nch = -(-len(rec["K"]) // 8)
+    p2 = 1 << (nch - 1).bit_length()
+    per = len(next(o for o in ops if o[1] == "pv")[3]) // 8
+    return p2 // per
+
+
+def programme_residency(rec, ops, lat):
+    """per SM: the calendar words of each kind's sub-runs; resident = one copy per kind when all sub-runs of the kind are
+    word-identical (cmd, KV_DESC); returns {sm: dict(qk_words, pv_words, identical, resident_words, fits)}."""
+    out = {}
+    for s in sorted({o[5] for o in ops}):
+        e = dict()
+        for kind in ("qk", "pv"):
+            seqs = []
+            for o in ops:
+                if o[5] != s or o[1] != kind:
+                    continue
+                cal, exp = E.compile_op(rec, o[:5], lat, kind == "pv")
+                first = min([c for c, f in enumerate(cal.cyc) if f] + list(cal.kvd) + list(cal.pkt))
+                seqs.append([(E.cmd_word(**(cal.cyc[c] if c < len(cal.cyc) else {})), cal.kvd.get(c, 0))
+                             for c in range(first, exp["end"] + 1)])
+            e[f"{kind}_words"] = len(seqs[0])
+            e[f"{kind}_subruns"] = len(seqs)
+            e[f"{kind}_identical"] = all(q == seqs[0] for q in seqs)
+        e["resident_words"] = e["qk_words"] + e["pv_words"]
+        e["fits_1024_word_programme"] = e["resident_words"] <= PROG_WORDS and e["qk_identical"] and e["pv_identical"]
+        out[SM_NAMES[s]] = e
+    return out
 
 
 def op_lines(rec, rows):
@@ -181,9 +229,9 @@ def build_unit(work: Path, bundle: Path, tb: Path, dmut: int, probe: bool):
     return exe
 
 
-def pv_merge(nodes):
-    """cross-SM reduce of the SM nodes in golden order: pairwise over the nodes padded to NSM (zeros)."""
-    return B.A.pairwise([np.asarray(n, F) for n in nodes] + [np.zeros(512, F)] * (NSM - len(nodes)))
+def pv_merge(nodes, pad=NSM):
+    """cross-SM reduce of the SM (sub-run) nodes in golden order: pairwise over the nodes padded to `pad` (zeros)."""
+    return B.A.pairwise([np.asarray(n, F) for n in nodes] + [np.zeros(512, F)] * (pad - len(nodes)))
 
 
 def node_from_words(words):
@@ -197,7 +245,8 @@ def node_from_words(words):
 
 def cmd_unit(a):
     rec, src = load_ds(Path(a.kv), a.layer)
-    ops, nrun = plan_d4g(rec)
+    ops, nrun = plan_d4g(rec, a.subrun)
+    allops = list(ops)
     if a.sms:
         want = {int(x) for x in a.sms.split(",")}
         ops = [o for o in ops if o[5] in want]
@@ -214,7 +263,7 @@ def cmd_unit(a):
     t0 = time.time()
     for op in ops:
         cal, exp = E.compile_op(rec, op[:5], lat, op[1] == "pv", smut=a.smut)
-        d = work / f"L{a.layer:02d}_{op[0]}_d{a.dmut}{('_' + a.smut) if a.smut else ''}"
+        d = work / f"L{a.layer:02d}_{op[0]}_d{a.dmut}{('_' + a.smut) if a.smut else ''}{('_s%d' % a.subrun) if a.subrun else ''}"
         d.mkdir(exist_ok=True)
         n = exp["end"] + 4
         if n > 4096:
@@ -224,7 +273,7 @@ def cmd_unit(a):
                             f"+N={n}"], capture_output=True, text=True, timeout=7200)
         out = r.stdout + r.stderr
         (d / "run.log").write_text(out)
-        res = dict(name=op[0], sm=SM_NAMES[op[5]], kind=op[1], kv4=op[2], rows=len(op[3]), rc=r.returncode,
+        res = dict(name=op[0], sm=SM_NAMES[op[5]], subrun=op[6], kind=op[1], kv4=op[2], rows=len(op[3]), rc=r.returncode,
                    fault=("FAULT" in out), calendar=exp)
         res.update(E.check(rec, op[:5], exp, out))
         res["pass"] = r.returncode == 0 and not res["fault"] and res["mismatches"] == 0 and \
@@ -236,23 +285,37 @@ def cmd_unit(a):
         if op[1] == "pv" and res["pass"]:
             words = [(int(x[1]), int(x[2], 16), int(x[3], 16)) for x in (ln.split() for ln in out.splitlines()
                                                                         if ln.startswith("R "))]
-            nodes[op[5]] = node_from_words(words).astype(np.uint32).view(F)
+            nodes[(op[5], op[6])] = node_from_words(words).astype(np.uint32).view(F)
         results.append(res)
         print(("PASS " if res["pass"] else "FAIL ") + json.dumps({k: v for k, v in res.items() if k != "calendar"}),
               flush=True)
     merged = None
-    npv = len({o[5] for o in plan_d4g(rec)[0]})
-    if len(nodes) == npv:
-        m = pv_merge([nodes[s] for s in range(npv)])
-        merged = dict(nodes=npv, equals_fixture_pv=bool(np.array_equal(zb(m), zb(rec["pv"]))),
+    keys = sorted({(o[5], o[6]) for o in allops if o[1] == "pv"})
+    if all(k in nodes for k in keys):
+        pad = merge_pad(rec, allops)
+        m = pv_merge([nodes[k] for k in keys], pad)
+        merged = dict(nodes=len(keys), pad=pad, equals_fixture_pv=bool(np.array_equal(zb(m), zb(rec["pv"]))),
                       mismatches=int(np.sum(zb(m) != zb(rec["pv"]))))
-    summ = dict(layer=a.layer, ops=len(results), passed=sum(r["pass"] for r in results), dmut=a.dmut, smut=a.smut,
-                nrun=nrun, lat=lat, source=src, cross_sm_merge=merged,
-                cross_sm_merge_scope="pairwise over the SM nodes padded to 16 (golden order), composed in Python: the "
-                                     "on-die merge (SU / COLL) is NOT part of this pre-check",
+        # the RTL nodes in position order: input of the on-die merge bench (att_merge_su.py)
+        np.savez(Path(a.out).with_suffix(".nodes.npz"), nodes=np.stack([nodes[k] for k in keys]).view(np.uint32),
+                 keys=np.array(keys), pad=pad, fixture_pv=np.asarray(rec["pv"], F).view(np.uint32))
+    residency = programme_residency(rec, allops, lat) if a.subrun else None
+    spans = {}
+    for r in results:
+        if r.get("span_first_word_to_last_result") is not None:
+            e = spans.setdefault(r["sm"], {}).setdefault(r["kind"], [])
+            e.append(r["span_first_word_to_last_result"])
+    if residency and not a.sms and not a.kinds and not all(e["fits_1024_word_programme"] for e in residency.values()):
+        results.append({"name": "programme_residency", "pass": False})
+    summ = dict(layer=a.layer, ops=len(results), passed=sum(bool(r.get("pass")) for r in results), dmut=a.dmut, smut=a.smut,
+                nrun=nrun, subrun=a.subrun, lat=lat, source=src, cross_sm_merge=merged, programme_residency=residency,
+                spans_first_word_to_last_result=spans,
+                cross_sm_merge_scope="pairwise over the SM (sub-run) nodes padded to the golden pad, composed in Python "
+                                     "here; the on-die merge (SU lane-store tree + COLL ring all-gather) is benched by "
+                                     "att_merge_su.py on these RTL nodes (<out>.nodes.npz)",
                 rtl="ot_hbm_accel_smh_attn die master (GEN2b bundle master_files.json + views.json defines "
                     + ",".join(DIE_DEFINES) + ") in tb_hbm_smh_attn", wall_s=round(time.time() - t0, 1),
-                verdict="PASS" if results and all(r["pass"] for r in results) else "FAIL")
+                verdict="PASS" if results and all(r.get("pass") for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1, default=int))
     print(("PASS" if summ["verdict"] == "PASS" else "FAIL") + " HBM_VEH_ATT_UNIT " +
           json.dumps({k: v for k, v in summ.items() if k != "source"}, default=int))
@@ -261,7 +324,7 @@ def cmd_unit(a):
 
 def cmd_plan(a):
     rec, src = load_ds(Path(a.kv), a.layer)
-    ops, nrun = plan_d4g(rec)
+    ops, nrun = plan_d4g(rec, a.subrun)
     b = budget(rec, ops, dict(E.DEFAULT_LAT))
     per_sm = {}
     for x in b:
@@ -272,7 +335,11 @@ def cmd_plan(a):
     # 8 AXI writes x 5 edges = CP_FRAME_EDGES; svg and xc each hold their own copy of programme rows and descriptors)
     sys.path.insert(0, str(HERE))
     import layer_images as LI  # noqa: E402
-    for e in per_sm.values():
+    res = programme_residency(rec, ops, dict(E.DEFAULT_LAT)) if a.subrun else None
+    for sm, e in per_sm.items():
+        if res:      # sub-runs: one resident copy per kind (word-identical calendars), not the sum over sub-runs
+            e["words_issued"] = e["words"]
+            e["words"] = res[sm]["resident_words"]
         e["fits_1024_word_programme"] = e["words"] <= PROG_WORDS
         e["install_edges_svg_plus_xc"] = 2 * e["words"] * LI.CP_FRAME_EDGES
         e["descriptor_rows_svg_plus_xc"] = 2 * e["svg_blocks"]
@@ -286,7 +353,8 @@ def cmd_plan(a):
     doc = dict(schema="opentallas.hbm_vehicle_att_plan.v1", lane="VEH-ATT", source=src, sms=NSM, nrun=nrun,
                rows=len(rec["K"]), window_rows=len(rec["rows8"]), compressed_rows=len(rec["rows4"]),
                placement="d4g W2: aligned chunk runs of 8 x nrun rows on SM s (sm_SW0..7, sm_NW0..7); same split QK/PV",
-               ops=b, per_sm=per_sm, host_cp=tot, svg_word_bits=SVG_W, xc_word_bits=XC_W, programme_words=PROG_WORDS)
+               ops=b, per_sm=per_sm, host_cp=tot, svg_word_bits=SVG_W, xc_word_bits=XC_W, programme_words=PROG_WORDS,
+               subrun=a.subrun, programme_residency=res)
     Path(a.out).write_text(json.dumps(doc, indent=1, default=int) + "\n")
     print(json.dumps(dict(nrun=nrun, sms=len(per_sm), per_sm=per_sm), default=int))
     return 0
@@ -392,6 +460,7 @@ def main(argv=None):
         p.add_argument("--kv", required=True, help="ds_att_kv.py output dir (contains L<NN>/att_kv.json)")
         p.add_argument("--layer", type=int, default=2)
         p.add_argument("--out", required=True)
+        p.add_argument("--subrun", type=int, default=0, help="rows per SM sub-run (HBM-ATTGAP: 32 = resident QK+PV)")
         if nm == "unit":
             p.add_argument("--work", required=True)
             p.add_argument("--bundle", required=True, help="GEN2b slice bundle (master_files.json, rtl/, physical/)")

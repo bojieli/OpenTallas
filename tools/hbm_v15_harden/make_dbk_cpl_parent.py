@@ -78,7 +78,15 @@ def main():
     pins['clk_rst'] = ('E', snap(190.0))
     avoid = {f: [v for n, (ff, v) in pins.items() if ff == f] for f in 'NSEW'}
     # W face: rr per bank row; rq + rr_valid beside the controller rows
-    rowbanks = {r: [b for b, (c, rr) in sorted(HOME.items(), key=lambda t: t[1][0]) if rr == r] for r in range(4)}
+    # HBM-DBKCPL 10-18: the col2 banks (2 = row 0, 7 = row 3) take rr on the N/S face beside their wd, not the W face.
+    # With rr on W (432 um away) their 547 block pins had a centroid 157 um from the bank (daemon FLOORPLAN_MARGIN
+    # bank_distance, hv16_dbk_cpl-q1-c2094045d) and rr[2*257+..] was the gate's worst in->macro path (-58.8 ps TT placement):
+    # 2 x 256 unregistered bits ran 430 um across the cluster.  Now they run ~110 um (bank W edge -> col1/col2 channel ->
+    # face); the die carries them on its own relayed lanes.  rr_valid (rr[b*257+256]) stays on W with the controller.
+    # Wires only, 0 cycles.  Banks never sit more than 100 um from their pins' centroid on the 3-column lattice otherwise:
+    # with rr on W a bank needs x0 <~ 290 um, so only two columns qualify.
+    FARC = 2
+    rowbanks = {r: [b for b, (c, rr) in sorted(HOME.items(), key=lambda t: t[1][0]) if rr == r and c != FARC] for r in range(4)}
     seg = {0: (2.4, 170.0), 1: (172.0, 248.0), 2: (296.0, 368.0), 3: (370.0, 537.6)}
     for r, banks in rowbanks.items():
         names = [f'rr[{b*257+i}]' for b in banks for i in range(256)]
@@ -86,20 +94,36 @@ def main():
     ctl = [f'rr[{b*257+256}]' for b in range(8)] + [f'rq[{i}]' for i in range(136)]
     for n, v in zip(ctl, grid(250.0, 294.0, len(ctl), avoid['W'])): pins[n] = ('W', v)
     # N face: wd per bank column, wb/wa between col1 and col2
-    colbanks = {c: [b for b, (cc, r) in sorted(HOME.items(), key=lambda t: -t[1][1]) if cc == c] for c in range(3)}
-    nseg = {0: (2.4, 262.0), 1: (264.0, 398.0), 2: (432.0, 602.4)}
-    for c, banks in colbanks.items():
-        names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
-        for n, v in zip(names, grid(*nseg[c], len(names), avoid['N'])): pins[n] = ('N', v)
+    # OWNERS-HBM/STK 10-18: wd leaves through the NEAREST N/S face (rows 2-3 N, rows 0-1 S).  All-N (HCDMA-DBK 10-17)
+    # failed the gate wire_reach: row-0 banks' unregistered wd ran 654 um to the N face (bank -> pin, > 500 um/stage) and
+    # macro->out wd[839] -149.5 ps.  wd stays wires-only (no parent flop, no added cycle); the die takes wd from both faces.
+    nseg = {0: (2.4, 262.0), 1: (264.0, 398.0), 2: (432.0, W - 2.4)}
+    # HH-7 10-19 (hv16_dbk_cpl-q1-65c2387ab TT: L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15): in column 0 the bank
+    # FARTHER from the face takes the channel-side (W-most) range, as on S (row 1 -> 2.4..131.8).  N had it inverted
+    # (row 3 first): row 2's wd climbed the W channel past bank 5 and then ran 46..175 um east (~375 um bank -> pin);
+    # now ~290 um, bank 5's ~270 um.  Wires only, 0 cycles.
+    for face, rows in (('N', (2, 3)), ('S', (1, 0))):
+        for c in range(3):
+            banks = [b for r in rows for b, (cc, rr) in HOME.items() if cc == c and rr == r]
+            names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
+            if c == FARC: names += [f'rr[{b*257+i}]' for b in banks for i in range(256)]
+            avoid.setdefault(face, [])
+            for n, v in zip(names, grid(*nseg[c], len(names), avoid[face])): pins[n] = ('N' if face == 'N' else 'S', v)
     wb = (['wb_reserve_v', 'wb_reserve_bank', 'wb_fill_bank'] + [f'wb_reserve_epoch[{i}]' for i in range(16)] +
           [f'wb_fill_epoch[{i}]' for i in range(16)] + [f'wb_reserve_sectors[{i}]' for i in range(12)] +
           [f'wb_reserve_base[{i}]' for i in range(32)] + ['wb_fill_start', 'wb_ready'] + [f'wa[{i}]' for i in range(12)])
     for n, v in zip(wb, grid(400.0, 430.0, len(wb), avoid['N'])): pins[n] = ('N', v)
     # E face: F20 host bus + tgt + collar status at the leaf, controller strap/status + reset beside them
-    e = (['rst_n', 'stk[0]', 'stk[1]'] + [f'tgt[{i}]' for i in range(8)] + ['cfg_v'] + [f'cfg_target[{i}]' for i in range(8)] +
+    # HBM-KITS-C/DBKCP 10-18: the controller's own E-face pins (stk[1:0] in, busy/quiet out; LEF y 51.4..64.2 on its E
+    # edge x 328.3) leave at the controller row (~280 um straight east).  At the ends of the full-face list they ran
+    # 598 um (stk -> E-face bottom) and 506 um (busy -> top): gate wire_reach FAIL at 90f961852.  Wires only, 0 cycles.
+    cy = CTRL[1] + 57.8
+    for n, v in zip(['busy', 'quiet', 'stk[0]', 'stk[1]'], grid(cy - 4.0, cy + 4.0, 4, avoid['E'])): pins[n] = ('E', v)
+    avoid['E'] = [v for n, (ff, v) in pins.items() if ff == 'E']
+    e = (['rst_n'] + [f'tgt[{i}]' for i in range(8)] + ['cfg_v'] + [f'cfg_target[{i}]' for i in range(8)] +
          [f'cfg_addr[{i}]' for i in range(12)] + [f'cfg_data[{i}]' for i in range(256)] + ['desc_v'] +
          [f'desc_base[{i}]' for i in range(12)] + [f'desc_limit[{i}]' for i in range(13)] + [f'desc_loops[{i}]' for i in range(16)] +
-         ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault', 'quiet', 'busy'])
+         ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault'])
     # OWNERS-HBM/STK 10-18: full E face (was 200..362 beside the leaf: a partial-face cluster); the leaf sits mid-face, so
     # the farthest host pin is <= ~330 um from it (one registered F20 hop, reach 405)
     for n, v in zip(e, grid(2.4, H - 2.4, len(e), avoid['E'])): pins[n] = ('E', v)
@@ -134,20 +158,40 @@ def main():
         pin_regs=dict(enable=False, reason=('Banks, controller and the collar leaf are hard children owning their registered '
             'endpoints (bank/controller pin flops, collar core pin flops); the parent holds only wires and the reset relay '
             'flops (ot_rst_relay on clk_rst). A parent pin flop would add a cycle to rr/wd/rq and the host bus.')),
-        route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=16, hold_margin_ns=0.03, macro_halo_um=5.4,
+        route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=16, hold_margin_ns=0.03, io_hold_margin_ns=0.03, macro_halo_um=5.4,
                    pin_balance=dict(h='M4', v='M5', group_max=1)),
+        # HH-7 10-19: 65c2387ab DRC 1 = parent M4 wire in the landing bank's M4 OBS pocket (M2-M4 belong to the child)
+        boundary_tcl=['physical/common_flow/child_pocket_guard.tcl'],
         params={}, inter=[], io_flop_at_pins=dict(cols=4, allow_none=True), inhold=False, outhold=False,
         keep_pin_regs=True, io_tcl=f'results/arch/hbm_die_v16_d4f/dbk_cpl_1017/assigned_pins.tcl',
         slot_change_request=(f'hb_dbk_<q> (d4f slot 560.0 x 400.0) -> {W} x {H} (1.12:1): 8 banks + controller + collar leaf '
             'on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, '
             'clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, '
-            'clk_bank on the nearest face (W x3, N x3, S x1, E x1).'),
+            'clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face; HBM-DBKCPL 10-18: rr of the col2 banks (rr[514..769] bank 2 -> S face, rr[1799..2054] bank 7 -> N face, beside their wd; rr_valid stays W) for daemon bank_distance (157 um).'),
         structural_change=why,
         reroute_reason=dict(kind='slot_change', source='physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)', why=why))
-    spec['job'] = dict(owner='Claude:OWNERS-HBM/STK', branch='claude/owners-hbm-1018-stk', tag='q1', record_to=f'results/rtl/ref_tile/{NAME}',
+    # HBM-DBKCPL 10-18: retry of the refused c2094045d (FLOORPLAN_MARGIN bank_distance) with the fixed pin plan
+    reroute_flow = dict(kind='flow_failure', failed_job='hv16_dbk_cpl-q1-c2094045d',
+        failure=('FLOORPLAN_MARGIN bank_distance: u_dbk.L[7].u_bank 157.6 um / u_dbk.L[2].u_bank 157.2 um from their 547 '
+                 "pins' centroid (rr on the W face 432 um away); fixed: their rr on the N/S face beside wd, wires only"),
+        why=why)
+    spec['reroute_reason'] = reroute_flow
+    # HH-7 10-19: valid re-route hv16_dbk_cpl-q1-65c2387ab ended NEEDS_RTL TT -12.30 / FF +20.59 / DRC 1 (routed sign-off,
+    # 4 endpoints, all parent wires of ~360-460 um between hard-child pins): controller faces split per bank group (RTL +
+    # re-hardened hv15_dbk_vp4_ctl view), column-0 N wd order fixed, child pocket guard for the M4 DRC.
+    spec['reroute_reason'] = dict(kind='rtl_change', failed_job='hv16_dbk_cpl-q1-65c2387ab',
+        source='rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv',
+        failure=('TT -12.30: u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, ~457 um U-turn), '
+                 'u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit star to 8 banks), '
+                 'L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15 (N wd order inverted in column 0); DRC 1 M4 Metal '
+                 'Spacing inside u_dbk.L[0].u_bank (parent wire in the bank M4 OBS pocket)'),
+        why=('controller bank_read_addr / slot copies leave on the face of the bank group they serve (S 0-2, W 3-4, '
+             'N 5-7; worst leg ~457 -> ~343 um); column-0 N wd: farther bank on the channel side; parent M2-M4 '
+             'obstructed over hard children between GRT and DRT (child_pocket_guard.tcl). 0 cycles, exact.'))
+    spec['job'] = dict(owner='Claude:HOURLY-HBM/HH-7', branch='claude/hh7-dbkcpl-1019', tag='h7', record_to=f'results/rtl/ref_tile/{NAME}',
         purpose=('HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; '
                  'RBH-STK). ' + why),
-        extra_paths=sorted(['physical/common_flow/assigned_pin_exact.tcl', BANK, CTLV, LEAFV,
+        extra_paths=sorted(['physical/common_flow/assigned_pin_exact.tcl', 'physical/common_flow/child_pocket_guard.tcl', BANK, CTLV, LEAFV,
                             'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2',
                             'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',
                             'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2',

@@ -78,6 +78,7 @@ foreach ot_thru_name $ot_list {
   set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]; set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
   set fx [expr {min(max($fx - $w / 2.0, $cx0 + 0.5), $cx1 - $w - 0.5)}]
   set fy [expr {min(max($fy - $h / 2.0, $cy0 + 0.5), $cy1 - $h - 0.5)}]
+  $ff setPlacementStatus PLACED                                ;# a FIRM origin cannot move (ODB-0359)
   $ff setLocation [expr {round($fx * $ot_dbu)}] [expr {round($fy * $ot_dbu)}]
   $ff setPlacementStatus FIRM
   incr ot_thru_n
