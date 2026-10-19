@@ -1,9 +1,11 @@
 #!/bin/bash
 # KV-RTRUNK 10-17: bit-exact bench of the PV pair result-trunk leaves (Verilator 5.050), rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv.
-# usage: bench_rtrunk_leaves.sh <pass|mut|smut> <qkd_rlyi_258|qkd_pv_rs_hd|qkd_rlyi_258s|qkd_pv_rs_hd_r> <work dir>
+# usage: bench_rtrunk_leaves.sh <pass|mut|smut> <qkd_rlyi_258|qkd_pv_rs_hd|qkd_rlyi_258s|qkd_pv_rs_hd_r|qkd_pv_rs_hd_f> <work dir>
 #  KV-KITS/NATIVE 10-18 successors: qkd_rlyi_258s (select registered at its pin: b must equal (s_r ? y : a) of the previous
 #  cycle, s_r = s one cycle earlier; smut = the r1 unregistered select, must FAIL); qkd_pv_rs_hd_r (T0 V / T copies driven
 #  equal to a<q>[256] / a<q>[257] as the generator wires them; same model as qkd_pv_rs_hd).
+#  AD3-KV-RSHD 10-18: qkd_pv_rs_hd_f (half-local selects): stimulus also holds the generator's T0 part invariant
+#  a1[256] == a0[256], a1[257] == a0[257] (both parts' V / T come from the same signals), copies equal; same model.
 #  qkd_rlyi_258: 20,000 random cycles; b must equal the previous cycle's (s ? y : a) on every bit.
 #  qkd_pv_rs_hd: 20,000 random cycles (T0 / T1 valid never both set, as scheduled); the beat word must equal the model.
 #  mut: the OT_QKD_RLYI_MUT build (inject bit 0 inverted) / header with T0's halves swapped (OT_QKD_RSHD_MUT) -- must FAIL.
@@ -58,7 +60,10 @@ module tb;
   wire ov; wire [4:0] ob; wire [15:0] oe; wire [511:0] od;
   reg [4:0] cnt = 0; reg [15:0] er = 0; reg xv; reg [4:0] xb; reg [15:0] xe; reg [511:0] xd;
   integer n = 0, err = 0, started = 0;
-`ifdef OT_RSHD_R
+`ifdef OT_RSHD_F
+  qkd_pv_rs_hd_f dut(.ck(ck), .a0(a0), .a1(a1), .a0v({31{a0[256]}}), .a1v({31{a1[256]}}), .a0t(a0[257]), .a1t(a1[257]),
+                     .b0(b0), .b1(b1), .ep(ep), .o_valid(ov), .o_beat(ob), .o_epoch(oe), .o_data(od));
+`elsif OT_RSHD_R
   qkd_pv_rs_hd_r dut(.ck(ck), .a0(a0), .a1(a1), .a0v({31{a0[256]}}), .a1v({31{a1[256]}}), .a0t(a0[257]), .a1t(a1[257]),
                      .b0(b0), .b1(b1), .ep(ep), .o_valid(ov), .o_beat(ob), .o_epoch(oe), .o_data(od));
 `else
@@ -79,11 +84,16 @@ module tb;
       for (int k = 0; k < 256; k++) begin a0[k] = $urandom; a1[k] = $urandom; b0[k] = $urandom; b1[k] = $urandom; end
       ep = $urandom; a0[257] = ($urandom % 7) == 0; a1[257] = a0[257] | ($urandom % 2);
       a0[256] = $urandom; a1[256] = $urandom; b0[256] = $urandom; b1[256] = $urandom;
+`ifdef OT_RSHD_F
+      a1[256] = a0[256]; a1[257] = a0[257];
+`endif
       if (a0[256] & a1[256]) begin b0[256] = 0; end
       b0[257] = $urandom; b1[257] = $urandom;
       @(posedge ck); model;
     end
-`ifdef OT_RSHD_R
+`ifdef OT_RSHD_F
+    $display("RTRUNK_LEAF %s %0d errors in %0d cycles (qkd_pv_rs_hd_f)", err ? "FAIL" : "PASS", err, n);
+`elsif OT_RSHD_R
     $display("RTRUNK_LEAF %s %0d errors in %0d cycles (qkd_pv_rs_hd_r)", err ? "FAIL" : "PASS", err, n);
 `else
     $display("RTRUNK_LEAF %s %0d errors in %0d cycles (qkd_pv_rs_hd)", err ? "FAIL" : "PASS", err, n);
@@ -95,6 +105,7 @@ EOT
 fi
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_QKD_RLYI_MUT -DOT_QKD_RSHD_MUT"; [ "$mode" = smut ] && DEF="-DOT_QKD_RLYI_SMUT"
 [ "$M" = qkd_pv_rs_hd_r ] && DEF="$DEF -DOT_RSHD_R"
+[ "$M" = qkd_pv_rs_hd_f ] && DEF="$DEF -DOT_RSHD_F"
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
   "$O/tb.sv" rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RTRUNK_LEAF
