@@ -4,7 +4,9 @@
 Two steps, no simulation here (benches run on the fleet: run_dv_slice.sh via ot-run, Verilator 5.050):
 
   collect  one slice-bench run (a run dir: status + sources.sha256 + verilator.version, and its replay dir with
-           replay.json + out.txt) -> a measurement JSON for (layer, cut).  The cut's measured cycles = the last
+           replay.json + out.txt) -> a measurement JSON for (layer, cut).  A dv_cut_replay.py replay (neighbour
+           traffic at the compiled cycles) also needs: verdict_kind SCHEDULE, no unencoded boundary event (partial),
+           not STALE, the same die.v as the build, its trace check PASS and every cross-cut compose PASS.  The cut's measured cycles = the last
            scheduled output check minus t0; it counts only when the run PASSES (every check on its scheduled cycle,
            bit-exact, no fault cycle), on Verilator 5.050, the program is the full layer calendar (--full-layer; smoke
            programs never count) and every named mutant run FAILS (the fail witness).
@@ -61,6 +63,27 @@ def collect(a):
         why.append(f'not on {VERILATOR} (daemon version): {r["verilator"] or "unknown"}')
     if rp.get('mutant') or rp.get('check_shift'):
         why.append('replay is a mutant / diagnostic, not the schedule')
+    if rp.get('schema') == 'opentallas.s81_dv.cut_replay.v1':      # dv_cut_replay.py (LB2-S81/REPLAY 10-18)
+        if rp.get('verdict_kind') != 'SCHEDULE':
+            why.append(f"cut replay verdict_kind {rp.get('verdict_kind')} (not SCHEDULE)")
+        if rp.get('partial'):
+            why.append(f"partial replay: {len(rp.get('unencoded', []))} scheduled boundary events not encoded")
+        st = rp.get('stale') or {}
+        if st.get('stale'):
+            why.append('programme compiled on lane ages the die build does not have (STALE)')
+        if not st.get('die_sha_match'):
+            why.append('programme compiled on a different die.v than the cut build')
+        ck = Path(a.check) if a.check else Path(a.replay) / 'check.json'
+        if not ck.exists():
+            why.append('no dv_cut_replay check (trace vs schedule) for this run')
+        elif json.loads(ck.read_text()).get('verdict') != 'PASS':
+            why.append('dv_cut_replay check FAILS (trace vs schedule)')
+        for cp in a.compose or []:
+            c = json.loads(Path(cp).read_text())
+            if c.get('verdict') != 'PASS':
+                why.append(f'cross-cut compose {cp} FAILS')
+    elif a.check or a.compose:
+        why.append('--check / --compose need a dv_cut_replay replay dir')
     if not muts:
         why.append('no mutant witness')
     why += [f'mutant {m["run"]} did not FAIL' for m in muts if not m['failed']]
@@ -164,6 +187,8 @@ def main(argv=None):
     c.add_argument('--replay', required=True)
     c.add_argument('--mutant', action='append', default=[])
     c.add_argument('--full-layer', action='store_true', help='the program is the full compiled layer calendar')
+    c.add_argument('--check', help='dv_cut_replay check.json of the run (default REPLAY/check.json)')
+    c.add_argument('--compose', action='append', default=[], help='dv_cut_replay compose.json the layer\'s cuts share')
     c.add_argument('--out', required=True)
     k = sp.add_parser('compose')
     k.add_argument('--slices', required=True)

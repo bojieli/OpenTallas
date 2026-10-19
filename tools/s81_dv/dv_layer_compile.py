@@ -146,8 +146,9 @@ class Die:
             k = self.strap(ld[lk], 'k') if lk in ld else None
             e = self.E.get(lk, {}).get('E')
             n = len(st.get(lk, []))
-            # half-cycle stations: one T/2 each; landing: last station -> o = E + 1 edges (ot_s81_land contract)
-            age = (math.ceil(n / 2) + e + 1) if lk in ld else n / 2
+            # half-cycle stations: one T/2 each; landing: last station -> o = K + 1 edges (ot_s81_land contract; the
+            # die's .k strap is the landing latency -- K = E until S81-LBGAP G8 aligns bundles with K > E; LB2-S81/REPLAY)
+            age = (math.ceil(n / 2) + (k if k is not None else e) + 1) if lk in ld else n / 2
             self.links[lk] = dict(stations=n, landing=ld.get(lk), K=k, E=e, src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
 
