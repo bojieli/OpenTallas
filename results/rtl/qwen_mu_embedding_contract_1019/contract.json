@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.qwen-mu-embedding-contract.v1",
+  "enabled_by_default": false,
+  "production_bound": false,
+  "FIRST": null,
+  "owners": {
+    "compiler_manifest": "codex/mu-ctx-admission-1019@065ee54a7:results/rtl/mu_qwen_1018/admission/cold_prefix/manifest.json",
+    "sysface": "codex/sysface-cyclic-1019@d1cc15095",
+    "controller": "644073ce1"
+  },
+  "identity": {
+    "token_bits": 18,
+    "epoch_bits": 16,
+    "user_bits": 2,
+    "epoch_user": "epoch[1:0]",
+    "epoch_sequence": "epoch[15:2]"
+  },
+  "model": {
+    "ledger_bits": 136,
+    "valid_bits": 4,
+    "resident_identity_bits": 36,
+    "reservation_bits": 2,
+    "fault_bits": 1,
+    "total_state_bits": 179,
+    "added_data_memory_bytes": 0,
+    "logical_added_cycles": 0,
+    "physical_cycles": null,
+    "physical_area_um2": null,
+    "mux": "4-to-1 34-bit tuple",
+    "boundary_bits_per_cycle": "accept37,fetch3,consume37,release1; outputs69 including expected tuple and fill strobe",
+    "macs_per_cycle": 0,
+    "replicas": 1,
+    "admitted": false
+  },
+  "bench_only": {
+    "rounds": 8,
+    "users": [
+      0,
+      1,
+      2,
+      3,
+      0,
+      1,
+      2,
+      3
+    ],
+    "epochs": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "round_span": 200,
+    "accept": 10,
+    "fetch": 20,
+    "expected_scale": 22,
+    "expected_codes": [
+      23,
+      86
+    ],
+    "core_start": 90,
+    "user0_lookahead_accept": 91,
+    "native_command": 92,
+    "native_code_reads": [
+      95,
+      158
+    ],
+    "native_outputs": [
+      98,
+      162
+    ],
+    "release": 170,
+    "end_check": 180,
+    "released_rows": [
+      0,
+      65536,
+      151935
+    ]
+  },
+  "production_requirements": [
+    "validated accepted tuple, including user0 initialization/update, before fetch",
+    "separate CTLM consume user/epoch path or proven sideband association",
+    "expected-word calendar triggered for each filler head SEG1 as well as user0",
+    "no second fetch until previous native read sequence released",
+    "INIT/reload consume after actual FACE/provider completion",
+    "physical LP/face/die stages priced in shared compiler manifest"
+  ],
+  "mutants": {
+    "1": "returned token",
+    "2": "returned epoch/user",
+    "3": "core token",
+    "4": "omitted last code word",
+    "5": "premature core start",
+    "6": "core epoch wrong user",
+    "7": "native command token",
+    "8": "core epoch same user +4",
+    "9": "omitted fetch/fill",
+    "10": "overlapping fetch during native reads",
+    "11": "late fetch at consume",
+    "12": "consumer wrong user",
+    "13": "reloaded user0 consumes old epoch0 instead of epoch4"
+  }
+}

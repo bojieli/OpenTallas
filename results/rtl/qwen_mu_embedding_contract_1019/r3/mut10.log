@@ -1,0 +1,4 @@
+FIRST_CODE_RE cycle=95 token=65536 epoch=0 resident=65536/0 complete=1
+[151000] %Fatal: tb_mu_embedding_contract.sv:74: Assertion failed in tb_mu_embedding_contract: JOIN_FAIL identity/residency provider=1 native=0 ledger=1
+%Error: rtl/test/qwen_split/tb_mu_embedding_contract.sv:74: Verilog $stop
+Aborting...
