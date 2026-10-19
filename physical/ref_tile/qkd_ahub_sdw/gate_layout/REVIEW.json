@@ -1,17 +1,28 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "qkd_ahub_sdw",
- "reviewer": "coordinator (2026-10-19 ~03:30)",
+ "reviewer": "coordinator (COORD 17:00 review of a6 944df8a10, lanes/KV-AHUB6.md; receipt written by KV-AHUB7 under that decision)",
  "verdict": "APPROVED",
- "time": "2026-10-19T03:30:00-07:00",
- "gate_commit": "25f7d0fb2",
+ "time": "2026-10-19T17:00:00-07:00",
+ "gate_commit": "944df8a10",
+ "decision": "COORD 17:00",
  "checklist": {
-  "lattice": "ACCEPT: 4 ot_nhb_zh + recip leaf in a regular 2x2+1 grid; zh y-origin 43.224 (0.024 um off lattice: DBU rounding; snap at next re-kit)",
-  "std_cell_band": "PASS: wires-mostly parent, std cells in channels, fill 0.353",
-  "pin_spread": "ACCEPT: W/E mid-face and N top-centre cluster (765 pins, pin-limited parent; partial faces follow the die plan)",
-  "clock_entry": "PASS: N-centre; spread TT 18.8 / FF 52.5 (<=80); insertion 1286/1068 is guidance (clock rule = spread)",
-  "shape": "PASS: 734.4x540 = geometry Codex reviewed for a3; GRT ovf 0"
+  "lattice": "ACCEPTED (COORD 17:00): 4 ot_nhb_zh + ot_qkh_recip_leaf at the a6 places; zh y 43.224 = coordinator waiver (43.2 puts the closed view's clk/rst_n M4 off track, KV-SUBMITFIX)",
+  "std_cell_band": "PASS: one full-width logic band y 194.4-345.6 between the Z-tree rows (core / io / relays); std util ~1%, fill 35.8%",
+  "pin_spread": "PASS: per-port disjoint ranges (pin_balance) on full faces: S 26%, N 38%, W 28%, E 20% of face length; pin geometry 629/629 on track",
+  "clock_entry": "PASS: one entry ck at N centre -> spine; pin-flop spread 28.9 TT / 36.6 FF ps (<= 80); insertion 880 ps = guidance (parent compensation / landing)",
+  "shape": "PASS: 734.4 x 540 (1.36:1); GRT overflow 0 at the a6 gate"
  },
- "notes": "a5 = the variant the die binds (AP_OFS/FR_OFS/Z_IN_STRIDE 4); a3 route can be cancelled.",
- "geometry_sha256": "da5d715adb6bef5b48448bedb279668256ca5897c3797b745241c36e0ee6ed1d"
+ "notes": "COORD 17:00: floorplan geometry (4 ZH + recip leaf, pins, 734.4x540) ACCEPTED; the 0-cycle a6 tweak NOT approved. a7 implements the decision with pins / pin_ranges / macros / outline identical (geometry_sha256 unchanged): one registered relay stage on each > 405 um leg (tree-select rt_q per Z tree, reciprocal y RY_RLY 2, W-face export relay u_rw WF_RLY 1); recip loop +2 edges handed to MU-DIE-KV (HUB_PUB law recip + 75); fr die edge unchanged (FR_OFS -7).",
+ "safe_design": {
+  "1_pins": "PASS: every input lands in a pin flop (u_io, ap_q), every output leaves a flop (am, u_rw fr relay, hf); rst_n lands in u_rr s0/s1",
+  "2_reach": "fixed (a7): relay stage on the tree-select, reciprocal-y and W-face export legs (~650 um each -> 2 hops)",
+  "3_fanout": "fixed (a7): core reset rn[1] 296 loads split into 2 regions (~150 each); q_rs one flop per tree drives 32 ANDs",
+  "4_depth": "PASS: a6 gate textbook depth 573 ps; decodes registered one edge ahead; one-hot selects",
+  "5_storage": "PASS: no runtime-indexed flop array > 2 kb (lm 16x32 b = 512 b, rz 4x32 b); Z sums in the closed ZH macros",
+  "6_floorplan": "PASS with waiver: children on the lattice except zh y 43.224 (coordinator waiver); full-width std-cell band; 1.36:1",
+  "7_clock": "PASS: centre-fed spine, spread 28.9/36.6 ps TT/FF, child-boundary clock reference, io_hold_margin 0.03",
+  "8_schedule": "PASS: static; +2 recip-loop edges handed to MU-DIE-KV (HUB_PUB = HUB_RECIP + 75), W relay absorbed inside the hub (same die edge)"
+ },
+ "geometry_sha256": "1d302540c6dc76ef0f65f1a9ecb3f9aede2b7ca9b28b401fd24a0732094f01a4"
 }

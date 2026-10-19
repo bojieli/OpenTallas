@@ -13,12 +13,19 @@
 // sealed ot_qkd_ahub_static_die_cal at stride 4).
 // MUT: 1..4 = the DUT's own negative controls; 5 = DUT at stride 16 (the a3 kit); 6 / 7 = slot_h / slot_k decode +1 (sed
 // copy); 8 = DUT at the RTL default offsets {4{2}} / 0 (the a4 kit) against this die; 9 = DUT FR_OFS + 1; 10 = DUT
-// AP_OFS[ES] + 1.  All must FAIL.
+// AP_OFS[ES] + 1; 11 = DUT tree-select relay bypassed (DUT MUT 5); 12 = DUT W-face export relay bypassed (DUT MUT 6).
+// All must FAIL.
+// KV-AHUB7 10-19 (COORD 17:00, a7): the DUT has one registered relay stage on each > 405 um leg (tree select RS 1,
+// reciprocal y RY 2, W-face export WF 1): its reciprocal loop is R_ISSUE + 71 (was + 69), so the compiled HUB_PUB law
+// is HUB_RECIP + 75 (attn_calendar.hub pub = recip + 67 + 2 + 2 + 4; was + 73).  Every calendar below is the HKV-DIE3
+// one with HUB_PUB + 2; PV_START / R are unchanged at every T (EXP binds PV_START: pub + RZ_MARGIN - max(P) stays below
+// it by >= 6 edges), so the service end and fr's R slot do not move.  The reference sealed hub runs RX_RLY 2 / RY_RLY 2
+// (the same loop latency).
 module tb_qkd_ahub_static_dw_s4o;
     parameter integer MUT = 0;
     localparam integer ZS = 4;                                   // the die's Z_IN_STRIDE (kv_static_die ASTK_Z_STRIDE)
     localparam integer DUT_ZS = (MUT == 5) ? 16 : ZS;
-    localparam integer DUT_MUT = (MUT <= 4) ? MUT : 0;
+    localparam integer DUT_MUT = (MUT <= 4) ? MUT : (MUT == 11) ? 5 : (MUT == 12) ? 6 : 0;
     localparam integer D_HS = 46, D_FR = 0, PVL = 0, D_PVFST = 40;   // the die's relay stages (fa7fe4ff9 table)
     localparam integer D_AP0 = 8, D_AP1 = 8, D_AP2 = 10, D_AP3 = 9;     // stacks WS WN ES EN
     localparam integer LH = D_HS + 1;
@@ -30,13 +37,13 @@ module tb_qkd_ahub_static_dw_s4o;
     // production calendars (11 x 16 b): {R, P1, P0, PV_START, HUB_PUB, HUB_RECIP, HUB_Z, HUB_LMAX, Z, LMAX, EXP}
     function automatic [175:0] pcal(input integer T);
         case (T)
-            1:       pcal = {16'd1067, 16'd248, 16'd280, 16'd663, 16'd933, 16'd860, 16'd779, 16'd236, 16'd518, 16'd229, 16'd244};
-            128:     pcal = {16'd1037, 16'd248, 16'd280, 16'd693, 16'd963, 16'd890, 16'd809, 16'd251, 16'd548, 16'd244, 16'd259};
-            1000:    pcal = {16'd1054, 16'd328, 16'd328, 16'd676, 16'd994, 16'd921, 16'd840, 16'd267, 16'd579, 16'd260, 16'd275};
-            2048:    pcal = {16'd1056, 16'd392, 16'd392, 16'd674, 16'd1056, 16'd983, 16'd902, 16'd299, 16'd641, 16'd292, 16'd307};
-            4096:    pcal = {16'd1041, 16'd520, 16'd520, 16'd689, 16'd1180, 16'd1107, 16'd1026, 16'd363, 16'd765, 16'd356, 16'd371};
-            6144:    pcal = {16'd906, 16'd648, 16'd648, 16'd824, 16'd1336, 16'd1263, 16'd1182, 16'd459, 16'd921, 16'd452, 16'd467};
-            default: pcal = {16'd814, 16'd776, 16'd776, 16'd916, 16'd1428, 16'd1355, 16'd1274, 16'd491, 16'd1013, 16'd484, 16'd499};
+            1:       pcal = {16'd1067, 16'd248, 16'd280, 16'd663, 16'd935, 16'd860, 16'd779, 16'd236, 16'd518, 16'd229, 16'd244};
+            128:     pcal = {16'd1037, 16'd248, 16'd280, 16'd693, 16'd965, 16'd890, 16'd809, 16'd251, 16'd548, 16'd244, 16'd259};
+            1000:    pcal = {16'd1054, 16'd328, 16'd328, 16'd676, 16'd996, 16'd921, 16'd840, 16'd267, 16'd579, 16'd260, 16'd275};
+            2048:    pcal = {16'd1056, 16'd392, 16'd392, 16'd674, 16'd1058, 16'd983, 16'd902, 16'd299, 16'd641, 16'd292, 16'd307};
+            4096:    pcal = {16'd1041, 16'd520, 16'd520, 16'd689, 16'd1182, 16'd1107, 16'd1026, 16'd363, 16'd765, 16'd356, 16'd371};
+            6144:    pcal = {16'd906, 16'd648, 16'd648, 16'd824, 16'd1338, 16'd1263, 16'd1182, 16'd459, 16'd921, 16'd452, 16'd467};
+            default: pcal = {16'd814, 16'd776, 16'd776, 16'd916, 16'd1430, 16'd1355, 16'd1274, 16'd491, 16'd1013, 16'd484, 16'd499};
         endcase
     endfunction
     reg [175:0] CAL = 0;
@@ -60,7 +67,7 @@ module tb_qkd_ahub_static_dw_s4o;
     reg  [3:0] g_v, g_g, g_a;  reg [7:0] g_t, g_h;  reg [15:0] g_k;  reg [127:0] g_d;
     wire [143:0] r_am;  wire r_rzv, r_pub, r_fault;  wire [1:0] r_rzh;  wire [31:0] r_rzd;  wire [15:0] r_rze;
     wire [127:0] r_rz;
-    ot_qkd_ahub_static_die_cal #(.Z_IN_STRIDE(ZS), .Z_LEVEL_GAP(10), .ZW_RLY(0), .ZR_RLY(0), .RX_RLY(1), .RY_RLY(1)) u_ref (
+    ot_qkd_ahub_static_die_cal #(.Z_IN_STRIDE(ZS), .Z_LEVEL_GAP(10), .ZW_RLY(0), .ZR_RLY(0), .RX_RLY(2), .RY_RLY(2)) u_ref (
         .cal({cal[111:96], cal[95:80], cal[79:64], cal[63:48], ZIN, ZIN, ZIN, ZIN, LIN, LIN, LIN, LIN}),
         .ck_core(ck), .ck_recip(ck), .ck_zh({4{ck}}), .rst_n(rst_n), .start(start_qk), .active_layer_parity(layer[0]),
         .request_epoch(ep), .active_layer(layer), .T(ctx), .si_valid(g_v), .si_g(g_g), .si_any(g_a), .si_epoch(r_hep),

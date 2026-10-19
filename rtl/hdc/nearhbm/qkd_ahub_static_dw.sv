@@ -35,6 +35,7 @@
 module qkd_ahub_static_io #(
     parameter [63:0] AP_OFS = {4{16'd2}},
     parameter integer FR_OFS = 0,
+    parameter integer WF_RLY = 0,
     parameter integer MUT = 0
 ) (
     input  wire          ck,
@@ -82,7 +83,9 @@ module qkd_ahub_static_io #(
         end
     end
     // export target from the same command's PV_START + R (17-bit + sign: never wraps into a reachable age)
-    wire signed [18:0] tgt_n = $signed({3'd0, c_pv}) + $signed({3'd0, cal_r_q}) + FR_OFS + ((MUT == 1) ? 1 : 0);
+    // KV-AHUB7 10-19 (COORD 17:00): the export leaves WF_RLY registered relay edges before the W-face pins, so u_io emits
+    // WF_RLY edges earlier; FR_OFS keeps its die meaning (fr still lands on pvfin's R slot, no die re-binding).
+    wire signed [18:0] tgt_n = $signed({3'd0, c_pv}) + $signed({3'd0, cal_r_q}) + FR_OFS - WF_RLY + ((MUT == 1) ? 1 : 0);
     // pin stage (every input registered; start / held words ride together, so the hub samples one coherent command)
     always @(posedge ck or negedge rst_n)
         if (!rst_n) start <= 1'b0; else start <= hs_start;
@@ -156,7 +159,9 @@ module qkd_ahub_static_dw #(
     parameter integer ZW_RLY = 0,
     parameter integer ZR_RLY = 0,
     parameter integer RX_RLY = 1,
-    parameter integer RY_RLY = 1,
+    parameter integer RY_RLY = 2,
+    parameter integer RS_RLY = 1,
+    parameter integer WF_RLY = 1,
     parameter integer MUT = 0
 ) (
     input  wire          ck,
@@ -212,11 +217,23 @@ module qkd_ahub_static_dw #(
     endfunction
     assign am0 = am_astk(am[35:0]);    assign am1 = am_astk(am[71:36]);
     assign am2 = am_astk(am[107:72]);  assign am3 = am_astk(am[143:108]);
-    qkd_ahub_static_io #(.AP_OFS(AP_OFS), .FR_OFS(FR_OFS), .MUT(MUT)) u_io (
+    // KV-AHUB7 10-19 (COORD 17:00 review of a6: every leg > 405 um gets one registered relay stage; pins / macros as a6):
+    //   (1) tree selects: rc_x = OR of four per-tree relay words rt_q[a] = q_rs[a] & root_a (RS_RLY, u_core; +1 edge);
+    //   (2) reciprocal y -> core rz[]: RY_RLY 2 (u_ry stage 0 anchored at the leaf pins, stage 1 on the way; +1 edge);
+    //   (3) W-face export: u_io's export flops -> u_rw (WF_RLY 1) -> fr pins; u_io emits WF_RLY edges earlier, so fr lands
+    //       on the same die edge (FR_OFS unchanged).
+    // Recip loop: RECIP_RETURN = R_ISSUE + 67 + RS + RX + RY = R_ISSUE + 71 (a6: + 69); the compiler's HUB_PUB law moves
+    // to HUB_RECIP + 75 (attn_calendar.hub: pub = recip + 67 + 2 + 2 + 4), handed to MU-DIE-KV.
+    // MUT 5 (bench): tree-select relay bypassed (data one edge early against the counted RECIP_RETURN); MUT 6: W-face relay
+    // bypassed (fr one edge before pvfin's R slot).  Both must FAIL.
+    wire fr_valid_i;  wire [15:0] fr_epoch_i;  wire [127:0] fr_rz_i;
+    ot_qkd_drly #(.W(145), .N((MUT == 6) ? 0 : WF_RLY)) u_rw (.clk(ck), .d({fr_rz_i, fr_epoch_i, fr_valid_i}),
+        .q({fr_rz, fr_epoch, fr_valid}));
+    qkd_ahub_static_io #(.AP_OFS(AP_OFS), .FR_OFS(FR_OFS), .WF_RLY(WF_RLY), .MUT(MUT)) u_io (
         .ck(ck), .rst_n(rr[0]), .hs_start(hs_start), .hs_ep(hs_ep), .hs_layer(hs_layer), .hs_ctx(hs_ctx),
         .hs_cal_lo(hs_cal_lo), .hs_cal_r(hs_cal_r), .start(start), .epoch(epoch), .layer(layer), .T(T),
         .hub_cal(hub_cal), .si_epoch(si_epoch), .si_layer(si_layer), .rz_publish(rz_publish), .rz_epoch(rz_epoch),
-        .rz_vector(rz_vector), .hub_fault(hub_fault), .fr_valid(fr_valid), .fr_epoch(fr_epoch), .fr_rz(fr_rz),
+        .rz_vector(rz_vector), .hub_fault(hub_fault), .fr_valid(fr_valid_i), .fr_epoch(fr_epoch_i), .fr_rz(fr_rz_i),
         .fault(hf));
     // ---- the static hub (= ot_qkd_ahub_static_die_cal, cal {RZ_PUBLISH, RECIP_ISSUE, Z_START, LMAX_ISSUE, Z_IN x4,
     // LMAX_IN x4}; RECIP_RETURN is the leaf + relay geometry) ----
@@ -227,9 +244,9 @@ module qkd_ahub_static_dw #(
     reg  [15:0] zh_err_q;
     always @(posedge ck) zh_err_q <= zh_err;
     wire rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
-    wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RX_RLY + RY_RLY);
+    wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RS_RLY + RX_RLY + RY_RLY);
     // KV-AHUBDW2 10-18: the look-ahead core (decodes registered one edge ahead, edge-exact; see below)
-    qkd_ahub_static_core_la #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10), .MUT(MUT)) u_core (
+    qkd_ahub_static_core_la #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10), .RS_RLY(RS_RLY), .MUT(MUT)) u_core (
         .cal({hub_cal[191:176], recip_return, hub_cal[175:0]}),
         .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
         .active_layer(layer), .T(T),
@@ -346,7 +363,8 @@ endmodule
 module qkd_ahub_static_core_la #(
     parameter integer Z_IN_STRIDE=16,
     parameter integer Z_LEVEL_GAP=10,
-    parameter integer MUT=0                             // 4 (bench negative control): decodes registered NOT ahead
+    parameter integer RS_RLY=0,                         // KV-AHUB7: per-tree relay stage on the reciprocal root select
+    parameter integer MUT=0                             // 4 (bench negative control): decodes registered NOT ahead; 5: RS relay bypassed
 )(
     input wire [207:0] cal,
     input wire clk,rst_n,start,active_layer_parity,
@@ -375,8 +393,9 @@ module qkd_ahub_static_core_la #(
     output wire [127:0] rz4,
     output reg fault
 );
-    wire [3:0] rn;
-    ot_rst_pipe #(.REGIONS(4),.STAGES(2)) u_rr (.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
+    // KV-AHUB7 10-19 (gate a6 textbook.high_fanout: rn[1] 296 loads): region 4 carries zseen[2..3] (two ~150-load copies)
+    wire [4:0] rn;
+    ot_rst_pipe #(.REGIONS(5),.STAGES(2)) u_rr (.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
     reg active,parity;reg [15:0] epoch;reg [5:0] layer;
     reg [63:0] LMAX_IN_AGE,Z_IN_AGE;reg [15:0] LMAX_ISSUE_AGE,Z_START_AGE,RECIP_ISSUE_AGE,RECIP_RETURN_AGE,RZ_PUBLISH_AGE;
     always @(posedge clk)if(start)
@@ -459,15 +478,19 @@ module qkd_ahub_static_core_la #(
     reg [15:0] lm_seen;
     reg [3:0] done_seen;
     always @(posedge clk or negedge rn[1])
-        if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
-        else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
+        if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;zseen[0]<=0;zseen[1]<=0;end
+        else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;zseen[0]<=0;zseen[1]<=0;end
         else begin
             for(integer a=0;a<4;a=a+1)begin
                 if(lm_b[a])begin lany[4*a+hh_b[2*a+:2]]<=any_b[a];lm_seen[4*a+hh_b[2*a+:2]]<=1;end
                 if(done_slot[a])done_seen[a]<=1;
-                if(z_b[a])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
+                if(z_b[a] && !hh_b[2*a+1])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
             end
         end
+    always @(posedge clk or negedge rn[4])
+        if(!rn[4])begin zseen[2]<=0;zseen[3]<=0;end
+        else if(start_b)begin zseen[2]<=0;zseen[3]<=0;end
+        else for(integer a=0;a<4;a=a+1)if(z_b[a] && hh_b[2*a+1])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
     always @(posedge clk)for(integer a=0;a<4;a=a+1)if(lm_b[a])lm[4*a+hh_b[2*a+:2]]<=data_b[32*a+:32];
     always @(posedge clk or negedge rn[0])if(!rn[0])zh_start<=0;else zh_start<={4{start_b}};
     always @(posedge clk)begin
@@ -508,17 +531,26 @@ module qkd_ahub_static_core_la #(
     reg [31:0] rz[0:3];
     reg [3:0] rz_seen;
     for(genvar a=0;a<4;a=a+1)assign rz4[32*a+:32]=rz[a];
+    // KV-AHUB7 10-19 (COORD 17:00): the tree-select leg gets a registered relay stage: rt_q[a] = q_rs[a] & root_a, one
+    // 32-flop word beside each Z tree (its select flop drives only those 32 ANDs), rc_x = OR of the four words one edge
+    // later; rc_v follows one edge later too (rc_vp), and RECIP_RETURN counts RS_RLY (dw).  MUT 5 bypasses the stage.
+    reg [31:0] rt_q[0:3];
+    always @(posedge clk)for(integer a=0;a<4;a=a+1)rt_q[a]<={32{q_rs[a]}}&zroot_q[64*a+:32];
+    wire [31:0] rc_sel=({32{q_rs[0]}}&zroot_q[31:0])|({32{q_rs[1]}}&zroot_q[95:64])|
+                       ({32{q_rs[2]}}&zroot_q[159:128])|({32{q_rs[3]}}&zroot_q[223:192]);
+    wire [31:0] rc_rly=rt_q[0]|rt_q[1]|rt_q[2]|rt_q[3];
+    reg rc_vp;
     always @(posedge clk or negedge rn[3])
-        if(!rn[3])begin rc_v<=0;rz_valid<=0;rz_publish<=0;rz_seen<=0;rz_epoch<=0;end
+        if(!rn[3])begin rc_v<=0;rc_vp<=0;rz_valid<=0;rz_publish<=0;rz_seen<=0;rz_epoch<=0;end
         else begin
-            rc_v<=recip_issue&&!start;rz_valid<=recip_return&&!start;
+            rc_vp<=recip_issue&&!start;
+            rc_v<=(RS_RLY!=0)?rc_vp:(recip_issue&&!start);rz_valid<=recip_return&&!start;
             rz_publish<=active && pub_hit && !start;
             rz_epoch<=epoch;
             if(start)rz_seen<=0;else if(recip_return)rz_seen[return_head]<=1;
         end
     always @(posedge clk)begin
-        rc_x<=({32{q_rs[0]}}&zroot_q[31:0])|({32{q_rs[1]}}&zroot_q[95:64])|
-              ({32{q_rs[2]}}&zroot_q[159:128])|({32{q_rs[3]}}&zroot_q[223:192]);
+        rc_x<=(RS_RLY!=0 && MUT!=5)?rc_rly:rc_sel;
         rz_head<=return_head;rz_data<=rc_y;
         if(recip_return)rz[return_head]<=rc_y;
     end
