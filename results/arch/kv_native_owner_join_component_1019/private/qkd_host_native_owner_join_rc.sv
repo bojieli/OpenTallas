@@ -39,6 +39,11 @@ module qkd_host_native_owner_join_rc #(
   input wire [86:0] event_key,
   input wire prompt_retired_v,
   input wire [86:0] prompt_key,
+  // Prospective saved CQ key is independent of the offer enable, avoiding
+  // a certify/fault feedback loop while vetoing malformed success pre-offer.
+  input wire cq_offer_native_valid,
+  input wire [86:0] cq_offer_key,
+  output wire cq_offer_ok,
   input wire cq_b_v,
   input wire [86:0] cq_key,
   input wire post_retired_v,
@@ -100,6 +105,9 @@ module qkd_host_native_owner_join_rc #(
   assign binding_valid = ENABLE_NATIVE_OWNER_JOIN && a_q.valid;
   assign binding_certified = binding_valid && a_q.cert_seen && !fault_q;
   assign protocol_fault = ENABLE_NATIVE_OWNER_JOIN && fault_q;
+  assign cq_offer_ok = !ENABLE_NATIVE_OWNER_JOIN || (a_q.valid &&
+    !fault_q && a_q.cert_seen && a_q.raw_seen && a_q.terminal_seen &&
+    a_q.event_copied && cq_offer_native_valid && cq_offer_key==expected_key);
   assign pending_phase = ENABLE_NATIVE_OWNER_JOIN ? p_q.phase : EMPTY;
   assign pending_client = ENABLE_NATIVE_OWNER_JOIN ? p_q.client : 16'd0;
   assign pending_slot = ENABLE_NATIVE_OWNER_JOIN ? p_q.slot : 8'd0;

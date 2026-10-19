@@ -50,3 +50,8 @@ allocating again. Prompt POST/report completion does not release the bound key
 until its real health certificate, raw result and terminal are also observed.
 Certificate acceptance requires actual raw and terminal witnesses. These fixes
 add no registers; the frozen 162-bit census remains unchanged.
+
+A prospective saved-CQ key compare drives cq_offer_ok before word0 offers.
+It checks the retained prior active binding and its actual certificate, raw and
+terminal witnesses. This wire path is independent from actual offer enables;
+registered fault detection alone is too late for current malformed word0.
