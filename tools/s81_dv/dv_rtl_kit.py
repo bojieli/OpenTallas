@@ -378,6 +378,27 @@ def main(argv=None):
         dst.write_bytes(texts[f])
         rec_files.append(dict(path=f, sha256=hashlib.sha256(texts[f]).hexdigest(),
                               origin=(extra[f] if f in extra else ('library-function' if f == 'cells_used.v' else sha))))
+    # `include files (LB2-S81 L0 10-18: dsdv_svc_rs.sv / dsdv_svc_sx_hrow.sv include *_roles.svh from their own
+    # directory; the kit copied only module files -> "Cannot find include file").  Written next to the includer (its
+    # directory is already an +incdir), never listed as a compile unit; a missing include is a kit problem.
+    includes = []
+    for f in list(files):
+        if f not in texts:
+            continue
+        for inc in re.findall(r'`include\s+"([^"]+)"', texts[f].decode(errors='ignore')):
+            cand = str(Path(f).parent / inc)
+            if cand not in texts:
+                r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                if r_.returncode:
+                    problems.append(f'INCLUDE_MISSING {inc} (included by {f})')
+                    continue
+                texts[cand] = r_.stdout
+            if cand not in includes and cand not in files:
+                includes.append(cand)
+                d_ = src / cand
+                d_.parent.mkdir(parents=True, exist_ok=True)
+                d_.write_bytes(texts[cand])
+                rec_files.append(dict(path=cand, sha256=hashlib.sha256(texts[cand]).hexdigest(), origin=sha, include=True))
     tdst = src / 'top' / Path(a.top_v).name.replace('.gz', '')
     tdst.parent.mkdir(parents=True, exist_ok=True)
     tdst.write_text(top_text)
