@@ -1,0 +1,12 @@
+{
+ "source_commit": "3b68a5ed4",
+ "verilator": null,
+ "simulator": "Icarus Verilog g2012",
+ "host": "ot-epyc5",
+ "positive": "PASS mut=0 errors=0 programme=1 descriptor=1 runs=1",
+ "mutants": {
+  "1": "FAIL: run argument off by one",
+  "2": "FAIL: target-id filter removed"
+ },
+ "scope": "Direct run-target protocol; no end-to-end physical qualification"
+}

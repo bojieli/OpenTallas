@@ -1,0 +1,21 @@
+GATE INFO pin_regs: pin registers opted out: RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['tgt_active', 'tgt_fault']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO remote: ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hdie_cp_svg_rel_1019_20261019-075932.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hdie_cp_svg_rel_1019_20261019-075932.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hdie_cp_svg_rel_1019-20261019-075932
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 18 s (gate total 93 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 895, 'pin_rectangles': 895, 'pin_track_checked': 895, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 7c045f031202335cdb13b5f3e2b8c46e8948077400b25e385a345ca79c0c46a0
+GATE WARN util: synthesized std area 446 um2 + macros 0 in core 6737: util 7%  -> FIX: set "std_area_um2": 446 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_static_run_target cells 2,974 flops 922 depth 293.4 ps util 0.0664 reach 0.0 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 6.6% outside 45%-65% (std 448 + macro 0 um2 in 6737 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 146.1..169.4 ps (spread 23.3), boundary mean 159.6; tt insertion all 109.7..131.3 ps (spread 21.6), boundary mean 122.1; ff insertion all 88.6..109.6 ps (spread 21.0), boundary mean 100.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hdie_cp_svg_rel_1019/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      347 paths, worst slack 268.0 ps (e.g. a_data[66]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS 2.679995114718281e-10 hold WNS 4.1840489406475e-11
+GATE INFO clock_rule: root port:clk: 922 sinks on the largest root; measured TT insertion 131.3 ps, FF insertion 109.6 ps, TT pin-flop spread 21.6 ps, FF pin-flop spread 21.0 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-smb-kits-1019/physical/ref_tile/hdie_cp_svg_rel_1019/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-hbm-smb-kits-1019/physical/ref_tile/hdie_cp_svg_rel_1019/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 18.00% used; GRT 17 s
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: hdie_cp_svg_rel_1019/gate_result.json written (exact staged source binding; commit it with the kit)

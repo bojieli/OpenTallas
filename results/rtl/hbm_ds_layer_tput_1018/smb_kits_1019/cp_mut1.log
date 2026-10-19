@@ -1,0 +1,4 @@
+RUN_TARGET FAIL mut=1 errors=1 programme=1 descriptor=1 runs=1
+FATAL: rtl/test/hbm_accel/svg_rel/tb_static_run_target.sv:38: run target mismatch
+       Time: 410000  Scope: tb_static_run_target
+MUT=1 RC=1

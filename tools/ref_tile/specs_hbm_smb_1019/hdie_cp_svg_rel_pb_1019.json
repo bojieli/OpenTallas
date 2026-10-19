@@ -1,0 +1,140 @@
+{
+ "name": "hdie_cp_svg_rel_pb_1019",
+ "top": "ot_static_run_target",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 51.84,
+  "h": 51.84,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "cfg_data"
+  ],
+  "S": [
+   "a_data"
+  ],
+  "E": [
+   "b_data"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "tgt_active",
+   "tgt_fault",
+   "a_we",
+   "a_addr",
+   "b_we",
+   "b_addr",
+   "run_v",
+   "run_base",
+   "run_count",
+   "run_arg",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge"
+ },
+ "params": {
+  "AWA": 11,
+  "AWB": 8,
+  "RBW": 8,
+  "RCW": 9,
+  "NA": 2,
+  "NF": 1,
+  "TGT_PIN": 1,
+  "RSYNC": 1
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "job": {
+  "owner": "Codex:HBM-SMB-KITS",
+  "branch": "codex/hbm-smb-kits-1019",
+  "tag": "r1",
+  "purpose": "Measured predecessor has 446 um2 std area and 895 pins. 51.84 square is pin-bound: 256-bit buses occupy separate N/S/E full faces at <6 pins/um; all narrow control and clock W. Predicted utilization ~20% is a physical pin-count limit, explicitly requires coordinator floorplan exception before adoption.",
+  "extra_paths": [
+   "rtl/test/hbm_accel/svg_rel",
+   "tools/hbm_layer_vehicle/smb_unit.py",
+   "results/rtl/hbm_ds_layer_tput_1018/smbudget_1019",
+   "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019"
+  ],
+  "benches": [
+   {
+    "name": "run_exact",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_run_target.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "RUN_TARGET PASS mut=0 errors=0",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "run_mut1",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_run_target.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "RUN_TARGET FAIL mut=1 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/cp_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "run_mut2",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_run_target.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "RUN_TARGET FAIL mut=2 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/smb_kits_1019/cp_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/hdie_cp_svg_rel_pb_1019/views",
+  "record_to": "results/rtl/ref_tile/hdie_cp_svg_rel_pb_1019"
+ },
+ "slot_change_request": "HBM-SMB-KITS -> HBM die lead: 51.84 square pin-bound cp_svg slot; W controls, N cfg_data, S a_data, E b_data; unchanged cfg/run cycles. Needs pin-bound utilization exception (~20%).",
+ "structural_change": "Measured predecessor has 446 um2 std area and 895 pins. 51.84 square is pin-bound: 256-bit buses occupy separate N/S/E full faces at <6 pins/um; all narrow control and clock W. Predicted utilization ~20% is a physical pin-count limit, explicitly requires coordinator floorplan exception before adoption.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL RSYNC=1 lands rst_n through the plain two-flop rsync[0]/rsync[1] pipeline; no raw pin drives core reset."
+ },
+ "std_area_um2": 446
+}
