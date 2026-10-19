@@ -17419,3 +17419,9 @@ def hbm_svg_landing_boundary_model():
     """Opt-in native pin landing: full-rate reserved ring and priced edges."""
     from hbm_layer_vehicle.svg_landing_boundary_model import model
     return model()
+
+
+def hbm_svg_regional_model():
+    """HBM-SMB-KITS native pipeline + regional return hierarchy before RTL."""
+    from hbm_layer_vehicle.svg_hierarchy_model import model
+    return model()
