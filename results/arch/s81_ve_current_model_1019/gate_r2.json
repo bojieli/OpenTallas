@@ -1,0 +1,137 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered (S81U-MIX): every input lands in a pin flop (*_q), every output is a flop.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81sl_ve_20261019-035916.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81sl_ve_20261019-035916.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 2647 s (gate total 15346 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1295, 'pin_rectangles': 1295, 'pin_track_checked': 1295, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 5752183ab6510d33d92ef42b4147ff9be413a208c368be2e8563f2da9a3e63b4",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 41013 um2 + macros 0 in core 116472: util 35%",
+   "fix": "set \"std_area_um2\": 41013 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81sl_ve cells 342,684 flops 41,966 depth 601.8 ps util 0.3114 reach 0.0 um (18.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 41,966 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset u_ot_pr_core.add.reset_leaf.sync[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 2,320 loads (2,320 flops, e.g. u_ot_pr_core.add.fault$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.add.lane[3].add.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[4]$_DFF_P_ -> u_ot_pr_core.add.lane[3].add.gq.u.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[1]$_DFF_P_/D: ~602 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 31.1% outside 45%-65% (std 36264 + macro 0 um2 in 116472 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 41,966 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 41,966 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 530.6..588.8 ps (spread 58.2), boundary mean 557.2; tt insertion all 405.3..458.3 ps (spread 53.0), boundary mean 429.4; ff insertion all 328.4..379.1 ps (spread 50.7), boundary mean 351.4; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81sl_ve/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      600 paths, worst slack 90.3 ps (e.g. u_ot_pr_core.chunk_kk.term[7].add.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[8]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 9.027767422509214e-11 hold WNS 3.720768138038011e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 41,966 sinks on the largest root; measured TT insertion 458.3 ps, FF insertion 379.1 ps, TT pin-flop spread 30.5 ps, FF pin-flop spread 30.9 ps; WARN: 41,966 sinks on one clock root > 15,000 (guidance); insertion 458.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-ve-1019/physical/ref_tile/s81sl_ve/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-ve-1019/physical/ref_tile/s81sl_ve/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 23.27% used; GRT 1277 s",
+   "fix": ""
+  }
+ ]
+}

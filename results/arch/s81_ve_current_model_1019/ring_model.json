@@ -1,0 +1,132 @@
+{
+  "verdict": "PASS abstract OLD-row recurrence only; not production RTL reset/valid proof",
+  "rings": [
+    {
+      "name": "mul.key",
+      "count": 4,
+      "width": 32,
+      "delay": 5,
+      "rows": 3,
+      "pointer_bits": 2,
+      "all_initial_codes": 4,
+      "checks": 44,
+      "memory_bits_per_ring": 96
+    },
+    {
+      "name": "mul.hold",
+      "count": 2,
+      "width": 128,
+      "delay": 6,
+      "rows": 4,
+      "pointer_bits": 2,
+      "all_initial_codes": 4,
+      "checks": 52,
+      "memory_bits_per_ring": 512
+    },
+    {
+      "name": "chunk.t1",
+      "count": 3,
+      "width": 32,
+      "delay": 4,
+      "rows": 2,
+      "pointer_bits": 1,
+      "all_initial_codes": 2,
+      "checks": 18,
+      "memory_bits_per_ring": 64
+    },
+    {
+      "name": "chunk.t2",
+      "count": 3,
+      "width": 32,
+      "delay": 8,
+      "rows": 6,
+      "pointer_bits": 3,
+      "all_initial_codes": 8,
+      "checks": 136,
+      "memory_bits_per_ring": 192
+    },
+    {
+      "name": "chunk.t3",
+      "count": 3,
+      "width": 32,
+      "delay": 12,
+      "rows": 10,
+      "pointer_bits": 4,
+      "all_initial_codes": 16,
+      "checks": 400,
+      "memory_bits_per_ring": 320
+    },
+    {
+      "name": "chunk.t4",
+      "count": 3,
+      "width": 32,
+      "delay": 16,
+      "rows": 14,
+      "pointer_bits": 4,
+      "all_initial_codes": 16,
+      "checks": 528,
+      "memory_bits_per_ring": 448
+    },
+    {
+      "name": "chunk.t5",
+      "count": 3,
+      "width": 32,
+      "delay": 20,
+      "rows": 18,
+      "pointer_bits": 5,
+      "all_initial_codes": 32,
+      "checks": 1312,
+      "memory_bits_per_ring": 576
+    },
+    {
+      "name": "chunk.t6",
+      "count": 3,
+      "width": 32,
+      "delay": 24,
+      "rows": 22,
+      "pointer_bits": 5,
+      "all_initial_codes": 32,
+      "checks": 1568,
+      "memory_bits_per_ring": 704
+    },
+    {
+      "name": "chunk.t7",
+      "count": 3,
+      "width": 32,
+      "delay": 28,
+      "rows": 26,
+      "pointer_bits": 5,
+      "all_initial_codes": 32,
+      "checks": 1824,
+      "memory_bits_per_ring": 832
+    },
+    {
+      "name": "add.hold",
+      "count": 8,
+      "width": 32,
+      "delay": 5,
+      "rows": 3,
+      "pointer_bits": 2,
+      "all_initial_codes": 4,
+      "checks": 44,
+      "memory_bits_per_ring": 96
+    },
+    {
+      "name": "add.copy",
+      "count": 1,
+      "width": 2,
+      "delay": 11,
+      "rows": 9,
+      "pointer_bits": 4,
+      "all_initial_codes": 16,
+      "checks": 368,
+      "memory_bits_per_ring": 18
+    }
+  ],
+  "ring_count": 36,
+  "memory_bits": 11602,
+  "pin_data_ff": 2628,
+  "pointer_ff": 113,
+  "max_coherent_store_bits": 832,
+  "explanation": "Every invalid code saturates to zero on its first edge. That edge writes no real row and reads unknown, but din captures d1. The first real write at edge2 stores d1 in row0; its OLD read at edge N+2 equals the required D=N+2 delayed d1. All legal codes rotate similarly. Unknown memory/output before D is intentionally unqualified; reset does not alter the data or pointer. Actual validity/first-use must suppress those outputs."
+}

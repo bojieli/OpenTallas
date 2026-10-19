@@ -1,0 +1,36 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: ot-epyc7       admits   991 GB (avail 767, growth 73, headroom 0, waiters 0/0 GB) load 29/96 running 23 disk 6276 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_ve-20261019-035916/routes/gate/work/orfs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-80183-1792443181 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "/work/results/asap7/opentallas_ot_s81sl_ve_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "c795bfb691f2f0769f0ea13a2c26cdbc067f18d5532553709e7b319f1e0bdb79",
+  "roots": 235128,
+  "roles": {
+    "comb": 192655,
+    "ff": 41537,
+    "input": 936
+  },
+  "max_count_by_role": {
+    "comb": 2320,
+    "ff": 870,
+    "input": 41706
+  },
+  "over405_nonclock": 1,
+  "macros": 0,
+  "macro_masters": {},
+  "scope": "Exact saved GRT ODB, uncapped logical sink pins through BUF/INV; Manhattan endpoint reach is a geometric lower bound, not stage path or routed wire length; macro contacts report MPin objects, not detailed escape/PG connectivity qualification"
+}
+OVER32 1230
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-80183-1792443181): exit 0
