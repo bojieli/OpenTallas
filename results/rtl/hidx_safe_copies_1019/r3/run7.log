@@ -1,0 +1,16 @@
+IDX_LINK_PIPE frame0 MUT7 records512 flits64 errors0 fault0/0
+PIPE_MITER cycle396 dut vf f0 c512 | ref@-5 vf f0 c512
+PIPE_RECORD frame1 record0 expected000004003f000000 got0000040030000000
+PIPE_RECORD frame1 record6 expected000004063f660000 got0000040630000000
+PIPE_RECORD frame1 record12 expected0000040c3f4d0000 got0000040c30000000
+PIPE_RECORD frame1 record18 expected000004123f340000 got0000041230000000
+IDX_LINK_PIPE frame1 MUT7 records512 flits64 errors72 fault0/0
+IDX_LINK_PIPE frame2 MUT7 records512 flits64 errors88 fault0/0
+IDX_LINK_PIPE frame3 MUT7 records512 flits64 errors128 fault0/0
+IDX_LINK_PIPE frame4 MUT7 records512 flits64 errors144 fault0/0
+IDX_LINK_PIPE frame5 MUT7 records512 flits64 errors180 fault0/0
+IDX_LINK_PIPE frame6 MUT7 records0 flits0 errors180 fault1/1
+IDX_LINK_PIPE_TOTAL MUT7 records3072 miter1282 errors180 fillsff maxpack71 first_tx ref187 dut192 fault ref1282 dut1287
+[12950000] %Fatal: tb_idx_link_pipe.sv:85: Assertion failed in tb_idx_link_pipe: pipelined link exact/miter/latency mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_link_pipe.sv:85: Verilog $stop
+Aborting...

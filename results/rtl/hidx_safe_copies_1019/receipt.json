@@ -1,0 +1,23 @@
+{
+  "source_commit": "5af00a1ab",
+  "source_sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv": "35633c534dbe6236bbbc9074af1e3cf0eb07a2d7e5e6d3b3bee75d0e7652fabf",
+    "rtl/test/hbm_idx_static/tb_idx_link_pipe.sv": "1f2f108e2e584c5ab89d10dbfca8efa96cf428864465b2e61f63daed46444cff"
+  },
+  "fleet": "ot-agidock128",
+  "verilator": "5.050",
+  "production_records": 3072,
+  "miter_edges": 1282,
+  "positive_errors": 0,
+  "link_extra_edges": 5,
+  "causal_mutant_errors": {
+    "wrong_local_rotate": 180,
+    "wrong_local_read_bank": 162
+  },
+  "source_exactness": "PASS",
+  "source_safety": "PENDING exact mapped census",
+  "physical_gate_launched": false,
+  "remote": "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019",
+  "census_unit": "oth-ubuntu-1450365-1792429291",
+  "census_session": 98861
+}
