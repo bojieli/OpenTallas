@@ -301,12 +301,26 @@ endmodule
    on = ijc[160+(k/2)] && !(b39_on && lo[39] && MUT!=9) && a[5:4]==g_id;
    grp = {a[6],a[3]};
    if(on) begin
-    if((BADG<0 || grp==2'(BADG)) && v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
+    if(v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
     v[grp]=1'b1; row[9*grp+:9]=a[15:7];
    end
   end
  end
- wire [40:0] w = {bad,row,v};
+ // group-g conflict flag (BADG >= 0), written pairwise: a conflict = two in-group slots with different rows (the
+ // sequential form flags the first slot whose row differs from the latest in-group row: equivalent).  Each slot's group
+ // bits then feed one in-group compare only (r6 sequential form: 56 loads on a slot-1 group bit).
+ reg badg; reg [3:0] ing; reg [8:0] rw [0:3];
+ always @* begin
+  for(integer k=0;k<4;k=k+1) begin : gq
+   reg [39:0] a, lo;
+   a = ijc[40*k+:40]; lo = ijc[80*(k/2)+:40];
+   ing[k] = ijc[160+(k/2)] && !(b39_on && lo[39] && MUT!=9) && a[5:4]==g_id && {a[6],a[3]}==2'(BADG<0?0:BADG);
+   rw[k] = a[15:7];
+  end
+  badg = (ing[0]&&ing[1]&&rw[0]!=rw[1]) || (ing[0]&&ing[2]&&rw[0]!=rw[2]) || (ing[0]&&ing[3]&&rw[0]!=rw[3]) ||
+         (ing[1]&&ing[2]&&rw[1]!=rw[2]) || (ing[1]&&ing[3]&&rw[1]!=rw[3]) || (ing[2]&&ing[3]&&rw[2]!=rw[3]);
+ end
+ wire [40:0] w = (BADG<0) ? {bad,row,v} : {badg,40'd0};
  always @(posedge clk) begin
   if(sp==2'd0) q0 <= w;
   if(sp==2'd1) q1 <= w;
