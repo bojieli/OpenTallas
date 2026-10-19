@@ -36,13 +36,11 @@ bind2() {   # $1 contract  $2 out dir  $3 tag -> strict port bind + functional b
   mkdir -p $2; bash tools/hbm_die_v16/d4g_layers/l1_bind_check.sh $1 $2 > /dev/null; tail -1 $2/port_bind.log
   if ! grep -q "^DIE_PORT_BIND PASS" $2/port_bind.log; then
     # strict main tool: every structural class must be 0; unread_net_bits alone is recorded (held, ROOT manifest scope d517 only)
-    python3 - $2/port_bind.log > $2/bind_classes.log <<'PY' || { echo "$3_BIND_FAIL"; cat $2/bind_classes.log; grep '^FAIL' $2/port_bind.log | head; return 1; }
-import re, sys
-l = [x for x in open(sys.argv[1]) if x.startswith('DIE_PORT_BIND')][-1]
-kv = dict(re.findall(r'(\w+)=(\d+)', l)); ok_nonzero = {'masters', 'instances', 'strap_ports', 'unread_net_bits'}
-bad = {k: v for k, v in kv.items() if k not in ok_nonzero and int(v)}
-print('BIND_STRUCTURAL', 'PASS' if not bad else 'FAIL', 'unread_net_bits', kv.get('unread_net_bits'), bad)
-sys.exit(1 if bad else 0)
+    python3 - $2/port_bind.json > $2/bind_classes.log <<'PY' || { echo "$3_BIND_FAIL"; cat $2/bind_classes.log; grep '^FAIL' $2/port_bind.log | head; return 1; }
+import json, sys
+r = json.load(open(sys.argv[1])); bad = [f for f in r.get('failing', []) if f != 'unread_net_bits']
+print('BIND_STRUCTURAL', 'PASS' if not bad else 'FAIL', 'failing', r.get('failing'), 'unread_net_bits', r['summary'].get('unread_net_bits'))
+sys.exit(1 if bad or not r.get('failing') else 0)
 PY
     echo "$3_BIND_STRUCTURAL_PASS_UNREAD_HELD $(cat $2/bind_classes.log) -> DIAGNOSTIC (strict unread FAIL recorded, not waived)"
   fi
