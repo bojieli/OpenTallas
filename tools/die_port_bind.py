@@ -664,6 +664,64 @@ def load_pads(obj):
     return pads
 
 
+def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT):
+    """Keep generated role exceptions bound when the actual CLI consumes them.
+
+    Plain owner-declared pads retain their existing schema. Generated KV proofs
+    additionally bind the exact die and source bytes; external parameter changes
+    require re-derivation into the inline, hashed bound netlist.
+    """
+    names = ('source_contract', 'static_head_unused_contract', 'pvw_padding_contract')
+    present = [name for name in names if name in doc]
+    if not present:
+        return
+    if 'source_contract' not in present:
+        raise ValueError('derived pads require relay source_contract binding')
+    digest = hashlib.sha256(Path(die_v).read_bytes()).hexdigest()
+    if mparams:
+        raise ValueError('derived pads do not bind external parameter overrides; re-derive inline netlist')
+    sources = {}
+    for name in present:
+        contract = doc[name]
+        if not isinstance(contract, dict) or contract.get('die_sha256') != digest:
+            raise ValueError('derived pad contract die SHA mismatch: ' + name)
+        if name == 'source_contract':
+            if not contract.get('rtl') or not contract.get('rtl_sha256'):
+                raise ValueError('derived relay pads missing source identity')
+            rows = {contract['rtl']: contract['rtl_sha256'], **contract.get('forwarded_source_sha256', {})}
+        else:
+            rows = contract.get('source_sha256')
+            if not isinstance(rows, dict) or not rows:
+                raise ValueError('derived pad role missing source identity: ' + name)
+        for rel, sha in rows.items():
+            path = Path(root) / rel
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != sha:
+                raise ValueError('derived pad contract source SHA mismatch: ' + rel)
+            if rel in sources and sources[rel] != sha:
+                raise ValueError('derived pad contracts disagree on source: ' + rel)
+            sources[rel] = sha
+    if idx is None:
+        return
+    # The RTL index may prefer a caller-supplied file over the hashed repository
+    # copy. Check the actual selected relay and its pinned descendants too.
+    _, _, _, insts = parse_die(str(die_v))
+    relay_masters = {m for m, *_ in insts
+                     if re.fullmatch(r'qkd_(?:rlys|rlysh0?|landsh0?)_\d+', m)}
+    expected = {}
+    for rel, sha in sources.items():
+        if Path(rel).suffix not in ('.sv', '.v'):
+            continue
+        for module in parse_modules((Path(root) / rel).read_text(), str(Path(root) / rel)):
+            expected[module.name] = sha
+    seen = set()
+    child_closure(idx, relay_masters, set(), seen)
+    for master in relay_masters | seen:
+        if master in expected:
+            selected = idx.get(master)
+            if selected is None or hashlib.sha256(Path(selected.path).read_bytes()).hexdigest() != expected[master]:
+                raise ValueError('derived pads selected RTL differs from pinned source: ' + master)
+
+
 def _spare_port(pads, mst, pn, inst, width, spare_out):
     """an open output port is spare when a pad declaration (instance entry first, then master) covers ALL its bits"""
     key = (mst, pn, inst) if (mst, pn, inst) in pads else (mst, pn)
@@ -1069,7 +1127,14 @@ def main(argv=None):
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
-    pads = load_pads(json.loads(Path(a.pad_file).read_text())) if a.pad_file else {}
+    pad_doc = json.loads(Path(a.pad_file).read_text()) if a.pad_file else {}
+    pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
+    mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
+    try:
+        validate_derived_pad_contracts(pad_doc, a.die_v, mparams)
+    except (ValueError, OSError) as exc:
+        ap.error(str(exc))
+    pads = load_pads(pad_doc)
     straps = {tuple(s.split(':', 1)) for s in a.strap}
     if a.strap_file:
         sj = json.loads(Path(a.strap_file).read_text())
@@ -1115,8 +1180,10 @@ def main(argv=None):
             todo += sorted(idx[n].children(idx) - seen)
         print('\n'.join(files_))
         return 0
-    pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
-    mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
+    try:
+        validate_derived_pad_contracts(pad_doc, a.die_v, mparams, idx)
+    except (ValueError, OSError) as exc:
+        ap.error(str(exc))
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps), pads=pads)
     if not a.no_child_closure:
         # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
