@@ -1,0 +1,3 @@
+# Forwarded strict-route diagnostic FAIL
+
+Immutable source c9dcc8b00 on reused dv2f16 geometry (pathfinding only, not current dv2f18dh2 qualification). Unpinned fleet run auto-spilled ot-epyc4 to ot-epyc5; terminal exit1 and output copy-back verified. All regional root buffers built, then no legal bounded route (1940,854)->(1691,877), before timing/neighbor proof. 47m57s elapsed,5.8GB peak RSS. There is no PASS neighbor TT/FF receipt, no clock-phase qualification, and no release claim. Preserve <=405um physical segment limit, zero seed pads, and no oversized fallback. Next diagnostic should expose obstacle/corridor component at the rejected endpoints before rebuilding the whole die.
