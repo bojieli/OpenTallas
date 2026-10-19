@@ -68,6 +68,18 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
   .block_ready(block_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
   .out_v(out_v),.out_mask(out_mask),.out_data(out_data),.out_ordinal(out_ordinal),.out_bank(out_bank),.out_epoch(out_epoch),.out_last(out_last),.fault(cdc_fault),
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),.k_wr_done(k_wr_done),.kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
+ // Cache consumes a fixed sector train immediately after OPEN. Native landing
+ // delays that train two edges, so its complete OPEN envelope follows identically.
+ localparam integer OW=35;
+ reg [OW-1:0] open_d1,open_d2;
+ wire [OW-1:0] open_raw={open_q,open_bank_q,open_epoch_q,rows_q[open_land_q],tag_q[open_land_q]};
+ always @(posedge stream_clk or negedge stream_rst_n)
+  if(!stream_rst_n)begin open_d1<=0;open_d2<=0;end
+  else begin open_d1<=open_raw;open_d2<=open_d1;end
+ wire cache_open_v,cache_open_bank;wire[15:0]cache_open_epoch;
+ wire[6:0]cache_open_count;wire[9:0]cache_open_tag;
+ assign {cache_open_v,cache_open_bank,cache_open_epoch,cache_open_count,cache_open_tag}=
+  NATIVE_LANDING!=0?open_d2:open_raw;
  wire[95:0]indices;wire[63:0]epochs;
  for(genvar l=0;l<4;l=l+1)begin:metadata
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
@@ -130,7 +142,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  assign programme_observe=programme;
  assign sm_command=programme[82:0];
  ot_hbm_svc_static_sm_packed136 #(.PACKED136(1)) rows(
-  .clk(stream_clk),.rst_n(stream_rst_n),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),
+  .clk(stream_clk),.rst_n(stream_rst_n),.open_v(cache_open_v),.open_bank(cache_open_bank),.open_epoch(cache_open_epoch),.open_count(cache_open_count),.open_tag_base(cache_open_tag),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
