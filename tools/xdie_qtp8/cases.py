@@ -158,6 +158,19 @@ for g_, j_, kv_ in (("dv2f14bq", QR, 7), ("dv2f14bi", QI, 6)):   # kv_ = port 2 
         f"cal_{g_}_mut_rxearly": RLB + J_ + ["--lats", "cal", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
     })
 
+# MU-QWEN 10-18: 4-user compiled calendar on the dv2f14bi collective (LS = calendar 378): every user's all-reduce at its
+# compiled cycle (overlapping epochs), the latency user's commands alone (identity), one filler command moved onto the
+# previous command's issue window (must FAIL: engine calendar fault), and the RLAT mutant on the MU window (must FAIL).
+_MU = ["--mu-cal", "results/rtl/mu_qwen_1018/coll/mu_cal.json"]
+_MUB = CASES["cal_dv2f14bi"] + _MU
+CASES.update({
+    "mu_bi": _MUB + ["--only", "mu_window($|_ref)"],
+    "mu_bi_neg_overlap": _MUB + ["--only", "mu_window_neg_overlap", "--expect-fail"],
+    "mu_bi_mut_rlat": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RLAT", "--expect-fail"],
+    "mu_bi_mut_rank": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RANK", "--expect-fail"],
+})
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
