@@ -600,6 +600,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
+        # S81-LBGAP G6 (10-18): duplicated module names resolve by rule, not by sort order -- the frames' bench list (the
+        # _rne_* variants), the svc_rs bench list, then each hardened tile's spec sources (RTL of record of its view);
+        # die_port_bind FAILS a first-pick among definitions with different ports / parameters (ambiguous_children)
+        for L in ('tools/s81_dv/frame_bench.f', 'tools/s81_dv/svc_rs/rs_files.sh'):
+            if (ROOT / L).is_file():
+                cmd += ['--prefer-list', str(ROOT / L)]
+        cmd += ['--ref-tile-prefer']
         for f in list(extra) + list(extra_rtl) + [str(ROOT / x) for x in T.get('rtl_files', [])]:
             cmd += ['--rtl-file', str(f)]
         for f in T.get('prefer', []):
