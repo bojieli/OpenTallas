@@ -1,0 +1,62 @@
+{
+  "snapshot": "ot-epyc7:dsdv_sh_lk_sr9-20261019-085159",
+  "source_commit": "9ed69f202",
+  "netlist_sha256": "8a435be2a6d0495c57918fdc54f3402388566d5c2354ac4e34501b44dc6efc93",
+  "DFF_count": 11158,
+  "SRAM_count": 3,
+  "SRAM_instances": [
+    "u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.u_mem",
+    "u_ot_pr_core.u_h.host.u_hi.g_ox_sram.u_ox.u_mem",
+    "u_ot_pr_core.u_sd.u_mem"
+  ],
+  "mapped_storage_checks": {
+    "RX_payload": {
+      "count": 0,
+      "examples": []
+    },
+    "QKV_bk": {
+      "count": 0,
+      "examples": []
+    },
+    "QKV_bv": {
+      "count": 0,
+      "examples": []
+    },
+    "HX_payload_flops": {
+      "count": 0,
+      "examples": []
+    },
+    "OX_payload_flops": {
+      "count": 0,
+      "examples": []
+    },
+    "SD_payload_flops": {
+      "count": 0,
+      "examples": []
+    },
+    "realigner_ring": {
+      "count": 2048,
+      "examples": [
+        "u_ot_pr_core.u_h.host.u_hi.u_eng.ra[0][0]$_DFFE_PP_",
+        "u_ot_pr_core.u_h.host.u_hi.u_eng.ra[0][100]$_DFFE_PP_",
+        "u_ot_pr_core.u_h.host.u_hi.u_eng.ra[0][101]$_DFFE_PP_",
+        "u_ot_pr_core.u_h.host.u_hi.u_eng.ra[0][102]$_DFFE_PP_"
+      ]
+    },
+    "payload_hop": {
+      "count": 291,
+      "examples": [
+        "u_ot_pr_core.u_sd.sd_hop_payload[0]$_DFFE_PP_",
+        "u_ot_pr_core.u_sd.sd_hop_payload[100]$_DFFE_PP_",
+        "u_ot_pr_core.u_sd.sd_hop_payload[101]$_DFFE_PP_",
+        "u_ot_pr_core.u_sd.sd_hop_payload[102]$_DFFE_PP_"
+      ]
+    }
+  },
+  "synth_total_um2": 52885.10088,
+  "macro_area_um2": 42987.672,
+  "std_area_um2": 9897.42888,
+  "core_um2": 142132.8384,
+  "fill_fraction": 0.37208221179096634,
+  "qualification": "Synthesis evidence; kept top u_rr family missing matcher in snapshot, corrected07fe2a37e awaits follow-up. CTS/placed escape pending."
+}
