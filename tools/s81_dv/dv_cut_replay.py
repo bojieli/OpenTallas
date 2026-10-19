@@ -740,13 +740,16 @@ def gen(a):
     for x, n in ((unenc_here, 'unencoded'), (offdie_here, 'offdie'), (internal_here, 'internal')):
         for e in x:
             by_kind[e['kind']][n] += 1
-    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize or (mu and mu['win']))
-                                 else 'SCHEDULE')
+    # HOP: a compiled window table whose TX rows anchor on the lowered hop beats is schedule, a hand table diagnostic
+    hand_win = bool(mu and mu['win'] and not (mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1'
+                                              and mu['win'].get('lowered')))
+    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize or hand_win) else 'SCHEDULE')
     ncyc = int(max([c for c, *_ in outs] + [c for c, *_ in ins] + [a.t0]) + 50)
     if mu is not None:
         ncyc = max(ncyc, int(a.t0 + mu['users'][-1]['shift'] + mu['window'] + 50))
         mu['mutant_bits'] = dict(mu_mut)
         mu['lanes'] = mu_lanes(die, cut, bnd)
+        mu['ep'] = ep_expect(a, S, mu, cut, out)
     doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
                prog=str(prog), prog_manifest_sha256=hashlib.sha256((prog / 'manifest.json').read_bytes()).hexdigest()
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
@@ -874,13 +877,18 @@ def mu_win_compiled(W, die):
 def mu_win_words(a, die, mu):
     """--mu-win rows {kind: tx | replay, inst, edge} (+ per-user {land, ab}, default land = user != 0, ab 0) -> the
     dsdv_mu_hslot window / replay commands at the slice's mu_c / mu_rc pin, edge + the user's shift.
-    Mutants (MUWIN): mu-win-shift:<event>:<n> moves one row n edges, mu-win-drop:<event> drops one row"""
+    Mutants (MUWIN): mu-win-shift:<event>:<n> moves one row n edges, mu-win-drop:<event> drops one row (TX row: the
+    window never opens, the user's h beats leave untagged = tag dropped); HOP: mu-win-ab:<event> flips the TX row's copy
+    select ab (wrong copy: pair B / a copy-B command on an AB_EN 0 endpoint).  --mu-win-kinds limits the driven rows
+    (HOP: cut_7 drives tx only -- the RX lanes have no peer die in a one-die cut, so a landing replay would read an empty
+    slot, a correct dsdv_mu_land fault)"""
     if not mu['win']:
         return []
     W = mu['win']
     if W.get('schema') == 'opentallas.s81_dv.mu_win.v1':
         W = mu_win_compiled(W, die)
     m = parse_mutant(a.mutant)
+    kinds = set((getattr(a, 'mu_win_kinds', None) or 'tx,replay').split(','))
     att = {int(k): v for k, v in W.get('users', {}).items()}
     out = []
     for i, ev in enumerate(W['events']):
@@ -888,10 +896,14 @@ def mu_win_words(a, die, mu):
             continue                                        # MUTANT: the row is never issued
         if m and m['kind'] == 'mu-win-shift' and m['ev'] == i:
             ev = dict(ev, edge=ev['edge'] + m['n'])          # MUTANT: the row moved n edges
+        if ev['kind'] not in kinds:
+            continue
         port = dict(tx='mu_c', replay='mu_rc')[ev['kind']]
         for u in mu['users']:
             k, at = u['user'], att.get(u['user'], {})
             land, ab = int(at.get('land', k != 0)), int(at.get('ab', 0))
+            if m and m['kind'] == 'mu-win-ab' and m['ev'] == i:
+                ab ^= 1                                     # MUTANT: wrong copy select
             if ev['kind'] == 'tx':
                 v = (u['pos'] & 0x1FFFFF) << 13 | k << 3 | land << 2 | ab << 1 | 1
             elif not land:
@@ -1037,6 +1049,109 @@ def src_ports_of(cut, L):
     return {cut.in_by_net[sb[0]]['port'] for sb in L['src_bits'] if sb and sb[0] in cut.in_by_net}
 
 
+# ================================================================================================= endpoint (HOP)
+# MU-DIE-S81/HOP (10-19).  The stage h hop is lowered (lower_vpx: XB beats on each end slice's lep ro at fixed edges) and
+# the compiled TX windows (dv_mu_win) open on them.  What the window does is visible only INSIDE the end-slice master:
+# the stamped beats leave on the elastic link lanes (offdie) and the master .fault is unconnected in the die.  So the
+# bench observes the lep core frame mux of each end slice in the cut (dv_slice_tb --ep-probe: EPB / EPF lines, +EP=) and
+# the replay states, per probed end slice and user, every ring beat the lep pushes: bench edge (the ro register edge of
+# the out event + t0 + 1 for the lep ro pin flop + the user's shift), pair (copy A 0 / B 1), kind, and the MU tag
+# [1077:1045] = {pos 21, user 10, land, 1} on the beats of the user's TX window (the hop's NB beats), 0 elsewhere.
+EP_INSTS = ('u_s_7N', 'u_s_7S', 'u_s_0N', 'u_s_0S')
+EP_PIN = 1                      # rstop ro register edge -> lep core ro pin flop (rov)
+EP_KIND = dict(XQ=1, XB=2, RD=4, CL=6)
+EP_MU_FAULTS = ('te', 'land', 'mcol')
+
+
+def ep_expect(a, S, mu, cut, out):
+    """endpoint beat expectation of the probed end slices (nominal calendar, also for mutants)"""
+    W = mu.get('win') or {}
+    if W.get('schema') != 'opentallas.s81_dv.mu_win.v1':
+        return None
+    insts = [i for i in EP_INSTS if i in cut.insts]
+    kinds = set((getattr(a, 'mu_win_kinds', None) or 'tx,replay').split(','))
+    att = {s['user']: s for s in W['slots']}
+    win = {(e['hop'], e['inst']) for e in W['events'] if e['kind'] == 'tx'} if 'tx' in kinds else set()
+    rows = []
+    for x in S.get('events', []):
+        if x.get('dir') != 'out' or x.get('inst') not in insts or 'lep' not in str(x.get('port', '')):
+            continue
+        for u in mu['users']:
+            s = att[u['user']]
+            tag = 0
+            if x.get('hop') and (x['hop'], x['inst']) in win:
+                tag = (u['pos'] & 0x1FFFFF) << 12 | u['user'] << 2 | s['land'] << 1 | 1
+            rows.append((x['cycle'] + a.t0 + EP_PIN + u['shift'], x['inst'], s['ab'] if tag else 0,
+                         EP_KIND[x['kind']], tag, x.get('hop') or '', u['user']))
+    rows.sort()
+    (out / 'ep_expect.txt').write_text(''.join(f'{c} {i} {p} {k} {t:x} {h or "-"} {u}\n' for c, i, p, k, t, h, u in rows))
+    return dict(insts=insts, beats=len(rows), hop_beats=sum(1 for r in rows if r[5]),
+                tagged=sum(1 for r in rows if r[4]), file='ep_expect.txt', pin_edge=EP_PIN,
+                note='tb --ep-probe lines EPB <edge> <inst> <pair> <kind> <tag>; MU faults te / land / mcol must not rise')
+
+
+def epcheck(a):
+    """endpoint check of a probed run: every EPB line of the probed end slices equals the replay's ep_expect (edge, pair,
+    kind, MU tag), and no MU fault source (TX window te, landing, replay collision) rises; other endpoint fault sources
+    (lane tiles without a peer, slice) are reported"""
+    rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    ep = (rp.get('mu') or {}).get('ep')
+    if not ep:
+        raise SystemExit(f'{a.replay}: no endpoint expectation (gen --mu ... --mu-win auto on a cut with an end slice)')
+    exp = {}
+    for l in (Path(a.replay) / ep['file']).read_text().splitlines():
+        c, i, p, k, t, h, u = l.split()
+        exp[(int(c), i)] = (int(p), int(k), int(t, 16), h, int(u))
+    ef = Path(a.run) / 'ep.txt'
+    txt = ef.read_text() if ef.exists() else ''
+    got, flt = {}, []
+    for l in txt.splitlines():
+        f = l.split()
+        if f[0] == 'EPB':
+            got[(int(f[1]), f[2])] = (int(f[3]), int(f[4]), int(f[5], 16))
+        elif f[0] == 'EPF':
+            flt.append(dict(edge=int(f[1]), inst=f[2], src=f[3]))
+    runlog = (Path(a.run) / 'run.log').read_text() if (Path(a.run) / 'run.log').exists() else ''
+    done = 'DV_SLICE cycles=' in runlog
+    errs = []
+    ncyc = rp['ncyc']
+    for key in sorted(set(exp) | set(got)):
+        if key[0] > ncyc:
+            continue
+        e, g = exp.get(key), got.get(key)
+        if e is None:
+            errs.append(f'unexpected beat {key[1]} edge {key[0]} pair {g[0]} kind {g[1]} tag {g[2]:x}')
+        elif g is None:
+            errs.append(f'missing beat {key[1]} edge {key[0]} ({e[3]} user {e[4]} tag {e[2]:x})')
+        elif g != e[:3]:
+            errs.append(f'beat {key[1]} edge {key[0]} ({e[3]} user {e[4]}): got pair {g[0]} kind {g[1]} tag {g[2]:x}, '
+                        f'want pair {e[0]} kind {e[1]} tag {e[2]:x}')
+    mu_f = [f for f in flt if f['src'] in EP_MU_FAULTS]
+    errs += [f'MU endpoint fault {f["src"]} at {f["inst"]} edge {f["edge"]}' for f in mu_f]
+    other = [f for f in flt if f['src'] not in EP_MU_FAULTS]
+    unexplained = [f for f in other if f['src'] == 'ep' and not any(
+        o['inst'] == f['inst'] and o['src'] in ('sl', 'ln', 'io') and o['edge'] <= f['edge'] for o in other)
+        and not any(m['inst'] == f['inst'] and m['edge'] <= f['edge'] for m in mu_f)]
+    errs += [f'endpoint fault at {f["inst"]} edge {f["edge"]} with no recorded source' for f in unexplained]
+    if not done:
+        errs.append('run incomplete (no DV_SLICE cycles line in run.log)')
+    if not txt:
+        errs.append(f'no endpoint probe output {ef}')
+    hop_exp = [k for k, v in exp.items() if v[3] != '-' and k[0] <= ncyc]
+    hop_ok = [k for k in hop_exp if got.get(k) == exp[k][:3]]
+    tag_ok = [k for k in hop_ok if exp[k][2]]
+    doc = dict(schema=SCHEMA + '.epcheck', replay=str(a.replay), run=str(a.run), verdict='PASS' if not errs else 'FAIL',
+               mutant=rp.get('mutant'), insts=ep['insts'], expected=len([k for k in exp if k[0] <= ncyc]),
+               observed=len(got), hop_beats_expected=len(hop_exp), hop_beats_ok=len(hop_ok), tagged_ok=len(tag_ok),
+               errors=errs[:40], n_errors=len(errs), mu_faults=mu_f, other_faults=other)
+    Path(a.out or (Path(a.run) / 'epcheck.json')).write_text(json.dumps(doc, indent=1) + '\n')
+    print(f'EPCHECK {doc["verdict"]} {len(hop_ok)}/{len(hop_exp)} hop beats exact ({len(tag_ok)} tagged), '
+          f'{doc["observed"]} beats observed vs {doc["expected"]} expected at {",".join(ep["insts"])}; '
+          f'MU faults {len(mu_f)}, other endpoint fault sources {[(f["inst"], f["src"], f["edge"]) for f in other]}'
+          + ('' if not errs else '; ' + '; '.join(errs[:5])))
+    return 0 if not errs else 1
+
+
 def parse_mutant(s):
     if not s:
         return None
@@ -1055,9 +1170,11 @@ def parse_mutant(s):
         return dict(kind='mu-win-shift', ev=int(f[1]), n=int(f[2]))
     if f[0] == 'mu-win-drop' and len(f) == 2:
         return dict(kind='mu-win-drop', ev=int(f[1]))
+    if f[0] == 'mu-win-ab' and len(f) == 2:
+        return dict(kind='mu-win-ab', ev=int(f[1]))
     raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
                      f'expect-shift:<KIND>:<n> | mu-drop:<user> | mu-offgrid:<user>:<n> | mu-win-shift:<ev>:<n> | '
-                     f'mu-win-drop:<ev>')
+                     f'mu-win-drop:<ev> | mu-win-ab:<ev>')
 
 
 def trace_sources(die, cut, traces):
@@ -1318,8 +1435,14 @@ def main(argv=None):
                    'first user\'s)')
     g.add_argument('--mu-pass', type=int, default=0, help='MU: pass index (pos = pos0 + pass x stride)')
     g.add_argument('--mu-win', default=None, help='MU: window / replay rows: auto = the compiled prog/mu_win.json '
-                   '(dv_layer_compile --mu-win; PRICED until the hop is lowered), or a hand JSON (DIAGNOSTIC)')
+                   '(dv_layer_compile --mu-win; TX anchored on the lowered hop beats), or a hand JSON (DIAGNOSTIC)')
+    g.add_argument('--mu-win-kinds', default='tx,replay', help='MU-DIE-S81/HOP: compiled rows driven (tx, replay); a '
+                   'one-die cut with the end slice has no RX peer, so drive tx only there')
     g = sp.add_parser('check')
+    g.add_argument('--replay', required=True)
+    g.add_argument('--run', required=True)
+    g.add_argument('--out')
+    g = sp.add_parser('epcheck')
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)
     g.add_argument('--out')
@@ -1333,7 +1456,7 @@ def main(argv=None):
     g.add_argument('--cut', action='append', required=True, help='NAME=REPLAY_DIR:RUN_DIR')
     g.add_argument('--out', required=True)
     a = ap.parse_args(argv)
-    return dict(ages=ages, gen=gen, check=check, compose=compose, mucheck=mucheck)[a.cmd](a)
+    return dict(ages=ages, gen=gen, check=check, compose=compose, mucheck=mucheck, epcheck=epcheck)[a.cmd](a)
 
 
 if __name__ == '__main__':

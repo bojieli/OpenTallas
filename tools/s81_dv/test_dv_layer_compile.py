@@ -132,7 +132,11 @@ def test_compile_l0():
         m = int(t['payload186'], 16) & 0xFFFF
         if t['name'].startswith('gu.'):          # gunit job words (engine 2 cw), not CTL beats
             continue
-        if t['name'].startswith('vpx.'):
+        if t['name'].startswith('vpx.') and t['name'].split('.')[1] in ('N', 'S'):
+            # MU-DIE-S81/HOP: the hop's RDOUT beat is one CTL for both end slices of a tier
+            tier = t['name'].split('.')[1]
+            assert m == (1 << sl[f'u_s_7{tier}']['sid']) | (1 << sl[f'u_s_0{tier}']['sid']), t['name']
+        elif t['name'].startswith('vpx.'):
             assert m == 1 << sl[t['name'].split('.')[1]]['sid'], t['name']
         else:
             assert m == 1 << sid, t['name']

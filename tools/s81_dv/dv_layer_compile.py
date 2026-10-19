@@ -509,6 +509,8 @@ class Prog:
                 row['tix'] = remap[row['arg'] & 0x7F]
                 row['arg'] = (row['arg'] & ~0x7F) | (row['tix'] & 0x7F)
             row.setdefault('done', row['issue'] + SEQ['done_v'])
+            if r.get('atomic'):
+                row['grp'] = op['id']           # MU-DIE-S81/HOP: the op's rows stay in one issuer job (split_jobs)
             row['what'] = f"{op['id']}: {row.get('what', '')}"
             self.rows.append(row)
         self.gunit_rows += [tuple(x) for x in r.get('gunit_rows', [])]
@@ -827,8 +829,19 @@ def split_jobs(prog, cap=NOPS - 2):
     for r in rows:                    # cut on the row budget AND the per-job template budget (TOK-S81-GAPS)
         t = {r['tix']} if 'tix' in r else set()
         if cur and (len(cur) >= cap or len(used | t) > NOPS):
-            chunks.append(cur)
-            cur, used = [], set()
+            # MU-DIE-S81/HOP: never cut inside an atomic op (the stage hop's fixed-edge command chain): the cut moves
+            # before the op's first row (a job is re-booted after the previous END, so a split op loses its edges)
+            g = r.get('grp')
+            k = len(cur)
+            while g is not None and k > 0 and cur[k - 1].get('grp') == g:
+                k -= 1
+            if 0 < k < len(cur):
+                chunks.append(cur[:k])
+                cur = cur[k:]
+                used = {x['tix'] for x in cur if 'tix' in x}
+            else:
+                chunks.append(cur)
+                cur, used = [], set()
         cur.append(r)
         used |= t
     if cur:

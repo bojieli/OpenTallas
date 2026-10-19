@@ -95,18 +95,32 @@ def build(sched, cal, slots, die, copy=None, nev=NEV_HW, nslot=NSLOT_HW):
     lanes = mu_lanes(die)
     hops = sorted([o for o in sched['ops'] if re.fullmatch(r'substage_hop\d+', o['op'])], key=lambda o: o['start'])
     ev, checks = [], []
+    # MU-DIE-S81/HOP: the hop is lowered (lower_vpx.lower_hop): each end slice's NB XB beats are 'out' events with
+    # hop = op name at fixed ro edges -> the TX window anchors on the slice's FIRST lowered beat and closes after its
+    # NB-th (the lep counts NB beats on its ro pin flop); without lowered beats the priced op start stays the anchor
+    beats = {}
+    for x in sched.get('events', []):
+        if x.get('dir') == 'out' and x.get('hop') and x.get('kind') in ('XB', 'XQ'):
+            beats.setdefault((x['hop'], x['inst']), []).append(x['cycle'])
+    lowered = all((h['op'], L['inst']) in beats for h in hops for L in lanes) and bool(hops)
     for h in hops:
-        htx = math.ceil(h['start'])
         hrx = math.ceil(h['end']) - NB
-        for kind, anchor, lead in (('tx', htx, LEAD_TX), ('replay', hrx, REPLAY_LAT)):
+        for kind, lead in (('tx', LEAD_TX), ('replay', REPLAY_LAT)):
             for L in lanes:
+                bc = sorted(beats.get((h['op'], L['inst']), []))
+                if kind == 'tx' and bc:
+                    anchor, what = bc[0], f'first of the {len(bc)} lowered XB beats on the lep ro (lower_vpx hop)'
+                elif kind == 'tx':
+                    anchor, what = math.ceil(h['start']), 'ceil(start): first h beat may reach ro (PRICED: not lowered)'
+                else:
+                    anchor, what = hrx, 'ceil(end) - NB: first h beat on ri (cut-through; receive side priced)'
                 pin = anchor - lead                       # layer cycle the command lands at the slice pin (user 0)
                 D = pin - t0 + CAP_TO_LAYER - L['age']
                 ev.append(dict(i=len(ev), kind=kind, k=0 if kind == 'tx' else 1, ep=L['ep'], inst=L['inst'],
                                port='mu_c' if kind == 'tx' else 'mu_rc', lane=L['lane'], age=L['age'], D=D,
                                pin_layer=pin, out_layer=pin - L['age'] + 1, hop=h['op'],
-                               anchor=dict(op=h['op'], edge=anchor, what='ceil(start): first h beat may reach ro'
-                                           if kind == 'tx' else 'ceil(end) - NB: first h beat on ri (cut-through)')))
+                               **(dict(beats=len(bc), beat_first=bc[0], beat_last=bc[-1]) if kind == 'tx' and bc else {}),
+                               anchor=dict(op=h['op'], edge=anchor, what=what)))
     att = [dict(slot=r['local'], user=r['user'], kind=r['kind'], land=int(r['kind'] != 'latency'),
                 ab=int(r['copy'] == 'B'), start=r['start']) for r in rows]
     # ---- static checks (the hwin / hslot rules + the port-alone lemma)
@@ -134,8 +148,8 @@ def build(sched, cal, slots, die, copy=None, nev=NEV_HW, nslot=NSLOT_HW):
         + (f'; collisions {coll[:4]}' if coll else ''))
     # port alone: no other scheduled outbound lep traffic (RD / ring beats at the end slice's outward port) of ANY user
     # inside a TX window [pin, ceil(hop.end)] of any user (the lep faults a non-h beat inside a window)
-    win = [(e, e['pin_layer'], math.ceil(next(h['end'] for h in hops if h['op'] == e['hop']))) for e in ev
-           if e['kind'] == 'tx']
+    win = [(e, e['pin_layer'], e['beat_last'] if 'beat_last' in e else
+            math.ceil(next(h['end'] for h in hops if h['op'] == e['hop']))) for e in ev if e['kind'] == 'tx']
     outs = [x for x in sched.get('events', []) if x.get('dir') == 'out' and x.get('inst') in {i for _, i in EPS}
             and 'lep' in str(x.get('port', ''))]
     hit = []
@@ -146,12 +160,20 @@ def build(sched, cal, slots, die, copy=None, nev=NEV_HW, nslot=NSLOT_HW):
             for a in att:
                 c = (x['cycle'] + a['start'] - rows[0]['start']) % period
                 for b in att:
+                    if a is b and x.get('hop') == e['hop']:
+                        continue                          # the window's own h beats
                     w0 = (lo + b['start'] - rows[0]['start']) % period
                     if 0 <= (c - w0) % period <= hi - lo:
                         hit.append((e['i'], b['user'], x['kind'], x['tag'], a['user']))
     chk('port_alone', not hit, f'{len(outs)} scheduled outbound lep events of {len(att)} users vs {len(win)} TX windows'
         + (f'; inside a window: {hit[:4]}' if hit else ''))
     chk('hops', bool(hops), f'{len(hops)} substage hop ops in the programme' + ('' if hops else ': no MU event'))
+    # MU-DIE-S81/HOP: a lowered hop puts exactly NB beats on each end slice's ro, after its window command
+    nbad = [(e['i'], e['inst'], e.get('beats')) for e in ev if e['kind'] == 'tx' and lowered and
+            (e.get('beats') != NB or e['beat_first'] - e['pin_layer'] < 2)]
+    chk('hop_beats', lowered and not nbad, (f'every TX window covers exactly NB {NB} lowered XB beats, command >= 2 '
+        f'edges before the first' if lowered else 'hop not lowered (no XB hop beats in the schedule events)')
+        + (f'; bad {nbad}' if nbad else ''))
     ok = all(c['verdict'] == 'PASS' for c in checks)
     # a uniform grid (mu1 hslot: ONE slot period) only when every gap is equal
     uni = len(set(gaps)) == 1
@@ -160,8 +182,10 @@ def build(sched, cal, slots, die, copy=None, nev=NEV_HW, nslot=NSLOT_HW):
                 REPLAY_LAT=REPLAY_LAT, cap_to_layer=CAP_TO_LAYER, lanes=lanes, hops=[dict(op=h['op'], start=h['start'],
                 end=h['end']) for h in hops], events=ev, slots=att, checks=checks,
                 verdict='PASS' if ok else 'FAIL', mu1_uniform=uni,
-                status='PRICED: D anchored on the priced substage_hop ops (hop lowering GAP: no h beat reaches the lep '
-                       'ro yet); seq_host side exact (run_mu_win_prog_bench.sh)')
+                lowered=lowered,
+                status=('TX LOWERED: window D anchored on the lowered XB hop beats (lower_vpx hop); replay D on the '
+                        'priced hop end (receive side elastic, off-die)') if lowered else
+                       'PRICED: D anchored on the priced substage_hop ops (hop not lowered)')
 
 
 # ------------------------------------------------------------------------------------------------ boot config words

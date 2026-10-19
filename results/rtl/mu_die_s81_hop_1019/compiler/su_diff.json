@@ -1,0 +1,101 @@
+[
+ {
+  "layer": "L0",
+  "nonhop_rows_identical": true,
+  "nonhop_events_identical": true,
+  "status_changes": {
+   "substage_hop0": [
+    "GAP",
+    "PARTIAL"
+   ]
+  },
+  "hop_rows": 8,
+  "hop_events": 332,
+  "jobs_before": [
+   [
+    3,
+    128
+   ],
+   [
+    12750,
+    7
+   ]
+  ],
+  "jobs_after": [
+   [
+    3,
+    128
+   ],
+   [
+    11166,
+    15
+   ]
+  ]
+ },
+ {
+  "layer": "L14",
+  "nonhop_rows_identical": true,
+  "nonhop_events_identical": true,
+  "status_changes": {
+   "substage_hop0": [
+    "GAP",
+    "PARTIAL"
+   ]
+  },
+  "hop_rows": 8,
+  "hop_events": 332,
+  "jobs_before": [
+   [
+    -64,
+    128
+   ],
+   [
+    22785,
+    12
+   ]
+  ],
+  "jobs_after": [
+   [
+    -64,
+    122
+   ],
+   [
+    19640,
+    26
+   ]
+  ]
+ },
+ {
+  "layer": "L20",
+  "nonhop_rows_identical": true,
+  "nonhop_events_identical": true,
+  "status_changes": {
+   "substage_hop0": [
+    "GAP",
+    "PARTIAL"
+   ]
+  },
+  "hop_rows": 8,
+  "hop_events": 332,
+  "jobs_before": [
+   [
+    5,
+    128
+   ],
+   [
+    27736,
+    8
+   ]
+  ],
+  "jobs_after": [
+   [
+    5,
+    128
+   ],
+   [
+    25539,
+    16
+   ]
+  ]
+ }
+]
