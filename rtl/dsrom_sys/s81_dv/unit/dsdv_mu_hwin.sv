@@ -62,7 +62,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer NC_REC=(NSLOT+23)/24;
     localparam integer MEM_RBASE=NEV+ID_C+4;
     localparam integer COPY_RBASE=MEM_RBASE+NEV*5+4;
-    localparam integer COPY_END=COPY_RBASE+NEV*7+NRT*NC_REC;
+    localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
+    localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+1;
     wire [COPY_END-1:0] rr; ot_rst_relay #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -106,7 +107,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // cs = the smallest gap.  gtm[k] = g[k] - 1 (the timer's compare value).
      reg [SI:0] gn; reg [23:0] cg; wire [23:0] ng;
     reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; 
-    wire [NSLOT-1:0] ss = armed ? sl : OH0;
+    // sl stays OH0 until arming: directly use the same slot state, avoiding a broadcast mux.
+    wire [NSLOT-1:0] ss = sl;
     wire on_cal = !armed || ph == 24'd0;
     wire [9:0] cmp_user [0:NC_REC-1];
     wire [3:0] id_we [0:NSLOT-1]; wire [NSLOT-1:0] rec_slot;
@@ -173,7 +175,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end
     // outputs from the fired heads: on each endpoint the highest-numbered firing event wins (the former loop order)
     reg fq0, fq1;
-    reg rtbad, m; reg [NEP*34-1:0] c_n, c_q; reg [NEP*11-1:0] rc_n, rc_q; reg col_w;
+    reg rtbad, m; reg [NEP*34-1:0] c_n, c_q; reg [NEP*11-1:0] rc_n, rc_q; wire col_w;
     reg [NEV-1:0] tx, rpl, sc, sr, lc, lr; integer e3, k3, p3;
     assign mu_c = c_q; assign mu_rc = rc_q;
     always @* begin
@@ -184,23 +186,58 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 if (vld[p] && eu[p] == rt_compare[r*NC_REC+p/24][30:21] && ep[p] == rt_compare[r*NC_REC+p/24][20:0]) m = 1'b1;
             if (rt_q[32*r + 31] && !m) rtbad = 1'b1;
         end
-        for (e3 = 0; e3 < NEV; e3 = e3 + 1) begin
-            tx[e3] = fire[e3] && !ek[e3];
-            rpl[e3] = fire[e3] && ek[e3] && (h_at[e3][1] || MUT == 4);
-        end
-        c_n = {NEP*34{1'b0}}; rc_n = {NEP*11{1'b0}}; col_w = 1'b0;
-        for (p3 = 0; p3 < NEP; p3 = p3 + 1) begin
-            for (e3 = 0; e3 < NEV; e3 = e3 + 1) begin sc[e3] = tx[e3] && eep[e3] == PI'(p3); sr[e3] = rpl[e3] && eep[e3] == PI'(p3); end
-            for (e3 = 0; e3 < NEV; e3 = e3 + 1) begin
-                lc[e3] = 1'b0; lr[e3] = 1'b0;
-                for (k3 = e3 + 1; k3 < NEV; k3 = k3 + 1) begin lc[e3] = lc[e3] | sc[k3]; lr[e3] = lr[e3] | sr[k3]; end
-                if (sc[e3] && !lc[e3])
-                    c_n[34*p3 +: 34] = c_n[34*p3 +: 34] | {h_ep[e3], h_eu[e3], h_at[e3][1], (MUT == 3) ? 1'b0 : h_at[e3][0], 1'b1};
-                if (sr[e3] && !lr[e3]) rc_n[11*p3 +: 11] = rc_n[11*p3 +: 11] | {h_eu[e3], 1'b1};
-                if ((sc[e3] && lc[e3]) || (sr[e3] && lr[e3])) col_w = 1'b1;
-            end
+        c_n = {NEP*34{1'b0}}; rc_n = {NEP*11{1'b0}};
+        for(p3=0;p3<NEP;p3=p3+1) for(e3=0;e3<NEV;e3=e3+1) begin
+            for(k3=0;k3<34;k3=k3+1)
+                c_n[34*p3+k3] = c_n[34*p3+k3] | (c_select[p3*3+k3/12][e3] && head_word[e3][k3]);
+            rc_n[11*p3+:11] = rc_n[11*p3+:11] | ({11{r_select[p3][e3]}} & {h_eu[e3],1'b1});
         end
     end
+    // A head that stays fresh has the same payload after this edge. Register the
+    // exact next-edge fire decision and winning endpoint selects beside each
+    // <=12-bit output slice, at the same edge as eqn/okq/fresh. No output edge added.
+    wire [33:0] head_word[0:NEV-1];
+    wire [NEV-1:0] c_select[0:NEP*3-1], r_select[0:NEP-1];
+    wire [NEV-1:0] next_fire;
+    reg next_collision;
+    reg collision_q; assign col_w=collision_q;
+    genvar oe,op,og;
+    generate for(oe=0;oe<NEV;oe=oe+1) begin:g_fire_lookahead
+        assign next_fire[oe]=ok[oe] && h_fr[oe] && h_ts[oe]==tm_event[oe]
+            && !adv[oe] && !(|(pe[oe]&rec_slot));
+        assign head_word[oe]={h_ep[oe],h_eu[oe],h_at[oe][1],(MUT==3)?1'b0:h_at[oe][0],1'b1};
+    end endgenerate
+    wire [NEV-1:0] nsc[0:NEP-1], nsr[0:NEP-1];
+    generate for(op=0;op<NEP;op=op+1) begin:g_output_select
+        for(oe=0;oe<NEV;oe=oe+1) begin:g_event
+            assign nsc[op][oe]=next_fire[oe] && !ek[oe] && eep[oe]==PI'(op);
+            assign nsr[op][oe]=next_fire[oe] && ek[oe] && (h_at[oe][1] || MUT==4) && eep[oe]==PI'(op);
+            wire higher_c,higher_r;
+            if(oe==NEV-1) begin:g_last
+                assign higher_c=1'b0; assign higher_r=1'b0;
+            end else begin:g_prior
+                assign higher_c=|nsc[op][NEV-1:oe+1]; assign higher_r=|nsr[op][NEV-1:oe+1];
+            end
+            for(og=0;og<3;og=og+1) begin:g_slice
+                (* keep *) reg select_r; assign c_select[op*3+og][oe]=select_r;
+                always @(posedge ck or negedge rr[SEL_RBASE+(op*NEV+oe)*4+og])
+                    if(!rr[SEL_RBASE+(op*NEV+oe)*4+og]) select_r<=1'b0;
+                    else select_r<=nsc[op][oe] && !higher_c;
+            end
+            (* keep *) reg replay_r; assign r_select[op][oe]=replay_r;
+            always @(posedge ck or negedge rr[SEL_RBASE+(op*NEV+oe)*4+3])
+                if(!rr[SEL_RBASE+(op*NEV+oe)*4+3]) replay_r<=1'b0;
+                else replay_r<=nsr[op][oe] && !higher_r;
+        end
+    end endgenerate
+    integer cp,ca,cb;
+    always @* begin
+        next_collision=1'b0;
+        for(cp=0;cp<NEP;cp=cp+1) for(ca=0;ca<NEV;ca=ca+1) for(cb=ca+1;cb<NEV;cb=cb+1)
+            next_collision=next_collision || (nsc[cp][ca] && nsc[cp][cb]) || (nsr[cp][ca] && nsr[cp][cb]);
+    end
+    always @(posedge ck or negedge rr[COPY_END-1])
+        if(!rr[COPY_END-1]) collision_q<=1'b0; else collision_q<=next_collision;
     wire wv = mw_q[25];
     wire idle = !armed && !(|vld);
     always @(posedge ck or negedge rn)
@@ -289,10 +326,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+1]) time_r<=32'd1; else time_r<=tm2;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+2])
             if(!rr[COPY_RBASE+7*ce+2]) rl_r<=24'd0;
-            else if(mc_q[25] && idle && mc_q[24]) rl_r<=mc_q[23:0];
+            else if(mc_q[25] && idle_event[ce] && mc_q[24]) rl_r<=mc_q[23:0];
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+3])
             if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
-            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT))
+            else if(mc_q[25] && idle_event[ce] && !mc_q[24] && gn!=SJ'(NSLOT))
                 lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+4])
             if(!rr[COPY_RBASE+7*ce+4]) lm_r<={1'b1,{(NSLOT-1){1'b0}}};
