@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: ot-epyc5       admits   679 GB (avail 641, growth 165, headroom 0, waiters 0/0 GB) load 67/128 running 17 disk 2918 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/s81-ve-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-404385-1792407455 after 1 s
+PASS ot_s81sl_ve beat 4 copies x 64: 12 partials + 256 outputs bit exact; reduce first-in -> last partial 255 cyc (GAP 2), add first-in -> last out 44 cyc
+PASS ve MUT=0 GAP=2
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-404385-1792407455): exit 0

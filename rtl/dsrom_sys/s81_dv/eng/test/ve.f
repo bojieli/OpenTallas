@@ -8,6 +8,7 @@ rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
 rtl/hdc/v41x/ot_dsrom_su_add6.sv
 rtl/hdc/v41x/ot_dsrom_su_norm.sv
 rtl/hdc/ot_hdc_delay.sv
+rtl/hdc/ot_hdc_delay_rf.sv
 rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_fpu.sv
 rtl/hdc/ot_hdc_fp32_mul_pipe.sv
