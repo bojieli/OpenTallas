@@ -1,0 +1,81 @@
+{
+  "peer_sets": {
+    "q0.station0": [
+      "q0.station1",
+      "q0.station2",
+      "q0.station4",
+      "q0.station8"
+    ],
+    "q0.station2": [
+      "q0.station3"
+    ],
+    "q0.station4": [
+      "q0.station5",
+      "q0.station6"
+    ],
+    "q0.station6": [
+      "q0.station7"
+    ],
+    "q0.station8": [
+      "q0.station10",
+      "q0.station12",
+      "q0.station9"
+    ],
+    "q0.station10": [
+      "q0.station11"
+    ],
+    "q0.station12": [
+      "q0.station13",
+      "q0.station14"
+    ],
+    "q0.station14": [
+      "q0.station15"
+    ],
+    "q1.station0": [
+      "q1.station1",
+      "q1.station2"
+    ],
+    "q1.station2": [
+      "q1.station3"
+    ],
+    "q2.station0": [
+      "q2.station1",
+      "q2.station2"
+    ],
+    "q2.station2": [
+      "q2.station3"
+    ],
+    "q2.station4": [
+      "q2.station5",
+      "q2.station6",
+      "q2.station8"
+    ],
+    "q2.station6": [
+      "q2.station7"
+    ],
+    "q2.station8": [
+      "q2.station10",
+      "q2.station9"
+    ],
+    "q2.station10": [
+      "q2.station11"
+    ],
+    "q2.station12": [
+      "q2.station13",
+      "q2.station14"
+    ],
+    "q2.station14": [
+      "q2.station15"
+    ],
+    "q3.station0": [
+      "q3.station1",
+      "q3.station2"
+    ],
+    "q3.station2": [
+      "q3.station3"
+    ]
+  },
+  "max_peer_sources": 4,
+  "reservation_ff": 51483,
+  "scope": "static source model, no numerical sim"
+}
