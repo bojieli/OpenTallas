@@ -25,7 +25,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // from 15,219 to ~7k sinks.  The payload is read continuously at the NEXT head (rp, or rp+1 on a column pop), so
     // the head word is valid one edge after any pop.  A write column issued less than two edges after its own payload
     // write would read the old word: that is checked (sticky fault), never silently stretched.  WPAY=0 = flops.
-    parameter integer WPAY=1
+    parameter integer WPAY=1,
+    // Negative-control witness: corrupt tag bit zero at pending identity write.
+    parameter integer BW_MUT_ID_TAG=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -224,7 +226,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     end
     ot_sram_1r1w_128x256_m1_r2c2 u_pending_identity(.clk(clk),.r_ce_in(1'b1),
       .r_addr_in(7'(ret_v?pending_rp+1'b1:pending_rp)),.rd_out(pending_meta),
-      .w_ce_in(column_read),.w_addr_in(7'(pending_wp)),.wd_in({235'b0,head[308:288]}),.w_mask_in({256{1'b1}}),
+      .w_ce_in(column_read),.w_addr_in(7'(pending_wp)),.wd_in({235'b0,head[308:288]^(BW_MUT_ID_TAG!=0?21'd16:21'd0)}),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_sram_1r1w_128x256_m1_r2c2 u_response_identity(.clk(clk),.r_ce_in(response_read),
       .r_addr_in(7'(response_read_address)),.rd_out(response_meta),
