@@ -1,5 +1,5 @@
 {
-  "scope": "Every other packet file; artifact-only SOURCE/MODEL, no engine receipt",
+  "scope": "Every other packet file, including nested dependency manifests; artifact-only SOURCE/MODEL, no engine receipt",
   "files": [
     {
       "path": "COST_LEDGER.json",
@@ -195,6 +195,11 @@
       "path": "dependencies/installed/README.md",
       "bytes": 8549,
       "sha256": "71ed540d98ddc770c3f85d7c567186aa1ee326b63344b02b494ee87984f0d1bf"
+    },
+    {
+      "path": "dependencies/installed/SHA256.json",
+      "bytes": 7898,
+      "sha256": "d5079ba90643ef5085914e6456111e19ba31d4ebb1c8b1a51ae1188a4475003e"
     },
     {
       "path": "dependencies/installed/extract_check.py",
@@ -560,6 +565,11 @@
       "path": "dependencies/qwen_contract/README.md",
       "bytes": 11934,
       "sha256": "83d912ac4977d851ea6110701607a2d4123805e6783da690f9a6b0982e5714fb"
+    },
+    {
+      "path": "dependencies/qwen_contract/SHA256.json",
+      "bytes": 3588,
+      "sha256": "81cc0988fd475426407ef3b6507e2fdc8588ebadb12d3668bca9fd7f15643cc8"
     },
     {
       "path": "dependencies/qwen_contract/actual_gen0_bindings.json",
