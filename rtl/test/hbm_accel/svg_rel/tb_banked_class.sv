@@ -47,6 +47,8 @@ module banked_class_case #(parameter SVG=1,PREL=1,MUT=0,W=SVG?135:173,XW=SVG?47:
  reg[255:0]z;begin z=0;z[255:240]=16'hc7a1;z[234:224]=11'(a);
  if(SVG)begin z[25]=1;z[29]=1;z[22:11]=12'(a);z[9:7]=3'(a);z[6:0]=7'(a);z[39:30]=10'(a);z[83]=1;z[106:101]=6'(a);z[116:107]=10'(a);z[117]=1;z[134:119]=16'hda71;z[118]=1;end
  else begin z[108:101]=8'ha2;z[100:98]=3'(mode);z[97:0]=98'(a*1347+573);z[172:109]=64'(a*9173+721);end
+ // Extension-only command: full magic/mode/KV exists while low83 arezero.
+ if(a==1022)z[82:0]=0;
  word=z;end endfunction
  task automatic idle(input integer n);repeat(n)@(negedge clk);endtask
  task automatic reset;begin @(negedge clk);rst_n=0;cfg_we=0;start_v=0;idle(4);rst_n=1;idle(16);end endtask
@@ -64,6 +66,8 @@ module banked_class_case #(parameter SVG=1,PREL=1,MUT=0,W=SVG?135:173,XW=SVG?47:
  for(integer mode=0;mode<8;mode=mode+1)if(mode!=3)begin install(mode^4);run(mode,mode>>2,1,0);reset();end
  // Genuine mismatch: dense descriptor, attention literal (postmrel off).
  install(4);run(0,0,0,0);if(!SVG&&!nfault)$fatal(1,"CLASS_FAIL mismatch missed");reset();
+ // Consecutive descriptor classes without resetting or changingprogramme.
+ install(4);run(4,1,1,0);run(0,0,1,0);run(6,1,1,0);run(2,0,1,0);reset();
  // Alternating descriptor class + injectedformat in an empty previousCslot.
  install(4);run(4,1,0,1);reset();install(0);run(0,0,0,1);reset();
  $display("BANKED_CLASS_PROFILE_PASS SVG=%0d PREL=%0d checked=%0d magic=%0d inject=%0d",SVG,PREL,checked,magic_seen,inject_seen);finished=1;end
