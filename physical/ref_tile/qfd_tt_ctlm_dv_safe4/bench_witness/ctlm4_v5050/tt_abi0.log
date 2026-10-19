@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc8       admits   831 GB (avail 695, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 33 disk 20 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-155921-1792453952 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+CTLM_ABI_PASS MUT=0 256 vectors (ss5 107/ag5 10/dc nval/ME idle/coll clear/hr/ME start)
+QCTLM BENCHES: PASS
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-155921-1792453952): exit 0

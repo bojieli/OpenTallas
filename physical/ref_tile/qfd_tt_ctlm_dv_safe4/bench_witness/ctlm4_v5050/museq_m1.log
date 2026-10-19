@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-epyc8       admits   832 GB (avail 695, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 33 disk 20 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-ctlm4-bench
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-156199-1792453952 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+MU_SEQ_FAIL mut 1: C1 lockstep mismatches lock 168 solo1 92 | C9 SRAM dense nu1 u0: faults=[], missing=0, extra=0, lockstep=32 | C9 SRAM refused-start lockstep=33
+{"dense_events": 235, "mut": 1, "verdict": "FAIL", "C_issue_offset": 1, "lock": {"mismatches": 168, "faults": [[22388, "000001"]]}, "solo1_events": 72, "mu4_events": 288, "mu4_done_per_user": {"0": 3, "1": 3, "2": 3, "3": 3}, "landed_words": 1536, "busy4_fault_code": "000001", "coll4_fault_code": "000010", "mu4_fault_code": "000000"}
+BENCH_EXIT 1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-156199-1792453952): exit 0
