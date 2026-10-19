@@ -1,0 +1,15 @@
+export DESIGN_NAME = ot_pg_canonical_xor16_1019
+export DESIGN_NICKNAME = pg_canonical_coupon_1019
+export PLATFORM = asap7
+export VERILOG_FILES = /src/tests/pg_canonical_coupon_1019/coupon.sv
+export SDC_FILE = /src/tests/pg_canonical_coupon_1019/component.sdc
+export CORNER = BC
+export ASAP7_USE_VT = RVT
+export NUM_CORES = 4
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_MEMORY_MAX_BITS = 2048
+export LEC_CHECK = 0
+export DIE_AREA = 0 0 43.2 43.2
+export CORE_AREA = 2.16 2.16 41.04 41.04
+export PLACE_DENSITY = 0.55
