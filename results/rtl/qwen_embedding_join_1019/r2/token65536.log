@@ -1,0 +1,6 @@
+FIRST_CODE_RE cycle=95 token=65536 epoch=77 resident=65536/77 complete=1
+JOIN_PASS realprovider+native59 token=65536 epoch=77 reads=64 output=65 fixedcmdage6..70
+- rtl/test/qwen_split/tb_embedding_join.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 151ns; walltime 0.010 s; speed 14.488 us/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 8 MB

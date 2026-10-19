@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.qwen-embedding-native-join.v1",
+  "source_commit": "294b27a4b",
+  "fleet_unit": "oth-ubuntu-1761688-1792426564",
+  "host": "ot-epyc8",
+  "verilator": "5.050",
+  "released_checkpoint": "b968826d9c46dd6066d109eabc6255188de91218",
+  "vector_manifest_sha256": "a86508f56c921f9e53096c5497b40df3f214e6fe68b870a44f8539e09c540cae",
+  "positive_tokens": [
+    0,
+    65536,
+    151935
+  ],
+  "reads_per_token": 64,
+  "outputs_per_token": 65,
+  "first_code_read_command_age": 3,
+  "first_output_command_age": 6,
+  "last_output_command_age": 70,
+  "mutants": {
+    "1": "returnedtoken",
+    "2": "returnedepoch",
+    "3": "coretoken",
+    "4": "missinglastword",
+    "5": "prematurecorestart",
+    "6": "wronguser epoch low2",
+    "7": "enginecommandtoken",
+    "8": "stale sameuser epoch+4"
+  },
+  "all_mutants_failed": true,
+  "source_hashes_match": true,
+  "vector_hashes_match_pinned_manifest": true,
+  "production_fullchain_bound": false,
+  "full_token_qualified": false,
+  "open": [
+    "actual all36/head programme and immutableprefix join",
+    "livehostepoch vs peruser c_emb ownership",
+    "die SF.rxrecord lane and parentLP ages",
+    "cold/re-admission and ordinary nexttoken lifetime",
+    "physical TT/FF/area/cycle price"
+  ]
+}
