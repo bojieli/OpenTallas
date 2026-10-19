@@ -1,0 +1,1876 @@
+{
+  "top": "ot_hbm_static_cfg_collar_idx256",
+  "netlist_sha256": "e7cb7ced7466aa48a2925b613be455eba2177e991e01d8a5c0ccbdce982abd0c",
+  "all_roots": 16825,
+  "over32": [],
+  "top80": [
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_037_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_255_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/cv"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_029_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND5x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_273_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/net5091"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "E": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_128_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_030_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_277_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_128_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_131_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_031_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_279_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_128_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_132_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_032_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_281_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_128_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_133_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_033_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND5x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_283_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/net5091"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "E": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_134_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_034_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_284_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_131_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_134_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_035_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_285_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_132_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_134_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_036_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_286_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_133_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_134_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_038_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND5x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_288_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/net5091"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "E": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_135_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_039_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_289_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_131_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_135_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_040_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_290_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_132_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_135_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_041_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_291_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_133_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_135_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_042_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND5x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_293_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/net5091"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "E": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_136_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].u_payload/_043_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[0].u_payload/_294_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_123_"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_127_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_131_"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[0].u_payload/_136_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_101_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_516_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4462"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_093_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_533_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_094_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_535_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_095_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_537_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_096_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_538_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_097_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_539_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_098_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_540_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_099_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_541_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_100_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_542_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_102_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_543_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4938"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_103_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_544_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_104_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_545_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4938"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_105_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_546_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4936"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_106_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_547_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4938"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[10].u_payload/_107_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[10].u_payload/_548_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[10].u_payload/net4937"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[10].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[10].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_101_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_516_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/net4461"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_093_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_533_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_094_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_535_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_095_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_537_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_096_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_538_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_097_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_539_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_098_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_540_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_099_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_541_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_100_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_542_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_102_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_543_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_103_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_544_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_104_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_545_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_105_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_546_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_106_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_547_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[11].u_payload/_107_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[11].u_payload/_548_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[11].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[11].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_101_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_516_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4460"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_093_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_533_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_094_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_535_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_095_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_537_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_096_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_538_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_097_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_539_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_098_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_540_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_099_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_541_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_100_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_542_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_102_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_543_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_103_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_544_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_104_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_545_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4935"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_105_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_546_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4933"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_106_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_547_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4935"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[12].u_payload/_107_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[12].u_payload/_548_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[12].u_payload/net4934"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[12].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[12].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_101_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_516_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4459"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_093_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_533_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_094_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_535_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_095_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_537_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_096_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_538_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_097_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_539_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_098_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_540_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_099_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_541_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_100_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_542_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_102_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_543_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4932"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_103_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_544_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_104_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_545_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4932"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_105_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_546_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4930"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_106_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_547_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4932"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[13].u_payload/_107_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND4x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[13].u_payload/_548_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[0]"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[13].u_payload/net4931"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[13].u_payload/ca[2]"
+        ],
+        "D": [
+          "g_fan32.u_banks.g_bank[13].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload/_101_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND2x2_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[14].u_payload/_516_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[14].u_payload/net4458"
+        ],
+        "B": [
+          "net4415"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload/_093_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[14].u_payload/_533_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[14].u_payload/net4928"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_263_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload/_094_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[14].u_payload/_535_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[14].u_payload/net4928"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_263_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_264_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload/_095_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[14].u_payload/_537_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[14].u_payload/net4928"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_248_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_265_"
+        ]
+      }
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[14].u_payload/_096_",
+      "loads": 32,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb",
+      "driver_cell": [
+        "AND3x1_ASAP7_75t_R",
+        "g_fan32.u_banks.g_bank[14].u_payload/_538_"
+      ],
+      "inputs": {
+        "A": [
+          "g_fan32.u_banks.g_bank[14].u_payload/net4928"
+        ],
+        "B": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_264_"
+        ],
+        "C": [
+          "g_fan32.u_banks.g_bank[14].u_payload/_265_"
+        ]
+      }
+    }
+  ]
+}

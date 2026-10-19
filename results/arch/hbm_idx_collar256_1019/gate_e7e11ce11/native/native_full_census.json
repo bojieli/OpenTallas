@@ -1,0 +1,91 @@
+{
+  "scope": "CTS placement-RC diagnostic only; not routed native qualification",
+  "corners": {
+    "tt": {
+      "clock_refs": {
+        "clk": {
+          "rise": 180.4,
+          "fall": 191.99178499999996,
+          "min": 157.62152,
+          "max": 194.90593,
+          "src": "insertion.json boundary mean",
+          "bmin": 166.1,
+          "bmax": 194.9,
+          "n": 2665
+        }
+      },
+      "lib_sha256": "b04fa53c180f9d97565cb4a8797034e509c43fdc7e813e50933df654a2afe012",
+      "ports": 2332,
+      "timed_data_outputs": 2032,
+      "timed_data_inputs": 296,
+      "launch": [
+        209.78545999999997,
+        "prm[592]"
+      ],
+      "capture": [
+        111.09788,
+        "cfg_target[6]"
+      ],
+      "launch_over220": 0,
+      "capture_over190": 0,
+      "ff_earliest_launch": [
+        95.22729000000001,
+        "prm[1228]"
+      ],
+      "ff_latest_hold": [
+        -20.017259999999993,
+        "cfg_data[35]"
+      ],
+      "comb_pins": [],
+      "untimed_inputs": [
+        "clk_in",
+        "VSS",
+        "VDD"
+      ],
+      "untimed_outputs": []
+    },
+    "ff": {
+      "clock_refs": {
+        "clk": {
+          "rise": 147.3,
+          "fall": 153.50501000000003,
+          "min": 127.92747,
+          "max": 159.23366,
+          "src": "insertion.json boundary mean",
+          "bmin": 134.9,
+          "bmax": 159.2,
+          "n": 2665
+        }
+      },
+      "lib_sha256": "d51c74f2913da9497a28169e247f8dd23fe5f15f1acd34833e78d65e8e599a56",
+      "ports": 2332,
+      "timed_data_outputs": 2032,
+      "timed_data_inputs": 296,
+      "launch": [
+        148.96925999999996,
+        "prm[592]"
+      ],
+      "capture": [
+        81.73679000000001,
+        "cfg_target[6]"
+      ],
+      "launch_over220": 0,
+      "capture_over190": 0,
+      "ff_earliest_launch": [
+        67.6325,
+        "prm[723]"
+      ],
+      "ff_latest_hold": [
+        -12.418650000000014,
+        "cfg_data[35]"
+      ],
+      "comb_pins": [],
+      "untimed_inputs": [
+        "clk_in",
+        "VSS",
+        "VDD"
+      ],
+      "untimed_outputs": []
+    }
+  }
+}

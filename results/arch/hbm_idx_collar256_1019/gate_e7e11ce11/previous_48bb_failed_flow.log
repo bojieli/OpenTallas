@@ -1,0 +1,33 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+ib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv
+12. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+Warning: Replacing memory \r_pay with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:305
+Warning: Replacing memory \r_go with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:305
+Warning: Replacing memory \r_off with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:304
+Warning: Replacing memory \page with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:282
+Warning: Replacing memory \need with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:282
+Warning: Replacing memory \hwm with list of registers. See /src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:282
+14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar_idx256'.
+/src/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv:210: ERROR: Don't know how to detect sign and width for AST_AUTOWIRE node!
+
+Elapsed time: 0:01.10[h:]min:sec. CPU time: user 1.02 sys 0.08 (99%). Peak memory: 83240KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/idx256-physical-48bb24b51/routes/preflight/physical.json

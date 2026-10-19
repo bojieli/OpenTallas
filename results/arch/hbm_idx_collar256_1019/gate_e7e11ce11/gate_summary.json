@@ -1,0 +1,174 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hdie_col_idx256_1019",
+  "verdict": "WARN",
+  "generated": "2026-10-19T10:44:58-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 5420,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 194.9,
+    "tt_spread_ps": 28.8,
+    "tt_pin_spread_ps": 28.8,
+    "ff_insertion_ps": 159.2,
+    "ff_spread_ps": 24.3,
+    "ff_pin_spread_ps": 24.3,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "clock_family": {
+            "core_clk": 5417
+          },
+          "boundary": {
+            "n": 2665,
+            "mean": 180.4,
+            "min": 166.1,
+            "max": 194.9
+          },
+          "all": {
+            "n": 5417,
+            "mean": 177.7,
+            "min": 166.1,
+            "max": 194.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 2665,
+            "mean": 147.3,
+            "min": 134.9,
+            "max": 159.2
+          },
+          "all": {
+            "n": 5417,
+            "mean": 144.7,
+            "min": 134.9,
+            "max": 159.2
+          },
+          "child_flop": null,
+          "macros": null
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "5,420 sinks on the largest root; measured TT insertion 194.9 ps, FF insertion 159.2 ps, TT pin-flop spread 28.8 ps, FF pin-flop spread 24.3 ps (spread <= 80 ps)"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "utilisation 20% outside 45%-60% (std 3100 + macro 0 in core 15695 um2)",
+      "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+    },
+    {
+      "severity": "WARN",
+      "check": "pins",
+      "message": "1 port group(s) left to the IO placer (ANY): ['prm']",
+      "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+    },
+    {
+      "severity": "WARN",
+      "check": "pins",
+      "message": "1-bit vector ports ['pw_we']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+      "fix": "use the actual RTL and mapped pin names"
+    },
+    {
+      "severity": "WARN",
+      "check": "pins",
+      "message": "1 port group(s) left to the IO placer (ANY): ['prm']",
+      "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+    },
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 3130 um2 + macros 0 in core 15695: util 20%",
+      "fix": "set \"std_area_um2\": 3130 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 19.8% outside 45%-65% (std 3101 + macro 0 um2 in 15695 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "tile",
+    "skip_incremental_repair": true,
+    "rc": "0",
+    "grt_s": 121,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 483625,
+        "usage": 151210,
+        "pct": 31.27,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 583009,
+        "usage": 162917,
+        "pct": 27.94,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 448408,
+        "usage": 30724,
+        "pct": 6.85,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 431095,
+        "usage": 22125,
+        "pct": 5.13,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M2",
+      31.27
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  },
+  "reset_landing": {
+    "max_sinks": 2,
+    "ports": [
+      {
+        "port": "rst_n",
+        "sinks": 1,
+        "flops": 1,
+        "macros": 0
+      }
+    ],
+    "over": [],
+    "waived": false,
+    "ok": true
+  }
+}

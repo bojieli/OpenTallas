@@ -1,0 +1,228 @@
+{
+  "scope": "actual post-CTS cells and IO rectangles; BUF/INV collapsed endpoint Manhattan reach upper bounds (cell corners), not routed wire-length",
+  "netlist_sha256": "e7cb7ced7466aa48a2925b613be455eba2177e991e01d8a5c0ccbdce982abd0c",
+  "roots_including_ties": 16971,
+  "ties": 146,
+  "max_loads": 32,
+  "over32": [],
+  "max_reach_upper_um": 222.426,
+  "reach_over405": [],
+  "missing_cells": [],
+  "unknown_cells": 0,
+  "unknown_cell_types": {},
+  "std_cells": 29863,
+  "outside_die": [],
+  "unplaced": [],
+  "top_reach": [
+    {
+      "net": "cd[75]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 222.426,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_074_/A2"
+    },
+    {
+      "net": "cd[71]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 221.616,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_083_/A2"
+    },
+    {
+      "net": "cd[72]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 220.32,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_081_/A2"
+    },
+    {
+      "net": "cd[76]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 220.158,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_072_/A2"
+    },
+    {
+      "net": "cd[67]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 218.808,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_091_/A2"
+    },
+    {
+      "net": "cd[78]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 218.754,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_069_/A1"
+    },
+    {
+      "net": "cd[73]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 216.864,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_079_/A2"
+    },
+    {
+      "net": "cd[77]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 216.486,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_101_/A2"
+    },
+    {
+      "net": "cd[66]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 215.136,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_093_/A2"
+    },
+    {
+      "net": "cd[79]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 215.082,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_099_/A2"
+    },
+    {
+      "net": "cd[68]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 213.192,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_089_/A2"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[4].u_payload/_104_",
+      "kind": "comb",
+      "loads": 32,
+      "reach_upper_um": 196.992,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_068_/B"
+    },
+    {
+      "net": "cd[74]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 193.914,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_076_/A2"
+    },
+    {
+      "net": "cd[65]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 189.108,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_095_/A2"
+    },
+    {
+      "net": "cd[69]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 187.596,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_087_/A2"
+    },
+    {
+      "net": "cd[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 187.002,
+      "worst_sink": "g_fan32.u_banks.g_bank[2].u_payload/g_operand[5].u_word/_083_/A2"
+    },
+    {
+      "net": "cd[51]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 186.624,
+      "worst_sink": "g_fan32.u_banks.g_bank[3].u_payload/g_operand[5].u_word/_091_/A2"
+    },
+    {
+      "net": "cd[63]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 186.462,
+      "worst_sink": "g_fan32.u_banks.g_bank[3].u_payload/g_operand[5].u_word/_099_/A2"
+    },
+    {
+      "net": "cd[59]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 186.3,
+      "worst_sink": "g_fan32.u_banks.g_bank[3].u_payload/g_operand[2].u_word/_074_/A2"
+    },
+    {
+      "net": "cd[24]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 16,
+      "reach_upper_um": 186.138,
+      "worst_sink": "g_fan32.u_banks.g_bank[1].u_payload/g_operand[5].u_word/_081_/A2"
+    },
+    {
+      "net": "cd[20]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 16,
+      "reach_upper_um": 186.03,
+      "worst_sink": "g_fan32.u_banks.g_bank[1].u_payload/g_operand[5].u_word/_089_/A2"
+    },
+    {
+      "net": "cd[255]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 185.814,
+      "worst_sink": "g_fan32.u_banks.g_bank[15].u_payload/g_operand[5].u_word/_099_/A2"
+    },
+    {
+      "net": "cd[64]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 185.274,
+      "worst_sink": "g_fan32.u_banks.g_bank[4].u_payload/g_operand[2].u_word/_097_/A2"
+    },
+    {
+      "net": "cd[219]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 185.058,
+      "worst_sink": "g_fan32.u_banks.g_bank[13].u_payload/g_operand[5].u_word/_074_/A2"
+    },
+    {
+      "net": "cd[247]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 185.004,
+      "worst_sink": "g_fan32.u_banks.g_bank[15].u_payload/g_operand[5].u_word/_083_/A2"
+    },
+    {
+      "net": "cd[23]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 16,
+      "reach_upper_um": 184.896,
+      "worst_sink": "g_fan32.u_banks.g_bank[1].u_payload/g_operand[5].u_word/_083_/A2"
+    },
+    {
+      "net": "cd[13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 16,
+      "reach_upper_um": 184.788,
+      "worst_sink": "g_fan32.u_banks.g_bank[0].u_payload/g_operand[5].u_word/_101_/A2"
+    },
+    {
+      "net": "cd[30]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 16,
+      "reach_upper_um": 184.464,
+      "worst_sink": "g_fan32.u_banks.g_bank[1].u_payload/g_operand[5].u_word/_069_/A1"
+    },
+    {
+      "net": "cd[60]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 184.302,
+      "worst_sink": "g_fan32.u_banks.g_bank[3].u_payload/g_operand[5].u_word/_072_/A2"
+    },
+    {
+      "net": "cd[253]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "kind": "ff",
+      "loads": 15,
+      "reach_upper_um": 184.086,
+      "worst_sink": "g_fan32.u_banks.g_bank[15].u_payload/g_operand[5].u_word/_101_/A2"
+    }
+  ]
+}
