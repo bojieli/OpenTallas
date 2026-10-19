@@ -60,7 +60,7 @@ extra = {
 }
 extra["raw_fenced_stall"]["mstall"] = 90
 # Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
-if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9'):
+if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10'):
     extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
 for name, c in extra.items():
     c["nb"] = [(d >> 240) & 0xFFFF for d in c["descs"]]
@@ -93,6 +93,11 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         # S81-SAFE-FIX/SH 10-19: APIPE 8 (IKEY address stage split): pos8 must pass, apbskip8 / apstale8 must be caught
         "pos9": ["-DOT_HOSTNATIVE_PIPE9"], "apbskip9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APBSKIP"],
         "apstale9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APSTALE"], "apxskip9": ["-DOT_HOSTNATIVE_PIPE9", "-DOT_ING_MUT_APXSKIP"],
+        # S81-SHLK s10 10-19: APIPE 10 (stream pipe + split row product): pos10 must pass, the rest must be caught
+        "pos10": ["-DOT_HOSTNATIVE_PIPE10"], "apbskip10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APBSKIP"],
+        "apstale10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APSTALE"], "apxskip10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APXSKIP"],
+        "sprh10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPRH"], "spkind10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPKIND"],
+        "rac10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_RAC"],
         "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
         "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
@@ -160,7 +165,7 @@ for name, c in cases.items():
 if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)
-if mode in ("pos", "base", "pos2", "pos7", "pos8", "pos9"):
+if mode in ("pos", "base", "pos2", "pos7", "pos8", "pos9", "pos10"):
     print("HNP_PASS" if ok_all else "HNP_FAIL")
     sys.exit(0 if ok_all else 1)
 print("HNP_NEG_DETECTED" if not ok_all else "HNP_NEG_MISSED")

@@ -27,7 +27,12 @@ bad=0
 # realigner pointer copy 0 stalls (OT_ING_MUT_RAC) -- the APIPE 7 additions (S81-SHLK 10-18; the back-to-back refill
 # mutant OT_ING_MUT_HREG needs a full-rate host stream: physical/sys_takeover/host_native_pipe_bench.py hreg7)
 # 9 = the unit MUT 9: the L0 rung landing dropped (S81-SHLK2 10-18; rung one edge short)
-mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; *) echo +define+MUT=$1;; esac; }
+# S81-SHLK s10 (APIPE 10, VL_EXTRA has -DOT_S81_SH_APIPE10): 11 = stream-pipe FIFO address read copy stalls
+# (OT_ING_MUT_SPRH), 12 = ROWS tail not masked (OT_ING_MUT_SPKIND), 13 = boot marker 1 edge late (OT_ING_MUT_MKD),
+# 14 = svc decode emits on the pop edge from the previous head (OT_S81_SH_MUT_HQSTALE)
+mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; 11) echo +define+OT_ING_MUT_SPRH;;
+  12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;; *) echo +define+MUT=$1;; esac; }
+MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 12 13 14";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do
@@ -54,7 +59,7 @@ done
 grep '^SEQHOST COLLIDE' "$O/run_collide.log"; grep -q 'PASS (fault raised)' "$O/run_collide.log" || { echo "collision not faulted"; bad=1; }
 "$O/base/tb" +seed=3 +stdrop=1 > "$O/run_stdrop.log" 2>&1
 grep '^SEQHOST STDROP' "$O/run_stdrop.log"; grep -q 'PASS (fault raised)' "$O/run_stdrop.log" || { echo "W region drop not faulted"; bad=1; }
-for m in 1 2 3 4 5 6 7 8 9 10; do
+for m in $MUTS; do
   build mut$m $(mdef $m) || { bad=1; continue; }
   "$O/mut$m/tb" +seed=1 > "$O/run_mut$m.log" 2>&1
   if grep -q '^SEQHOST PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1

@@ -97,9 +97,11 @@ module ot_rom_host_ingest #(
     output wire              fault
 );
     wire rn_h, rn_i, rn_c;
-    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
-    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
-    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 9 ? 8 : 1)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
+    // APIPE >= 10 (S81-SHLK s10): reset copies sized for <= 32 loads a copy (kit reset_relay_split max_loads 32;
+    // sr9 gate families rsh 117 / rsi 958 / rsc 372 loads).  Same release edge.
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 8 : APIPE >= 9 ? 8 : 1)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 40 : APIPE >= 9 ? 8 : 1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 16 : APIPE >= 9 ? 8 : 1)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
     // cross-domain nets (declared ahead of use)
     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
     reg          irv_q;
@@ -228,10 +230,31 @@ module ot_rom_host_ingest #(
     wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && ox_room;
     assign e_wrdy = ox_room;
     assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && ox_room && rd_room;
-    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
+    // APIPE >= 10 (S81-SHLK s10): the engine's stream sectors reach its write port 2 edges after their pop (stream
+    // pipe); the boot marker word is delayed by the same 2 edges (mk_d2), so every request-FIFO word keeps its order
+    // and a uniform +2 edge offset.  The marker is issued (host FIFO pop, ofree reserve: ox_iss) at mark_go; the
+    // engine is idle then and its next write is >= 5 edges away (dispatch, address pipe, stream pipe).
+    reg          mk_d1, mk_d2;
+    reg  [65:0]  mk_p1, mk_p2;
+    always @(posedge clk_i) begin mk_p1 <= hx_head[129:64]; mk_p2 <= mk_p1; end
+    always @(posedge clk_i or negedge rn_i)
+        if (!rn_i) begin mk_d1 <= 1'b0; mk_d2 <= 1'b0; end
+`ifdef OT_ING_MUT_MKD
+        else begin mk_d1 <= mark_go; mk_d2 <= mark_go; end                     // mutant: marker only 1 edge late
+`else
+        else begin mk_d1 <= mark_go; mk_d2 <= mk_d1; end
+`endif
+    wire         mk_w = (APIPE >= 10) ? mk_d2 : mark_go;
+    wire [65:0]  mk_pay = (APIPE >= 10) ? mk_p2 : hx_head[129:64];
+`ifndef SYNTHESIS
+    always @(posedge clk_i) if (APIPE >= 10 && rn_i && mk_d2 && (e_wv || e_rv)) $fatal(1, "ot_rom_host_ingest: APIPE 10 marker collides with an engine write");
+`endif
+    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mk_w;
+    // request-FIFO entries are reserved at issue: the marker at mark_go (APIPE 10: written 2 edges later)
+    wire         ox_iss = (APIPE >= 10) ? ((e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go) : ox_wr;
     // Preserve the optional marker region in bits65:64. Existing markers use
     // zero there and retain their exact low64 payload / RoPE dispatch behavior.
-    wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 190'd0, hx_head[129:64]}
+    wire [AW+256:0] ox_w = mk_w ? {1'b1, {AW{1'b1}}, 190'd0, mk_pay}
                          : e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
     // APIPE >= 6: the request write registered one clk_i edge (ox_w_q is data only: no reset); APIPE < 6: no logic
     wire            ox_wr_f;
@@ -247,7 +270,7 @@ module ot_rom_host_ingest #(
 `ifdef OT_ING_MUT_OXFREE
                 ofree <= ofree + ox_freed;                                      // mutant: issued requests not counted
 `else
-                ofree <= ofree - (ox_wr ? 1'b1 : 1'b0) + ox_freed;
+                ofree <= ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
 `endif
             end
         assign ox_wr_f = ox_wr_q;

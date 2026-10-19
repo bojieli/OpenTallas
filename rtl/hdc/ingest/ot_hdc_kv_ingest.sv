@@ -90,6 +90,20 @@ module ot_hdc_kv_ingest #(
     //           levels / 775-787 ps, over the 600-ps stage rule): as 7 with stage B split in two.  B0 (apb_*) registers
     //           the block base a2_blk = rbase + sb * 2176, the IKEY code / scale offsets (bit-disjoint fields: no carry
     //           chain) and a2_raddr; B adds them (two-operand adds).  One more bubble edge a row (four), same values.
+    //   APIPE = 10 (S81-SHLK s10 2026-10-19, dsdv_sh_lk_sr9 gate TT -252/-271 ps, all worst paths ra_rpc -> 8 full
+    //           512-b realigner copies (~1,000 loads a pointer bit) -> sc_acc / ox write data; textbook ap0_pitch ->
+    //           ap1_lp 26 levels 884 ps): as 9 plus (a) STREAM PIPE: the realigner head is no longer formed in the pop
+    //           cycle.  Stage P (registered at the pop edge) captures the 40-byte window of the 256-byte ring that holds
+    //           the head (32:1 select of 8-byte ring granules by the pointer's granule index, 10 kept pointer copies,
+    //           32 output bits a copy) with the fine byte offset, write address and data kind; stage O forms the head by
+    //           an 8:1 byte select (8 kept fine-offset copies), masks / substitutes the IKEY scales, writes sc_acc and
+    //           enters a 4-entry output FIFO that drives the write port (registered head).  Pops are credit-issued
+    //           against the FIFO (no w_rdy in the pop cone).  Every stream sector reaches the write port 2 edges later;
+    //           rate 1 sector/edge unchanged; a fenced segment's done pulse is delayed by the same 2 edges (it still
+    //           leaves after its last sector's count); busy covers the pipe.  The next stream segment dispatches as
+    //           before (the pipe keeps order).  Same sectors, same order, same addresses, uniformly +2 edges.  (b) ap1_lp = local *
+    //           pitch[2:0] and ap1_lph = local * pitch[4:3] (two short products), summed with rbase in stage X
+    //           (three-operand add): no edge change.  Requires QKV = 0 (stream-only engine).
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
@@ -324,9 +338,12 @@ module ot_hdc_kv_ingest #(
     // APIPE >= 7 (S81-SHLK 2026-10-18, dsdv_sh_lk route ef442ffba: u_eng.ra_rp[5] -> word select + byte shift of all 512
     // bits -> ox_w_q / sc_acc TT -22.4, 11 endpoints): RAC = 8 kept copies of ra_rp, loaded with it on every edge; copy
     // s drives the select / shift of head bits [32 s +: 32] only.  Same value, same edge: no cycle or value change.
-    localparam integer RAC = (APIPE >= 7) ? 8 : 1;
+    localparam integer SP  = (APIPE >= 10) ? 1 : 0;   // APIPE 10: stream pipe (see the parameter note)
+    localparam integer RAC = (APIPE >= 10) ? 10 : (APIPE >= 7) ? 8 : 1;
     (* keep *) reg [8*RAC-1:0] ra_rpc;           // RAC = 1: unused (the original single-pointer realigner below)
-    if (RAC > 1) begin : g_rac
+    if (SP != 0) begin : g_ra0
+        assign ra_head = 256'd0;                // APIPE 10: the head is formed in stage O (g_sp)
+    end else if (RAC > 1) begin : g_rac
         genvar ras;
         for (ras = 0; ras < 8; ras = ras + 1) begin : g_rah
             wire [7:0]   rp = ra_rpc[8 * ras +: 8];
@@ -382,12 +399,13 @@ module ot_hdc_kv_ingest #(
     wire        ap_go   = (APIPE == 0) || ap_ok || st_mode == M_RAW;
     // this cycle's stream step
     reg  [5:0]  st_pop;
+    reg  [1:0]  st_kind;                        // APIPE 10: 0 head, 1 head masked to k_take bytes, 2 / 3 sc_acc[0 / 1]
     reg         st_wv, st_adv;
     reg  [255:0] st_wd;
     reg  [AW-1:0] st_wa;
     wire [5:0]  k_take = (st_rem > 16'd32) ? 6'd32 : st_rem[5:0];
     always @* begin
-        st_pop = 6'd0; st_wv = 1'b0; st_wd = 256'd0; st_wa = {AW{1'b0}}; st_adv = 1'b0;
+        st_pop = 6'd0; st_wv = 1'b0; st_wd = 256'd0; st_wa = {AW{1'b0}}; st_adv = 1'b0; st_kind = 2'd0;
         if (st_act && !st_pad && ap_go) begin
             case (st_mode)
                 M_RAW: if (ra_n >= 9'd32) begin
@@ -396,6 +414,7 @@ module ot_hdc_kv_ingest #(
                 M_ROWS: if (ra_n >= {3'd0, k_take}) begin
                     st_pop = k_take; st_adv = 1'b1; st_wv = u_mine;
                     st_wd = (k_take == 6'd32) ? ra_head : (ra_head & ~({256{1'b1}} << {k_take[4:0], 3'b000}));
+                    st_kind = (k_take == 6'd32) ? 2'd0 : 2'd1;
                     st_wa = u_raddr + st_sec;
                 end
                 M_IKEY: begin
@@ -406,7 +425,7 @@ module ot_hdc_kv_ingest #(
                     end else if (st_ph == 3'd2) begin
                         if (ra_n >= 9'd4) begin st_pop = 6'd4; st_adv = 1'b1; end
                     end else begin
-                        st_adv = 1'b1; st_wv = u_mine; st_wd = sc_acc[st_ph[0] ? 0 : 1];
+                        st_adv = 1'b1; st_wv = u_mine; st_wd = sc_acc[st_ph[0] ? 0 : 1]; st_kind = st_ph[0] ? 2'd2 : 2'd3;
                         st_wa = u_kscal + (st_ph == 3'd4 ? 1 : 0);
                     end
                 end
@@ -414,7 +433,8 @@ module ot_hdc_kv_ingest #(
             endcase
         end
     end
-    wire st_go = st_adv && (!st_wv || w_rdy);
+    wire sp_room;                               // APIPE 10: output FIFO credit (g_sp); 1 otherwise
+    wire st_go = st_adv && (!st_wv || ((SP != 0) ? sp_room : w_rdy));
     // ROWS: the row ends with its last output sector (this die) or its last bytes (dropped)
     wire st_row_end = u_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
 
@@ -427,9 +447,13 @@ module ot_hdc_kv_ingest #(
     wire [255:0]  qp_wd;
     wire          qp_busy;                   // QPIPE: a beat / sector still in the input or drain pipeline
     wire          qk_wv = (QPIPE != 0) ? qp_wv : q_wv;
-    assign w_v    = qk_wv || st_wv;
-    assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
-    assign w_data = qk_wv ? ((QPIPE != 0) ? qp_wd : q_sec) : st_wd;
+    wire          sp_wv;                     // APIPE 10: stream output FIFO head (g_sp)
+    wire [AW-1:0] sp_wa;
+    wire [255:0]  sp_wd;
+    wire          sp_busy;                   // APIPE 10: a sector still in stage P or the output FIFO
+    assign w_v    = qk_wv || ((SP != 0) ? sp_wv : st_wv);
+    assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : ((SP != 0) ? sp_wa : st_wa);
+    assign w_data = qk_wv ? ((QPIPE != 0) ? qp_wd : q_sec) : ((SP != 0) ? sp_wd : st_wd);
     wire w_fire = w_v && w_rdy;
     // done / sector-count outputs (APIPE 2: registered write fire, done one edge later)
     reg         done_r, done_q, wf_q;
@@ -445,13 +469,20 @@ module ot_hdc_kv_ingest #(
 `ifdef OT_ING_MUT_NSECLAG
     assign done_v = done_r; assign done_tag = dtag_r;                       // mutant: done leaves before its last count
 `else
-    assign done_v = (APIPE >= 2) ? done_q : done_r; assign done_tag = (APIPE >= 2) ? dtag_q : dtag_r;
+    // APIPE 10: done delayed 2 more edges, as the stream pipe delays the sectors
+    reg         done_s1, done_s2;
+    reg  [7:0]  dtag_s1, dtag_s2;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin done_s1 <= 1'b0; done_s2 <= 1'b0; dtag_s1 <= 0; dtag_s2 <= 0; end
+        else begin done_s1 <= done_q; dtag_s1 <= dtag_q; done_s2 <= done_s1; dtag_s2 <= dtag_s1; end
+    assign done_v = (SP != 0) ? done_s2 : (APIPE >= 2) ? done_q : done_r;
+    assign done_tag = (SP != 0) ? dtag_s2 : (APIPE >= 2) ? dtag_q : dtag_r;
 `endif
     assign n_sectors = nsec_r;
     wire ra_push = st_act && !st_pad && in_v && (ra_n <= 9'd192) && (st_beats != 0);
     wire pad_take = st_act && st_pad && in_v && (st_beats != 0);
     assign in_rdy = qi_act || (st_act && (st_pad ? (st_beats != 0) : ((ra_n <= 9'd192) && (st_beats != 0))));
-    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy;
+    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy || sp_busy;
 
     // dispatch: a QKV descriptor takes the other slot once it is drained (and an
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
@@ -633,8 +664,6 @@ module ot_hdc_kv_ingest #(
                     end
                     M_IKEY: begin
                         if (st_ph == 3'd2) begin
-                            if (st_row[3]) sc_acc[1][st_row[2:0] * 32 +: 32] <= ra_head[31:0];
-                            else           sc_acc[0][st_row[2:0] * 32 +: 32] <= ra_head[31:0];
                             if (st_row[3:0] == 4'd15) st_ph <= 3'd3;
                             else begin st_ph <= 3'd0; st_row <= st_row + 1; st_left <= st_left - 1; end
                         end else if (st_ph == 3'd4) begin
@@ -648,6 +677,16 @@ module ot_hdc_kv_ingest #(
             if (st_act && !st_pad && st_left == 0 && !s_disp) st_pad <= 1'b1;   // an empty segment
         end
     end
+    // IKEY scales (APIPE 10: written from stage O, one edge after the pop; read by stage O of the phase 3 / 4 pops,
+    // which come at least one edge after the last scale pop, so the read always sees the group's 16 scales)
+    wire        sc_we;
+    wire [3:0]  sc_row;
+    wire [31:0] sc_wd;
+    always @(posedge clk)
+        if (sc_we) begin
+            if (sc_row[3]) sc_acc[1][sc_row[2:0] * 32 +: 32] <= sc_wd;
+            else           sc_acc[0][sc_row[2:0] * 32 +: 32] <= sc_wd;
+        end
     // APIPE: the address terms of the current row; invalidated whenever st_row / the segment can change
     wire ap_inval = s_disp || (st_go && (st_mode == M_ROWS ? st_row_end :
                                          st_mode == M_IKEY ? ((st_ph == 3'd2 && st_row[3:0] != 4'd15) || st_ph == 3'd4) : 1'b0));
@@ -672,8 +711,9 @@ module ot_hdc_kv_ingest #(
     wire [31:0] a2_sb    = ap1_gs >> 6;
     wire [5:0]  a2_q     = ap1_gs[5:0];
     wire [31:0] a2_blk   = ap1_rbase + (a2_sb << 11) + (a2_sb << 7);
-    reg  [31:0] ap1_lp;
-    wire [31:0] a2_raddr = (APIPE >= 4) ? ap1_rbase + ap1_lp : ap1_rbase + ap1_local * ap1_pitch;
+    reg  [31:0] ap1_lp, ap1_lph;
+    wire [31:0] a2_raddr = (APIPE >= 10) ? ap1_rbase + ap1_lp + (ap1_lph << 3)
+                         : (APIPE >= 4) ? ap1_rbase + ap1_lp : ap1_rbase + ap1_local * ap1_pitch;
     wire [31:0] a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
     wire [31:0] a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
     // APIPE 3: stage A0 (ap0_*) = the decomposition and descriptor fields; ap1_rbase = base + stack * stride from it
@@ -711,7 +751,8 @@ module ot_hdc_kv_ingest #(
             ap1_rbase <= (APIPE >= 5) ? ap0_base + ap0_pp0 + ap0_pp1 + ap0_pp2
                                       : ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
             ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
-            if (APIPE >= 4) ap1_lp <= ap0_local * ap0_pitch;
+            if (APIPE >= 10) begin ap1_lp <= ap0_local * {29'd0, ap0_pitch[2:0]}; ap1_lph <= ap0_local * {30'd0, ap0_pitch[4:3]}; end
+            else if (APIPE >= 4) ap1_lp <= ap0_local * ap0_pitch;
         end else begin
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
         end
@@ -760,6 +801,102 @@ module ot_hdc_kv_ingest #(
     // QPIPE QKV path (see the parameter): input I0 / I1 / bank write, per-lane banks, drain E1 / E2 into an output FIFO
     // =============================================================================
     localparam integer LBW = LWP + 1;                       // per-lane bank index {slot, word}
+    // =============================================================================
+    // APIPE 10 stream pipe (see the parameter note): stage P (pop edge) -> stage O -> 4-entry output FIFO
+    // =============================================================================
+    generate if (SP != 0) begin : g_sp
+`ifndef SYNTHESIS
+        initial if (QKV != 0 || QPIPE != 0 || AW != 32) $error("ot_hdc_kv_ingest: APIPE 10 stream pipe requires QKV = 0, QPIPE = 0, AW = 32");
+`endif
+        reg           p_wv, p_sc;
+        reg  [1:0]    p_kind;
+        reg  [5:0]    p_kt;
+        reg  [3:0]    p_row;
+        reg  [AW-1:0] p_wa;
+        reg  [319:0]  p_win;                   // ring bytes 8 * rp[7:3] .. + 39 (the head and its fine offset)
+        (* keep *) reg [23:0] p_fo;            // 8 kept copies of the fine byte offset rp[2:0], 4 head bytes each
+        // window granule g = ring granule (rp[7:3] + g) mod 32; ring granule k = ra[k / 4][64 (k mod 4) +: 64].
+        // 10 slices of 32 window bits; slice s reads pointer copy s (32 one-hot select loads a copy).
+        wire [319:0]  win;
+        genvar gs, gb;
+        for (gs = 0; gs < 10; gs = gs + 1) begin : g_ws
+            localparam integer G = gs / 2;
+            localparam integer H = gs % 2;
+            wire [4:0] gi = ra_rpc[8 * gs + 3 +: 5];
+            reg  [31:0] v;
+            integer k;
+            always @* begin
+                v = 32'd0;
+                for (k = 0; k < 32; k = k + 1)
+                    if (gi == ((k + 32 - G) % 32)) v = v | ra[k / 4][64 * (k % 4) + 32 * H +: 32];
+            end
+            assign win[32 * gs +: 32] = v;
+        end
+        always @(posedge clk)
+            if (st_go) begin
+                p_win <= win; p_fo <= {8{ra_rpc[2:0]}}; p_kind <= st_kind; p_kt <= k_take; p_row <= st_row[3:0];
+                p_wa <= st_wa;
+            end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin p_wv <= 1'b0; p_sc <= 1'b0; end
+            else begin
+                p_wv <= st_go && st_wv;
+                p_sc <= st_go && st_mode == M_IKEY && st_ph == 3'd2;
+            end
+        // stage O: head byte b = window byte b + fine offset (8:1, fine-offset copy b / 4)
+        wire [255:0] head;
+        for (gb = 0; gb < 32; gb = gb + 1) begin : g_hb
+            wire [2:0] fo = p_fo[3 * (gb / 4) +: 3];
+            reg  [7:0] hb;
+            integer j;
+            always @* begin
+                hb = 8'd0;
+                for (j = 0; j < 8; j = j + 1) if (fo == j) hb = hb | p_win[8 * (gb + j) +: 8];
+            end
+            assign head[8 * gb +: 8] = hb;
+        end
+        wire [255:0] o_mask = ~({256{1'b1}} << {p_kt[4:0], 3'b000});
+`ifdef OT_ING_MUT_SPKIND
+        wire [255:0] o_d = (p_kind == 2'd0) ? head : (p_kind == 2'd1) ? head                       // mutant: tail not masked
+`else
+        wire [255:0] o_d = (p_kind == 2'd0) ? head : (p_kind == 2'd1) ? (head & o_mask)
+`endif
+                         : (p_kind == 2'd2) ? sc_acc[0] : sc_acc[1];
+        assign sc_we = p_sc; assign sc_row = p_row; assign sc_wd = head[31:0];
+        // output FIFO: 4 x {addr, data}; read through 9 kept one-hot read-pointer copies (32 output bits a copy)
+        reg  [AW+255:0] fq [0:3];
+        reg  [1:0]      fq_wr;
+        reg  [2:0]      fq_n;
+        (* keep *) reg [35:0] fq_rh;
+        wire            fq_pop = (fq_n != 0) && w_rdy;
+        always @(posedge clk) if (p_wv) fq[fq_wr] <= {p_wa, o_d};
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin fq_wr <= 2'd0; fq_n <= 3'd0; fq_rh <= {9{4'b0001}}; end
+            else begin
+                if (p_wv) fq_wr <= fq_wr + 2'd1;
+`ifdef OT_ING_MUT_SPRH
+                if (fq_pop) for (int c = 0; c < 8; c++) fq_rh[4 * c +: 4] <= {fq_rh[4 * c +: 3], fq_rh[4 * c + 3]};  // mutant: address copy 8 stalls
+`else
+                if (fq_pop) for (int c = 0; c < 9; c++) fq_rh[4 * c +: 4] <= {fq_rh[4 * c +: 3], fq_rh[4 * c + 3]};
+`endif
+                fq_n <= fq_n + (p_wv ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
+            end
+        wire [AW+255:0] fq_h;
+        for (gb = 0; gb < 9; gb = gb + 1) begin : g_fr
+            wire [3:0] oh = fq_rh[4 * gb +: 4];
+            assign fq_h[32 * gb +: 32] = ({32{oh[0]}} & fq[0][32 * gb +: 32]) | ({32{oh[1]}} & fq[1][32 * gb +: 32])
+                                       | ({32{oh[2]}} & fq[2][32 * gb +: 32]) | ({32{oh[3]}} & fq[3][32 * gb +: 32]);
+        end
+        assign sp_wv = (fq_n != 0);
+        assign sp_wa = fq_h[AW+255:256];
+        assign sp_wd = fq_h[255:0];
+        assign sp_room = (fq_n + (p_wv ? 3'd1 : 3'd0)) <= 3'd3;
+        assign sp_busy = p_wv || p_sc || (fq_n != 0);
+    end else begin : g_sp0
+        assign sp_wv = 1'b0; assign sp_wa = {AW{1'b0}}; assign sp_wd = 256'd0; assign sp_room = 1'b1; assign sp_busy = 1'b0;
+        assign sc_we = st_go && st_mode == M_IKEY && st_ph == 3'd2; assign sc_row = st_row[3:0]; assign sc_wd = ra_head[31:0];
+    end endgenerate
+
     generate if (QPIPE != 0) begin : g_qp
         // ---- I0: the beat and its granule walk
         reg          i0_v, i0_slot, i0_last;

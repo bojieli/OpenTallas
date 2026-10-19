@@ -91,7 +91,9 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     input  wire [5:0]    sq_i,            // L1 status {fault, code 4, busy}
     input  wire          vf_i             // L2 fault (via L1)
 );
-`ifdef OT_S81_SH_APIPE9
+`ifdef OT_S81_SH_APIPE10
+    wire [15:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(16)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
+`elsif OT_S81_SH_APIPE9
     wire [7:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
 `else
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
@@ -167,7 +169,9 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // mux -> dq paths start at a ck_ic flop; every host word +1 ck_ic edge, rate unchanged) + 8 kept realigner pointer
     // copies in the engine (ra_rp -> 512-b shift fanout; no cycle change).  Host path f_host -> s_hw / t_host = +2 edges
     // vs the dsfd_host_c golden (tb HSH 2).
-`ifdef OT_S81_SH_APIPE9
+`ifdef OT_S81_SH_APIPE10
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(10))
+`elsif OT_S81_SH_APIPE9
     dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(9))
 `else
     dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(8))

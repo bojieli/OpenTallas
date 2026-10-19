@@ -8,7 +8,9 @@
 // sys-takeover 2026-10-09: FPIPE (fence PIPE), ENG_TRIM (engine without the dead QKV path), APIPE (engine stream address
 // registers); all opt-in, defaults = the original (`OT_HOSTNATIVE_PIPE sets all three for benches).
 module dsfd_host_native #(parameter integer ENABLE=0,PROTECT=0,
-`ifdef OT_HOSTNATIVE_PIPE9
+`ifdef OT_HOSTNATIVE_PIPE10
+ parameter integer FPIPE=2,ENG_TRIM=1,APIPE=10     // bench only (S81-SHLK s10 10-19): APIPE 9 + stream pipe + split row product
+`elsif OT_HOSTNATIVE_PIPE9
  parameter integer FPIPE=2,ENG_TRIM=1,APIPE=9
 `elsif OT_HOSTNATIVE_PIPE8
  parameter integer FPIPE=2,ENG_TRIM=1,APIPE=8      // bench only (S81-SAFE-FIX/SH 10-19): APIPE 7 + split IKEY address stage

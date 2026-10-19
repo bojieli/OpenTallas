@@ -74,7 +74,23 @@ module dsdv_sh_sd #(
     wire [545:0] mem_q;
     ot_sram_1r1w2c_16x546_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q),
       .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({257'd0,iwe,ia,id}),.w_mask_in({546{1'b1}}));
+`ifdef OT_S81_SH_APIPE10
+    // S81-SHLK s10 (sr9 gate: u_mem rd_out (TT clk->q 310 ps) -> head decode / credit check -> fault, macro->reg -233 ps):
+    // the popped head is registered straight from the macro (h_q); its decode, credit reserve, fault check and the
+    // stack write act one edge after the pop, from h_q.  That edge replaces the APIPE 9 payload hop, so hw leaves on
+    // the same edge as before (HSH 6).  The pop itself never reads the head (STATIC).
+    reg [288:0] h_q;
+    reg pop_q;
+    always @(posedge ck) if (sd_pop) h_q <= mem_q[288:0];
+    always @(posedge ck or negedge rn) if (!rn) pop_q <= 1'b0; else pop_q <= sd_pop;
+    assign h = h_q;
+`ifndef SYNTHESIS
+    initial if (STATIC == 0) $error("dsdv_sh_sd: OT_S81_SH_APIPE10 requires STATIC != 0 (the pop must not read the head)");
+`endif
+`else
+    wire pop_q = sd_pop;
     assign h=mem_q[288:0];
+`endif
     always @(posedge ck or negedge rn) if(!rn)head_v<=0;else head_v<=have_next;
 `ifndef SYNTHESIS
     always @(posedge ck)if(rn&&have_next&&iv&&read_next==wp)$fatal(1,"SH_SD_SRAM_COLLISION");
@@ -129,7 +145,9 @@ module dsdv_sh_sd #(
 `ifdef OT_S81_SH_SRAM
     assign sd_pop=pop;
 `endif
-`ifdef OT_S81_SH_SRAM
+`ifdef OT_S81_SH_APIPE10
+    // (no payload hop: the h_q edge above)
+`elsif OT_S81_SH_SRAM
     // One physical payload hop between the upper SRAM and the stack faces.
     // Credits are reserved at pop; the following edge emits that reserved word.
     (* keep = "true" *) reg [290:0] sd_hop_payload;
@@ -160,6 +178,14 @@ module dsdv_sh_sd #(
             if (pop) rp <= rp + 1'b1;
             n <= n + iv - pop;
             o_cr <= pop;
+`ifdef OT_S81_SH_APIPE10
+            if (pop_q && (bad || (STATIC != 0 && !ok))) fault <= 1'b1;
+            for (s = 0; s < NS; s = s + 1) begin
+                hw[292*s] <= pop_q && dst[s];
+                cr[s] <= cr[s] - (pop_q && dst[s]) + (hc_q[9*s] && !(MUT == 2 && crn == 49 && s == 0));
+                if (cr[s] - (pop_q && dst[s]) + hc_q[9*s] > SCRED) fault <= 1'b1;
+            end
+`else
             if (pop && (bad || (STATIC != 0 && !ok))) fault <= 1'b1;
             for (s = 0; s < NS; s = s + 1) begin
 `ifdef OT_S81_SH_SRAM
@@ -170,11 +196,19 @@ module dsdv_sh_sd #(
                 cr[s] <= cr[s] - (pop && dst[s]) + (hc_q[9*s] && !(MUT == 2 && crn == 49 && s == 0));
                 if (cr[s] - (pop && dst[s]) + hc_q[9*s] > SCRED) fault <= 1'b1;
             end
+`endif
             if (hc_q[0]) crn <= (crn == 49) ? 0 : crn + 1'b1;
             host_ack_n <= asum[8] ? 8'hff : asum[7:0];
             if (asum[8]) fault <= 1'b1;
         end
-`ifdef OT_S81_SH_SRAM
+`ifdef OT_S81_SH_APIPE10
+    always @(posedge ck)
+`ifdef OT_S81_SH_MUT_HQSTALE
+        for (s = 0; s < NS; s = s + 1) if (sd_pop && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};   // mutant: emits on the pop edge (previous head)
+`else
+        for (s = 0; s < NS; s = s + 1) if (pop_q && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+`endif
+`elsif OT_S81_SH_SRAM
     always @(posedge ck)
         for (integer t=0;t<NS;t=t+1) if(sd_hop_v&&sd_hop_dst[t]) hw[292*t+1+:291]<=sd_hop_payload;
 `else
