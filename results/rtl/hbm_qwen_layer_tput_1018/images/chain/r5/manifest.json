@@ -163,9 +163,9 @@
    "fill_sectors": 64,
    "drain_sectors": 32,
    "programme": 0,
-   "line0_serial": 3154,
-   "compiled_commit_serial": 3212,
-   "priced_end_serial": 3200,
+   "line0_serial": 3158,
+   "compiled_commit_serial": 3216,
+   "priced_end_serial": 3204,
    "commit_slack_edges": -12
   },
   {
@@ -354,9 +354,9 @@
    "fill_sectors": 16,
    "drain_sectors": 16,
    "programme": 0,
-   "line0_serial": 3439,
-   "compiled_commit_serial": 3493,
-   "priced_end_serial": 3482,
+   "line0_serial": 3443,
+   "compiled_commit_serial": 3497,
+   "priced_end_serial": 3486,
    "commit_slack_edges": -11
   },
   {
@@ -550,9 +550,9 @@
    "fill_sectors": 1024,
    "drain_sectors": 1024,
    "programme": 1,
-   "line0_serial": 4901,
-   "compiled_commit_serial": 5081,
-   "priced_end_serial": 4991,
+   "line0_serial": 4905,
+   "compiled_commit_serial": 5085,
+   "priced_end_serial": 4995,
    "commit_slack_edges": -90
   },
   {
@@ -712,9 +712,9 @@
    "fill_sectors": 384,
    "drain_sectors": 128,
    "programme": 2,
-   "line0_serial": 8697,
-   "compiled_commit_serial": 8794,
-   "priced_end_serial": 8749,
+   "line0_serial": 8701,
+   "compiled_commit_serial": 8798,
+   "priced_end_serial": 8753,
    "commit_slack_edges": -45
   },
   {
@@ -817,9 +817,9 @@
    "fill_sectors": 192,
    "drain_sectors": 96,
    "programme": 3,
-   "line0_serial": 18396,
-   "compiled_commit_serial": 18469,
-   "priced_end_serial": 18444,
+   "line0_serial": 18400,
+   "compiled_commit_serial": 18473,
+   "priced_end_serial": 18448,
    "commit_slack_edges": -25
   },
   {
@@ -975,9 +975,9 @@
    "fill_sectors": 256,
    "drain_sectors": 128,
    "programme": 4,
-   "line0_serial": 25099,
-   "compiled_commit_serial": 25196,
-   "priced_end_serial": 25151,
+   "line0_serial": 25103,
+   "compiled_commit_serial": 25200,
+   "priced_end_serial": 25155,
    "commit_slack_edges": -45
   },
   {
@@ -1080,9 +1080,9 @@
    "fill_sectors": 64,
    "drain_sectors": 32,
    "programme": 5,
-   "line0_serial": 27885,
-   "compiled_commit_serial": 27943,
-   "priced_end_serial": 27931,
+   "line0_serial": 27889,
+   "compiled_commit_serial": 27947,
+   "priced_end_serial": 27935,
    "commit_slack_edges": -12
   },
   {
@@ -1271,9 +1271,9 @@
    "fill_sectors": 16,
    "drain_sectors": 16,
    "programme": 5,
-   "line0_serial": 28170,
-   "compiled_commit_serial": 28224,
-   "priced_end_serial": 28213,
+   "line0_serial": 28174,
+   "compiled_commit_serial": 28228,
+   "priced_end_serial": 28217,
    "commit_slack_edges": -11
   },
   {
@@ -1624,9 +1624,9 @@
    "fill_sectors": 256,
    "drain_sectors": 128,
    "programme": 6,
-   "line0_serial": 33428,
-   "compiled_commit_serial": 33525,
-   "priced_end_serial": 33480,
+   "line0_serial": 33432,
+   "compiled_commit_serial": 33529,
+   "priced_end_serial": 33484,
    "commit_slack_edges": -45
   },
   {
@@ -1729,9 +1729,9 @@
    "fill_sectors": 192,
    "drain_sectors": 96,
    "programme": 7,
-   "line0_serial": 43127,
-   "compiled_commit_serial": 43200,
-   "priced_end_serial": 43175,
+   "line0_serial": 43131,
+   "compiled_commit_serial": 43204,
+   "priced_end_serial": 43179,
    "commit_slack_edges": -25
   },
   {
@@ -1887,9 +1887,9 @@
    "fill_sectors": 256,
    "drain_sectors": 128,
    "programme": 8,
-   "line0_serial": 49830,
-   "compiled_commit_serial": 49927,
-   "priced_end_serial": 49882,
+   "line0_serial": 49834,
+   "compiled_commit_serial": 49931,
+   "priced_end_serial": 49886,
    "commit_slack_edges": -45
   }
  ],
@@ -6069,11 +6069,12 @@
    "load_serial": 2879,
    "start_serial": 3149,
    "image": "images/su_prog00/cols/config.mem",
-   "image_sha256": "c2898431321f988ac1a3c91f6aff7d703f64c33a59301d7eef82ec6a98f51e0d",
+   "image_sha256": "ad63bb24450dfc4e7508322d2865b9ef650acb7ad5bc373db1ac9d14eb10dd17",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6082,7 +6083,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6091,7 +6093,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6100,7 +6103,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6109,7 +6113,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6118,7 +6123,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6127,7 +6133,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6136,7 +6143,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6145,7 +6153,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6154,7 +6163,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6174,11 +6184,12 @@
    "load_serial": 4215,
    "start_serial": 4896,
    "image": "images/su_prog01/cols/config.mem",
-   "image_sha256": "94dd7b5f33be39417ece99e7a711291a2c7e56ddc63498d35c3fd4fe982932cc",
+   "image_sha256": "8ae1010019e2d5bc357b83c6fe7aa3dffd1f70b6436fa62774ed64e202410652",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 2,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6187,7 +6198,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 2,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6196,7 +6208,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 2,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6205,7 +6218,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6214,7 +6228,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6223,7 +6238,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6232,7 +6248,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6241,7 +6258,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6250,7 +6268,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6259,7 +6278,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6279,11 +6299,12 @@
    "load_serial": 8470,
    "start_serial": 8692,
    "image": "images/su_prog02/cols/config.mem",
-   "image_sha256": "bc8594e6309c9919d9574cfccedd0a2e11579cde84de54f91848be00a6cb8d68",
+   "image_sha256": "2a4ecb09c5ddd5e5208a152c7a6ccb1bafb36271cd52004776f939f7803e4df6",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6292,7 +6313,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6301,7 +6323,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6310,7 +6333,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6319,7 +6343,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6328,7 +6353,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6337,7 +6363,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6346,7 +6373,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6355,7 +6383,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6364,7 +6393,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6384,11 +6414,12 @@
    "load_serial": 18248,
    "start_serial": 18391,
    "image": "images/su_prog03/cols/config.mem",
-   "image_sha256": "abfc9fe208940e144e87182c8771f5480f4082032e5676aa386e7be6d954bbf5",
+   "image_sha256": "4556d91636f4edc8d760f6ac9e21d6a1da4b5a626e83b87e5a8c87659277f654",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6397,7 +6428,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6406,7 +6438,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6415,7 +6448,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6424,7 +6458,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6433,7 +6468,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6442,7 +6478,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6451,7 +6488,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6460,7 +6498,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6469,7 +6508,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6489,11 +6529,12 @@
    "load_serial": 24872,
    "start_serial": 25094,
    "image": "images/su_prog04/cols/config.mem",
-   "image_sha256": "10306352737a8ba0dfbee0caeb1e0e4b73aedc2d9a13865e5c7263d72a806113",
+   "image_sha256": "d6de13613b1756be571fa4d3260da59201842af2fc70d2fbe31d2cdb452ef17b",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6502,7 +6543,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6511,7 +6553,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6520,7 +6563,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6529,7 +6573,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6538,7 +6583,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6547,7 +6593,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6556,7 +6603,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6565,7 +6613,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6574,7 +6623,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6595,11 +6645,12 @@
    "load_serial": 27610,
    "start_serial": 27880,
    "image": "images/su_prog05/cols/config.mem",
-   "image_sha256": "c2898431321f988ac1a3c91f6aff7d703f64c33a59301d7eef82ec6a98f51e0d",
+   "image_sha256": "ad63bb24450dfc4e7508322d2865b9ef650acb7ad5bc373db1ac9d14eb10dd17",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6608,7 +6659,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6617,7 +6669,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6626,7 +6679,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6635,7 +6689,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6644,7 +6699,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6653,7 +6709,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6662,7 +6719,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6671,7 +6729,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6680,7 +6739,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6700,11 +6760,12 @@
    "load_serial": 33201,
    "start_serial": 33423,
    "image": "images/su_prog06/cols/config.mem",
-   "image_sha256": "bc8594e6309c9919d9574cfccedd0a2e11579cde84de54f91848be00a6cb8d68",
+   "image_sha256": "2a4ecb09c5ddd5e5208a152c7a6ccb1bafb36271cd52004776f939f7803e4df6",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6713,7 +6774,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6722,7 +6784,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6731,7 +6794,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6740,7 +6804,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6749,7 +6814,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6758,7 +6824,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6767,7 +6834,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6776,7 +6844,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6785,7 +6854,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6805,11 +6875,12 @@
    "load_serial": 42979,
    "start_serial": 43122,
    "image": "images/su_prog07/cols/config.mem",
-   "image_sha256": "abfc9fe208940e144e87182c8771f5480f4082032e5676aa386e7be6d954bbf5",
+   "image_sha256": "4556d91636f4edc8d760f6ac9e21d6a1da4b5a626e83b87e5a8c87659277f654",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6818,7 +6889,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6827,7 +6899,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6836,7 +6909,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6845,7 +6919,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6854,7 +6929,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6863,7 +6939,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6872,7 +6949,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6881,7 +6959,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6890,7 +6969,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6910,11 +6990,12 @@
    "load_serial": 49603,
    "start_serial": 49825,
    "image": "images/su_prog08/cols/config.mem",
-   "image_sha256": "10306352737a8ba0dfbee0caeb1e0e4b73aedc2d9a13865e5c7263d72a806113",
+   "image_sha256": "d6de13613b1756be571fa4d3260da59201842af2fc70d2fbe31d2cdb452ef17b",
    "columns": [
     {
      "column": 0,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6923,7 +7004,8 @@
     },
     {
      "column": 1,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6932,7 +7014,8 @@
     },
     {
      "column": 2,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6941,7 +7024,8 @@
     },
     {
      "column": 3,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6950,7 +7034,8 @@
     },
     {
      "column": 4,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6959,7 +7044,8 @@
     },
     {
      "column": 5,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6968,7 +7054,8 @@
     },
     {
      "column": 6,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6977,7 +7064,8 @@
     },
     {
      "column": 7,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6986,7 +7074,8 @@
     },
     {
      "column": 8,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -6995,7 +7084,8 @@
     },
     {
      "column": 9,
-     "index_banks": 1,
+     "index_banks": 4,
+     "image_index_banks": 1,
      "dictionary_banks": 1,
      "leaf_dictionary_banks": 3,
      "leaf": "ot_hbm_su_programme_pgcol_s",
@@ -7006,7 +7096,7 @@
    "note": null
   }
  ],
- "t0_serial": 294,
+ "t0_serial": 298,
  "priced_layer_cycles": 66116.6,
  "counts": {
   "chain_stale": 1,

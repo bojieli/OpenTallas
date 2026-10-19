@@ -9,7 +9,11 @@
   "token": 46335,
   "expected_found": 2,
   "expected_missing": [],
-  "expected_checked": 2
+  "expected_checked": 2,
+  "found_as": {
+   "d0.head+head_scale.logits": "stream",
+   "d5.head+head_scale.logits": "stream"
+  }
  },
  "ranks_out": {
   "0": {
@@ -18,7 +22,7 @@
     "format_open": 5
    },
    "events": 0,
-   "replay_sha256": "3010a9e488b3e306ca0e48d917a4ecbc6efeee665a3374e3dea87179da220993"
+   "replay_sha256": "31e0bd34cbf64af6f7ddc9078165e064685de8c56e2a186d700b7ffe6e1aa193"
   },
   "5": {
    "counts": {
@@ -26,7 +30,7 @@
     "format_open": 5
    },
    "events": 0,
-   "replay_sha256": "cbacb3fe438decf3d364a77e9be9efd06fef46220b0698928bf9fca3ca959705"
+   "replay_sha256": "629a37a963822992fce4c5fce0f729de16d88a252902666599b7ee048d2b0271"
   }
  },
  "operands_sha256": "8d701ef666b2fee0a396de68d6684118648eecec3b2055e78ea3070713bf3ee5"
