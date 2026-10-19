@@ -21,7 +21,15 @@ module tb_hbm_su_pg_stream_'''+MODE+';')
 rep('parameter integer SAFE_COPY=1,QID=1,', 'parameter integer DLAND=1,QID=1,' if MODE=='safe2' else 'parameter integer SAFE_COPY=1,DLAND=3,QID=1,')
 rep('.clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(rst_n),.bridge_rst_n(brst_n),.pos(pos),',
     '.clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(N``_rst),.bridge_rst_n(N``_brst),.pos(pos),')
+# SAFE2 r5: the DUT captures inj_rd / inj_addr on pg_clk (+1 stream edge); the REFERENCE gets the same inputs through
+# one pg_clk register (the compiler issues the inject addresses one stream edge earlier).  kitland: both raw.
+rep('.inj_rd(injrd),.inj_addr(inja),', '.inj_rd(N``_injrd),.inj_addr(N``_inja),')
 rep(' `PGS_PORTS(r)\n', ''' `PGS_PORTS(r)
+ // SAFE2 r5 inject pin capture: reference inputs one pg_clk edge late (DUT registers them itself).
+ reg [1:0] r_injrd_q=0; reg [159:0] r_inja_q=0;
+ always @(posedge pg_clk) begin r_injrd_q <= injrd; r_inja_q <= inja; end
+ wire [1:0] r_injrd = '''+("r_injrd_q" if MODE=='safe2' else "injrd")+''', d_injrd = injrd;
+ wire [159:0] r_inja = '''+("r_inja_q" if MODE=='safe2' else "inja")+''', d_inja = inja;
  // DUT: the kit face landing (DLAND plain clk_ctl flops: 1 for SAFE2).  REFERENCE: the designed release (100 ps before
  // a coincident edge) delayed by one epoch (12q, transport) -> both leave reset on the same coincident edge in both
  // clock domains if the DUT's reset tree is epoch-exact.

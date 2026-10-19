@@ -284,13 +284,18 @@ endmodule
  assign b0 = q0 & M; assign b1 = q1 & M; assign b2 = q2 & M;
  reg [1:0] sp;
  always @(posedge clk or negedge rst_n) if(!rst_n) sp<=2'd0; else sp<=sp+2'd1;
+ // SAFE2 r5 (LEAD-HBM 10-19, checklist item 1): the inject input pins are captured per region on pg_clk before the
+ // decode (+1 stream edge on the inject path, priced in H-D4G / LH-REPRICE3); each port bit now drives one capture flop
+ // per region (<= 5 loads) instead of the decode cones (r4 census: inj_addr[123] 37 / [126] 33).  No reset (data).
+ reg [161:0] ijc;
+ always @(posedge clk) ijc <= ij;
  reg [3:0] v; reg [35:0] row; reg bad; integer k;
  always @* begin
   v=0; row=0; bad=0;
   for(k=0;k<4;k=k+1) begin : dec
    reg [39:0] a, lo; reg on; reg [1:0] grp;
-   a = ij[40*k+:40]; lo = ij[80*(k/2)+:40];
-   on = ij[160+(k/2)] && !(b39_on && lo[39] && MUT!=9) && a[5:4]==g_id;
+   a = ijc[40*k+:40]; lo = ijc[80*(k/2)+:40];
+   on = ijc[160+(k/2)] && !(b39_on && lo[39] && MUT!=9) && a[5:4]==g_id;
    grp = {a[6],a[3]};
    if(on) begin
     if(v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;

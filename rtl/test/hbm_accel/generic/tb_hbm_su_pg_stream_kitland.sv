@@ -37,6 +37,11 @@ module tb_hbm_su_pg_stream_kitland;
   wire [513:0] N``_surr; wire [3:0] N``_ijv; wire [35:0] N``_ijrow; wire N``_ijbad, N``_pgf; wire [33:0] N``_lgrq; \
   wire [561:0] N``_lgwq; wire [513:0] N``_farrr; wire [1:0] N``_farwd; wire N``_lgf;
  `PGS_PORTS(r)
+ // SAFE2 r5 inject pin capture: reference inputs one pg_clk edge late (DUT registers them itself).
+ reg [1:0] r_injrd_q=0; reg [159:0] r_inja_q=0;
+ always @(posedge pg_clk) begin r_injrd_q <= injrd; r_inja_q <= inja; end
+ wire [1:0] r_injrd = injrd, d_injrd = injrd;
+ wire [159:0] r_inja = inja, d_inja = inja;
  // DUT: the kit face landing (DLAND plain clk_ctl flops: 1 for SAFE2).  REFERENCE: the designed release (100 ps before
  // a coincident edge) delayed by one epoch (12q, transport) -> both leave reset on the same coincident edge in both
  // clock domains if the DUT's reset tree is epoch-exact.
@@ -49,7 +54,7 @@ module tb_hbm_su_pg_stream_kitland;
  `PGS_PORTS(d)
  `define PGS_CONN(N) \
   .clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(N``_rst),.bridge_rst_n(N``_brst),.pos(pos),.vmr_cmd(vmr),.su_wq(suwq), \
-  .su_rr(N``_surr),.ij_v(N``_ijv),.ij_row(N``_ijrow),.ij_bad(N``_ijbad),.pg_fault(N``_pgf),.inj_rd(injrd),.inj_addr(inja), \
+  .su_rr(N``_surr),.ij_v(N``_ijv),.ij_row(N``_ijrow),.ij_bad(N``_ijbad),.pg_fault(N``_pgf),.inj_rd(N``_injrd),.inj_addr(N``_inja), \
   .lg_rq(N``_lgrq),.lg_wq(N``_lgwq),.lg_rr(lgrr),.lg_w_done(lgwd),.lg_read(lgr),.lg_write(lgw),.far_rq(farrq), \
   .far_wq(farwq),.far_rr(N``_farrr),.far_w_done(N``_farwd),.lg_fault(N``_lgf)
  ot_hbm_su_static_pg_stream #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MULTIRATE(1),
