@@ -73,6 +73,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     reg sticky;
     localparam integer QW=$clog2(QD);
     reg[QW-1:0]wp,rp,ep;reg[QW:0]count,unposted;
+    // Address successors are computed before column eligibility arrives.
+    // cv/posted selects a registered address, never a conditional carry chain.
+    (* keep="true",dont_touch="true" *) reg[QW-1:0]rp_plus1,ep_plus1;
     wire[63:0]queue_head,queue_post; // SRAM-backed four-bank metadata, two read replicas
     /*reg[63:0]queue[0:QD-1];*/          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
     wire[14:0]qrow_post; /*reg[14:0]qrow[0:QD-1];*/           // the DRAM row of each queued access (multi-row)
@@ -165,7 +168,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     end
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
-        wire[QW-1:0]wpay_raddr=cv?rp+1'b1:rp;
+        wire[QW-1:0]wpay_raddr=cv?rp_plus1:rp;
         ot_sram_1r1w_128x256_m1_r2c2 u_write_payload(
             .clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(wpay_raddr)),.rd_out(head_wdata),
             .w_ce_in(accepted&&i_we),.w_addr_in(7'(wp)),.wd_in(i_wdata),.w_mask_in({256{1'b1}}),
@@ -187,7 +190,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // storage; forwarding covers same-edge SRAM read/write ambiguity.
     wire[255:0]qh[0:3],qe[0:3];
     reg[3:0]mf_v;reg[QW-3:0]mf_addr[0:3];reg[78:0]mf_data[0:3];
-    wire[QW-1:0]next_rp=cv?rp+1'b1:rp,next_ep=posted?ep+1'b1:ep;
+    wire[QW-1:0]next_rp=cv?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
     // Select each bank's forwarding source first. Then a local two-bit
     // selector sees only one <=16-bit four-way mux: <=32 mux inputs per bit.
@@ -240,7 +243,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         .col_we(cwe),.col_aq(caq),.dbg_held());
     always @(posedge clk or negedge lrst_n)begin
         if(!lrst_n)begin
-            sticky<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
+            sticky<=0;wp<=0;rp<=0;ep<=0;rp_plus1<=1;ep_plus1<=1;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
             head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;
         end else begin
@@ -252,12 +255,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
             pending_count<=pending_count+(column_read?6'd1:6'd0)-(ret_v?6'd1:6'd0);
             response_count<=response_count+(ret_v?6'd1:6'd0)-(response_take?6'd1:6'd0);
-            if(posted)ep<=ep+1'b1;
+            if(posted)begin ep<=ep_plus1;ep_plus1<=ep_plus1+1'b1;end
             fresh_v<=accepted&&i_we;fresh_slot<=wp;
             if(cv)begin
                 if(count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))sticky<=1;
                 if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)sticky<=1;
-                rp<=rp+1'b1;
+                rp<=rp_plus1;rp_plus1<=rp_plus1+1'b1;
                 if(cwe)k_wr_done<=1;
                 else begin
                     if(pending_count>=RQ)sticky<=1;

@@ -59,11 +59,12 @@ module ot_hbm_r14_aq_pc_safe #(
   // request the following successor while capturing the SRAM's old output.
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
   // The two overlapped heads sustain one pop per edge, including ring wrap.
-  wire [WQW-1:0] qread=wr_ok ? q_rp+WQW'(2) : q_rp+WQW'(1);
+  (* keep="true",dont_touch="true" *) reg[WQW-1:0]q_rp_plus1,q_rp_plus2;
+  wire [WQW-1:0] qread=wr_ok ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
   reg [31:0] hb_oh;
-  wire [WQW-1:0] qsuccessor=q_rp+WQW'(1);
+  wire [WQW-1:0] qsuccessor=q_rp_plus1;
   wire [29:0] qprefetch=(qfresh&&qfresh_addr==qsuccessor)?qfresh_data:qm[29:0];
   wire head_from_push=qpush&&((q_n==0)||(wr_ok&&q_n==1));
   wire [29:0] head_next=head_from_push?{wr_bank,wr_col,wr_row,wr_rd}:qprefetch;
@@ -270,7 +271,7 @@ module ot_hbm_r14_aq_pc_safe #(
   assign ref_fault = fault_r;
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      q_n <= 0; q_rp <= 0; tail_set <= 0;
+      q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
       open <= 0; refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
@@ -281,7 +282,7 @@ module ot_hbm_r14_aq_pc_safe #(
       case({qpush,wr_ok})
         2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
       endcase
-      if (wr_ok) q_rp <= WQW'(q_rp + 1'b1);
+      if (wr_ok) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;q_rp_plus2<=q_rp_plus2+1'b1;end
       if (col_aq) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
       if (col_we) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
       if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
