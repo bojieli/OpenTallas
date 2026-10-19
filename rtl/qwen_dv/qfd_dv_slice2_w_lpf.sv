@@ -88,7 +88,7 @@ module qfd_dv_slice2_w_lpf #(parameter integer SL_MUT = 0, parameter integer SU_
     wire [515:0]  h_n0, h_n1, h_n2, h_n3, h_s0, h_s1, h_s2, h_s3;
     qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .DIR(0)) u_c (.ck(ck), .rst_n(rst_n),
         .cmd_i(cmd_wi), .cmd_o(c_cmd_o), .hr_i(hr_wi), .hr_o(c_hr_o),
-        .rs_s0(rs_s0), .rs_s1(rs_s1), .rs_n0(rs_n0), .rs_n1(rs_n1), .l9_i(l9_wi),
+        .rs_s0(rs_s0), .rs_s1(rs_s1), .rs_n0(rs_n0), .rs_n1(rs_n1), .l9_i(l9_wi), .l9_o(c_l9_o),
         .st_up_i(st_wi), .st_up_o(c_st_up_o), .st_dn_i(st_ei), .st_dn_o(c_st_dn_o),
         .sc_up_i(sc_wi), .sc_up_o(c_sc_up_o), .sc_dn_i(sc_ei), .sc_dn_o(c_sc_dn_o),
         .ch_up_i(w_ch_up_i), .ch_dn_o(c_ch_dn_o), .ch_dn_i(w_ch_dn_i), .ch_up_o(c_ch_up_o),

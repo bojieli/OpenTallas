@@ -28,7 +28,9 @@ def top():
     text = re.sub(r'qfd_dv_slice2_e_t(\w+)', r'qfd_dv_slice2_w_t\1', text)
     text = text.replace('.DIR(1)', '.DIR(0)')
     # L9 stays on E while the down-facing command/status through-cell moves to W.
-    text = text.replace(', .l9_o(c_l9_o)', '').replace(', .l9_eo(l9_eo)', '')
+    a=text.index('u_te (');b=text.index(');',a)
+    face=text[a:b].replace(', .l9_o(c_l9_o)', '').replace(', .l9_eo(l9_eo)', '')
+    text=text[:a]+face+text[b:]
     anchor = '.rd_eo(rd_eo), .dr_eo(dr_eo));'
     if text.count(anchor) != 1:
         raise ValueError('W up-face through-cell changed; review fixed-direction L9 routing')
