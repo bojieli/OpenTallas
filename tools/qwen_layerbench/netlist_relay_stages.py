@@ -125,6 +125,23 @@ def age_fields(r, land_k, land_e=None):
             return dict(age_edges=LG.lane_cycles(row) + min(plain), landing_k=ks[0],
                         plain_relay_stages=min(plain),
                         age_basis='exact GEN forwarded chain + individually walked plain relay flops')
+    if len(r['lands']) == 1 and len(lands) == 1:
+        sequence = next(iter(lands))
+        rows = [(land_e or {}).get(name) for name in sequence]
+        plain = r.get('plain_counts', set())
+        if len(sequence) > 1 and len(set(sequence)) == len(sequence) and all(rows) and len(plain) == 1:
+            frame_sets = [set(row.get('stations') or []) for row in rows]
+            n = sum(int(row.get('n', -1)) for row in rows)
+            frames = set().union(*frame_sets)
+            valid = all(len(fs) == int(row.get('n', -1)) and int(row.get('post_stages', 0)) >= 0
+                        and land_k.get(name) == int(row.get('K', -1)) % 8
+                        for name, row, fs in zip(sequence, rows, frame_sets))
+            if (valid and len(frames) == n and r.get('forwarded_paths') == {frozenset(frames)}
+                    and r['st'] == {n + min(plain)}
+                    and sum(int(row.get('post_stages', 0)) for row in rows) <= min(plain)):
+                return dict(age_edges=sum(LG.lane_cycles(row) for row in rows) + min(plain),
+                            landing_k=[land_k[name] for name in sequence], plain_relay_stages=min(plain),
+                            age_basis='ordered exact GEN forwarded chains + individually walked plain relay flops')
     return dict(age_edges=None, landing_k=ks[0] if len(ks) == 1 else ks,
                 age_basis='landed path: missing lane metadata, mixed paths, or actual K differs from recorded K')
 

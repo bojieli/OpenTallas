@@ -99,6 +99,16 @@ endmodule'''
         record['forwarded_paths'] = {frozenset(['foreign_hop', 'land'])}
         self.assertIsNone(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'])
 
+    def test_multiple_landings_require_disjoint_exact_chains_and_straps(self):
+        rows = dict(l1=dict(E=3, K=3, cal=0, n=2, stations=['h1', 'l1']),
+                    l2=dict(E=4, K=5, cal=1, n=1, stations=['l2']))
+        record = dict(st={5}, lands={('l1', 'l2')},
+                      forwarded_paths={frozenset(['h1', 'l1', 'l2'])}, plain_counts={2})
+        self.assertEqual(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'], 11)
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 4}, rows)['age_edges'])
+        rows['l2']['stations'] = ['l1']
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'])
+
     def test_shared_age_source_on_compute_seam(self):
         import record_bundles as RB
         f = ROOT / 'results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam'
