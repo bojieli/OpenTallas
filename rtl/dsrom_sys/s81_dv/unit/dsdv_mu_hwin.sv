@@ -483,6 +483,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             assign d_write={3{wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce)}};
             assign attr_write=wv && idle_event[ce] && mw_q[22:21]==2'd2 && esel==EI'(ce);
             assign kind_write=wv && idle_event[ce] && mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce);
+            assign rl_write=cfg_rl_r && idle_event[ce];
             assign gap_write=cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT);
         end
         assign attr_boot[ce]=attr_write;
