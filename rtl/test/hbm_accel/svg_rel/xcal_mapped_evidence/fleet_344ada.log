@@ -1,0 +1,34 @@
+ot-run: ot-epyc4       admits   974 GB (avail 795, growth 113, headroom 0, waiters 0/0 GB) load 107/128 running 35 disk 412 GB 
+ot-run: ot-epyc5       admits   845 GB (avail 705, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 14 disk 564 GB 
+ot-run: ot-epyc6       admits   417 GB (avail 387, growth 95, headroom 0, waiters 0/0 GB) load 47/128 running 16 disk 563 GB 
+ot-run: ot-epyc7       admits   751 GB (avail 626, growth 101, headroom 0, waiters 0/0 GB) load 65/96 running 19 disk 502 GB 
+ot-run: ot-epyc8       admits  1189 GB (avail 915, growth 83, headroom 0, waiters 0/0 GB) load 37/128 running 24 disk 565 GB 
+ot-run: ot-pve1        admits   114 GB (avail 92, growth 13, headroom 0, waiters 0/0 GB) load 44/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    93 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 20/64 running 7 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-312225-1792426326 after 0 s
+ROOT=/srv/opentallas-scratch/claude/xcal-map-344ada-1019
+sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29
+{
+  "top": "ot_hbm_xcal_desc_host_native",
+  "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+  "physical_claim": false,
+  "std_area_liberty_units": 690.2755199999999,
+  "macro_counts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+  },
+  "unmapped_or_unknown": {}
+}
+OVER32 [(['$abc$12528$new_n6317'], 534), (['$abc$12528$new_n5806'], 528), (['$abc$12528$auto$dfflibmap.cc:546:dfflibmap$12464'], 139), (['$abc$12528$auto$dfflibmap.cc:546:dfflibmap$12398'], 80), (['u_desc.g_t2.g_read_slice[0].bank_q', 'u_desc.g_t2.g_read_slice[10].bank_q', 'u_desc.g_t2.g_read_slice[11].bank_q', 'u_desc.g_t2.g_read_slice[12].bank_q', 'u_desc.g_t2.g_read_slice[13].bank_q', 'u_desc.g_t2.g_read_slice[14].bank_q', 'u_desc.g_t2.g_read_slice[15].bank_q', 'u_desc.g_t2.g_read_slice[1].bank_q', 'u_desc.g_t2.g_read_slice[2].bank_q', 'u_desc.g_t2.g_read_slice[3].bank_q', 'u_desc.g_t2.g_read_slice[4].bank_q', 'u_desc.g_t2.g_read_slice[5].bank_q', 'u_desc.g_t2.g_read_slice[6].bank_q', 'u_desc.g_t2.g_read_slice[7].bank_q', 'u_desc.g_t2.g_read_slice[8].bank_q', 'u_desc.g_t2.g_read_slice[9].bank_q'], 77), (['$abc$12528$new_n5204'], 35), (['$abc$12528$new_n5750'], 34), (['$abc$12528$new_n5732'], 33)]
+{
+  "top": "ot_hbm_xcal_prog_native",
+  "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+  "physical_claim": false,
+  "std_area_liberty_units": 637.01478,
+  "macro_counts": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2
+  },
+  "unmapped_or_unknown": {}
+}
+OVER32 [(['$abc$9832$auto$dfflibmap.cc:546:dfflibmap$9646'], 514), (['$abc$9832$new_n6419'], 173), (['$abc$9832$new_n5964'], 75)]
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-312225-1792426326): exit 0

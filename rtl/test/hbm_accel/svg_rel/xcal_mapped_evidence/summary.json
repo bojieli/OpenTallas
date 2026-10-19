@@ -1,0 +1,22 @@
+{
+  "baseline_source_commit": "344adaacf",
+  "final_source_commit": "ac7e3ab71",
+  "image_sha256": "16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "flow": "ORFS Yosys synth -flatten; dfflibmap SEQ RVT TT; ABC833.333ps across AO/OA/SIMPLE/INVBUF/SEQ; post-ABC flatten for complete hierarchy load count; no post-flatten merge",
+  "area_um2": {
+    "descriptor": 462.50676,
+    "programme": 654.642
+  },
+  "data_control_max_fanout": 32,
+  "unmapped_cells": 0,
+  "reset_fanout": {
+    "descriptor": 190,
+    "programme": 118
+  },
+  "clock_sinks": {
+    "descriptor": 1140,
+    "programme": 1679
+  },
+  "reset_status": "OPEN recovery-tree treatment; not waived",
+  "adoption": "NO CTS gate or physical claim"
+}

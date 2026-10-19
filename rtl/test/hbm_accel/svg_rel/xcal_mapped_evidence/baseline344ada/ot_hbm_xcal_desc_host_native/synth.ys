@@ -1,0 +1,21 @@
+read_liberty -lib /work/map/AO.lib
+read_liberty -lib /work/map/OA.lib
+read_liberty -lib /work/map/SIMPLE.lib
+read_liberty -lib /work/map/INVBUF.lib
+read_liberty -lib /work/map/SEQ.lib
+read_verilog -sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv
+read_verilog -sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv
+read_verilog -sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv
+read_verilog -sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv
+read_verilog -sv rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv
+read_verilog -sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+hierarchy -check -top ot_hbm_xcal_desc_host_native -chparam PAW 11 -chparam PREL 1 -chparam DD 256 -chparam DAW 8
+synth -top ot_hbm_xcal_desc_host_native -flatten
+dfflibmap -liberty /work/map/SEQ.lib
+abc -liberty /work/map/AO.lib -liberty /work/map/OA.lib -liberty /work/map/SIMPLE.lib -liberty /work/map/INVBUF.lib -liberty /work/map/SEQ.lib -D 833.333
+setundef -zero
+opt_clean -purge
+tee -o /work/map/ot_hbm_xcal_desc_host_native/stat.txt stat -liberty /work/map/AO.lib -liberty /work/map/OA.lib -liberty /work/map/SIMPLE.lib -liberty /work/map/INVBUF.lib -liberty /work/map/SEQ.lib
+write_json /work/map/ot_hbm_xcal_desc_host_native/mapped.json
+write_verilog /work/map/ot_hbm_xcal_desc_host_native/mapped.v
