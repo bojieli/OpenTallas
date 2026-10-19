@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.ahub.current_plan_pickup.v1",
+  "selected_source_commit": "5f2ce19bc",
+  "qualification": false,
+  "files": [
+    {
+      "path": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+      "selected_5f2_exists": true,
+      "sha256": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b",
+      "matches_model_source_evidence": true
+    },
+    {
+      "path": "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv",
+      "selected_5f2_exists": false,
+      "sha256": null
+    },
+    {
+      "path": "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_gen7.sv",
+      "selected_5f2_exists": false,
+      "sha256": null
+    },
+    {
+      "path": "tools/qwen_kv_die/kv_static_die.py",
+      "selected_5f2_exists": true,
+      "sha256": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a"
+    },
+    {
+      "path": "physical/ref_tile/ot_nhb_zh_m5/spec.json",
+      "selected_5f2_exists": true,
+      "sha256": "b19caa371f86791e4abd94484bafebdd65e6f723dc47c86315ea9746eba08cc6"
+    },
+    {
+      "path": "physical/ref_tile/ot_nhb_zh_m5/job.json",
+      "selected_5f2_exists": true,
+      "sha256": "74a84cdf5aea4f4d845d32603bdbe1e489df1974d73ac35c7cafbc584c720851"
+    },
+    {
+      "path": "physical/ref_tile/qkh_recip_ref/spec.json",
+      "selected_5f2_exists": true,
+      "sha256": "27b64fab679a8c36627b77b47009bcb53b9935862695a4e4f5b23bfd02ef5032"
+    },
+    {
+      "path": "physical/ref_tile/qkh_recip_ref/job.json",
+      "selected_5f2_exists": true,
+      "sha256": "d5536d3a6dd2198b932b861e02067e5f03ad89edf957d44859a1077dbdeb3243"
+    },
+    {
+      "path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+      "selected_5f2_exists": true,
+      "sha256": "852a52478348722ec2ef181fc548db4fef54b456c512af1a6e41f306b89aec2c",
+      "matches_failed_gate_evidence": true
+    },
+    {
+      "path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+      "selected_5f2_exists": true,
+      "sha256": "95a21129e18dfb2ed567b8781ff1e60a3e0f4ffe6d50287d0c97e975f4a545be",
+      "matches_failed_gate_evidence": true
+    },
+    {
+      "path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+      "selected_5f2_exists": true,
+      "sha256": "b2c4acd4e5a47fb9b7d7230ed7fc97dadd7f60e0b9dccbd0f9f55eaca4d5557f",
+      "matches_failed_gate_evidence": true
+    },
+    {
+      "path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf.lef",
+      "selected_5f2_exists": true,
+      "sha256": "33685dfe99a6e5ce29e301d5968e0ee9735d87a20703a10c234cd4903879ed94",
+      "matches_failed_gate_evidence": true
+    },
+    {
+      "path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib",
+      "selected_5f2_exists": true,
+      "sha256": "93eb25be3a66a597312177e02e8b10abffbee5467707e13d37e8dffaf86e4750",
+      "matches_failed_gate_evidence": true
+    },
+    {
+      "path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_ff.lib",
+      "selected_5f2_exists": true,
+      "sha256": "6bc1ab172b236ef5a19494bc0b01a19fafa7ac988137f8c1eb920d552bc96893",
+      "matches_failed_gate_evidence": true
+    }
+  ]
+}

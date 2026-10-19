@@ -1,0 +1,44 @@
+1491:     if AHUB_STATIC:
+1492:         out['qkd_ahub'] = dict(module='qkd_ahub_static_dw', file=AHUB_FILE,
+1493:             ports=dict(hs=['hs_start', 'hs_ep', 'hs_layer', 'hs_ctx', 'hs_cal_lo', 'hs_cal_r'],
+1494:                        **{f'ap_{st}': [f'ap{k}'] for k, st in enumerate(STACKS)},
+1495:                        **{f'am_{st}': [f'am{k}'] for k, st in enumerate(STACKS)},
+1496:                        fr=['fr_valid', 'fr_epoch', 'fr_rz'], hf=['hf'], ck_c=['ck'], rst_n=['rst_n']),
+1497:             sliced={}, classed={})
+1498:         # HKV-DIE 10-19 (HKV-ASTK finding): the hub's Z input stride must be the strip's (closed qkd_astk_ctl_s Z_STRIDE 4);
+1499:         # the RTL default 16 put every Z word on the wrong hub slot.  The hub kit must be (re)hardened at this value.
+1500:         if ASTK_ST:
+1501:             out['qkd_ahub']['parameters'] = dict(Z_IN_STRIDE=ASTK_Z_STRIDE)
+1502:         # HKV-DIE3 10-19 (HOURLY-KV decision (c)): the die binds the ACTUAL AP_OFS / FR_OFS of the post-station netlist
+1503:         # table (kv_static_params ahub_ages), never the RTL defaults while the table disagrees; the hub kit (a5) is
+1504:         # hardened at the same constants and kv_static_params AHUB_OFS_BOUND checks kit == die binding == table.
+1505:         ofs = ahub_ofs_bound()
+1506:         if ofs:
+1507:             out['qkd_ahub']['parameters'] = dict(out['qkd_ahub'].get('parameters') or {}, AP_OFS=ofs['AP_OFS_hex'],
+1508:                                                  FR_OFS=ofs['FR_OFS'])
+1509:     # KV-FACELAND-WIRE 10-19: a top-level tile selected in OT_KV_FACE_LAND binds its face-landed wrapper module
+1510:     # <master>_fl (same ports; the kit's rtl/lib/face_land file), so the bound netlist carries the edges the compiler
+
+2404: def ahub_ages(m, pv_lead=0, stack_start_lag=None):
+2405:     """KV-INTEG/AHUB: qkd_ahub_static_dw parameters from the plan's relay stages (D = registered die relay stages,
+2406:     pin registers excluded; bench tb_qkd_ahub_static_dw proves both formulas edge-exact):
+2407:       FR_OFS   = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1   -> fr lands on pvfin's R slot (cal R after start_pv)
+2408:       AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs)  (ap pin flops)         -> hub input ages of stack s = the native
+2409:                                                                           service's LMAX / Z input ages
+2410:     L_s = the stack's start lag behind the attention root's start_qk (compiler; 0 if not given).  The hub's am word
+2411:     reaches astk_s L_h + D(am_s) - L_s edges after the service's (L_h = D(ks_ahs) + 1): the compiler's EXP_START must
+2412:     cover it (am_lag_edges)."""
+2413:     st = m.get('relay_stages', {})
+2414:     lag = stack_start_lag or {}
+2415:     dh, df, dp = st.get('ks_ahs', 0), st.get('ks_ahfr', 0), st.get('ks_pvfst', 0)
+2416:     lh = dh + 1
+2417:     ap = {s: 2 + lag.get(s, 0) + st.get(f'ap_{s}', 0) - dh for s in STACKS}   # KV-AHUBDW: + 1 = the hub's ap pin flops
+2418:     return dict(schema='opentallas.qwen_kv.ahub_ages.v1', module='qkd_ahub_static_dw', file=AHUB_FILE,
+2419:                 relays=dict(ks_ahs=dh, ks_ahfr=df, ks_pvfst=dp, **{f'ap_{s}': st.get(f'ap_{s}', 0) for s in STACKS},
+2420:                             **{f'am_{s}': st.get(f'am_{s}', 0) for s in STACKS}),
+2421:                 PV_LEAD=pv_lead, FR_OFS=dp - pv_lead - df - dh - 1,
+2422:                 AP_OFS=[ap[s] for s in STACKS], AP_OFS_hex='{' + ', '.join(f"16'h{ap[s] & 0xffff:04x}" for s in reversed(STACKS)) + '}',
+2423:                 am_lag_edges={s: lh + st.get(f'am_{s}', 0) - lag.get(s, 0) for s in STACKS},
+2424:                 stack_start_lag={s: lag.get(s, 0) for s in STACKS},
+2425:                 bench='tools/qwen_kv_die/ahub_static_dw_bench.sh (results/rtl/qwen_kv_static_ahub_1018)')
+2426: 

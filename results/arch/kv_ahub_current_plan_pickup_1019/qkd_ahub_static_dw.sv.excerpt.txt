@@ -1,0 +1,78 @@
+134: module qkd_ahub_static_dw #(
+135:     parameter [63:0] AP_OFS = {4{16'd2}},
+136:     parameter integer FR_OFS = 0,
+137:     parameter integer Z_IN_STRIDE = 16,
+138:     parameter integer ZW_RLY = 0,
+139:     parameter integer ZR_RLY = 0,
+140:     parameter integer RX_RLY = 1,
+141:     parameter integer RY_RLY = 1,
+142:     parameter integer MUT = 0
+143: ) (
+144:     input  wire          ck,
+145:     input  wire          rst_n,
+146:     input  wire          hs_start,
+147:     input  wire [15:0]   hs_ep,
+148:     input  wire [5:0]    hs_layer,
+149:     input  wire [13:0]   hs_ctx,
+150:     input  wire [111:0]  hs_cal_lo,
+151:     input  wire [15:0]   hs_cal_r,
+152:     input  wire [42:0]   ap0,
+153:     input  wire [42:0]   ap1,
+154:     input  wire [42:0]   ap2,
+155:     input  wire [42:0]   ap3,
+156:     output wire [35:0]   am0,
+157:     output wire [35:0]   am1,
+158:     output wire [35:0]   am2,
+159:     output wire [35:0]   am3,
+160:     output wire          fr_valid,
+161:     output wire [15:0]   fr_epoch,
+162:     output wire [127:0]  fr_rz,
+163:     output wire          hf
+164: );
+165:     wire start;  wire [15:0] epoch;  wire [5:0] layer;  wire [13:0] T;  wire [191:0] hub_cal;
+166:     wire [63:0] si_epoch;  wire [23:0] si_layer;
+167:     wire [143:0] am;  wire rz_valid, rz_publish, hub_fault;  wire [1:0] rz_head;  wire [31:0] rz_data;
+168:     wire [15:0] rz_epoch;  wire [127:0] rz_vector;
+169:     // KV-AHUBDW 10-18 (pin rules): (a) synced regional resets: the rst_n port drives ONLY the 2-flop synchroniser of
+170:     // u_rr (ot_rst_pipe, the relay form of ot_rst_relay for a cluster this size); each region is its own flop chain
+171:     // placed by its loads: 0 io leaf + ap pin flops, 1 core (its own 4-region pipe inside), 2..5 the four Z trees'
+172:     // rst_n pins, 6 the reciprocal leaf's rst_n pin.  Release = 2 + 2 edges after the port (no consumer counts from it).
+173:     // (b) flop-first pins: the four stack words ap_s land in pin flops ap_q (+1 edge on the hub input ages: the plan's
+174:     // AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs), kv_static_die.ahub_ages); hs lands in u_io's pin flops; every output
+175:     // (am, fr, hf) leaves a flop.  (c) the sealed ot_qkd_ahub_static_die_cal is composed here child by child (same
+176:     // core / relays / Z trees / reciprocal leaf, same parameters, RECIP_RETURN = R_ISSUE + 67 + RX + RY) so each hard
+177:     // child gets its own reset region; tb_qkd_ahub_static_dw checks it edge-exact against the sealed master.
+178:     wire [6:0] rr;
+179:     ot_rst_pipe #(.REGIONS(7), .STAGES(2)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+
+205:     wire [3:0] zh_start, zh_g;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv, zh_err;
+206:     wire [23:0] zh_p;  wire [255:0] zh_root;
+207:     wire rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
+208:     wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RX_RLY + RY_RLY);
+209:     qkd_ahub_static_core_cal #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10)) u_core (
+210:         .cal({hub_cal[191:176], recip_return, hub_cal[175:0]}),
+211:         .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
+212:         .active_layer(layer), .T(T),
+213:         .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh), .si_k(si_k), .si_any(si_any),
+214:         .si_epoch(si_epoch), .si_layer(si_layer), .si_data(si_data),
+215:         .am(am), .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
+216:         .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+217:         .rz_valid(rz_valid), .rz_head(rz_head), .rz_data(rz_data), .rz_epoch(rz_epoch), .rz_publish(rz_publish),
+218:         .rz4(rz_vector), .fault(hub_fault));
+219:     genvar a;
+220:     generate for (a = 0; a < 4; a = a + 1) begin : g_zh
+221:         wire [267:0] zi;  wire [67:0] zo, zot;
+222:         ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(ck),
+223:             .d({zh_start[a], zh_we[128*a +: 128], zh_sid[128*a +: 128], zh_iv[4*a +: 4], zh_g[a], zh_p[6*a +: 6]}), .q(zi));
+224:         ot_nhb_zh u_zh (.clk(ck), .rst_n(rr[2 + a]), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]),
+225:                         .ziv(zi[10:7]), .zg(zi[6]), .zp(zi[5:0]), .root(zot[63:0]), .zerr(zot[67:64]));
+226:         ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(ck), .d(zot), .q(zo));
+227:         assign zh_root[64*a +: 64] = zo[63:0];  assign zh_err[4*a +: 4] = zo[67:64];
+228:     end endgenerate
+229:     wire [32:0] rx;  wire [33:0] ry, ryt;
+230:     ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rx (.clk(ck), .d({rc_v, rc_x}), .q(rx));
+231:     ot_qkh_recip_leaf u_recip (.clk(ck), .rst_n(rr[6]), .v(rx[32]), .x(rx[31:0]), .y(ryt[31:0]), .vo(ryt[32]),
+232:                                .fault(ryt[33]));
+233:     ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ry (.clk(ck), .d(ryt), .q(ry));
+234:     assign rc_y = ry[31:0];  assign rc_vo = ry[32];  assign rc_fault = ry[33];
+235: endmodule

@@ -1,0 +1,1 @@
+Source-only proposal ready. ROOT chooses/grants a private real ZH bundle four-slot transport/reset proof; do not build the full AHUB shell. Physical WAITS on exact ZH+reciprocal repaired routed access, latency/source identity, native TT/FF and PG exports. Read README and identity.json. No jobs.
