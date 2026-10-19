@@ -58,7 +58,8 @@ module tb_dsdv_seq_host_mu;
     wire [15:0] iss_jobs = 16'(`ISS.st_jobs);
     reg [514:0] HS [0:NHS-1];
     reg [25:0] CF [0:NHS-1]; reg [7:0] CI [0:NHS-1]; reg [7:0] ci;
-    reg [1023:0] dir, mufile, cfgfile;
+    // Fleet closure paths can exceed128bytes; strings preserve full manifest paths.
+    string dir, mufile, cfgfile;
     integer nhs, ncf = 0, hsp = 0, cfp = 0, cyc = 0, t_ks = -1, ncy, launch0 = -1, tmo;
     integer nmu = 0, kmu = 0, fd, rc;
     integer mu_sh [0:NMU-1]; reg [9:0] mu_us [0:NMU-1]; reg [20:0] mu_ps [0:NMU-1], mu_tk [0:NMU-1];
