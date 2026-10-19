@@ -54,7 +54,7 @@ run(){ # bin mode case tag
     rm -f vmi.mem wmem.mem xmem.mem )
 }
 fbuild 0 0 & fbuild 1 1 & ebuild 0 0 & ebuild 1 1 & wait
-for m in ar mtp; do
+for m in $(cd $C && ls -d ar mtp mu 2>/dev/null); do
   for c in pre_emit pre_legal post_emit post_legal; do run $O/obj_f0/Vf0 $m $c $c & done
   run $O/obj_f1/Vf1 $m pre_legal pre_legal_mut1 & run $O/obj_f1/Vf1 $m post_legal post_legal_mut1 &
   run $O/obj_e0/Ve0 $m hcmix hcmix & run $O/obj_e1/Ve1 $m hcmix hcmix_mut1 &

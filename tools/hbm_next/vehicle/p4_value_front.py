@@ -6,7 +6,8 @@ What is real and what is not (stated, not hidden):
   * records   = the CMTP HGI-1R whole-token images (results/arch/hbm_next_1019/cmtp/emitter/whole/{ar_N1,mtp_N6}),
                 decoded with isa_rows.decode_one; segment L's first FUSED.HC_PRE_NORM, HC.HC_MIX, FUSED.HC_POST (the
                 attention sub-layer's front and back).  Their VM bases / row strides / N / eps (imm_a) drive the benches.
-  * operands  = the committed CMTP golden ar_mtp_g5 (released DeepSeek-V4.1-Flash checkpoint, real DSpark drafter:
+  * operands  = (users N = 4: the CMTP mu4 golden, 4 independent users at their position 1, u{u}_p1_h{L-1} / pre)
+                the committed CMTP golden ar_mtp_g5 (released DeepSeek-V4.1-Flash checkpoint, real DSpark drafter:
                 draft 1 accepted, draft 2 rejected): the layer-L input h_{p}_{L-1} [4, 5120] and pre_{p}_{L-1} [4] of
                 position p (AR: p = 1, N = 1; MTP verify: p = 1..6, N = 6) + layer L's released weights
                 (hc_attn_fn [24, 20480] / base / scale, attn_norm.weight) read from the snapshot
@@ -47,7 +48,18 @@ sys.path.insert(0, str(ROOT / "tools/hbm_next"))
 A_ = "results/arch/hbm_next_1019"
 IMG = ROOT / A_ / "cmtp/emitter/whole"
 GOLD = ROOT / A_ / "cmtp/goldens/ar_mtp_g5/golden_spec.npz"
-MODES = {"ar": dict(img="ar_N1", pos=[1]), "mtp": dict(img="mtp_N6", pos=[1, 2, 3, 4, 5, 6])}
+GOLD_MU = ROOT / A_ / "cmtp/goldens/mu4/mu4.npz"
+MODES = {"ar": dict(img="ar_N1", pos=[1]), "mtp": dict(img="mtp_N6", pos=[1, 2, 3, 4, 5, 6]),
+         "mu": dict(img="mu_N4", pos=[0, 1, 2, 3])}        # mu: pos = USER u at its position 1 (mu4 golden)
+
+
+def operands(mode, L, gz, gmu):
+    """layer-L input h [4, 5120] and pre [4] of every row of the record (golden arrays, bit for bit)"""
+    if mode == "mu":
+        return ([np.asarray(gmu[f"u{u}_p1_h{L - 1}"], F) for u in MODES[mode]["pos"]],
+                [np.asarray(gmu[f"u{u}_p1_pre{L - 1}"], F) for u in MODES[mode]["pos"]])
+    return ([np.asarray(gz[f"h_{p}_{L - 1}"], F) for p in MODES[mode]["pos"]],
+            [np.asarray(gz[f"pre_{p}_{L - 1}"], F) for p in MODES[mode]["pos"]])
 D, K = 5120, 20480
 VMW = 1 << 19
 F = np.float32
@@ -163,6 +175,7 @@ def gen(a):
     ck = LC.Checkpoint(Path(a.snap)) if a.snap else LC.Checkpoint()
     m, init_sha = LC.build_model(ck, engram=False)
     gz = np.load(GOLD)
+    gmu = np.load(GOLD_MU) if GOLD_MU.exists() else None
     L = a.layer
     fn = np.asarray(m.lw(L, "hc_attn_fn"), dtype=F)
     base, scale = np.asarray(m.lw(L, "hc_attn_base"), F), np.asarray(m.lw(L, "hc_attn_scale"), F)
@@ -171,7 +184,9 @@ def gen(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     summary = dict(schema="opentallas.hbm_next_1019.veh.value_front_cases.v1", layer=L, golden=str(GOLD.relative_to(ROOT)),
-                   golden_sha256=hashlib.sha256(GOLD.read_bytes()).hexdigest(), model_init_sha=init_sha,
+                   golden_sha256=hashlib.sha256(GOLD.read_bytes()).hexdigest(),
+                   golden_mu=str(GOLD_MU.relative_to(ROOT)), golden_mu_sha256=hashlib.sha256(GOLD_MU.read_bytes()).hexdigest()
+                   if GOLD_MU.exists() else None, model_init_sha=init_sha,
                    weights_sha256={k: hashlib.sha256(np.ascontiguousarray(v).tobytes()).hexdigest() for k, v in
                                    dict(hc_attn_fn=fn, hc_attn_base=base, hc_attn_scale=scale, attn_norm=wn).items()},
                    eps=dict(norm=float(m.eps), hc=float(m.hc_eps), sinkhorn=int(m.sinkhorn_iters)), modes={})
@@ -179,8 +194,7 @@ def gen(a):
         recs, src = seg_records(mode, L)
         P = MODES[mode]["pos"]
         n = len(P)
-        hs = [np.asarray(gz[f"h_{p}_{L - 1}"], F) for p in P]
-        pres = [np.asarray(gz[f"pre_{p}_{L - 1}"], F) for p in P]
+        hs, pres = operands(mode, L, gz, gmu)
         # golden on the real operands (the model's own methods)
         mixes = [m.hc_mixes(h, L, "attn") for h in hs]
         xs = []
@@ -304,7 +318,7 @@ def main():
     sp = ap.add_subparsers(dest="cmd", required=True)
     g = sp.add_parser("gen")
     g.add_argument("--layer", type=int, default=2)
-    g.add_argument("--modes", default="ar,mtp")
+    g.add_argument("--modes", default="ar,mtp,mu")
     g.add_argument("--snap", default=None)
     g.add_argument("--out", required=True)
     c = sp.add_parser("collect")
