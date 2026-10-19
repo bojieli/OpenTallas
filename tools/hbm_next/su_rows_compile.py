@@ -164,6 +164,17 @@ def main():
             for q in range(4):
                 v |= ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74) << (q * QW)
             f.write(f'{v:0{QW}x}\n')
+    # SUDMA2: the row code as programme column bits: per quarter a 2442-b line {rc20, line2422} (prog_rc.mem, 4 x 2442
+    # = 9768 b, quarter q at q x 2442, for su_programme_compile --line-bits 9768 --partition 4); prog_rc0.mem = rc zeroed
+    QR = QW + 20
+    for nm, use in (('prog_rc.mem', 1), ('prog_rc0.mem', 0)):
+        with open(out / nm, 'w') as f:
+            for e in range(NE):
+                v = 0
+                for q in range(4):
+                    lq = (((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74
+                    v |= (lq | (rc[e][q] << QW if use else 0)) << (q * QR)
+                f.write(f'{v:0{(4 * QR + 3) // 4}x}\n')
     (out / 'rowc.mem').write_text(''.join(''.join(f'{rc[e][q]:05x}' for q in (3, 2, 1, 0)) + '\n' for e in range(NE)))
     # strides (rowx ports): r_ss A,B,C,D,I (16 b sectors) | r_sr (9 b rows) | w_ss O,R | w_sr | c_vb A,B,C,D,O (24 b)
     rs_sec = [VM_RS << 4, 0, VM_RS << 4, 0, 0] if rel else [0] * 5
@@ -193,6 +204,14 @@ def main():
             w = ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74)
             for c in range(cols):
                 dic[c].add((w >> (256 * c)) & ((1 << 256) - 1))
+    # SUDMA2: the row code as a PROGRAMME COLUMN: the 20-b rc rides the spare top bits of column 9 (2422 + 20 = 2442 <=
+    # 10 x 256: no new column, no new macro, pslice SB 2422 -> 2442); dictionary words a column with rc included
+    dic_rc = [set() for _ in range(cols)]
+    for e in range(NE):
+        for q in range(4):
+            w = ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74) | rc[e][q] << QW
+            for c in range(cols):
+                dic_rc[c].add((w >> (256 * c)) & ((1 << 256) - 1))
     first_cmd = 0
     last_w = max(x[0] for x in expw)
     man = dict(schema='opentallas.hbm_next.su_rows.v1', n=N, nv=nv, op=a.op, row_relative=rel, lat=L, edges=NE,
@@ -201,6 +220,8 @@ def main():
                fr=FR, ld_edge=S, first_emit=EM[0][0], last_drain=DR[-1][-1], first_cmd_edge=first_cmd,
                last_vm_write_edge=last_w, cycles=last_w - first_cmd + 1 - L, expected_vm_writes=len(expw),
                expected_scalars=0, dict_words_per_col=[len(d) for d in dic],
+               dict_words_per_col_rc_in_col9=[len(d) for d in dic_rc],
+               d4g_pslice_q4_dict_capacity=[128 * b for b in (3, 10, 9, 13, 2, 1, 1, 1, 1, 1)],
                golden='hdc_golden mul/add NumPy FP32 RNE (+ bf16 RNE for ABC), independent of the DUT')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(f'NE={NE} NW={len(expw)} NS=0 II={II} cycles={man["cycles"]}')

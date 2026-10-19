@@ -24,6 +24,11 @@
 #      vectors hnx_argmax_wide_vectors.py seeds 0..2: MUT 0 PASS (done edges exact: P1 67, P6 177), MUT 1/2/3 (as stage a),
 #      4 beat bank rotation dropped, 5 last-beat sector mask dropped -> ARGMAX_ROWS FAIL; plus WS 1 PMIN 1 on the
 #      ORIGINAL vectors (hnx_argmax_rows_vectors.py) -> PASS = the original reader edge for edge
+#  p   (SUDMA2 10-19) ROW CODE AS PROGRAMME COLUMN: images ws_ab_n6 / ws_abc_n6 with the 20-b rc in the spare top bits
+#      of column 9 (line 2442 b a quarter: pslice SB 2422 -> 2442, same 10 columns); su_programme_compile --line-bits
+#      9768 --partition 4, d4g producers ot_hbm_su_programme_part PIPE 2 (= pslice_q4) vs monolithic, lockstep + golden
+#      (tb_hbm_su_programme_part, unchanged): positive PASS; mutants template / pcoff (as d4g) and rcdrop (image compiled
+#      without rc, golden with rc) -> SU_PROGRAMME_PART FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -53,6 +58,33 @@ if [ "$ST" = d ]; then
       "${VMB[@]}" physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $O/build_d$m.log 2>&1
     ( cd $O && $d/Vd$m > $O/d_m$m.log 2>&1; echo RUN_RC=$? >> $O/d_m$m.log )
     V "d_m$m: $(grep -h 'KVWB_RING\|RUN_RC' $O/d_m$m.log | head -2 | tr '\n' ' ')"; rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = p ]; then
+  PS=rtl/hbm_accel/generic/adapters/static_su/programme
+  PM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+  for c in ws_ab_n6 ws_abc_n6; do (
+    case $c in ws_ab_n6) a="--n 6 --wsplit 1";; *) a="--n 6 --op ABC --wsplit 1";; esac
+    python3 tools/hbm_next/su_rows_compile.py $O/vec_$c $a > $O/vec_$c.log 2>&1 || V "vector gen $c FAILED"
+    P=$O/p_$c; X=$O/p_${c}_rcdrop; mkdir -p $P $X
+    python3 tools/hbm_static/su_programme_compile.py $O/vec_$c/prog_rc.mem $P/mono --line-bits 9768 > $P/mono.log 2>&1
+    python3 tools/hbm_static/su_programme_compile.py $O/vec_$c/prog_rc.mem $P --line-bits 9768 --partition 4 --start-depth 2 --mut-pc-slice 3 > $P/part.log 2>&1
+    python3 tools/hbm_static/su_programme_compile.py $O/vec_$c/prog_rc0.mem $X/mono --line-bits 9768 > $X/mono.log 2>&1
+    python3 tools/hbm_static/su_programme_compile.py $O/vec_$c/prog_rc0.mem $X --line-bits 9768 --partition 4 --start-depth 2 > $X/part.log 2>&1
+    cp $P/expected.mem $X/expected.mem
+    V "$c compile: $(tail -1 $P/part.log | cut -c1-300)"
+    for m in 0 1; do
+      verilator --binary --timing -O1 -j 4 -Wno-fatal -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND --top-module tb_hbm_su_programme_part \
+        -I$P -GMUT=$m -GPIPE=2 --Mdir $P/obj$m $PS/ot_hbm_su_programme.sv $PS/ot_hbm_su_programme_root.sv \
+        $PS/ot_hbm_su_programme_part.sv $PS/tb_hbm_su_programme_part.sv $PM > $P/build$m.log 2>&1 || V "$c build $m FAILED"
+    done
+    for r in "0 _ positive $P" "0 +MUT_TEMPLATE template $P" "0 +MUT_PCOFF pcoff $P" "1 _ phase $P" "0 _ rcdrop $X"; do
+      set -- $r; a=$2; [ "$a" = _ ] && a=""
+      $P/obj$1/Vtb_hbm_su_programme_part +DIR=$4 $a > $O/p_${c}_$3.log 2>&1; echo RUN_RC=$? >> $O/p_${c}_$3.log
+      V "p $c $3: $(grep -h 'SU_PROGRAMME_PART PASS\|SU_PROGRAMME_PART FAIL\|RUN_RC' $O/p_${c}_$3.log | head -2 | tr '\n' ' ')"
+    done
+    rm -rf $P/obj0 $P/obj1 ) &
   done
   wait; V "done"; exit 0
 fi
