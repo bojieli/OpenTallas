@@ -1,5 +1,5 @@
 `timescale 1ps/1fs
-module tb #(parameter integer WQ=32,ROW_REGIONS=0);
+module tb #(parameter integer WQ=32,ROW_REGIONS=0,CYCLES=24000,RESET_PERIOD=3001);
 reg clk=0;always #512 clk=~clk;
 reg rst_n=0;reg [63:0] resets=0;
 reg slot_parity=0;reg [7:0] refresh_reload=122;
@@ -9,10 +9,10 @@ ot_hbm_r14_aq_pc_safe #(.WQ(WQ),.ROW_REGIONS(ROW_REGIONS)) u_new(.clk(clk),.rst_
 ref_ot_hbm_r14_aq_pc_safe_18bd #(.WQ(WQ)) u_ref(.clk(clk),.rst_n(rst_n),.reset_regions(resets),.slot_parity(slot_parity),.refresh_reload(refresh_reload),.row_v(b[0]),.row_op(b[3:1]),.row_bank(b[8:4]),.row_row(b[27:9]),.col_v(b[28]),.col_bank(b[33:29]),.col_col(b[38:34]),.ref_fault(b[39]),.wr_v(wr_v),.wr_bank(wr_bank),.wr_col(wr_col),.wr_row(wr_row),.wr_rd(wr_rd),.wr_r(b[40]),.col_we(b[41]),.col_aq(b[42]),.dbg_held(b[74:43]));
 integer n,checks=0,pushes=0,cols=0,rows=0;reg[31:0]rng=32'hcafe1234;
 initial begin
-for(n=0;n<24000;n=n+1)begin
+for(n=0;n<CYCLES;n=n+1)begin
  @(negedge clk);
  rng=(rng<<1)^((rng[31])?32'h04c11db7:0);
- rst_n=(n%3001)>=4;resets={64{rst_n}};
+ rst_n=(n%RESET_PERIOD)>=4;resets={64{rst_n}};
  wr_v=rst_n&&b[40]&&rng[2:0]!=0;
  wr_bank=rng[9:5];wr_col=rng[14:10];wr_row={12'd0,rng[21:15]};wr_rd=rng[22];
  if(n%1500<900)begin wr_bank=5'((n/64)%32);wr_row=19'(n/2048);end

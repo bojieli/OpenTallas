@@ -5,7 +5,7 @@ module tb_hbm_kr_ready_bridge;
  reg rst_n=0;integer epoch=0,cyc=0,sent=0,received=0,last_rx=-1,max_occ=0,first_push=-1;
  reg grant_prev=0;wire ir,ov,fault;wire[2:0]occupancy;wire[276:0]od;
  wire fixture_iv=sent<256;
- wire ready=(epoch==0)?((cyc<100)||(PRODUCER!=0&&cyc>=150&&cyc<180)):((cyc<100)||(cyc%19>=7));
+ wire ready=(epoch==0)?((cyc>=2&&cyc<100)||(PRODUCER!=0&&cyc>=150&&cyc<180)):((cyc<100)||(cyc%19>=7));
  wire iv,source_ready;wire[276:0]bridge_data;wire[17:0]native_valid;
  integer bridge_sent=0;
  integer pop_truth[0:17][0:3];
