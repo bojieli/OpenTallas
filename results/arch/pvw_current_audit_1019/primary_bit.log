@@ -1,0 +1,6 @@
+SOURCE_PRIMARY_PASS {'pv2': 65536, 'pe2': 8192, 'bc': 5888, 'rst_n': 256, 'join_join_go': 32, 'join_rst_n': 32}
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/pvw-current-audit-1019/audit.py", line 83, in <module>
+    got=bits(acm[port],an);assert got==expected_bits,(parent,inst,port)
+                                  ^^^^^^^^^^^^^^^^^^
+AssertionError: ('pvw_0', 'u_s0_b0', 'pv2')

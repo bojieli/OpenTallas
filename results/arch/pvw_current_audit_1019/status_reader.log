@@ -1,0 +1,8 @@
+SOURCE_PRIMARY_PASS {'pv2': 65536, 'pe2': 8192, 'bc': 5888, 'rst_n': 256, 'join_join_go': 32, 'join_rst_n': 32}
+ACTUAL_PRIMARY_PASS {'ot_qwen_tp8_pv_slice_t.rst_n': 512, 'ot_qwen_tp8_pv_slice_t.pv2': 131072, 'ot_qwen_tp8_pv_slice_t.pe2': 16384, 'ot_qwen_tp8_pv_slice_t.bc': 11776, 'ot_qwen_tp8_pv_slice_t.ts': 262144, 'ot_qwen_tp8_pv_slice_t.fault': 512, 'ot_qwen_tp8_pv_join_t.rst_n': 64, 'ot_qwen_tp8_pv_join_t.ts0': 65536, 'ot_qwen_tp8_pv_join_t.ts1': 65536, 'ot_qwen_tp8_pv_join_t.ts2': 65536, 'ot_qwen_tp8_pv_join_t.ts3': 65536, 'ot_qwen_tp8_pv_join_t.join_go': 64, 'ot_qwen_tp8_pv_join_t.sf': 512, 'ot_qwen_tp8_pv_join_t.y': 32768, 'ot_qwen_tp8_pv_join_t.y_valid': 64, 'ot_qwen_tp8_pv_join_t.fault': 64}
+ACTUAL_RELAY_IDENTITY_PASS {'qkd_rlys_296.a': 953120, 'qkd_rlys_296.b': 953120, 'qkd_rlys_36.a': 40896, 'qkd_rlys_36.b': 40896, 'qkd_rlys_1.a': 512, 'qkd_rlys_1.b': 512} relocated 888
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/pvw-current-audit-1019/audit.py", line 177, in <module>
+    assert sum(counts.values())==sum(v['bits'] for v in expected_classes.values())==5356,(counts,len(unread),zeros)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (Counter({'branch_subset_cargo': 4756, 'duplicate_reset_cargo': 448, 'fixed_width_delay_terminal': 62, 'reserved_zero_command': 56, 'unconsumed_public_status': 33}), 122419, 117064)

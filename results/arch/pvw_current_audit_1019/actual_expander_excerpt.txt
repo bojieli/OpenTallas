@@ -1,0 +1,58 @@
+a4c857df8afd5c30444f91f797ff94bc8755c8e303a31a5b87a581a486b546dc  /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/tools/qwen_kv_die/kv_expand.py
+930e70a670f01c1723e0c7eca335b5eccd259d3e7dc7eed39bc30bd932b6b805  /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/tools/qwen_kv_die/kv_bound_netlist.py
+        ff = FLIP[fo]
+        nleaf, conn_bits, tie_bits = 0, 0, 0
+        drivers = defaultdict(int)
+        inputs = set()
+        rectangles = []
+        for cname, c in J['cells'].items():
+            cell = cname.lstrip('\\')
+            ct = base_type(c['type'])
+            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
+            if ct not in leaf:
+                raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
+            used_leaf.add(ct)
+            L = leaf[ct]
+            cx, cy, co = spec['plan'](cell, fw, fh)
+            w_, h_ = L['size']
+            # Generated frame outlines shave 24 nm from the nominal contract.
+            # Match bind_views' 50 nm outline tolerance while rejecting real spill.
+            if min(cx, cy) < -0.001 or cx + w_ > fw + 0.05 or cy + h_ > fh + 0.05:
+                raise ValueError(f'{inst}/{cell}: closed leaf outside contract frame')
+            rect = (cell, cx, cy, cx + w_, cy + h_)
+            for other in rectangles:
+                if min(rect[3], other[3]) - max(rect[1], other[1]) > 0.001 and \
+                   min(rect[4], other[4]) - max(rect[2], other[2]) > 0.001:
+                    raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}')
+            rectangles.append(rect)
+            px = fw - cx - w_ if ff[0] else cx
+            py = fh - cy - h_ if ff[1] else cy
+            cf = FLIP[co]
+            orient = ORIENT[(ff[0] ^ cf[0], ff[1] ^ cf[1])]
+            cinst = f'{inst}__{re.sub(r"[^A-Za-z0-9_]", "_", cell)}'
+            pc = []
+            for p, bits in c['connections'].items():
+                if p not in L['ports']:
+                    raise ValueError(f'{cinst}: RTL port {p} not a pin of view {ct}')
+                if L['ports'][p]['w'] != len(bits):
+                    raise ValueError(f'{cinst}: port {p} RTL {len(bits)} b vs view {L["ports"][p]["w"]} b')
+                refs = [ref(bid, cell) for bid in bits]
+                conn_bits += len(bits)
+                tie_bits += sum('__tie' in r_ for r_ in refs)
+                if L['ports'][p]['dir'] == 'input':
+                    inputs.update(bid for bid in bits if not isinstance(bid, str))
+                if L['ports'][p]['dir'] == 'output':
+                    for bid in bits:
+                        if not isinstance(bid, str):
+                            drivers[bid] += 1
+                pc.append(f'.{p}({pack(refs)})')
+            miss = sorted(set(L['ports']) - set(c['connections']))
+            if miss:
+                raise ValueError(f'{cinst}: view pins without an RTL connection {miss[:6]}')
+            new_lines.append(f'  {ct} {cinst} ({", ".join(pc)});')
+            add_place.append(f'ot_mts::place [$_blk findInst {cinst}] {fx + px:.3f} {fy + py:.3f} {orient}')
+            nleaf += 1
+        multi = [bid for bid, n in drivers.items() if n > 1]
+        if multi:
+            raise ValueError(f'{inst}: {len(multi)} bits with several leaf drivers')
+        available = set(drivers) | set(strap_bits) | {bid for p in J['ports'].values()

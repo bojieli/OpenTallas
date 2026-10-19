@@ -1,0 +1,30 @@
+[
+  {
+    "case": "positive",
+    "exit": 0,
+    "expected_pattern": "PVW_ROLE_AUDIT_PASS",
+    "pass_": true,
+    "log_sha256": "aed9778f0795fd0a699fece9f5cf27f3d7d647d85681ddfb28c9373945c8426b"
+  },
+  {
+    "case": "primary_bit",
+    "exit": 1,
+    "expected_pattern": "AssertionError",
+    "pass_": true,
+    "log_sha256": "993280e1fe628242073138faa01435f981907061d3b338139b5e34e28e663178"
+  },
+  {
+    "case": "relay_bit",
+    "exit": 1,
+    "expected_pattern": "RELAY_BIT_IDENTITY",
+    "pass_": true,
+    "log_sha256": "2e8734b1779e7998b2b7dd860cf44e503acdd5ad2f6637fb2cdc7ed2ebe621bc"
+  },
+  {
+    "case": "status_reader",
+    "exit": 1,
+    "expected_pattern": "AssertionError",
+    "pass_": true,
+    "log_sha256": "a95b801c32843936a81bf0d8262180e6f0e4a4fd222510cddcdd874c759ee991"
+  }
+]

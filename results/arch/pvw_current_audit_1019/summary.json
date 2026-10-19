@@ -1,0 +1,272 @@
+{
+  "schema": "opentallas.pvw_unread_role_audit.v2",
+  "qualification": "read-only source/consumer evidence; NO padding declaration, tie, or waiver",
+  "source_commit": "4db097403",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv": "4601aa6d6ccb8b201d2f991a028a972d77f505506bc1ea87d5495738f0a7064d",
+    "tools/qwen_kv_die/pv_trunk_gen.py": "85e6bb225c010e1758b0dbcf8e24ebb20e1ab562b304c3f159ade8c787ba9458",
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba",
+    "rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv": "b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad",
+    "tools/die_port_bind.py": "36ba6b19bf2547a7d797739aa81b07260e7633be4d936f50f04e976730c6960c",
+    "tools/qwen_kv_die/kv_bootage.py": "bc8a613dadec056a89d72a50082c3d03c3b440093f0780cae4a667615d101d46"
+  },
+  "report_sha256": "3a621bcdfe391a74e58d49ee61b911531258252bf1ce05a64743021be0ff36bf",
+  "die_sha256": "7006cbd0d11ffb755902c588eec474a1a7c27d7ad77212cebe3be1fcae5aae7e",
+  "role_counts": {
+    "unconsumed_public_status": 34,
+    "reserved_zero_command": 56,
+    "branch_subset_cargo": 4756,
+    "fixed_width_delay_terminal": 62,
+    "duplicate_reset_cargo": 448
+  },
+  "classified_bits": 5356,
+  "actual_strict_summary": {
+    "masters": 68,
+    "instances": 44903,
+    "unbound_masters": 0,
+    "stub_masters": 0,
+    "ambiguous_masters": 0,
+    "port_not_in_rtl": 0,
+    "width_mismatch": 0,
+    "input_unconnected": 0,
+    "input_tied": 0,
+    "unparsed_connections": 0,
+    "duplicate_port_connections": 0,
+    "undriven_net_bits": 0,
+    "multi_driven_net_bits": 0,
+    "unread_net_bits": 45863,
+    "output_open_ports": 69,
+    "top_assigns": 0,
+    "params_not_in_rtl": 0,
+    "strap_ports": 36,
+    "pad_bits": 212103,
+    "spare_out_bits": 572077,
+    "unresolved_children": 0,
+    "ambiguous_children": 0,
+    "variant_children": 12
+  },
+  "actual_strict_failing": [
+    "unread_net_bits",
+    "output_open_ports"
+  ],
+  "actual_primary_checks": {
+    "ot_qwen_tp8_pv_slice_t.rst_n": 512,
+    "ot_qwen_tp8_pv_slice_t.pv2": 131072,
+    "ot_qwen_tp8_pv_slice_t.pe2": 16384,
+    "ot_qwen_tp8_pv_slice_t.bc": 11776,
+    "ot_qwen_tp8_pv_slice_t.ts": 262144,
+    "ot_qwen_tp8_pv_slice_t.fault": 512,
+    "ot_qwen_tp8_pv_join_t.rst_n": 64,
+    "ot_qwen_tp8_pv_join_t.ts0": 65536,
+    "ot_qwen_tp8_pv_join_t.ts1": 65536,
+    "ot_qwen_tp8_pv_join_t.ts2": 65536,
+    "ot_qwen_tp8_pv_join_t.ts3": 65536,
+    "ot_qwen_tp8_pv_join_t.join_go": 64,
+    "ot_qwen_tp8_pv_join_t.sf": 512,
+    "ot_qwen_tp8_pv_join_t.y": 32768,
+    "ot_qwen_tp8_pv_join_t.y_valid": 64,
+    "ot_qwen_tp8_pv_join_t.fault": 64
+  },
+  "relay_checks": {
+    "qkd_rlys_296.a": 953120,
+    "qkd_rlys_296.b": 953120,
+    "qkd_rlys_36.a": 40896,
+    "qkd_rlys_36.b": 40896,
+    "qkd_rlys_1.a": 512,
+    "qkd_rlys_1.b": 512
+  },
+  "actual_parameter_definitions": {
+    "ot_qwen_tp8_pv_slice_t": {
+      "declared": {
+        "RESET_PIN": "0"
+      },
+      "effective_defaults": {
+        "RESET_PIN": 0
+      },
+      "source_path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+      "source_sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+    },
+    "ot_qwen_tp8_pv_join_t": {
+      "declared": {
+        "MUT": "0",
+        "J_LAT": "7",
+        "RESET_PIN": "0",
+        "J_OUT": "3*J_LAT+3"
+      },
+      "effective_defaults": {
+        "MUT": 0,
+        "J_LAT": 7,
+        "RESET_PIN": 0,
+        "J_OUT": 24
+      },
+      "source_path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+      "source_sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+    },
+    "ot_qwen_tp8_pv_wide_ctl_tb": {
+      "declared": {
+        "FIRST_INPUT_AGE": "127",
+        "RESET_PIN": "0",
+        "MUT": "0",
+        "TRUNK_D": "0",
+        "FLAG_D": "0",
+        "IDLE": "0",
+        "FEED": "1",
+        "DRAIN": "2",
+        "TRA": "3",
+        "TRB": "4",
+        "TRADD": "5",
+        "TRDRAIN": "6",
+        "JOIN": "7",
+        "JGO": "2",
+        "COL_LAT": "JGO+3+3*7+3+1",
+        "COL_CHK": "COL_LAT+TRUNK_D+FLAG_D"
+      },
+      "effective_defaults": {
+        "FIRST_INPUT_AGE": 127,
+        "RESET_PIN": 0,
+        "MUT": 0,
+        "TRUNK_D": 0,
+        "FLAG_D": 0,
+        "IDLE": 0,
+        "FEED": 1,
+        "DRAIN": 2,
+        "TRA": 3,
+        "TRB": 4,
+        "TRADD": 5,
+        "TRDRAIN": 6,
+        "JOIN": 7,
+        "JGO": 2,
+        "COL_LAT": 30,
+        "COL_CHK": 30
+      },
+      "source_path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv",
+      "source_sha256": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba"
+    },
+    "qkd_rlys_1": {
+      "declared": {},
+      "effective_defaults": {},
+      "source_path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+      "source_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+    },
+    "qkd_rlys_36": {
+      "declared": {},
+      "effective_defaults": {},
+      "source_path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+      "source_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+    },
+    "qkd_rlys_296": {
+      "declared": {},
+      "effective_defaults": {},
+      "source_path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+      "source_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+    }
+  },
+  "actual_parameter_profiles": {
+    "ot_qwen_tp8_pv_join_t": {
+      "{}": 64
+    },
+    "ot_qwen_tp8_pv_slice_t": {
+      "{}": 512
+    },
+    "ot_qwen_tp8_pv_wide_ctl_tb": {
+      "{}": 2
+    },
+    "qkd_rlys_1": {
+      "{}": 5983
+    },
+    "qkd_rlys_296": {
+      "{}": 4311
+    },
+    "qkd_rlys_36": {
+      "{}": 10416
+    },
+    "qkd_rlys_528": {
+      "{}": 2123
+    }
+  },
+  "actual_controller_interfaces": [
+    {
+      "instance": "pvw_0__u_ctl",
+      "master": "ot_qwen_tp8_pv_wide_ctl_tb",
+      "connections": {
+        "busy": "n_pvw_0__busy[0]",
+        "cfg_fia": "n_ks_age_pv__r41__pinfix4[7:0]",
+        "clk": "n_clk_core_c[0]",
+        "cmd": "n_pvw_0__cmd_w[59:0]",
+        "col_fault": "n_pvw_0__cf_w[31:0]",
+        "col_valid": "n_pvw_0__cv_w[31:0]",
+        "context_len": "n_ks_pvst__r36__pinfix1[14:1]",
+        "epoch": "n_ks_pvst__r36__pinfix1[30:15]",
+        "fault": "n_ks_af_ufp0[0]",
+        "in_epoch": "{n_pvh_ES_3__r3[30:15], n_pvh_ES_2__r3[30:15], n_pvh_ES_1__r3[30:15], n_pvh_ES_0__r3[30:15], n_pvh_WS_3__r3[30:15], n_pvh_WS_2__r3[30:15], n_pvh_WS_1__r2[30:15], n_pvh_WS_0__r2[30:15]}",
+        "in_t": "{n_pvh_ES_3__r3[14:1], n_pvh_ES_2__r3[14:1], n_pvh_ES_1__r3[14:1], n_pvh_ES_0__r3[14:1], n_pvh_WS_3__r3[14:1], n_pvh_WS_2__r3[14:1], n_pvh_WS_1__r2[14:1], n_pvh_WS_0__r2[14:1]}",
+        "in_valid": "{n_pvh_ES_3__r3[0], n_pvh_ES_2__r3[0], n_pvh_ES_1__r3[0], n_pvh_ES_0__r3[0], n_pvh_WS_3__r3[0], n_pvh_WS_2__r3[0], n_pvh_WS_1__r2[0], n_pvh_WS_0__r2[0]}",
+        "out_age": "n_pvw_0__out_age[15:0]",
+        "out_epoch": "n_pvw_0__out_epoch[15:0]",
+        "pair_id": "1'b0",
+        "req_t": "{n_pvrq_ES_3[14:1], n_pvrq_ES_2[14:1], n_pvrq_ES_1[14:1], n_pvrq_ES_0[14:1], n_pvrq_WS_3[14:1], n_pvrq_WS_2[14:1], n_pvrq_WS_1[14:1], n_pvrq_WS_0[14:1]}",
+        "req_valid": "{n_pvrq_ES_3[0], n_pvrq_ES_2[0], n_pvrq_ES_1[0], n_pvrq_ES_0[0], n_pvrq_WS_3[0], n_pvrq_WS_2[0], n_pvrq_WS_1[0], n_pvrq_WS_0[0]}",
+        "rst_n": "n_rst_die_t7__m[0]",
+        "start": "n_ks_pvst__r36__pinfix1[0]"
+      }
+    },
+    {
+      "instance": "pvw_1__u_ctl",
+      "master": "ot_qwen_tp8_pv_wide_ctl_tb",
+      "connections": {
+        "busy": "n_pvw_1__busy[0]",
+        "cfg_fia": "n_ks_age_pv__f0__r2[15:8]",
+        "clk": "n_clk_core_c[0]",
+        "cmd": "n_pvw_1__cmd_w[59:0]",
+        "col_fault": "n_pvw_1__cf_w[31:0]",
+        "col_valid": "n_pvw_1__cv_w[31:0]",
+        "context_len": "n_ks_pvst__beq37[14:1]",
+        "epoch": "n_ks_pvst__beq37[30:15]",
+        "fault": "n_ks_af_ufp1[0]",
+        "in_epoch": "{n_pvh_EN_3__r3[30:15], n_pvh_EN_2__r3[30:15], n_pvh_EN_1__r3[30:15], n_pvh_EN_0__r3[30:15], n_pvh_WN_3__r3[30:15], n_pvh_WN_2__r3[30:15], n_pvh_WN_1__r2[30:15], n_pvh_WN_0__r2[30:15]}",
+        "in_t": "{n_pvh_EN_3__r3[14:1], n_pvh_EN_2__r3[14:1], n_pvh_EN_1__r3[14:1], n_pvh_EN_0__r3[14:1], n_pvh_WN_3__r3[14:1], n_pvh_WN_2__r3[14:1], n_pvh_WN_1__r2[14:1], n_pvh_WN_0__r2[14:1]}",
+        "in_valid": "{n_pvh_EN_3__r3[0], n_pvh_EN_2__r3[0], n_pvh_EN_1__r3[0], n_pvh_EN_0__r3[0], n_pvh_WN_3__r3[0], n_pvh_WN_2__r3[0], n_pvh_WN_1__r2[0], n_pvh_WN_0__r2[0]}",
+        "out_age": "n_pvw_1__out_age[15:0]",
+        "out_epoch": "n_pvw_1__out_epoch[15:0]",
+        "pair_id": "1'b1",
+        "req_t": "{n_pvrq_EN_3[14:1], n_pvrq_EN_2[14:1], n_pvrq_EN_1[14:1], n_pvrq_EN_0[14:1], n_pvrq_WN_3[14:1], n_pvrq_WN_2[14:1], n_pvrq_WN_1[14:1], n_pvrq_WN_0[14:1]}",
+        "req_valid": "{n_pvrq_EN_3[0], n_pvrq_EN_2[0], n_pvrq_EN_1[0], n_pvrq_EN_0[0], n_pvrq_WN_3[0], n_pvrq_WN_2[0], n_pvrq_WN_1[0], n_pvrq_WN_0[0]}",
+        "rst_n": "n_rst_die_t9__m[0]",
+        "start": "n_ks_pvst__beq37[0]"
+      }
+    }
+  ],
+  "primary_instances": 576,
+  "primary_interfaces": 3712,
+  "primary_pin_bits": 718080,
+  "relay_pin_bits": 1989056,
+  "repair_stations": 4,
+  "repair_relocated_input_bits": 888,
+  "ledger_uncompressed_sha256": "9a0e849306026181840de66b84f6e865061b628b0278b46ba36d206d8388f232",
+  "ledger_gzip_sha256": "45c28d429275ec8fee3fb33e14d42548a7e0e2a7c12aee70c9cc722fe3be38ee",
+  "source_default_parameter_semantics": "Effective actual no-override defaults differ from generated parent parameter intents; no elaboration/behavioral identity or native signoff claimed.",
+  "parameter_role_invariance": {
+    "invariant": "Connectivity roles, exact driver/reader bit sets, and source-origin-to-existing-primary port identities are unchanged by the explicit RESET_PIN0vs1/TRUNK_D0vs54/FLAG_D0vs58 profiles. Reserved high cmd bits remain unwritten by any partial assignment under either profile.",
+    "not_proved_invariant": "Reset release/capture behavior, calendar deadlines, value age, numerical traces, and selected hard-view behavior.",
+    "source_intent": {
+      "slice": {
+        "RESET_PIN": 1
+      },
+      "join": {
+        "RESET_PIN": 1,
+        "MUT": 0,
+        "J_LAT": 7
+      },
+      "control": {
+        "RESET_PIN": 1,
+        "FIRST_INPUT_AGE": 127,
+        "TRUNK_D": 54,
+        "FLAG_D": 58,
+        "MUT": 0
+      }
+    },
+    "omission": "kv_expand.py retains parent elaboration but emits only type/instance/connections, dropping child c[parameters]. Actual raw sidecar has48 ECTL entries and0PV entries; native binder cannot recover missing child overrides.",
+    "required_next_fix": "Preserve evaluated child parameters through expansion/native binding, fail closed against exact selected-view parameter profiles, and revalidate behavior/reset/ages; no helper activation from this role ledger.",
+    "actual_expander_excerpt_sha256": "bc99942ec05221a26c5293119b5de747aa561869ded28d6be5647bb35f479ae5"
+  }
+}

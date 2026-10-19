@@ -1,0 +1,7 @@
+SOURCE_PRIMARY_PASS {'pv2': 65536, 'pe2': 8192, 'bc': 5888, 'rst_n': 256, 'join_join_go': 32, 'join_rst_n': 32}
+ACTUAL_PRIMARY_PASS {'ot_qwen_tp8_pv_slice_t.rst_n': 512, 'ot_qwen_tp8_pv_slice_t.pv2': 131072, 'ot_qwen_tp8_pv_slice_t.pe2': 16384, 'ot_qwen_tp8_pv_slice_t.bc': 11776, 'ot_qwen_tp8_pv_slice_t.ts': 262144, 'ot_qwen_tp8_pv_slice_t.fault': 512, 'ot_qwen_tp8_pv_join_t.rst_n': 64, 'ot_qwen_tp8_pv_join_t.ts0': 65536, 'ot_qwen_tp8_pv_join_t.ts1': 65536, 'ot_qwen_tp8_pv_join_t.ts2': 65536, 'ot_qwen_tp8_pv_join_t.ts3': 65536, 'ot_qwen_tp8_pv_join_t.join_go': 64, 'ot_qwen_tp8_pv_join_t.sf': 512, 'ot_qwen_tp8_pv_join_t.y': 32768, 'ot_qwen_tp8_pv_join_t.y_valid': 64, 'ot_qwen_tp8_pv_join_t.fault': 64}
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/pvw-current-audit-1019/audit.py", line 137, in <module>
+    assert ab==exp or (ab[0].startswith('n_'+parent+'__') and canonical((ab[0][len('n_'+parent+'__'):],ab[1]))==canonical(sb)),('RELAY_BIT_IDENTITY',parent,inst,port,sb,ab)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('RELAY_BIT_IDENTITY', 'pvw_0', 'u_CP10g4c0_5_r0', 'a', ('w_CP10g4c0_4', 1), ('n_pvw_0__w_CP10g4c0_4', 0))
