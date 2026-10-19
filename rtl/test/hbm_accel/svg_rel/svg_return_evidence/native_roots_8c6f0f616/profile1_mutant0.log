@@ -1,0 +1,15 @@
+SOURCE_REVISION=8c6f0f616
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_ROOTS profile=1 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1632 minimum_edges=7 maximum_edges=7
+SVG_RETURN PASS mut=0 profile=1 errors=0 outputs=1632 windows=3 warm_checks=3 latency_stages=7
+- rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.006 s; speed 259.206 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB

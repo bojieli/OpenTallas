@@ -1,0 +1,130 @@
+ot-run: ot-epyc4       admits   952 GB (avail 780, growth 113, headroom 0, waiters 0/0 GB) load 81/128 running 36 disk 412 GB 
+ot-run: ot-epyc5       admits   736 GB (avail 629, growth 113, headroom 0, waiters 0/0 GB) load 85/128 running 17 disk 564 GB 
+ot-run: ot-epyc6       admits   609 GB (avail 540, growth 113, headroom 0, waiters 0/0 GB) load 39/128 running 19 disk 563 GB 
+ot-run: ot-epyc7       admits   834 GB (avail 685, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 24 disk 502 GB 
+ot-run: ot-epyc8       admits   990 GB (avail 806, growth 113, headroom 0, waiters 0/0 GB) load 60/128 running 28 disk 565 GB 
+ot-run: ot-pve1        admits   114 GB (avail 92, growth 13, headroom 0, waiters 0/0 GB) load 50/28 running 6 disk 1196 GB 
+ot-run: ot-agidock128  admits    88 GB (avail 74, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4154819-1792425334 after 0 s
+Referenced but unset environment variable evaluates to an empty string: p
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-svg-return-1019-native
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_ROOTS profile=0 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1632 minimum_edges=7 maximum_edges=7
+SVG_RETURN PASS mut=0 profile=0 errors=0 outputs=1632 windows=3 warm_checks=3 latency_stages=7
+- rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 169.985 us/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB
+PROFILE=0 MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_WARM edge=9 expected=9
+RETURN_DATA_FAIL ordinal=0 expected=0 full=0
+RETURN_DATA_FAIL ordinal=1 expected=1 full=1
+RETURN_DATA_FAIL ordinal=2 expected=2 full=2
+RETURN_DATA_FAIL ordinal=3 expected=3 full=3
+RETURN_DATA_FAIL ordinal=4 expected=4 full=4
+RETURN_DATA_FAIL ordinal=5 expected=5 full=5
+RETURN_DATA_FAIL ordinal=6 expected=6 full=6
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_ROOTS profile=0 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1632 minimum_edges=7 maximum_edges=7
+SVG_RETURN FAIL mut=1 profile=0 errors=1632 outputs=1632 windows=3 warm_checks=3 latency_stages=7
+[1614624] %Fatal: tb_svg_return_regional.sv:96: Assertion failed in tb_svg_return_regional: regional return mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $stop
+Aborting...
+PROFILE=0 MUT=1 RC=1
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional_ot_hbm_svg_return_ring4__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_svg_return_regional__ALL.a    -pthread -lpthread -latomic   -o Vtb_svg_return_regional
+rm Vtb_svg_return_regional__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/hbm-svg-return-1019-native/run_1/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.072 MB sources in 10 modules, into 1.325 MB in 11 C++ files needing 0.003 MB
+- Verilator: Walltime 7.570 s (elab=0.013, cvt=0.124, bld=7.393); cpu 0.212 s on 2 threads; allocated 52.434 MB
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_WARM edge=9 expected=9
+RETURN_DATA_FAIL ordinal=0 expected=0 full=0
+RETURN_DATA_FAIL ordinal=1 expected=1 full=1
+RETURN_DATA_FAIL ordinal=2 expected=2 full=2
+RETURN_DATA_FAIL ordinal=3 expected=3 full=3
+RETURN_DATA_FAIL ordinal=4 expected=4 full=4
+RETURN_DATA_FAIL ordinal=5 expected=5 full=5
+RETURN_DATA_FAIL ordinal=6 expected=6 full=6
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_ROOTS profile=0 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1632 minimum_edges=7 maximum_edges=7
+SVG_RETURN FAIL mut=2 profile=0 errors=1632 outputs=1632 windows=3 warm_checks=3 latency_stages=7
+[1614624] %Fatal: tb_svg_return_regional.sv:96: Assertion failed in tb_svg_return_regional: regional return mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $stop
+Aborting...
+PROFILE=0 MUT=2 RC=1
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional_ot_hbm_svg_return_ring4__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_svg_return_regional__ALL.a    -pthread -lpthread -latomic   -o Vtb_svg_return_regional
+rm Vtb_svg_return_regional__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/hbm-svg-return-1019-native/run_2/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.072 MB sources in 10 modules, into 1.325 MB in 11 C++ files needing 0.003 MB
+- Verilator: Walltime 7.374 s (elab=0.013, cvt=0.122, bld=7.197); cpu 0.213 s on 2 threads; allocated 52.426 MB
+Verilator 5.050 2026-07-01 rev v5.050
+RETURN_FAULT_FAIL
+RETURN_VALID_FAIL tick=14 got=0 expected=1
+RETURN_FAULT_FAIL
+RETURN_VALID_FAIL tick=15 got=0 expected=1
+RETURN_FAULT_FAIL
+RING_PHASE_FAIL phase_fault=0001
+RETURN_VALID_FAIL tick=16 got=0 expected=1
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_COUNTS_FAIL outputs=1422 windows=3 warm_checks=3
+RETURN_ROOTS profile=0 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1422 minimum_edges=7 maximum_edges=7
+SVG_RETURN FAIL mut=3 profile=0 errors=3526 outputs=1422 windows=3 warm_checks=3 latency_stages=7
+[1614624] %Fatal: tb_svg_return_regional.sv:96: Assertion failed in tb_svg_return_regional: regional return mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $stop
+Aborting...
+PROFILE=0 MUT=3 RC=1
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional_ot_hbm_svg_return_ring4__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_svg_return_regional__pch.h.slow -c Vtb_svg_return_regional__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_svg_return_regional__ALL.a    -pthread -lpthread -latomic   -o Vtb_svg_return_regional
+rm Vtb_svg_return_regional__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/hbm-svg-return-1019-native/run_3/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.072 MB sources in 10 modules, into 1.439 MB in 11 C++ files needing 0.003 MB
+- Verilator: Walltime 7.670 s (elab=0.021, cvt=0.144, bld=7.456); cpu 0.249 s on 2 threads; allocated 52.426 MB
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=9 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_ROOTS profile=1 pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9
+RETURN_LATENCY samples=1632 minimum_edges=7 maximum_edges=7
+SVG_RETURN PASS mut=0 profile=1 errors=0 outputs=1632 windows=3 warm_checks=3 latency_stages=7
+- rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.006 s; speed 259.206 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
+PROFILE=1 MUT=0 RC=0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4154819-1792425334): exit 0
