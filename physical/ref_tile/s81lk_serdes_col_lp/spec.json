@@ -360,6 +360,17 @@
      "verilator"
     ]
    }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp_record.json",
+   "rtl/dsrom_sys/s81_link/col/lp/tb_ot_pdie_serdes_col_lp.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_lpw.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv",
+   "rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "tools/landed_parent/lp.py",
+   "tools/landed_parent/specs/ot_pdie_serdes_col.json"
   ]
  },
  "inter": [],
