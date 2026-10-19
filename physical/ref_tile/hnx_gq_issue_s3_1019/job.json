@@ -1,0 +1,193 @@
+{
+ "name": "hnx_gq_issue_s3_1019-s3-COMMIT",
+ "block": "ot_hnx_coll_gq_issue",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-P3/GQ",
+ "purpose": "HBM-NEXT P=3 COLL gather master ISSUE leaf, structurally safe successor of hnx_gq_issue_1019 (n2 72d501b02 NEEDS_RTL TT -53.69 / FF -12.95). SAFE-DESIGN 8-item checklist in README.md. Calendar: data edges unchanged (P @24); launch->fire +1 (4).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hnx-gq-s3-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv",
+   "rtl/hbm_next/coll/tb/tb_hnx_aq14.sv",
+   "tools/hbm_next/hnx_gq_s3_bench.sh",
+   "tools/hbm_next/hnx_coll_gq_train.py",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/arch/hbm_next_1019/units/coll/witness_s3",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_coll_gq_issue u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_GQ_FAN32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/coll/ot_hnx_coll_gq.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hbm_next/coll/ot_hnx_coll_aq14.sv rtl/hbm_next/coll/ot_hnx_coll_aq_scale13r.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_gq_s3_exact",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/main main",
+    "expect": "pass",
+    "pass_regex": "s1: COLLQ PASS set=1 rows=6",
+    "min_count_regex": "s0: COLLQ PASS set=0 rows=6 loops=2 vm_words_checked=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_gq_s3_mut_m9",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/m9 m9",
+    "expect": "fail",
+    "pass_regex": "m9: COLLQ PASS",
+    "fail_regex": "m9: COLLQ FAIL set=0 errors=",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "note": "quantiser SRAM ring one slot short (x one edge early)",
+    "fail_witness": "results/arch/hbm_next_1019/units/coll/witness_s3/m9.log"
+   },
+   {
+    "name": "hnx_gq_s3_mut_m2",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/m2 m2",
+    "expect": "fail",
+    "pass_regex": "m2: COLLQ PASS",
+    "fail_regex": "m2: COLLQ FAIL set=0 errors=",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "note": "exponent byte bias 126 (eb copies)",
+    "fail_witness": "results/arch/hbm_next_1019/units/coll/witness_s3/m2.log"
+   },
+   {
+    "name": "hnx_gq_s3_mut_m8",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/m8 m8",
+    "expect": "fail",
+    "pass_regex": "m8: COLLQ PASS",
+    "fail_regex": "m8: COLLQ FAIL set=1 errors=",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "note": "row-local k never restarts",
+    "fail_witness": "results/arch/hbm_next_1019/units/coll/witness_s3/m8.log"
+   },
+   {
+    "name": "hnx_gq_s3_mut_aqec",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/aqec aqec",
+    "expect": "fail",
+    "pass_regex": "COLLQ aqec AQ14_EXACT_PASS",
+    "fail_regex": "COLLQ aqec FAIL AQ14_NUMERIC_MISMATCH",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "note": "one element's kept exponent copy off by one",
+    "fail_witness": "results/arch/hbm_next_1019/units/coll/witness_s3/aqec.log"
+   },
+   {
+    "name": "hnx_gq_s3_mut_aqrs",
+    "cmd": "bash tools/hbm_next/hnx_gq_s3_bench.sh {RUN}/bench/aqrs aqrs",
+    "expect": "fail",
+    "pass_regex": "COLLQ aqrs AQ14_EXACT_PASS",
+    "fail_regex": "COLLQ aqrs FAIL AQ14_NUMERIC_MISMATCH",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "note": "one element's kept shift-count copy off by one",
+    "fail_witness": "results/arch/hbm_next_1019/units/coll/witness_s3/aqrs.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_gq_issue_s3_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_gq_issue_s3_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_gq_issue_s3_1019 --out {RUN}/record/views/ot_hnx_coll_gq_issue --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_gq_issue_s3_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_gq_issue_s3_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_next_1019/units/coll/route_hnx_gq_issue_s3_1019/hnx_gq_issue_s3_1019-s3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "After n2 72d501b02 NEEDS_RTL (TT -53.69 u_aq0.s8_e -> s9_rs exponent broadcast/subtract/clamp/shift count; FF -12.95 u_aq1.q -> aq_q_q zero-logic capture): quantiser ot_hnx_coll_aq14 (S9 split, 32 kept per-element exponent copies, 3 kept shift-count copies per element, LATENCY 14, II 1, exact numerics), 1024b x9 element lines on 8 SRAM rings (macros on the 43.2 lattice), zero-logic capture register removed (P @24 unchanged), registered single-read descriptor row file (+1 launch->fire edge), kept select copies <=32 loads, 24-region reset relay; outline 432x345.6 (8 macros, K geometry), TritonCTS unclustered short leaves."
+}

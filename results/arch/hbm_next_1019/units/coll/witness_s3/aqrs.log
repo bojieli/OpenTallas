@@ -1,0 +1,8 @@
+2026-10-19T16:46:36-07:00 start host=ot-epyc8 bundle=7a7f7112a329971c947eac0933cdf1059d8da572 Verilator 5.050 2026-07-01 rev v5.050
+2026-10-19T16:46:44-07:00 COLLQ aqrs FAIL AQ14_NUMERIC_MISMATCH block4 fp41 e126/126
+2026-10-19T16:46:44-07:00 done
+--- /srv/opentallas-scratch/claude/l2h-gq/out/b1_aqrs/aqrs.log (tail)
+[23333000] %Fatal: tb_hnx_aq14.sv:26: Assertion failed in tb: AQ14_NUMERIC_MISMATCH block4 fp41 e126/126
+%Error: rtl/hbm_next/coll/tb/tb_hnx_aq14.sv:26: Verilog $stop
+Aborting...
+verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
