@@ -33,7 +33,7 @@
   "q_read_external_edge_delta_measured": 0,
   "formatter_input_internal_pipeline_delta": 1,
   "formatter_output_external_edge_delta_measured": 0,
-  "benchmark_scope": "NU1 positive and MU14-op/4user overlapped fixed slots pass; full negative controls pending final source",
+  "benchmark_scope": "SAFE2 NU1 positive PASS unchanged output edges; lateprefetch FAIL245; MU14-op4user overlap PASS. FullSAFE2 negative refresh pending ot-epyc4 final9f-native-all.",
   "roots": [
     "ck",
     "ck_fmt",
@@ -41,5 +41,12 @@
   ],
   "related_clock_windows": "ordinary samephase1:1 setup and hold, no masks; linked reference spread<=80psTTFF required",
   "pin_track_budget": "aggregate N~1800/518.4<6 perum; S~1600/518.4<6; W~600/648<6; actual perbus assigned track gate required",
-  "outline_admission": "Owner-approved spend-area exact writer bank; provisional macro-fit outline. Retarget from measured std area and gate before adoption."
+  "outline_admission": "Owner-approved spend-area exact writer bank; provisional macro-fit outline. Retarget from measured std area and gate before adoption.",
+  "strict_safe_mode": 2,
+  "q_prefetch_input_advance_edges": 1,
+  "q_pin_to_sram_read_edges": 2,
+  "qdd_pin_to_sram_write_edges": 2,
+  "sameedge_read_write_forwarding": true,
+  "per_beat_ready_law": "prefetch raw pin edge >= last Qdd raw pin edge for all16 seats of beat; compiler certificate REQUIRED",
+  "production_ready_certificate_status": "BLOCKED: qwen_qready deriving real GEN readiness bounds, sysface compiler fails closed without proof"
 }

@@ -83,3 +83,12 @@ no pre-register decode in the functional SAFE2 scatter path.
 Native elapsed output-cycle delta remains0 only under the earlier prefetch
 contract; input read latency increases1. Throughput and token schedule claims
 remain scoped to the committed bench until the production manifest passes.
+
+## Committed scoped evidence (973aa1754)
+
+Fleet Verilator5.050:SAFE2 positive PASS (33TX records, done214->215,
+65embedding rows), MU overlap PASS (14ops/4users,533 referenceedges),
+late-prefetch mutant FAIL245errors (only1CMD escapes, zeroQ records).
+Witnesses results/rtl/mu_qwen_1018/n59_safe/safe2_*.log, source identity
+safe2_sources.txt. Full negative-control refresh runs independently.
+No physical closure or production readiness claim follows from these benches.
