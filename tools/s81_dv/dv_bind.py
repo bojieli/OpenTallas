@@ -771,7 +771,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
                              calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
                              bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows))
-    if run_bind:
+    if True:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
         # S81-LBGAP G6 (10-18): duplicated module names resolve by rule, not by sort order -- the frames' bench list (the
@@ -789,6 +789,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             cmd += ['--allow-model', mm]
         for d_ in T.get('defines', []):         # S81-DIE5: build defines of the bound RTL (e.g. DSFD_PQ_STATIC_X2)
             cmd += ['--define', d_]
+    if not run_bind:
+        rec['port_bind_cmd'] = cmd       # S81-DIEPLACE obstacle pass: dv_rvcase indexes the same RTL; no verdict
+    if run_bind:
         r = subprocess.run(cmd, capture_output=True, text=True)
         log_, rc_ = r.stdout + r.stderr, r.returncode
         nbad_ = len(lrc['mismatch']) + len(lrc['unresolved'])
