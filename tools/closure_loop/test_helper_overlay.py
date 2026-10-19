@@ -411,6 +411,61 @@ class HelperOverlay(unittest.TestCase):
         CL.ship_helpers('local', str(run), job)
         self.assertFalse(job['helper_overlay_verification']['mutation'])
 
+    def add_future_helper(self):
+        rel = 'physical/common_flow/clock_family.tcl'
+        for root in (self.root, self.daemon):
+            p = root / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(b'# future helper must not enter an old frozen route\n')
+        self.git('add', rel)
+        self.git('commit', '-m', 'add future helper')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        return '../../' + rel
+
+    def test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change(self):
+        job, origin = self.installed_job()
+        before = (origin / 'cl/orfs_hold_mm.tcl').read_bytes()
+        stamp = (origin / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
+        future = self.add_future_helper()
+        destination = Path(self.tmp.name) / 'old-plan-relocated'
+        relocated = dict(job, bench_helper_origin=dict(host='local', run=str(origin)))
+        # Also cover a legacy helper removed from today's global list: frozen
+        # membership, not today's names, defines what the route executed.
+        with patch.object(CL, 'HELPERS', (future,)), patch.object(HO, 'HELPERS', (future,)):
+            CL.ship_helpers('local', str(destination), relocated)
+        self.assertEqual((destination / 'cl/orfs_hold_mm.tcl').read_bytes(), before)
+        self.assertFalse((destination / 'cl/clock_family.tcl').exists())
+        self.assertEqual((origin / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns, stamp)
+        self.assertEqual(HO.verify_installed_plan(destination / 'cl', job['route_overlay_plan'])['status'],
+                         'verified_original')
+
+    def test_publish_refresh_never_appends_new_global_helper_to_old_plan(self):
+        job, run = self.installed_job()
+        newest = b'# reviewed publish-only refresh\n'
+        self.commit_helper(newest)
+        (self.daemon / self.rel).write_bytes(newest)
+        future = self.add_future_helper()
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+        self.assertFalse((run / 'cl/clock_family.tcl').exists())
+        self.assertEqual([row['path'] for row in job['route_overlay_plan']['files']], [self.rel])
+        self.assertEqual(HO.verify_installed_plan(run / 'cl', job['route_overlay_plan'])['status'],
+                         'verified_original')
+
+    def test_frozen_transport_refuses_missing_extra_or_changed_rows(self):
+        _, binding = self.gate()
+        plan = binding['route_overlay_plan']
+        payloads = {self.rel: self.new}
+        modes = {self.rel: plan['files'][0]['mode']}
+        self.assertEqual(CL.frozen_helper_transport_rows(plan, payloads, modes)[0][1], self.new)
+        for data, mode in [({}, modes), (dict(payloads, extra=b'x'), modes),
+                           ({self.rel:b'changed'}, modes), (payloads, {self.rel:0o777})]:
+            with self.subTest(data=data, mode=mode), self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY'):
+                CL.frozen_helper_transport_rows(plan, data, mode)
+
     def test_publish_helper_drift_to_main_ships_current_bytes(self):
         _, binding = self.gate()
         gate_plan = binding['route_overlay_plan']

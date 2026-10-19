@@ -3039,6 +3039,26 @@ def checkpoint(j, why=""):
     return True
 
 
+def frozen_helper_transport_rows(plan, payloads, modes):
+    """Transport precisely the recorded helper membership, including old sets.
+
+    A newer daemon can add or remove helper names. An existing route keeps its
+    verified bytes and modes; only the already-sanctioned publish rows may differ.
+    """
+    rows = HO.frozen_rows(plan)
+    expected = {row['path'] for row in rows}
+    if set(payloads) != expected or modes is None or set(modes) != expected:
+        raise ValueError('FROZEN_HELPER_OVERLAY: transport membership differs from frozen plan')
+    result = []
+    for row in rows:
+        rel = row['path']; data = payloads[rel]
+        if (hashlib.sha256(data).hexdigest() != row['sha256'] or HO.blob_id(data) != row['git_blob']
+                or modes[rel] != row['mode']):
+            raise ValueError('FROZEN_HELPER_OVERLAY: transport bytes/mode differ from frozen plan: ' + rel)
+        result.append((Path(rel).name, data, row['mode']))
+    return result
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -3177,12 +3197,14 @@ def ship_helpers(host, run, job=None):
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
+    # Frozen recovery/publish refresh may contain fewer (or older) helpers than
+    # today's HELPERS. Never append a new dependency to an already executed set.
+    outgoing = (frozen_helper_transport_rows(frozen, payloads, modes) if payloads is not None else
+                [(Path(h).name, overlay_helper_bytes(h), (HERE / h).stat().st_mode & 0o777) for h in HELPERS])
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
-        for helper in HELPERS:
-            rel = os.path.normpath(f"tools/closure_loop/{helper}")
-            data = payloads[rel] if payloads is not None else overlay_helper_bytes(helper)
-            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = modes[rel] if modes is not None else (HERE / helper).stat().st_mode & 0o777
+        for name, data, mode in outgoing:
+            ti = tarfile.TarInfo(name); ti.size = len(data); ti.mode = mode
             ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
         if frozen is not None:
             data = (json.dumps(frozen, indent=1) + "\n").encode()
