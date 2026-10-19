@@ -1,0 +1,190 @@
+{
+  "status": "PASS_RESTORED_NATIVE_CONTACTS_AND_OCCUPANCY_ONLY",
+  "contacts_compared": 1421,
+  "contact_mismatches": [],
+  "macro_halo_um": 5.4,
+  "std_cell_macro_halo_overlaps": [],
+  "macro_area_um2": 138101.76,
+  "outline_um": [
+    734.4,
+    540
+  ],
+  "aspect_ratio": 1.3599999999999999,
+  "actual_pdn_generated": false,
+  "pg_qualified": false,
+  "power_connection": "OPEN: no parent rails/stripes/vias or native child supply access measured",
+  "native_contact_checks": {
+    "ot_nhb_zh": {
+      "sha256": "852a52478348722ec2ef181fc548db4fef54b456c512af1a6e41f306b89aec2c",
+      "size_um": [
+        151.2,
+        151.2
+      ],
+      "declared_symmetry": [],
+      "orientations": {
+        "R0": {
+          "orient": "R0",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            },
+            "M5": {
+              "pins": 336,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            }
+          }
+        },
+        "MX": {
+          "orient": "MX",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 2,
+              "max_offset_nm": 24.0
+            },
+            "M5": {
+              "pins": 336,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            }
+          }
+        },
+        "MY": {
+          "orient": "MY",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            },
+            "M5": {
+              "pins": 336,
+              "offtrack": 336,
+              "max_offset_nm": 24.0
+            }
+          }
+        },
+        "R180": {
+          "orient": "R180",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 2,
+              "max_offset_nm": 24.0
+            },
+            "M5": {
+              "pins": 336,
+              "offtrack": 336,
+              "max_offset_nm": 24.0
+            }
+          }
+        }
+      }
+    },
+    "ot_qkh_recip_leaf": {
+      "sha256": "33685dfe99a6e5ce29e301d5968e0ee9735d87a20703a10c234cd4903879ed94",
+      "size_um": [
+        216.0,
+        216.0
+      ],
+      "declared_symmetry": [],
+      "orientations": {
+        "R0": {
+          "orient": "R0",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            },
+            "M5": {
+              "pins": 67,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            }
+          }
+        },
+        "MX": {
+          "orient": "MX",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 2,
+              "max_offset_nm": 24.0
+            },
+            "M5": {
+              "pins": 67,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            }
+          }
+        },
+        "MY": {
+          "orient": "MY",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 0,
+              "max_offset_nm": 0.0
+            },
+            "M5": {
+              "pins": 67,
+              "offtrack": 67,
+              "max_offset_nm": 24.0
+            }
+          }
+        },
+        "R180": {
+          "orient": "R180",
+          "origin_nm": [
+            43200,
+            43200
+          ],
+          "layers": {
+            "M4": {
+              "pins": 2,
+              "offtrack": 2,
+              "max_offset_nm": 24.0
+            },
+            "M5": {
+              "pins": 67,
+              "offtrack": 67,
+              "max_offset_nm": 24.0
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.ahub.fixed_face_geometry.v1",
+  "qualified": false,
+  "source_sha256": "57a9e0f37cb7a6ac77eb1c9714500030e4736f6cfa0c9c22a28b5d790c3976e1",
+  "std_count": 12181,
+  "ff_count": 3420,
+  "boundary_ff_count": 645,
+  "clock_sinks": 3425,
+  "macro_count": 5,
+  "std_area_um2": 1643.6471400001592,
+  "band_um": [
+    21.6,
+    226.8,
+    712.8,
+    231.66
+  ],
+  "legal_row_count": 18,
+  "row_area_um2": 3359.23199999999,
+  "band_area_um2": 3359.2319999999895,
+  "utilization_percent": 48.92925347222711,
+  "independent_macro_overlaps": [],
+  "independent_std_overlaps": [],
+  "outside_band": [],
+  "graph_receipt": {
+    "source_odb_sha256": "5d6fd0bcf2018923b065c566da58ebcdb13b59d74cf6d65f242feb5b6b0c84bb",
+    "placement_odb_sha256": "b21c032a4627f0a58604d794db6abe6b74be5bc9318d31ca0b9a363abcd30ff7",
+    "identical_native_graph": true,
+    "canonical_graph_sha256": "f5e85729e39ec9fc2e19580150f87acc6f00e106374db4be23dc4d92fd8c4c94"
+  },
+  "face_counts": {
+    "W": 303,
+    "E": 158,
+    "N": 168
+  },
+  "face_density_per_um": {
+    "W": 0.5611111111111111,
+    "E": 0.29259259259259257,
+    "N": 0.22875816993464054
+  },
+  "clock_entry_um": [
+    367.212,
+    539.9580000000001
+  ],
+  "ff_centroid_um": [
+    412.55294210526284,
+    229.29860526315892
+  ],
+  "clock_entry_centroid_manhattan_um": 356.000336842104,
+  "clock_regional_root_proposal_um": [
+    367.2,
+    229.23
+  ],
+  "max_manhattan_by_role_um": {
+    "data": 984.073,
+    "reset": 594.8210000000001,
+    "constant": 906.64,
+    "clock": 672.348
+  },
+  "over405_by_role": {
+    "data": 912,
+    "reset": 15,
+    "constant": 239,
+    "clock": 2448
+  },
+  "maximum_face_leg_manhattan_um": 984.073,
+  "max_stage_manhattan_sum_um": 984.733,
+  "stage_over405_count": 1189,
+  "combinational_cycle_cell_count": 0,
+  "open": [
+    "All Manhattan figures are ideal lower bounds, not routed lengths. Macro detours and PG obstacles can increase wire lengths.",
+    "No CTS, native loaded TT/FF timing, spread/launch/capture, PDN or hard-child power connection qualification.",
+    "Production POR/admission and functional fault propagation remain separate open obligations."
+  ]
+}
+Traceback (most recent call last):
+  File "/run/metrics.py", line 94, in <module>
+    import matplotlib;matplotlib.use('Agg')
+ModuleNotFoundError: No module named 'matplotlib'
