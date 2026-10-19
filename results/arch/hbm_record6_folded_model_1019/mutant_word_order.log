@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/artifacts/hbm-record6-folded-model-1019/model.py", line 198, in <module>
+    selected=schedule(9,112),four_global_adders=schedule(9,112,global_adders=4),
+  File "/home/ubuntu/artifacts/hbm-record6-folded-model-1019/model.py", line 79, in schedule
+    assert result[1] == tree(b,n), 'ORDERED_CANONICAL_FRAGMENT'
+AssertionError: ORDERED_CANONICAL_FRAGMENT

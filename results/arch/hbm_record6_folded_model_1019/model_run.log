@@ -1,0 +1,152 @@
+{
+  "selected": {
+    "nl": 9,
+    "group_period": 112,
+    "global_adders": 1,
+    "lane_age_illustration": 29,
+    "groups": [
+      {
+        "group": 0,
+        "emit": 32,
+        "first_capture": 62
+      },
+      {
+        "group": 1,
+        "emit": 144,
+        "first_capture": 174
+      },
+      {
+        "group": 2,
+        "emit": 256,
+        "first_capture": 286
+      },
+      {
+        "group": 3,
+        "emit": 368,
+        "first_capture": 398
+      }
+    ],
+    "fragment_count": 26,
+    "local_additions": 134,
+    "global_additions": 27,
+    "held_local_result_lifetime_checks": 1228,
+    "total_additions": 1281,
+    "root_serial": 588,
+    "R_native_done_serial_illustration": 667,
+    "R_native_done_stream_illustration": 889.3333333333334,
+    "extra_stream_over_original182_18": 707.1533333333334,
+    "whole_expression_sha256": "f82ff124f8a26899d7bb5aed78374e449c2bd44b3d94d2297cd60d9b09d7c015"
+  },
+  "four_global_adders": {
+    "nl": 9,
+    "group_period": 112,
+    "global_adders": 4,
+    "lane_age_illustration": 29,
+    "groups": [
+      {
+        "group": 0,
+        "emit": 32,
+        "first_capture": 62
+      },
+      {
+        "group": 1,
+        "emit": 144,
+        "first_capture": 174
+      },
+      {
+        "group": 2,
+        "emit": 256,
+        "first_capture": 286
+      },
+      {
+        "group": 3,
+        "emit": 368,
+        "first_capture": 398
+      }
+    ],
+    "fragment_count": 26,
+    "local_additions": 134,
+    "global_additions": 27,
+    "held_local_result_lifetime_checks": 1228,
+    "total_additions": 1281,
+    "root_serial": 534,
+    "R_native_done_serial_illustration": 613,
+    "R_native_done_stream_illustration": 817.3333333333334,
+    "extra_stream_over_original182_18": 635.1533333333334,
+    "whole_expression_sha256": "f82ff124f8a26899d7bb5aed78374e449c2bd44b3d94d2297cd60d9b09d7c015"
+  },
+  "four_total_adders": {
+    "nl": 9,
+    "emit_period": 112,
+    "actual_emit_slots": 64,
+    "total_adders": 4,
+    "root_serial": 7451,
+    "R_native_done_serial_illustration": 7530,
+    "R_native_done_stream_illustration": 10040.0,
+    "extra_stream_over_original182_18": 9857.82,
+    "whole_expression_sha256": "f82ff124f8a26899d7bb5aed78374e449c2bd44b3d94d2297cd60d9b09d7c015",
+    "source_change": "NEW per-chunk lane-liveness lowering; whole-group capture prohibited"
+  },
+  "optimistic_source_node_only": {
+    "nl": 7,
+    "group_period": 80,
+    "global_adders": 1,
+    "lane_age_illustration": 29,
+    "groups": [
+      {
+        "group": 0,
+        "emit": 32,
+        "first_capture": 62
+      },
+      {
+        "group": 1,
+        "emit": 112,
+        "first_capture": 142
+      },
+      {
+        "group": 2,
+        "emit": 192,
+        "first_capture": 222
+      },
+      {
+        "group": 3,
+        "emit": 272,
+        "first_capture": 302
+      }
+    ],
+    "fragment_count": 26,
+    "local_additions": 134,
+    "global_additions": 27,
+    "held_local_result_lifetime_checks": 1228,
+    "total_additions": 1281,
+    "root_serial": 450,
+    "R_native_done_serial_illustration": 529,
+    "R_native_done_stream_illustration": 705.3333333333334,
+    "extra_stream_over_original182_18": 523.1533333333334,
+    "whole_expression_sha256": "f82ff124f8a26899d7bb5aed78374e449c2bd44b3d94d2297cd60d9b09d7c015"
+  }
+}
+{
+  "retained_full512_input_payload_valid_FF": 16896,
+  "active_compute_stations": 40,
+  "words_per_station": 8,
+  "actual_station_operand_bits": 256,
+  "extra_accumulator_output_FF": 1320,
+  "local_select_pipeline_FF": 5280,
+  "fragment_bank_bits": 1456,
+  "global_select_pipeline_FF": 224,
+  "static_operator_schedule_state_FF_upper": 1024,
+  "tag_and_fragment_fault_FF_upper": 128,
+  "native_adder_LAT6_register_bits": 499,
+  "existing_node_OPR_and_mode_bits": 72,
+  "arithmetic_nodes": 41,
+  "arithmetic_pipeline_FF": 23411,
+  "scheduler_command_store_capacity_total": 7111,
+  "scheduler_command_store_physical_slots": 8192,
+  "scheduler_command_store_per_bank": 128,
+  "new_SRAM_macros": 0,
+  "operator_register_classification": "ROOT confirmed true private operator operands admissible; no coherent memory sharding",
+  "all_explicit_FF_reservation_before_fanout_copies": 49739,
+  "reference_DFF_area_um2": 14503.8924,
+  "reference_DFF_TT_CLK_fF": 23612.893904
+}

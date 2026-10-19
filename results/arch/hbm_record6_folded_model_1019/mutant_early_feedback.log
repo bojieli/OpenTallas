@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/artifacts/hbm-record6-folded-model-1019/model.py", line 198, in <module>
+    selected=schedule(9,112),four_global_adders=schedule(9,112,global_adders=4),
+  File "/home/ubuntu/artifacts/hbm-record6-folded-model-1019/model.py", line 67, in schedule
+    acc=add(f'g{g}.chunk{c}.word{j}',acc,
+  File "/home/ubuntu/artifacts/hbm-record6-folded-model-1019/model.py", line 44, in add
+    assert t>=max(earliest,a[0],b[0],available.get(resource,0)), 'EARLY_FEEDBACK'
+AssertionError: EARLY_FEEDBACK
