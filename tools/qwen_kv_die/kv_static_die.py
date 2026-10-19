@@ -1464,7 +1464,7 @@ def _die_joins(m, K, B, add, fk, rec):
                 fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
             bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
         rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
-                            'e quad -> pvw in_e at ERL 3 after the fork; record astk_eread: fork + 3 + pve stages vs the '
+                            'e quad -> pvw in_e at ASTK_ERL (7: ERL 3 + 4 tap pin-register edges, KV-ERTAP) after the fork; record astk_eread: fork + 7 + pve stages vs the '
                             'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
     # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
     if SEQ_S and 'seq' in by:
@@ -2008,9 +2008,14 @@ def record(m):
                 **{k: v for k, v in m.get('static_die', {}).items()})
 
 
+# KV-ERTAP 2026-10-18: qkd_astk_er_tap_st registers every pin (route b18fa696b NEEDS_RTL, I2O hold): read pin -> response
+# pin = the EP's ERL 3 + 2 request-side + 2 response-side pin-register edges.
+ASTK_ERL = 7
+
+
 def astk_eread(m):
     """KV-WIRE2 ASTK: per V port, the e quad's arrival at the PV pair's in_e relative to its V header vh at the pair:
-    e_after_header = fork(vh -> astk) + ERL 3 + pve - header(pvfork -> pair) edges (relay stages; the pair must take in_e
+    e_after_header = fork(vh -> astk) + ASTK_ERL + pve - header(pvfork -> pair) edges (relay stages; the pair must take in_e
     that many edges after vh, or the shorter path is padded: compiler / pair owner)."""
     st_, fs_, fk = m.get('relay_stages'), m.get('fork_stages', {}), m.get('forks', {})
     if st_ is None:
@@ -2023,8 +2028,8 @@ def astk_eread(m):
                 continue
             fb = f'{tr}__f{fk[tr].index(ld)}'
             f_ = fs_.get(fb, st_.get(fb, 0))
-            out[f'{st}_{k}'] = dict(header=st_.get(tr, 0), fork=f_, erl=3, pve=st_.get(f'pve_{st}', 0),
-                                    e_after_header=f_ + 3 + st_.get(f'pve_{st}', 0) - st_.get(tr, 0))
+            out[f'{st}_{k}'] = dict(header=st_.get(tr, 0), fork=f_, erl=ASTK_ERL, pve=st_.get(f'pve_{st}', 0),
+                                    e_after_header=f_ + ASTK_ERL + st_.get(f'pve_{st}', 0) - st_.get(tr, 0))
     return out
 
 

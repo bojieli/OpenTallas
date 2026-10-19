@@ -1264,6 +1264,57 @@
   },
   {
    "design": "s81",
+   "unit": "S81 index scan at p4l 1 HBM stack a die, option D (coordinator 0iq): full-scan keys over k=3 TP4 stages (L20 5,937 -> 9630 cycles = measured 1-stack reader 7700 at 87382 keys + 116 adders + legs/merge 1814; L2/L8/L14 2,951 -> 5654; re-index L24-36 873 -> 1,656 priced)",
+   "group": "S81.SCAN_STACKS_P4L",
+   "measured": 9630.0,
+   "price": 5937.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.622,
+   "e2e_loss_pct": 2.758,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 843800.4,
+     "added_cycles": 14934.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.77,
+     "composition_1018": {
+      "T_cycles": 980312.6,
+      "tok_s": 1224.1
+     }
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1210915.1,
+     "added_cycles": 33399.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 3693.0,
+     "e2e_loss_pct": 2.758,
+     "composition_1018": {
+      "T_cycles": 1344614.8,
+      "tok_s": 3711.7
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_scand_1018/scand.json + reader_1stack.json (W11 reader, 1 stack a die, Verilator 5.050, ot-epyc5); results/arch/s81_scanchk_1018/scan_stacks.json (1-stack fact, re-index price)",
+   "evidence_grade": "measured-old-RTL reader + priced legs/merge",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "S81-SCAND: option D measured. The reader term is the measured 1-stack W11 reader at the per-die key count (k=1 reproduces SCANCHK: AR 1,185.6 / MTP 3,455.7); D k=3 -> AR 1.77 % / MTP 2.76 % e2e loss (DAG basis), within the 5 % unit limit. Open: the index reader/scorer is NOT bound on p4l (bind9 has no dsfd_svc_idx successor) and has one query store (no B3 MTP read sharing); the merge legs and the 4k x 512 final select are compiler + priced. tools/token_compose_xdie.py applies this row until dv_price is re-run with it."
+  },
+  {
+   "design": "s81",
    "unit": "S81.DV_LANDING_HALFCYCLE (p4l DV die: landed die-link crossings 1+E on every linked block input, forwarded half-cycle dsfd_dvrlyh relay hops, host plane hf/ht E28 once per token; added cycles a token, landing was unpriced)",
    "group": "S81.DV_LANDING_HALFCYCLE",
    "measured": 18275.5,
@@ -2618,11 +2669,11 @@
   },
   "s81": {
    "accepted_pct": 2.063,
-   "proposed_pct": 0.871,
-   "accepted_plus_proposed_pct": 2.934,
+   "proposed_pct": 3.629,
+   "accepted_plus_proposed_pct": 5.692,
    "limit_pct": 15.0,
    "accepted_rows": 2,
-   "proposed_rows": 6,
+   "proposed_rows": 7,
    "headroom_pct": 12.937,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
