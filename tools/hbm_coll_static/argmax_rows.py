@@ -68,9 +68,19 @@ def set_npt(n):
     NPT = n
 
 
+LIDS = {}                                                        # ROWS 256: loop id -> dense id (issuer v7 NL 32)
+NL_256 = 32
+
+
 def enc_meta(nxt, tgt=0, count=0, lid=63, halt=0):
     """issuer row metadata (ot_hgi_coll_static_issuer_v6): next[5:0] target[11:6] count[43:12] halt[44] lid[50:45];
-    ROWS 128 adds next[6]/target[6]/lid[6] at [51]/[52]/[53], ROWS 256 next[7]/target[7]/lid[7] at [54]/[55]/[56]."""
+    ROWS 128 adds next[6]/target[6]/lid[6] at [51]/[52]/[53], ROWS 256 next[7]/target[7]/lid[7] at [54]/[55]/[56].
+    ROWS 256 (HBM-COLL256-KITS, issuer v7: loop counters by id, NL 32): loop ids are mapped densely in order of first
+    use (an injective rename: the loop semantics and every iteration value are unchanged); > 32 ids is a compile error."""
+    if PW == 8:
+        lid = LIDS.setdefault(lid, len(LIDS))
+        if lid >= NL_256:
+            raise SystemExit(f'ARGMAX_ROWS_COMPILE FAIL {len(LIDS)} loop ids > {NL_256} (256-row issuer v7)')
     for x in (nxt, tgt, lid):
         if not 0 <= x < (1 << PW):
             raise ValueError(('pc field', x, PW))

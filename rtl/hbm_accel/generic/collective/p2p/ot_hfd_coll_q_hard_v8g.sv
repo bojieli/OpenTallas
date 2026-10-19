@@ -79,10 +79,19 @@ module ot_hfd_coll_q_hard_v8g_body #(
  wire [36:0] program_cfg;wire hgi_start;wire [PW-1:0] hgi_start_pc;
  wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [PW-1:0] uop_pc;wire busy_d2,start_d3;
  wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
+ // HBM-COLL256-KITS (10-19): ROWS 256 binds the safe 256-row issuer leaf ot_hgi_coll_issuer_m256 (v7 core: SRAM metadata
+ // lookahead, 2 x 256x256 per bank); ROWS 64/128 keep ot_hgi_coll_issuer_m (v6). Same ports and edges.
+ generate if(ROWS>128)begin:g_iss256
+ ot_hgi_coll_issuer_m256 u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
+  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
+  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
+  .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
+ end else begin:g_iss
  ot_hgi_coll_issuer_m #(.ROWS(ROWS)) u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
   .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
+ end endgenerate
  // V7 compact slices (Codex a08f80c6e/b1c5ffa0e; grant coll_slice_geometry_grant_1552): 16 x 96-bit hard leaves, same
  // d1 -> d2 -> d3 edges as ot_hgi_coll_uop_pipe (monolithic V6b leaf native FAIL L303.8/C372.4).
  ot_hgi_coll_upipe_sliced_v7 u_upipe(.clk(clk_upipe),.d1(inst_d1),.d2(inst_d2),.d3(inst));
