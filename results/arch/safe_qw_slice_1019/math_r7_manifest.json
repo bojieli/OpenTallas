@@ -1,0 +1,25 @@
+{
+  "shape": {
+    "add_LAT": 7,
+    "mul_LAT": 6,
+    "DRST": 0
+  },
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_ring_delay.sv": "2854d0c09afe62df0a061141026ff896413da58258c50bc6255508a910622879",
+    "rtl/qwen_dv/qfd_dv_reset_tree.sv": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+    "rtl/common/landed_parent/ot_pl_land.sv": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "tools/qwen_dv/bound_math_netlist.py": "67a8c2b3734f680c111a13ce37b18fbd551f558c505190839eba214370868688",
+    "tools/qwen_dv/gen_station_math_input.py": "82aed0290215b8794d82a4d923d2f8decd80ac1a807373848cba7afaf99a74c2",
+    "tools/qwen_dv/run_station_math_generate.sh": "61dcd9bb5e74508b3b79e8584bb5f7703b4fe7f485a328d265b104384c9bf272"
+  },
+  "prepared_mul_sha256": "a50b5b3a53f0eaed49227eb812350ebf8688288673afd2d5823f3a32e1f084ed",
+  "mask_identity_cases": 3072,
+  "shc0_mutant_mismatches": 48,
+  "tool_version": "record actual yosys --version in tool_version.txt",
+  "scope": "source construction; exact simulation, native load retention and mapped area/timing required",
+  "emitted_source_sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f"
+}
