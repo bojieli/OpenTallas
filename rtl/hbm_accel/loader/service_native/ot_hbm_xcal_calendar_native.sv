@@ -88,8 +88,8 @@ module ot_hbm_xcal_calendar_native #(
             .w_ce_in(wr_ok && cfg_addr_q[AW-1]),.w_addr_in(cfg_addr_q[9:0]),.wd_in(cfg_data_q),.w_mask_in({256{1'b1}}),
             .rr_en(2'b00),.rr_addr(18'd0),.cr_en(2'b00),.cr_sel(16'd0));
         for(genvar slice=0;slice<16;slice=slice+1)begin:g_read_slice
-            (* keep = 1 *) reg bank_q;
-            always @(posedge clk)bank_q<=pc[AW-1];
+            wire bank_q;
+            (* keep = 1 *) ot_hbm_xcal_kept_bit u_bank(.clk(clk),.d(pc[AW-1]),.q(bank_q));
             assign macro_data[16*slice+:16]=bank_q?rd_hi[16*slice+:16]:rd_lo[16*slice+:16];
         end
     end endgenerate
@@ -108,10 +108,9 @@ module ot_hbm_xcal_calendar_native #(
       (macro_data[239:224]&~idmask[239:224])==0 && macro_data[223:W]==0;
     for(genvar slice=0;slice<(W+15)/16;slice=slice+1)begin:g_calendar_slice
       localparam integer BW=(W-16*slice<16)?W-16*slice:16;
-      (* keep = 1 *) reg word_ok_q,valid_q;
-      always @(posedge clk)word_ok_q<=incoming_ok;
-      always @(posedge clk or negedge rst_n)
-        if(!rst_n)valid_q<=0;else valid_q<=valid0;
+      wire word_ok_q,valid_q;
+      (* keep = 1 *) ot_hbm_xcal_kept_bit u_ok(.clk(clk),.d(incoming_ok),.q(word_ok_q));
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_valid(.clk(clk),.rst_n(rst_n),.d(valid0),.q(valid_q));
       always @(posedge clk)calendar[16*slice+:BW]<=valid_q&&word_ok_q?captured[16*slice+:BW]:{BW{1'b0}};
     end
     always @(posedge clk or negedge rst_n)

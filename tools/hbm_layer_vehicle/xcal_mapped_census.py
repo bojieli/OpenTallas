@@ -47,5 +47,5 @@ for job in jobs:
     counts=collections.Counter(c['type'] for c in mod['cells'].values());unknown={k:v for k,v in counts.items() if k not in areas and not k.startswith('ot_sram_')}
     report=dict(top=top,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),source_sha256={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sources},macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],clock_networks=[n for n in nets if n['clock']],reset_networks=[n for n in nets if n['reset']],top50=nets[:50])
     (dst/'census.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts']},indent=2),flush=True)
+    print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts','clock_networks','reset_networks']},indent=2),flush=True)
     print('OVER32',[(n['names'],n['fanout']) for n in report['over32_data_control']],flush=True)
