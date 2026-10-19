@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 2330,
+  "pin_rectangles": 2330,
+  "pin_track_checked": 2330,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/codex/idx256-physical-458299321/routes/preflight/work/orfs/idx256_dump.json",
+ "dump_sha256": "751a4e329f7a67240848bb9806483b836ddd6b030df40201f4cd8ee6bfd180d8",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}

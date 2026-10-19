@@ -1,0 +1,30 @@
+{
+  "source": "458299321",
+  "rtl_sha256": "26ce26513692be70f1951a452bfd52c19e855dd80ab8377553e2e814d623e95b",
+  "functional": "PASS default and FAN32:9cases,3356identityedges,1026writes,4launches,32record events; bothtrials include reset/reload; secondtrial carries255/256/511",
+  "mutants": "9/10/11 bounds,12 recordselect,13 lostcountercarry all FAIL",
+  "actual_mapped": {
+    "roots": 16834,
+    "roots_over32": 0,
+    "flops": 5420,
+    "delta_ff_vs590": 960,
+    "std_area_um2": 3100.8,
+    "depth_ps": 376.7,
+    "depth_levels": 10,
+    "signal_clock_pins": 2330,
+    "track_inaccessible": 0,
+    "outside_pins": 0,
+    "in_to_out_bits": 0,
+    "raw_reset_sinks": 1
+  },
+  "placement": "floorplan+IOP only, standard cells unplaced; density PNG empty, not a placed density claim",
+  "outline_um": [
+    129.6,
+    129.6
+  ],
+  "actual_core_fill": 0.1976,
+  "low_fill_approval": "REQUESTED, no CTS launched",
+  "source_added_successful_data_edges": 0,
+  "physical_qualified": false,
+  "cts_launched": false
+}

@@ -1,18 +1,19 @@
 IDX256 configuration collar successor
 
-This separate master blocks writes to programme row 256 or above, nonzero pages, and full 32-bit need counts above 256. An invalid installation event concurrent with launch cannot write or start. The canonical collar is byte-identical. The actual interface is PAGE_W1/NS1/NPR6/NREC8/NGO2/NB2/NF5/XSER0, with 2330 pins. Successful configuration and execution gain zero edges and no state bits.
+This separate master rejects programme row>=256, nonzero pages, and full32-bit need>256; an invalid update concurrent with launch cannot write or start. The canonical collar is unchanged. FAN32 defaults to0; the physical candidate enables FAN32=1 and preserves every successful configuration/data edge while distributing the inherited wide controls.
 
-The component proof compares the real old and new collars over 2280 edges, including two full installations, low-row restart, operands, records, launches and resets. Both actual legacy row aliases are witnessed. Independent write, page and count guard mutants fail. These are functional results; native and physical qualification remain open.
+The source458299321 proof compares actual default and FAN32 modes against the original collar:9cases,3356 identity edges,1026 writes,4 launches,32 real record events, two resets/reloads and count carries at255/256/511. Bounds mutants9/10/11, record-selection mutant12 and lost-carry mutant13 all fail. Actuallegacy row aliases remain witnessed.
 
-Preflight checklist:
+The FAN32 mechanism has16 protected16-bit record/operand/programme banks, registered next-onehot copies, private counter/state controls and25 parallel copies of the existing reset second stage. Logical record and operand capacities remain2048/1536 bits. Estimated added distributed state958 bits; actual mapped total5420FF versus4460 on590 (+960), including retained implementation artifacts. Zero successful install/launch/record/data edges are added.
 
-1. Registered boundary: RTL input flops and output flop Q retained. Reset lands through g_rst_same.rc[0:1]. No extra reset stage. Native boundary census remains required.
-2. Reach: 129.6 um square; opposite-corner Manhattan extent is 259.2 um. Actual placed-wire audit remains required.
-3. Fanout: no new guard state. Actual synthesis must check guard enable and inherited reset fanout before a CTS gate.
-4. Depth: guards are reductions/comparisons in the configuration path, estimated at six logic levels. Actual synthesis must check the 600 ps target. There is no combinational external input-to-output path.
-5. Storage: six operand rows hold 1536 bits. Eight record rows hold 2048 bits including payload, offset, go and valid. Neither array exceeds 2048 bits. There is no long flop delay line or new storage.
-6. Floorplan: 129.6 um square lies on the 43.2 um lattice. One full core region, no macros or islands. Exact four-face plan assigns 583/583/582/582 pins, nominal 0.216 um pitch and 4.50 pins/um maximum. The 2673 um2 standard-area estimate predicts 17% core fill; this is a pin-bound waiver request. Actual mapped area, IO geometry and root approval are required before a CTS gate.
-7. Clock: clk is near the middle of the west face; ordinary local CTS, TT setup and FF hold, 60/25 ps uncertainties, 30 ps IO hold margin. TT/FF pin spread must be at most 80 ps and the parent boundary must match.
-8. Schedule: static, zero added successful install, launch, record or data edges. No ready/credit protocol is added.
+Pre-CTS checklist:
+1. Boundary PASS: no combinational in-to-out path, input-to-register and register-to-output depth0; raw rst_n reaches one stage1 FF. Reset assertion/release remain the existing2clk edges, with same-stage kept local copies.
+2. Reach PENDING actualplacement:129.6square gives259.2um opposite-corner Manhattan span, below405; floorplan/IOP has no placed cells and does not measure actual wirelength.
+3. Fanout PASS actualASAP7map:16834 nonclock roots, zero above32, including FF/comb/reset with BUF/INVcollapsed. Previous807/261/165/87/69load failures are preserved separately.
+4. Depth PASS mapped model:376.7ps/10levels worst; no external combinational path. Actualpostplacement/TT timing remains required.
+5. Storage PASS: heldrecord2048bits and sixoperand1536bits, each within2kb. No >=3deep delay chain. Added control copies are finite retained FFs, not another data queue.
+6. Geometry REQUESTED ROOTreview: no macros; one full-core standardcell region, square129.6. Exactactual2330pins (583/583/582/582) all trackaccessible and insideboundary. Maximumfullface4.50pins/um; nominalpitch0.216. Std3100.8um2/core15695 gives19.76% fill. This is an explicit pin-bound low-fill request, not an approved waiver. Floorplan/density PNGs show only IO/PG before placement; density is blank.
+7. Clock PENDING:5420actualFF sinks on clk, clk at west-centre. No CTS or measured spread yet. Use833.333ps, TTsetup/FFhold,60/25ps uncertainties, IOholdmargin0.03; native pin spread<=80 and parent boundary match required.
+8. Schedule PASS component: fixed timing, no credits/backpressure,0 added successful edges; sourceguard depth/page/need behavior intentionally rejects invalid programming.
 
-The previous die estimate was only 59.4 um square and the older hard kit had NF4. Neither is admitted for this NF5 successor. A fresh actual die home, lanes, source-bound synthesis and native TT/FF view are required. No REVIEW or submission is authorized by this preflight document.
+ROOT review packet: results/arch/hbm_idx_collar256_1019/fan32_458299321/{record.json,fanout_all.json,textbook_preflight.json,pin_geometry_preflight.json,png}. No REVIEW.json, submission, native view or die adoption is authorized. The old59.4estimate and NF4 hardview do not qualify this actual NF5 master; final homes/lanes/native source-bound die must regenerate.
