@@ -97,7 +97,7 @@ def compile_attention(rec, sm=0, mut=''):
                 fits_legacy_attention_reservation=store.top <= S.ATT_RESERVED,
                 ingress_install_edges=2 * store.top + 2 * len(blocks), run_edges=previous_end - rc0,
                 rows_per_sm=sum(len(o[3]) for o in ops if o[1] == 'qk'),
-                hbm_lines=sum(len(b['lines']) for b in blocks), provider_gap_edges=0))
+                hbm_lines=sum(len(b['lines']) for b in blocks), hbm_sector_bytes=32*len(mem), provider_gap_edges=0))
 
 
 def run(a):

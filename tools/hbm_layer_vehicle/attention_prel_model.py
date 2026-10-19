@@ -14,14 +14,16 @@ def model(rows_per_sm=64, subrun_rows=8, kv4=False):
     row_bytes = 288 if kv4 else 528
     lines = math.ceil(row_bytes * subrun_rows / 136)
     nsub = math.ceil(rows_per_sm / subrun_rows)
+    physical_block_bytes = math.ceil(lines * 136 / 128) * 128
     assert lines <= 64
     return dict(rows_per_sm=rows_per_sm, subrun_rows=subrun_rows,
                 encoded_bytes_per_subrun=row_bytes * subrun_rows,
                 lines_per_block=lines, descriptors_per_run=2 * nsub,
-                hbm_bytes_per_run=2 * nsub * lines * 136,
+                cache_line_bytes_per_run=2 * nsub * lines * 136,
+                hbm_bytes_per_run=2 * nsub * physical_block_bytes,
                 packet_bits_per_edge=1099, command_bits_per_edge=192,
                 hbm_service_bytes_per_stream_edge=136*8/11,
-                hbm_fetch_stream_edges_lower_bound=math.ceil(lines*11/8),
+                hbm_fetch_stream_edges_lower_bound=math.ceil(physical_block_bytes/(136*8/11)),
                 cache_line_bits=1088, svg_word_bits=135, xc_word_bits=173,
                 programme_words_capacity=2048, descriptor_capacity=256,
                 programme_replicas=2, programme_mux='existing paired 1024x256 SRAMs',
