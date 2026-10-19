@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_ctrl_rg2",
+ "enable": false,
+ "reason": "RTL registers every pin at its face in its own clock domain (S81-SAFE-FIX 10-19: rq pin register, rd/rk/wd/status output flops on clk; PHY k_rdy/kr_*/k_wr_done pin flops and k_* output flops on ckh -- k_rdy was the last exception and is now a face flop with kept per-group copies). The flow pin-register hook clocks one domain only; on the ckh PHY face it would put clk flops on hclk pins and add a cycle inside the PHY valid/ready loop."
+}

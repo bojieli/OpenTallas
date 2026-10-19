@@ -76,12 +76,26 @@ module ot_s81ph_afifo_g_sram #(
     wire re=rrst_n&&have_next;
 `endif
     wire we=wrst_n&&wfire;
+`ifdef S81CTRL_SRAM_P192
+    // s81ctrl_rg2_s3 (SAFE item 6): wide-pitch 16x340 master, 0.192 um pin pitch = 5.12 contacts/um per W/E face
+    // (stock 16x546 = 10.19/um).  Same compiler, array/timing model and read/write edges; W (340 request,
+    // 277 response) must fit 340.
+    initial if (W>340) $fatal(1,"S81CTRL_SRAM_P192 requires W<=340");
+    wire [339:0] q;
+    wire [339:0] wdx;
+    assign wdx = w_d;   // zero-extend (no zero replication when W == 340)
+    ot_sram_1r1w2c_16x340_p192 u_mem (
+        .wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(q),
+        .w_ce_in(we),.w_addr_in(wa),.wd_in(wdx),
+        .w_mask_in({340{1'b1}}));
+`else
     wire [545:0] q;
     // Unused physical rows/columns are paid capacity, not fabricated data lanes.
     ot_sram_1r1w2c_16x546_m1 u_mem (
         .wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(q),
         .w_ce_in(we),.w_addr_in(wa),.wd_in({{(546-W){1'b0}},w_d}),
         .w_mask_in({546{1'b1}}));
+`endif
     assign r_d=q[W-1:0];
 `ifndef SYNTHESIS
     // Both active addresses must remain distinct at either physical clock edge.
