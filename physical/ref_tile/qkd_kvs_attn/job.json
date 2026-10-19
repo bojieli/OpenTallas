@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvs_attn-g2-COMMIT",
+ "name": "qkd_kvs_attn-g3-COMMIT",
  "block": "qkd_kvs_attn",
  "ref_tile": true,
  "owner": "Claude:KV-ATTNKIT",
@@ -84,7 +84,7 @@
    },
    {
     "name": "attn_land_pair",
-    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_m0 0 0 \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14\"",
+    "cmd": "bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_m0 0 0 \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\"",
     "expect": "pass",
     "threads": 2,
     "peak_ram_gb": 4,
@@ -196,7 +196,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvs_attn/qkd_kvs_attn-g2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kvs_attn/qkd_kvs_attn-g3-COMMIT"
   }
  ],
  "cycles_added": 0,

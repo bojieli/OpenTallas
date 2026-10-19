@@ -55,11 +55,18 @@ module qkd_native_attention_static_ctl #(
   .native_position(pos),.native_epoch(ep),.native_layer(layer),.fault(guard_fault),.fault_cause());
  reg loaded,local_fault,loading;reg [175:0] cal;
  reg [15:0] rx_cmd,tx_first,last;
+ // age: run selects between two kept candidates, so the run pin is one mux from the age flops (KV-ATTNKIT g2: i_ctl
+ // run -> age 10 levels).  Same function as 'if(run){if(ok)age<=0} else if(busy)age<=age+1'.
+ wire run_ok=(LAND!=0)?(loaded&&!busy):!(!loaded||busy||fault);
+ (* keep *) wire [15:0] age_hold=busy?age+16'd1:age;
+ (* keep *) wire [15:0] age_run=run_ok?16'd0:age;
+ wire [15:0] age_nx=run?age_run:age_hold;
  // Guard consumes the registered descriptor one edge after load. Keep the
  // compiled values with that descriptor, independently of link record fields.
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin loaded<=0;loading<=0;local_fault<=0;busy<=0;age<=0;cal<=0;rx_cmd<=0;tx_first<=0;last<=0;end
   else begin
+   age<=age_nx;
    if(load)begin
     if(busy||loading||loaded||compiled_rx_cmd<2||compiled_tx_first<=compiled_rx_cmd+34||compiled_end!=compiled_tx_first+34)
      local_fault<=1;
@@ -69,9 +76,8 @@ module qkd_native_attention_static_ctl #(
    if(accepted)begin loaded<=1;loading<=0;end
    if(run)begin
     if(!loaded||busy||fault)local_fault<=1;
-    if(LAND!=0?(loaded&&!busy):!(!loaded||busy||fault))begin busy<=1;age<=0;loaded<=0;end
+    if(run_ok)begin busy<=1;loaded<=0;end
    end else if(busy)begin
-    age<=age+1'b1;
     if(age==last)busy<=0;
    end
    if(request_valid&&!request_ready)local_fault<=1;
@@ -124,11 +130,21 @@ module qkd_native_attention_static_ctl #(
   .rx_epoch(),.rx_layer(),.rx_beat(rx_beat),.rx_data(rx_data),.fault(record_fault),.fault_cause());
  end endgenerate
  reg slot_fault;
+ // LAND: the TX slot pins (d2d att_tx_slot / kind / beat) land in flops with their expectation; the check runs one edge
+ // later and slot_fault_o = slot_fault | that check (= the original sticky flop, edge for edge)
+ reg ls_slot,ls_exp;reg [8:0] ls_kb,ls_ekb;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin ls_slot<=0;ls_exp<=0;ls_kb<=0;ls_ekb<=0;end
+  else begin ls_slot<=tx_slot;ls_exp<=tx_expected;ls_kb<={tx_slot_kind,tx_slot_beat};
+   ls_ekb<={status_slot?4'd4:4'd3,status_slot?5'd0:result_expected_beat};end
+ wire slot_chk=(LAND!=0)&&(ls_slot!=ls_exp||(ls_slot&&ls_kb!=ls_ekb));
+ wire slot_fault_o=slot_fault||slot_chk;
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin q_valid<=0;q_beat<=0;q_data<=0;slot_fault<=0;end
   else begin
    q_valid<=!fault&&rx_valid&&rx_kind==2;q_beat<=rx_beat;q_data<=rx_data;
-   if(tx_slot!=tx_expected||(tx_slot&&{tx_slot_kind,tx_slot_beat}!={status_slot?4'd4:4'd3,status_slot?5'd0:result_expected_beat}))slot_fault<=1;
+   if(LAND==0&&(tx_slot!=tx_expected||(tx_slot&&{tx_slot_kind,tx_slot_beat}!={status_slot?4'd4:4'd3,status_slot?5'd0:result_expected_beat})))slot_fault<=1;
+   if(LAND!=0&&slot_chk)slot_fault<=1;
   end
  end
  generate if(LAND!=0)begin:g_txl
@@ -141,7 +157,7 @@ module qkd_native_attention_static_ctl #(
  end endgenerate
  assign request_valid=rx_valid&&rx_kind==1&&!fault;
  assign request_epoch=ep;assign request_layer=layer;assign request_position=pos;assign request_calendar=cal;
- assign fault=local_fault||guard_fault||record_fault||slot_fault||service_fault;
+ assign fault=local_fault||guard_fault||record_fault||slot_fault_o||service_fault;
 endmodule
 
 // KV-ATTNKIT 10-18: qkd_native_attention_record with a LANDED RX face (qkd_native_attention_static_ctl LAND=1).

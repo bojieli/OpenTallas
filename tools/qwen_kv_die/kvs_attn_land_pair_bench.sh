@@ -4,7 +4,7 @@
 # tb_kvs_attn_land_pair.sv, one Verilator build, every mode.  Last line: KVS_LANDPAIR_ALL PASS|FAIL ...; exit 0 only on PASS.
 # Run from the repository root on the fleet (ot-run); Verilator = the closure daemon's pinned 5.050.
 set -u
-O=$1; BM=${2:-0}; FM=${3:-0}; MODES=${4:-"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14"}
+O=$1; BM=${2:-0}; FM=${3:-0}; MODES=${4:-"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"}
 for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do [ -d "$_d" ] && export PATH="$_d:$PATH"; done
 rm -rf "$O"; mkdir -p "$O"
 S=rtl/qwen_sys/split_20261014
