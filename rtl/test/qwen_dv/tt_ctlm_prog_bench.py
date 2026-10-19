@@ -11,7 +11,12 @@ status timeline), and checks against the compiled expectation:
   * the control stores seal (control_stores_ready) and no fault rises (cf), command_stage follows the running stage.
 Edges are relative to each stage's edge 0 (the dh pin register captures h_start).
 
-Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --bmut 1 (the
+QLB-C4b: with an image compiled --tload, every slice table word (BOOT TLOAD) must leave tt_ctlm.tl (the dvs_W5 st_wi
+driver) on its compiled edge with the dv_lower word, and nothing else may leave tl.
+QW-DIEFIX: every ROM word must leave with go on hr[452] (the slice's gi decode) and decode as a matvec there.
+Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --mut 27 / 28 (RTL
+TLOAD payload macro halves swapped / table word one edge late; were 9 / 10 on the single-user block), --hra 1 (the
+as-built hr layout, go on hr[73]), --bmut 1 (the
 slices report the SU op before the gate/up matvec done DEP + 1 edges late: the head's chase is unmet on its fixed cycle),
 --bmut 2 (image: the first decode SU entry one edge late, the expectation unchanged).
 
@@ -55,6 +60,9 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
     boot_s = dw7 + 2 - img['constants']['CAL_S']
     for x in img['expected']['boot_cmd_after_seal']:
         exp.append((boot_s + x['edge'], 'CMD', int(x['cmd'], 16)))
+    # QLB-C4b: the slice table words (TLOAD) on tt_ctlm.tl, each on its compiled edge, nothing else
+    for x in img['expected'].get('boot_tl_after_seal', []):
+        exp.append((boot_s + x['edge'], 'TL', int(x['word'], 16)))
     ev.append((c + 4, 6, 0b11))                                   # kok / kwd levels (the T calendar's LEVEL)
     tok, pos = 0x1234, 4321
     # stage starts at the T calendar's compiled spacing (stage 0, the first n decode stages); the LM-head stage follows
@@ -137,7 +145,7 @@ def run(a):
     with open(evf, 'w') as f:
         for cy, k, v in sorted(ev, key=lambda e: (e[0], e[1])):
             f.write(f'{cy} {k} {v:x}\n')
-    obj = work / (f'obj_m{a.mut}_h{a.hard}' + (f'_l{a.lmut}' if a.landed else ''))
+    obj = work / (f'obj_m{a.mut}_h{a.hard}' + (f'_hra{a.hra}' if a.hra else '') + (f'_l{a.lmut}' if a.landed else ''))
     srcs = [str(ROOT / l.strip()) for l in open(HERE / 'tt_ctlm_dv_sources.f') if l.strip()]
     if a.landed:    # HF-4 10-18: + the landed cluster (lp.py) in lockstep, LMUT = its mutant
         srcs += [str(ROOT / f) for f in ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/ot_pl_land.sv',
@@ -146,11 +154,11 @@ def run(a):
     if not (obj / 'Vtb').exists():
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
-               '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}',
+               '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}', f'-GHRA={a.hra}',
                f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
                *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-        (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
+        (work / f'build_{obj.name}.log').write_text(p.stdout + p.stderr)
         if p.returncode:
             print(p.stdout[-3000:], p.stderr[-3000:])
             raise SystemExit('verilator build failed')
@@ -163,6 +171,8 @@ def run(a):
         cy, k = int(p[0]), p[1]
         if k == 'CMD':
             got.append((cy, 'CMD', int(p[2], 16)))
+        elif k == 'TL':
+            got.append((cy, 'TL', int(p[2], 16)))
         elif k == 'LOC':
             got.append((cy, 'LOC', (p[2], int(p[3]))))
         elif k == 'ISSUE':
@@ -220,6 +230,7 @@ def run(a):
            dict(nout=3072, tiles=1, k=32, wbase=112, xbase=4096), dict(nout=4096, tiles=3, k=6, wbase=368, xbase=55280)]
     info['stage1_matches_xt1_ops'] = [all(f[k] == o[k] for k in o) for (_, f), o in zip(rom_words[:4], xt1)]
     info['nat_go_minus_issue'] = d_nat
+    info['tl_words'] = (sum(1 for e in sg if e[1] == 'TL'), sum(1 for e in se if e[1] == 'TL'))
     if d_rom is None or len(d_rom) != 1:
         errs.append(f'ROM command go count {len(roms)} vs ROM issues {len(rom_iss)} (offsets {d_rom})')
     if d_nat is None or len(d_nat) != 1:
@@ -246,8 +257,10 @@ def main():
     a = ap.parse_args()
     ok, n, errs, info = run(a)
     v = 'PASS' if ok == n and not errs else 'FAIL'
-    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} HARD_HR={a.hard} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
-          f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")}')
+    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} HARD_HR={a.hard} HRA={a.hra} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
+          f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")} tl got/exp {info.get("tl_words")} '
+          f'stage1_xt1 {info.get("stage1_matches_xt1_ops")}')
+    print('    ROM fields (slice layout):', json.dumps(info.get('rom_fields', [])[:4]))
     for e in errs[:12]:
         print('   ', e)
     if a.landed:

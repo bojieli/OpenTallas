@@ -9,7 +9,9 @@
 //   6 LEVEL {kok, kwd}        7 AG ag5 (10 b, held)    8 SS ss5 (107 b, held)    9 NRET native_ret (95 b, held)
 // Log (+LOG), label = the posedge just taken: "c CMD hex" (cmd register), "c LOC kind base" (EMB / SEG start pulses),
 //   "c ISSUE pc unit" (head fixed issue / END), "c ROM go" (ib go), "c NAT go" (native_cmd go), "c XPF hex" (arm word),
-//   "c CSR" (control stores ready), "c CF bits" on a fault rise, "c STAGE s" (command_stage change).
+//   "c CSR" (control stores ready), "c CF bits" on a fault rise, "c STAGE s" (command_stage change),
+//   "c TL hex" (QLB-C4b: a stream table word on tl, the dvs_W5 st_wi driver), "c ROMRAW hex" (hr[73] set without the
+//   slice's go hr[452]: the as-built layout, QW-DIEFIX).
 // Q-H16C 10-18: +define+TB_HARD (bench --hard 1) probes the hard leaf (HARD_HR 1) instead of the inline head.
 `ifdef TB_HARD
 `define TB_HEAD dut.g_hard_hr.u_hr.u_head
@@ -20,17 +22,17 @@
 `endif
 module tb_qfd_tt_ctlm_prog (input wire ck);
     // HARD_HR 0 = inline head; 1 = the h16c h17 hard leaf with the running-stage port (Q-H16C 10-18; bench --hard 1)
-    parameter integer MUT = 0, XPF_EDGES = 26, STAGE_ME = 1, HARD_HR = 0;
+    parameter integer MUT = 0, XPF_EDGES = 26, STAGE_ME = 1, HARD_HR = 0, HRA = 0;   // HRA: HR_ASBUILT (mutant)
     reg rst_n = 1'b0;
     reg [74:0] pw = 0; reg [186:0] dh = 0; reg [106:0] ss5 = 0; reg [9:0] ag5 = 0; reg [94:0] nret = 95'd1;
     reg kok = 0, kwd = 0;
-    wire [452:0] hr; wire [115:0] cmd; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
+    wire [452:0] hr; wire [115:0] cmd; wire [1087:0] tl; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
     wire [75:0] pobs, cobs; wire [68:0] dobs; wire csr, cir, lcv; wire [17:0] ntk, nps; wire [5:0] cst; wire [379:0] ncmd;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .MUT(MUT), .STAGE_ME(STAGE_ME), .HARD_HR(HARD_HR)) dut (.ck(ck), .rst_n(rst_n),
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .MUT(MUT), .STAGE_ME(STAGE_ME), .HARD_HR(HARD_HR), .HR_ASBUILT(HRA)) dut (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(1'b0), .program_obs(pobs), .control_stores_ready(csr),
         .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst), .cal_program_obs(cobs),
         .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd), .native_ret(nret), .hr(hr),
-        .cmd(cmd), .ss5(ss5), .ag5(ag5), .emb_start(emb_start), .emb_token(emb_token), .cf(cf));
+        .cmd(cmd), .tl(tl), .ss5(ss5), .ag5(ag5), .emb_start(emb_start), .emb_token(emb_token), .cf(cf));
     integer fd, lg, cyc, ncyc, ec, ek, r, pre = 0;
     reg [186:0] ev; reg have; reg [1023:0] evf, lgf; reg csr_l = 0, cf_l = 0; reg [5:0] cst_l = 0;
     initial begin
@@ -45,10 +47,13 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
         if (pre < 4) begin pre = pre + 1; if (pre == 4) rst_n = 1'b1; end
         else begin
             if (cmd != 116'd0) $fdisplay(lg, "%0d CMD %h", cyc, cmd);
+            if (tl != 1088'd0) $fdisplay(lg, "%0d TL %h", cyc, tl);
             if (dut.c_emb) $fdisplay(lg, "%0d LOC EMB 0", cyc);
             if (dut.c_seg) $fdisplay(lg, "%0d LOC SEG %0d", cyc, dut.c_base);
             if (fix_v) $fdisplay(lg, "%0d ISSUE %0d %0d", cyc, `TB_HEAD.fixed_pc, `TB_HEAD.fixed_unit);
-            if (hr[73]) $fdisplay(lg, "%0d ROM %h", cyc, hr[452:73]);
+            // QW-DIEFIX 10-19: the go the SLICE reads is hr[452] (gi = {hr[451:73], hr[452]}); as built go sat on hr[73]
+            if (hr[452]) $fdisplay(lg, "%0d ROM %h", cyc, hr[452:73]);
+            if (hr[73] && !hr[452]) $fdisplay(lg, "%0d ROMRAW %h", cyc, hr[452:73]);
             if (ncmd[0]) $fdisplay(lg, "%0d NAT %h", cyc, ncmd);
             if (hr[1]) $fdisplay(lg, "%0d XPF %h", cyc, hr[72:1]);
             if (csr && !csr_l) $fdisplay(lg, "%0d CSR", cyc);

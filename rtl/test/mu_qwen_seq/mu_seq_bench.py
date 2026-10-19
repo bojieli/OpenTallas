@@ -22,8 +22,15 @@ Checks (PASS needs all):
   the XC, then one word every RX_STRIDE edges, results = f(tag, k) (tag carries the user); each word lands at the slice's
   PORTS ar_base + 16 k (ar_k reset by PORTS, as qfd_dv_slice2) and must land at user(tag)'s own region + 16 k;
   C6 busy4 sets fault_code[0];  C7 coll4 sets fault_code[1].
+TLOAD (MU-DQ-CTLMTL 10-19, QLB-C4b LOCAL kind 3 on the MU calendar): BOOT carries a TLOAD (PW block row 40) and the
+decode segment one (row 41, played by every user, not relocated); tl is in the lockstep compare (C1).
+  C8 every TL word (solo1, solo4, mu4) == {1, kind, dst, src, eaddr, tag, PW block 16r .. 16r+15} exactly 2 edges after
+     its issue edge (BOOT: SETID edge + 2 + 2; segment: S + 1300 + C + 2), nothing else on tl;
+  C9 tlc4: NU 4, user 1 started 1 edge before user 0's segment TLOAD issue edge, so user 1's first fetch read wants the
+     shared store port on the TLOAD issue edge: no fault, user 1's timeline == compiled, both TL words exact.
 Mutants (--mut, each must FAIL): 11 relocation/tag from the wrong user, 12 per-user base dropped, 13 old one-in-flight
-rule, 14 start-while-busy not faulted, 15 a start freezes every playhead (the single calendar's global gating).
+rule, 14 start-while-busy not faulted, 15 a start freezes every playhead (the single calendar's global gating),
+4 TLOAD payload halves swapped, 5 TLOAD word one edge late, 29 a TLOAD issue edge still grants a fetch read.
 """
 import argparse, json, os, re, subprocess, sys
 from pathlib import Path
@@ -57,18 +64,28 @@ def xc(seg, words, mode=0): return F(go=(0, 1, 1), kind=(1, 3, 0), sub=(4, 2, 0)
 def loc_emb():        return F(go=(0, 1, 1), kind=(1, 3, 1), dst=(112, 4, 14))
 def loc_seg(b):       return F(go=(0, 1, 1), kind=(1, 3, 2), base=(4, 12, b), dst=(112, 4, 14))
 def setid():          return F(go=(0, 1, 1), kind=(1, 3, 7), dst=(112, 4, 15))
+def tload(row, tk, dst, src, ea, tag):
+    return F(go=(0, 1, 1), kind=(1, 3, 3), row=(4, 6, row), tk=(10, 3, tk), tdst=(13, 4, dst), src=(17, 4, src),
+             ea=(21, 24, ea), tag=(45, 28, tag), dst=(112, 4, 14))
+TL_ROWS = {3: (6, tload(40, 3, 5, 0, 0x123, 0xabcde)), 1: (1300, tload(41, 1, 2, 1, 0x456, 0x777))}
+def tl_pw(a):         return ((a * 0x9E3779B97F4A7C15) ^ (a << 7) ^ 0x5A5A) & ((1 << 64) - 1)   # PW pattern of the blocks
+def tl_word(c):
+    row, tk, dst, src, ea, tag = (c >> 4) & 63, (c >> 10) & 7, (c >> 13) & 15, (c >> 17) & 15, (c >> 21) & 0xffffff, (c >> 45) & 0xfffffff
+    ctl = (1 << 63) | (tk << 60) | (dst << 56) | (src << 52) | (ea << 28) | tag
+    pay = sum(tl_pw(16 * row + i) << (64 * i) for i in range(16))
+    return (ctl << 1024) | pay
 
 
 AR_WORDS = 64
 AR_REG = {0: 0x1000, 1: 0x1400}       # image ar_base of the two epochs (user 0); user u adds u x UVM_STRIDE
 SEGS = {
     # decode layer: 2 all-reduce epochs; PORTS 8 edges before the epoch's first result (after the previous epoch's last)
-    1: [(8, su(1)), (12, su(2)), (16, stn(0x100)), (60, su(3)), (400, xc(0, AR_WORDS)), (1200, su(4)),
+    1: [(8, su(1)), (12, su(2)), (16, stn(0x100)), (60, su(3)), (400, xc(0, AR_WORDS)), (1200, su(4)), TL_ROWS[1],
         (2320, ports(AR_REG[0], 0x2000, 0x3000)), (2600, su(5)), (2640, stn(0x140)), (2700, xc(1, AR_WORDS)),
         (3000, loc_seg(0x10)), (4620, ports(AR_REG[1], 0x2000, 0x3000)), (4900, su(6)), (5000, su(7))],
     0: [(8, loc_emb()), (12, su(8)), (20, su(9))],                               # token start (stage 0)
     2: [(8, stn(0x180)), (16, loc_seg(0x20)), (24, xc(2, 1, mode=1))],          # LM head (stage 37)
-    3: [(4, setid()), (8, su(10))],                                             # BOOT
+    3: [(4, setid()), TL_ROWS[3], (8, su(10))],                                 # BOOT
 }
 
 
@@ -86,6 +103,10 @@ def image():
     nent = len(entries)
     assert BASE + 2 * nent <= 976
     pw = [0] * 1024
+    for _, c in TL_ROWS.values():
+        r = (c >> 4) & 63
+        assert 16 * r >= BASE + 2 * nent and r < 61
+        for i in range(16): pw[16 * r + i] = tl_pw(16 * r + i)
     for e, v in enumerate(entries):
         pw[BASE + 2 * e] = v & ((1 << 64) - 1); pw[BASE + 2 * e + 1] = v >> 64
     dw = [(0x43414c44 << 32) | (BASE << 16) | nent] + [(desc[s][0] << 16) | desc[s][1] for s in range(4)] + [0, 0, 0]
@@ -125,7 +146,7 @@ def run(work, exe, name, events, ncyc):
     evf.write_text(''.join(f'{c} {k} {v:x}\n' for c, k, v in events))
     r = subprocess.run([str(exe), f'+EV={evf}', f'+LOG={lg}', f'+NCYC={ncyc}'], capture_output=True, text=True)
     if r.returncode != 0: sys.exit(f'RUN FAILED {name}: {r.stdout[-2000:]} {r.stderr[-2000:]}')
-    out = dict(ev=[], faults=[], mism=None, end=None)
+    out = dict(ev=[], faults=[], mism=None, end=None, tl=[])
     for ln in lg.read_text().split('\n'):
         p = ln.split()
         if not p: continue
@@ -133,6 +154,7 @@ def run(work, exe, name, events, ncyc):
         if k in ('CMD', 'SUI', 'SEG'): out['ev'].append((c, k, int(p[2]), int(p[3], 16)))
         elif k in ('XCI', 'EMB', 'DONE'): out['ev'].append((c, k, int(p[2]), 0))
         elif k == 'FAULT': out['faults'].append((c, p[2]))
+        elif k == 'TL': out['tl'].append((c, int(p[2], 16)))
         elif k == 'END': out['end'] = (int(p[2]), p[3]); out['mism'] = int(p[4])
     return out
 
@@ -159,6 +181,7 @@ def expected_user_events(entries, u, s_cyc, C):
         t = s_cyc + T + C
         dst, kind = (c >> 112) & 15, (c >> 1) & 7
         if dst == 14:
+            if kind == 3: continue                     # TLOAD: on tl (C8), not an event here
             if kind == 1: ev.append((t, 'EMB', u, 0))
             else: ev.append((t, 'SEG', u, (c >> 4) & 0xfff))
         else:
@@ -227,6 +250,11 @@ def main():
     res['mu4'] = run(work, e4, 'mu4', ld + [start(c, u, st) for c, u, st in mu_starts], end_solo + SHIFTS[-1])
     res['busy4'] = run(work, e4, 'busy4', ld + [start(s0, 1, 1), start(s0 + 2000, 1, 2)], s0 + 8000)
     res['coll4'] = run(work, e4, 'coll4', ld + [start(s0, 0, 1), start(s0 + 4, 2, 1)], s0 + 6000)
+    cmds = [e for e in res['solo1']['ev'] if e[1] == 'CMD' and e[0] >= s0]
+    C = cmds[0][0] - s0 - SEGS[1][0][0] if cmds else 0
+    t_tl = s0 + TL_ROWS[1][0] + C                                   # user 0's segment TLOAD issue edge
+    tlc_starts = [(s0, 0, 1), (t_tl - 1, 1, 1)]
+    res['tlc4'] = run(work, e4, 'tlc4', ld + [start(c, u, st) for c, u, st in tlc_starts], s0 + 8000)
 
     # C1 lockstep
     if res['lock']['mism'] != 0 or res['solo1']['mism'] != 0:
@@ -241,8 +269,6 @@ def main():
         d = [x for x in u0(res['mu4']) if x not in u0(res['solo1'])][:3] + [x for x in u0(res['solo1']) if x not in u0(res['mu4'])][:3]
         fails.append(f'C3 user 0 events differ: mu4 vs solo1 (first diffs {d})')
     # C4 every user's timeline
-    cmds = [e for e in res['solo1']['ev'] if e[1] == 'CMD' and e[0] >= s0]
-    C = cmds[0][0] - s0 - SEGS[1][0][0] if cmds else 0
     if res['mu4']['faults']: fails.append(f'C4 mu4 faulted: {res["mu4"]["faults"]}')
     got = sorted(e for e in res['mu4']['ev'] if e[0] >= s0)
     want = sorted(x for c, u, st in mu_starts for x in expected_user_events(SEGS[1], u, c, C))
@@ -254,6 +280,24 @@ def main():
     lerr, nland = landing_model(got)
     if lerr: fails.append(f'C5 landing: {len(lerr)} errors, first {lerr[:3]}')
     if nland != 4 * NPER * 2 * AR_WORDS: fails.append(f'C5 landed {nland} words, want {4 * NPER * 2 * AR_WORDS}')
+    # C8 TLOAD table words: BOOT (SETID edge + 2 + 2) and every segment start (S + 1300 + C + 2), exact, nothing else
+    def tl_want(r, starts):
+        setid_e = [e[0] for e in r['ev'] if e[1] == 'CMD' and e[3] == setid()]
+        w = [(c + (TL_ROWS[3][0] - 4) + 2, tl_word(TL_ROWS[3][1])) for c in setid_e]
+        w += [(c + TL_ROWS[1][0] + C + 2, tl_word(TL_ROWS[1][1])) for c in starts]
+        return sorted(w)
+    for n, st in (('solo1', starts0), ('solo4', starts0), ('mu4', [c for c, _, _ in mu_starts]),
+                  ('tlc4', [c for c, _, _ in tlc_starts])):
+        if sorted(res[n]['tl']) != tl_want(res[n], st) or not res[n]['tl']:
+            g, w = sorted(res[n]['tl']), tl_want(res[n], st)
+            fails.append(f"C8 {n} TL words != compiled: got {len(g)} at {[c for c, _ in g][:6]} want {len(w)} at "
+                         f"{[c for c, _ in w][:6]}; value diffs {sum(1 for x, y in zip(g, w) if x != y)}")
+    # C9 shared read port on the TLOAD issue edge
+    if res['tlc4']['faults']: fails.append(f"C9 tlc4 faulted: {res['tlc4']['faults']} (fault_code {res['tlc4']['end']})")
+    got9 = sorted(e for e in res['tlc4']['ev'] if e[0] >= s0)
+    want9 = sorted(x for c, u, st in tlc_starts for x in expected_user_events(SEGS[1], u, c, C))
+    if got9 != want9:
+        fails.append(f'C9 tlc4 timeline != compiled (missing {len(set(want9) - set(got9))} extra {len(set(got9) - set(want9))})')
     # C6 / C7 negative scenarios
     fc = lambda r: r['end'][1] if r['end'] else '000000'
     if fc(res['busy4'])[-1] != '1': fails.append(f"C6 busy4 restart not faulted (fault_code {fc(res['busy4'])})")
@@ -262,7 +306,8 @@ def main():
                 lock=dict(mismatches=res['lock']['mism'], faults=res['lock']['faults']),
                 solo1_events=len(u0(res['solo1'])), mu4_events=len(got), mu4_done_per_user=per_user,
                 landed_words=nland, busy4_fault_code=fc(res['busy4']), coll4_fault_code=fc(res['coll4']),
-                mu4_fault_code=fc(res['mu4']))
+                mu4_fault_code=fc(res['mu4']), tl_words={n: len(res[n]['tl']) for n in ('lock', 'solo1', 'solo4', 'mu4', 'tlc4')},
+                tlc4_fault_code=fc(res['tlc4']), tlc4_user1_start=tlc_starts[1][0], tlc4_tload_issue=t_tl)
     (work / f'summary_m{m}.json').write_text(json.dumps(summ, indent=1))
     print(f"MU_SEQ_{summ['verdict']} mut {m}" + ('' if not fails else ': ' + ' | '.join(fails)))
     print(json.dumps({k: v for k, v in summ.items() if k != 'fails'}))
