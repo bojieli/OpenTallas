@@ -139,7 +139,7 @@ def launch(ref, tier="fast", names=None, label=None):
     for (host, group), bs in groups.items():
         src = stage(commit, host)
         run = f"{REMOTE}/runs/{commit}"
-        lines = ["#!/bin/bash", f"cd {src}", "export OMP_NUM_THREADS=16"]
+        lines = ["#!/bin/bash", f"cd {src}", "export OMP_NUM_THREADS=16", f"export OT_EXACTNESS_FIXTURES={REMOTE}/fixtures"]
         for b in bs:
             w = f"{run}/{b['bench']}"
             lines += [f"echo running > {w}.state",

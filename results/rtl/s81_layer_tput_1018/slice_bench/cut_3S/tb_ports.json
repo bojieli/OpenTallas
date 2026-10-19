@@ -1,0 +1,1628 @@
+[
+{
+"index": 0,
+"port": "i__ck_cl2S",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 1,
+"port": "i__ck_cl3S",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 2,
+"port": "i__ck_cl4S",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 3,
+"port": "i__ck_south2",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 4,
+"port": "i__ck_south3",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 5,
+"port": "i__ck_south4",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 6,
+"port": "i__ck_south5",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 7,
+"port": "i__ck_void3",
+"dir": "input",
+"kind": "clock",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 8,
+"port": "o__land_fault",
+"dir": "output",
+"kind": "die_output",
+"width": 224,
+"lo": 0,
+"bits": [
+[
+214,
+214
+],
+[
+199,
+198
+],
+[
+94,
+91
+],
+[
+75,
+62
+],
+[
+40,
+37
+]
+]
+},
+{
+"index": 9,
+"port": "o__rs_25_13_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 10,
+"port": "o__rs_25_3_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 11,
+"port": "o__rs_26_0",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 12,
+"port": "o__rs_26_12",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 13,
+"port": "o__rs_26_18_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 14,
+"port": "o__rs_26_18_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 15,
+"port": "o__rs_26_6_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 16,
+"port": "o__rs_28_19_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 17,
+"port": "o__rs_29_10_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 18,
+"port": "o__rs_29_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 19,
+"port": "o__rs_29_3_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 20,
+"port": "o__rs_29_3_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 21,
+"port": "o__rs_29_4_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 22,
+"port": "o__rs_29_4_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 23,
+"port": "o__rs_29_5_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 24,
+"port": "o__rs_29_6_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 25,
+"port": "o__rs_31_4",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 26,
+"port": "o__rs_31_7",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 27,
+"port": "o__rs_32_3_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 28,
+"port": "o__rs_32_4_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 29,
+"port": "o__rs_32_7",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 30,
+"port": "o__rs_33_26",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 31,
+"port": "o__rs_33_26_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 32,
+"port": "o__rs_33_28_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 33,
+"port": "o__rs_33_30_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 34,
+"port": "o__rs_33_4_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 35,
+"port": "o__rs_33_6_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 36,
+"port": "o__rs_33_7_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 37,
+"port": "o__rs_34_10_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 38,
+"port": "o__rs_34_12",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 39,
+"port": "o__rs_34_29",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 40,
+"port": "o__rs_34_7_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 41,
+"port": "o__rs_35_12",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 42,
+"port": "o__rs_35_4",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 43,
+"port": "o__rs_36_11_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 44,
+"port": "o__rs_36_12_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 45,
+"port": "o__rs_36_13_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 46,
+"port": "o__rs_36_14_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 47,
+"port": "o__rs_36_15_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 48,
+"port": "o__rs_36_16_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 49,
+"port": "o__rs_36_17_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 50,
+"port": "o__rs_36_18",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 51,
+"port": "o__rs_36_26_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 52,
+"port": "o__rs_36_29_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 53,
+"port": "o__rs_36_30_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 54,
+"port": "o__rs_36_4_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 55,
+"port": "o__rs_36_5_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 56,
+"port": "o__rs_36_7_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 57,
+"port": "o__rs_38_19_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 58,
+"port": "o__rs_39_0_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 59,
+"port": "o__rs_41_19_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 60,
+"port": "o__rs_42_18_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 61,
+"port": "o__rs_43_11_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 62,
+"port": "o__rs_43_12_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 63,
+"port": "o__rs_43_13_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 64,
+"port": "o__rs_43_14_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 65,
+"port": "o__rs_43_15_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 66,
+"port": "o__rs_43_16_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 67,
+"port": "o__rs_43_17_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 68,
+"port": "o__rs_43_18",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 69,
+"port": "o__rs_43_18_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 70,
+"port": "o__rs_43_18_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 71,
+"port": "o__rs_43_19_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 72,
+"port": "o__rs_43_4",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 73,
+"port": "o__rs_43_5",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 74,
+"port": "o__rs_43_6",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 75,
+"port": "o__rs_43_7",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 76,
+"port": "o__rs_44_4_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 77,
+"port": "o__rs_45_13_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 78,
+"port": "o__rs_45_4_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 79,
+"port": "o__rs_46_10_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 80,
+"port": "o__rs_46_12_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 81,
+"port": "o__rs_49_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 82,
+"port": "o__rs_50_0",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 83,
+"port": "o__rs_50_10_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 84,
+"port": "o__rs_50_3_1",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 85,
+"port": "o__rs_50_7_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 86,
+"port": "o__rsl_hrq_03_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 87,
+"port": "o__rsl_jw_W_l1_31",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 88,
+"port": "o__rsl_xrE_3S_l0_0",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 89,
+"port": "o__rsl_xrE_3S_l0_2",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 90,
+"port": "o__rsl_xrE_3S_l0_3",
+"dir": "output",
+"kind": "boundary",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 91,
+"port": "i__rst_n",
+"dir": "input",
+"kind": "die_input",
+"width": 1,
+"lo": 0,
+"bits": [
+[
+0,
+0
+]
+]
+},
+{
+"index": 92,
+"port": "i__u_s_2S_ck_line",
+"dir": "input",
+"kind": "clock",
+"width": 16,
+"lo": 0,
+"bits": [
+[
+7,
+4
+]
+]
+},
+{
+"index": 93,
+"port": "i__u_s_4S_ck_line",
+"dir": "input",
+"kind": "clock",
+"width": 16,
+"lo": 0,
+"bits": [
+[
+15,
+12
+]
+]
+},
+{
+"index": 94,
+"port": "i__w_pv_W_src",
+"dir": "input",
+"kind": "boundary",
+"width": 562,
+"lo": 0,
+"bits": [
+[
+513,
+0
+]
+]
+},
+{
+"index": 95,
+"port": "o__w_q_W_l0_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 96,
+"port": "o__w_q_W_l1_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+236,
+0
+]
+]
+},
+{
+"index": 97,
+"port": "o__w_tvN_s_3S_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 98,
+"port": "i__w_tvS_gunit_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 99,
+"port": "i__w_xrE_2S_l0_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 100,
+"port": "i__w_xrE_2S_l1_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 101,
+"port": "i__w_xrE_2S_l2_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 102,
+"port": "i__w_xrE_2S_l3_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 103,
+"port": "o__w_xrE_3S_l0_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 104,
+"port": "o__w_xrE_3S_l1_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 105,
+"port": "o__w_xrE_3S_l2_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 106,
+"port": "o__w_xrE_3S_l3_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 107,
+"port": "o__w_xrW_2S_l0_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 108,
+"port": "o__w_xrW_2S_l1_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 109,
+"port": "o__w_xrW_2S_l2_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 110,
+"port": "o__w_xrW_2S_l3_lnd",
+"dir": "output",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 111,
+"port": "i__w_xrW_3S_l0_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 112,
+"port": "i__w_xrW_3S_l1_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 113,
+"port": "i__w_xrW_3S_l2_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+},
+{
+"index": 114,
+"port": "i__w_xrW_3S_l3_src",
+"dir": "input",
+"kind": "boundary",
+"width": 276,
+"lo": 0,
+"bits": [
+[
+275,
+0
+]
+]
+}
+]

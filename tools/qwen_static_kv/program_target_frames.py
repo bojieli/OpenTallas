@@ -7,7 +7,7 @@ TARGET_WORDS={1:327,2:181,3:4,4:192,5:192,6:1024,7:1024,8:1024,9:1024,
  # KVJ-G2b 10-17: the static KV die's dispatcher targets (qkd_static_kv_boot_dispatch DIECFG/LINKCFG/ESCFG=1):
  # 10 = pre-boot die configuration (32 ECTL + NRST 43 reset delays + seal), 11 = link-end calendar (2*32+2),
  # 12 = PC chain players' constants, 13 = join4 beat calendar (8 segments)
- 10:32+43+1,11:66,12:1024,13:8}
+ 10:32+43+2,11:66,12:1024,13:8}
 MAX_TARGET=13
 PREBOOT=(10,)            # pass 1 (POR, unaligned release): loaded alone, then the HOST re-asserts the functional resets
 OPTIONAL=(10,11,12,13)

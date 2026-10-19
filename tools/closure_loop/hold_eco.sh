@@ -138,7 +138,7 @@ if [ -n "$M6_STUB" ]; then
   echo "OT_ECO M6 PORT-only obstruction: $M6_STUB um" | tee -a "$OUT/eco.log"
 fi
 if [ "$ECO_MEG" = 1 ] && [ -f "$RCFG" ]; then
-  for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM; do
+  for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM OT_MEG_OUT_UM; do
     x=$(sed -n "s/^export $v *= *//p" "$RCFG" | tail -1)
     if [ -n "$x" ]; then PK_ENV+=(-e "$v=$x"); fi
   done

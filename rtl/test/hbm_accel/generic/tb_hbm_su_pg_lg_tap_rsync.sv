@@ -6,8 +6,10 @@
 //  (2) RESET EDGES: the tap reset (g_rsync.rs[1]) changes on the SECOND pg_clk edge strictly after the serial edge that
 //      samples the new rst_n (assert and release); serial 4 / stream 3 quanta, common edge every 12 quanta.
 // MUT (-> RSYNC_MUT): 1 = r8b one pg_clk flop of the raw serial rst_n -> (2) FAILS.
+// The DUT runs LOCAL_SPLIT=1 (its default, NATIVE-FIX3 10-18) against the LOCAL_SPLIT=0 reference: (1) proves 0 added edges.
+// SMUT (-> SPLIT_MUT): 1 = split calendar due tap one entry late, 2 = local return copy fed from the near_rr pins -> (1) FAILS.
 module tb_hbm_su_pg_lg_tap_rsync;
- parameter integer MUT=0, NRST=6, EDGES=4000;
+ parameter integer MUT=0, SMUT=0, NRST=6, EDGES=4000;
  localparam integer TS=1200, TP=900, T0=600;
  reg sclk=0, pclk=0;
  initial begin #(T0); forever begin sclk=1; #(TS/2); sclk=0; #(TS/2); end end
@@ -22,7 +24,7 @@ module tb_hbm_su_pg_lg_tap_rsync;
  end else begin lrq=0; frq=0; lwq=0; fwq=0; lrd=0; lwr=0; nwd=0; nrr=0; end
  wire [33:0] d_nrq, r_nrq; wire [561:0] d_nwq, r_nwq; wire [513:0] d_lrr, r_lrr, d_frr, r_frr;
  wire [1:0] d_lwd, r_lwd, d_fwd, r_fwd; wire d_f, r_f;
- ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(10),.WRITE_RETURN(7),.RSYNC_MUT(MUT)) dut(
+ ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(10),.WRITE_RETURN(7),.RSYNC_MUT(MUT),.SPLIT_MUT(SMUT)) dut(
   .clk_ctl(sclk),.pg_clk(pclk),.rst_n(por),.local_rq(lrq),.far_rq(frq),.local_wq(lwq),.far_wq(fwq),.local_read(lrd),
   .local_write(lwr),.near_rq(d_nrq),.near_wq(d_nwq),.near_rr(nrr),.near_w_done(nwd),.local_rr(d_lrr),.far_rr(d_frr),
   .local_w_done(d_lwd),.far_w_done(d_fwd),.fault(d_f));

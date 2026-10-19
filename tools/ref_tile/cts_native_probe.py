@@ -21,6 +21,8 @@ def main():
  # The original gate's exact archived signoff SDC remains authoritative. This
  # prelude only reads its CTS ODB, propagated clocks, TT cells and placement RC.
  prelude=(HERE/'path_classes.tcl').read_text().split('proc kind')[0]
+ # the probe runs as /probe.tcl inside the container: path_classes' info-script-relative source must point at the mounted tree
+ prelude=prelude.replace('[file join [file dirname [file normalize [info script]]] cross_clock_paths.tcl]','/src/tools/ref_tile/cross_clock_paths.tcl')
  tcl=prelude+'\nwrite_timing_model -library_name native_cts_probe_tt /work/native_probe_tt.lib\n';(out/'probe.tcl').write_text(tcl)
  script=remote+'/native_probe.tcl'
  cmd=['ot-run','--mem',str(a.mem),'--threads','1','--hosts',host,'--dir',remote,'--','docker','run','--rm','-e','OT_GATE_SIGNOFF_SDC=/src/'+kit+'/signoff.sdc','-v',remote+'/src:/src:ro','-v',remote+'/routes/gate/work/orfs:/work','-v',script+':/probe.tcl:ro','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/probe.tcl']
