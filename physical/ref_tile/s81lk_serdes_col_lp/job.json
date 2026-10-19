@@ -21,6 +21,59 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "link_m0",
+    "cmd": "mkdir -p {RUN}/lk && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_s81_pdie_col -GMODE=0 -GMUT=0 rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_lpw.sv rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v -Mdir {RUN}/lk/obj > {RUN}/lk/build.log 2>&1 && {RUN}/lk/obj/Vtb_s81_pdie_col > {RUN}/lk/run.log 2>&1; tail -20 {RUN}/lk/run.log; grep -q 'TB_S81_PDIE_COL PASS' {RUN}/lk/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_m0",
+    "cmd": "mkdir -p {RUN}/lp0 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp -GMUT=0 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv rtl/dsrom_sys/s81_link/col/lp/tb_ot_pdie_serdes_col_lp.sv -Mdir {RUN}/lp0/obj > {RUN}/lp0/build.log 2>&1 && {RUN}/lp0/obj/Vtb_ot_pdie_serdes_col_lp > {RUN}/lp0/run.log 2>&1; cat {RUN}/lp0/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp0/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mut1",
+    "cmd": "mkdir -p {RUN}/lp1 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp -GMUT=1 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv rtl/dsrom_sys/s81_link/col/lp/tb_ot_pdie_serdes_col_lp.sv -Mdir {RUN}/lp1/obj > {RUN}/lp1/build.log 2>&1 && {RUN}/lp1/obj/Vtb_ot_pdie_serdes_col_lp > {RUN}/lp1/run.log 2>&1; cat {RUN}/lp1/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp1/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mut2",
+    "cmd": "mkdir -p {RUN}/lp2 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp -GMUT=2 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv rtl/dsrom_sys/s81_link/col/lp/tb_ot_pdie_serdes_col_lp.sv -Mdir {RUN}/lp2/obj > {RUN}/lp2/build.log 2>&1 && {RUN}/lp2/obj/Vtb_ot_pdie_serdes_col_lp > {RUN}/lp2/run.log 2>&1; cat {RUN}/lp2/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp2/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mut4",
+    "cmd": "mkdir -p {RUN}/lp4 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp -GMUT=4 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp.sv rtl/dsrom_sys/s81_link/col/lp/tb_ot_pdie_serdes_col_lp.sv -Mdir {RUN}/lp4/obj > {RUN}/lp4/build.log 2>&1 && {RUN}/lp4/obj/Vtb_ot_pdie_serdes_col_lp > {RUN}/lp4/run.log 2>&1; cat {RUN}/lp4/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp4/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
