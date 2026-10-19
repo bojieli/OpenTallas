@@ -1,0 +1,90 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{
+  "schema": "opentallas.ahub.safe_physical_preflight.v1",
+  "source_commit": "483ac4ba8",
+  "tools_commit": "59835e962",
+  "source_native_sha256": "e215df81353e6ba546c0865945e53e60b772f891a76a1ca833f2c2744e83b7b8",
+  "qualified": false,
+  "macros": [
+    {
+      "inst": "safe_c9467",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        43.2,
+        43.2,
+        194.4,
+        194.4
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9468",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        259.2,
+        43.2,
+        410.4,
+        194.4
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9469",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        43.2,
+        345.6,
+        194.4,
+        496.8
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9470",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        259.2,
+        345.6,
+        410.4,
+        496.8
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9471",
+      "master": "ot_qkh_recip_leaf",
+      "box_um": [
+        475.2,
+        259.2,
+        691.2,
+        475.2
+      ],
+      "orientation": "R0"
+    }
+  ],
+  "std_area_um2": 1608.0427800001842,
+  "ff_count": 3315,
+  "boundary_ff_count": 540,
+  "boundary_ff_area_um2": 159.65099999999953,
+  "other_std_area_um2": 1448.3917800001775,
+  "face_counts": {
+    "W": 303,
+    "E": 158,
+    "N": 168
+  },
+  "face_density_per_um": {
+    "W": 0.5611111111111111,
+    "E": 0.29259259259259257,
+    "N": 0.22875816993464054
+  },
+  "actual_rows": {
+    "count": 1984,
+    "area_um2": 391089.2544000165
+  },
+  "blockers": [
+    "Source-bound region/row allocation must fit actual boundary and core cell areas before placement; no global placement, CTS, route, PG or native timing qualification."
+  ]
+}

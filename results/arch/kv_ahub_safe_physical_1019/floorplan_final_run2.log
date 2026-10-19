@@ -1,0 +1,631 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc7       admits  1025 GB (avail 818, growth 101, headroom 0, waiters 0/0 GB) load 31/96 running 31 disk 6433 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3267597-1792432271 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{
+  "schema": "opentallas.ahub.safe_physical_preflight.v1",
+  "source_commit": "483ac4ba8",
+  "tools_commit": "59835e962",
+  "source_native_sha256": "e215df81353e6ba546c0865945e53e60b772f891a76a1ca833f2c2744e83b7b8",
+  "qualified": false,
+  "macros": [
+    {
+      "inst": "safe_c9467",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        43.2,
+        43.2,
+        194.4,
+        194.4
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9468",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        259.2,
+        43.2,
+        410.4,
+        194.4
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9469",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        43.2,
+        345.6,
+        194.4,
+        496.8
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9470",
+      "master": "ot_nhb_zh",
+      "box_um": [
+        259.2,
+        345.6,
+        410.4,
+        496.8
+      ],
+      "orientation": "R0"
+    },
+    {
+      "inst": "safe_c9471",
+      "master": "ot_qkh_recip_leaf",
+      "box_um": [
+        475.2,
+        259.2,
+        691.2,
+        475.2
+      ],
+      "orientation": "R0"
+    }
+  ],
+  "std_area_um2": 1608.0427800001842,
+  "ff_count": 3315,
+  "boundary_ff_count": 540,
+  "boundary_ff_area_um2": 159.65099999999953,
+  "other_std_area_um2": 1448.3917800001775,
+  "face_counts": {
+    "W": 303,
+    "E": 158,
+    "N": 168
+  },
+  "face_density_per_um": {
+    "W": 0.5611111111111111,
+    "E": 0.29259259259259257,
+    "N": 0.22875816993464054
+  },
+  "actual_rows": {
+    "count": 1984,
+    "area_um2": 391089.2544000165
+  },
+  "blockers": [
+    "Boundary correspondence fails dedicated-face identity:623 signal ports with FF endpoints use only540 distinct FF;35 AM sources each drive allfour stacks. Additional22 same-edge command copies account for645 FF endpoint occurrences.",
+    "Current explicit full-face pin assignment has paired AM endpoint diameter914.976um. Triangle inequality requires at least457.488um on one leg, greater than405um even without obstacles. Different pin assignment may reduce this bound; it does not restore dedicated face FF identities.",
+    "No source-bound row/fence/clock ownership plan can be admitted before dedicated face-source identity is repaired; GP/DPL/CTS/route intentionally not launched."
+  ],
+  "cross_face_sources": [
+    {
+      "inst": "safe_c7825",
+      "ports": [
+        "am0[9]",
+        "am1[9]",
+        "am2[9]",
+        "am3[9]"
+      ],
+      "diameter_um": 914.976,
+      "minimum_possible_max_leg_um": 457.488,
+      "witness_pair": [
+        "am3[9]",
+        "am0[9]"
+      ]
+    },
+    {
+      "inst": "safe_c7824",
+      "ports": [
+        "am0[8]",
+        "am1[8]",
+        "am2[8]",
+        "am3[8]"
+      ],
+      "diameter_um": 913.344,
+      "minimum_possible_max_leg_um": 456.672,
+      "witness_pair": [
+        "am3[8]",
+        "am0[8]"
+      ]
+    },
+    {
+      "inst": "safe_c7823",
+      "ports": [
+        "am0[7]",
+        "am1[7]",
+        "am2[7]",
+        "am3[7]"
+      ],
+      "diameter_um": 911.76,
+      "minimum_possible_max_leg_um": 455.88,
+      "witness_pair": [
+        "am3[7]",
+        "am0[7]"
+      ]
+    },
+    {
+      "inst": "safe_c7822",
+      "ports": [
+        "am0[6]",
+        "am1[6]",
+        "am2[6]",
+        "am3[6]"
+      ],
+      "diameter_um": 910.1279999999999,
+      "minimum_possible_max_leg_um": 455.06399999999996,
+      "witness_pair": [
+        "am3[6]",
+        "am0[6]"
+      ]
+    },
+    {
+      "inst": "safe_c7821",
+      "ports": [
+        "am0[5]",
+        "am1[5]",
+        "am2[5]",
+        "am3[5]"
+      ],
+      "diameter_um": 908.496,
+      "minimum_possible_max_leg_um": 454.248,
+      "witness_pair": [
+        "am3[5]",
+        "am0[5]"
+      ]
+    },
+    {
+      "inst": "safe_c7820",
+      "ports": [
+        "am0[4]",
+        "am1[4]",
+        "am2[4]",
+        "am3[4]"
+      ],
+      "diameter_um": 906.864,
+      "minimum_possible_max_leg_um": 453.432,
+      "witness_pair": [
+        "am3[4]",
+        "am0[4]"
+      ]
+    },
+    {
+      "inst": "safe_c7853",
+      "ports": [
+        "am0[3]",
+        "am1[3]",
+        "am2[3]",
+        "am3[3]"
+      ],
+      "diameter_um": 905.28,
+      "minimum_possible_max_leg_um": 452.64,
+      "witness_pair": [
+        "am3[3]",
+        "am0[3]"
+      ]
+    },
+    {
+      "inst": "safe_c7851",
+      "ports": [
+        "am0[35]",
+        "am1[35]",
+        "am2[35]",
+        "am3[35]"
+      ],
+      "diameter_um": 903.648,
+      "minimum_possible_max_leg_um": 451.824,
+      "witness_pair": [
+        "am3[35]",
+        "am0[35]"
+      ]
+    },
+    {
+      "inst": "safe_c7850",
+      "ports": [
+        "am0[34]",
+        "am1[34]",
+        "am2[34]",
+        "am3[34]"
+      ],
+      "diameter_um": 902.016,
+      "minimum_possible_max_leg_um": 451.008,
+      "witness_pair": [
+        "am3[34]",
+        "am0[34]"
+      ]
+    },
+    {
+      "inst": "safe_c7849",
+      "ports": [
+        "am0[33]",
+        "am1[33]",
+        "am2[33]",
+        "am3[33]"
+      ],
+      "diameter_um": 900.384,
+      "minimum_possible_max_leg_um": 450.192,
+      "witness_pair": [
+        "am3[33]",
+        "am0[33]"
+      ]
+    },
+    {
+      "inst": "safe_c7848",
+      "ports": [
+        "am0[32]",
+        "am1[32]",
+        "am2[32]",
+        "am3[32]"
+      ],
+      "diameter_um": 898.8,
+      "minimum_possible_max_leg_um": 449.4,
+      "witness_pair": [
+        "am3[32]",
+        "am0[32]"
+      ]
+    },
+    {
+      "inst": "safe_c7847",
+      "ports": [
+        "am0[31]",
+        "am1[31]",
+        "am2[31]",
+        "am3[31]"
+      ],
+      "diameter_um": 897.168,
+      "minimum_possible_max_leg_um": 448.584,
+      "witness_pair": [
+        "am3[31]",
+        "am0[31]"
+      ]
+    },
+    {
+      "inst": "safe_c7846",
+      "ports": [
+        "am0[30]",
+        "am1[30]",
+        "am2[30]",
+        "am3[30]"
+      ],
+      "diameter_um": 895.536,
+      "minimum_possible_max_leg_um": 447.768,
+      "witness_pair": [
+        "am3[30]",
+        "am0[30]"
+      ]
+    },
+    {
+      "inst": "safe_c7852",
+      "ports": [
+        "am0[2]",
+        "am1[2]",
+        "am2[2]",
+        "am3[2]"
+      ],
+      "diameter_um": 893.904,
+      "minimum_possible_max_leg_um": 446.952,
+      "witness_pair": [
+        "am3[2]",
+        "am0[2]"
+      ]
+    },
+    {
+      "inst": "safe_c7845",
+      "ports": [
+        "am0[29]",
+        "am1[29]",
+        "am2[29]",
+        "am3[29]"
+      ],
+      "diameter_um": 892.3199999999999,
+      "minimum_possible_max_leg_um": 446.15999999999997,
+      "witness_pair": [
+        "am3[29]",
+        "am0[29]"
+      ]
+    },
+    {
+      "inst": "safe_c7844",
+      "ports": [
+        "am0[28]",
+        "am1[28]",
+        "am2[28]",
+        "am3[28]"
+      ],
+      "diameter_um": 890.688,
+      "minimum_possible_max_leg_um": 445.344,
+      "witness_pair": [
+        "am3[28]",
+        "am0[28]"
+      ]
+    },
+    {
+      "inst": "safe_c7843",
+      "ports": [
+        "am0[27]",
+        "am1[27]",
+        "am2[27]",
+        "am3[27]"
+      ],
+      "diameter_um": 889.056,
+      "minimum_possible_max_leg_um": 444.528,
+      "witness_pair": [
+        "am3[27]",
+        "am0[27]"
+      ]
+    },
+    {
+      "inst": "safe_c7842",
+      "ports": [
+        "am0[26]",
+        "am1[26]",
+        "am2[26]",
+        "am3[26]"
+      ],
+      "diameter_um": 887.424,
+      "minimum_possible_max_leg_um": 443.712,
+      "witness_pair": [
+        "am3[26]",
+        "am0[26]"
+      ]
+    },
+    {
+      "inst": "safe_c7841",
+      "ports": [
+        "am0[25]",
+        "am1[25]",
+        "am2[25]",
+        "am3[25]"
+      ],
+      "diameter_um": 885.84,
+      "minimum_possible_max_leg_um": 442.92,
+      "witness_pair": [
+        "am3[25]",
+        "am0[25]"
+      ]
+    },
+    {
+      "inst": "safe_c7840",
+      "ports": [
+        "am0[24]",
+        "am1[24]",
+        "am2[24]",
+        "am3[24]"
+      ],
+      "diameter_um": 884.208,
+      "minimum_possible_max_leg_um": 442.104,
+      "witness_pair": [
+        "am3[24]",
+        "am0[24]"
+      ]
+    },
+    {
+      "inst": "safe_c7839",
+      "ports": [
+        "am0[23]",
+        "am1[23]",
+        "am2[23]",
+        "am3[23]"
+      ],
+      "diameter_um": 882.576,
+      "minimum_possible_max_leg_um": 441.288,
+      "witness_pair": [
+        "am3[23]",
+        "am0[23]"
+      ]
+    },
+    {
+      "inst": "safe_c7838",
+      "ports": [
+        "am0[22]",
+        "am1[22]",
+        "am2[22]",
+        "am3[22]"
+      ],
+      "diameter_um": 880.944,
+      "minimum_possible_max_leg_um": 440.472,
+      "witness_pair": [
+        "am3[22]",
+        "am0[22]"
+      ]
+    },
+    {
+      "inst": "safe_c7837",
+      "ports": [
+        "am0[21]",
+        "am1[21]",
+        "am2[21]",
+        "am3[21]"
+      ],
+      "diameter_um": 879.312,
+      "minimum_possible_max_leg_um": 439.656,
+      "witness_pair": [
+        "am3[21]",
+        "am0[21]"
+      ]
+    },
+    {
+      "inst": "safe_c7836",
+      "ports": [
+        "am0[20]",
+        "am1[20]",
+        "am2[20]",
+        "am3[20]"
+      ],
+      "diameter_um": 877.728,
+      "minimum_possible_max_leg_um": 438.864,
+      "witness_pair": [
+        "am3[20]",
+        "am0[20]"
+      ]
+    },
+    {
+      "inst": "safe_c7835",
+      "ports": [
+        "am0[19]",
+        "am1[19]",
+        "am2[19]",
+        "am3[19]"
+      ],
+      "diameter_um": 874.4639999999999,
+      "minimum_possible_max_leg_um": 437.23199999999997,
+      "witness_pair": [
+        "am3[19]",
+        "am0[19]"
+      ]
+    },
+    {
+      "inst": "safe_c7834",
+      "ports": [
+        "am0[18]",
+        "am1[18]",
+        "am2[18]",
+        "am3[18]"
+      ],
+      "diameter_um": 872.832,
+      "minimum_possible_max_leg_um": 436.416,
+      "witness_pair": [
+        "am3[18]",
+        "am0[18]"
+      ]
+    },
+    {
+      "inst": "safe_c7833",
+      "ports": [
+        "am0[17]",
+        "am1[17]",
+        "am2[17]",
+        "am3[17]"
+      ],
+      "diameter_um": 871.2479999999999,
+      "minimum_possible_max_leg_um": 435.62399999999997,
+      "witness_pair": [
+        "am3[17]",
+        "am0[17]"
+      ]
+    },
+    {
+      "inst": "safe_c7832",
+      "ports": [
+        "am0[16]",
+        "am1[16]",
+        "am2[16]",
+        "am3[16]"
+      ],
+      "diameter_um": 869.616,
+      "minimum_possible_max_leg_um": 434.808,
+      "witness_pair": [
+        "am3[16]",
+        "am0[16]"
+      ]
+    },
+    {
+      "inst": "safe_c7831",
+      "ports": [
+        "am0[15]",
+        "am1[15]",
+        "am2[15]",
+        "am3[15]"
+      ],
+      "diameter_um": 867.9839999999999,
+      "minimum_possible_max_leg_um": 433.99199999999996,
+      "witness_pair": [
+        "am3[15]",
+        "am0[15]"
+      ]
+    },
+    {
+      "inst": "safe_c7830",
+      "ports": [
+        "am0[14]",
+        "am1[14]",
+        "am2[14]",
+        "am3[14]"
+      ],
+      "diameter_um": 866.352,
+      "minimum_possible_max_leg_um": 433.176,
+      "witness_pair": [
+        "am3[14]",
+        "am0[14]"
+      ]
+    },
+    {
+      "inst": "safe_c7829",
+      "ports": [
+        "am0[13]",
+        "am1[13]",
+        "am2[13]",
+        "am3[13]"
+      ],
+      "diameter_um": 864.768,
+      "minimum_possible_max_leg_um": 432.384,
+      "witness_pair": [
+        "am3[13]",
+        "am0[13]"
+      ]
+    },
+    {
+      "inst": "safe_c7828",
+      "ports": [
+        "am0[12]",
+        "am1[12]",
+        "am2[12]",
+        "am3[12]"
+      ],
+      "diameter_um": 863.136,
+      "minimum_possible_max_leg_um": 431.568,
+      "witness_pair": [
+        "am3[12]",
+        "am0[12]"
+      ]
+    },
+    {
+      "inst": "safe_c7827",
+      "ports": [
+        "am0[11]",
+        "am1[11]",
+        "am2[11]",
+        "am3[11]"
+      ],
+      "diameter_um": 861.504,
+      "minimum_possible_max_leg_um": 430.752,
+      "witness_pair": [
+        "am3[11]",
+        "am0[11]"
+      ]
+    },
+    {
+      "inst": "safe_c7826",
+      "ports": [
+        "am0[10]",
+        "am1[10]",
+        "am2[10]",
+        "am3[10]"
+      ],
+      "diameter_um": 859.872,
+      "minimum_possible_max_leg_um": 429.936,
+      "witness_pair": [
+        "am3[10]",
+        "am0[10]"
+      ]
+    },
+    {
+      "inst": "safe_c8785",
+      "ports": [
+        "am0[0]",
+        "am1[0]",
+        "am2[0]",
+        "am3[0]"
+      ],
+      "diameter_um": 858.288,
+      "minimum_possible_max_leg_um": 429.144,
+      "witness_pair": [
+        "am3[0]",
+        "am0[0]"
+      ]
+    }
+  ],
+  "face_flop_port_count": 623,
+  "face_flop_endpoint_occurrences": 645
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3267597-1792432271): exit 0

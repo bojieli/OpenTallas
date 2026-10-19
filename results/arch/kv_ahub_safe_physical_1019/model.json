@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.ahub.safe_geometry_rejection.v1",
+  "qualified": false,
+  "status": "BLOCKED_BEFORE_PLACEMENT",
+  "outline_um": [
+    734.4,
+    540
+  ],
+  "aspect_ratio": 1.3599999999999999,
+  "macro_area_um2": 138101.76,
+  "mapped_source_std_area_um2": 1575.67518,
+  "physical_tie_import_std_area_um2": 1608.0427800001842,
+  "tie_area_increment_um2": 32.36760000018421,
+  "boundary_ff_area_um2": 159.65099999999953,
+  "historical_band_all_std_fill_percent": 21.541210937502466,
+  "candidate_core_band_um": [
+    21.6,
+    226.8,
+    712.8,
+    231.66
+  ],
+  "candidate_band_nominal_site_area_um2": 3359.2319999999895,
+  "candidate_all_std_charged_fill_percent": 47.86935763889452,
+  "candidate_status": "CAPACITY_ESTIMATE_ONLY: all std charged to core band; native face strip/copy placement, legal rows, PG blockages and clock loads not admitted. Reprice after source repair.",
+  "macro_halo_um": 5.4,
+  "pg_reservations": "Original child LEFs immutable; parent M5/M6/M7 stripes and child PG connection/access unmeasured. No PDN generated.",
+  "clock_ownership": "Prospective source-owned W/E/N face groups and central core/5 child contacts. N entry at x367.212,y540; central core root near367.2,229 requires approximately311um trunk; regional buffer routes/loaded TT+FF arrivals unknown. No assumed compensation or clock latency change.",
+  "native_limits_ps": {
+    "launch": 220,
+    "capture": 190,
+    "pin_flop_spread_TT_FF": 80
+  },
+  "constraints": "No delay/uncertainty/hold relaxation; all native TT/FF timing, physical PG escape and <=405um stage reach remain unqualified.",
+  "max_endpoint_diameter_um": 914.7840000000001,
+  "minimum_any_location_max_leg_um": 457.39200000000005,
+  "reach_limit_um": 405,
+  "allowed_next_step": "Source face-copy repair, then regenerate exact area/row/native access and region ownership model before placement/CTS approval."
+}

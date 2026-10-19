@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-epyc7       admits  1075 GB (avail 826, growth 74, headroom 0, waiters 0/0 GB) load 29/96 running 19 disk 6433 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ahub-safe-physical-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3264913-1792432243 after 1 s
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "openroad": executable file not found in $PATH
+
+Run 'docker run --help' for more information
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3264913-1792432243): exit 127
