@@ -1,0 +1,21 @@
+{
+  "scope": "Bijective scalar alias spelling only; no cell, port, connection, state, clock or edge change",
+  "base": "9a86b8bfe",
+  "old_source_sha256": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+  "new_source_sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+  "canonical_source_sha256": "bcc3019accd0ff2ab59748cd9e81dd420b4d35d0c9f938e034183a385a9a3bcb",
+  "kernel_alias_widths": [
+    3864,
+    7790
+  ],
+  "canonical_exact_equal": true,
+  "reason": "Avoid false vector-wide UNOPTFLAT cycles in simulator; actual arithmetic graph unchanged",
+  "generator_reemit_exact_equal": true,
+  "generator_reemit_unit": "oth-ubuntu-1887830-1792433677",
+  "exact_math_unit": "oth-ubuntu-6821-1792433617",
+  "exact_math_result": "PASS10000edges,tworesets,8518add8520mul,allresult/error/valid bits and FP special cases",
+  "runtime_seconds": 0.136,
+  "previous_vector_alias_runtime_seconds": 2.674,
+  "production_status": "New actual source E/W all10 and MUT14/15 running; previous frozen jobs preserved",
+  "native_graph_scope": "R9 native76,682FF/42SRAM graph is unchanged under bijective alias rename; no new primitive or edge cost. Physical timing/area remains unqualified."
+}

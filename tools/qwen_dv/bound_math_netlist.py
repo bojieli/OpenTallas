@@ -134,12 +134,12 @@ def build(raw,top,new,drop=(),collapse=False):
     nextbit+=1
  else:raise ValueError('fanout replication did not converge')
  def bit(b):
-  if isinstance(b,int):return f'n[{b}]'
+  if isinstance(b,int):return f'n_{b}'
   assert b in ('0','1','x','z');return "1'b"+b
  def bus(bs):return bit(bs[0]) if len(bs)==1 else '{'+','.join(bit(b) for b in reversed(bs))+'}'
  lines=['// Generated fixed production-shape math. No extra arithmetic edges.',f'module {new}('+','.join(ports)+');']
  for n,p in ports.items():lines.append(f"{p['direction']} wire [{len(p['bits'])-1}:0] {n};")
- lines.append(f'wire [{nextbit-1}:0] n;')
+ lines.extend('wire '+', '.join(f'n_{i}' for i in range(k,min(k+64,nextbit)))+';' for k in range(0,nextbit,64))
  for n,p in ports.items():lines.append(f'assign '+(bus(p['bits'])+' = '+n if p['direction']=='input' else n+' = '+bus(p['bits']))+';')
  used=set()
  for idx,(n,c) in enumerate(cells.items()):
