@@ -29,6 +29,14 @@ TP-dependence: every stage FUNCTION above is TP-agnostic (row-local or whole-vec
 all-reduce returns t (and so x', r of the residuals, gu / act downstream of resid1) carry the TP4 fold order.  With
 TP4-folded inputs the stage outputs equal the TP4 golden's; the TP8 values need the TP8 golden (qwen_tp8_layer_gold).
 
+tp8od (env QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 HDC_SU_WIDTH=64 HDC_KV_FMT=fp8; QW-ODSCALE 10-19):
+    dv_layer_fixture.py tp8od --img 'TP8IMG/L{layer}/die{die}' --tp8gold GOLD/P8191 --layer N --out DIR
+  the od stage on the TP8 ISA golden (qwen_tp8_layer_gold --pc-dump, production TP8 fold): o x = die-0 ATTN_fp32.hex
+  (the o-proj input), down x = ACT 0..1535 of die 0's VM after source PC24 (candidate_pc<k>_vm.npz, k from oracle.json
+  original_to_candidate_pc), gold = collective<s>_partial.hex of die 0 (the RAW partial the die all-reduces: the AR
+  segments of the image's descriptors, in order o then down); w / s = the TP8 die-0 image's own o / down columns
+  (identical to the tp4 cut: tp8w).  Writes L<N>_mat_od_tp8.npz (bench keys o_* / down_* + o_gold_y / down_gold_y).
+
 tp8w (env QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 HDC_SU_WIDTH=64): decodes the TP8 die-0 matrices and checks that the rows /
 columns cut above are byte-identical to the TP8 die's own weights and scales (qkv, gu, o, down).
 
@@ -251,15 +259,63 @@ def run_tp8w(a):
     return 0 if rec['verdict'] == 'PASS' else 1
 
 
+def run_tp8od(a):
+    if PO.TP != 8 or PO.GROUPS != 3072:
+        raise SystemExit('tp8od needs QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 HDC_SU_WIDTH=64 HDC_KV_FMT=fp8')
+    n, out, gd = a.layer, Path(a.out), Path(a.tp8gold)
+    pos = int(gd.name.lstrip('P'))
+    orc = json.loads((gd.parent / 'oracle.json').read_text())
+    if orc.get('tp') != 8 or str(pos) not in orc['per_position']:
+        raise SystemExit(f'{gd.parent}/oracle.json: not a TP8 gold recording position {pos}')
+    im = Img(a.img.format(layer=n, die=0), n, 8)
+    if orc['layer_image_sha256'][f'L{n}'][0] != {k: v for k, v in im.image_sha.items() if k in
+                                                   orc['layer_image_sha256'][f'L{n}'][0]}:
+        raise SystemExit('TP8 image digests differ from the gold run')
+    ar = [si for si, seg in enumerate(im.descriptors) if seg['kind'] == P.COLL_ALLREDUCE]
+    if len(ar) != 2:
+        raise SystemExit(f'expected 2 all-reduce segments (o, down), got {ar}')
+    dd = gd / 'die0' / f'L{n}'
+    vm_map, _ = FP.vm_map()
+    cpc = orc['original_to_candidate_pc']['24']
+    snap = np.load(dd / f'candidate_pc{cpc}_vm.npz')['vm_bits']
+    act = G.from_bits(snap[vm_map['ACT']:vm_map['ACT'] + 1536].astype(np.uint32))
+    attn = read_hex(dd / 'ATTN_fp32.hex')
+    if len(attn) != 512:
+        raise SystemExit(f'ATTN {len(attn)} != 512')
+    gold = {nm: read_hex(dd / f'collective{si}_partial.hex') for nm, si in zip(('o', 'down'), ar)}
+    wo, so = im.mat('o')
+    wd, sd = im.mat('down')
+    if wo.shape[1] != 512 or wd.shape[1] != 1536:
+        raise SystemExit(f'TP8 die-0 o / down columns {wo.shape} / {wd.shape}')
+    p = out / f'L{n}_mat_od_tp8.npz'
+    np.savez_compressed(p, o_w=wo.astype(np.int8), o_s=so, o_x=attn, down_w=wd.astype(np.int8), down_s=sd, down_x=act,
+                        o_gold_y=gold['o'], down_gold_y=gold['down'])
+    # informative: hdc_golden G.matvec at split 256 (the DV ownership split) vs the gold partials (the bench decides)
+    rep = {nm: int(np.sum(G.bits(G.matvec(w.astype(F), x, 256)) == G.bits(gold[nm])))
+           for nm, w, x in (('o', wo, attn), ('down', wd, act))}
+    rec = dict(schema='opentallas.qwen.dv-layer-fixture-tp8od.v1', layer=n, position=pos, tp8_die=0,
+               gold=str(gd), oracle_collective_profile=orc['collective_profile'],
+               allreduce_segments=dict(o=ar[0], down=ar[1]), act_snapshot=f'candidate_pc{cpc}_vm.npz (source PC24)',
+               image_sha256=im.image_sha, inputs_sha256={f.name: sha(f) for f in (
+                   dd / 'ATTN_fp32.hex', dd / f'candidate_pc{cpc}_vm.npz', dd / f'collective{ar[0]}_partial.hex',
+                   dd / f'collective{ar[1]}_partial.hex', gd.parent / 'oracle.json')},
+               hdc_matvec_split256_equal_rows=rep, file=p.name, sha256=sha(p),
+               tool_sha256=sha(__file__))
+    (out / f'L{n}_tp8od.json').write_text(json.dumps(rec, indent=1) + '\n')
+    print('TP8OD', n, json.dumps(rep))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('what', choices=('tp4', 'tp8w'))
+    ap.add_argument('what', choices=('tp4', 'tp8w', 'tp8od'))
     ap.add_argument('--img', required=True)
     ap.add_argument('--realmem')
+    ap.add_argument('--tp8gold', help='tp8od: the TP8 gold position dir (qwen_tp8_layer_gold OUT/P<p>)')
     ap.add_argument('--layer', type=int, required=True)
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    return run_tp4(a) if a.what == 'tp4' else run_tp8w(a)
+    return dict(tp4=run_tp4, tp8w=run_tp8w, tp8od=run_tp8od)[a.what](a)
 
 
 if __name__ == '__main__':

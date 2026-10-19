@@ -15,7 +15,9 @@ SiLU) are tools/qwen_layerbench/dv_lower_vec.py (QLB-C4b/3a); this module alloca
     operand layout), o / down -> AR with dbase = 128 b = the global row element address (the AR word tag), LM head ->
     none (amax 1, dbase = die row0 + 128 b = the vocabulary row: the argmax index).
     BTAB map: one per-slice layout (qkv 0, o 8, gu 32, down 48, lm_head 72 .. 271 of 512 words) + its kind-2 stream
-    table words built from the matrices' BF16 row scales.
+    table words built from the matrices' BF16 row scales -- EXCEPT o / down (AR destinations): the ISA all-reduces the
+    RAW o / down partials and applies the post-TP scale in the residual (PC19 / PC28 = the DV residual's pscale), so
+    their station row scale is BF16 1.0 (station_row_scales; QW-ODSCALE 10-19, exact vs the TP8 ISA gold partials).
     TILE-DELIVERY CONTRACT (output, the schedule the ME / xhead calendar must deliver): the edge of every round's far
     cluster word at each slice's rs pins.  For AR destinations the AR words of all 12 slices share ONE outbound lane
     (2 edges a hop, a pass word and an own word on one edge is a port fault) and io_collective takes one word an edge
@@ -174,13 +176,25 @@ def btab_layout(own):
     return lay
 
 
-def btab_stream(lay, scales):
+AR_UNSCALED = ('o', 'down')     # ISA: AR of RAW partials, post-TP scale in the residual (pscale) -> station scale 1.0
+
+
+def station_row_scales(name, matrix_scales):
+    """the BF16 row scale the DV station applies (BTAB) for matrix `name`, from the matrix's own row scales: o / down
+    (AR destinations) -> 1.0 (the post-TP scale belongs to the residual, after the all-reduce); others = the matrix's."""
+    import numpy as np
+    sc = np.asarray(matrix_scales, dtype=np.float32)
+    return np.ones(len(sc), dtype=np.float32) if name in AR_UNSCALED else sc
+
+
+def btab_stream(lay, scales, mutant=None):
     """{slice: [(word0, payload)]} kind-2 table words (4 BTAB words = 64 BF16 a stream word) from {matrix: FP32 BF16-valued
-    row scales}; rows of a partial block pad with 0."""
+    MATRIX row scales} (station_row_scales applied: o / down emit 1.0); rows of a partial block pad with 0.
+    mutant 'rawscale' = the pre-QW-ODSCALE lowering (o / down BTAB = the matrix scales)."""
     import numpy as np
     out = {}
     for name, sc in scales.items():
-        sc = np.asarray(sc, dtype=np.float32)
+        sc = np.asarray(sc, dtype=np.float32) if mutant == 'rawscale' else station_row_scales(name, sc)
         hw = (sc.view(np.uint32) >> 16).astype(np.uint64)
         if np.any((sc.view(np.uint32) & 0xFFFF) != 0):
             raise LowerError(f'{name}: scales are not BF16 values')

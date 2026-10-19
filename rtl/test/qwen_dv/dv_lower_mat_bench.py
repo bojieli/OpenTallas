@@ -111,8 +111,14 @@ def mat(rng, rows, split):
     x = (rng.standard_normal(split * KC) * 2.0).astype(F)
     s = G.to_bf16((rng.random(rows) * 0.02 + 1e-3).astype(F))
     parts = B.l6_parts(w, x, split)
-    y = G.mul(G.matvec(w, x, split), s)
-    return dict(w=w, x=x, s=s, parts=parts, y=B.fbits(y))
+    return dict(w=w, x=x, s=s, parts=parts, y=None)
+
+
+def expect_y(name, gm, split):
+    """bench expectation with the compiler's station row scale (o / down: 1.0; others: the matrix scale)"""
+    if gm['y'] is None:
+        gm['y'] = B.fbits(G.mul(G.matvec(gm['w'], gm['x'], split), M.station_row_scales(name, gm['s'])))
+    return gm
 
 
 FIX = {}                                              # QW-REALSTG: --fixture npz (dv_layer_fixture.py)
@@ -122,13 +128,12 @@ def real_mat(name, split):
     """real int8 rows / BF16 scales / matvec input of the fixture (TP8 die 0 cut of the recorded ISA golden)"""
     pre = '' if name in ('qkv', 'gu') else f'{name}_'
     w, x, sc = FIX[pre + 'w'].astype(F), FIX[pre + 'x'].astype(F), FIX[pre + 's'].astype(F)
-    if name in ('o', 'down'):                         # the ISA all-reduces RAW o / down partials (FastDieMachine: no
-        sc = np.ones(len(sc), dtype=F)                # scale); the post-TP scale is the residual's pscale after the AR,
-                                                      # so the station's BTAB row scale must be BF16 1.0 (exact)
     if 'split' in FIX and int(FIX['split']) != split:
         raise SystemExit(f'fixture split {int(FIX["split"])} != ownership split {split}')
     parts = B.l6_parts(w, x, split)
-    y = G.mul(G.matvec(w, x, split), sc)
+    # s = the MATRIX row scales (the compiler's input); the expectation applies the COMPILER's station row scale
+    # (dv_lower_mat.station_row_scales: o / down -> BF16 1.0, the ISA all-reduces RAW partials -- QW-ODSCALE)
+    y = G.mul(G.matvec(w, x, split), M.station_row_scales(name, sc))
     return dict(w=w, x=x, s=sc, parts=parts, y=B.fbits(y))
 
 
@@ -249,7 +254,7 @@ def calibrate(work, seed):
 # ------------------------------------------------------------------------------------------------ runs
 def run_vm(work, name, ages, rng, mutant):
     m = D.ownership()[name]
-    gm = real_mat(name, m['split']) if FIX else mat(rng, m['blocks'][-1]['rows'][1], m['split'])
+    gm = real_mat(name, m['split']) if FIX else expect_y(name, mat(rng, m['blocks'][-1]['rows'][1], m['split']), m['split'])
     lay = M.btab_layout(D.ownership())
     tabs = M.btab_stream(lay, {name: gm['s']})
     ev = LB.Events()
@@ -278,8 +283,9 @@ def run_vm(work, name, ages, rng, mutant):
 def run_od(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
-    gms = {n: (real_mat(n, own[n]['split']) if FIX else mat(rng, 4096, own[n]['split'])) for n in ('o', 'down')}
-    tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()})
+    gms = {n: (real_mat(n, own[n]['split']) if FIX else expect_y(n, mat(rng, 4096, own[n]['split']), own[n]['split']))
+           for n in ('o', 'down')}
+    tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()}, mutant=mutant)   # matrix scales in; BTAB 1.0 out
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
@@ -287,7 +293,7 @@ def run_od(work, ages, rng, mutant):
     w0 = {'o': 600, 'down': 1300}
     for k, n in enumerate(('o', 'down')):
         xcs[n] = M.lower_xc(ch, ages, w0[n], 256, k, mutant=mutant)          # exact edge: reserved first
-        lows[n] = M.lower_matvec(n, w0[n], ages, ch, own=own, mutant=None if mutant in ('xc_bc',) else mutant)
+        lows[n] = M.lower_matvec(n, w0[n], ages, ch, own=own, mutant=None if mutant in ('xc_bc', 'rawscale') else mutant)
     coll = {n: M.ar_collisions(lows[n], ages) for n in lows}
     base = t + 20 - min(c['edge'] for c in ch.commands())
     put_chain(ev, base, ch.commands())
@@ -335,8 +341,22 @@ def run_od(work, ages, rng, mutant):
         errs.append(f'XC: cc words on {others} (only dvs_W5 reaches io_collective)')
     else:
         ok += 1
-    return ok, n_, errs, dict(span_cycles=span, isa_gold='TP8-gold-only (TP8 partial, split 256; no TP4 value)' if FIX
-                              else 'none', collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
+    # TP8 ISA gold (dv_layer_fixture.py tp8od: qwen_tp8_layer_gold collective<s>_partial of die 0 = the RAW o / down
+    # partial the die all-reduces): the bench expectation (= the RTL AR words, checked above) bit-exact vs the gold
+    gold = 'TP8-gold-only (TP8 partial, split 256; no TP4 value)' if FIX else 'none'
+    if FIX and all(f'{n}_gold_y' in FIX for n in ('o', 'down')):
+        res = {}
+        for n in ('o', 'down'):
+            g = B.fbits(FIX[f'{n}_gold_y'].astype(F))
+            o = int(np.sum(g == gms[n]['y']))
+            res[n] = f'{o}/{len(g)}'
+            n_ += 1
+            if o == len(g):
+                ok += 1
+            else:
+                errs.append(f'TP8 ISA gold {n}: bench expectation differs from the gold partial in {len(g) - o}/{len(g)} rows')
+        gold = 'tp8_isa_gold_words=' + ','.join(f'{k}:{v}' for k, v in res.items())
+    return ok, n_, errs, dict(span_cycles=span, isa_gold=gold, collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
                               stn={n: len(l['stn']) for n, l in lows.items()})
 
 
@@ -349,7 +369,7 @@ def run_lm(work, ages, rng, mutant):
     lay = M.btab_layout(own)
     hg = own['lm_head']
     rows = hg['blocks'][-1]['rows'][1]
-    gm = mat(rng, rows, 512)
+    gm = expect_y('lm_head', mat(rng, rows, 512), 512)
     tabs = M.btab_stream(lay, {'lm_head': gm['s']})
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
@@ -438,7 +458,7 @@ def run_emb(work, ages, rng, mutant):
 
 RUNS = dict(qkv=lambda w, a, r, m: run_vm(w, 'qkv', a, r, m), gu=lambda w, a, r, m: run_vm(w, 'gu', a, r, m),
             od=run_od, lm=run_lm, emb=run_emb)
-MUTANTS = dict(qkv=('sbase1',), gu=('sbase1',), od=('nostagger', 'xc_bc'), lm=('amax_local',), emb=('emb_late',))
+MUTANTS = dict(qkv=('sbase1',), gu=('sbase1',), od=('nostagger', 'xc_bc', 'rawscale'), lm=('amax_local',), emb=('emb_late',))
 
 
 def main():
