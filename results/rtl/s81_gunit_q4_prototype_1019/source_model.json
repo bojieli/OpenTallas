@@ -1,0 +1,35 @@
+{
+  "status": "BOUNDED_SOURCE_COMPONENT_ONLY_STORAGE_BLOCKED",
+  "model": "e6269d903",
+  "baseline_source": "12ab196b6",
+  "mapped_evidence": "3ca0d8055",
+  "default_q4": 0,
+  "q4": {
+    "D0": 18,
+    "DS": 16,
+    "ITERS": 20,
+    "LAT": 642,
+    "old_LAT": 602,
+    "extra_edges_per_job": 40,
+    "candidate_HOP_N": 1015,
+    "candidate_HOP_S": 1013,
+    "predicate_logical_ff": 96,
+    "predicate_physical_ff_reserved": 192,
+    "predicate_gate_area_reserve_um2": 1012.4352
+  },
+  "useful_copy": {
+    "target_pins": 24,
+    "original_findings": 1874,
+    "extra_ff_model": 3133,
+    "extra_area_model_um2": 1054.01736,
+    "polarity_reserve_um2": 396.80928,
+    "actual_source_coverage": null
+  },
+  "storage": {
+    "base_t_bits": 3072,
+    "implementation": "unchanged original four logical 768-bit words",
+    "admission": "BLOCKED producer lifetime/collision/abort/settle and prefetch/cache-versus-12-bank comparison missing"
+  },
+  "reset": "original direct assertion unchanged; sync0-to-regional proposal not implemented or equality claimed",
+  "physical": "NO CTS OR ROUTE; 388.8x432 is sizing only; parent fit/reach/clock/PG/open"
+}

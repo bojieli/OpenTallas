@@ -174,7 +174,10 @@ endmodule
 // ---- correctly rounded X / T from the seed, 3 registered stages + a combinational final ------------------------------
 // Same integer construction as ot_hdc_sk_quot; subn (runtime) = its SUBN parameter.  Every input is stable for the
 // whole step (xm/xe/xz/tm/te/subn from >= 4 edges before, r from the seed's output register).
-module ot_hdc_skp_quot (
+module ot_hdc_skp_quot #(
+    parameter integer Q4 = 0,
+    parameter integer MUT_Q4 = 0  // source bench only: corrupt the range predicate
+) (
     input  wire              clk,
     input  wire              subn,
     input  wire [23:0]       xm,
@@ -252,6 +255,35 @@ module ot_hdc_skp_quot (
     wire z2 = ((u_s ^ u_cs) == {(u_s[W-2:0] | u_cs[W-2:0]), 1'b1});
     wire inc1 = (!neg1 & !z1) | (z1 & m3_q[0]);
     wire inc2 = (!neg2 & !z2) | (z2 & !m3_q[0]);
+    generate if (Q4) begin : g_q4
+        // Q4 captures correction and exact signed-11-bit range predicates.
+        // ms_q/s_q/E_q remain this transaction's operands until next Q2;
+        // D0 and DS below delay the recurrence by exactly one edge.
+        wire signed [10:0] eb = E3_q + 11'sd127;
+        wire signed [10:0] eb1 = E3_q + 11'sd128;
+        wire sub = s3_q != 5'd0;
+        wire hi0 = !sub && (eb > 11'sd254);
+        wire hi1 = !sub && (eb1 > 11'sd254);
+        wire low = !subn && (eb < 11'sd1);
+        wire zero = xz | z3_q;
+        wire [2:0] pack_q;
+        wire [5:0] range_q;
+        // Both copies do useful work. Packing needs only three predicates;
+        // do not manufacture consumers for unused high/low predicate copies.
+        (* keep = 1 *) ot_hdc_skp_q4_pack3 u_pack (.clk(clk), .d({inc1,inc2,zero}), .q(pack_q));
+        (* keep = 1 *) ot_hdc_skp_q4_range6 u_range (.clk(clk),
+            .d({inc1,inc2,hi0,hi1,low ^ (MUT_Q4 != 0),zero}), .q(range_q));
+        wire [24:0] m1_s0, m1_s1;
+        ot_hdc_sk_cadd #(.W(24)) u_inc (.a(m3_q), .b(24'd0), .s0(m1_s0), .s1(m1_s1));
+        wire [23:0] m2_s0, m2_s1;
+        ot_hdc_sk_cadd #(.W(23)) u_inc2 (.a(m3_q[23:1]), .b(23'd0), .s0(m2_s0), .s1(m2_s1));
+        wire [24:0] mf = pack_q[1] ? {m2_s1,m3_q[0]} : (pack_q[2] ? m1_s1 : {1'b0,m3_q});
+        wire ovm = mf[24];
+        wire [7:0] field = sub ? {7'd0,mf[23]} : (ovm ? eb1[7:0] : eb[7:0]);
+        wire range_ovm = range_q[4] ? (&m3_q[23:1]) : (range_q[5] && (&m3_q[23:0]));
+        assign y = pack_q[0] ? 31'd0 : {field,ovm ? 23'd0 : mf[22:0]};
+        assign range = !range_q[0] && ((range_ovm ? range_q[2] : range_q[3]) || range_q[1]);
+    end else begin : g_legacy_final
     wire [24:0] m1_s0, m1_s1;
     ot_hdc_sk_cadd #(.W(24)) u_inc (.a(m3_q), .b(24'd0), .s0(m1_s0), .s1(m1_s1));
     wire [23:0] m2_s0, m2_s1;
@@ -267,12 +299,15 @@ module ot_hdc_skp_quot (
     wire zero = xz | z3_q;
     assign y = zero ? 31'd0 : {field, ovm ? 23'd0 : mf[22:0]};
     assign range = !zero & (bad_hi | bad_lo);
+    end endgenerate
 endmodule
 
 module ot_hdc_sinkhorn_p #(
     parameter integer ITERS = 20,
     parameter [31:0]  EPS = 32'h358637BD,
     parameter integer CONTROL_SAFE = 0,
+    parameter integer Q4 = 0,
+    parameter integer MUT_Q4 = 0,
     parameter integer MUT = 0                  // bench only: 1 = a steady step lands one stage early
 ) (
     input  wire         clk,
@@ -286,7 +321,7 @@ module ot_hdc_sinkhorn_p #(
     output wire         busy
 );
     localparam integer STEPS = 2 * ITERS - 1;
-    localparam integer D0 = 17, DS = 15;
+    localparam integer D0 = 17 + (Q4 != 0), DS = 15 + (Q4 != 0);
     localparam integer LAT = D0 + STEPS * DS;
     localparam [1:0] P_IDLE = 2'd0, P_Z = 2'd1, P_RUN = 2'd2;
     localparam [7:0]  EPS_E = (EPS[30:23] == 8'd0) ? 8'd1 : EPS[30:23];
@@ -402,7 +437,7 @@ module ot_hdc_sinkhorn_p #(
         ot_hdc_skp_seed #(.NC(4), .CONTROL_SAFE(CONTROL_SAFE)) u_seed (.clk(clk), .tm(tmc[0]), .decoded(decoded), .r(rs));
         // Q1..Q3 + final; element (r, k) -> storage 4k + r (transposed)
         for (k = 0; k < 4; k = k + 1) begin : g_q
-            ot_hdc_skp_quot u_q (.clk(clk), .subn(zm[4*r + k]), .xm(x_m[4*r + k]), .xe(x_e[4*r + k]),
+            ot_hdc_skp_quot #(.Q4(Q4), .MUT_Q4(MUT_Q4)) u_q (.clk(clk), .subn(zm[4*r + k]), .xm(x_m[4*r + k]), .xe(x_e[4*r + k]),
                                  .xz(x_z[4*r + k] & zm[4*r + k]), .tm(tmc[k]), .te(tec[k]), .r(rs[29*k +: 29]),
                                  .y(q[4*k + r]), .range(q_rng[4*k + r]));
         end
@@ -466,6 +501,14 @@ module ot_hdc_sinkhorn_p #(
 `endif
 endmodule
 (* keep_hierarchy = 1 *) module ot_hdc_skp_denominator34(input wire clk, input wire [33:0] d, output reg [33:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+// Fixed distinct useful consumer modules survive hierarchy-preserving mapping.
+// Source has 16*(3+6)=144 predicate FF, below the 192-FF model reserve.
+(* keep_hierarchy = 1 *) module ot_hdc_skp_q4_pack3(input wire clk, input wire [2:0] d, output reg [2:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy = 1 *) module ot_hdc_skp_q4_range6(input wire clk, input wire [5:0] d, output reg [5:0] q);
     always @(posedge clk) q <= d;
 endmodule
 `default_nettype wire
