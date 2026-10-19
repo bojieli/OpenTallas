@@ -74,3 +74,23 @@ prior exact synthesis49.90% plus <=64FF, actual area remeasured by gate;
 (7) same centre CTS and 0.03ns hold budgets, native launch/spread must be
 remeasured; (8) static calendar unchanged, +0cycles priced. Root review,
 native PASS, actual area/copies and final PNG required. No REVIEW or submit.
+
+## SVCGU regen (10-19, branch claude/s81-svcgu-gunit-1019) -- SAFE-DESIGN checklist
+Input: gate2 d9ef27598 (CTS, ot-epyc7) FAIL only on fill 28% / band density (outline 388.8 x 432 for 40,172 um2 std +
+6,643 um2 macros); TT setup WNS +13 ps, FF hold +35 ps, GRT overflow 0, pin-flop spread TT 63.5 / FF 59.7 ps.
+1 Pins: PASS (source-registered faces, reset_landing 2 stages, io_hold_margin 0.03).
+2 Reach: PASS by construction (tile 388.8 x 259.2; longest pin->landing / macro->band path << 405 um); gate measures.
+3 Fanout: fixed for the dominant family -- native census 2eb2bda2b: 118 of 153 FF roots > 32 were the Sinkhorn quotient
+  Q2 shift copies g_shc (<= 72 loads) + 15 g_lt (<= 46): copies doubled (lt 4 -> 8, Q2 shift 6 -> 15 slices + 2 sub),
+  kept via ot_skf_kr (* keep_hierarchy *) -- the gate's keep_modules / native census must show 17 g_shc + 8 g_lt
+  per quotient. Remaining 20 FF roots (fp32 mul/add keep-stage regs <= 101, 2 reset regions 39/38) and 424 comb roots:
+  buffered by repair_design (set_max_fanout 32 in the kit SDC), WAIVED with reason: gate2 closed post-CTS with
+  positive setup/hold at GRT 0; shared fp32 mul/add modules are used by many closed tiles.
+4 Depth: WAIVED-with-reason: worst stage Sinkhorn u_zq -> u_eps 648 ps at 20 levels (guideline ~600 / ~20 levels),
+  post-CTS TT setup positive in gate2.
+5 Storage: PASS (3,072-bit base table in 12 native 32x64 SRAM banks; scales 384 b flops < 2 kb).
+6 Floorplan: fixed -- outline 388.8 x 259.2 (aspect 1.5) from MEASURED synthesis area, fill ~46 %; S face keeps
+  388.8 um for ~1,173 S pins (~3.0/um); 12 macros on the 43.2 lattice (x 43.2/172.8/302.4, y 43.2/86.4/172.8/216);
+  the whole core is the std band (band exception removed).
+7 Clock: gate2 spread 63.5/59.7 ps PASS; single centre root re-measured by this --cts gate.
+8 Schedule: static; 0 edges (Sinkhorn LAT 642, GUNIT hc_lat 1004 unchanged -- bench_svcgu witnesses).
