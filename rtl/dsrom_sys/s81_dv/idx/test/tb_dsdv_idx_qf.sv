@@ -34,7 +34,8 @@ module tb_dsdv_idx_qf;
             if (qc0 !== (inw.exists(cyc - 2) ? inw[cyc - 2] : 513'd0) || qc1 !== qc0) begin
                 nerr++; if (nerr < 6) $display("TB_QF child mismatch cyc %0d got %h", cyc, qc0[16:0]);
             end
-            if (qr !== (expr.exists(cyc) ? expr[cyc] : 513'd0)) begin
+            // qr: valid bit every edge, data when valid (the chain ignores data bits of an idle word)
+            if (qr[0] !== (expr.exists(cyc) ? 1'b1 : 1'b0) || (qr[0] && qr !== expr[cyc])) begin
                 nerr++; if (nerr < 6) $display("TB_QF qr mismatch cyc %0d got v%0d %h exp v%0d", cyc, qr[0], qr[512:497],
                                                  expr.exists(cyc) ? expr[cyc][0] : 0);
             end
