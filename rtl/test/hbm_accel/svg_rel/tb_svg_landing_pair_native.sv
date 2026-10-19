@@ -33,19 +33,21 @@ module svg_pair_old_reference #(parameter integer BANK=1)(
  end
  always @(negedge hclk)packet_q=expected[rp];
  always @(posedge sclk or negedge srst)begin
-  if(!srst)begin rv<=0;st<=1;rdv<=0;rb<=0;rdb<=0;ep<=0;total<=0;row<=0;data_q<=0;data_q2<=0;cp_q<=0;fp_q<=0;bp_q<=0;end
+  if(!srst)begin rv<=0;st<=1;rdv<=0;rb<=0;rdb<=0;ep<=0;total<=0;row<=0;cp_q<=0;fp_q<=0;bp_q<=0;end
   else begin
    rv<=reserve_v;st<=stop;rdv<=read_v;rb<=reserve_bank;rdb<=read_bank;ep<=reserve_epoch;total<=reserve_total;row<=read_row;
-   data_q<=data;data_q2<=data_q;cp_q<=cv;fp_q<=fault;bp_q<=cb;
+   cp_q<=cv;fp_q<=fault;bp_q<=cb;
   end
  end
+ // Match unreset native held-data Q through reset; every active comparison remains.
+ always @(posedge sclk)begin data_q<=data;data_q2<=data_q;end
  always @(posedge sclk)begin
   if(srst)begin
    exp_c=cp_q;exp_b=bp_q;exp_f=fp_q;
    #80;
    if(native_complete)completions=completions+1;
    if(native_complete!==exp_c||(native_complete&&native_bank!==exp_b)||native_fault!==exp_f||native_data!==data_q2)begin
-    errors=errors+1;if(errors<5)$display("PAIR_OLD_MASTER_FAIL bank=%0d complete=%0b/%0b fault=%0b/%0b",BANK,native_complete,exp_c,native_fault,exp_f);
+    errors=errors+1;if(errors<5)$display("PAIR_OLD_MASTER_FAIL bank=%0d complete=%0b/%0b fault=%0b/%0b data_match=%0b time=%0t",BANK,native_complete,exp_c,native_fault,exp_f,native_data===data_q2,$time);
    end
   end
  end
