@@ -1,0 +1,41 @@
+ot-run: ot-epyc4       admits  1186 GB (avail 887, growth 49, headroom 0, waiters 0/0 GB) load 57/128 running 18 disk 396 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-coupon1-1019/out
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3703908-1792443684 after 0 s
+{
+  "INVxp33_ASAP7_75t_R": {
+    "area": 0.04374
+  },
+  "AND2x2_ASAP7_75t_R": {
+    "area": 0.08748
+  },
+  "MAJIxp5_ASAP7_75t_R": {
+    "area": 0.10206
+  },
+  "OR2x2_ASAP7_75t_R": {
+    "area": 0.08748
+  },
+  "XOR2xp5_ASAP7_75t_R": {
+    "area": 0.13122
+  },
+  "reference_budget": {
+    "HA_area": 0.2187,
+    "FA_area": 0.69984,
+    "HA_cells": 2,
+    "FA_cells": 7,
+    "CSA8_FA": 4,
+    "CSA8_HA": 3,
+    "CSA16_FA": 11,
+    "CSA16_HA": 4,
+    "binary8_FA": 4,
+    "binary8_HA": 7,
+    "binary16_FA": 11,
+    "binary16_HA": 15
+  }
+}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3703908-1792443684): exit 0
