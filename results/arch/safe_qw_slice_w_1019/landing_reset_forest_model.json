@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.qwen.same_depth_landing_reset_forest.v1",
+  "status": "PRIVATE_COMPONENT_MODEL_NOT_GENERATOR_ADOPTION_OR_PHYSICAL_PROOF",
+  "problem": "Scalar regional lpr_core drives hundreds of local reader/writer rq pins; a single 1088-bit chunk ring alone has46 rq loads. A scalar reset input pin does not make these physical loads one.",
+  "construction": "Replace the last two stages of an already-priced regional reset run with kept32-ary branches and individually kept leaf flops. Preserve total regional reset run depth. Each local ring chunk receives its own existing-final-stage leaf through an explicit vector-reset wrapper.",
+  "parameters": {"minimum_depth": 2, "maximum_leaves": 1024, "fanout_limit": 32},
+  "age_contract": {"added_data_edges": 0, "added_reset_release_edges": 0, "comparison": "Every forest leaf equals unchanged ot_pl_pad W1 N=DEPTH on each destination capture edge, including arbitrary reset assertions and releases."},
+  "logical_cost": {"formula": "DEPTH-2 + ceil(LEAVES/32) + LEAVES FFs", "example_depth8_leaves47": {"FFs": 55, "original_pad_FFs": 8, "incremental_FFs": 47}},
+  "retention": "Every prefix, branch and leaf is a unique kept one-bit flop hierarchy. Generic/native synthesis retention must be measured; buffer trees cannot substitute for the source distribution.",
+  "parent_plan_not_implemented": "Allocate one leaf per actual chunk and separately audit scalar hard/soft child reset consumers. A scalar child-facing leaf is not proof of internal child reset loads. The root's fanout to all region prefix entries and every asynchronous input load remain audited.",
+  "not_proven": ["Parent generator integration, exact total source fanout and final component reset census.", "Actual clock/reset phase, 405um per-level placement/route, TT/FF timing and arrival ownership.", "Any waiver for deeper unpriced distribution or long holding chains outside the explicitly priced reset propagation contract."]
+}
