@@ -59,8 +59,8 @@ module qkd_hr_core_guard(ck_core, token_epoch_valid, token_epoch, native_pr, nat
   wire est;
   input [127:0] slice_boot_fault;
   wire [127:0] slice_boot_fault;
-  input [127:0] ctrl_completion_fault;
-  wire [127:0] ctrl_completion_fault;
+  input ctrl_completion_fault;
+  wire ctrl_completion_fault;
   input [23:0] service_faults;
   wire [23:0] service_faults;
   output service_faults_o;
@@ -228,7 +228,6 @@ module qkd_hr_core_guard(ck_core, token_epoch_valid, token_epoch, native_pr, nat
   wire _58_;
   wire _59_;
   wire _60_;
-  wire _61_;
   wire ck_axi;
   wire ck_bootbarrier;
   wire ck_coordinator_codec;
@@ -302,7 +301,7 @@ module qkd_hr_core_guard(ck_core, token_epoch_valid, token_epoch, native_pr, nat
   wire u_rank__ck_rx;
   wire u_rank__ck_sum;
   wire u_rank__ck_tx;
-  wire [127:0] u_rank__ctrl_completion_fault;
+  wire u_rank__ctrl_completion_fault;
   wire [2:0] u_rank__die_id;
   wire u_rank__fence_fault;
   wire [181:0] u_rank__hc;
@@ -426,31 +425,30 @@ module qkd_hr_core_guard(ck_core, token_epoch_valid, token_epoch, native_pr, nat
   wire u_rank__u_phy__rst_n;
   wire u_rank__u_phy__rx_rck;
   wire u_rank__u_phy__tx_wck;
-  assign { _18_, _17_, _16_, _15_, _14_, _13_, _12_, _11_ } = _10_ || root_mux_fault;
-  assign _10_ = peer_protocol_fault || coordinator_fault;
-  assign u_rank__physical_fault = { _52_, _51_, _50_, _49_, _48_, _47_, _46_, _45_ } | { _44_, _43_, _42_, _41_, _40_, _39_, _38_, _37_ };
-  assign { _52_, _51_, _50_, _49_, _48_, _47_, _46_, _45_ } = physical_fault | { _36_, _35_, _34_, _33_, _32_, _31_, _30_, _29_ };
+  assign { _17_, _16_, _15_, _14_, _13_, _12_, _11_, _10_ } = _09_ || root_mux_fault;
+  assign _09_ = peer_protocol_fault || coordinator_fault;
+  assign u_rank__physical_fault = { _51_, _50_, _49_, _48_, _47_, _46_, _45_, _44_ } | { _43_, _42_, _41_, _40_, _39_, _38_, _37_, _36_ };
+  assign { _51_, _50_, _49_, _48_, _47_, _46_, _45_, _44_ } = physical_fault | { _35_, _34_, _33_, _32_, _31_, _30_, _29_, _28_ };
   assign physical_fault = { 7'h00, link_physical_fault } << die_id;
-  assign { _44_, _43_, _42_, _41_, _40_, _39_, _38_, _37_ } = { _18_, _17_, _16_, _15_, _14_, _13_, _12_, _11_ } << die_id;
-  assign { _36_, _35_, _34_, _33_, _32_, _31_, _30_, _29_ } = { 7'h00, record_fault } << die_id;
+  assign { _43_, _42_, _41_, _40_, _39_, _38_, _37_, _36_ } = { _17_, _16_, _15_, _14_, _13_, _12_, _11_, _10_ } << die_id;
+  assign { _35_, _34_, _33_, _32_, _31_, _30_, _29_, _28_ } = { 7'h00, record_fault } << die_id;
   assign u_rank__u_control__service_ready = service_ready && program_ready;
-  assign _61_ = por_n && pll_locked;
-  assign _28_ = $signed(32'd1) && u_rank__native_protocol_fault;
-  assign _02_ = _01_ || _00_;
-  assign _03_ = _02_ || u_rank__ingress_fault;
-  assign _05_ = _03_ || u_rank__program_fault;
-  assign _07_ = _05_ || u_rank__commit_fault;
-  assign _09_ = _07_ || host_observer_fault;
-  assign { _27_, _26_, _25_, _24_, _23_, _22_, _21_, _20_ } = _09_ || u_rank__peer_link_fault;
-  assign _04_ = u_rank__source_fault | u_rank__dispatch_fault;
-  assign _06_ = _04_ | u_rank__bootbarrier_fault;
-  assign _08_ = _06_ | u_rank__marker_consumer_fault;
-  assign _19_ = _08_ | est;
-  assign service_faults_o = _19_ | _28_;
-  assign u_rank__observed_physical_faults = u_rank__physical_fault | { _60_, _59_, _58_, _57_, _56_, _55_, _54_, _53_ };
-  assign _01_ = | slice_boot_fault;
-  assign _00_ = | ctrl_completion_fault;
-  assign { _60_, _59_, _58_, _57_, _56_, _55_, _54_, _53_ } = { _27_, _26_, _25_, _24_, _23_, _22_, _21_, _20_ } << die_id;
+  assign _60_ = por_n && pll_locked;
+  assign _27_ = $signed(32'd1) && u_rank__native_protocol_fault;
+  assign _01_ = _00_ || ctrl_completion_fault;
+  assign _02_ = _01_ || u_rank__ingress_fault;
+  assign _04_ = _02_ || u_rank__program_fault;
+  assign _06_ = _04_ || u_rank__commit_fault;
+  assign _08_ = _06_ || host_observer_fault;
+  assign { _26_, _25_, _24_, _23_, _22_, _21_, _20_, _19_ } = _08_ || u_rank__peer_link_fault;
+  assign _03_ = u_rank__source_fault | u_rank__dispatch_fault;
+  assign _05_ = _03_ | u_rank__bootbarrier_fault;
+  assign _07_ = _05_ | u_rank__marker_consumer_fault;
+  assign _18_ = _07_ | est;
+  assign service_faults_o = _18_ | _27_;
+  assign u_rank__observed_physical_faults = u_rank__physical_fault | { _59_, _58_, _57_, _56_, _55_, _54_, _53_, _52_ };
+  assign _00_ = | slice_boot_fault;
+  assign { _59_, _58_, _57_, _56_, _55_, _54_, _53_, _52_ } = { _26_, _25_, _24_, _23_, _22_, _21_, _20_, _19_ } << die_id;
   qkd_host_service_guard u_rank__u_guard  (
     .abort(service_abort),
     .accepted_ing_cls(u_rank__ing_cls),
@@ -497,7 +495,7 @@ module qkd_hr_core_guard(ck_core, token_epoch_valid, token_epoch, native_pr, nat
     .legacy_tk(local_tk),
     .local_tk(u_rank__native_tk),
     .native_pr(native_pr),
-    .por_n(_61_),
+    .por_n(_60_),
     .protocol_fault(u_rank__native_protocol_fault),
     .recovery_clear(host_recovery_clear),
     .request_cr(native_request_cr),
