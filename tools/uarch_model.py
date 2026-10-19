@@ -17425,3 +17425,9 @@ def hbm_svg_regional_model():
     """HBM-SMB-KITS native pipeline + regional return hierarchy before RTL."""
     from hbm_layer_vehicle.svg_hierarchy_model import model
     return model()
+
+
+def hbm_svg_return_regional_model():
+    """Opt-in seven-edge source-pair/ring/cache SVG return prototype."""
+    from hbm_layer_vehicle.svg_return_model import model
+    return model()
