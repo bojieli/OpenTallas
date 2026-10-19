@@ -1,0 +1,15 @@
+('ot-epyc4', 0, '')
+('ot-epyc5', 0, '')
+('ot-epyc6', 0, '')
+('ot-epyc7', 0, '')
+('ot-epyc8', 0, '')
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 34/128 running 15 disk 414 GB 
+ot-run: ot-epyc5       admits   561 GB (avail 449, growth 49, headroom 0, waiters 0/0 GB) load 46/128 running 7 disk 911 GB 
+ot-run: ot-epyc6       admits  1244 GB (avail 930, growth 59, headroom 0, waiters 0/0 GB) load 27/128 running 18 disk 5717 GB 
+ot-run: ot-epyc7       admits   996 GB (avail 755, growth 58, headroom 0, waiters 0/0 GB) load 32/96 running 20 disk 6272 GB 
+ot-run: ot-epyc8       admits  1179 GB (avail 911, growth 86, headroom 0, waiters 0/0 GB) load 23/128 running 15 disk 79 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-a3-wholemaster-1019/api_corrected
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-a3-wholemaster-1019/api_corrected
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2099483-1792447512 after 0 s
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2099483-1792447512): exit 1
