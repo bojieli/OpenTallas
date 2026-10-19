@@ -25,7 +25,13 @@
     "rank_instances": 8,
     "rank_existing_packet_bits_repurposed_total": 16,
     "new_rank_vector_bits": 0,
-    "new_ifpins_or_services_or_post_state": 0
+    "new_ifpins_or_services_or_post_state": 0,
+    "selected_rank0_repurposed_live_bits": 2,
+    "other_rank_observer_roles": "RANK1-7 reject observer events; bench ties observer inputs0",
+    "selected_new_plus_repurposed_live_bits": 6,
+    "conservative_new_plus_repurposed_live_bits": 20,
+    "baseline213_plus_selected_live": 219,
+    "baseline213_plus_conservative_live": 233
   },
   "ports": {
     "scheduler_outputs": [
@@ -53,8 +59,7 @@
     "parameter": "ENABLE_NATIVE_OWNER_JOIN=0",
     "private_modules": [
       "qkd_host_peer_rank_codec_rc",
-      "qkd_host_peer_coordinator_codec_rc",
-      "qkd_host_post_collector_rc"
+      "qkd_host_peer_coordinator_codec_rc"
     ]
   },
   "production_H": null,
@@ -62,5 +67,6 @@
   "CDC": null,
   "physical": null,
   "SU_latency": null,
-  "MU_rate": null
+  "MU_rate": null,
+  "post_policy": "enabled POST issue is already alloc_fire; typed NO_NATIVE observers do not alter native POST state; raw observers remain visible; true native marker retains all original comparisons"
 }
