@@ -299,16 +299,19 @@ def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None
             m['buses'].extend(hops)
             m.setdefault('relay_stages', {})[base] = m.get('relay_stages', {}).get(base, 0) + k
             for it in pads:
-                added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y))
+                added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y,
+                                  launch=(si, port), sink=(dinst, dport)))
         rec[name] = dict(members=rows, stages=max(r['stages'] + r['pads'] + r.get('offset', 0) for r in rows.values()))
     m['buses'] = [b for b in m['buses'] if b is not None]
     m['insts'].extend(staged)
-    for row in added:      # each pad joins the core clock trunk of its chain's source (kv_pin_repair rule)
-        src = row['clock_source']
-        j = next((j for j, (_, cl, _, eps) in enumerate(m['buses']) if cl == 'clock_trunk' and any(i == src for i, _ in eps)),
-                 None)
-        if j is None:
-            j = next(j for j, (b, _, _, _) in enumerate(m['buses']) if b == 'clk_core_c')
+    import kv_pin_repair as KPR
+    byall = dict(by, **{it.name: it for it in staged})
+    for row in added:      # KVR-DERIVE 10-19: each pad joins the LAUNCHING pin's clock trunk (kv_pin_repair.relay_trunk;
+        # the old rule took the first trunk touching the source and could land a core record on n_clk_hbm)
+        j, dom = KPR.relay_trunk(m['buses'], byall, row.pop('launch'), row.pop('sink'))
+        row.update(domain=dom, clock=m['buses'][j][0])
+        if KPR.trunk_domain(row['clock']) != ('core' if dom == 'mixed' else dom):
+            raise ValueError(f'kv_bundle_eq: pad {row["relay"]} clock {row["clock"]} != launch domain {dom}')
         b_, cl_, w_, eps_ = m['buses'][j]
         m['buses'][j] = (b_, cl_, w_, list(eps_) + [(row['relay'], 'ck')])
     prev = m.get(record_key) or {}

@@ -75,3 +75,40 @@ def equalize(K, m, target=None):
                         natural_max=max(v['round_trip'] for v in nat.values()),
                         natural_min=min(v['round_trip'] for v in nat.values()))
     return m
+
+
+# KVR-DERIVE 10-19 (QW-KVATTN2 finding 2): qkd_pv16_vport has ONE RT for both of its sides (vq0 -> group {k, 0} -> i0 and
+# vq1 -> group {k, 1} -> i1), so the two V round trips 9 + vq + rs of a port must be equal.  The shorter side's 15-b V get
+# chain (vport.vq<g> -> slg.vreq) is padded at its sink end (kv_bundle_eq machinery, core-clock pads).  The port's RT is
+# then 9 + the common relay count; the kit's hard RT (kv_static_die.tile_ages VPORT_RT) is checked by kv_static_params.
+def vport_side_eq_on():
+    return os.environ.get('OT_KV_VPORT_SIDE_EQ', '1') == '1'
+
+
+def equalize_vport_sides(K, m):
+    by = {i.name: i for i in m['insts']}
+    bundles = {}
+    for st in KSD.STACKS:
+        for k in range(4):
+            vp = f'vport_{st}_{k}'
+            if vp in by and all(f'slg_{st}_{2 * k + g}' in by for g in (0, 1)):
+                bundles[f'V.rt_{st}_{k}'] = [(vp, f'vq{g}', f'slg_{st}_{2 * k + g}') for g in (0, 1)]
+    if not bundles:
+        return m
+    nat = {}
+
+    def plan_fn(name, stages, walk):
+        tot = {}
+        for (vp, port, s), q in stages.items():
+            hits = [v[0] for kk, v in walk((s, 'rsp')).items() if kk[0] == vp]
+            if len(hits) != 1:
+                raise ValueError(f'kv_vport_side_eq: {s}.rsp reaches {vp} {len(hits)} times')
+            tot[(vp, port, s)] = q + hits[0]
+        t = max(tot.values())
+        nat[name] = dict(sides=[tot[x] for x in sorted(tot, key=lambda x: x[1])], RT=KSD.VPORT_RT_SEG + t)
+        return {x: t - v for x, v in tot.items()}
+    m = BEQ.equalize(K, m, bundles=bundles, plan_fn=plan_fn, record_key='vport_side_eq',
+                     rule='every V port: vq0 + rs0 == vq1 + rs1 (pads on the shorter 15-b V get chain at its sink end; '
+                          'tools/qwen_kv_die/kv_k_rt_eq.py equalize_vport_sides)')
+    m['vport_side_eq'].update(natural=nat, RT={n_[2:]: v['RT'] for n_, v in nat.items()})
+    return m

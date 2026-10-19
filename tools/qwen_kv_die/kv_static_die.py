@@ -274,6 +274,64 @@ import kv_static_ages as _AGES   # noqa: E402
 ECTLK_RESPONSE_LAT = _AGES.K_RT_BUDGET
 ECTLK_QK_ISSUE_AGE = ECTLK_RESPONSE_LAT + _AGES.QK_WRITE_BEFORE_READ
 ECTLK_ROW_RETURN_LAT = ECTLK_RESPONSE_LAT + 7
+# KVR-DERIVE 10-19 (coordinator decision): the static-schedule ages HARD-CODED in closed tiles.  This die binds exactly
+# these values; the generator pads a faster path up to the value where that is legal (core-clock pad relays) and
+# kv_static_params FAILS every path whose relay-plan age differs (never a mismatch bound; a path already longer than the
+# value needs the ONE later re-harden: boot-programmable static-schedule registers, spec in lanes/KVR-DERIVE.md).
+#   ECTL_RESPONSE_LAT  qkd_ectl3_kiss_st children (rt80 kit)        8 + krq + krs                 (kv_k_rt_eq pads krq)
+#   VPORT_RT           qkd_pv16_vport kit (r6: RT 8)                 9 + pvvq_g + pvrs_g, both sides (pads: pvvq, 15 b)
+#   PV_FIRST_INPUT_AGE ot_qwen_tp8_pv_wide_ctl_t kit (OT_KV_PV_T_CTL_KIT spec)   4 + W + DQ + RT_die + 1, all 16 ports
+#   PV_LEAD / F_DLY    qkd_kvs_attn (generated tile text: attn_root / attn_face join parameters)
+#                      PV_LEAD = D(ks_pvst) to pvw_0 and pvw_1; F_DLY = 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) [+ face land]
+VPORT_KIT = os.environ.get('OT_KV_VPORT_KIT', 'physical/ref_tile/qkd_pv16_vport_r6/spec.json')
+VPORT_RT_SEG = 9          # landing seg vreq capture 1 + VREQ latency 8 (KVJ-F tb_static_landing_vport)
+LANDING_SEG = 8           # K request -> response latency of the landing seg
+
+
+def _kit_params(rel):
+    """a kit spec's params from the worktree, else from git HEAD (sparse checkouts); None when absent"""
+    f = ROOT / rel
+    try:
+        txt = f.read_text() if f.exists() else __import__('subprocess').run(
+            ['git', '-C', str(ROOT), 'show', f'HEAD:{rel}'], capture_output=True, text=True, check=True).stdout
+        return json.loads(txt).get('params') or {}
+    except Exception:              # noqa: BLE001
+        return None
+
+
+def tile_ages():
+    """the hard-coded tile ages this die binds (+ where each comes from)"""
+    vk = _kit_params(VPORT_KIT) or {}
+    ck = os.environ.get('OT_KV_PV_T_CTL_KIT', 'qkd_pv_ctl_t_d54f58a95')
+    cp = _kit_params(f'physical/ref_tile/{ck}/spec.json') or {}
+    at = attn_tile_params()
+    return dict(ECTL_RESPONSE_LAT=ECTLK_RESPONSE_LAT, ECTL_QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE,
+                VPORT_RT=int(vk.get('RT', 8)), VPORT_DQ=int(vk.get('DQ', 0)),
+                PV_FIRST_INPUT_AGE=int(cp['FIRST_INPUT_AGE']) if 'FIRST_INPUT_AGE' in cp else None,
+                PV_LEAD=at.get('PV_LEAD'), F_DLY=at.get('F_DLY'),
+                source=dict(ECTL='kv_static_ages.K_RT_BUDGET (qkd_ectl3_kiss_st rt80 children)', VPORT=VPORT_KIT,
+                            PV_CTL=f'physical/ref_tile/{ck}/spec.json', ATTN=f'{RTL_FILE} module qkd_kvs_attn'))
+
+
+def attn_tile_params(text=None):
+    """PV_LEAD / F_DLY as the generated qkd_kvs_attn tile binds them (the tile text; the closed kit is that text)"""
+    if text is None:
+        p = ROOT / RTL_FILE
+        if not p.exists():
+            return {}
+        text = p.read_text()
+    m = re.search(r'module\s+qkd_kvs_attn\b(.*?)endmodule', text, re.S)
+    if not m:
+        return {}
+    out = {}
+    for k, mod in (('PV_LEAD', 'qkd_attn_service_root'), ('F_DLY', 'qkd_attn_result_face_s')):
+        mm = re.search(mod + r'\s*#\s*\((.*?)\)\s*\w+\s*\(', m.group(1), re.S)
+        v = re.search(r'\.' + k + r'\((\d+)\)', mm.group(1)) if mm else None
+        if v:
+            out[k] = int(v.group(1))
+    return out
+
+
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()

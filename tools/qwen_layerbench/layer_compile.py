@@ -269,6 +269,8 @@ def main(argv=None):
     ap.add_argument('--n59-land-edges', type=int, default=8,
                     help='qfd_native59_dv_service LAND_EDGES the die binds (dv2f14bn: default 8; see gaps)')
     ap.add_argument('--gz-over', type=int, default=4_000_000, help='write a compiled table gzipped above this many bytes')
+    ap.add_argument('--kv-die-v', help='KVR-DERIVE: the bound KV die netlist (die_bound.v): instance bindings checked')
+    ap.add_argument('--kv-case-die-v', help='KVR-DERIVE: the KV case die.v (+ .params.json): straps / relay clocks checked')
     ap.add_argument('--kv-static-model', help='HKV-DIE2: CASE/static_model.json (kv_die.py case): recompute the KV static '
                     'parameters (hub AP_OFS/FR_OFS, ASTK e_after_header, attention fault latencies, seq KVN bundle) on '
                     '--kv-stages and FAIL a finding where they disagree (tools/qwen_kv_die/kv_static_params.py)')
@@ -409,7 +411,8 @@ def main(argv=None):
         sys.path.insert(0, str(ROOT / 'tools/qwen_kv_die'))
         import kv_static_params as KSP
         ksp = KSP.run(json.load(open(a.kv_static_model)), docs['qwen_kv'],
-                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None, attn=True)   # HKV-DIE3: + ATTN_CALENDAR
+                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None, attn=True,   # HKV-DIE3: + ATTN_CALENDAR
+                      die_v=a.kv_die_v, case_die_v=a.kv_case_die_v)       # KVR-DERIVE: bindings / straps / relay clocks
         write_json(out / 'kv_static_params.json', ksp)
         for f in ksp['fails']:
             findings.append(dict(id=f'KV_STATIC_PARAMS {f["id"]}', severity='FAIL', owner='KV die lead (HKV-DIE)',
@@ -430,7 +433,11 @@ def main(argv=None):
                stages=S, txd=txd, kv_programme=kvp, relay_check={k: v['verdict'] for k, v in checks.items()},
                **({'kv_static_params': dict(status=ksp['status'], table_digest=ksp['table_digest'],
                                             ahub_ages=ksp['params'].get('ahub_ages'), seq_kvn=ksp['params'].get('seq_kvn'),
-                                            attn_fault_lane_max=(ksp['params'].get('attn_fault') or {}).get('lane_latency_max'))}
+                                            attn_fault_lane_max=(ksp['params'].get('attn_fault') or {}).get('lane_latency_max'),
+                                            # KVR-DERIVE 10-19: the attention-path static ages THIS table needs vs the
+                                            # closed tiles' hard ages the die binds (any difference is a FAIL finding)
+                                            static_schedule={k: (ksp['params'].get('static_schedule') or {}).get(k)
+                                                             for k in ('schedule', 'tile_ages')})}
                   if ksp else {}),
                findings=[f['id'] for f in findings], gaps=len(gaps),
                files={str(p.relative_to(out)): sha(p) for p in files})
