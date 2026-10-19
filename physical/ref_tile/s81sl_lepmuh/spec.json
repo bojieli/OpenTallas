@@ -221,7 +221,7 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "^FAIL lep_muh: ok \\d+ rx \\d+ tx \\d+ hostplane \\d+|^FAIL lep_muh: .*rx [1-9]|^FAIL lep_muh: .*tx [1-9]",
+    "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
     "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_hstamp.log"
    },
    {
@@ -230,7 +230,7 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "^FAIL lep_muh: ok \\d+ rx \\d+ tx \\d+ hostplane \\d+|^FAIL lep_muh: .*rx [1-9]|^FAIL lep_muh: .*tx [1-9]",
+    "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
     "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_tagdrop.log"
    },
    {
@@ -239,7 +239,7 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "^FAIL lep_muh: ok \\d+ rx \\d+ tx \\d+ hostplane \\d+|^FAIL lep_muh: .*rx [1-9]|^FAIL lep_muh: .*tx [1-9]",
+    "fail_regex": "^FAIL lep_muh: ok 0 rx [1-9]",
     "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_landcut.log"
    },
    {
@@ -248,7 +248,7 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "^FAIL lep_muh: ok \\d+ rx \\d+ tx \\d+ hostplane \\d+|^FAIL lep_muh: .*rx [1-9]|^FAIL lep_muh: .*tx [1-9]",
+    "fail_regex": "^LEPMUH_STATS .* ks 0/[1-9]",
     "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_ksoff.log"
    }
   ],

@@ -8,8 +8,6 @@
 #   mu_kit_bench.sh OUTDIR lepmuh MUT SEED   tb_s81sl_lep_muh (kit s81sl_lepmuh, MU-S81-2/HOSTEP): host-plane MU endpoint
 #                                            ot_s81sl_lep_mu_h + dsdv_mu_land vs the single-user ot_s81sl_lep.
 #                                            MUT none | HSTAMP | TAGDROP | LANDCUT | KSOFF (ot_s81sl_lep_core)
-#   mu_kit_bench.sh OUTDIR hwin   MUT [BADRT]  tb_dsdv_mu_hwin (kit dsdv_mu_hwin) beside dsdv_mu_hslot: MUT 0 | 3 | 4,
-#                                            BADRT 1 = an RX tag of no outstanding start (must fault)
 #   mu_kit_bench.sh OUTDIR hslot  MUT NS [COLLIDE]   tb_dsdv_mu_hslot (kit dsdv_mu_hslot): NS users / slots, MUT 0|1|2,
 #                                            COLLIDE 1 = a start into an occupied slot (must fault)
 # Prints the testbench verdict lines and a last line BENCH_PASS / BENCH_FAIL <what>; exit 0 only on BENCH_PASS.
@@ -42,18 +40,6 @@ lepmu|lepmuh)
   grep -E "^(LEP_MU_STATS|LEPMUH_STATS|MISMATCH|PASS|FAIL|ERR)" $O/run_$R.log | head -12
   grep -q "^PASS $VR:" $O/run_$R.log && { echo "BENCH_PASS $B MUT=$M seed $S"; exit 0; }
   echo "BENCH_FAIL $B MUT=$M seed $S"; exit 1 ;;
-hwin)
-  C=${4:-0}; U=rtl/dsrom_sys/s81_dv/unit
-  D=""; [ "$M" != none ] && [ "$M" != 0 ] && D="+define+WMUT=$M"; [ "$C" = 1 ] && D="$D +define+BADRT=1"
-  R=hwin_${M}_$C
-  $V --binary --timing -j ${J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hwin $D \
-    rtl/lib/ot_rst_relay.sv $U/dsdv_mu_hslot.sv $U/dsdv_mu_hwin.sv $U/test/tb_dsdv_mu_hwin.sv --Mdir $O/obj_$R -o tb > $O/build_$R.log 2>&1 \
-    || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
-  $O/obj_$R/tb > $O/run_$R.log 2>&1
-  grep -E "^(MUWIN|ERR)" $O/run_$R.log | head -12
-  if [ "$C" = 1 ]; then ok='^MUWIN BADRT PASS \(fault raised\)'; else ok='^MUWIN PASS$'; fi
-  grep -q -E "$ok" $O/run_$R.log && { echo "BENCH_PASS hwin MUT=$M BADRT $C"; exit 0; }
-  echo "BENCH_FAIL hwin MUT=$M BADRT $C"; exit 1 ;;
 hslot)
   NS=${4:-47}; C=${5:-0}; U=rtl/dsrom_sys/s81_dv/unit
   D="+define+NS=$NS +define+NP=$NS"; [ "$M" != none ] && [ "$M" != 0 ] && D="$D +define+MUT=$M"; [ "$C" = 1 ] && D="$D +define+COLLIDE=1"

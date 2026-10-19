@@ -1,0 +1,12 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M->H ring 48 got tag 000000000 exp 000190001
+MISMATCH M->H ring 49 got tag 000000000 exp 000190001
+MISMATCH M->H ring 50 got tag 000000000 exp 000190001
+MISMATCH M->H ring 51 got tag 000000000 exp 000190001
+MISMATCH M->H ring 52 got tag 000000000 exp 000190001
+MISMATCH M->H ring 53 got tag 000000000 exp 000190001
+MISMATCH M->H ring 54 got tag 000000000 exp 000190001
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 160 hostplane 0 | faults 000
+FAIL lep_muh: ok 1 rx 0 tx 160 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=TAGDROP seed 1
+rc=1
