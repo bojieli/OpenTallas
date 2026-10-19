@@ -186,12 +186,21 @@ def main(argv=None):
     if _expanded is not None:
         _sources = dict(_configured_leaf_sources)
         _reported = _expanded.get('leaves', {})
+        _preexpand = Path(a.die_v + '.preexp')
+        if _preexpand.exists():
+            _original_instances = {_i for _m, _i, _p, _c in PB.parse_die(str(_preexpand), a.top)[3]
+                                   if _m != '__assign__'}
+        else:
+            # Expansion always creates parent__child names. Unexpanded legacy
+            # bindings without that delimiter remain compatible; ambiguous
+            # names need the preserved pre-expansion source as their witness.
+            _original_instances = {_i for _m, _i, _p, _c in insts
+                                   if _m in bindings and '__' not in _i}
         # Independently indexed by-name RTL also covers dynamically configured
         # expanded leaf types absent from the static registry. A deleted report
         # binding must not make such a parameterized module disappear.
         for _mst, _inst, _params, _connections in insts:
-            if (_mst in _sources or _mst in _reported or _mst in bindings or
-                    _mst in HARD_MODELS or _mst.startswith('qkd_rly')):
+            if _mst in _sources or _mst in _reported or _inst in _original_instances:
                 continue
             _mod = idx.get(_mst)
             if _mod is not None:
@@ -201,7 +210,7 @@ def main(argv=None):
                 except ValueError:
                     pass
                 _sources[_mst] = str(_path)
-        EP.verify_bound(ROOT, _expanded, _ip, insts, _sources,
+        EP.verify_bound(ROOT, _expanded, _ip, insts, _sources, _original_instances,
                         a.diagnostic_parameter_profiles)
     exp = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
     rseg = relay_segments(Path(a.relay_rtl).read_text()) if a.relay_rtl else {}

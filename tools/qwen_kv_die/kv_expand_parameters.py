@@ -93,7 +93,7 @@ def preserve(root, module, overrides, rtl, view, profiles, diagnostic=False):
                           frozen_receipt=receipt)
 
 
-def verify_bound(root, report, sidecar, actual_instances, leaf_sources, diagnostic=False):
+def verify_bound(root, report, sidecar, actual_instances, leaf_sources, original_instances, diagnostic=False):
     # The proof ledger is not its own census. Enumerate the physical instances
     # against independently configured leaf RTL, including modules whose entry
     # was removed from expand.json. Parameterless legacy leaves need no receipt.
@@ -106,6 +106,8 @@ def verify_bound(root, report, sidecar, actual_instances, leaf_sources, diagnost
     required = {}
     defaults = {}
     for module, inst, _params, _connections in actual_instances:
+        if inst in original_instances:
+            continue
         if module not in sources:
             continue
         if module not in defaults:
