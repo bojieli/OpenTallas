@@ -2,7 +2,7 @@
 
 Prepared source-only request, not an executed physical stage. ROOT accepted the exact pin-bound placement at13:19. ROOT must separately
 review this source-only kit and give an explicit CTS-only grant; final PG
-prototype47e03369c test receipts are pinned. No shared helper is
+prototypea92a40171 test receipts are pinned. No shared helper is
 activated here. `request.json` pins the final PG helper; no grant is fabricated.
 
 ## Exact vehicle and planned operation
@@ -125,8 +125,8 @@ and `neighbor_timing_status:DIAGNOSTIC_ONLY`. Absent/wrong grant refuses before
 any output directory or physical tool. Source-only kit preparation is complete;
 no CTS, read-only STA, native export or gate has run for this new candidate.
 
-The PG helper SHA13e936d24fc2a2e35a9f8cc0c6047820753cb5cc8a559a13a7eb8fe56e1ebef3
-is the tested47e03369c prototype. `pg_test_receipt.json` retains exact upstream
+The PG helper SHA86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4
+is the testeda92a40171 master-MTerm-complete prototype. `pg_test_receipt.json` retains exact upstream
 196864-terminal positive/original644negative and domain controls. Insertion is
 followed by fresh mapping, binding every new instance, legal placement, all-native
 coverage and only then instance protection. No existing protection is cleared.

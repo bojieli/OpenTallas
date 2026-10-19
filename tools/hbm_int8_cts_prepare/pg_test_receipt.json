@@ -4,26 +4,42 @@
   "production_activation": false,
   "route_retry": false,
   "parent_adoption": false,
-  "source_base": "e5e69def3",
-  "helper_sha256": "13e936d24fc2a2e35a9f8cc0c6047820753cb5cc8a559a13a7eb8fe56e1ebef3",
+  "source_base": "47e03369c",
+  "helper_sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
   "host": "ot-epyc7",
-  "fleet_dir": "/srv/opentallas-scratch/claude/idx-clock-pg-source-1019",
-  "final_prototype_unit": "oth-ubuntu-65496-1792442025",
-  "final_readonly_audit_unit": "oth-ubuntu-67946-1792442089",
   "openroad": "26Q3-1510-g6cb3f2b704",
   "results": {
-    "old_default_missing": 644,
-    "before_protection_bound": 644,
-    "instances": 322,
-    "all_native_pg_checked": 196864,
-    "source_order_clone_equals_reviewed_odb": true,
-    "whole_def_equals_reviewed_clone": true,
-    "two_native_regions_arbitrary_supply_names": "PASS",
-    "same_role_wrong_domain": "EXPECTED_FAIL",
-    "global_regional_conflict": "EXPECTED_FAIL",
-    "unsupported_pin_regex": "EXPECTED_FAIL",
-    "remove_region_filter_mutant": "EXPECTED_FAIL",
-    "readonly_original": "FAIL_644",
-    "readonly_clone": "PASS_0"
-  }
+    "scope": "SOURCE_PROTOTYPE_ONLY",
+    "production_activation": false,
+    "source_base": "47e03369c",
+    "prior_packet": "47e03369c:results/arch/idx_clock_pg_source_1019",
+    "clone_sha256": "22e4a3d00d57b5d0b9c69e92bd26b4ca351b95b179f3fce416c065a34e79821a",
+    "native_master_pg_mterms": 196864,
+    "missing_iterm_fixture_actual": 0,
+    "modeled_missing_iterm": "EXPECTED_REFUSAL",
+    "modeled_type_mismatch": "EXPECTED_REFUSAL",
+    "old_order_missing": 644,
+    "corrected_bind_count": 644,
+    "audit_reuse_exit": 3,
+    "prior_fail_report_preserved": true,
+    "units": [
+      "oth-ubuntu-73026-1792442287",
+      "oth-ubuntu-73705-1792442311"
+    ]
+  },
+  "packet_commit": "a92a40171",
+  "units": [
+    "oth-ubuntu-73026-1792442287",
+    "oth-ubuntu-73705-1792442311"
+  ],
+  "receipt_logs": {
+    "pg_completeness.log": "d05ff7207e4df53170626892f59b5e8ded654ea690ed504deabb00cdbfcebd62",
+    "pg_prove.log": "5f079799d9edd909fa3d6216f99049a31126c79d76f1ea7a94861c666a42ff64",
+    "pg_domains.log": "2b107da31584a678158cb9b2814e60a4e7ebfcb4df9844995a313af2b79367c1",
+    "pg_audit.clone.log": "890267d81ad56daac995779e92d6a150d0c0ae51c78e8ae02131ed3b1fb49496",
+    "pg_audit.original.log": "14986f8b11224bb19cbe5c4ce1e69076c577efa4dfb337e5fcfd60540ded2e68",
+    "pg_audit.overwrite.log": "738167b4a51eac4dca44280076ba62442d7d376cf035160553b06707c142a663",
+    "pg_preserve.log": "c80a735e02cb51add7e9f310bb678e11ded9e6a5eddea415ee2e3902ff99987c"
+  },
+  "semantics": "Each native master PG MTerm must have exact matching same-role ITerm; missing/type mismatch modeled API negatives refuse binder and final collector. No actual missing ITerm claimed."
 }

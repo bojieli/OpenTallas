@@ -43,12 +43,31 @@ proc ot_pg_expected {mapping inst term} {
   if {![dict exists $mapping $key]} {error "OT_PG_UNKNOWN_DOMAIN $key"}
   return [dict get $mapping $key]
 }
+# Census is driven by the MASTER, never by the possibly incomplete ITerm list.
+proc ot_pg_master_census {inst} {
+  set rows {}
+  foreach mt [[$inst getMaster] getMTerms] {
+    set role [$mt getSigType]
+    if {$role ni {POWER GROUND}} continue
+    set pin [$mt getName]
+    set term [$inst findITerm $pin]
+    set why ""
+    if {$term eq "NULL"} {
+      set why OT_PG_MISSING_ITERM
+    } elseif {[$term getMTerm] ne $mt || [$term getSigType] ne $role} {
+      set why OT_PG_ITERM_TYPE_MISMATCH
+    }
+    lappend rows [list $mt $term $why]
+  }
+  return $rows
+}
 proc ot_pg_bind_before_protect {mapping inst} {
   set pending {}
   # Preflight every terminal before changing any connection. No force or
   # temporary clearing of protection is permitted in this SOURCE prototype.
-  foreach term [$inst getITerms] {
-    if {[[$term getMTerm] getSigType] ni {POWER GROUND}} continue
+  foreach row [ot_pg_master_census $inst] {
+    lassign $row mt term why
+    if {$why ne ""} {error "$why [$inst getName]/[$mt getName]"}
     set expected [ot_pg_expected $mapping $inst $term]
     set actual [$term getNet]
     if {$actual ne "NULL" && $actual ne $expected} {
@@ -60,8 +79,9 @@ proc ot_pg_bind_before_protect {mapping inst} {
     error "OT_PG_ORDER_PROTECTED_UNBOUND [$inst getName]"
   }
   foreach pair $pending {lassign $pair term net; $term connect $net}
-  foreach term [$inst getITerms] {
-    if {[[$term getMTerm] getSigType] ni {POWER GROUND}} continue
+  foreach row [ot_pg_master_census $inst] {
+    lassign $row mt term why
+    if {$why ne ""} {error "$why [$inst getName]/[$mt getName]"}
     if {[$term getNet] ne [ot_pg_expected $mapping $inst $term]} {
       error "OT_PG_BIND_VERIFY [$inst getName]"
     }
@@ -73,15 +93,18 @@ proc ot_pg_bind_before_protect {mapping inst} {
 proc ot_pg_collect_all_native {block mapping} {
   set checked 0; set failures {}; set counts [dict create POWER 0 GROUND 0]
   foreach inst [$block getInsts] {
-    foreach term [$inst getITerms] {
-      set mt [$term getMTerm]; set role [$mt getSigType]
-      if {$role ni {POWER GROUND}} continue
+    foreach row [ot_pg_master_census $inst] {
+      lassign $row mt term census_why
+      set role [$mt getSigType]
       incr checked; dict incr counts $role
-      set actual [$term getNet]
+      set actual "NULL"
+      if {$census_why eq ""} {set actual [$term getNet]}
       set actual_name ""; set actual_role ""
       if {$actual ne "NULL"} {set actual_name [$actual getName]; set actual_role [$actual getSigType]}
       set why ""; set expected_name ""
-      if {[catch {ot_pg_expected $mapping $inst $term} expected]} {
+      if {$census_why ne ""} {
+        set why $census_why
+      } elseif {[catch {ot_pg_expected $mapping $inst $term} expected]} {
         set why $expected
       } else {
         set expected_name [$expected getName]

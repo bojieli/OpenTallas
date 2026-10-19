@@ -3,7 +3,7 @@ source /work/kit/libs_TT.tcl
 read_db /work/input/placed.odb
 source $p/setRC.tcl
 source /work/kit/vendor/native_pg_binding.tcl
-foreach procname {ot_pg_bind_before_protect ot_pg_assert_all_native} {
+foreach procname {ot_pg_prepare ot_pg_master_census ot_pg_bind_before_protect ot_pg_assert_all_native} {
   if {[llength [info commands $procname]] != 1} {error "missing tested PG adapter $procname"}
 }
 source /work/kit/constraints.sdc
@@ -57,6 +57,9 @@ report_clock_skew
 report_checks -path_delay max -format full_clock_expanded -group_path_count 30
 report_checks -path_delay min -format full_clock_expanded -group_path_count 30
 report_check_types -max_slew -max_capacitance -max_fanout -violators
+# Refresh after every possible insertion/master change and before publication.
+set mapping [ot_pg_prepare $block]
+ot_pg_assert_all_native $block $mapping
 write_db /work/output/cts_only.odb
 write_verilog /work/output/cts_only.v
 puts "INT8_BOUNDED_CTS_ONLY_FINISHED inserted=$added NO_GRT_NO_ROUTE"

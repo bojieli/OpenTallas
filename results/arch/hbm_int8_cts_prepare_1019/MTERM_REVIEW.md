@@ -1,0 +1,7 @@
+# Final source kit PG completeness alignment
+
+Successor to b37fe4aa1; helper and native receipt package are exact a92a40171. Every native master POWER/GROUND MTerm requires an existing ITerm with exact master-terminal identity and matching role. Missing ITerm/type mismatch refuse both pre-mutation binding and final census. Tested fleet units are pinned in pg_test_receipt.json, with all causal logs vendored and manifest hashed. Missing-ITerm/type negatives model API corruption; the actual native clone has all 196864 matching terminals. No universal native-creation guarantee is claimed.
+
+The original independent signal inventory/identity, raw export, renderer, TT/FF, strict and conductor scripts remain byte-identical to b37fe4aa1. Only PG helper/test receipts, preparation validator, final pre-write census and source manifests changed. Mapping is freshly built after insertion and immediately before final write; binding precedes protection and no protection is cleared. No ordinary cell, signal, timing constraint, source ODB or native library changes.
+
+The helper already has exact pinned fleet master-census, missing/type refusal, ordering, native voltage-domain and report-preservation receipts; no duplicate native replay is needed for vendoring identical bytes. Source-only syntax/validator refusal checks follow. This is preparation only: no CTS, route, gate, shared activation or diagnostic ROOT grant.

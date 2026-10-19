@@ -1,0 +1,9 @@
+PASS all Python syntax
+PASS all shell syntax
+PASS helper Tcl parse: six PG procedures
+EXPECTED_REFUSAL absent before output/tool
+EXPECTED_REFUSAL wrong_stage before output/tool
+EXPECTED_REFUSAL wrong_fingerprint before output/tool
+PASS all preexisting hashes unchanged except helper/PG receipt/preflight/final-census
+PASS every vendored script and causal receipt manifest hash
+PASS exact a92 helper + missing/type causal receipt binding

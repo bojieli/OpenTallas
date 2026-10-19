@@ -63,12 +63,12 @@
   },
   "pg_adapter": {
     "path": "kit/vendor/native_pg_binding.tcl",
-    "sha256": "13e936d24fc2a2e35a9f8cc0c6047820753cb5cc8a559a13a7eb8fe56e1ebef3",
+    "sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
     "owner": "idx_clock_pg_binding",
     "bind_proc": "ot_pg_bind_before_protect $mapping $inst",
     "coverage_proc": "ot_pg_assert_all_native $block $mapping",
     "prepare_proc": "ot_pg_prepare $block",
-    "state": "TEST_RECEIPT47e03369c_PINNED_ROOT_REVIEW_REQUIRED"
+    "state": "MASTER_MTERM_COMPLETENESS_a92a40171_PINNED_ROOT_REVIEW_REQUIRED"
   },
   "root_grant": null
 }
