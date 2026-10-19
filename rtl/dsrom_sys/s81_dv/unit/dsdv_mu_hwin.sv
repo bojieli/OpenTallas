@@ -72,7 +72,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer RPTR_BASE=ROUT_BASE+C_RG+R_RG, RCTRL_BASE=RPTR_BASE+6*SLOT_RG+1;
     localparam integer RWRITE_BASE=RCTRL_BASE+6, RLM_BASE=RWRITE_BASE+4*SLOT_RG;
     localparam integer RBOOT_BASE=RLM_BASE+NEV*SLOT_RG;
-    localparam integer RESET_REGIONS=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
+    localparam integer NBOOT_GROUPS=(NEV+3)/4;
+    localparam integer RBOOT_DATA=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
+    localparam integer RESET_REGIONS=RBOOT_DATA+((LOCAL_BOOT!=0)?NBOOT_GROUPS:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -391,6 +393,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end endgenerate
     // Same-edge physical copies: independent event address, due-time, compare-time,
     // boot bounds and wrap state. Distinct reset roots prevent cross-event merging.
+    wire [20:0] boot_data[0:NBOOT_GROUPS-1];
+    generate for(genvar bg=0;bg<NBOOT_GROUPS;bg=bg+1) begin:g_boot_data
+        if(LOCAL_BOOT!=0) begin:g_local
+            (* keep *) reg [20:0] data_r;
+            always @(posedge ck or negedge rr[RBOOT_DATA+bg])
+                if(!rr[RBOOT_DATA+bg]) data_r<=0; else data_r<=f_mw[20:0];
+            assign boot_data[bg]=data_r;
+        end else begin:g_direct assign boot_data[bg]=mw_q[20:0];end
+    end endgenerate
     genvar ce, rcg;
     generate for(ce=0;ce<NEV;ce=ce+1) begin:g_event_broadcast
         (* keep *) reg [31:0] ts_r, time_r;
@@ -444,7 +455,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         if(CHECK_STAGE!=0) begin:g_check_lookahead
             wire [20:0] next_d;
             for(genvar db=0;db<21;db=db+1) begin:g_d_mux
-                assign next_d[db]=d_check[db/8]?mw_q[db]:eD[ce][db];
+                assign next_d[db]=d_check[db/8]?boot_data[ce/4][db]:eD[ce][db];
             end
             wire [SI-1:0] next_lw=(gap_write)?
                 ((gn==0)?SI'(NSLOT-1):gn[SI-1:0]):lw_r;
@@ -483,7 +494,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
             else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
         for(genvar db=0;db<21;db=db+1) begin:g_d_storage
-            always @(posedge ck) if(d_write[db/8]) eD[ce][db]<=mw_q[db];
+            always @(posedge ck) if(d_write[db/8]) eD[ce][db]<=boot_data[ce/4][db];
         end
 `ifdef DSDV_MU_POINTER_ASSERT
         always @(posedge ck) if(rn && LOCAL_BOOT!=0 && cfg_w1_r)
@@ -491,7 +502,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
 `endif
         always @(posedge ck) begin
             if(kind_write) begin
-                ek[ce]<=mw_q[8]; eep[ce]<=mw_q[9+:PI];
+                ek[ce]<=boot_data[ce/4][8]; eep[ce]<=boot_data[ce/4][9+:PI];
             end
         end
     end endgenerate
