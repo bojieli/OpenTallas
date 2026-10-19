@@ -177,8 +177,7 @@
    "v": "M5"
   },
   "cts_sink": {
-   "size": 16,
-   "diameter_um": 30,
+   "sink_clustering": false,
    "extra": "-balance_levels -no_obstruction_aware"
   },
   "io_hold_margin_ns": 0.025
