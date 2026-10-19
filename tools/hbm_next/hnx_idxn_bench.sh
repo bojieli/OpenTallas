@@ -80,9 +80,8 @@ run(){ # tag binary-tag caldir want plusargs...
   V "$t [$ok want $want got $verdict rc=$rc]: $(grep -h 'IDX_ROWS_CYCLES\|IDX_HNX_ROWS rows\|TIMELINE\|SCOREBAD\|TXBAD\|EXTRASCORE\|KEYSTREAM\|BEATROW' $od/run.log | head -5 | tr '\n' ' ')"
 }
 if [ "$ST" = index ]; then
-  build hnx "" "${HNX[@]}" "${COMMON[@]}" &
-  build d4g "+define+D4G_DUT" "${D4G[@]}" "${COMMON[@]}" &
-  wait
+  build hnx "" "${HNX[@]}" "${COMMON[@]}"           # sequential: two parallel hierarchical builds peaked > 80 GB (OOM 10-19)
+  build d4g "+define+D4G_DUT" "${D4G[@]}" "${COMMON[@]}"
   run d4g_n1 d4g $O/cal/d4g PASS +N=$DL +EXP_KEY=$DK +EXP_TX=$DT &
   run n1_d4gprog hnx $O/cal/d4g PASS +N=$DL +ROWS=1 +EXP_KEY=$DK +EXP_TX=$DT &
   for n in 1 2 3 4 5 6; do run n$n hnx $O/cal/frame PASS +N=$FL +ROWS=$n +PITCH=$II +EXP_KEY=$FK +EXP_TX=$FT & done
