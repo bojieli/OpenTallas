@@ -1,0 +1,9 @@
+BAD ADDRESS 00041200 (slot 72) lane 0 case5
+BAD ADDRESS 00041201 (slot 72) lane 1 case5
+BAD ADDRESS 00041202 (slot 72) lane 2 case5
+BAD ADDRESS 00041203 (slot 72) lane 3 case5
+BAD ADDRESS 00041204 (slot 72) lane 4 case5
+[56350000] %Fatal: tb_hnx_dma_kvwb_ring.sv:124: Assertion failed in tb_hnx_dma_kvwb_ring: KVWB_RING FAIL errors=704 MUT=1
+%Error: rtl/hbm_next/dma/tb/tb_hnx_dma_kvwb_ring.sv:124: Verilog $stop
+Aborting...
+RUN_RC=1

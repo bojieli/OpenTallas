@@ -52,6 +52,13 @@ if [ "$ST" = q ]; then
   V "lint eng4 rc=$? errors=$(grep -c '%Error' $O/lint_eng4.log)"
   V "done"; exit 0
 fi
+case $ST in
+  q0) qbuild q_n4s "$NS -GMUT=0" & qbuild q_d4g "-GSPR=320 -GRNPOS=2 -GRSTRIDE=0 -GSSTRIDE=0 -GMUT=0" & wait
+      np=$(grep -h '^TB_HNX_HC_Q PASS MUT=0' $O/q_n4s.log $O/q_d4g.log | wc -l)
+      [ "$np" = 2 ] && V "HNX_HC_Q_BENCH PASS 2/2" || V "HNX_HC_Q_BENCH FAIL $np/2"; exit 0;;
+  qm7) qbuild q_m7 "$NS -GMUT=7"; exit 0;;
+  qm8) qbuild q_m8 "$NS -GMUT=8"; exit 0;;
+esac
 # ---- HC_MIX N-row cases
 case $ST in e0) NL="1 2 3 4 6 8";; *) NL="4";; esac
 for n in $NL; do python3 tools/rtl_hbm_hc_eng_static_gate.py --run $O/cases_$ST/n$n --split --npos $n --raw0 167 --rs 104 > $O/cases_${ST}_n$n.log 2>&1 || V "vector gen n$n FAILED"; done
@@ -67,6 +74,24 @@ ebuild(){ # tag mut cases...
       V "$t $c: $(grep -h 'HC_ENG_DONE\|HC_ENG PASS\|HC_ENG FAIL\|FAULT\|MISMATCH\|watchdog\|RUN_RC' run.log | head -4 | tr '\n' ' ')" ) &
   done
   wait; rm -rf $d
+  local np=0 nc=$#
+  for c in "$@"; do grep -q '^HC_ENG PASS' $O/run_${t}_$c/run.log && np=$((np+1)); done
+  [ $np = $nc ] && V "HNX_HC_RING MUT=$m PASS $np/$nc" || V "HNX_HC_RING MUT=$m FAIL $np/$nc (HC_ENG FAIL)"
+  if [ $t = e0 ]; then
+    V "HNX_HC_ROW_II $(python3 - $O <<'PY'
+import re, sys, glob
+pts = []
+for f in glob.glob(sys.argv[1] + '/run_e0_n*/run.log'):
+    m = re.search(r'npos=(\d+).*HC_MIX_CYCLES=(\d+)', open(f).read())
+    if m: pts.append((int(m.group(1)), int(m.group(2))))
+pts.sort(); n = len(pts)
+if n < 2: print('n/a'); sys.exit()
+mx = sum(p for p, _ in pts) / n; my = sum(c for _, c in pts) / n
+ii = sum((p - mx) * (c - my) for p, c in pts) / sum((p - mx) ** 2 for p, _ in pts)
+print('%.1f cycles/row; points %s' % (ii, ' '.join('N%d=%d' % pc for pc in pts)))
+PY
+)"
+  fi
 }
 case $ST in e0) ebuild e0 0 n1 n2 n3 n4 n6 n8;; e4) ebuild e4 4 n4;; e1) ebuild e1 1 n4;; esac
 V "done"

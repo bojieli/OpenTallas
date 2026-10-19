@@ -1,0 +1,187 @@
+{
+ "tag": "f4c_t6_Lab",
+ "die_um": [
+  23891.84,
+  30392.0
+ ],
+ "die_mm2": 726.12,
+ "placed_mm2": 556.79,
+ "cut_lanes": {
+  "worst_v": {
+   "ratio": 0.478,
+   "x": 10700.0,
+   "y": [
+    11700.0,
+    12700.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.44,
+   "y": 19200.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "lines_over_060": 0,
+  "windows_over_060": 0
+ },
+ "cut_no_lanes": 0.837,
+ "faces_over_1": 4,
+ "stages_bw": 6.176,
+ "per_class": {
+  "HBM_K": {
+   "bits": 35392,
+   "stages_bw": 0.0
+  },
+  "SM_X": {
+   "bits": 34944,
+   "stages_bw": 6.42
+  },
+  "COLL_VM": {
+   "bits": 22208,
+   "stages_bw": 12.0
+  },
+  "SM_HBM": {
+   "bits": 18112,
+   "stages_bw": 5.12
+  },
+  "LG_SFU": {
+   "bits": 17792,
+   "stages_bw": 1.0
+  },
+  "LG_HC": {
+   "bits": 17792,
+   "stages_bw": 2.0
+  },
+  "LG_SU": {
+   "bits": 17792,
+   "stages_bw": 0.0
+  },
+  "HC_CORE": {
+   "bits": 17792,
+   "stages_bw": 13.92
+  },
+  "VM_RING": {
+   "bits": 17792,
+   "stages_bw": 10.12
+  },
+  "VM_HUB": {
+   "bits": 17216,
+   "stages_bw": 11.69
+  },
+  "HC_ENG": {
+   "bits": 11488,
+   "stages_bw": 0.5
+  },
+  "COLL_RING": {
+   "bits": 8256,
+   "stages_bw": 10.25
+  },
+  "COLL_EP": {
+   "bits": 7650,
+   "stages_bw": 9.8
+  },
+  "EP_SERDES": {
+   "bits": 5280,
+   "stages_bw": 0.0
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "stages_bw": 2.38
+  },
+  "SM_OUT": {
+   "bits": 4320,
+   "stages_bw": 6.12
+  },
+  "HBM_VM": {
+   "bits": 4096,
+   "stages_bw": 22.38
+  },
+  "VM_HBM": {
+   "bits": 4096,
+   "stages_bw": 21.75
+  },
+  "SU_CORE": {
+   "bits": 3072,
+   "stages_bw": 2.0
+  },
+  "SFU_CORE": {
+   "bits": 3072,
+   "stages_bw": 9.42
+  },
+  "KV_DESC": {
+   "bits": 1024,
+   "stages_bw": 5.31
+  }
+ },
+ "relay_flops": 1278808.0,
+ "su_slice": [
+  1797.12,
+  2825.28
+ ],
+ "sm": [
+  2630.88,
+  8510.4
+ ],
+ "fits_reticle": true,
+ "reticle": {
+  "die_um": [
+   23891.84,
+   30392.0
+  ],
+  "long_margin_um": 2608.0,
+  "short_margin_um": 2108.16,
+  "margin_req_um": 500.0,
+  "ok": true
+ },
+ "cut_phy_unmasked": {
+  "worst_v": {
+   "ratio": 0.478,
+   "x": 10700.0,
+   "y": [
+    11700.0,
+    12700.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.44,
+   "y": 19200.0,
+   "x": [
+    7600.0,
+    8600.0
+   ]
+  },
+  "lines_over_060": 0,
+  "windows_over_060": 0,
+  "rule": "pin_cut with full supply over the PHY rows (the cut_window_who.py measure; removes the PHY-row supply-mask artefact noted in d4f_a2p_fullcore/README pc637)",
+  "over_060": []
+ },
+ "sum_bits_mm": 695796.0,
+ "graph_relay_flops": 1278808.0,
+ "overlaps": 0,
+ "outside": 0,
+ "by_class_longest_um": {
+  "COLL_EP": 5779,
+  "COLL_RING": 9270,
+  "COLL_VM": 9154,
+  "EP_SERDES": 50,
+  "HBM_K": 20,
+  "HBM_VM": 10702,
+  "HC_CORE": 8894,
+  "HC_ENG": 259,
+  "KV_DESC": 6114,
+  "LG_HC": 1394,
+  "LG_SFU": 1074,
+  "LG_SU": 50,
+  "QUANT_VM": 910,
+  "SFU_CORE": 4013,
+  "SM_HBM": 4975,
+  "SM_OUT": 6114,
+  "SM_X": 8460,
+  "SU_CORE": 2476,
+  "VM_HBM": 10702,
+  "VM_HUB": 7732,
+  "VM_RING": 5756
+ }
+}
