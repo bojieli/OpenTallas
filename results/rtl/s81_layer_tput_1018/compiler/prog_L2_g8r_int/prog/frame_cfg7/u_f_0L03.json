@@ -1,0 +1,19 @@
+{
+ "frame": "u_f_0L03",
+ "master": "col_h9_l4",
+ "slice": "u_s_0S",
+ "first_matvec": "attn.a_proj",
+ "status": "GAP",
+ "gaps": [
+  {
+   "module": "tools/s81_dv/frame_return_plan.py",
+   "port": "plan_phase(rows = 2 * 12 / nseg)",
+   "missing": "the frame return legaliser places only rows = 2 x (12 q elements / nseg) per frame; a_proj puts 28 rows on a slice's 8 frames (4,4,4,4,3,3,3,3), wq_b 512, wo_b 320, router 6 rows per slice"
+  },
+  {
+   "module": "ot_s81sl_xs",
+   "port": "calendar / phase / stream ROMs (OT_ROM_DIR images)",
+   "missing": "no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule \"rows in the owning slice's frames\" (SPEC section 2) needs a re-placement and re-emitted ROM images"
+  }
+ ]
+}

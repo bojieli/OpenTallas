@@ -1090,7 +1090,7 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
-def util_metrics(std_area, blocks, core, halo=HALO_UM):
+def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
     """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
     gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
     macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
@@ -1098,7 +1098,8 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM):
     total = (std_area + mac) / core
     if not blocks:
         return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
-    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    hx = halo if halo_x is None else halo_x             # route.macro_halo_x_um: wider halo on the W/E (pin) faces
+    keep = min(core, sum((b["w"] + 2 * hx) * (b["h"] + 2 * halo) for b in blocks))
     placeable = max(core - keep, 1e-9)
     dens = std_area / placeable
     return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
@@ -1448,7 +1449,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     core = (x1c - x0c) * (y1c - y0c)
     if std_area:
         halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
-        um = util_metrics(std_area, blocks, core, halo)
+        hx = float(s["route"].get("macro_halo_x_um", halo)) if s.get("recipe", 1) >= 2 else halo
+        um = util_metrics(std_area, blocks, core, halo, hx)
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
@@ -1895,7 +1897,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
-        extra.append(f"--macro-place-halo {h} {h}")
+        # optional route.macro_halo_x_um: a wider W/E halo (MACRO_PLACE_HALO "x y") keeps the pin-escape zone of
+        # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
+        hx = float(s["route"].get("macro_halo_x_um", h))
+        extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the

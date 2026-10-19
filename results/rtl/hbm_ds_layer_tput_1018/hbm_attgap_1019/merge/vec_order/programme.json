@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.hbm_att_merge_su.v1",
+ "lane": "HBM-ATTGAP",
+ "nodes": 20,
+ "pad": 32,
+ "levels": 5,
+ "ops": [
+  "AD_C level 1",
+  "AD_C level 2",
+  "AD_C level 3",
+  "AD_C level 4",
+  "AD_C level 5"
+ ],
+ "order_mutant": true,
+ "nodes_npz": "/srv/opentallas-scratch/claude/hbm-attgap6/run/out/L2_s32_pos.nodes.npz",
+ "nodes_sha256": "53862f51cd10605225d155175127e48cd1213db75cdca5eac2b718a05a265f86",
+ "final_equals_fixture_pv": true,
+ "order_mutant_final_mismatch_words": 23,
+ "golden": "hdc_golden add (NumPy FP32 RNE, canonical +0) over the tb's in-place store schedule",
+ "nops": 5
+}

@@ -19,7 +19,8 @@
 // slices on the half's P.V return tree to the p4j entry slice, in compiled windows).
 //
 // q frames (SVC FRAME PROTOCOL v1.1 header; payload as svc_c unless stated):
-//   12 CFG      [29:0] WB (window ring base)
+//   12 CFG      [29:0] WB (window ring base); TOK-S81-GAPS/SVCP (10-19, G10): [32] ST valid, [31:30] ST = the die's HBM
+//               stack position (P.V quarter / held-row stack); [32] = 0 keeps the parameter ST (legacy frames)
 //    3 OWN_ROW  [479:459] pos, [458:449] user; payload block b = {scale 8, codes 256}: block t is written (2 writes)
 //    2 WIN_LOAD as svc_c ([29:0] SB, [88:81] wcount, [98:89] nsel, [119:99] first window pos, [458:449] user, tag)
 //    7 SEL_IDS  as svc_c; the slice records per rank whether the row is this stack's (held) and fetches its own rows
@@ -27,7 +28,10 @@
 //    6 ROWS     as svc_c; the slice keeps pair t / 2, half t % 2
 //    5 PV       as svc_c (stored by every slice, used by the 4 slices of quarter ST, which emit P.V)
 //   13 GO       (new, len 0) the compiled start: the engine share starts gd cycles after GO reaches this slice;
-//               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start
+//               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start;
+//               TOK-S81-GAPS/SVCP (10-19): [47:32] PIO = the on-die P injection start (dsdv_svc_rs_c P path: the SM's e
+//               rows enter the score exchange as P beats from PIO, the fold root packs the PV frame and the entries
+//               put it on the dn stream); PIO = 0 = legacy (the PV frame comes from the host q stream)
 //    9 SMJ      (new) SM head job / rows: [0] start, [4:1] kind, [12:5] jid, [13] operand rows (else parameter rows,
 //               r_j = payload index), [29:14] head mask (operand rows only)
 //
@@ -111,13 +115,20 @@ module dsdv_svc_att #(
     output reg  [1:0]           hcr,
     output reg  [1:0]           hack,
     output wire                 fault,
-    output wire [31:0]          fault_code
+    output wire [31:0]          fault_code,
+    // TOK-S81-GAPS/SVCP (10-19): the compiled P path offsets of the job (GO frame), the share's cycle counter and the
+    // stack position (CFG) for the slice's P path / P.V slot
+    output wire [15:0]          pio_o,
+    output wire [15:0]          pvo_o,
+    output wire [15:0]          jc_o,
+    output wire [1:0]           st_o
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
     reg [31:0] fc;
     assign fault_code = fc;
+    assign pio_o = pio; assign pvo_o = pvo; assign jc_o = jc; assign st_o = st_r;
     assign fault = |fc;
 
     // ------------------------------------------------------------------ frame parser (as ot_s81_svch_attq)
@@ -141,14 +152,15 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
+    reg [1:0] st_r;                                 // stack position: CFG [31:30] when [32], else the parameter ST
     reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; end
+        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
-            if (hdr_mine && h_type == 4'd12) wb <= q_d[29:0];
+            if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
                 wuser <= q_d[458:449]; tagj <= q_d[502:495];
@@ -208,7 +220,7 @@ module dsdv_svc_att #(
     wire [31:0] sid_g = swd[32*sw_i +: 32];
     wire [9:0] s_rank = sw_base[sw_r[4:0]] + 10'(sw_i);
     wire sw_have = sw_w != sw_r;
-    wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == 2'(ST);
+    wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == st_r;
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
     always @(posedge clk) if (sel_pay) begin
@@ -271,7 +283,7 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ static program (GO + gd)
     reg [7:0] go_cnt; reg go_arm; reg go;
-    reg [15:0] po, pvo, jc;                         // compiled p-feed start / P.V drain base; cycles since the share's start
+    reg [15:0] po, pvo, pio, jc;                    // compiled p-feed start / P.V drain base / P injection start; cycles since the share's start
     reg dr_arm, dr_on; reg [2:0] dbeat;
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
@@ -296,7 +308,7 @@ module dsdv_svc_att #(
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
-                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == 2'(ST);
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
@@ -310,7 +322,7 @@ module dsdv_svc_att #(
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
-    wire pvown = tile[3:2] == 2'(ST);
+    wire pvown = tile[3:2] == st_r;
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
@@ -399,7 +411,7 @@ module dsdv_svc_att #(
             end
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
-            po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
+            po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
@@ -453,7 +465,7 @@ module dsdv_svc_att #(
             if (sel_pay) begin sw_w <= sw_w + 1'b1; if (sw_w - sw_r >= 6'd32) fc[5] <= 1'b1; end
             if (sw_step) begin
                 if (sw_i < sw_n[sw_r[4:0]]) begin
-                    sel_held[s_rank] <= sid_g[7:6] == 2'(ST);
+                    sel_held[s_rank] <= sid_g[7:6] == st_r;
                     if (g_own) fq_w[sid_g[8]] <= fq_w[sid_g[8]] + 1'b1;
                 end
                 if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_n[sw_r[4:0]]) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
@@ -473,7 +485,7 @@ module dsdv_svc_att #(
             go <= 1'b0; go_o <= 1'b0;
             if (hdr_mine && h_type == 4'd13) begin
                 if (!job_open || go_arm || run) fc[8] <= 1'b1;
-                go_arm <= 1'b1; go_cnt <= gd; po <= q_d[15:0]; pvo <= q_d[31:16];
+                go_arm <= 1'b1; go_cnt <= gd; po <= q_d[15:0]; pvo <= q_d[31:16]; pio <= q_d[47:32];
             end else if (go_arm) begin
                 if (go_cnt == 0) begin go_arm <= 1'b0; go <= 1'b1; go_o <= 1'b1; end
                 else go_cnt <= go_cnt - 1'b1;

@@ -111,13 +111,13 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Control: S face quarters 0 / 1, N face quarters 2 / 3 (t_o at the E end: quarter 1's W-face t_o comes up the inter-quarter gap), E face vd (to the glue's W face) + clock. The S81U-BK2 kit s81dvbk_selc (129.6 x 345.6) FAILed clock_rule: 26,013 sinks, TT insertion 347.4 ps.",
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Control: S face quarters 0 / 1, N face quarters 2 / 3 (t_o at the E end: quarter 1's W-face t_o comes up the inter-quarter gap), E face vd (to the glue's W face) + clock. The S81U-BK2 kit s81dvbk_selc (129.6 x 345.6) FAILed clock_rule: 26,013 sinks, TT insertion 347.4 ps. S81-SVCBK 10-18: native launch FAIL of CLOSED s81dvbk_selc2-c2-368403ff4 (t_c_s[97] 234.5 > 220, 20 pins: the quarter control word tc is RTL-shared/equal across the S and N faces, folded into one flop) -> pin_reg_split on (one launch flop clone per output pin, 0 cycles); io_hold_margin 0.0 -> 0.025 (KITS 10-18 rule).",
  "job": {
-  "owner": "Claude:S81U-BK3",
-  "branch": "claude/s81u2-bk-1017",
-  "tag": "c2",
+  "owner": "Claude:S81-SVCBK",
+  "branch": "claude/s81-svcbk-1018",
+  "tag": "c2prs",
   "purpose": "S81-DV bk_sel select control leaf, vertical cut (dsfd_selt_c SLAT 4 / XDX 1 re-pinned / re-cut; lane S81U-BK3): clock measurement (26k sinks: control / landing split owed if TT insertion > 300 ps).",
   "benches": [
    {
@@ -141,7 +141,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/sel_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/sel_mut3.txt"
    }
   ],
   "extra_paths": [
@@ -156,7 +156,14 @@
    "rtl/link"
   ],
   "views_to": "physical/ref_tile/s81dvbk_selc2/views",
-  "record_to": "results/rtl/ref_tile/s81dvbk_selc2"
+  "record_to": "results/rtl/ref_tile/s81dvbk_selc2",
+  "reroute_reason": {
+   "kind": "native_launch",
+   "source": "results/arch/s81_svcbk_1018/native_dsdv_bksel_c.json",
+   "cell": "dsdv_bksel_c",
+   "launch_ps": 234.5,
+   "fix": "native launch FAIL of CLOSED s81dvbk_selc2-c2-368403ff4 (t_c_s[97] 234.5 ps > 220, 20 pins; spread TT 51.6 / FF 48.5 OK): equal tc bits for the S and N faces merged into one flop -> pin_reg_split (one launch flop clone per output pin, 0 cycles). Same RTL, outline and pin faces."
+  }
  },
  "children": [],
  "inter": [],
@@ -166,5 +173,6 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "pin_reg_split": true
 }
