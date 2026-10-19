@@ -1,0 +1,578 @@
+{
+  "sha256": "2e68b13db4d25b598e3f218a2fd705180d61e6bf4d077279920a7a8ffbf99d6a",
+  "top": "qkd_d2d_static_ovl_reset24",
+  "cells": 40738,
+  "copy_output_drivers": 27,
+  "total_clocked_states": 11093,
+  "nonclock_nonconst_max": 24,
+  "violations": [],
+  "copy_cells": {
+    "$auto$dfflibmap.cc:553:dfflibmap$154": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4881
+        ],
+        "Y": [
+          4882
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$156": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4883
+        ],
+        "Y": [
+          4884
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$158": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4885
+        ],
+        "Y": [
+          4886
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$160": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4887
+        ],
+        "Y": [
+          4888
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$162": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4889
+        ],
+        "Y": [
+          4890
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$164": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4891
+        ],
+        "Y": [
+          4892
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$166": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4893
+        ],
+        "Y": [
+          4894
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$168": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4895
+        ],
+        "Y": [
+          4896
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$170": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4897
+        ],
+        "Y": [
+          4898
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$172": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4899
+        ],
+        "Y": [
+          4900
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$174": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4901
+        ],
+        "Y": [
+          4902
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$176": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4903
+        ],
+        "Y": [
+          4904
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$178": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4905
+        ],
+        "Y": [
+          4906
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$180": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4907
+        ],
+        "Y": [
+          4908
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$182": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4909
+        ],
+        "Y": [
+          4910
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$184": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4911
+        ],
+        "Y": [
+          4912
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$186": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4913
+        ],
+        "Y": [
+          4914
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$188": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4915
+        ],
+        "Y": [
+          4916
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$190": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4917
+        ],
+        "Y": [
+          4918
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$192": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4919
+        ],
+        "Y": [
+          4920
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$194": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4921
+        ],
+        "Y": [
+          4922
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$196": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4923
+        ],
+        "Y": [
+          4924
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$198": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4925
+        ],
+        "Y": [
+          4926
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$200": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4927
+        ],
+        "Y": [
+          4928
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$202": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4929
+        ],
+        "Y": [
+          4930
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$204": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4931
+        ],
+        "Y": [
+          4932
+        ]
+      }
+    },
+    "$auto$dfflibmap.cc:553:dfflibmap$206": {
+      "hide_name": 1,
+      "type": "INVx1_ASAP7_75t_R",
+      "parameters": {},
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "invmap.v:2.19-2.50"
+      },
+      "port_directions": {
+        "A": "input",
+        "Y": "output"
+      },
+      "connections": {
+        "A": [
+          4933
+        ],
+        "Y": [
+          4934
+        ]
+      }
+    }
+  }
+}

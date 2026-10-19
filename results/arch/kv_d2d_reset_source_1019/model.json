@@ -1,0 +1,41 @@
+{
+  "scope": "opt-in fixed-production-profile reset partition only",
+  "profile": {
+    "source": "353123a8d126467def3bd34fa3df362b81916ab8",
+    "NTX": 3,
+    "NL": 2,
+    "MUT": 0,
+    "PR": 1,
+    "SAFE_RC": 1,
+    "TXDP": "0x03030416"
+  },
+  "removed_pairs": 6,
+  "final_copies": 27,
+  "added_flops": 21,
+  "added_inverters": 21,
+  "added_clock_sinks": 21,
+  "added_std_um2": 7.042140000000001,
+  "clock_edges_added": 0,
+  "data_edges_added": 0,
+  "reset_release_edges_added": 0,
+  "SRAM_macros": 4,
+  "frame_um": [
+    475.2,
+    280.8
+  ],
+  "nominal_frame_delta_um2": 0,
+  "fit": "unchanged nominal outline only; no placement/nativeclock/access/parent proof",
+  "max_first_logic_loads": 24,
+  "shared_D_max": 7,
+  "clock_qualification": false,
+  "parent_binding": false,
+  "default_adoption": false,
+  "source_safe32": false,
+  "direct_max": 24,
+  "transparent_max": 1096,
+  "transparent_violating_nets": {
+    "ordinary": 417,
+    "OVL": 402
+  },
+  "broader_prototype_status": "emitter-only DRAFT; independent re-read/resynth/miter/area/open"
+}
