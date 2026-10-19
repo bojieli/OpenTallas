@@ -1,0 +1,16 @@
+{
+  "actual_launch_source_files": {
+    "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "rtl/hdc/nearhbm/qkd_ahub_transport_private.sv": "06225ec687b54ca9021587883785c40ca6a36872fe04438d4d099b6b5336a851",
+    "results/kv_ahub_transport_component_1019/tb_transport.sv": "ac25eddfd733fb826e076ecfd8b124fdd369c1347d383a70bd9b5db34a3f06eb",
+    "results/kv_ahub_transport_component_1019/run_remote.sh": "599d5083d3e7071aae2c7290b0f57df472d8682175b48d1aa8b354de42ea1ff7"
+  },
+  "original_freeze_commit": "189dddcf7",
+  "original_source_commit": "9410f5f14",
+  "structural_refinement": "private exact4FF reset-face clone exposes native s1, prevents arbitrary old regional rr admission; unchanged state count; synchronous payload phase plus async qualified outputvalid clear",
+  "job": "oth-ubuntu-2274401-1792449777",
+  "host": "ot-epyc8",
+  "session": 95572,
+  "physical": "HOLD",
+  "sampled_initialization": "3randomized2state seeds plus adversarialallones oldregional q, not universalformalproof"
+}

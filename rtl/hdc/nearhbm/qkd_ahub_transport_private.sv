@@ -3,6 +3,20 @@
 // Four INDEXED slots, one write/read per bank/edge, READ_OLD semantics.
 // Accepted edge n -> ingress n -> store n+1 -> read n+3 -> output n+4.
 // Payload is intentionally unreset; slot validity supplies authority.
+// Exact REGIONS=1, STAGES=2 ot_rst_pipe equations, with existing s1 exposed.
+// This authority prevents an arbitrary old regional q1 from admitting data
+// before assertion propagation. No additional arming count or state exists.
+module qkd_ahub_reset_face_private(input wire clk,rst_n_in,
+    output wire rst_n,qualified);
+    (* keep="true",dont_touch="true" *) reg s0,s1,q0,q1;
+    always @(posedge clk or negedge rst_n_in)
+        if(!rst_n_in) begin s0<=0;s1<=0;end
+        else begin s0<=1;s1<=s0;end
+    always @(posedge clk) begin q0<=s1;q1<=q0;end
+    assign rst_n=q1;
+    assign qualified=s1;
+endmodule
+
 module qkd_ahub_transport_private #(
     parameter integer W = 268,
     parameter integer BANK_BITS = 8,
@@ -20,37 +34,40 @@ module qkd_ahub_transport_private #(
     genvar b;
     generate for (b=0;b<BANKS;b=b+1) begin:g_bank
         localparam integer BW=((W-b*BANK_BITS)<BANK_BITS)?(W-b*BANK_BITS):BANK_BITS;
-        wire tx_ready, rx_ready;
-        ot_rst_pipe #(.REGIONS(1),.STAGES(2)) u_tx_reset
-            (.clk(clk),.rst_n_in(tx_rst_n),.rst_n(tx_ready));
-        ot_rst_pipe #(.REGIONS(1),.STAGES(2)) u_rx_reset
-            (.clk(clk),.rst_n_in(rx_rst_n),.rst_n(rx_ready));
+        wire tx_ready, rx_ready,tx_qualified,rx_qualified;
+        qkd_ahub_reset_face_private u_tx_reset
+            (.clk(clk),.rst_n_in(tx_rst_n),.rst_n(tx_ready),.qualified(tx_qualified));
+        qkd_ahub_reset_face_private u_rx_reset
+            (.clk(clk),.rst_n_in(rx_rst_n),.rst_n(rx_ready),.qualified(rx_qualified));
         (* keep="true", dont_touch="true" *) reg [BW-1:0] ingress, ring_q, landing;
         // Functional-only small indexed storage; no macro qualification inherited.
         (* keep="true", dont_touch="true" *) reg [BW-1:0] payload [0:3];
         (* keep="true", dont_touch="true" *) reg [1:0] phase;
         (* keep="true", dont_touch="true" *) reg [3:0] slot_valid;
         (* keep="true", dont_touch="true" *) reg ingress_valid, ring_valid, landing_valid;
-        wire bank_accept=in_valid && tx_ready && rx_ready;
+        wire bank_accept=in_valid && tx_ready && rx_ready && ((MUT==5)?1'b1:(tx_qualified && rx_qualified));
         assign bank_accepted[b]=bank_accept;
         wire [1:0] read_slot=phase+2'd2+((MUT==1 && b==0)?2'd1:2'd0);
         always @(posedge clk) begin
             ingress <= d[b*BANK_BITS +: BW];
             ingress_valid <= bank_accept;
-            if (!rx_ready) begin
+            if (!rx_ready || !rx_qualified) begin
                 phase <= 2'd0;
                 slot_valid <= (MUT==3)?4'b1111:4'b0000;
                 ring_valid <= 1'b0;
-                landing_valid <= 1'b0;
             end else begin
                 payload[phase] <= ingress;
                 slot_valid[phase] <= ingress_valid;
                 ring_q <= payload[read_slot];
                 ring_valid <= slot_valid[read_slot];
-                landing_valid <= (MUT==2 && b==0)?slot_valid[read_slot]:ring_valid;
                 phase <= phase+2'd1;
             end
             landing <= ring_q;
+        end
+        always @(posedge clk or negedge rx_qualified) begin
+            if(!rx_qualified) landing_valid<=1'b0;
+            else if(!rx_ready) landing_valid<=1'b0;
+            else landing_valid <= (MUT==2 && b==0)?slot_valid[read_slot]:ring_valid;
         end
         assign q[b*BANK_BITS +: BW]=landing;
         assign bank_valid[b]=landing_valid;
