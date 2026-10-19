@@ -11,8 +11,11 @@ pins={
 manifest=[]
 for rev,paths in pins.items():
  for p in paths:
-  b=git('show',f'{rev}:{p}'); dest=OUT/'source'/rev/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(b)
-  manifest.append(dict(commit=git('rev-parse',rev).decode().strip(),path=p,sha256=hashlib.sha256(b).hexdigest(),bytes=len(b),lines=len(b.splitlines())))
+  b=git('show',f'{rev}:{p}'); dest=OUT/'source'/rev/p;dest.parent.mkdir(parents=True,exist_ok=True)
+  if p.endswith('/matrix.log'):
+   dest=dest.with_suffix('.log.gz');dest.write_bytes(gzip.compress(b,mtime=0))
+  else: dest.write_bytes(b)
+  manifest.append(dict(commit=git('rev-parse',rev).decode().strip(),path=p,sha256=hashlib.sha256(b).hexdigest(),bytes=len(b),lines=len(b.splitlines()),copy=str(dest.relative_to(OUT)),compression='gzip' if p.endswith('/matrix.log') else None))
 prior=ROOT/'results/arch/qwen_calr_sysface_binding_1019/source'
 s=gzip.decompress((prior/'gen0__die.v.gz').read_bytes()).decode()
 lines=s.splitlines()
