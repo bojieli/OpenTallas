@@ -38,18 +38,32 @@
       "read_per_cycle": 1,
       "write_per_cycle": 1,
       "interface_bits": 512
+    },
+    {
+      "name": "scale_wait3",
+      "count": 1,
+      "useful_bits": 1536,
+      "read_per_cycle": 1,
+      "write_per_cycle": 1,
+      "interface_bits": 512
     }
   ],
-  "total_macros": 4,
-  "total_macro_area_um2": 57596.832,
-  "useful_storage_bits": 22584,
-  "removed_storage_flops": 22584,
+  "total_macros": 5,
+  "total_macro_area_um2": 71996.04000000001,
+  "useful_storage_bits": 24120,
+  "removed_storage_flops": 24120,
   "added_cycles": {
     "skew": 0,
     "hi_fifo": 0,
-    "l9_fifo": 0
+    "l9_fifo": 0,
+    "scale_wait": 0,
+    "root_argmax": 1
   },
   "method": "Synchronous read lookahead; compare-and-forward read/write collision explicitly rather than relying on macro read-during-write. 1 read and 1 write each cycle, no arbitration/stalls.",
   "geometry": "All macro origins on43.2 lattice; footprints occupy216x129.6 sites with pin-face channels to be synthesized/placed.",
-  "qualification": "Timing, util, reset fanout, argmax pipelining and parent W/E landing prices require measured synth/benches before kit gate"
+  "qualification": "Timing, util, reset fanout, argmax pipelining and parent W/E landing prices require measured synth/benches before kit gate",
+  "reset_release_added_edges": {
+    "core": 2,
+    "redstn": 2
+  }
 }

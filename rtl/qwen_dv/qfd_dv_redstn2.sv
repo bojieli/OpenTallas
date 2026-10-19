@@ -51,6 +51,11 @@ module qfd_dv_redstn2 #(
     output reg  [511:0]  r_d,
     output reg           fault
 );
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    localparam integer SCALE_DRST = 0; // arithmetic data is qualified by vs; reset valid only
+`else
+    localparam integer SCALE_DRST = 1;
+`endif
     // ---------------------------------------------------------------- configuration
     reg [1:0] mode; reg wsrc; reg [7:0] nwords; reg [8:0] sbase; reg [7:0] kcm1;
     always @(posedge ck or negedge rst_n)
@@ -202,14 +207,22 @@ module qfd_dv_redstn2 #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin bt_re <= 1'b0; bt_word <= 9'd0; end
         else begin bt_re <= fv && !wsrc; bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0); end
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    wire [511:0] fd3;
+    qfd_dv_sram_delay #(.W(512), .D(3)) u_scale_wait (.ck(ck), .rst_n(rst_n), .d(fd), .q(fd3));
+`else
     reg [511:0] fd1, fd2, fd3;
+`endif
     reg         fv1, fv2, fv3, ws1, ws2, ws3, ls1, ls2, ls3;
     reg [7:0]   j1, j2, j3;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin fv1 <= 1'b0; fv2 <= 1'b0; fv3 <= 1'b0; end
         else begin fv1 <= fv; fv2 <= fv1; fv3 <= fv2; end
     always @(posedge ck) begin
-        fd1 <= fd; fd2 <= fd1; fd3 <= fd2; ws1 <= wsrc; ws2 <= ws1; ws3 <= ws2; j1 <= j; j2 <= j1; j3 <= j2;
+`ifndef OT_QFD_DV_SAFE_STORAGE
+        fd1 <= fd; fd2 <= fd1; fd3 <= fd2;
+`endif
+        ws1 <= wsrc; ws2 <= ws1; ws3 <= ws2; j1 <= j; j2 <= j1; j3 <= j2;
         ls1 <= (j + 8'd1 == nwords); ls2 <= ls1; ls3 <= ls2;
     end
     // fd3 / bt_q are aligned: bt_re is registered on the edge after fv (E1), the macro reads at E2, the capture flop at
@@ -218,7 +231,7 @@ module qfd_dv_redstn2 #(
     wire [15:0]  vs;
     wire [31:0]  es;
     generate for (l = 0; l < 16; l = l + 1) begin : g_sc
-        ot_hdc_fp32_mul_lat #(.LAT(SCALE_LAT)) u_mul (.clk(ck), .rst_n(rst_n), .valid_in(fv3),
+        ot_hdc_fp32_mul_lat #(.LAT(SCALE_LAT), .DRST(SCALE_DRST)) u_mul (.clk(ck), .rst_n(rst_n), .valid_in(fv3),
             .a(fd3[32*l +: 32]), .b({ws3 ? 16'h3F80 : bt_q[16*l +: 16], 16'd0}),
             .y(y[32*l +: 32]), .err(es[2*l +: 2]), .valid_out(vs[l]));
     end endgenerate
@@ -277,6 +290,11 @@ module qfd_dv_sram_delay #(parameter integer W = 514, parameter integer D = 14, 
 );
     reg [4:0] wp;
     reg [D-2:0] valid;
+    // One kept asynchronous-assert copy separates the<=18 mask reset pins
+    // from the pointer/warm pipeline (19 direct loads at production D14).
+    // Its one release edge is hidden within the D>=3 warm-up, not data age.
+    wire mask_reset;
+    (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(2048)) u_mask_reset (.ck(ck),.rst_n(rst_n),.d(1'b1),.q(mask_reset));
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin wp <= 0; valid <= 0; end
         else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
@@ -289,11 +307,11 @@ module qfd_dv_sram_delay #(parameter integer W = 514, parameter integer D = 14, 
         localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
         // Separate hierarchy keeps the<=32-load valid copies through opt_merge.
         wire warm_q;
-        (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(rst_n), .d(valid[D-2]), .q(warm_q));
+        (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(mask_reset), .d(valid[D-2]), .q(warm_q));
         assign q[32*g +: B] = warm_q ? mq[32*g +: B] : {B{1'b0}};
     end endgenerate
 `ifndef SYNTHESIS
-    initial if (D < 3 || D > 31 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
+    initial if (D < 3 || D > 27 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
 `endif
 endmodule
 
