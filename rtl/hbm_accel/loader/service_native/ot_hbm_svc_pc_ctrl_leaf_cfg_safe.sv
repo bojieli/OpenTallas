@@ -40,7 +40,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     output wire col_v,col_we,output wire[4:0]col_bank,col_col,
     output wire[255:0]col_data,output wire[31:0]col_strb,
     input wire dram_rvalid,input wire[255:0]dram_rdata,
-    output wire pc_fault,owner_fault
+    output wire pc_fault,output reg[5:0]owner_fault_split
 );
     // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
     wire lrst_n;
@@ -141,9 +141,21 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
         assign col_data=head[255:0];assign col_strb=head[287:256];
     end endgenerate
-    reg owner_fault_q;
-    always @(posedge clk)if(!lrst_n)owner_fault_q<=0;else owner_fault_q<=sticky||kfront_fault;
-    assign owner_fault=owner_fault_q;
+    // Released H9b diagnostic ABI: six separately registered fault classes.
+    // Internal sticky traffic kill retains its original edge; pins follow one
+    // diagnostic edge later, as on the released native controller.
+    reg[5:0]fault_detail;
+    always @(posedge clk)if(!lrst_n)begin fault_detail<=0;owner_fault_split<=0;end
+    else begin
+      owner_fault_split<=fault_detail;
+      if(i_v&&!legal)fault_detail[0]<=1;
+      if(cv&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
+          (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)))fault_detail[1]<=1;
+      if(column_read&&pending_count>=RQ)fault_detail[2]<=1;
+      if(ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))fault_detail[3]<=1;
+      if((response_take&&(read_reserved==0||response_count==0))||read_reserved>RQ||pending_count>RQ||response_count>RQ)fault_detail[4]<=1;
+      if(kfront_fault)fault_detail[5]<=1;
+    end
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
         wire[QW-1:0]wpay_raddr=cv?rp+1'b1:rp;

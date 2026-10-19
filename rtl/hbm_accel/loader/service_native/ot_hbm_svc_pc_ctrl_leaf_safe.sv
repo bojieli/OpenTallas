@@ -49,6 +49,7 @@ module ot_hbm_svc_pc_ctrl_leaf_safe #(
 `else
     localparam integer REF_STRAP=RELOAD;
 `endif
+    wire[5:0]owner_fault_split;assign owner_fault=|owner_fault_split;
     ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY)) u_cfg(
         .pc_id(5'(PC_STRAP)),.refresh_reload(8'(REF_STRAP)),
         .k_v(k_v),
@@ -80,5 +81,5 @@ module ot_hbm_svc_pc_ctrl_leaf_safe #(
         .clk(clk),
         .rst_n(rst_n),
         .pc_fault(pc_fault),
-        .owner_fault(owner_fault));
+        .owner_fault_split(owner_fault_split));
 endmodule
