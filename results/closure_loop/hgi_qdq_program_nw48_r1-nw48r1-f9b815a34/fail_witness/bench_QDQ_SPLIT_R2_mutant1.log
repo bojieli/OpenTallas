@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hgi_qdq_program_nw48_r1-nw48r1-f9b815a34 bench bench_QDQ_SPLIT_R2_mutant1 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hgi_qdq_program_nw48_r1-nw48r1-f9b815a34 log cl/bench_QDQ_SPLIT_R2_mutant1.a1b1.log captured 2026-10-19T00:01:48-07:00
+# fail_regex 'LOCKSTEP_FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+[3090000] %Fatal: tb_hgi_qdq_host_split_r2_lockstep.sv:133: Assertion failed in tb_hgi_qdq_host_split_r2_lockstep.unnamedblk7: LOCKSTEP_FAIL wq bank0 cycle59 split v1 a198a monolith+9 v1 a1988
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv:133: Verilog $stop
+Aborting...
+PASS QDQ_HOST_SPLIT_R2_LOCKSTEP_GATE cases 1: split r2 == monolith (rq +3+XR, wq/done +9+3XR) golden writes; mutants killed (LOCKSTEP_FAIL)
+[3090000] %Fatal: tb_hgi_qdq_host_split_r2_lockstep.sv:133: Assertion failed in tb_hgi_qdq_host_split_r2_lockstep.unnamedblk7: LOCKSTEP_FAIL wq bank0 cycle59 split v1 a198a monolith+9 v1 a1988
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv:133: Verilog $stop
+Aborting...
