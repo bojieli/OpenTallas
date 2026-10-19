@@ -15,7 +15,10 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // QD (HBM-BW): access-queue depth in sectors (leaf queue + sequencer queue).  The queue is the ACT lookahead: an
     // entry's bank is activated when it is queued, so QD cycles of column work must cover the ACT sequencing of a block's
     // four banks (tRRD/slot ~4 cycles each) + tRCD 19 + a refresh ACT-blocking window (16): 32 left no margin.
-    parameter integer QD=64,
+    // All thirteen macros already support128 entries. With RQ128, roughly100
+    // queued sectors remain visible after reserving the return round-trip;
+    // QD64 exposed a legal current-bank refresh too late for the static go.
+    parameter integer QD=128,
     parameter integer OREG=1,
     parameter integer KREG=1,
     parameter integer KRREG=1,
