@@ -93,6 +93,8 @@ def main(a):
                                      'Repeat independent placed 405um/endpoints/overlap/row checks and ROOT review before timing'])
     else:
         if not a.reference:raise ValueError('source-bound prepare receipt required')
+        if not a.constant_contact_policy:raise ValueError('original constant-contact guard required alongside clock guard')
+        record['original_constant_contact_policy_sha256']=sha(a.constant_contact_policy)
         reference=json.loads(Path(a.reference).read_text())
         if (reference['manifest_sha256']!=record['manifest_sha256'] or reference['gen_source']!=a.gen_source
                 or reference['row_policy_sha256']!=record['row_policy_sha256'] or reference.get('operation')!='prepare'):
@@ -116,6 +118,7 @@ def main(a):
         if actual!=reference['planned_core_mesh_from_actual_shapes']:raise ValueError('actual generated mesh differs from planned source-bound blueprint')
         record.update(reference_sha256=sha(a.reference),actual_generated_mesh_sha256=digest(actual),
                       generated_mesh_matches_blueprint=True,all_cell_coordinates_unchanged=True)
+        command('source {'+a.constant_contact_policy+'}')
         for code in ('ot_clock_pg_contact_check $stage_clocks','ot_tie_rows_verify 8.64 .48',
                      'check_power_grid -net VDD','check_power_grid -net VSS'):command(code)
         record['actual_contacts_stack_shorts_native_continuity_pass']=True
@@ -129,5 +132,6 @@ if __name__=='__main__':
     for n in ('odb','manifest','policy','out','tool-source','gen-source'):p.add_argument('--'+n,required=True)
     p.add_argument('--reference')
     p.add_argument('--pdn-source')
+    p.add_argument('--constant-contact-policy')
     p.add_argument('--pdn-companion',action='append',default=[])
     main(p.parse_args())
