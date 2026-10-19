@@ -51,11 +51,18 @@ export OT_KV_D2DS_VIEW=${KVS14P_D2DS_VIEW:-0}
 # rly_pvin_WN_3_40 (1055 b -> pvfork_WN_3 W face) unslotted = 4 wide landing stations): 1 = keep those lanes as plain relays and
 # stamp the whole run DIAGNOSTIC (never a die result) so the GRT / STA / die clock evidence of the rest exists; 0 = refuse
 export OT_KV_FWD_UNLANDED_DIAG=${KVS14P_UNLANDED_DIAG:-1}
+# OT_KV_CLK_UNMEASURED_DIAG (kvs14p-beefa20ce PREP FAIL: qkd_landsh0_* views have no insertion measurement for their second
+# clock ck_s = lane_ckf; only core_clk on ck): 1 = R = 0 for unmeasured clock pins, run stamped DIAGNOSTIC; re-measure owed
+export OT_KV_CLK_UNMEASURED_DIAG=${KVS14P_CLK_UNMEASURED_DIAG:-1}
 unset OT_KV_FWD_NETLIST_ONLY OT_KV_STATIC_DIE_DIAGNOSTIC
 bash tools/qwen_kv_die/chain/kvsys_prep.sh $R > $R/prep.log 2>&1 || { say "PREP FAIL (prep.log): $(tail -3 $R/prep.log | tr '\n' ' ' | cut -c1-400)"; exit 1; }
 if [ -s $R/FWD_UNLANDED_DIAGNOSTIC ]; then
   say "FWD UNLANDED DIAGNOSTIC: $(tr '\n' ' ' < $R/FWD_UNLANDED_DIAGNOSTIC) left as relays (no reserved landing frame) -- run is DIAGNOSTIC, NOT A DIE RESULT"
   echo "FWD_UNLANDED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
+fi
+if [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ]; then
+  say "CLK UNMEASURED DIAGNOSTIC (R=0): $(cat $R/libs/CLK_UNMEASURED_DIAGNOSTIC | head -c 300) -- NOT A DIE RESULT"
+  echo "CLK_UNMEASURED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
 fi
 say "D2DS VIEW: $(grep -m1 'OT_KV_D2DS_VIEW' $R/prep.log | head -c 300)"
 say "BUNDLE_EQ: $(grep -m1 -i 'bundle' $R/prep.log | head -c 400)"
@@ -82,6 +89,7 @@ export OT_CORNERS="tt ff" OT_DCC_CORNERS="tt ff"
 # strict bind PASS -> a real chain; otherwise the chain still runs, stamped DIAGNOSTIC (never a die result)
 if tail -1 $R/port_bind_v2/port_bind_v2.txt 2>/dev/null | grep -q PASS; then unset OT_BIND_DIAGNOSTIC; else export OT_BIND_DIAGNOSTIC=1; fi
 [ -s $R/FWD_UNLANDED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
 # a refused launch gate (native bind / RELAY_CHECK) stops die_chain before GRT: re-run once stamped DIAGNOSTIC so the GRT /

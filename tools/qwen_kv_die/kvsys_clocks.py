@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import qwen_die_element_lib as E   # noqa: E402
-from qwen_tp8.die_sta_libs import clock_tcl, measured_clock_refs   # noqa: E402
+from qwen_tp8.die_sta_libs import clock_tcl, measured_clock_refs, parse_lib, clock_refs   # noqa: E402
 import kv_die as K   # noqa: E402
 
 CORNERS = ('tt', 'ff', 'ss')
@@ -60,7 +60,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     K._set_geometry(True)
     views = json.loads(a.views.read_text())['views']
-    leaves, src = {}, {}
+    leaves, src, unmeasured = {}, {}, {}
     for mst, r in views.items():
         if not r.get('bound'):
             continue
@@ -77,10 +77,26 @@ def main(argv=None):
                 continue
             try:
                 refs = measured_clock_refs(lib, vd / 'insertion.json', c)
-            except ValueError:
+            except ValueError as e_:
                 if c == 'ss':
                     continue          # SS: sensitivity only; a view without an SS boundary measurement skips it
-                raise
+                if os.environ.get('OT_KV_CLK_UNMEASURED_DIAG') != '1':
+                    raise
+                # KV-PLAN5 10-18 DIAGNOSTIC only: the landing hop-0 views (qkd_landsh0_*) measured core_clk on ck but not their
+                # second clock ck_s (lane_ckf, ring write side): unmeasured clock pins take R = 0 (ideal), recorded below
+                lb = parse_lib(lib)
+                rr_ = clock_refs(lb, json.loads((vd / 'insertion.json').read_text()), c)
+                refs = {}
+                for pin_, v_ in lb['pins'].items():
+                    if not (v_['clock'] or pin_ in rr_):
+                        continue
+                    r_ = rr_.get(pin_)
+                    if r_ and r_['src'] == 'insertion.json boundary mean':
+                        refs[pin_] = r_['rise']
+                    else:
+                        refs[pin_] = 0.0
+                        unmeasured.setdefault(mst, set()).add(pin_)
+                print(f'kvsys_clocks: DIAGNOSTIC unmeasured clock pin(s) R=0: {mst} {c}: {e_}')
             for rpin, rr in refs.items():
                 if b is None:
                     per.setdefault(c, {})[rpin] = rr
@@ -135,8 +151,11 @@ def main(argv=None):
                measured=src, assumed_ideal=sorted(m_ for m_ in leaves if m_ not in src),
                per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK, qkd_ahub=K.AHUB_CLK, qkd_land=K.KS.LAND_CLK,
                                       qkd_astk=K.KS.ASTK_CLK),
+               unmeasured_diagnostic={k_: sorted(v_) for k_, v_ in unmeasured.items()},
                rule='phi - R per sink, R = insertion.json boundary mean of the bound view (per corner); frames ideal (R 0)')
     (a.out / 'clocks.json').write_text(json.dumps(rec, indent=1) + '\n')
+    if unmeasured:
+        (a.out / 'CLK_UNMEASURED_DIAGNOSTIC').write_text(json.dumps(rec['unmeasured_diagnostic']) + '\n')
     print(json.dumps({k: rec[k] for k in ('sinks', 'domains')} | dict(measured=list(src))))
 
 
