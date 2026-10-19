@@ -2,7 +2,7 @@
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
 // SFU core k9 (H-SU 2026-10-17, coordinator 0co: square-ish ~1,600 x 1,800 cluster, owner rule "no long-thin blocks").
-// Pure port re-slicing of ot_hgi_sfu_core_split2 (no logic, no registers, no edges): the sixteen lane-direct buses are
+// Port re-slicing of ot_hgi_sfu_core_split2 (no logic of its own; DRAIN_PIPE below adds split2's drain stage): the sixteen lane-direct buses are
 // split into four face groups so each group of four lane leaves (hard child ot_su12_sfu) faces its own block side:
 //   _w = lanes 0-3 (W column)   _n = lanes 4-7 (N row)   _e = lanes 8-11 (E column)   _s = lanes 12-15 (S row).
 // split2's X_w[k*W +: W] (lane k, k=0..7) -> lanes 0-3 on _w, 4-7 on _n; X_e (lanes 8..15) -> 8-11 on _e, 12-15 on _s.
@@ -15,6 +15,7 @@ module ot_hgi_sfu_core_split3 #(
  parameter integer TAP_WR=11
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
+ input wire [4:0] clk_st,
  input wire [3:0] clk_lg,rst_lg_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire [470:0] io_word,

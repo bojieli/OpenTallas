@@ -3,7 +3,8 @@
 // Wires-only native arithmetic-grid candidate. No HGI/control/memory envelope is claimed.
 // Each mapper adds4edges; caller must bind exact controller phase and actual cache/ACK lifetime.
 module ot_hgi_sfu_arithmetic_grid #(
- parameter integer BTREE=0   // 1: registered broadcast tree (4 ot_hgi_sfu_bcast_e0 nodes + 16 ot_hgi_sfu_lane_map_e123), cycle-identical
+ parameter integer BTREE=0,  // 1: registered broadcast tree (4 ot_hgi_sfu_bcast_e0 nodes + 16 ot_hgi_sfu_lane_map_e123), cycle-identical
+ parameter integer PASS_OHREP=0  // LH-SU (10-19): lane_map pass-ring one-hot replication (g_mono)
 ) (
  input wire [15:0] clk_lane, clk_map, rst_lane_n, rst_map_n,
  input wire [1741:0] control,
@@ -127,7 +128,7 @@ module ot_hgi_sfu_arithmetic_grid #(
 .e0_row(n_row[j/4]),.e0_ls(n_ls[j/4]),.e0_lvw(n_lvw[j/4]),.e0_emit(n_emit[j/4]),.e0_pass(n_pass[j/4]),.e0_ld(n_ld[j/4]),
 .o_ld_c(m_ld_c),.o_o_v(m_o_v),.o_i_v(m_i_v),.o_krow(m_krow),.o_ls(m_ls),.o_lvw(m_lvw),.o_emit(m_emit),.o_pass(mapped_pass));
   end else begin:g_mono
-  ot_hgi_sfu_lane_map u_map (
+  ot_hgi_sfu_lane_map #(.PASS_OHREP(PASS_OHREP)) u_map (
 .clk(clk_map[j]),.rst_n(rst_map_n[j]),.lane_j(4'(j)),.ld_terms(terms),
 .i_o_v(r_o_v),.i_i_v(r_i_v),.i_krow(r_krow),.i_ls(r_ls),.i_lvw(r_lvw),.i_emit(r_emit),
 .i_pass(c_pass),
