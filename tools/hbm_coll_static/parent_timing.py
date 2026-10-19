@@ -9,14 +9,16 @@ hierarchy parent ot_hfd_coll_q{2,3}_hard_v5 (H-NETLIST/COLL 1045, V5 issue timin
                 write 1 edge later, so its configured / init_busy / program_fault outputs are +1 (SHP).  Frame-to-frame
                 gaps (55-edge row drain, 66-edge descriptor scan before launch) are RELATIVE to the target's own
                 capture and are unchanged.
-  issue path    launch capture +1, uop stream delayed +3 for the pipelined iteration products (ot_hgi_coll_iter_mul, V6):
-                every issue-path output (first uop effect, busy, done, injects, VM requests, rails, deliveries) is +4
-                (SH).  Host launch -> first uop effect: 5 -> 9 edges.
+  issue path    launch capture +1, issuer input pin registers +1 (COLLPIN 10-18, coordinator 0gd), uop stream delayed
+                +3 for the pipelined iteration products (ot_hgi_coll_iter_mul, V6): every issue-path output (first uop
+                effect, busy, done, injects, VM requests, rails, deliveries) is +5 (SH).  Host launch -> first uop
+                effect: 5 -> 10 edges.  The programme target's occupancy view of the issuer is UNCHANGED (the issuer
+                exports busy | start_q), so frame/descriptor/launch legality windows are as before.
   child faults  registered once more at the fj pins: host-visible fault = (V4 edge) + SH + 1 for a fault raised on the
                 issue path; a programme-frame fault is + SHP.
 
 The facts are read from the lockstep bench that proves them, rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_hard_v5.sv
-(`localparam integer SH=..,SHP=..` and the fault-edge rule `scen==6?SHP:SH+1`).  Compiling for a parent with another
+(`localparam integer SH=..,SHP=..` and the fault-edge rule `(scen==6||scen==8)?SHP:SH+1`).  Compiling for a parent with another
 parent's constants FAILS `check` (a negative: hard_v5 with the V4 constants).
 
     python3 tools/hbm_coll_static/parent_timing.py show [--parent hard_v5]
@@ -45,6 +47,7 @@ HOST_V4 = {
     "host_descriptor_to_launch_gap_edges": 66,  # relative: unchanged by a uniform capture shift
     "host_launch_to_issuer_start_edges": 2,
     "host_launch_to_first_uop_edges": 5,
+    "issuer_input_pin_edges": 0,                # issuer leaf pin stage on cfg/start/start_pc (part of issue_path_shift)
     "issue_path_shift_edges": 0,                # every issue-path output (busy/done/injects/VM/rails/deliveries)
     "child_fault_extra_edges": 0,               # child fault -> host fault, beyond the issue-path shift
     "program_fault_shift_edges": 0,
@@ -59,12 +62,13 @@ def _hard_v5(sh: int, shp: int) -> dict:
                 host_last_frame_to_row_complete_edges=HOST_V4["host_last_frame_to_row_complete_edges"] + shp,
                 host_launch_to_issuer_start_edges=HOST_V4["host_launch_to_issuer_start_edges"] + shp,
                 host_launch_to_first_uop_edges=HOST_V4["host_launch_to_first_uop_edges"] + sh,
+                issuer_input_pin_edges=1 if sh >= 5 else 0,
                 issue_path_shift_edges=sh,
                 child_fault_extra_edges=1,
                 program_fault_shift_edges=shp)
 
 
-HARD_V5 = _hard_v5(4, 1)          # tb_hgi_coll_q_hard_v5.sv V6: SH=4, SHP=1, child fault +SH+1 (V5 5bb671b57 was SH=3)
+HARD_V5 = _hard_v5(5, 1)          # tb_hgi_coll_q_hard_v5.sv COLLPIN: SH=5, SHP=1, child fault +SH+1 (V6 SH=4; V5 5bb671b57 SH=3)
 PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5}
 
 
@@ -81,7 +85,7 @@ def tb_facts(tb: Path = TB) -> dict:
     m = re.search(r"localparam\s+integer\s+SH\s*=\s*(\d+)\s*,\s*SHP\s*=\s*(\d+)\s*;", t)
     if not m:
         raise ValueError(f"{tb}: no `localparam integer SH=..,SHP=..;`")
-    f = re.search(r"scen\s*==\s*6\s*\?\s*SHP\s*:\s*SH\s*\+\s*(\d+)", t)
+    f = re.search(r"scen\s*==\s*6\s*(?:\|\|\s*scen\s*==\s*\d+\s*\)\s*)?\?\s*SHP\s*:\s*SH\s*\+\s*(\d+)", t)
     if not f:
         raise ValueError(f"{tb}: no fault-edge rule `scen==6?SHP:SH+n`")
     return {"SH": int(m.group(1)), "SHP": int(m.group(2)), "child_fault_plus": int(f.group(1)), "tb": str(tb)}

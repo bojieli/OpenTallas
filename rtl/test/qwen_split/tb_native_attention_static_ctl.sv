@@ -39,7 +39,7 @@ module tb_native_attention_static_ctl;
   end
   if(txv)begin
    if(nt<32&&(txp[542:539]!=3||txp[511:0]!=512'(nt)))$fatal(1,"TX corrupt");
-   if(nt==32&&(txp[542:539]!=4||txp[511:0]!=0))$fatal(1,"STATUS corrupt");nt=nt+1;
+   if(nt==32&&(txp[542:539]!=4||txp[511:0]!={507'd0,5'b01001}))$fatal(1,"STATUS corrupt (namespace {q_ready,done,fault,busy,ready} = 01001)");nt=nt+1;
   end
  end
  initial begin

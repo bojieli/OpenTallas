@@ -1,0 +1,153 @@
+Startpoint: u_f_0L01 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: st_x_f_0L00_l2_0 (rising edge-triggered flip-flop clocked by clk')
+Path Group: clk
+Path Type: min
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                 0.0    0.0  833.3 ^ u_f_0L01/clk (dv_f_0L01)
+     1   21.1   20.0   25.0  858.3 v u_f_0L01/o_x_f_0L00_l2[22] (dv_f_0L01)
+     1   19.3   27.3   57.0  915.3 v wire727837/Y (BUFx8_ASAP7_75t_R)
+     1   28.4   29.2   66.8  982.1 v wire727836/Y (BUFx8_ASAP7_75t_R)
+               118.9   36.7 1018.8 v st_x_f_0L00_l2_0/i[22] (dsfd_dvrlyh_276_NS)
+                            1018.8   data arrival time
+
+                      416.7  416.7   clock clk' (rise edge)
+                      181.5  598.2   clock network delay (propagated)
+                       25.0  623.2   clock uncertainty
+                        0.0  623.2   clock reconvergence pessimism
+                             623.2 ^ st_x_f_0L00_l2_0/ck (dsfd_dvrlyh_276_NS)
+                       69.2  692.4   library hold time
+                             692.4   data required time
+-------------------------------------------------------------------------
+                             692.4   data required time
+                            -1018.8   data arrival time
+-------------------------------------------------------------------------
+                             326.4   slack (MET)
+
+
+Startpoint: u_s_7N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: st_tvS_s_7N_0 (rising edge-triggered flip-flop clocked by clk')
+Path Group: clk
+Path Type: min
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                 0.0    0.0  833.3 ^ u_s_7N/clk (dv_s_7N)
+     1   21.9   20.0   25.0  858.3 v u_s_7N/o_tvS_s_7N[117] (dv_s_7N)
+     1   19.6   25.1   61.4  919.8 v wire418022/Y (BUFx8_ASAP7_75t_R)
+     1   29.3   31.5   70.1  989.9 v wire418021/Y (BUFx8_ASAP7_75t_R)
+                98.6   29.5 1019.4 v st_tvS_s_7N_0/i[117] (dsfd_dvrlyh_276_NS)
+                            1019.4   data arrival time
+
+                      416.7  416.7   clock clk' (rise edge)
+                      316.5  733.2   clock network delay (propagated)
+                       25.0  758.2   clock uncertainty
+                        0.0  758.2   clock reconvergence pessimism
+                             758.2 ^ st_tvS_s_7N_0/ck (dsfd_dvrlyh_276_NS)
+                       69.5  827.7   library hold time
+                             827.7   data required time
+-------------------------------------------------------------------------
+                             827.7   data required time
+                            -1019.4   data arrival time
+-------------------------------------------------------------------------
+                             191.7   slack (MET)
+
+
+Startpoint: st_tvS_s_7N_4 (rising edge-triggered flip-flop clocked by clk')
+Endpoint: st_tvS_s_7N_5 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                      416.7  416.7   clock clk' (rise edge)
+                     1933.8 2350.5   clock network delay (propagated)
+               196.9    0.0 2350.5 ^ st_tvS_s_7N_4/ck (dsfd_dvrlyh_276_NS)
+     1    2.8   14.1  239.1 2589.5 v st_tvS_s_7N_4/o[117] (dsfd_dvrlyh_276_NS)
+     1   22.6   24.6   32.3 2621.8 v wire1647525/Y (BUFx8_ASAP7_75t_R)
+     1   20.4   27.3   79.7 2701.6 v wire1647524/Y (BUFx8_ASAP7_75t_R)
+     1   25.9   25.4   72.0 2773.6 v wire1647523/Y (BUFx8_ASAP7_75t_R)
+               103.6   31.5 2805.0 v st_tvS_s_7N_5/i[117] (dsfd_dvrlyh_276_NS)
+                            2805.0   data arrival time
+
+                        0.0    0.0   clock clk (rise edge)
+                     2328.6 2328.6   clock network delay (propagated)
+                       25.0 2353.6   clock uncertainty
+                        0.0 2353.6   clock reconvergence pessimism
+                            2353.6 ^ st_tvS_s_7N_5/ck (dsfd_dvrlyh_276_NS)
+                       69.5 2423.1   library hold time
+                            2423.1   data required time
+-------------------------------------------------------------------------
+                            2423.1   data required time
+                            -2805.0   data arrival time
+-------------------------------------------------------------------------
+                             381.9   slack (MET)
+
+
+Startpoint: u_s_0S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: st_xrE_0S_l1_0 (rising edge-triggered flip-flop clocked by clk')
+Path Group: clk
+Path Type: min
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                 0.0    0.0  833.3 ^ u_s_0S/clk (dv_s_0S)
+     1   20.4   20.0   25.0  858.3 v u_s_0S/o_xrE_0S_l1[33] (dv_s_0S)
+     1   18.7   25.2   54.9  913.2 v wire549483/Y (BUFx8_ASAP7_75t_R)
+     1   30.9   27.0   63.4  976.6 v wire549482/Y (BUFx8_ASAP7_75t_R)
+               127.4   39.1 1015.7 v st_xrE_0S_l1_0/i[33] (dsfd_dvrlyh_276_WE)
+                            1015.7   data arrival time
+
+                      416.7  416.7   clock clk' (rise edge)
+                      291.7  708.4   clock network delay (propagated)
+                       25.0  733.4   clock uncertainty
+                        0.0  733.4   clock reconvergence pessimism
+                             733.4 ^ st_xrE_0S_l1_0/ck (dsfd_dvrlyh_276_WE)
+                       44.2  777.6   library hold time
+                             777.6   data required time
+-------------------------------------------------------------------------
+                             777.6   data required time
+                            -1015.7   data arrival time
+-------------------------------------------------------------------------
+                             238.1   slack (MET)
+
+
+Startpoint: st_xrE_0S_l1_2 (rising edge-triggered flip-flop clocked by clk')
+Endpoint: st_xrE_0S_l1_3 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                      416.7  416.7   clock clk' (rise edge)
+                      960.2 1376.9   clock network delay (propagated)
+               144.9    0.0 1376.9 ^ st_xrE_0S_l1_2/ck (dsfd_dvrlyh_276_WE)
+     1   22.7   92.4  204.5 1581.4 v st_xrE_0S_l1_2/o[33] (dsfd_dvrlyh_276_WE)
+     1   18.5   29.2   84.7 1666.0 v wire1150323/Y (BUFx8_ASAP7_75t_R)
+     1   30.3   26.7   62.3 1728.3 v wire1150322/Y (BUFx8_ASAP7_75t_R)
+               131.8   40.8 1769.1 v st_xrE_0S_l1_3/i[33] (dsfd_dvrlyh_276_WE)
+                            1769.1   data arrival time
+
+                        0.0    0.0   clock clk (rise edge)
+                     1297.0 1297.0   clock network delay (propagated)
+                       25.0 1322.0   clock uncertainty
+                        0.0 1322.0   clock reconvergence pessimism
+                            1322.0 ^ st_xrE_0S_l1_3/ck (dsfd_dvrlyh_276_WE)
+                       44.2 1366.2   library hold time
+                            1366.2   data required time
+-------------------------------------------------------------------------
+                            1366.2   data required time
+                            -1769.1   data arrival time
+-------------------------------------------------------------------------
+                             402.9   slack (MET)
+
+
+[WARNING STA-0473] no valid objects specified for -to.
+[ERROR STA-0511] report_checks command failed.

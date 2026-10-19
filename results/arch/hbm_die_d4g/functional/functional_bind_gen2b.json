@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.d4g_functional_bind.v1",
+ "contract": "/home/ubuntu/scratch/hbm-wire/gen2b_pre_relay.json",
+ "verdict": "PASS",
+ "classes": {
+  "INJ": {
+   "paths": 200,
+   "bits": 39296,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "DEL": {
+   "paths": 96,
+   "bits": 26080,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "RC": {
+   "paths": 84,
+   "bits": 5628,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "SFUJ": {
+   "paths": 64,
+   "bits": 2048,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "DMA": {
+   "paths": 44,
+   "bits": 9620,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "HC": {
+   "paths": 376,
+   "bits": 82452,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "XCMD": {
+   "paths": 296,
+   "bits": 124816,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  }
+ },
+ "stale_gaps": [],
+ "open_gaps": [],
+ "unlisted_open_gaps": [],
+ "fails": [],
+ "paths": 1160
+}

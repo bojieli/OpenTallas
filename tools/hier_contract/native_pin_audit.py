@@ -245,6 +245,29 @@ def die_bindings(root: Path) -> dict:
     return dict(bound=bound, cells=cells, meta=meta)
 
 
+def receipt_path(p, root):
+    """the receipt as a repo-relative path when it lies inside the checkout (closed_stands reads a COMMITTED receipt at
+    the job's commit / origin/main; an absolute local path is not committed evidence)."""
+    try:
+        return str(Path(p).resolve().relative_to(Path(root).resolve()))
+    except ValueError:
+        return str(p)
+
+
+def reroute_reason_for(r, source, hints):
+    """(ROOT-INF1 2026-10-18, INF.1) the CLOSED-STANDS "reroute_reason" for a routed view that FAILS this audit.
+    native_spread when the only miss is the TT / FF pin-flop spread (> 80, owner 0dq), else native_capture (it admits any
+    capture / launch / spread FAIL).  Before this the candidates carried kind pin_register, which closed_stands refuses
+    without a pair_cost_ps > 683.3 -- so a spread-failed closed tile could not be re-routed from the audit's output."""
+    lim = PA.NEIGHBOUR_SKEW_PS
+    spread = any((r.get(k) or 0) > lim for k in ("spread_ps", "ff_spread_ps"))
+    other = bool(r.get("launch_over") or r.get("capture_over") or r.get("comb_pins"))
+    kind = "native_spread" if spread and not other else "native_capture"
+    return dict(kind=kind, source=source, cell=r.get("lib_cell") or r["cell"], launch_ps=r.get("launch_ps"),
+                capture_ps=r.get("capture_ps"), spread_ps=r.get("spread_ps"), ff_spread_ps=r.get("ff_spread_ps"),
+                fix="; ".join(hints) or "re-kit the boundary (pin flops at the pins, balanced boundary clock)")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=str(HERE.parents[1]))
@@ -354,11 +377,11 @@ def main(argv=None) -> int:
                 hints.append(f"{r['comb_pins']} combinational pins: register them")
             if (r.get("spread_ps") or 0) > 80:
                 hints.append(f"boundary clock spread {r['spread_ps']} ps > 80: balance the boundary registers / split the root")
+            if (r.get("ff_spread_ps") or 0) > 80:
+                hints.append(f"FF pin-flop spread {r['ff_spread_ps']} ps > 80: balance the boundary registers at FF")
             cands.append(dict(design=d, cell=r["cell"], view=r["view"], job=r.get("job"), launch_ps=r.get("launch_ps"),
                               capture_ps=r.get("capture_ps"), spread_ps=r.get("spread_ps"), r_from=r["ref_src"],
-                              reroute_reason=dict(kind="pin_register", source=f"{out}/{d}.json", cell=r["lib_cell"] or r["cell"],
-                                                  launch_ps=r.get("launch_ps"), capture_ps=r.get("capture_ps"),
-                                                  fix="; ".join(hints))))
+                              reroute_reason=reroute_reason_for(r, receipt_path(out / f"{d}.json", root), hints)))
     (out / "reroute_candidates.json").write_text(json.dumps(dict(schema="opentallas.native_pin_audit.candidates.v1",
                                                                   source=head, candidates=cands), indent=1) + "\n")
     md += ["", "## Re-route candidates (fail AND bound by the die)", "",

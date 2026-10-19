@@ -1,0 +1,16 @@
+{
+ "reviewer": "coordinator sub-lane S81-TILES8/bk (Claude)",
+ "time": "2026-10-18T03:05-07:00",
+ "gate_commit": "368403ff4",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "2 SRAM 128x256 at y 25.92 / 105.84 (fix 4f4de7b87), inter-macro channel 38.9 um, N/S 25.9 um",
+  "std_cell_band": "one band per macro face + W/E columns; util 20% std, fill 39.5%",
+  "pin_spread": "3,712 pins on W/E/N/S full faces, pin geometry PASS (0 inaccessible)",
+  "clock_entry": "S face centre beside the S register band",
+  "shape": "172.8 x 172.8 (square)",
+  "trial_grt": "OT_GATE_TRIAL=1 trial GRT overflow 0 on every layer (M2 44.1%, M3 46.1%, M4 30.7%, M5 28.6%; total 37.9%) -> the GRT-0116 hotspot of route 1 is gone",
+  "timing": "TT placement setup WNS +91.7 ps, hold +7.3 ps"
+ },
+ "note": "Clock under OWNER 10-17 rule: pin-flop (boundary, n 3,708) spread TT 71.1 ps (233.1..304.2); FF all-flop spread 77.1 (179.3..256.4) bounds the FF boundary spread -> PASS (<= 80). Insertion 304.2 TT is guidance; the parent compensates the boundary. Reroute reason: route 1 s81dvbk_g2-g2-d73a4b8db EARLY_FAIL_CONGESTION (GRT-0116) fixed structurally by the macro move."
+}

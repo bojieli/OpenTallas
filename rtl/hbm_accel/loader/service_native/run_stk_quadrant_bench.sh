@@ -71,8 +71,8 @@ case "$c" in
   vvp -n "$out/sf_default_m1.vvp" > "$out/sf_default_m1.log" 2>&1 || true
   grep -q '^FAIL tb_hbm_svc_stack_fault MUT=1' "$out/sf_default_m1.log"
   echo "STK_SF_DEFAULT PASS" ;;
- rc_q)          ivl "$c" pass tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" ;;
- rc_mut[1-4])   IVP="-Ptb_hbm_pc_refresh_cfg_q.MUT=${c#rc_mut}" ivl "$c" fail tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" ;;
+ rc_q)          ivl "$c" pass tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" rtl/lib/ot_rst_relay.sv ;;
+ rc_mut[1-4])   IVP="-Ptb_hbm_pc_refresh_cfg_q.MUT=${c#rc_mut}" ivl "$c" fail tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" rtl/lib/ot_rst_relay.sv ;;
  equiv_default)
   for m in stack_fault wb_cutthrough_cdc; do
    sed "s/^module ot_hbm_svc_${m} /module gold_${m} /" "$ref/ot_hbm_svc_${m}.gen0.sv" > "$out/gold_${m}.sv"

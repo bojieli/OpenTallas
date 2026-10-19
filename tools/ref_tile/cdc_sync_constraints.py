@@ -519,7 +519,9 @@ MARKER = '  puts "OT_MULTI_ROOT OWNERSHIP PASS roots='
 
 
 def extend(body, spec, root):
-    record = lint(spec, root)
+    # kit generation binds a receipt-cached lint (lint_receipt.py): never re-elaborated on localhost per gen/gate/submit
+    import lint_receipt
+    record = lint_receipt.record(KEY, lint, CdcError, spec, root, _yosys())
     if body.count(CROSSING) != 1 or body.count(MARKER) != 1:
         raise CdcError('cdc_synchronizers multi-root crossing gate changed; revalidate extension')
     body = body.replace(CROSSING, '          ot_cdc_crossing $start $pin $source $cell $source_domain $expected\n'

@@ -39,7 +39,9 @@ def main():
              '  if {[llength $p] == 0} { return NA }',
              '  return [get_property [lindex $p 0] slack]', '}']
         for r in fl['lanes']:
-            L.append(f"puts \"OT_LAND {r['bid']} {a.corner} {r['E']} setup [ot_land_worst {{{pins(r)}}} max] "
+            if r.get('lane') == 'reset':
+                continue
+            L.append(f"puts \"OT_LAND {r['bid']} {a.corner} {r.get('E_sta', r['E'])} setup [ot_land_worst {{{pins(r)}}} max] "
                      f"hold [ot_land_worst {{{pins(r)}}} min]\"")
         a.out.write_text('\n'.join(L) + '\n')
         print(f'{a.out}: {len(fl["lanes"])} lanes')
@@ -51,6 +53,8 @@ def main():
             meas.setdefault(m.group(1), {})[m.group(2)] = (int(m.group(3)), m.group(4), m.group(5))
     rows, fails = [], []
     for r in fl['lanes']:
+        if r.get('lane') == 'reset':
+            continue
         mm = meas.get(r['bid'], {})
         s1, h0 = {}, {}
         for c, (e0, s, h) in mm.items():

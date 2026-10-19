@@ -1,0 +1,11 @@
+BAD case 0 copy 0/0 gate 3eb3fde7/3ec24728
+BAD case 1 copy 1/1 gate 3f17d786/3f2fa66b
+BAD case 2 copy 2/2 gate 3f0c9cf0/3f1fd9bb
+BAD case 3 copy 3/3 gate 3f1e0445/3f3f252d
+BAD case 4 copy 0/0 gate 3f2ff4ec/3f200600
+BAD case 5 copy 1/1 gate 3f102287/3f2dd54d
+FAIL MUTANT 2 REJECTED mismatches=24 of 32
+- rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_eg.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 468ns; walltime 0.007 s; speed 70.480 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 9 MB

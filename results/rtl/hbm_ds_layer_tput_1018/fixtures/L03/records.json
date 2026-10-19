@@ -1,0 +1,6148 @@
+{
+ "schema": "opentallas.hbm_ds_layer_fixture.v1",
+ "layer": 3,
+ "ranks": [
+  0
+ ],
+ "tp": 96,
+ "placement": "TP-96 native programme (the only bit-exact DS programme); d4g TP-192 = SPLIT TRANSFORM: row-split records map to d4g dies 2r / 2r+1 by row halves, tree/K-split records need a TP-192 programme (d4g_placement per record)",
+ "golden": "released DeepSeek-V4.1-Flash checkpoint, 1M context (pos 1,048,575), W17 reference shards; ds_native layer verdict below is the bit-exact check of the layer output",
+ "ds_native_verdicts": [
+  {
+   "layer": 3,
+   "verdict": "pass",
+   "fault": null
+  }
+ ],
+ "priced_layer_cycles": 13665.5,
+ "priced_records_unmatched": [
+  {
+   "i": 30,
+   "op": "HC.HC_MIX",
+   "tag": "hc_attn (mixes + Sinkhorn)"
+  },
+  {
+   "i": 47,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 0 w1"
+  },
+  {
+   "i": 51,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 6 w1"
+  },
+  {
+   "i": 52,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 6 w3"
+  },
+  {
+   "i": 53,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 0 w3"
+  },
+  {
+   "i": 54,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 1 w1"
+  },
+  {
+   "i": 55,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 1 w3"
+  },
+  {
+   "i": 56,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 2 w1"
+  },
+  {
+   "i": 57,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 2 w3"
+  },
+  {
+   "i": 59,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 3 w1"
+  },
+  {
+   "i": 60,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 3 w3"
+  },
+  {
+   "i": 61,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 4 w1"
+  },
+  {
+   "i": 62,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 4 w3"
+  },
+  {
+   "i": 63,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 5 w1"
+  },
+  {
+   "i": 65,
+   "op": "SM.MATVEC",
+   "tag": "expert slot 5 w3"
+  },
+  {
+   "i": 74,
+   "op": "HC.HC_MIX",
+   "tag": "hc_ffn (mixes + Sinkhorn)"
+  }
+ ],
+ "records": {
+  "0": [
+   {
+    "k": 0,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ROW_GATHER",
+    "tag": "selected compressed-KV rows to the head dies",
+    "family": "kv_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      8589934592,
+      512,
+      1,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      34359738368,
+      512,
+      1,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "I": [
+      126976,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 8589934592,
+      "bytes": 2048,
+      "sha256": "4f1d0cc0e1889e4e9a963678f435e384a91719519ca680046d271e76a0413e1a"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k0.I",
+      "words": 512,
+      "sha256": "6428aa21435c6f39a152df1e7b09eb74d5e4c3d14246eb2443afbbec2cf5fa22"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "HBM",
+      "addr": 34359738368,
+      "bytes": 2048,
+      "sha256": "a0f89c51287066c3ed52ebd4604e48024dbc5a05b64f1c7265d6e769dd466bca"
+     }
+    },
+    "k_layer": 0,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 1,
+    "L": 0,
+    "layer": 3,
+    "op": "FUSED.HC_PRE_NORM",
+    "tag": "attn_norm",
+    "family": "hc_pre_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      17179869184,
+      5120,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "C": [
+      40960,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k1.A",
+      "words": 20480,
+      "sha256": "eb07afdf1924c3fe4be642608720c6b6a5a4ea4104136018f4077ddd94561f1a"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 17179869184,
+      "bytes": 10240,
+      "sha256": "b1788f2a3590e2769f9fe887533ec1026e7fa8a4b8e60ce24bbc7a39aa62f50a"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k1.C",
+      "words": 4,
+      "sha256": "8f115df036eb5515f6b778cd85fb9c4539c8c314f99b14c2c8dac54e849d4eff"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k1.O",
+      "words": 5120,
+      "sha256": "0d5ec3ade3a2481e74475bbf4073b0021847e1a0345037ab0f5dc7cb93b68f0c"
+     }
+    },
+    "k_layer": 1,
+    "priced": [
+     {
+      "i": 0,
+      "start": 185,
+      "end": 819.95,
+      "cls": "-",
+      "unit": "FUSED",
+      "base_cost": 649.33
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 2,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "wkv",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68728418720,
+      5120,
+      5,
+      5440,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      47616,
+      5,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k2.A",
+      "words": 5120,
+      "sha256": "0d5ec3ade3a2481e74475bbf4073b0021847e1a0345037ab0f5dc7cb93b68f0c"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68728418720,
+      "n": 5120,
+      "m": 5,
+      "stride": 5440,
+      "err": "HBM access [0x10008871a0, +26880) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k2.O",
+      "words": 5,
+      "sha256": "939473a16dbdc7dcc41f75037cb4d7efce4797eb7adf8724398e9e94afa4d47d"
+     }
+    },
+    "k_layer": 2,
+    "priced": [
+     {
+      "i": 3,
+      "start": 1068.5,
+      "end": 1268.05,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 199.97
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 3,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.FENCE",
+    "tag": "hc_attn.weight_fence",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {},
+    "inputs": {},
+    "outputs": {},
+    "k_layer": 3,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 4,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "q_norm.gain",
+    "family": "q_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17179889664,
+      1280,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      48128,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17179889664,
+      "bytes": 2560,
+      "sha256": "e94f4f526f5673493ae6d476220f64c4ce7ee3bd2b96be80c6d41030ccf77062"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k4.O",
+      "words": 1280,
+      "sha256": "9c507c72089105777f787f4e04deb08fe407041b12c3e0ac3858c2200ee7589d"
+     }
+    },
+    "k_layer": 4,
+    "priced": [
+     {
+      "i": 5,
+      "start": 1480.31,
+      "end": 1614.19,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 105.62
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 5,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "kv_norm.gain",
+    "family": "kv_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17179892224,
+      512,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      49408,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17179892224,
+      "bytes": 1024,
+      "sha256": "7c7a53d73b923fd2237eb5ffbeca7a34a1b1632b654a02dd5e98474a8db5239a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k5.O",
+      "words": 512,
+      "sha256": "90cce6a0b79cdbb31e86d5e1810a241c7e1b65efd2015d861200b4a69023d3b3"
+     }
+    },
+    "k_layer": 5,
+    "priced": [
+     {
+      "i": 7,
+      "start": 1484.31,
+      "end": 1617.22,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 104.65
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 6,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "kv_rope.table",
+    "family": "kv_rope",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17179893248,
+      64,
+      1,
+      0,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      53376,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17179893248,
+      "bytes": 256,
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k6.O",
+      "words": 64,
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f"
+     }
+    },
+    "k_layer": 6,
+    "priced": [
+     {
+      "i": 9,
+      "start": 1488.31,
+      "end": 1620.66,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 104.08
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 7,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "wq_a",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68721451168,
+      5120,
+      13,
+      5440,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      46336,
+      13,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k7.A",
+      "words": 5120,
+      "sha256": "0d5ec3ade3a2481e74475bbf4073b0021847e1a0345037ab0f5dc7cb93b68f0c"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68721451168,
+      "n": 5120,
+      "m": 13,
+      "stride": 5440,
+      "err": "HBM access [0x10001e20a0, +70400) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k7.O",
+      "words": 13,
+      "sha256": "700f017aaa425f7e749cb92213aa7ae680c115d5231053d1de27b594383f2f0e"
+     }
+    },
+    "k_layer": 7,
+    "priced": [
+     {
+      "i": 1,
+      "start": 843.95,
+      "end": 1043.5,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 199.97
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 8,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "x_projections_gather.qa",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      46336,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      46336,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k8.A",
+      "words": 1280,
+      "sha256": "b44d567963a707d21d003066114b5ae9af8f8c7acdd2610957ee28ec3a665074"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k8.O",
+      "words": 1280,
+      "sha256": "7f9a3a3539818d140b4c9e4d145c3eb974d6d57ba5cd55d2a3eb57e389da6c8d"
+     }
+    },
+    "k_layer": 8,
+    "priced": [
+     {
+      "i": 2,
+      "start": 1059.5,
+      "end": 1463.31,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 382.71
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 9,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "q_norm.ss",
+    "family": "q_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      46336,
+      160,
+      8,
+      160,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "R": [
+      49920,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k9.A",
+      "words": 1280,
+      "sha256": "7f9a3a3539818d140b4c9e4d145c3eb974d6d57ba5cd55d2a3eb57e389da6c8d"
+     },
+     "R": {
+      "space": "VM",
+      "array": "r0.k9.R",
+      "words": 1,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+     }
+    },
+    "outputs": {},
+    "k_layer": 9,
+    "priced": [
+     {
+      "i": 4,
+      "start": 1479.31,
+      "end": 1661.49,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 165.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 10,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attn.res_copy",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      20480,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k10.A",
+      "words": 20480,
+      "sha256": "eb07afdf1924c3fe4be642608720c6b6a5a4ea4104136018f4077ddd94561f1a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k10.O",
+      "words": 20480,
+      "sha256": "eb07afdf1924c3fe4be642608720c6b6a5a4ea4104136018f4077ddd94561f1a"
+     }
+    },
+    "k_layer": 10,
+    "priced": [
+     {
+      "i": 31,
+      "start": 5534.95,
+      "end": 5623.13,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 99.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 11,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "hc_attn (mixes + Sinkhorn) gather",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k11.A",
+      "words": 24,
+      "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k11.O",
+      "words": 24,
+      "sha256": "c9bc4c9c66fed4b38d359eb2245ffedb7f9333d4d2c4dbf021ccf61c0ee84737"
+     }
+    },
+    "k_layer": 11,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 12,
+    "L": 0,
+    "layer": 3,
+    "op": "HC.HC_MIX_POST",
+    "tag": "hc_attn (mixes + Sinkhorn) post",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68719476736,
+      1,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      41024,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k12.A",
+      "words": 24,
+      "sha256": "c9bc4c9c66fed4b38d359eb2245ffedb7f9333d4d2c4dbf021ccf61c0ee84737"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68719476736,
+      "n": 1,
+      "m": 1,
+      "stride": 0,
+      "err": "HBM access [0x1000000000, +2) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k12.O",
+      "words": 24,
+      "sha256": "478aa20423ff0fd8956e985828fb1eb3a488308c7a96972f6fe2fc50f0af2b91"
+     }
+    },
+    "k_layer": 12,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 13,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "x_projections_gather.kvraw",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      47616,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      47616,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k13.A",
+      "words": 512,
+      "sha256": "28c1994dd2def2096a6516a7554f08fdff53b7a381c1ca3fb30db7bf2b8189bd"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k13.O",
+      "words": 512,
+      "sha256": "919e4790c28693b68405335ca7fbad6f0c96b7db5bd8bec8f0e0a2a351496bed"
+     }
+    },
+    "k_layer": 13,
+    "priced": [
+     {
+      "i": 6,
+      "start": 1473.31,
+      "end": 1877.12,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 382.71
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 14,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "q_norm.rs",
+    "family": "q_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      49920,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      49984,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k14.A",
+      "words": 1,
+      "sha256": "941d8fce7a8c46f55e53506d45e04651467c74a0a5e2768587dd7eeab5714496"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k14.O",
+      "words": 1,
+      "sha256": "e57bcdaddc3513f31bb8642aca10dc49d7c5abf5f40eda5b792165ee6d20f533"
+     }
+    },
+    "k_layer": 14,
+    "priced": [
+     {
+      "i": 8,
+      "start": 1661.49,
+      "end": 1804.51,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 152.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 15,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "q_norm.y",
+    "family": "q_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      46336,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      49984,
+      1280,
+      1,
+      0,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      48128,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      50048,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k15.A",
+      "words": 1280,
+      "sha256": "7f9a3a3539818d140b4c9e4d145c3eb974d6d57ba5cd55d2a3eb57e389da6c8d"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k15.B",
+      "words": 1280,
+      "sha256": "9fc8d302893bf89783459c8ffa517b6f40a33759da432293a2d9a1a692a71aff"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k15.C",
+      "words": 1280,
+      "sha256": "9c507c72089105777f787f4e04deb08fe407041b12c3e0ac3858c2200ee7589d"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k15.O",
+      "words": 1280,
+      "sha256": "00c994777d604eb89478c5fae6087648f4343d3003839e04244d63d42fbde76b"
+     }
+    },
+    "k_layer": 15,
+    "priced": [
+     {
+      "i": 10,
+      "start": 1804.51,
+      "end": 1855.69,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 62.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 16,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "wq_b (head-aligned: head h on die h)",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      50048,
+      1280,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68731208352,
+      1280,
+      512,
+      2176,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      53440,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k16.A",
+      "words": 1280,
+      "sha256": "00c994777d604eb89478c5fae6087648f4343d3003839e04244d63d42fbde76b"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68731208352,
+      "n": 1280,
+      "m": 512,
+      "stride": 2176,
+      "err": "HBM access [0x1000b302a0, +1113216) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k16.O",
+      "words": 512,
+      "sha256": "c9f4a750974ab4ea4cfb9226a9db8179878e2ba759941e67b71726ccf4ffdeb9"
+     }
+    },
+    "k_layer": 16,
+    "priced": [
+     {
+      "i": 11,
+      "start": 1879.69,
+      "end": 2497.49,
+      "cls": "W2",
+      "unit": "SM",
+      "base_cost": 482.82
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 17,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "kv_norm.ss",
+    "family": "kv_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      47616,
+      64,
+      8,
+      64,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "R": [
+      49920,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k17.A",
+      "words": 512,
+      "sha256": "919e4790c28693b68405335ca7fbad6f0c96b7db5bd8bec8f0e0a2a351496bed"
+     },
+     "R": {
+      "space": "VM",
+      "array": "r0.k17.R",
+      "words": 1,
+      "sha256": "941d8fce7a8c46f55e53506d45e04651467c74a0a5e2768587dd7eeab5714496"
+     }
+    },
+    "outputs": {},
+    "k_layer": 17,
+    "priced": [
+     {
+      "i": 12,
+      "start": 1893.12,
+      "end": 2061.3,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 151.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 18,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "kv_norm.rs",
+    "family": "kv_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      49920,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      49984,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k18.A",
+      "words": 1,
+      "sha256": "db515ad43d597fee3b333fbd92fe980aeb7f763e8f8933098df7278c2b634253"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k18.O",
+      "words": 1,
+      "sha256": "e2e391f8b6a11421b6ea6dd0f42adbfa3a2c94bb824ec77bb70bd70e244ede68"
+     }
+    },
+    "k_layer": 18,
+    "priced": [
+     {
+      "i": 13,
+      "start": 2061.3,
+      "end": 2204.32,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 152.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 19,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "kv_norm.y",
+    "family": "kv_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      47616,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      49984,
+      512,
+      1,
+      0,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      49408,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      51840,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k19.A",
+      "words": 512,
+      "sha256": "919e4790c28693b68405335ca7fbad6f0c96b7db5bd8bec8f0e0a2a351496bed"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k19.B",
+      "words": 512,
+      "sha256": "130ec8af588149142ebd4509258801f899104e0b8e00b3bd25292a1c7061ebc3"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k19.C",
+      "words": 512,
+      "sha256": "90cce6a0b79cdbb31e86d5e1810a241c7e1b65efd2015d861200b4a69023d3b3"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k19.O",
+      "words": 512,
+      "sha256": "83015073cd8f0326fc682fce10b4f28b64da76a08102f7adcc3940e40683104f"
+     }
+    },
+    "k_layer": 19,
+    "priced": [
+     {
+      "i": 14,
+      "start": 2204.32,
+      "end": 2253.5,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 20,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "kv_rope.tail",
+    "family": "kv_rope",
+    "occ": 0,
+    "desc": {
+     "A": [
+      52288,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      53376,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "D": [
+      53408,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      52288,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k20.A",
+      "words": 64,
+      "sha256": "e20252c3f5e10d9b30235f99062773904fc11eebad4dc388d94a542a221e1d92"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k20.B",
+      "words": 64,
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f"
+     },
+     "D": {
+      "space": "VM",
+      "array": "r0.k20.D",
+      "words": 64,
+      "sha256": "9f4babc83c25e33b3862654fb88cbdb5aa036d428c8e9b7090b23adb90ee0f8a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k20.O",
+      "words": 64,
+      "sha256": "54570da4cdae40366c059659c0256645e2727826c1c88f442fc203468238c344"
+     }
+    },
+    "k_layer": 20,
+    "priced": [
+     {
+      "i": 15,
+      "start": 2253.5,
+      "end": 2302.68,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 21,
+    "L": 0,
+    "layer": 3,
+    "op": "FUSED.QDQ_FP8",
+    "tag": "kv_row_qdq",
+    "family": "q_norm_kv_row",
+    "occ": 0,
+    "desc": {
+     "A": [
+      51840,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      52352,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k21.A",
+      "words": 512,
+      "sha256": "0d7bfe3be79fb52d46bed6e9cc6961c99e6973417d80526a455a81a6be708885"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k21.O",
+      "words": 512,
+      "sha256": "68e2099c8de18b6515c3dbddb0df26183f51c702cf0f02a05fcbecb743dbeda6"
+     }
+    },
+    "k_layer": 21,
+    "priced": [
+     {
+      "i": 16,
+      "start": 2325.68,
+      "end": 2349.68,
+      "cls": "-",
+      "unit": "FUSED",
+      "base_cost": 24
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 22,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.KVWB_DS",
+    "tag": "window_row_append",
+    "family": "q_norm_kv_row",
+    "occ": 0,
+    "desc": {
+     "A": [
+      52352,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      17179895072,
+      512,
+      128,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k22.A",
+      "words": 512,
+      "sha256": "68e2099c8de18b6515c3dbddb0df26183f51c702cf0f02a05fcbecb743dbeda6"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "HBM",
+      "addr": 17179895072,
+      "bytes": 262144,
+      "sha256": "1c2de06bc9ee24e4feba76115f179444c5bc65830b86492ed8c163f6cf8f6f37"
+     }
+    },
+    "k_layer": 22,
+    "priced": [
+     {
+      "i": 17,
+      "start": 2372.68,
+      "end": 2428.57,
+      "cls": "W2",
+      "unit": "DMA",
+      "base_cost": 60
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 23,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "q_rope.tail",
+    "family": "q_rope",
+    "occ": 0,
+    "desc": {
+     "A": [
+      53888,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      53376,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "D": [
+      53408,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      53888,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k23.A",
+      "words": 64,
+      "sha256": "16d39479e3bf6c1551364bbe531a2637cec9dd6c9fa217bd6e0365e61781b3fb"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k23.B",
+      "words": 64,
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f"
+     },
+     "D": {
+      "space": "VM",
+      "array": "r0.k23.D",
+      "words": 64,
+      "sha256": "9f4babc83c25e33b3862654fb88cbdb5aa036d428c8e9b7090b23adb90ee0f8a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k23.O",
+      "words": 64,
+      "sha256": "abefe8041a8de8285ae00a50d391560eb53d7367662e9d2861cd0ba0bd773ad5"
+     }
+    },
+    "k_layer": 23,
+    "priced": [
+     {
+      "i": 18,
+      "start": 2521.49,
+      "end": 2570.67,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 24,
+    "L": 0,
+    "layer": 3,
+    "op": "ATT.QK",
+    "tag": "attend.qk",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      53440,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      17179895072,
+      128,
+      128,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "C": [
+      34359738368,
+      512,
+      1,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      53952,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k24.A",
+      "words": 512,
+      "sha256": "4b290eb4b03810866e49608f05e0bc5c1901cc95326ddc52354705ad0c7f1fc3"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 17179895072,
+      "bytes": 65536,
+      "sha256": "71c809ae74f7e19683a5187a23f97d134f9db59ea09d22a60ad729e312487e5c"
+     },
+     "C": {
+      "space": "HBM",
+      "addr": 34359738368,
+      "bytes": 2048,
+      "sha256": "a0f89c51287066c3ed52ebd4604e48024dbc5a05b64f1c7265d6e769dd466bca"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k24.O",
+      "words": 640,
+      "sha256": "99080b9ee532ee31f8ff9dec2ae9ca22ccaddb81da6e8be36269b16f73721cc9"
+     }
+    },
+    "k_layer": 24,
+    "priced": [
+     {
+      "i": 19,
+      "start": 2594.67,
+      "end": 3199.97,
+      "cls": "W2",
+      "unit": "SM",
+      "base_cost": 547
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 25,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.max",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      53952,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "R": [
+      54592,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k25.A",
+      "words": 640,
+      "sha256": "99080b9ee532ee31f8ff9dec2ae9ca22ccaddb81da6e8be36269b16f73721cc9"
+     },
+     "R": {
+      "space": "VM",
+      "array": "r0.k25.R",
+      "words": 1,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+     }
+    },
+    "outputs": {},
+    "k_layer": 25,
+    "priced": [
+     {
+      "i": 20,
+      "start": 3223.97,
+      "end": 3399.15,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 158.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 26,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.exp_sum",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      53952,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      54592,
+      640,
+      1,
+      0,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      54656,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "R": [
+      55296,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k26.A",
+      "words": 640,
+      "sha256": "99080b9ee532ee31f8ff9dec2ae9ca22ccaddb81da6e8be36269b16f73721cc9"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k26.B",
+      "words": 640,
+      "sha256": "df8ba23baa1e3bd435775458845c65e0973e9ff2a4e4e5c23b357f6895a467ee"
+     },
+     "R": {
+      "space": "VM",
+      "array": "r0.k26.R",
+      "words": 1,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k26.O",
+      "words": 640,
+      "sha256": "a6f684fc0bd54f749e30093b03fd82f117ab580eea3ef4aea245886e9798d9ca"
+     }
+    },
+    "k_layer": 26,
+    "priced": [
+     {
+      "i": 21,
+      "start": 3399.15,
+      "end": 3671.17,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 253.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 27,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "attend.sink_table",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17179895040,
+      1,
+      1,
+      0,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      56000,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17179895040,
+      "bytes": 4,
+      "sha256": "3f234d7b9ca6df57da1882c61c1d9d29eb019309c548ed72eb1a70af18e52afb"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k27.O",
+      "words": 1,
+      "sha256": "3f234d7b9ca6df57da1882c61c1d9d29eb019309c548ed72eb1a70af18e52afb"
+     }
+    },
+    "k_layer": 27,
+    "priced": [
+     {
+      "i": 22,
+      "start": 3225.97,
+      "end": 3358.24,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 104.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 28,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.bf16_p",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      54656,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      55360,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k28.A",
+      "words": 640,
+      "sha256": "a6f684fc0bd54f749e30093b03fd82f117ab580eea3ef4aea245886e9798d9ca"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k28.O",
+      "words": 640,
+      "sha256": "5cfcf7b1db6f03351409f52b05837b83990c248ba8a91c0f797db581d732e35a"
+     }
+    },
+    "k_layer": 28,
+    "priced": [
+     {
+      "i": 23,
+      "start": 3671.17,
+      "end": 3721.35,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 61.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 29,
+    "L": 0,
+    "layer": 3,
+    "op": "ATT.PV",
+    "tag": "attend.pv",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      55360,
+      640,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      17179895072,
+      128,
+      128,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "C": [
+      34359738368,
+      512,
+      1,
+      2048,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      56192,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k29.A",
+      "words": 640,
+      "sha256": "5cfcf7b1db6f03351409f52b05837b83990c248ba8a91c0f797db581d732e35a"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 17179895072,
+      "bytes": 65536,
+      "sha256": "71c809ae74f7e19683a5187a23f97d134f9db59ea09d22a60ad729e312487e5c"
+     },
+     "C": {
+      "space": "HBM",
+      "addr": 34359738368,
+      "bytes": 2048,
+      "sha256": "a0f89c51287066c3ed52ebd4604e48024dbc5a05b64f1c7265d6e769dd466bca"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k29.O",
+      "words": 512,
+      "sha256": "dab46b0da30fbaecd9d4d85653e3871fa2274f8d2527a61689133e8fd74da388"
+     }
+    },
+    "k_layer": 29,
+    "priced": [
+     {
+      "i": 24,
+      "start": 3745.35,
+      "end": 4714.77,
+      "cls": "W2",
+      "unit": "SM",
+      "base_cost": 808
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 30,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.den",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      56000,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      54592,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      55296,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      56128,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k30.A",
+      "words": 1,
+      "sha256": "3f234d7b9ca6df57da1882c61c1d9d29eb019309c548ed72eb1a70af18e52afb"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k30.B",
+      "words": 1,
+      "sha256": "5171eb869e2b631301812d73d4412477412887189be88836e431157782aaf6d7"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k30.C",
+      "words": 1,
+      "sha256": "d9ffaa7b27bc0af68addf8ad8637224948171e8a3e902df694a75630e48b43bb"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k30.O",
+      "words": 1,
+      "sha256": "253cdbd692aac4941751ed973906228213e6184664caae605a1f0f99de2c7a85"
+     }
+    },
+    "k_layer": 30,
+    "priced": [
+     {
+      "i": 25,
+      "start": 3746.35,
+      "end": 3891.37,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 154.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 31,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.norm",
+    "family": "attend",
+    "occ": 0,
+    "desc": {
+     "A": [
+      56192,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      56128,
+      512,
+      1,
+      0,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      57216,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k31.A",
+      "words": 512,
+      "sha256": "dab46b0da30fbaecd9d4d85653e3871fa2274f8d2527a61689133e8fd74da388"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k31.B",
+      "words": 512,
+      "sha256": "970deb529a8f3b1087e0907a62486ceeea5fb672bc9f65c73b8b028656dfbb90"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k31.O",
+      "words": 512,
+      "sha256": "7541c323ffbbf5123bbe335b5d8ae5fc6ef763339c256539c8fe79757b529ed7"
+     }
+    },
+    "k_layer": 31,
+    "priced": [
+     {
+      "i": 26,
+      "start": 4738.77,
+      "end": 4803.95,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 76.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 32,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "attend.inv_rope.tail",
+    "family": "attend.inv_rope",
+    "occ": 0,
+    "desc": {
+     "A": [
+      57664,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      53376,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "D": [
+      53408,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      57664,
+      64,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k32.A",
+      "words": 64,
+      "sha256": "411345d161b5fa11b83986499633cd81b6fa264215a5b6bf8116531a7c70452f"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k32.B",
+      "words": 64,
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f"
+     },
+     "D": {
+      "space": "VM",
+      "array": "r0.k32.D",
+      "words": 64,
+      "sha256": "9f4babc83c25e33b3862654fb88cbdb5aa036d428c8e9b7090b23adb90ee0f8a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k32.O",
+      "words": 64,
+      "sha256": "ccce81c319671f55c7740beb682a6252c671aeaa8e81ef3d0ebc00029fa075ce"
+     }
+    },
+    "k_layer": 32,
+    "priced": [
+     {
+      "i": 27,
+      "start": 4803.95,
+      "end": 4853.13,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 33,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+    "family": "mv.wo_a_part",
+    "occ": 0,
+    "desc": {
+     "A": [
+      57216,
+      512,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68802515872,
+      512,
+      1024,
+      1088,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      57728,
+      1024,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k33.A",
+      "words": 512,
+      "sha256": "1bbbecc08de5146d2c850b7b18986c1dc94a9fd587d08b55ef4ebabdd5e8c92c"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68802515872,
+      "n": 512,
+      "m": 1024,
+      "stride": 1088,
+      "err": "HBM access [0x1004f313a0, +1114048) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k33.O",
+      "words": 1024,
+      "sha256": "73678bf675b017735b0c682c9673d240c51dfd59c6c77e0ad5356e3145e871dd"
+     }
+    },
+    "k_layer": 33,
+    "priced": [
+     {
+      "i": 28,
+      "start": 4877.13,
+      "end": 5508.95,
+      "cls": "W2",
+      "unit": "SM",
+      "base_cost": 489.83
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 34,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.GROUP_REDUCE_MCAST",
+    "tag": "o-group tree reduce (8 contributors) + multicast",
+    "family": "all_reduce",
+    "occ": 0,
+    "desc": {
+     "A": [
+      57728,
+      1024,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      70016,
+      12288,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k34.A",
+      "words": 1024,
+      "sha256": "73678bf675b017735b0c682c9673d240c51dfd59c6c77e0ad5356e3145e871dd"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k34.O",
+      "words": 12288,
+      "sha256": "584a7b7c04fcbd538869705192fa5eb3ccf1054573d9148f23804685491b01d0"
+     }
+    },
+    "k_layer": 34,
+    "priced": [
+     {
+      "i": 29,
+      "start": 5524.95,
+      "end": 6874.17,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 1325.94
+     }
+    ],
+    "d4g_placement": "needs_tp192_programme"
+   },
+   {
+    "k": 35,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "wo_b",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      70016,
+      8192,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68811433120,
+      8192,
+      53,
+      8704,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      82432,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k35.A",
+      "words": 8192,
+      "sha256": "1b233e91904ffcc7a308adbf5b265894708b2222c75cd97106dd72dcde0f9c4c"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68811433120,
+      "n": 8192,
+      "m": 53,
+      "stride": 8704,
+      "err": "HBM access [0x10057b24a0, +460800) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k35.O",
+      "words": 53,
+      "sha256": "62654c03bbdf43fc79e86ae752550ecc7333738c3039b4237fd223e8b0e8b75a"
+     }
+    },
+    "k_layer": 35,
+    "priced": [
+     {
+      "i": 32,
+      "start": 6890.17,
+      "end": 7210.67,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 320.92
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 36,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "attn_out_gather.y",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      82432,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      82432,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k36.A",
+      "words": 5120,
+      "sha256": "495461b845ca1a145f97f93fcc06b9ed280421883bafb7aca2d849861bcbb68e"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k36.O",
+      "words": 5120,
+      "sha256": "f15e422d1217757b2918e5558a3127148fb58cd5e62a3a11078839993a678f5c"
+     }
+    },
+    "k_layer": 36,
+    "priced": [
+     {
+      "i": 33,
+      "start": 7226.67,
+      "end": 7989.78,
+      "cls": "C2",
+      "unit": "COLL",
+      "base_cost": 788.52
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 37,
+    "L": 0,
+    "layer": 3,
+    "op": "FUSED.HC_POST",
+    "tag": "hc_post attn",
+    "family": "hc_post",
+    "occ": 0,
+    "desc": {
+     "A": [
+      82432,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      20480,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      41028,
+      20,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k37.A",
+      "words": 5120,
+      "sha256": "f15e422d1217757b2918e5558a3127148fb58cd5e62a3a11078839993a678f5c"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k37.B",
+      "words": 20480,
+      "sha256": "eb07afdf1924c3fe4be642608720c6b6a5a4ea4104136018f4077ddd94561f1a"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k37.C",
+      "words": 20,
+      "sha256": "c80e6f64b9b5841baab83d080ea61633d695a489c88eb4005d94495299aa28ea"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k37.O",
+      "words": 20480,
+      "sha256": "222ddfff2f4d92c62d433fa09175013718685a44c22ed01f0ab044d4bb27ab34"
+     }
+    },
+    "k_layer": 37,
+    "priced": [
+     {
+      "i": 34,
+      "start": 8005.78,
+      "end": 8167.31,
+      "cls": "-",
+      "unit": "FUSED",
+      "base_cost": 222.67
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 38,
+    "L": 0,
+    "layer": 3,
+    "op": "FUSED.HC_PRE_NORM",
+    "tag": "ffn_norm",
+    "family": "hc_pre_norm",
+    "occ": 0,
+    "desc": {
+     "A": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      17179879424,
+      5120,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "C": [
+      41024,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k38.A",
+      "words": 20480,
+      "sha256": "222ddfff2f4d92c62d433fa09175013718685a44c22ed01f0ab044d4bb27ab34"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 17179879424,
+      "bytes": 10240,
+      "sha256": "f8166f045eb75fcb69bc5737398268914992e0627919ceb8a17583e602c0e24c"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k38.C",
+      "words": 4,
+      "sha256": "93342e0fb2fd4cdfce8465402a45fa6bc0d60e46031b2bb8152c60646442123b"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k38.O",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     }
+    },
+    "k_layer": 38,
+    "priced": [
+     {
+      "i": 35,
+      "start": 8167.31,
+      "end": 8802.26,
+      "cls": "-",
+      "unit": "FUSED",
+      "base_cost": 649.33
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 39,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "router gate",
+    "family": "mv.mv",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68857976128,
+      5120,
+      4,
+      10880,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      87552,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k39.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68857976128,
+      "n": 5120,
+      "m": 4,
+      "stride": 10880,
+      "err": "HBM access [0x1008415540, +42880) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k39.O",
+      "words": 4,
+      "sha256": "1b755400691be7e19fba679bf1bf5b165badb99842436e15465ea98cff6839a7"
+     }
+    },
+    "k_layer": 39,
+    "priced": [
+     {
+      "i": 36,
+      "start": 8826.26,
+      "end": 9101.78,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 275.94
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 40,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "router_act",
+    "family": "router_act",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87552,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      87552,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k40.A",
+      "words": 4,
+      "sha256": "1b755400691be7e19fba679bf1bf5b165badb99842436e15465ea98cff6839a7"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k40.O",
+      "words": 4,
+      "sha256": "15b483fb0b29d1809bc2d82c80ae69ff6771d5e81a5ad29617685bd9f39d62e8"
+     }
+    },
+    "k_layer": 40,
+    "priced": [
+     {
+      "i": 37,
+      "start": 9125.78,
+      "end": 9455.8,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 339.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 41,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "router_gather.gsc",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87552,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      87552,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k41.A",
+      "words": 384,
+      "sha256": "8e89d52ff591b4aadc1aa8c19fe28f507737a08fcf88604ec16d7f1561abd632"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k41.O",
+      "words": 384,
+      "sha256": "6a41834990964057fd0df97cb055eb2356e975c57a6ab20ad048e0d7a7b8b708"
+     }
+    },
+    "k_layer": 41,
+    "priced": [
+     {
+      "i": 38,
+      "start": 9471.8,
+      "end": 10258.32,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 765.42
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 42,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "route.bias",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17179893504,
+      384,
+      1,
+      0,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      87936,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17179893504,
+      "bytes": 1536,
+      "sha256": "8ed7739d97b34db19479c6d7412ea4624bbc5b5b00927c0132872795d208b099"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k42.O",
+      "words": 384,
+      "sha256": "8ed7739d97b34db19479c6d7412ea4624bbc5b5b00927c0132872795d208b099"
+     }
+    },
+    "k_layer": 42,
+    "priced": [
+     {
+      "i": 39,
+      "start": 9480.8,
+      "end": 9613.55,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 104.49
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 43,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.scores_bias",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87552,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      87936,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88320,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k43.A",
+      "words": 384,
+      "sha256": "6a41834990964057fd0df97cb055eb2356e975c57a6ab20ad048e0d7a7b8b708"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k43.C",
+      "words": 384,
+      "sha256": "8ed7739d97b34db19479c6d7412ea4624bbc5b5b00927c0132872795d208b099"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k43.O",
+      "words": 384,
+      "sha256": "fc6ba6923de5dd267ae20a1a4f7f09b9128e404e8c16801f050aff20db1ad154"
+     }
+    },
+    "k_layer": 43,
+    "priced": [
+     {
+      "i": 40,
+      "start": 10274.32,
+      "end": 10323.5,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 44,
+    "L": 0,
+    "layer": 3,
+    "op": "IDX.TOPK",
+    "tag": "route.top6",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      88320,
+      384,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88704,
+      6,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k44.A",
+      "words": 384,
+      "sha256": "fc6ba6923de5dd267ae20a1a4f7f09b9128e404e8c16801f050aff20db1ad154"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k44.O",
+      "words": 6,
+      "sha256": "c5c8838d96e8e3795a83057aff0e9a77f440632d1b97e003b67311ff24774149"
+     }
+    },
+    "k_layer": 44,
+    "priced": [
+     {
+      "i": 41,
+      "start": 10352.5,
+      "end": 10584.01,
+      "cls": "-",
+      "unit": "IDX",
+      "base_cost": 283.01
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 45,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 0 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      70787343936,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      193664,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88704,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k45.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 70787343936,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x107b412640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k45.I",
+      "words": 1,
+      "sha256": "50c8ba3a6170f0a2fb6736ece8a603576ef6309a35e810911599bc6211b554a9"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k45.O",
+      "words": 48,
+      "sha256": "ac48eef3a26980dee91ed74cdce27fcfbaa20f92f037c68d4152610d742e0aca"
+     }
+    },
+    "k_layer": 45,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 46,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather0",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87680,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88768,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88704,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k46.A",
+      "words": 1,
+      "sha256": "3e1f89fa90e0a66499c3999778515bb45f32cff7fd70f326253a13f31d213667"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k46.I",
+      "words": 1,
+      "sha256": "50c8ba3a6170f0a2fb6736ece8a603576ef6309a35e810911599bc6211b554a9"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k46.O",
+      "words": 1,
+      "sha256": "3e1f89fa90e0a66499c3999778515bb45f32cff7fd70f326253a13f31d213667"
+     }
+    },
+    "k_layer": 46,
+    "priced": [
+     {
+      "i": 42,
+      "start": 10641.01,
+      "end": 10690.19,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 47,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather1",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87681,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88769,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88705,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k47.A",
+      "words": 1,
+      "sha256": "e7c81c8afa00857071c4bdd2092523f4a4eb00a0180d0d4738ecd467939eb218"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k47.I",
+      "words": 1,
+      "sha256": "1fc3bd4778fdfdaea679fe9d9da2bf8a30ce49e7a9e477c602c0ae68da9f57b6"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k47.O",
+      "words": 1,
+      "sha256": "e7c81c8afa00857071c4bdd2092523f4a4eb00a0180d0d4738ecd467939eb218"
+     }
+    },
+    "k_layer": 47,
+    "priced": [
+     {
+      "i": 43,
+      "start": 10690.19,
+      "end": 10739.37,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 48,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather2",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87694,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88770,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88706,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k48.A",
+      "words": 1,
+      "sha256": "7c1a7d9dde63dba6c469a6ba051a78ac611d54c017515bba39535f1001286bc5"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k48.I",
+      "words": 1,
+      "sha256": "191949ff18d4ffd269d06c4b0bcd641257c885d3ea94c7556134740595c2d3fc"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k48.O",
+      "words": 1,
+      "sha256": "7c1a7d9dde63dba6c469a6ba051a78ac611d54c017515bba39535f1001286bc5"
+     }
+    },
+    "k_layer": 48,
+    "priced": [
+     {
+      "i": 44,
+      "start": 10739.37,
+      "end": 10788.55,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 49,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather3",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87711,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88771,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88707,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k49.A",
+      "words": 1,
+      "sha256": "a7698bf7c8ff2d44fb30d0ce1ba3162155325ae34b2cdf7e73a8e3f456143028"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k49.I",
+      "words": 1,
+      "sha256": "e278a9f28e866b2b194e7679f88f4b6ccd393f938fbdb0a495d098fdfbda75e4"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k49.O",
+      "words": 1,
+      "sha256": "a7698bf7c8ff2d44fb30d0ce1ba3162155325ae34b2cdf7e73a8e3f456143028"
+     }
+    },
+    "k_layer": 49,
+    "priced": [
+     {
+      "i": 45,
+      "start": 10788.55,
+      "end": 10837.73,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 50,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.LOAD",
+    "tag": "route.one",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      17180167456,
+      1,
+      1,
+      0,
+      1,
+      "HBM",
+      "FP32"
+     ],
+     "O": [
+      88966,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "HBM",
+      "addr": 17180167456,
+      "bytes": 4,
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k50.O",
+      "words": 1,
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c"
+     }
+    },
+    "k_layer": 50,
+    "priced": [
+     {
+      "i": 46,
+      "start": 10645.01,
+      "end": 10777.28,
+      "cls": "D2",
+      "unit": "DMA",
+      "base_cost": 104.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 51,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather4",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87712,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88772,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88708,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k51.A",
+      "words": 1,
+      "sha256": "5c21bbe687d287c8ca966b9531913e047ae039ed8a28e82bd956be46fc085a79"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k51.I",
+      "words": 1,
+      "sha256": "709eddfc631541f3ecea46e733bbf3043279bddfb51fdfd7be60efbc2714537e"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k51.O",
+      "words": 1,
+      "sha256": "5c21bbe687d287c8ca966b9531913e047ae039ed8a28e82bd956be46fc085a79"
+     }
+    },
+    "k_layer": 51,
+    "priced": [
+     {
+      "i": 48,
+      "start": 10837.73,
+      "end": 10886.91,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 52,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.gather5",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      87780,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88773,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "I": [
+      88709,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k52.A",
+      "words": 1,
+      "sha256": "21533f1ca9a983b2e592cd2db71abd1cdfee6b4806bd7b9a2d1a354f10238bb4"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k52.I",
+      "words": 1,
+      "sha256": "f682108a9234d87641fd8dc232214c24a6dfd0beaeb2c5290a50ac431afd9dd5"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k52.O",
+      "words": 1,
+      "sha256": "21533f1ca9a983b2e592cd2db71abd1cdfee6b4806bd7b9a2d1a354f10238bb4"
+     }
+    },
+    "k_layer": 52,
+    "priced": [
+     {
+      "i": 49,
+      "start": 10886.91,
+      "end": 10936.09,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 53,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.total",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      88768,
+      6,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "R": [
+      88832,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k53.A",
+      "words": 6,
+      "sha256": "a674fff9a3ee847531220bc5f3855b9aa952134370fc8e0a3abe2473bc23b47e"
+     },
+     "R": {
+      "space": "VM",
+      "array": "r0.k53.R",
+      "words": 1,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+     }
+    },
+    "outputs": {},
+    "k_layer": 53,
+    "priced": [
+     {
+      "i": 50,
+      "start": 10936.09,
+      "end": 11068.27,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 115.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 54,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.FENCE",
+    "tag": "hc_ffn.weight_fence",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {},
+    "inputs": {},
+    "outputs": {},
+    "k_layer": 54,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 55,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "hc_ffn (mixes + Sinkhorn) gather",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k55.A",
+      "words": 24,
+      "sha256": "c9bc4c9c66fed4b38d359eb2245ffedb7f9333d4d2c4dbf021ccf61c0ee84737"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k55.O",
+      "words": 24,
+      "sha256": "d0ff33b258a92b67320861b8cd89dc9de5f46e2ea9d756935e7f057fe15d5d1e"
+     }
+    },
+    "k_layer": 55,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 56,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 6 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      74637719360,
+      5120,
+      48,
+      5440,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      252032,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k56.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 74637719360,
+      "n": 5120,
+      "m": 48,
+      "stride": 5440,
+      "err": "HBM access [0x1160c13740, +260800) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k56.O",
+      "words": 48,
+      "sha256": "7facabd6a4bc572a22cb725f6800f7a5053e155856b3f1854901a90b9af604f2"
+     }
+    },
+    "k_layer": 56,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 57,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.den",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      88832,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88896,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k57.A",
+      "words": 1,
+      "sha256": "b47f5c8d91f48debc116fb04bde88dc2c393a74d4ef6a1aed74b38fd41ef40cc"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k57.O",
+      "words": 1,
+      "sha256": "b47f5c8d91f48debc116fb04bde88dc2c393a74d4ef6a1aed74b38fd41ef40cc"
+     }
+    },
+    "k_layer": 57,
+    "priced": [
+     {
+      "i": 58,
+      "start": 11068.27,
+      "end": 11117.45,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 58,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 1 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      70802384448,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      203392,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88705,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k58.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 70802384448,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x107c26a640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k58.I",
+      "words": 1,
+      "sha256": "1fc3bd4778fdfdaea679fe9d9da2bf8a30ce49e7a9e477c602c0ae68da9f57b6"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k58.O",
+      "words": 48,
+      "sha256": "579524cca639d263ba6ad37d5a767b78cc6eb77d197e2e2eedcc40b6bd320f44"
+     }
+    },
+    "k_layer": 58,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 59,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 2 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      70997911104,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      213120,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88706,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k59.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 70997911104,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x1087ce2640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k59.I",
+      "words": 1,
+      "sha256": "191949ff18d4ffd269d06c4b0bcd641257c885d3ea94c7556134740595c2d3fc"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k59.O",
+      "words": 48,
+      "sha256": "05386529446725ec10bd547e117b057eadc746c1ef936545ba21836e190b581b"
+     }
+    },
+    "k_layer": 59,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 60,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "route.weights",
+    "family": "route",
+    "occ": 0,
+    "desc": {
+     "A": [
+      88768,
+      6,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      88896,
+      6,
+      1,
+      0,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      88960,
+      6,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k60.A",
+      "words": 6,
+      "sha256": "a674fff9a3ee847531220bc5f3855b9aa952134370fc8e0a3abe2473bc23b47e"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k60.B",
+      "words": 6,
+      "sha256": "72581478b3eb4d60b23c144a3af8dcc9053e7f755625107e5a48a27fa99acde7"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k60.O",
+      "words": 6,
+      "sha256": "a67fdd9421fbac392ea4553f7a06a55acfae2bd102185fa98e8f2dc1ae0d41e4"
+     }
+    },
+    "k_layer": 60,
+    "priced": [
+     {
+      "i": 64,
+      "start": 11117.45,
+      "end": 11181.63,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 75.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 61,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 3 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      71253599808,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      222848,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88707,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k61.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 71253599808,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x10970ba640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k61.I",
+      "words": 1,
+      "sha256": "e278a9f28e866b2b194e7679f88f4b6ccd393f938fbdb0a495d098fdfbda75e4"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k61.O",
+      "words": 48,
+      "sha256": "57b7aa9cf9c92c1ca35516a8bb2e2660e3762d52784fc283382c83c27fb96a34"
+     }
+    },
+    "k_layer": 61,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 62,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 4 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      71268640320,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      232576,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88708,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k62.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 71268640320,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x1097f12640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k62.I",
+      "words": 1,
+      "sha256": "709eddfc631541f3ecea46e733bbf3043279bddfb51fdfd7be60efbc2714537e"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k62.O",
+      "words": 48,
+      "sha256": "508af89f2c35a836b075267f83cdacbafe2431d9bc015446950202bf9e381c2a"
+     }
+    },
+    "k_layer": 62,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 63,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 5 w1+w3",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41216,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      72291395136,
+      5120,
+      48,
+      3264,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      242304,
+      48,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88709,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k63.A",
+      "words": 5120,
+      "sha256": "6c1939852e2e02625ed30977fccedea7af8327e9016bbb85eb15a6621043effa"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 72291395136,
+      "n": 5120,
+      "m": 48,
+      "stride": 3264,
+      "err": "HBM access [0x10d4e72640, +158528) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k63.I",
+      "words": 1,
+      "sha256": "f682108a9234d87641fd8dc232214c24a6dfd0beaeb2c5290a50ac431afd9dd5"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k63.O",
+      "words": 48,
+      "sha256": "3f7663e2e109df3c4e76f2cc65d25ece3487158a4e93171dcecc64750b68622c"
+     }
+    },
+    "k_layer": 63,
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 64,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "swiglu",
+    "family": "swiglu",
+    "occ": 0,
+    "desc": {
+     "A": [
+      193664,
+      24,
+      7,
+      9728,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      88960,
+      24,
+      7,
+      1,
+      0,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      193688,
+      24,
+      7,
+      9728,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      145792,
+      24,
+      7,
+      2304,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k64.A",
+      "words": 168,
+      "sha256": "f4821d3f9d388b148df9438aba5907beca2d05a12224500faad514ee51068fae"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k64.B",
+      "words": 168,
+      "sha256": "36f3072b205e48476203f9131e42e026bbfe0bf8d1c7daeff3a456e1f9b17bfc"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k64.C",
+      "words": 168,
+      "sha256": "dffcc00a6aba7635f92627b15a26dea25db78a12255228cababa580615e764d9"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k64.O",
+      "words": 168,
+      "sha256": "688f2b5b276a4499c4270c58312cb4e5df2d4b272232405c3bf0043603d10907"
+     }
+    },
+    "k_layer": 64,
+    "priced": [
+     {
+      "i": 66,
+      "start": 11307.88,
+      "end": 11479.9,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 181.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 65,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s3",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      152704,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      152704,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k65.A",
+      "words": 2304,
+      "sha256": "fda6da06015c6b8eab647995e4f9774e813372259f78f458b10218595e47a089"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k65.O",
+      "words": 2304,
+      "sha256": "97120e27ef6c8d7bf9b409f9997fce9ea7cc3cee4a9cfe5238a5458bb3225908"
+     }
+    },
+    "k_layer": 65,
+    "priced": [
+     {
+      "i": 68,
+      "start": 11643.22,
+      "end": 11790.54,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 66,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s4",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      155008,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      155008,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k66.A",
+      "words": 2304,
+      "sha256": "12e5a20ec921d43e828aa71784619a6a34185e8a90761565c59f2afc80fb537b"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k66.O",
+      "words": 2304,
+      "sha256": "f7f03ed3d05f9f45eae6da5ed79c9a5ef5e0ce194756746c37e499b2474b55ea"
+     }
+    },
+    "k_layer": 66,
+    "priced": [
+     {
+      "i": 67,
+      "start": 11495.9,
+      "end": 11643.22,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 67,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 4 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      155008,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      76445370432,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      237184,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88708,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k67.A",
+      "words": 2304,
+      "sha256": "f7f03ed3d05f9f45eae6da5ed79c9a5ef5e0ce194756746c37e499b2474b55ea"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 76445370432,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11cc7fc840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k67.I",
+      "words": 1,
+      "sha256": "709eddfc631541f3ecea46e733bbf3043279bddfb51fdfd7be60efbc2714537e"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k67.O",
+      "words": 53,
+      "sha256": "c5ffcca10212aa932cf730ab315e22ddb3de61b04b97c2a545e0dad3038c286a"
+     }
+    },
+    "k_layer": 67,
+    "priced": [
+     {
+      "i": 72,
+      "start": 11997.41,
+      "end": 12040.97,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 68,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 3 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      152704,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      76434229312,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      227456,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88707,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k68.A",
+      "words": 2304,
+      "sha256": "97120e27ef6c8d7bf9b409f9997fce9ea7cc3cee4a9cfe5238a5458bb3225908"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 76434229312,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11cbd5c840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k68.I",
+      "words": 1,
+      "sha256": "e278a9f28e866b2b194e7679f88f4b6ccd393f938fbdb0a495d098fdfbda75e4"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k68.O",
+      "words": 53,
+      "sha256": "dcd96560b60f40dcced525b7f56b8b633c17016507c2f19dfae1b4dd88300a1e"
+     }
+    },
+    "k_layer": 68,
+    "priced": [
+     {
+      "i": 73,
+      "start": 12040.97,
+      "end": 12084.53,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 69,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s1",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      148096,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      148096,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k69.A",
+      "words": 2304,
+      "sha256": "eae83e4bb752cba6e81ccbf27c6a1ad0b4ed885d3533d7e4ab5a0af175052b61"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k69.O",
+      "words": 2304,
+      "sha256": "8d70987357d0cdca34bcb3200e6abe38253d3f1610ad84e5feb1091827eb6976"
+     }
+    },
+    "k_layer": 69,
+    "priced": [
+     {
+      "i": 69,
+      "start": 11790.54,
+      "end": 11937.85,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 70,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s0",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145792,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      145792,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k70.A",
+      "words": 2304,
+      "sha256": "322296bcbb82e391f47d5ff9811efcf3f522c2c3e756db19f4190495edaf6258"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k70.O",
+      "words": 2304,
+      "sha256": "ed0ee150e40167144927aa79f17546fa91d55bd61e6e04bf780229df4031e513"
+     }
+    },
+    "k_layer": 70,
+    "priced": [
+     {
+      "i": 75,
+      "start": 12094.17,
+      "end": 12241.49,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 71,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 0 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145792,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      76088854592,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      198272,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88704,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k71.A",
+      "words": 2304,
+      "sha256": "ed0ee150e40167144927aa79f17546fa91d55bd61e6e04bf780229df4031e513"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 76088854592,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11b73fc840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k71.I",
+      "words": 1,
+      "sha256": "50c8ba3a6170f0a2fb6736ece8a603576ef6309a35e810911599bc6211b554a9"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k71.O",
+      "words": 53,
+      "sha256": "6c7de28f2ef8e6527d83ead91b47c1c2921be52b4ffae2900a860d96813906e6"
+     }
+    },
+    "k_layer": 71,
+    "priced": [
+     {
+      "i": 76,
+      "start": 12257.49,
+      "end": 12301.05,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 72,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s5",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      157312,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      157312,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k72.A",
+      "words": 2304,
+      "sha256": "f528e5e934875cfc63eff9a05ab30a344a0e7ef7ece640be331122fb469e84e3"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k72.O",
+      "words": 2304,
+      "sha256": "24a0cecd24844b25164007383626c88a3b2182d7552c513ed9bdae2bc14d80d6"
+     }
+    },
+    "k_layer": 72,
+    "priced": [
+     {
+      "i": 71,
+      "start": 11946.85,
+      "end": 12094.17,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 73,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 1 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      148096,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      76099995712,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      208000,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88705,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k73.A",
+      "words": 2304,
+      "sha256": "8d70987357d0cdca34bcb3200e6abe38253d3f1610ad84e5feb1091827eb6976"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 76099995712,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11b7e9c840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k73.I",
+      "words": 1,
+      "sha256": "1fc3bd4778fdfdaea679fe9d9da2bf8a30ce49e7a9e477c602c0ae68da9f57b6"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k73.O",
+      "words": 53,
+      "sha256": "fbb59b979929b815c228e84884419e0dddfa4047338e67d769630b3e226ce5b8"
+     }
+    },
+    "k_layer": 73,
+    "priced": [
+     {
+      "i": 70,
+      "start": 11953.85,
+      "end": 11997.41,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 74,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "moe_sum.0",
+    "family": "moe_sum",
+    "occ": 0,
+    "desc": {
+     "A": [
+      198272,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      208000,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k74.A",
+      "words": 53,
+      "sha256": "6c7de28f2ef8e6527d83ead91b47c1c2921be52b4ffae2900a860d96813906e6"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k74.C",
+      "words": 53,
+      "sha256": "fbb59b979929b815c228e84884419e0dddfa4047338e67d769630b3e226ce5b8"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k74.O",
+      "words": 53,
+      "sha256": "35d4f33edf89014c1583d00d5baf646176cd9a2ff22eaeadb83fb80d5487e492"
+     }
+    },
+    "k_layer": 74,
+    "priced": [
+     {
+      "i": 79,
+      "start": 12368.61,
+      "end": 12417.79,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 75,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s2",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      150400,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      150400,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k75.A",
+      "words": 2304,
+      "sha256": "b1968e18899e7eb40ece7d369209fe692c4000303f4df11d3f59379aa0ab0d7b"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k75.O",
+      "words": 2304,
+      "sha256": "8d809dda0e8ba946fa626a05f19cca335d11f0dec2f467fbb662dfc1f6e1af45"
+     }
+    },
+    "k_layer": 75,
+    "priced": [
+     {
+      "i": 77,
+      "start": 12250.49,
+      "end": 12397.81,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 76,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 2 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      150400,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      76244830272,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      217728,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88706,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k76.A",
+      "words": 2304,
+      "sha256": "8d809dda0e8ba946fa626a05f19cca335d11f0dec2f467fbb662dfc1f6e1af45"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 76244830272,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11c08bc840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k76.I",
+      "words": 1,
+      "sha256": "191949ff18d4ffd269d06c4b0bcd641257c885d3ea94c7556134740595c2d3fc"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k76.O",
+      "words": 53,
+      "sha256": "6d00e2ca12e190975565b5b514ec553640ad28c512b5a2fa7c5cae8fbb7379c5"
+     }
+    },
+    "k_layer": 76,
+    "priced": [
+     {
+      "i": 80,
+      "start": 12413.81,
+      "end": 12457.37,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 77,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "expert_intermediate_gather.s6",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      159616,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      159616,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k77.A",
+      "words": 2304,
+      "sha256": "1ae83227f4582334662c6ee110c360f832f5cce09d7c7a00d81d89373fb22090"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k77.O",
+      "words": 2304,
+      "sha256": "8fb10be380ff25f629e361d398ffefaacd21bf5d74a9e804c06765216e7994bb"
+     }
+    },
+    "k_layer": 77,
+    "priced": [
+     {
+      "i": 81,
+      "start": 12406.81,
+      "end": 12554.13,
+      "cls": "C1",
+      "unit": "COLL",
+      "base_cost": 126.22
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 78,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "moe_sum.2",
+    "family": "moe_sum",
+    "occ": 0,
+    "desc": {
+     "A": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      227456,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "D": [
+      217728,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k78.A",
+      "words": 53,
+      "sha256": "35d4f33edf89014c1583d00d5baf646176cd9a2ff22eaeadb83fb80d5487e492"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k78.C",
+      "words": 53,
+      "sha256": "dcd96560b60f40dcced525b7f56b8b633c17016507c2f19dfae1b4dd88300a1e"
+     },
+     "D": {
+      "space": "VM",
+      "array": "r0.k78.D",
+      "words": 53,
+      "sha256": "6d00e2ca12e190975565b5b514ec553640ad28c512b5a2fa7c5cae8fbb7379c5"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k78.O",
+      "words": 53,
+      "sha256": "a763dd73e360e5040917e48b460ef90d89670191edab619b285836efa4be3068"
+     }
+    },
+    "k_layer": 78,
+    "priced": [
+     {
+      "i": 82,
+      "start": 12481.37,
+      "end": 12530.55,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 79,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 5 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      157312,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      77202966592,
+      2304,
+      53,
+      2176,
+      1,
+      "HBM",
+      "FP4E2M1"
+     ],
+     "O": [
+      246912,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ],
+     "I": [
+      88709,
+      1,
+      1,
+      0,
+      1,
+      "VM",
+      "U32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k79.A",
+      "words": 2304,
+      "sha256": "24a0cecd24844b25164007383626c88a3b2182d7552c513ed9bdae2bc14d80d6"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 77202966592,
+      "n": 2304,
+      "m": 53,
+      "stride": 2176,
+      "err": "HBM access [0x11f9a7c840, +115456) outside every region"
+     },
+     "I": {
+      "space": "VM",
+      "array": "r0.k79.I",
+      "words": 1,
+      "sha256": "f682108a9234d87641fd8dc232214c24a6dfd0beaeb2c5290a50ac431afd9dd5"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k79.O",
+      "words": 53,
+      "sha256": "bf22b84bf57b089e752311b9b029ca903f0eab9be0f9b8cfa2f56f79c9d11431"
+     }
+    },
+    "k_layer": 79,
+    "priced": [
+     {
+      "i": 78,
+      "start": 12301.05,
+      "end": 12344.61,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 43.98
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 80,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "moe_sum.4",
+    "family": "moe_sum",
+    "occ": 0,
+    "desc": {
+     "A": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      246912,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "D": [
+      237184,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k80.A",
+      "words": 53,
+      "sha256": "a763dd73e360e5040917e48b460ef90d89670191edab619b285836efa4be3068"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k80.C",
+      "words": 53,
+      "sha256": "bf22b84bf57b089e752311b9b029ca903f0eab9be0f9b8cfa2f56f79c9d11431"
+     },
+     "D": {
+      "space": "VM",
+      "array": "r0.k80.D",
+      "words": 53,
+      "sha256": "c5ffcca10212aa932cf730ab315e22ddb3de61b04b97c2a545e0dad3038c286a"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k80.O",
+      "words": 53,
+      "sha256": "9fb256e5e15cbdd8251115372592be38c0909820779506053f52bc937ceb6004"
+     }
+    },
+    "k_layer": 80,
+    "priced": [
+     {
+      "i": 84,
+      "start": 12571.13,
+      "end": 12620.31,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 81,
+    "L": 0,
+    "layer": 3,
+    "op": "SM.MATVEC",
+    "tag": "expert slot 6 w2",
+    "family": "mv.linear_q",
+    "occ": 0,
+    "desc": {
+     "A": [
+      159616,
+      2304,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      78940985664,
+      2304,
+      53,
+      3264,
+      1,
+      "HBM",
+      "FP8E4M3"
+     ],
+     "O": [
+      256640,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "BF16"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k81.A",
+      "words": 2304,
+      "sha256": "8fb10be380ff25f629e361d398ffefaacd21bf5d74a9e804c06765216e7994bb"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 78940985664,
+      "n": 2304,
+      "m": 53,
+      "stride": 3264,
+      "err": "HBM access [0x12613fd940, +172032) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k81.O",
+      "words": 53,
+      "sha256": "35f093119352c55a4cac54a5c6582fb2442f1e73c718f40fc1fefcba04210686"
+     }
+    },
+    "k_layer": 81,
+    "priced": [
+     {
+      "i": 83,
+      "start": 12570.13,
+      "end": 12635.67,
+      "cls": "W1",
+      "unit": "SM",
+      "base_cost": 65.97
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 82,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "moe_sum.6",
+    "family": "moe_sum",
+    "occ": 0,
+    "desc": {
+     "A": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      256640,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      89088,
+      53,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k82.A",
+      "words": 53,
+      "sha256": "9fb256e5e15cbdd8251115372592be38c0909820779506053f52bc937ceb6004"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k82.C",
+      "words": 53,
+      "sha256": "35f093119352c55a4cac54a5c6582fb2442f1e73c718f40fc1fefcba04210686"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k82.O",
+      "words": 53,
+      "sha256": "b2b7cd5bfceed4d5da6546afc602d980c280ee5691d9bc446f4d7b931920886c"
+     }
+    },
+    "k_layer": 82,
+    "priced": [
+     {
+      "i": 85,
+      "start": 12659.67,
+      "end": 12708.85,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 83,
+    "L": 0,
+    "layer": 3,
+    "op": "COLL.ALL_GATHER",
+    "tag": "ffn_out_gather.yf",
+    "family": "all_gather",
+    "occ": 0,
+    "desc": {
+     "A": [
+      89088,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      89088,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k83.A",
+      "words": 5120,
+      "sha256": "80b8b5a5a94b65febe3598d1d4b4af03f1a3443f2259eb249bff8430050c2f79"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k83.O",
+      "words": 5120,
+      "sha256": "7b7b890b4e778514fad4863cf504df82336b3d4c73dadfbf6661e50230df422b"
+     }
+    },
+    "k_layer": 83,
+    "priced": [
+     {
+      "i": 86,
+      "start": 12724.85,
+      "end": 13487.96,
+      "cls": "C2",
+      "unit": "COLL",
+      "base_cost": 788.52
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 84,
+    "L": 0,
+    "layer": 3,
+    "op": "HC.HC_MIX_POST",
+    "tag": "hc_ffn (mixes + Sinkhorn) post",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      145536,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      68856001696,
+      1,
+      1,
+      0,
+      1,
+      "HBM",
+      "BF16"
+     ],
+     "O": [
+      41088,
+      24,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k84.A",
+      "words": 24,
+      "sha256": "d0ff33b258a92b67320861b8cd89dc9de5f46e2ea9d756935e7f057fe15d5d1e"
+     },
+     "B": {
+      "space": "HBM",
+      "addr": 68856001696,
+      "n": 1,
+      "m": 1,
+      "stride": 0,
+      "err": "HBM access [0x10082334a0, +2) outside every region"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k84.O",
+      "words": 24,
+      "sha256": "29178fb59d1c11c43b3dfae3cb2ab0539f6d9fedf2bf6f55552f5248fd020d42"
+     }
+    },
+    "k_layer": 84,
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 85,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "ffn.res_copy",
+    "family": "hc_mixes",
+    "occ": 0,
+    "desc": {
+     "A": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      20480,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k85.A",
+      "words": 20480,
+      "sha256": "222ddfff2f4d92c62d433fa09175013718685a44c22ed01f0ab044d4bb27ab34"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k85.O",
+      "words": 20480,
+      "sha256": "222ddfff2f4d92c62d433fa09175013718685a44c22ed01f0ab044d4bb27ab34"
+     }
+    },
+    "k_layer": 85,
+    "priced": [
+     {
+      "i": 87,
+      "start": 12733.85,
+      "end": 12822.03,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 99.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 86,
+    "L": 0,
+    "layer": 3,
+    "op": "DMA.FENCE",
+    "tag": "routed-expert slices HBM -> SMEM (descriptors after the router; B2) (weights read in place through C3b)",
+    "family": "expert_fetch",
+    "occ": 0,
+    "desc": {},
+    "inputs": {},
+    "outputs": {},
+    "k_layer": 86,
+    "priced": [
+     {
+      "i": 88,
+      "start": 12734.85,
+      "end": 12823.8,
+      "cls": "-",
+      "unit": "DMA",
+      "base_cost": 60
+     }
+    ],
+    "d4g_placement": "rank_local_or_tbd"
+   },
+   {
+    "k": 87,
+    "L": 0,
+    "layer": 3,
+    "op": "SU.VOP",
+    "tag": "pre <- ffn mix pre",
+    "family": "hc_post",
+    "occ": 0,
+    "desc": {
+     "A": [
+      41088,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      40960,
+      4,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k87.A",
+      "words": 4,
+      "sha256": "6da9802e2b2ada965dbb1bd6ed8d6e58196c9cb46a9febcfae55d9d2d26ba392"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k87.O",
+      "words": 4,
+      "sha256": "6da9802e2b2ada965dbb1bd6ed8d6e58196c9cb46a9febcfae55d9d2d26ba392"
+     }
+    },
+    "k_layer": 87,
+    "priced": [
+     {
+      "i": 89,
+      "start": 13127.48,
+      "end": 13176.66,
+      "cls": "-",
+      "unit": "SU",
+      "base_cost": 60.0
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   },
+   {
+    "k": 88,
+    "L": 0,
+    "layer": 3,
+    "op": "FUSED.HC_POST",
+    "tag": "hc_post ffn",
+    "family": "hc_post",
+    "occ": 0,
+    "desc": {
+     "A": [
+      89088,
+      5120,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "B": [
+      20480,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "C": [
+      41092,
+      20,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ],
+     "O": [
+      0,
+      20480,
+      1,
+      0,
+      1,
+      "VM",
+      "FP32"
+     ]
+    },
+    "inputs": {
+     "A": {
+      "space": "VM",
+      "array": "r0.k88.A",
+      "words": 5120,
+      "sha256": "7b7b890b4e778514fad4863cf504df82336b3d4c73dadfbf6661e50230df422b"
+     },
+     "B": {
+      "space": "VM",
+      "array": "r0.k88.B",
+      "words": 20480,
+      "sha256": "222ddfff2f4d92c62d433fa09175013718685a44c22ed01f0ab044d4bb27ab34"
+     },
+     "C": {
+      "space": "VM",
+      "array": "r0.k88.C",
+      "words": 20,
+      "sha256": "f1a5f4857c0ef0c7ec3a0c24e2efee1c7f1fb28c86d4318a37ddbe18024f2b5e"
+     }
+    },
+    "outputs": {
+     "O": {
+      "space": "VM",
+      "array": "r0.k88.O",
+      "words": 20480,
+      "sha256": "d15711cbf75a9b50313a4657bc4ffd1976828af5e71cca7d65c9aecb50f1e187"
+     }
+    },
+    "k_layer": 88,
+    "priced": [
+     {
+      "i": 90,
+      "start": 13503.96,
+      "end": 13665.49,
+      "cls": "-",
+      "unit": "FUSED",
+      "base_cost": 222.67
+     }
+    ],
+    "d4g_placement": "row_split_halves_on_dies_2r_2r+1"
+   }
+  ]
+ }
+}
