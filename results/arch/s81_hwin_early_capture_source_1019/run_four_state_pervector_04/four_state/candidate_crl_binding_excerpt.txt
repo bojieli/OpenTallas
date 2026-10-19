@@ -1,0 +1,47 @@
+v0x567f5f698270_0 .net "slot", 0 0, L_0x567f5f7fd490;  alias, 1 drivers
+v0x567f5f698330_0 .net "start", 0 0, L_0x567f5f81e0a0;  alias, 1 drivers
+L_0x567f5f7fd3f0 .cmp/eq 24, L_0x567f5f8411e0, v0x567f5f7c8a80_0;
+L_0x567f5f7fd5a0 .reduce/nor L_0x567f5f81e030;
+L_0x567f5f7fd700 .reduce/nor L_0x567f5f7fbf40;
+S_0x567f5f698510 .scope module, "u_crl" "dsdv_mu_boot_enable" 4 167, 4 772 0, S_0x567f5f697460;
+ .timescale -9 -12;
+    .port_info 0 /INPUT 7 "count";
+    .port_info 1 /INPUT 1 "armed";
+    .port_info 2 /INPUT 1 "valid";
+    .port_info 3 /INPUT 1 "match";
+    .port_info 4 /OUTPUT 1 "en";
+L_0x567f5f7fdb30 .functor AND 1, L_0x567f5f7fd9a0, L_0x567f5f7fda90, C4<1>, C4<1>;
+L_0x567f5f7fdc40 .functor AND 1, L_0x567f5f7fdb30, L_0x567f5f7fddc0, C4<1>, C4<1>;
+L_0x567f5f7fdd00 .functor AND 1, L_0x567f5f7fdc40, L_0x567f5f7fdef0, C4<1>, C4<1>;
+L_0x7939de8ffa78 .functor BUFT 1, C4<0000000000000000000000000000000z>, C4<0>, C4<0>, C4<0>;
+v0x567f5f6986f0_0 .net *"_ivl_0", 31 0, L_0x7939de8ffa78;  1 drivers
+v0x567f5f6987d0_0 .net *"_ivl_11", 0 0, L_0x567f5f7fdb30;  1 drivers
+v0x567f5f698890_0 .net *"_ivl_13", 0 0, L_0x567f5f7fdc40;  1 drivers
+L_0x7939de8f78d0 .functor BUFT 1, C4<00000000000000000000000000000000>, C4<0>, C4<0>, C4<0>;
+v0x567f5f698960_0 .net/2u *"_ivl_4", 31 0, L_0x7939de8f78d0;  1 drivers
+v0x567f5f698a40_0 .net *"_ivl_6", 0 0, L_0x567f5f7fd9a0;  1 drivers
+v0x567f5f698b50_0 .net *"_ivl_9", 0 0, L_0x567f5f7fda90;  1 drivers
+v0x567f5f698c10_0 .net "armed", 0 0, v0x567f5f7c7bb0_0;  1 drivers
+L_0x7939de8ff718 .functor BUFT 1, C4<000000z>, C4<0>, C4<0>, C4<0>;
+v0x567f5f698cd0_0 .net "count", 6 0, L_0x7939de8ff718;  1 drivers
+v0x567f5f698db0_0 .net "en", 0 0, L_0x567f5f7fdd00;  1 drivers
+v0x567f5f698e70_0 .net "match", 0 0, L_0x567f5f7fdef0;  1 drivers
+v0x567f5f698f30_0 .net "valid", 0 0, L_0x567f5f7fddc0;  1 drivers
+L_0x567f5f7fd9a0 .cmp/eq 32, L_0x7939de8ffa78, L_0x7939de8f78d0;
+L_0x567f5f7fda90 .reduce/nor v0x567f5f7c7bb0_0;
+S_0x567f5f699090 .scope module, "u_crm" "dsdv_mu_boot_enable" 4 168, 4 772 0, S_0x567f5f697460;
+ .timescale -9 -12;
+    .port_info 0 /INPUT 7 "count";
+    .port_info 1 /INPUT 1 "armed";
+    .port_info 2 /INPUT 1 "valid";
+    .port_info 3 /INPUT 1 "match";
+    .port_info 4 /OUTPUT 1 "en";
+L_0x567f5f7fe3d0 .functor AND 1, L_0x567f5f7fe240, L_0x567f5f7fe330, C4<1>, C4<1>;
+L_0x567f5f7fe4e0 .functor AND 1, L_0x567f5f7fe3d0, L_0x567f5f7fe660, C4<1>, C4<1>;
+L_0x567f5f7fe5a0 .functor AND 1, L_0x567f5f7fe4e0, L_0x567f5f7fe7a0, C4<1>, C4<1>;
+L_0x7939de8ffac0 .functor BUFT 1, C4<0000000000000000000000000000000z>, C4<0>, C4<0>, C4<0>;
+v0x567f5f699310_0 .net *"_ivl_0", 31 0, L_0x7939de8ffac0;  1 drivers
+v0x567f5f6993f0_0 .net *"_ivl_11", 0 0, L_0x567f5f7fe3d0;  1 drivers
+v0x567f5f6994b0_0 .net *"_ivl_13", 0 0, L_0x567f5f7fe4e0;  1 drivers
+L_0x7939de8f7918 .functor BUFT 1, C4<00000000000000000000000000000000>, C4<0>, C4<0>, C4<0>;
+v0x567f5f699580_0 .net/2u *"_ivl_4", 31 0, L_0x7939de8f7918;  1 drivers
