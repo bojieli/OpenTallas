@@ -5,7 +5,9 @@
 #               s0 (+set=0 = the d4g bench rows, N 1: the fork reproduces ot_hgi_coll_gq at every compiled edge),
 #               s1 (+set=1 trains N 1..6, negative rs_A), s2 (+set=2 cycles(N) scan), faults f1..f4 (set 0) and f5 (set 1,
 #               rs_O breaks the bank rule) -> COLLQ PASS / COLLQ FAULT PASS
+#               + the closed tree13 exact bench (tb_aq_tree13, 1,024 blocks) on the quantiser copy ot_hgi_coll_aq13 -> COLLQ AQ13
 #  STAGE m6|m7|m8 : mutant (6 source ignores rs_A, 7 landing ignores rs_O, 8 row-local k never restarts) on +set=1 -> FAIL
+#  STAGE m9 : HNX-GQ 10-19: quantiser element line (ot_hdc_delay_hc GATED 0) one bank short, on +set=0 (QBG rows) -> FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -16,8 +18,9 @@ P=rtl/hbm_accel/generic/collective/p2p
 LIB=(rtl/hbm_next/coll/ot_hnx_coll_gq.sv "$P/ot_hgi_coll_ring_ag.sv" "$P/ot_hgi_coll_ring_ag_lane.sv" "$P/ot_hgi_coll_ring_b_stop.sv"
      "$P/ot_hgi_coll_pring_static_state_capture.sv" "$P/ot_hgi_coll_pring_static.sv"
      rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
-     rtl/lib/ot_rst_relay.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv
+     rtl/lib/ot_rst_relay.sv $P/ot_hgi_coll_aq13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv
      rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv
+     rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv
      rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv)
 FL=(--binary --timing -O2 -j 16 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
 build(){ # tag mut
@@ -39,6 +42,13 @@ if [ "$ST" = main ]; then
   python3 tools/hbm_next/hnx_coll_gq_train.py vectors-rows $O/vecr > $O/vecr.log 2>&1 || V "vectors-rows FAILED"
   python3 tools/hbm_next/hnx_coll_gq_train.py price > $O/price.jsonl 2>&1
   ( python3 tools/hbm_next/hnx_coll_gq_train.py check-train > $O/check_train.log 2>&1; V "$(tail -1 $O/check_train.log)" ) &
+  ( sed 's/ot_hbm_xp_aq_tree13 #/ot_hgi_coll_aq13 #/' physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv > $O/tb_aq13.sv
+    verilator --binary --timing -O2 -j 8 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb --Mdir $O/obj_aq13 $O/tb_aq13.sv \
+      $P/ot_hgi_coll_aq13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv \
+      rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv > $O/aq13.build.log 2>&1
+    $O/obj_aq13/Vtb > $O/aq13.log 2>&1
+    if grep -q '^AQ_TREE13_EXACT_PASS blocks1024 ' $O/aq13.log; then V "COLLQ AQ13 $(grep -m1 AQ_TREE13_EXACT_PASS $O/aq13.log)"
+    else V "COLLQ AQ13 FAIL"; fi; rm -rf $O/obj_aq13 ) &
   build m 0
   run s0 m +set=0 & run s1 m +set=1 & run s2 m +set=2 &
   for f in 1 2 3 4; do run f$f m +set=0 +fault=$f & done
@@ -48,6 +58,6 @@ if [ "$ST" = main ]; then
   rm -rf $O/obj_m
 else
   python3 tools/hbm_next/hnx_coll_gq_train.py vectors-rows $O/vecr > $O/vecr.log 2>&1 || V "vectors-rows FAILED"
-  m=${ST#m}; build $ST $m; run $ST $ST +set=1; rm -rf $O/obj_$ST
+  m=${ST#m}; build $ST $m; if [ "$m" = 9 ]; then run $ST $ST +set=0; else run $ST $ST +set=1; fi; rm -rf $O/obj_$ST
 fi
 V "done"
