@@ -62,10 +62,15 @@ module qfd_mu_embedding_cold_epoch_model #(parameter ENABLE=0, parameter NU=4, p
      if(COLD_PENDING&&u==0)begin
       if((reserved_pending||pending0_cold_role)&&!cold_promote)fault<=1;
       if(init_publication&&!cold_promote)fault<=1;
-      pending0_cold_role<=0;
-      if(cold_promote)reserved_pending<=0;
+      if(cold_promote&&pending_valid[0]&&!(fetch_slot&&fetch_user==0)&&
+         !(consume_slot&&consume_user==0)&&!(retire_slot&&retire_mask[0])&&
+         !(accepted_v&&accepted_user==0))begin
+       pending0_cold_role<=0;reserved_pending<=0;
+       active[0]<=pending[0];active_valid[0]<=1;pending_valid[0]<=0;
+      end
+     end else begin
+      active[u]<=pending[u];active_valid[u]<=1;pending_valid[u]<=0;
      end
-     active[u]<=pending[u];active_valid[u]<=1;pending_valid[u]<=0;
     end
    end
    if(COLD_PENDING&&init_publication&&(!publish_slot||!publish_mask[0]))fault<=1;
