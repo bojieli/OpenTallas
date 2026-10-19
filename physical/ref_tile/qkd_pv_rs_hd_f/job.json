@@ -1,5 +1,5 @@
 {
- "name": "qkd_pv_rs_hd_f-f1-COMMIT",
+ "name": "qkd_pv_rs_hd_f-f1-b1c5412b5",
  "block": "qkd_pv_rs_hd_f",
  "ref_tile": true,
  "owner": "Claude:AD3-KV-RSHD",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/ad3-kv-rshd-1018",
-  "commit": "COMMIT",
+  "commit": "b1c5412b5",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "rtl/hdc",
@@ -131,7 +131,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_rs_hd_f/qkd_pv_rs_hd_f-f1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_rs_hd_f/qkd_pv_rs_hd_f-f1-b1c5412b5"
   }
  ],
  "cycles_added": 0,
