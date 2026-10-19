@@ -48,7 +48,11 @@ RULES = {
         ('lg_rq', 'rd', 'READ_RETURN', 10, 10, BANK_RD, 'ot_hbm_vm_lg_static_bank: near SU 10 = 4 own + bank read 6'),
         ('lg_wq', 'wr', 'WRITE_RETURN', 7, 7, BANK_WR, 'near SU 7 = 4 own + bank commit 3')],
     'ot_hgi_sm_xload_cl2_ctlx': [
-        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'die contract note: RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages')],
+        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages; list = per-bank vector '
+         '(HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl staggers bank b issue by max - l_b)')],
+    'ot_hgi_sm_xload_cl2p_ctlx': [
+        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx; SCALAR only until its '
+         'ctl gets the cl2 per-bank stagger')],
     'ot_hbm_idx_vm_query_static_n12': [
         ('vm_rq', 'rd', 'VM_RT_EXTRA', 4, 4, BANK_RD + 2, 'header: VM_RT_EXTRA 4 = 2 shell pins + 2 die edges (1 relay each way)')],
     'ot_hbm_idx_rootctl_static_am': [
@@ -62,6 +66,8 @@ RULES = {
     'ot_hgi_dma_back_static_vp4_banks_cp': [
         ('rq', 'rd', 'DRAIN_RT', None, None, BANK_RD, 'drain_rel32 comes from the descriptor (compiler-owned): reported, owner confirms')],
 }
+# masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
+VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
 # downstream clients of a share: (share master, share request port) -> (client param, RTL default, ref value, ref lanes, why)
 SHARE_PORTS = {
     ('ot_hbm_idx_rootctl_static_am', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 2, 'n12 SW behind the registered share: 2 fixed edges'),
@@ -196,6 +202,10 @@ def check(c):
             row['status'] = 'FAIL'; row['bad'].append('no return path traced'); rows.append(row); continue
         need = max(rts)
         vec = I[ci].get('params', {}).get(pname)
+        if isinstance(vec, list) and (m, pname) not in VECTOR_OK:
+            row.update(have=vec, status='FAIL')
+            row['bad'].append(f'{ci}.{pname} is a list but {m} has no per-bank vector form (VECTOR_OK)')
+            rows.append(row); continue
         if isinstance(vec, list) and ref is not None:
             row.update(have=vec, want=[None] * len(vec))
             for p in ps:
@@ -204,7 +214,11 @@ def check(c):
                 if bi < len(vec):
                     row['want'][bi] = w
                 if bi >= len(vec) or int(vec[bi]) != w:
-                    row['bad'].append(f'{ci}.{pname}[{bi}] = {vec[bi] if bi < len(vec) else None}, bank {p["bank"]} needs {w}')
+                    pad = (f' (budget above the lanes: die pads the {p["bank"]}:{p["bank_port"]} lane +{int(vec[bi]) - w})'
+                           if bi < len(vec) and int(vec[bi]) > w else '')
+                    row['bad'].append(f'{ci}.{pname}[{bi}] = {vec[bi] if bi < len(vec) else None}, bank {p["bank"]} needs {w}{pad}')
+                    if pad:
+                        row.setdefault('lane_pads', []).append(f'{p["bank"]}:{p["bank_port"]}+{int(vec[bi]) - w}')
             if rule[1] == 'share':
                 excess[ci] = need - ref_rt
             row['status'] = 'FAIL' if row['bad'] else 'PASS'
