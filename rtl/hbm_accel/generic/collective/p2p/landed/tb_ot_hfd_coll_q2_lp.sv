@@ -199,10 +199,10 @@ module tb_ot_hfd_coll_q2_lp;
     always @(posedge clk) begin : g_dlo_pr_cw_o integer j; dlo_pr_cw_o[0] <= fo_pr_cw_o; for (j = 1; j <= 0; j = j + 1) dlo_pr_cw_o[j] <= dlo_pr_cw_o[j - 1]; end
     wire [279:0] fo_pr_ccw_o, lo_pr_ccw_o;  reg [279:0] dlo_pr_ccw_o [0:0];
     always @(posedge clk) begin : g_dlo_pr_ccw_o integer j; dlo_pr_ccw_o[0] <= fo_pr_ccw_o; for (j = 1; j <= 0; j = j + 1) dlo_pr_ccw_o[j] <= dlo_pr_ccw_o[j - 1]; end
-    wire [57:0] fo_isa_ring, lo_isa_ring;  reg [57:0] dlo_isa_ring [0:0];
-    always @(posedge clk) begin : g_dlo_isa_ring integer j; dlo_isa_ring[0] <= fo_isa_ring; for (j = 1; j <= 0; j = j + 1) dlo_isa_ring[j] <= dlo_isa_ring[j - 1]; end
-    wire [255:0] fo_isa_lp_data, lo_isa_lp_data;  reg [255:0] dlo_isa_lp_data [0:0];
-    always @(posedge clk) begin : g_dlo_isa_lp_data integer j; dlo_isa_lp_data[0] <= fo_isa_lp_data; for (j = 1; j <= 0; j = j + 1) dlo_isa_lp_data[j] <= dlo_isa_lp_data[j - 1]; end
+    wire [57:0] fo_isa_ring, lo_isa_ring;  reg [57:0] dlo_isa_ring [0:1];
+    always @(posedge clk) begin : g_dlo_isa_ring integer j; dlo_isa_ring[0] <= fo_isa_ring; for (j = 1; j <= 1; j = j + 1) dlo_isa_ring[j] <= dlo_isa_ring[j - 1]; end
+    wire [255:0] fo_isa_lp_data, lo_isa_lp_data;  reg [255:0] dlo_isa_lp_data [0:1];
+    always @(posedge clk) begin : g_dlo_isa_lp_data integer j; dlo_isa_lp_data[0] <= fo_isa_lp_data; for (j = 1; j <= 1; j = j + 1) dlo_isa_lp_data[j] <= dlo_isa_lp_data[j - 1]; end
     wire [1:0] fo_ag_v, lo_ag_v;  reg [1:0] dlo_ag_v [0:0];
     always @(posedge clk) begin : g_dlo_ag_v integer j; dlo_ag_v[0] <= fo_ag_v; for (j = 1; j <= 0; j = j + 1) dlo_ag_v[j] <= dlo_ag_v[j - 1]; end
     wire [3:0] fo_ag_src, lo_ag_src;  reg [3:0] dlo_ag_src [0:0];
@@ -250,8 +250,8 @@ module tb_ot_hfd_coll_q2_lp;
             nc = nc + 1; if (lo_retry_requested !== fo_retry_requested) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=retry_requested cycle=%0d flat=%h landed=%h", cyc, fo_retry_requested, lo_retry_requested); end
             nc = nc + 1; if (lo_pr_cw_o !== fo_pr_cw_o) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=pr_cw_o cycle=%0d flat=%h landed=%h", cyc, fo_pr_cw_o, lo_pr_cw_o); end
             nc = nc + 1; if (lo_pr_ccw_o !== fo_pr_ccw_o) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=pr_ccw_o cycle=%0d flat=%h landed=%h", cyc, fo_pr_ccw_o, lo_pr_ccw_o); end
-            nc = nc + 1; if (lo_isa_ring !== fo_isa_ring) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=isa_ring cycle=%0d flat=%h landed=%h", cyc, fo_isa_ring, lo_isa_ring); end
-            nc = nc + 1; if (lo_isa_lp_data !== fo_isa_lp_data) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=isa_lp_data cycle=%0d flat=%h landed=%h", cyc, fo_isa_lp_data, lo_isa_lp_data); end
+            nc = nc + 1; if (lo_isa_ring !== dlo_isa_ring[0]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=isa_ring cycle=%0d flat=%h landed=%h", cyc, dlo_isa_ring[0], lo_isa_ring); end
+            nc = nc + 1; if (lo_isa_lp_data !== dlo_isa_lp_data[0]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=isa_lp_data cycle=%0d flat=%h landed=%h", cyc, dlo_isa_lp_data[0], lo_isa_lp_data); end
             nc = nc + 1; if (lo_ag_v !== fo_ag_v) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ag_v cycle=%0d flat=%h landed=%h", cyc, fo_ag_v, lo_ag_v); end
             nc = nc + 1; if (lo_ag_src !== fo_ag_src) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ag_src cycle=%0d flat=%h landed=%h", cyc, fo_ag_src, lo_ag_src); end
             nc = nc + 1; if (lo_ag_tag !== fo_ag_tag) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ag_tag cycle=%0d flat=%h landed=%h", cyc, fo_ag_tag, lo_ag_tag); end

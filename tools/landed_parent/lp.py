@@ -50,6 +50,11 @@ SPEC (JSON; paths relative to the repo root):
                  bench.reset_cycles) with a real programme instead of random words and ends with lp_finish("<name>")
   sticky_outputs {port: max_lag} outputs fed through loose nets, compared in the bench as sticky (monotone) flags:
                  landed(c) subset of flat(c) and (flat(c - max_lag) & flat(c)) subset of landed(c) (a reset clears).
+  out_regs       {output port: stages >= 1} region register stages in front of the output (in the output's region,
+                 ot_pl_pad u_lpo_<port>); the port's offset grows by the stages.  REQUIRED for a port -> port pass-through
+                 (an output fed combinationally from an input port): the landed standard launches every output from a
+                 region flop, so gen fails closed on an unregistered pass-through.  Give a port that is consumed
+                 together with the pass-through (same capture edge downstream) the same stages to keep them aligned.
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
@@ -390,9 +395,20 @@ class Parent:
                 lands[(n, r)]["loose"] = True
             for d in ds:
                 (loose if n in self.loose else edges).append((d, inst, n, self.A if landed else 0, landed, pin))
+        oregs = {k: int(v) for k, v in (self.S.get("out_regs") or {}).items()}
+        for p, k in oregs.items():
+            if p not in out_drv or k < 1:
+                raise SystemExit(f"out_regs {p}: not an output port of {self.S['top']} or stages {k} < 1")
+            if any(n == p for n, _, _ in rd):
+                raise SystemExit(f"out_regs {p}: the port is also read inside the parent; register a dedicated output net")
         for p, ds in out_drv.items():
+            thru = sorted(d for d in ds if d.startswith("port:"))
+            if thru and not oregs.get(p):
+                raise SystemExit(f"output {p} is a port pass-through of {', '.join(thru)}: the landed standard launches "
+                                 f"every output from a region flop (OT_MULTI_ROOT refuses it); add out_regs {{\"{p}\": 1}} "
+                                 "(and the same stages on any port captured together with it)")
             for d in ds:
-                edges.append((d, f"port:{p}", p, 0, False, None))
+                edges.append((d, f"port:{p}", p, oregs.get(p, 0), False, None))
         nodes = sorted({e[0] for e in edges + loose} | {e[1] for e in edges + loose} | set(self.region))
         t = {v: 0 for v in nodes}
         for it in range(len(nodes) + 1):
@@ -439,7 +455,7 @@ class Parent:
             lst[0]["unlanded_mutant"] = True
         loose_lag = [dict(net=n, reader=b, lag_edges=max(0, v)) for (n, b), v in sorted(lags.items())]
         return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
-                    loose=loose, loose_lag=loose_lag)
+                    loose=loose, loose_lag=loose_lag, oregs=oregs)
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
@@ -482,10 +498,22 @@ class Parent:
             keep.append(body[pos:ins["span"][0]])
             pos = ins["span"][1]
         keep.append(body[pos:])
+        oregs = P.get("oregs") or {}
+        def oren(txt):      # out_regs ports: the flat body drives <p>__o; the region register drives the port
+            for p in oregs:
+                txt = re.sub(rf"(?<![\w$.]){re.escape(p)}\b", f"{p}__o", txt)
+            return txt
+        for p in sorted(oregs):         # declared before the flat body that drives them
+            w(f"    wire {self.ports[p]['range'] or ''} {p}__o;   // out_regs: flat driver of {p}")
         for chunk in keep:
-            for line in chunk.splitlines():
+            for line in oren(chunk).splitlines():
                 if line.strip():
                     w(line.rstrip())
+        for p, k in sorted(oregs.items()):
+            rng = self.ports[p]["range"]
+            w(f"    // ---- OUTPUT REGISTER {p}: +{k} edge(s) in region {P['nreg'][f'port:{p}']} (out_regs; port offset +{k})")
+            w(f"    ot_pl_pad #(.W({width_text(rng)}), .N({k})) u_lpo_{p} "
+              f"(.ck(ck_{P['nreg'][f'port:{p}']}), .d({p}__o), .q({p}));")
         # reset tree
         w(f"    // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region {rr} holds the root)")
         w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
@@ -551,6 +579,8 @@ class Parent:
                     for (si, net), rep in sub.items():
                         if si == i:
                             ex = re.sub(rf"(?<![\w$]){re.escape(net)}\b", rep, ex)
+                if self.cports[ins["module"]][pin] == "out":
+                    ex = oren(ex)
                 cs.append(f".{pin}({ex})")
             w(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{i} (" + ", ".join(cs) + f");   // region {r}, t = {P['t'].get(i, 0)}")
         w("endmodule")
@@ -619,6 +649,7 @@ class Parent:
         t = P["t"]
         flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
+        flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) for i in self.insts)
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
@@ -647,7 +678,9 @@ class Parent:
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
                             "depth + t(c)"),
-            flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst),
+            flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst, **({"out_regs": flops_oreg} if flops_oreg else {})),
+            **({"out_regs": [dict(port=p, stages=k, region=P["nreg"][f"port:{p}"], inst=f"u_lpo_{p}")
+                             for p, k in sorted(P["oregs"].items())]} if P.get("oregs") else {}),
             communicating_region_pairs=dict(landed=pairs, reset_hops=rpairs),
             compiler=dict(
                 note="every latency change vs the flat parent; the compiler schedule takes these (static calendar, no "

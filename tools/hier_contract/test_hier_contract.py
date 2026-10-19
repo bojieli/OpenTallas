@@ -125,6 +125,20 @@ class ChildLint(unittest.TestCase):
         left = APS.obs_rects(APS.split_lef(out)[1])["M5"]
         self.assertAlmostEqual(sum((c - a) * (d - b) for a, b, c, d in left), 5.0 * 0.3 - 2 * 0.024 * 0.092, places=6)
 
+    def test_band_piece_trimmed_off_non_abutting_pin(self):
+        # TW2-COLLP 2026-10-19 (vmwrite_roots_v6 rgx_data1[286]/[289]): a merged band rect over two W-face M4 pins leaves
+        # carved pieces abutting one pin and 0.024 um from the next one; 1c trims them to the wide spacing (0.072) from
+        # the pin they do not abut, so no pin loses its access stub; the piece between the two covered pins is kept
+        import abstract_pin_stub as APS
+        sig = (("p0", "M4", 0.0, 5.0), ("p1", "M4", 0.0, 5.288), ("p2", "M4", 0.0, 5.432), ("p3", "M4", 0.0, 5.576))
+        text = lef(sig=sig, obs=[("M4", 0.025, 5.048, 0.06, 5.552)])
+        self.assertEqual(len(APS.pin_spacing_violations(text)), 2)
+        out, _ = APS.process(text)
+        self.assertEqual(APS.pin_spacing_violations(out), [])
+        left = sorted(APS.obs_rects(APS.split_lef(out)[1])["M4"], key=lambda r: r[1])
+        self.assertEqual([tuple(round(v, 3) for v in r) for r in left],
+                         [(0.025, 5.096, 0.06, 5.288), (0.025, 5.312, 0.06, 5.432), (0.025, 5.456, 0.06, 5.504)])
+
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))
@@ -263,6 +277,22 @@ class Pockets(unittest.TestCase):
         # the 0.3-um slot between the two west bars IS closed away from the pin
         self.assertTrue(any(r[1] >= 4.4 - 1e-9 and r[3] <= 4.7 + 1e-9 and r[2] > 2 for r in added), added)
         self.assertEqual(self.close(out), out)  # idempotent
+
+    def test_pin_keepout_is_wide_spacing(self):
+        """KV-ECTL5 (DRT-0073 u_a/req_t[10]): the fill keeps >= the wide-metal spacing (2 M5 pitches = 0.096) free beside
+        a pin, so no fill rect sits closer than 0.072 um to it; the old one-pitch (0.048) keep-out did"""
+        import abstract_pin_stub as APS
+        self.assertEqual(APS.keep_um("M5"), 0.096)
+        self.assertEqual(APS.keep_um("M6"), 0.128)
+        self.assertEqual(APS.keep_um("M3"), 0.036)
+        out = self.close(self.text())
+        self.assertEqual(APS.pin_spacing_violations(out), [])
+        added = [r for r in self.m5(out) if r not in [o[1:] for o in self.OBS]]
+        keep = (0 - 0.096, 4.5 - 0.096, 0.192 + 0.096, 4.524 + 0.096)
+        self.assertFalse([r for r in added if APS._ov(r, keep)])
+        # a wide M5 OBS one pitch beside the M5 pin (vertical layer: side by side in x) is reported
+        bad = APS.pin_spacing_violations(self.text(obs=self.OBS + [("M5", 0.24, 4.0, 1.0, 5.0)]))
+        self.assertTrue(any(v[0] == "p" and v[1] == "M5" for v in bad), bad)
 
     def test_wide_gap_and_single_obstacle_untouched(self):
         import abstract_pin_stub as APS

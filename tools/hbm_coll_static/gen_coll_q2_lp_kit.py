@@ -170,6 +170,7 @@ def spec():
         "clock_entry_domains": entry_domains(cks),
         "landed_record": "results/arch/landed_parent_1018/collq/ot_hfd_coll_q2_lp_record.json",
         "reset_ports": ["rst_n"],
+        "reset_landing": {"enable": False, "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_sw) -> u_lpr_<r> regional runs (depth 3) -> per-child u_lprc_* pads; the port net has ONE sink (TW2-COLLP 10-19, ROOT-RST rule satisfied in RTL)"},
         "outline": {"w": 1296.0, "h": 1036.8, "exact": True},
         "macros": macros,
         "children": children(),

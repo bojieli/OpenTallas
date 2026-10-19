@@ -9,7 +9,8 @@
    spacing against metal the abstract only partly describes.  Obstacles = OBS rects + PG pin rects on that layer.
    Every free gap that lies BETWEEN two obstacles (never between an obstacle and the macro boundary) and is narrower
    than D in x or in y becomes OBS, x-pass / y-pass iterated to a fixed point on the exact compressed coordinate grid.
-   Nothing is added within one routing pitch of a signal pin rect on that layer (pin access stays).
+   Nothing is added within keep_um(layer) of a signal pin rect on that layer or the one below (pin access stays): whole
+   pitches >= the wide-metal spacing (M6 0.128, M5 0.096), since a fill rect is wide metal (KV-ECTL5 DRT-0073).
    D = 32 routing pitches of the layer (2.048 um on M6); OT_OBS_CLOSE_UM=<um> overrides it, OT_OBS_CLOSE=0 disables the step.
    A closed LEF carries the comment line `# OT_OBS_CLOSED layer=M6 d_um=2.048 added=<n>` before OBS; child_lint (h)
    imports find_pockets() from this file and FAILs a marked LEF that still has a pocket.
@@ -26,6 +27,12 @@ MARK_RE = re.compile(r"\n[ \t]*# OT_OBS_CLOSED layer=(\S+) d_um=([\d.]+) added=(
 _RUN = re.compile(rb"(?<=[\x01\x02])[\x00\x03]+(?=[\x01\x02])")  # 0 free, 1 obstacle, 2 fill, 3 free pin keep-out
 _FILL = re.compile(rb"\x02+")
 _RECT = r"RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"
+
+
+def _abut(a, b):  # closed rects touching along an edge of positive length (or overlapping)
+    ox = min(a[2], b[2]) - max(a[0], b[0])
+    oy = min(a[3], b[3]) - max(a[1], b[1])
+    return (ox > 0 and oy >= 0) or (oy > 0 and ox >= 0)
 
 
 def _ov(a, b):  # overlap with positive area
@@ -84,8 +91,28 @@ def move_stubs(head, obs, pins):
                 # the OBS keeps only the rect minus those pin rects (child_lint (f) band: no OBS over a face pin)
                 holes = [x[1:] for p in hit for x in pins[p] if x[0] == cur and _ov(r, x[1:])]
                 ind = re.match(r"\s*", line).group()
-                out += [f"{ind}RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;"
-                        for a, b, c, e in rect_minus(tuple(map(_iu, r)), [tuple(map(_iu, h)) for h in holes])]
+                pieces = rect_minus(tuple(map(_iu, r)), [tuple(map(_iu, h)) for h in holes])
+                # 1c (TW2-COLLP 2026-10-19, vmwrite_roots_v6 rgx_data1[286]/[289]): a carved band piece lies between
+                # neighbouring face pins; where it comes closer than the wide-metal spacing to a pin it does NOT abut, it
+                # is the merged band of the ABUTTING pin's jog (a DRC-clean child keeps real metal of another net at
+                # legal spacing; the exporter merge made it look wide): trim it back to that spacing so the other pin
+                # keeps a clean access stub (pin_spacing_violations / DRT-0073).  Pieces abutting nothing, and every
+                # single-pin or non-band OBS rect, are unchanged.
+                ws = WIDE_SPACING_UM.get(cur)
+                if ws:
+                    k = _iu(ws)
+                    lay = [tuple(map(_iu, x[1:])) for rs in pins.values() for x in rs if x[0] == cur]
+                    trimmed = []
+                    for pc in pieces:
+                        if any(_abut(pc, q) for q in lay):
+                            near = [q for q in lay if not _abut(pc, q) and not _ov(pc, q)
+                                    and pc[0] < q[2] + k and q[0] - k < pc[2] and pc[1] < q[3] + k and q[1] - k < pc[3]]
+                            pc_l = rect_minus(pc, [(q[0] - k, q[1] - k, q[2] + k, q[3] + k) for q in near]) if near else [pc]
+                            trimmed += pc_l
+                        else:
+                            trimmed.append(pc)
+                    pieces = trimmed
+                out += [f"{ind}RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;" for a, b, c, e in pieces]
                 continue
         out.append(line)
     obs = "\n".join(out)
@@ -120,6 +147,21 @@ def rect_minus(r, holes):
         else:
             out.append((y0, y1, runs))
     return [(a, y0, b, y1) for y0, y1, runs in out for a, b in runs]
+
+
+# ASAP7 SPACINGTABLE wide-metal spacing (um): a shape wider than the layer's min width needs 0.072 um on M4..M7
+# (WIDTH 0.025 / 0.033 -> 0.072).  The fill rects are wide, so the free band kept around a pin must be >= this, or every
+# access stub on the pin violates it: KV-ECTL5 2026-10-19, qkd_ectl3_kiss_st-e4-13455b5bb DRT-0073 "No access point for
+# u_a/req_t[10]" -- one M6 pitch (0.064) between the pin and a 1.25-um fill rect; 35 such pins on qkd_static_ectla_kiss.
+WIDE_SPACING_UM = {"M4": 0.072, "M5": 0.072, "M6": 0.072, "M7": 0.072}
+
+
+def keep_um(layer):
+    """free band kept around signal pins: the smallest whole number of routing pitches >= the layer's wide-metal spacing
+    (M4/M5 0.096, M6/M7 0.128), never less than one pitch"""
+    pitch = PITCH_UM.get(layer, 0.064)
+    n = max(1, -(-round(WIDE_SPACING_UM.get(layer, 0.0) * 1000) // round(pitch * 1000)))
+    return round(n * pitch, 4)
 
 
 def top_obs_layer(layers):
@@ -221,13 +263,46 @@ def find_pockets(text, d_um=None, use_marker=True):
         d = close_d_um(layer)
     norm = lambda r: (min(r[0], r[2]), min(r[1], r[3]), max(r[0], r[2]), max(r[1], r[3]))
     obst = [norm(tuple(map(_iu, r))) for r in by[layer]] + [norm(tuple(map(_iu, r[1:]))) for r in pg if r[0] == layer]
-    p = _iu(pitch)
+    p = _iu(keep_um(layer))
     below = "M%d" % (int(layer[1:]) - 1)
     keep = [(a - p, b - p, c + p, e + p) for rs in sig.values() for r in rs if r[0] in (layer, below)
             for a, b, c, e in [norm(tuple(map(_iu, r[1:])))]]
     rects = fill_gaps(obst, keep, _iu(d)) if d > 0 else []
     rec.update(d_um=d, pitch_um=pitch, obstacles=len(obst), rects=[tuple(v / U for v in r) for r in rects], _int=rects)
     return rec
+
+
+def pin_spacing_violations(text):
+    """signal pin rects with a same-layer OBS rect closer than the spacing the router needs for an access stub on the pin
+    (wide-metal spacing WIDE_SPACING_UM when the OBS rect is wider than the layer's min width, else one min spacing):
+    [(pin, layer, gap um, need um, obs rect)].  Such a pin has no DRC-clean access point (DRT-0073 in the parent)."""
+    head, obs = split_lef(text)
+    sig, _ = pin_rects(head)
+    by = obs_rects(obs)
+    out = []
+    for pin, rs in sig.items():
+        for r in rs:
+            layer = r[0]
+            if layer not in WIDE_SPACING_UM or layer not in by:
+                continue
+            a, b, c, e = (min(r[1], r[3]), min(r[2], r[4]), max(r[1], r[3]), max(r[2], r[4]))
+            minw = PITCH_UM[layer] / 2
+            for o in by[layer]:
+                x0, y0, x1, y1 = (min(o[0], o[2]), min(o[1], o[3]), max(o[0], o[2]), max(o[1], o[3]))
+                need = WIDE_SPACING_UM[layer] if min(x1 - x0, y1 - y0) > minw + 1e-6 else minw
+                # parallel run along the layer's preferred direction only (M4 / M6 horizontal, M5 / M7 vertical);
+                # end-of-line neighbours are governed by the EOL rule, not by the spacing table
+                if int(layer[1:]) % 2 == 0:
+                    if not (x1 > a and x0 < c):
+                        continue
+                    g = max(y0 - e, b - y1)
+                else:
+                    if not (y1 > b and y0 < e):
+                        continue
+                    g = max(x0 - c, a - x1)
+                if 1e-6 < g < need - 1e-6:
+                    out.append((pin, layer, round(g, 4), need, (x0, y0, x1, y1)))
+    return out
 
 
 def close_pockets(head, obs):

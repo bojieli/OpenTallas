@@ -486,8 +486,23 @@
  "flops": {
   "landing": 11456,
   "pads": 0,
-  "reset": 10
+  "reset": 10,
+  "out_regs": 314
  },
+ "out_regs": [
+  {
+   "port": "isa_lp_data",
+   "stages": 1,
+   "region": "sw",
+   "inst": "u_lpo_isa_lp_data"
+  },
+  {
+   "port": "isa_ring",
+   "stages": 1,
+   "region": "sw",
+   "inst": "u_lpo_isa_ring"
+  }
+ ],
  "communicating_region_pairs": {
   "landed": [
    "rg-sw",
@@ -666,8 +681,8 @@
    "retry_requested": 0,
    "pr_cw_o": 0,
    "pr_ccw_o": 0,
-   "isa_ring": 0,
-   "isa_lp_data": 0,
+   "isa_ring": 1,
+   "isa_lp_data": 1,
    "ag_v": 0,
    "ag_src": 0,
    "ag_tag": 0,

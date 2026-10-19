@@ -155,5 +155,10 @@
   "qid_wr": "wr"
  },
  "qid_rg_note": "QF-COLLQ 10-18: qid_rg = the ring region's copy of the quadrant identity strap (N face beside u_rctl; die ties it to the same constant as qid). One S-face qid reached u_rctl.qid 1,146-1,200 um combinationally (textbook wire_reach REFUSE > 500 um); a strap is case-analysed, never landed, so each region gets its own pin.",
- "qid_wr_note": "TW-HBM-COLLP 10-19: qid_wr = the VM-writer region's copy of the quadrant identity strap (W face beside ck_wr / u_writer.sid; die ties it to the same constant as qid). One sw-owned qid fed u_writer.sid (kit OT_MULTI_ROOT: input qid has wrong domain for u_writer); a strap is case-analysed, never landed."
+ "qid_wr_note": "TW-HBM-COLLP 10-19: qid_wr = the VM-writer region's copy of the quadrant identity strap (W face beside ck_wr / u_writer.sid; die ties it to the same constant as qid). One sw-owned qid fed u_writer.sid (kit OT_MULTI_ROOT: input qid has wrong domain for u_writer); a strap is case-analysed, never landed.",
+ "out_regs": {
+  "isa_ring": 1,
+  "isa_lp_data": 1
+ },
+ "out_regs_note": "TW2-COLLP 10-19: isa_lp_data = rc_d was a port -> port pass-through (SU -> gather master hcollgi_<q>); the landed standard / OT_MULTI_ROOT refuse an output with no region flop (lpk5 gate floorplan FAIL 'output isa_lp_data[0] has wrong or unregistered source domain rc_d[0]'). Registered on ck_sw (+1 edge); isa_ring gets the same +1 because hcollgi captures isa_ring and isa_lp_data on the same edge (ring-A merge register). COMPILER: every ISA ring-A command and its rc_d take effect 3 edges later than on v5 (was +2 on v8g); rc_* / SU bundle timing unchanged."
 }

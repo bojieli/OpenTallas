@@ -84,11 +84,11 @@
   "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
   "owner": "Q-DIE11-RLY"
  },
- "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 600-b forwarded-clock lane frame qfd_landh0_600_NE_104x106: landing with the hop-0 gate (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_600 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. QK-FWD 10-18 CLASS MASTER (tools/qwen_split/fwd_lane_classes.py): one hardened master per family / width class (1, 128, 600; widths quantised up, spare inputs tied low by the die) / direction class (H, V, HV, VH; the die places the rep with MX / MY / R180) / frame; replaces the per-GEN-frame masters (147 on dv2f14bn, 164 on dv2f14bg -> 48 classes).",
+ "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 600-b forwarded-clock lane frame qfd_landh0_600_NE_104x106: landing with the hop-0 gate (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_600 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. QK-FWD 10-18 CLASS MASTER (tools/qwen_split/fwd_lane_classes.py): one hardened master per family / width class (1, 128, 600; widths quantised up, spare inputs tied low by the die) / direction class (H, V, HV, VH; the die places the rep with MX / MY / R180) / frame; replaces the per-GEN-frame masters (147 on dv2f14bn, 164 on dv2f14bg -> 48 classes). | QK-LANDEN 10-19 e1 (coordinator Q.STA.LAND600.3 option (b), ROOT-RST rule): en (hop-0 ICG enable = the source released reset) is registered on ck_s at the face (one async-clear flop) before the clock gate; the ICG enable and the ring write epoch are that flop, never the input port. +1 reset-release edge (K + 1 in the die calendar, lane_groups.HOP0_EN_REG); steady-state lane latency unchanged. Lane input min credits the lane_ckf tree (f20c82b74); io_hold_margin 0.03.",
  "job": {
-  "owner": "Claude:QK-FWD",
-  "branch": "claude/qk-fwd-1018",
-  "tag": "c1",
+  "owner": "Claude:QK-LANDEN",
+  "branch": "claude/qk-landen-1019",
+  "tag": "e1",
   "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_landh0_600_NE_104x106 (landing with the hop-0 gate, 600 b)",
   "benches": [
    {
@@ -110,14 +110,15 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/arch/qwen_split_compute_1014/qk_landen_1019/bench/w600_pass.log"
    },
    {
     "name": "sel_mutant",
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel {RUN}/bench_sel 600",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/qk_fwd_1018/bench/w600_sel.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/qk_landen_1019/bench/w600_sel.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -129,7 +130,19 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive {RUN}/bench_naive 600",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/qk_fwd_1018/bench/w600_naive.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/qk_landen_1019/bench/w600_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "encomb_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh encomb {RUN}/bench_encomb 600",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/qk_landen_1019/bench/w600_encomb.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -144,7 +157,13 @@
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/qk_fwd_1018/bench"
+   "results/arch/qwen_split_compute_1014/qk_landen_1019/bench"
   ]
+ },
+ "reroute_reason": {
+  "kind": "native_capture",
+  "cell": "qfd_landh0_600_NE_104x106",
+  "source": "results/arch/qk_landh548_1018/native_receipts_closed_c1_600_128.json",
+  "fix": "capture side: en (the hop-0 ICG enable, combinational from the input port in the closed view: native capture 351-429 ps > 190) is registered on ck_s at the face before the clock gate (rtl/qwen_split/qfd_fwd_lane.sv ot_qfd_land FIRST=1, QK-LANDEN, coordinator Q.STA.LAND600.3 option (b)); lane data input min = L_min(lane_ckf) + C + U (f20c82b74: no hold pads); io_hold_margin_ns 0.03. Same outline and pin faces."
  }
 }

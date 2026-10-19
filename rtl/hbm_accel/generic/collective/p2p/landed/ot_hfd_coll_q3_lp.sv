@@ -117,6 +117,8 @@ module ot_hfd_coll_q3_lp #(
     input wire ck_wr,
     input wire ck_rg
 );
+    wire [255:0] isa_lp_data__o;   // out_regs: flat driver of isa_lp_data
+    wire [57:0] isa_ring__o;   // out_regs: flat driver of isa_ring
  localparam integer PWT=545;
  wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
  wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [5:0] uop_pc;wire busy_d2,start_d3;
@@ -202,9 +204,13 @@ module ot_hfd_coll_q3_lp #(
  wire [511:0] w_rgx_d3=dest_d[4905+:512];
  wire [280:0] kq0,kq1,kq2,kq3,kq4,kq5,kq6,kq7;
  assign vm_kq={kq7,kq6,kq5,kq4,kq3,kq2,kq1,kq0};
- assign isa_ring=p_ring[57:0];assign isa_lp_data=rc_d;
+ assign isa_ring__o=p_ring[57:0];assign isa_lp_data__o=rc_d;
  wire [279:0] r_pin0,r_pin1;wire [1:0] r_carry_write;wire r_acc_we;wire [2:0] r_acc_tag;
  wire [255:0] r_rhs_add,r_carry_add,r_state_tx,r_acc_rr,r_ay;wire [7:0] r_av;
+    // ---- OUTPUT REGISTER isa_lp_data: +1 edge(s) in region sw (out_regs; port offset +1)
+    ot_pl_pad #(.W(((255) - (0) + 1)), .N(1)) u_lpo_isa_lp_data (.ck(ck_sw), .d(isa_lp_data__o), .q(isa_lp_data));
+    // ---- OUTPUT REGISTER isa_ring: +1 edge(s) in region sw (out_regs; port offset +1)
+    ot_pl_pad #(.W(((57) - (0) + 1)), .N(1)) u_lpo_isa_ring (.ck(ck_sw), .d(isa_ring__o), .q(isa_ring));
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region sw holds the root)
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_sw), .d(rst_n), .q(lpr_root));
     wire lpr_sw;  ot_pl_pad #(.W(1), .N(2)) u_lpr_sw (.ck(ck_sw), .d(lpr_root), .q(lpr_sw));   // 0 hop(s) from sw
