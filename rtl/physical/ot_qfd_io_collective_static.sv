@@ -23,7 +23,9 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     input  wire          clk,                   // parent root
     input  wire          clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3,
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
+`ifdef OT_COLL_B4_NATIVE
     input wire clk_pring2,clk_pring3,clk_rring2,clk_rring3, // used only by opt-in PR_B4
+`endif
     input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,
     input  wire          rst_n,
     input  wire [1:0]    pkg_s,
@@ -73,11 +75,16 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
     always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
     wire[(PR_B4 ? 13 : 9)-1:0] mem_clocks;
+`ifdef OT_COLL_B4_NATIVE
     generate if(PR_B4) begin:g_b4_clocks
         assign mem_clocks={clk_rring3,clk_rring2,clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring3,clk_pring2,clk_pring1,clk_pring0};
     end else begin:g_old_clocks
         assign mem_clocks={clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0};
     end endgenerate
+`else
+    assign mem_clocks={clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0};
+    initial if(PR_B4) $error("COLL_B4_REQUIRES_NATIVE_SOURCE_DEFINE");
+`endif
     ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1), .PR_B4(PR_B4)) u_coll (
         .clk_mem(mem_clocks),
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),

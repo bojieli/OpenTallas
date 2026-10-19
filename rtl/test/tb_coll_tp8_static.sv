@@ -79,7 +79,9 @@ module tb_coll_tp8_static #(
             qfd_io_collective_static #(.PR_B4(PR_B4)) u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
+`ifdef OT_COLL_B4_NATIVE
                 .clk_pring2(clk),.clk_pring3(clk),.clk_rring2(clk),.clk_rring3(clk),
+`endif
                 .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
