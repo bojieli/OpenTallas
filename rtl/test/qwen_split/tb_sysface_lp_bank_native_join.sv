@@ -32,7 +32,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  sf_native_probe_land #(.W(2)) lou(.ck(ck),.rsi_w(rcore),.rsi_r(rhr),.i(eu_raw),.o(eu));
  wire actual_init=dut.init_u0_q&&dut.d_start&&dut.d_stage==0&&dut.s_user==0;
  wire pub=(MUT==9&&cyc==1600)||actual_init||(dut.ctx_ld&&dut.ctx_mask!=0);
- wire[3:0]pubmask=(MUT==4)?4'd0:((actual_init?4'b0001:0)|{dut.ctx_mask,1'b0});
+ wire[3:0]pubmask=(MUT==4)?4'd0:(MUT==9&&cyc==1600)?4'd1:((actual_init?4'b0001:0)|{dut.ctx_mask,1'b0});
  reg fetch=0,release_row=0;wire[15:0]fe,re,ce;wire ef;
  qfd_mu_embedding_cold_epoch_model #(.ENABLE(1),.NU(4),.COLD_PENDING(1)) ledger(.ck(ck),.rst_n(rst_n),.epoch_abort(1'b0),.new_epoch(1'b0),.accepted_v(mv),.accepted_user(mu),.accepted_epoch(me),.accepted_cold_role(mu==0),.accepted_token(mt),.accepted_generation(mg),.publish_slot(pub),.publish_mask(pubmask),.init_publication(actual_init),.init_token(dut.s_tok),.init_generation(MUT==8?2'd3:2'd2),.fetch_slot(fetch),.fetch_pending(1'b1),.fetch_user(2'd0),.fetch_token(ETOK),.fetch_generation(2'd2),.consume_slot(es),.consume_user(eu),.consume_token(et),.release_slot(release_row),.retire_slot(1'b0),.retire_mask(4'd0),.fetch_epoch(fe),.expected_epoch(re),.core_epoch(ce),.fault(ef));
 
@@ -45,7 +45,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  wire[511:0]pw_data=pw_scale?{496'd0,ESCALE}:row[pw_idx];
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
- qfd_native59_dv_service #(.MUT(0),.NU(4),.MCTX(1),.SAFE(2))dut(
+ qfd_native59_dv_service #(.MUT(0),.NU(4),.MCTX(1),.SAFE(2))native_engine(
  .ck(clk),.ck_fmt(clk),.ck_qbuf(clk),.rst_n(rst_n),
  .host_epoch_valid(hv),.host_fused_capability(1'b1),.host_epoch(he),.host_tag(ht),.host_generation(hg),
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
