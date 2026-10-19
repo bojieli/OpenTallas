@@ -176,6 +176,10 @@ def cmd_word(**f):
     put(135, 1, f.get("run_last", 0))
     put(134, 1, f.get("publish", 0))
     put(132, 2, f.get("pubsel", 0))
+    put(131, 1, f.get("fold", 0))          # r2 in-SM PV stream fold (head dim 128): entry fold_a <- fold_a + fold_b
+    put(128, 3, f.get("fold_a", 0))
+    put(125, 3, f.get("fold_b", 0))
+    put(124, 1, f.get("folded", 0))        # folded publication (head dim 128: column parity = dim half)
     put(115, 1, f.get("dload", 0))
     put(109, 2, f.get("be_mode", 0))
     put(108, 1, f.get("be_clear", 0))
