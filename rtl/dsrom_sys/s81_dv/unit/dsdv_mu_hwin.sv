@@ -455,7 +455,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             // checker observes after this edge. Fault remains on first start.
             always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
                 if(!rr[COPY_RBASE+7*ce+6]) invalid_r<=1'b0;
-                else invalid_r<=next_enabled && ({3'd0,next_d} < (24'(next_lw)+24'd3) || {3'd0,next_d}+24'd2 > next_rl);
+                else invalid_r<=next_enabled && ({3'd0,next_d} < (24'(next_lw)+24'd3) || (next_rl<24'd2 || {3'd0,next_d} > next_rl-24'd2));
             assign invalid_event[ce]=invalid_r;
         end else begin:g_check_direct
             assign invalid_event[ce]=evld[ce] && ({3'd0,eD[ce]} < (24'(lw_r)+24'd3) || {3'd0,eD[ce]}+24'd2 > rl_r);
