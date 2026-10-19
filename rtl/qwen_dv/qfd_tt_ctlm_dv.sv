@@ -34,14 +34,31 @@
 // ready / idle / progress, so the head's ME availability checks have no DV producer (rule c).  The check moved into the
 // slices: a station word outside its STN window faults the station (ag5 stn bit), which this block returns as the ME
 // fault.  Gap G10 (contract change requested in lanes/Q-CTLM.md): ag += stn_busy restores a head-side idle check.
+// STAGE_ME (QLB-PROG 10-18, G-C3; opt-in, 0 = as built): ONE installed image runs every stage of a token (qfd_sys_face
+//   installs the PW1024 + DW8 image once per epoch), so the stage start must not restart the decode-layer ME programme in
+//   stages that have none, and the ROM relocation must follow the RUNNING stage.  STAGE_ME = 1:
+//   (a) the dh h_start starts the ME programme (base 0, head fixed-issue calendar, XPF schedule) only for the decode
+//       stages 1 .. LAST_STAGE-1; stage 0 (embedding) and LAST_STAGE (LM head) run their calendar segments only;
+//   (b) command_stage (= the ot_qwen_tp8_rom_relocate stage, sys_face head_stage) is the running stage, latched from dh on
+//       the stage start edge, instead of the image's CALS stage (PW1017 [17:12]): as built, all 36 layers would read the
+//       weights of the one layer named in the image.
+//   0 extra edges on the issue path (the stage latch loads on the same edge as tok_r / pos_r).
 // MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
 //   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
-//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule).
+//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule); 9 = HARD_HR leaf stage from the CALS word.
+// HARD_HR (S-QWCOL 10-18, default 1): the head side is the hardened TT head leaf ot_qfd_tt_ctlm_static_hr (kit
+//   qfd_tt_head_static_h16c, claude/q-tth16: head_static_rk H15 + native route + resident relocation + loaded stage +
+//   the registered relocated ROM command, CMDREG 1) instead of the same three blocks inline.  Edges unchanged: the
+//   child's rom_cmd register IS the ib field of hr (hr = {ib, xpf, v} still one register after the relocated command);
+//   the child's reset stations release its state one ck edge after rst_n (no data / command edge changes).  Its three
+//   clock entries (ck_head, ck_pm0, ck_pm1) are this block's ck.  HARD_HR = 0: the previous inline head (reference).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
     parameter integer MUT = 0,
-    parameter integer LAST_STAGE = 37
+    parameter integer LAST_STAGE = 37,
+    parameter integer HARD_HR = 1,
+    parameter integer STAGE_ME = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -65,7 +82,7 @@ module qfd_tt_ctlm_dv #(
     output wire [379:0]  native_cmd,
     input  wire [94:0]   native_ret,
     // ---------------- W5 slice (qfd_dv_slice2_w dn face)
-    output reg  [452:0]  hr,
+    output wire [452:0]  hr,
     output wire [115:0]  cmd,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
@@ -107,6 +124,8 @@ module qfd_tt_ctlm_dv #(
     assign cal_image_ready = c_ready;
 
     // ------------------------------------------------------------------ token / ME start (was seq_su's st face)
+    // STAGE_ME: the ME programme starts only in decode stages (see the header)
+    wire        s_me = (STAGE_ME == 0) ? s_start : (s_start && s_stage != 6'd0 && s_stage < LAST_STAGE[5:0]);
     reg  [17:0] tok_r, pos_r;
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
@@ -116,10 +135,10 @@ module qfd_tt_ctlm_dv #(
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
             if (s_start) begin tok_r <= s_tok; pos_r <= s_pos; end
-            st_h <= s_start | c_seg;
-            if (s_start) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
+            st_h <= s_me | c_seg;
+            if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_r; st_pos <= pos_r; st_base <= c_base; end
-            if (s_start && c_seg) start_fault <= 1'b1;
+            if (s_me && c_seg) start_fault <= 1'b1;
             emb_start <= c_emb; emb_token <= tok_r;
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
@@ -137,42 +156,73 @@ module qfd_tt_ctlm_dv #(
     wire [15:0] x_orows = (MUT == 4) ? ss_prog : ss_rows;
 
     // ------------------------------------------------------------------ ME head (the b2 parent minus the tree)
-    wire [379:0] hcmd, local_rom_cmd, ib;
-    wire [94:0]  ret, rom_ret;
-    wire         head_fault, relocation_fault, me_image_ready;
+    wire [94:0]  rom_ret;
+    wire         me_image_ready;
     wire [55:0]  cp;
     wire [15:0]  actual_me_observe;
-    reg  [5:0]   loaded_stage;
-    reg          relocation_sticky, cp_fault;
+    reg          cp_fault;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin loaded_stage <= 6'd0; relocation_sticky <= 1'b0; cp_fault <= 1'b0; end
-        else begin
-            if (pw[74] && pw[73:64] == 10'd1017 && pw[63:32] == 32'h43414c53) loaded_stage <= pw[17:12];
-            if (relocation_fault) relocation_sticky <= 1'b1;
-            if (cp[0]) cp_fault <= 1'b1;      // a CP copy row: no copy engine on the DV die
-        end
-    assign command_stage = loaded_stage;
-    ot_qwen_tp8_rom_relocate u_resident_relocation (.in_cmd(local_rom_cmd), .in_stage(loaded_stage), .out_cmd(ib),
-        .fault(relocation_fault));
-    ot_qfd_native_cmd_route u_native_route (.clk(ck), .rst_n(rst_n), .cmd(hcmd), .rom_ret(rom_ret), .native_ret(native_ret),
-        .rom_cmd(local_rom_cmd), .native_cmd(native_cmd), .ret(ret));
+        if (!rst_n) cp_fault <= 1'b0;
+        else if (cp[0]) cp_fault <= 1'b1;      // a CP copy row: no copy engine on the DV die
+    wire         hr_fault;                     // head fault | relocation sticky
+    wire [379:0] ib_q;                         // the relocated ROM command, registered (hr ib field)
     // ME status: see the header (ME STATUS); ret layout {fault, progress 16, am_any, am_val 32, am_idx 18, wrom_addr 24,
     // wrom_re, idle, ready}
     assign rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1};
     wire unused_me = &{1'b0, actual_me_observe[14:0]};
-    qfd_tt_ctlm_head_static u_head (
-        .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
-        .me_image_ready(me_image_ready), .program_obs(program_obs),
-        .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos),
-        .clk(ck), .ck_sched(ck), .rst_n(rst_n),
-        .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
-        .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
-        .x_oacc(su_acc), .x_oidle(!ag_su_busy), .x_oprog(x_oprog), .x_orows(x_orows),
-        .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1),       // no VM port on the ME path: x arrives in the stream
-        .m_fin_o(), .m_fidx_o(), .m_fval_o(), .me_clk_en(), .c_fault(head_fault),
-        .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(),
-        .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(),
-        .cmd(hcmd), .ret(ret));
+    generate if (HARD_HR != 0) begin : g_hard_hr
+        // STAGE_ME (b) lives INSIDE the hard head leaf: the h17 leaf (Q-H16C 10-18) latches loaded_stage from its
+        // stage_start / stage ports when STAGE_ME = 1, else from the image CALS word.  Part (a) is here in the parent.
+        // MUT 9 (bench only) = the as-built leaf (stage from the CALS word) under STAGE_ME = 1.
+        ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
+            .stage_start(s_start), .stage(s_stage),
+            .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
+            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
+            .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
+            .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
+            .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
+            .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
+            .x_oacc(su_acc), .x_oidle(!ag_su_busy), .x_oprog(x_oprog), .x_orows(x_orows),
+            .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1),
+            .m_fin_o(), .m_fidx_o(), .m_fval_o(),
+            .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(),
+            .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));
+    end else begin : g_soft_hr
+        reg  [5:0]   loaded_stage;
+        reg          relocation_sticky;
+        reg  [379:0] ib_r;
+        wire [379:0] hcmd, local_rom_cmd, ib;
+        wire [94:0]  ret;
+        wire         head_fault, relocation_fault;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin loaded_stage <= 6'd0; relocation_sticky <= 1'b0; ib_r <= 380'd0; end
+            else begin
+                if (STAGE_ME != 0) begin if (s_start) loaded_stage <= s_stage; end
+                else if (pw[74] && pw[73:64] == 10'd1017 && pw[63:32] == 32'h43414c53) loaded_stage <= pw[17:12];
+                if (relocation_fault) relocation_sticky <= 1'b1;
+                ib_r <= ib;
+            end
+        assign command_stage = loaded_stage;
+        assign ib_q = ib_r;
+        assign hr_fault = head_fault | relocation_sticky;
+        ot_qwen_tp8_rom_relocate u_resident_relocation (.in_cmd(local_rom_cmd), .in_stage(loaded_stage), .out_cmd(ib),
+            .fault(relocation_fault));
+        ot_qfd_native_cmd_route u_native_route (.clk(ck), .rst_n(rst_n), .cmd(hcmd), .rom_ret(rom_ret),
+            .native_ret(native_ret), .rom_cmd(local_rom_cmd), .native_cmd(native_cmd), .ret(ret));
+        qfd_tt_ctlm_head_static u_head (
+            .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
+            .me_image_ready(me_image_ready), .program_obs(program_obs),
+            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos),
+            .clk(ck), .ck_sched(ck), .rst_n(rst_n),
+            .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
+            .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
+            .x_oacc(su_acc), .x_oidle(!ag_su_busy), .x_oprog(x_oprog), .x_orows(x_orows),
+            .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1),       // no VM port on the ME path: x arrives in the stream
+            .m_fin_o(), .m_fidx_o(), .m_fval_o(), .me_clk_en(), .c_fault(head_fault),
+            .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(),
+            .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(),
+            .cmd(hcmd), .ret(ret));
+    end endgenerate
 
     // ------------------------------------------------------------------ XPF (unchanged loader + static schedule)
     generate if (XPF_TRANSPORT_EDGES < 0) begin : g_unassigned_arm_route
@@ -211,16 +261,18 @@ module qfd_tt_ctlm_dv #(
     assign control_stores_ready = me_image_ready && c_ready && xpf_loader_ready && xpf_monitor_ready;
 
     // ------------------------------------------------------------------ hr (head row) to W5: one register
-    reg hv;
+    // (the ib field's register is ib_q: the hard head's rom_cmd register, or g_soft_hr.ib_r)
+    reg hv; reg [72:0] hr_lo;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin hv <= 1'b0; hr <= 453'd0; end
+        if (!rst_n) begin hv <= 1'b0; hr_lo <= 73'd0; end
         else begin
             hv <= 1'b1;
-            hr <= {ib, xpf, hv};
+            hr_lo <= {xpf, hv};
         end
+    assign hr = {ib_q, hr_lo};
 
     // ------------------------------------------------------------------ dc (was seq_su's dc) and faults
-    wire core_fault = head_fault | relocation_sticky | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault;
+    wire core_fault = hr_fault | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault;
     reg  tok_seen, xc_busy, arl_d;
     reg  [17:0] ntok;
     reg  [31:0] nval;

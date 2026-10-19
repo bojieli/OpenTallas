@@ -1,0 +1,134 @@
+{
+ "name": "qkd_astk_ex_s",
+ "top": "qkd_astk_ex_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+  "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+  "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2_bb.v",
+  "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "macros": [],
+ "recipe": 4,
+ "inter": [],
+ "children": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "outline": {
+  "w": 149.04,
+  "h": 149.04
+ },
+ "pins": {
+  "W": [
+   "xa",
+   "ck",
+   "rst_n",
+   "xe"
+  ]
+ },
+ "pin_ranges": {
+  "xa": [
+   3,
+   72
+  ],
+  "ck": [
+   74.2,
+   74.8
+  ],
+  "rst_n": [
+   75.6,
+   76.2
+  ],
+  "xe": [
+   78,
+   146
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data pin: xa lands in the (* keep *) pin flop xq, xe is a register (qkd_astk_ex_s, rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv); the static calendar prices exactly these edges"
+ },
+ "slot_change_request": "S-KVASTK 2026-10-18: lane-free static EXP leaf of qkd_astk_strip_st (successor of qkd_astk_ex, which carried the legacy P.V-tree lanes ui/di/pi/ci/ku/kd/tu/td/f): 104 pins, all on the W face facing its engine slice qkd_astk_ep_s (E face xa/xe); square 149.04 um at the measured old-ex area minus the lane flops. Die lead re-cuts ASTK_W (no tree columns).",
+ "job": {
+  "owner": "Claude:S-KVASTK 10-18",
+  "branch": "claude/s-kvastk-t2-1018",
+  "tag": "s1",
+  "purpose": "S-KVASTK: lane-free static EXP leaf qkd_astk_ex_s of the credit-free ASTK strip qkd_astk_strip_st (x32 per strip): fp32 subtract + exp pipeline, no P.V lanes; every pin registered in RTL.",
+  "extra_paths": [
+   "configs/hardware",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qkd_astk_strip",
+   "results/asap7_physical/bitcell_density",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/test/nearhbm",
+   "rtl/test/qwen_kv_die",
+   "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp",
+   "rtl/test/sim_hdc_v41x_fastfp_dpi.sv",
+   "rtl/test/sim_hdc_v41x_fastfp_wrap.sv",
+   "tools/check_macro_track_alignment.py",
+   "tools/mem_compiler",
+   "tools/qwen_kv_die",
+   "tools/qwen_rom_fulldie.py"
+  ],
+  "benches": [
+   {
+    "name": "qkd_astk_strip_st_lockstep",
+    "cmd": "bash tools/qwen_kv_die/astk_static_bench.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_astk_strip_st lockstep",
+    "note": "every edge of qkd_astk_strip_st (ctl_s + 8 ep_s + 32 ex_s + 4 zn) equals qkd_astk_native_stack_cal (the selected static ASTK) on si / ap / lt / e reads / fault; phase 1 functional (T 8192, 8,192 scores, lmax 4, Z 64, 2,048 e reads), phase 2 T 600 random",
+    "pass_witness": "results/rtl/ref_tile/qkd_astk_ex_s/bench_witness_st1/mut0.log"
+   },
+   {
+    "name": "qkd_astk_ex_s_mutant",
+    "cmd": "bash tools/qwen_kv_die/astk_static_bench.sh {RUN}/bench/neg 2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_astk_strip_st",
+    "note": "MUT 2: ex_s e one ulp off",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_ex_s/bench_witness_st1/mut2.log"
+   }
+  ]
+ },
+ "structural_change": "s1 (S-KVASTK 10-18): new master qkd_astk_ex_s replaces qkd_astk_ex (lanes removed: 1,267+ pass-through pins -> 104)."
+}
