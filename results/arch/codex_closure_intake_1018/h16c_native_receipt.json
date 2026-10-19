@@ -1,0 +1,43 @@
+[
+  {
+    "cell": "ot_qfd_tt_ctlm_static_hr",
+    "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
+    "lib_cell": "ot_qfd_tt_ctlm_static_hr",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean",
+      "lib midrange"
+    ],
+    "R_ps": 303.1,
+    "spread_ps": 75.1,
+    "outputs": 1205,
+    "inputs": 300,
+    "launch_ps": 216.3,
+    "launch_pin": "cp[52]",
+    "capture_ps": 183.9,
+    "capture_pin": "cp_active",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 68.8,
+    "ff_launch_min_ps": 86.9,
+    "ff_hold_need_ps": -81.4,
+    "pass": true,
+    "fail_why": "",
+    "job": "qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+    "route_source_commit": "ae6b0c59a",
+    "generated": "2026-10-18T23:32:00.324601-07:00",
+    "hashes": {
+      "abstract.json": "72801242210b5917aff932bc5df8b7d07414a2de9d658ae36edf85f14eb8b59d",
+      "ot_qfd_tt_ctlm_static_hr_tt.lib": "84c9bc48dcc9221d527abf015a217036c3e6c2bdb5756fd32f0e76c8205a72c2",
+      "insertion.json": "ffe8b84a9d59ae588ddd62a1f04c5158facfd90a455fcc77a85fe38f670a4277",
+      "ot_qfd_tt_ctlm_static_hr.lef": "7f4ced565455b0641f3e2ed6bc1a49b44b13e7af09a32482351b5366e917c151",
+      "ot_qfd_tt_ctlm_static_hr_ff.lib": "5bbf1df917201f6af8074700eca054bb7fc58a159e6af4c740ce8fcdf8dd4acb",
+      "child_lint.json": "2452535081cad7d53429ba440f16993f4ad487a8e29a79ac19f83e13306673c4"
+    },
+    "audit_tool_sha256": "6aa73631d11c0d6886acbad30b67015dbfec5c38bbdad1e21636536e87653f9f",
+    "artifact_origin": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a/record/views/ot_qfd_tt_ctlm_static_hr",
+    "qualification_scope": "Native pin/clock metrics from exact routed export only; no full-die timing or native composition claim."
+  }
+]
