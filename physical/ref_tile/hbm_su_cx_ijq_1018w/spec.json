@@ -140,8 +140,8 @@
   "auto_merge": false,
   "reroute_reason": {
    "kind": "rtl_change",
-   "what": "one-root split of the two-root leaf hbm_su_cx_ij_1017 (never routed); congestion re-plan of the first ij_q route hbm_su_cx_ijq_1018-x1-ac1057e3b (no closed ij_q view; same RTL/ports; that route's trial GRT needed 5/30 extra congestion iterations)",
-   "why": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrit"
+   "what": "congestion re-plan of the first ij_q route hbm_su_cx_ijq_1018-x1-ac1057e3b, which went EARLY_FAIL_DRC 10-19 06:15 (DRT stuck at 168 violations, best 137, after 41 iterations; no closed ij_q view; same RTL/ports/faces/outline). DRT report rpt-40: all 143 markers in ONE interior 28x37 um window (x 116-144, y 152-189) = the dense diagonal gather band (M2 EOL/short 74, M3 spacing/short 44, M4 23; none at pin faces or corners); its trial GRT needed 5/30 extra iterations, M3 45%/M2 33% vs M4/M5 10%/9%",
+   "why": "the 16->4 chunk gather was packed into one ~0.55-density band at the ob0/ob1 midpoints. Fix: routability-driven global placement spreads the band to ~0.3 bin density (gate w: trial GRT overflow 0, 1 extra iteration vs 5), unclustered CTS (TT/FF pin-flop spread 33.9/33.2 ps), 8-column pin-flop bands. Base change retained: one-root split of the two-root leaf hbm_su_cx_ij_1017 (CX-IJ 10-18; 3:4 crossings become 2-bank seams)"
   },
   "extra_paths": [
    "tools/hbm_static/su_cxport_split_vl_run.sh",
