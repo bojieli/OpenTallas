@@ -1,0 +1,45 @@
+{
+  "scope": "Isolated opt-in native stream consumer source; upstream existing-edge copies unbound",
+  "rtl_sha256": "99de07870c754f1c76f3c45bc0dc5768318e748d8796954a16eaa22f72aa698e",
+  "native_cells": 40956,
+  "native_ff": 6459,
+  "new_consumer_ff": 1,
+  "std_area_um2": 4451.65308,
+  "sequential_area_um2": 2082.98628,
+  "direct_and_transparent_ultimate_max": 24,
+  "native_comb_stage_depth": 13,
+  "depth_is_not_sta": true,
+  "added_steady_edges": 0,
+  "boot_age": "No new consumer release stages; predecessor reset/firstqualifieduse OPEN",
+  "input_copy_counts": {
+    "incoming_headers": 146,
+    "cfg_v": 2,
+    "xw_we": 25,
+    "xw_addr": 6,
+    "rst_n": 95
+  },
+  "new_input_copy_bits_excluding_reset": 179,
+  "actual_port_copy_liveness": "All179data/control and95reset bits have1..24realcellloads",
+  "bench": {
+    "verilator": "5.050",
+    "positive": "PASS10000edges/tworesets/allcontrols/allvalidpayload",
+    "mutants": {
+      "rawvalid": "FAIL28",
+      "wrongSID": "FAIL31",
+      "resetomission": "FAIL1",
+      "oldSID": "FAIL31"
+    },
+    "binary_sha256": "575eaf9005725f789e192e25b69a50b77937bfa3ce12eb7c3815927514ae4633"
+  },
+  "native_liberty_models_sha256": "b365d0eb830e9ec44660be4186f61dfef8340b9e39c5bdc81a115a3cc5f81e34",
+  "combined_tt_liberty_sha256": "2a403ec7f10f2b3388b2c11a7fbecaaabc1d519f23862eafac3af4f681c2ab80",
+  "strict_allbits_failure": "Preserved atcycle28:twv0/xv0/relaydiff0/controldiff0/twdatadiff0/xdatadiff1; unresetinvalidXTpayload differs under nativeQNmodelpoweron",
+  "qualified": false,
+  "open": [
+    "Actual producer capture copies/cfg decode/SUreturncopies",
+    "Composed fullE/Wproduction and causalmutants",
+    "Actual reset assertion/release and firstqualifieduse",
+    "Nativeclock/TTFFtiming/PG/pin/reach/geometry",
+    "NoCTS/route/gate/submitauthorized"
+  ]
+}

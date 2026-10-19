@@ -1,0 +1,287 @@
+
+-- Running command `read_json native_final/candidate.json; write_verilog native_final/qfd_dv_stream_controls.v; stat -liberty mapped/combined.lib' --
+
+1. Executing JSON frontend.
+Importing module qfd_dv_stream_controls from JSON tree.
+Importing module XOR2xp5_ASAP7_75t_R from JSON tree.
+Importing module XOR2x2_ASAP7_75t_R from JSON tree.
+Importing module XOR2x1_ASAP7_75t_R from JSON tree.
+Importing module XNOR2xp5_ASAP7_75t_R from JSON tree.
+Importing module XNOR2x2_ASAP7_75t_R from JSON tree.
+Importing module XNOR2x1_ASAP7_75t_R from JSON tree.
+Importing module TIELOx1_ASAP7_75t_R from JSON tree.
+Importing module TIEHIx1_ASAP7_75t_R from JSON tree.
+Importing module SDFLx4_ASAP7_75t_R from JSON tree.
+Importing module SDFLx3_ASAP7_75t_R from JSON tree.
+Importing module SDFLx2_ASAP7_75t_R from JSON tree.
+Importing module SDFLx1_ASAP7_75t_R from JSON tree.
+Importing module SDFHx4_ASAP7_75t_R from JSON tree.
+Importing module SDFHx3_ASAP7_75t_R from JSON tree.
+Importing module SDFHx2_ASAP7_75t_R from JSON tree.
+Importing module SDFHx1_ASAP7_75t_R from JSON tree.
+Importing module OR5x2_ASAP7_75t_R from JSON tree.
+Importing module OR5x1_ASAP7_75t_R from JSON tree.
+Importing module OR4x2_ASAP7_75t_R from JSON tree.
+Importing module OR4x1_ASAP7_75t_R from JSON tree.
+Importing module OR3x4_ASAP7_75t_R from JSON tree.
+Importing module OR3x2_ASAP7_75t_R from JSON tree.
+Importing module OR3x1_ASAP7_75t_R from JSON tree.
+Importing module OR2x6_ASAP7_75t_R from JSON tree.
+Importing module OR2x4_ASAP7_75t_R from JSON tree.
+Importing module OR2x2_ASAP7_75t_R from JSON tree.
+Importing module OAI33xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI333xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI332xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI331xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI32xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI322xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI321xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI31xp67_ASAP7_75t_R from JSON tree.
+Importing module OAI31xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI311xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI22xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI22xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI22x1_ASAP7_75t_R from JSON tree.
+Importing module OAI222xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI221xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI21xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI21xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI21x1_ASAP7_75t_R from JSON tree.
+Importing module OAI211xp5_ASAP7_75t_R from JSON tree.
+Importing module OA33x2_ASAP7_75t_R from JSON tree.
+Importing module OA333x2_ASAP7_75t_R from JSON tree.
+Importing module OA333x1_ASAP7_75t_R from JSON tree.
+Importing module OA332x2_ASAP7_75t_R from JSON tree.
+Importing module OA332x1_ASAP7_75t_R from JSON tree.
+Importing module OA331x2_ASAP7_75t_R from JSON tree.
+Importing module OA331x1_ASAP7_75t_R from JSON tree.
+Importing module OA31x2_ASAP7_75t_R from JSON tree.
+Importing module OA22x2_ASAP7_75t_R from JSON tree.
+Importing module OA222x2_ASAP7_75t_R from JSON tree.
+Importing module OA221x2_ASAP7_75t_R from JSON tree.
+Importing module OA21x2_ASAP7_75t_R from JSON tree.
+Importing module OA211x2_ASAP7_75t_R from JSON tree.
+Importing module O2A1O1Ixp5_ASAP7_75t_R from JSON tree.
+Importing module O2A1O1Ixp33_ASAP7_75t_R from JSON tree.
+Importing module NOR5xp2_ASAP7_75t_R from JSON tree.
+Importing module NOR4xp75_ASAP7_75t_R from JSON tree.
+Importing module NOR4xp25_ASAP7_75t_R from JSON tree.
+Importing module NOR3xp33_ASAP7_75t_R from JSON tree.
+Importing module NOR3x2_ASAP7_75t_R from JSON tree.
+Importing module NOR3x1_ASAP7_75t_R from JSON tree.
+Importing module NOR2xp67_ASAP7_75t_R from JSON tree.
+Importing module NOR2xp33_ASAP7_75t_R from JSON tree.
+Importing module NOR2x2_ASAP7_75t_R from JSON tree.
+Importing module NOR2x1p5_ASAP7_75t_R from JSON tree.
+Importing module NOR2x1_ASAP7_75t_R from JSON tree.
+Importing module NAND5xp2_ASAP7_75t_R from JSON tree.
+Importing module NAND4xp75_ASAP7_75t_R from JSON tree.
+Importing module NAND4xp25_ASAP7_75t_R from JSON tree.
+Importing module NAND3xp33_ASAP7_75t_R from JSON tree.
+Importing module NAND3x2_ASAP7_75t_R from JSON tree.
+Importing module NAND3x1_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp67_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp5_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp33_ASAP7_75t_R from JSON tree.
+Importing module NAND2x2_ASAP7_75t_R from JSON tree.
+Importing module NAND2x1p5_ASAP7_75t_R from JSON tree.
+Importing module NAND2x1_ASAP7_75t_R from JSON tree.
+Importing module MAJx3_ASAP7_75t_R from JSON tree.
+Importing module MAJx2_ASAP7_75t_R from JSON tree.
+Importing module MAJIxp5_ASAP7_75t_R from JSON tree.
+Importing module INVxp67_ASAP7_75t_R from JSON tree.
+Importing module INVxp33_ASAP7_75t_R from JSON tree.
+Importing module INVx8_ASAP7_75t_R from JSON tree.
+Importing module INVx6_ASAP7_75t_R from JSON tree.
+Importing module INVx5_ASAP7_75t_R from JSON tree.
+Importing module INVx4_ASAP7_75t_R from JSON tree.
+Importing module INVx3_ASAP7_75t_R from JSON tree.
+Importing module INVx2_ASAP7_75t_R from JSON tree.
+Importing module INVx1_ASAP7_75t_R from JSON tree.
+Importing module INVx13_ASAP7_75t_R from JSON tree.
+Importing module INVx11_ASAP7_75t_R from JSON tree.
+Importing module ICGx8DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx6p67DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx5p33DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx5_ASAP7_75t_R from JSON tree.
+Importing module ICGx4_ASAP7_75t_R from JSON tree.
+Importing module ICGx4DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx3_ASAP7_75t_R from JSON tree.
+Importing module ICGx2p67DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx2_ASAP7_75t_R from JSON tree.
+Importing module ICGx1_ASAP7_75t_R from JSON tree.
+Importing module HB4xp67_ASAP7_75t_R from JSON tree.
+Importing module HB3xp67_ASAP7_75t_R from JSON tree.
+Importing module HB2xp67_ASAP7_75t_R from JSON tree.
+Importing module HB1xp67_ASAP7_75t_R from JSON tree.
+Importing module HAxp5_ASAP7_75t_R from JSON tree.
+Importing module FAx1_ASAP7_75t_R from JSON tree.
+Importing module DLLx3_ASAP7_75t_R from JSON tree.
+Importing module DLLx2_ASAP7_75t_R from JSON tree.
+Importing module DLLx1_ASAP7_75t_R from JSON tree.
+Importing module DHLx3_ASAP7_75t_R from JSON tree.
+Importing module DHLx2_ASAP7_75t_R from JSON tree.
+Importing module DHLx1_ASAP7_75t_R from JSON tree.
+Importing module DFFLQx4_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx3_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx2_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx1_ASAP7_75t_R from JSON tree.
+Importing module DFFHQx4_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx3_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx2_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx1_ASAP7_75t_R from JSON tree.
+Importing module DFFASRHQNx1_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx9p33_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx8_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx6p67_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx5p33_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx20_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx16_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx14_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx12_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx11_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx10_ASAP7_75t_R from JSON tree.
+Importing module BUFx8_ASAP7_75t_R from JSON tree.
+Importing module BUFx6f_ASAP7_75t_R from JSON tree.
+Importing module BUFx5_ASAP7_75t_R from JSON tree.
+Importing module BUFx4f_ASAP7_75t_R from JSON tree.
+Importing module BUFx4_ASAP7_75t_R from JSON tree.
+Importing module BUFx3_ASAP7_75t_R from JSON tree.
+Importing module BUFx2_ASAP7_75t_R from JSON tree.
+Importing module BUFx24_ASAP7_75t_R from JSON tree.
+Importing module BUFx16f_ASAP7_75t_R from JSON tree.
+Importing module BUFx12f_ASAP7_75t_R from JSON tree.
+Importing module BUFx12_ASAP7_75t_R from JSON tree.
+Importing module BUFx10_ASAP7_75t_R from JSON tree.
+Importing module AOI33xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI333xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI332xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI331xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI32xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI322xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI321xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI31xp67_ASAP7_75t_R from JSON tree.
+Importing module AOI31xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI311xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI22xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI22xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI22x1_ASAP7_75t_R from JSON tree.
+Importing module AOI222xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI221xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI221x1_ASAP7_75t_R from JSON tree.
+Importing module AOI21xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI21xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI21x1_ASAP7_75t_R from JSON tree.
+Importing module AOI211xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI211x1_ASAP7_75t_R from JSON tree.
+Importing module AO33x2_ASAP7_75t_R from JSON tree.
+Importing module AO333x2_ASAP7_75t_R from JSON tree.
+Importing module AO333x1_ASAP7_75t_R from JSON tree.
+Importing module AO332x2_ASAP7_75t_R from JSON tree.
+Importing module AO332x1_ASAP7_75t_R from JSON tree.
+Importing module AO331x2_ASAP7_75t_R from JSON tree.
+Importing module AO331x1_ASAP7_75t_R from JSON tree.
+Importing module AO32x2_ASAP7_75t_R from JSON tree.
+Importing module AO32x1_ASAP7_75t_R from JSON tree.
+Importing module AO322x2_ASAP7_75t_R from JSON tree.
+Importing module AO31x2_ASAP7_75t_R from JSON tree.
+Importing module AO22x2_ASAP7_75t_R from JSON tree.
+Importing module AO22x1_ASAP7_75t_R from JSON tree.
+Importing module AO222x2_ASAP7_75t_R from JSON tree.
+Importing module AO221x2_ASAP7_75t_R from JSON tree.
+Importing module AO221x1_ASAP7_75t_R from JSON tree.
+Importing module AO21x2_ASAP7_75t_R from JSON tree.
+Importing module AO21x1_ASAP7_75t_R from JSON tree.
+Importing module AO211x2_ASAP7_75t_R from JSON tree.
+Importing module AND5x2_ASAP7_75t_R from JSON tree.
+Importing module AND5x1_ASAP7_75t_R from JSON tree.
+Importing module AND4x2_ASAP7_75t_R from JSON tree.
+Importing module AND4x1_ASAP7_75t_R from JSON tree.
+Importing module AND3x4_ASAP7_75t_R from JSON tree.
+Importing module AND3x2_ASAP7_75t_R from JSON tree.
+Importing module AND3x1_ASAP7_75t_R from JSON tree.
+Importing module AND2x6_ASAP7_75t_R from JSON tree.
+Importing module AND2x4_ASAP7_75t_R from JSON tree.
+Importing module AND2x2_ASAP7_75t_R from JSON tree.
+Importing module A2O1A1O1Ixp25_ASAP7_75t_R from JSON tree.
+Importing module A2O1A1Ixp33_ASAP7_75t_R from JSON tree.
+
+2. Executing Verilog backend.
+
+2.1. Executing BMUXMAP pass.
+
+2.2. Executing DEMUXMAP pass.
+Dumping module `\qfd_dv_stream_controls'.
+
+3. Printing statistics.
+
+=== qfd_dv_stream_controls ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    36706        - wires
+    43899        - wire bits
+       28        - public wires
+     7221        - public wire bits
+       28        - ports
+     7221        - port bits
+    40956 4.45E+03 cells
+       12     1.05   A2O1A1Ixp33_ASAP7_75t_R
+       90    7.873   AND2x2_ASAP7_75t_R
+       73    6.386   AND3x1_ASAP7_75t_R
+       50    5.103   AND4x1_ASAP7_75t_R
+       23    2.683   AND5x1_ASAP7_75t_R
+       40    3.499   AO21x1_ASAP7_75t_R
+        3    0.437   AO221x1_ASAP7_75t_R
+       17    2.974   AO222x2_ASAP7_75t_R
+     2148  281.861   AO22x1_ASAP7_75t_R
+       22    2.566   AO32x1_ASAP7_75t_R
+      137   11.985   AOI211xp5_ASAP7_75t_R
+      320   23.328   AOI21xp33_ASAP7_75t_R
+      976   99.611   AOI221xp5_ASAP7_75t_R
+      557   81.211   AOI222xp33_ASAP7_75t_R
+     1354  118.448   AOI22xp33_ASAP7_75t_R
+        2    0.204   AOI311xp33_ASAP7_75t_R
+       31    2.712   AOI31xp33_ASAP7_75t_R
+      524   53.479   AOI32xp33_ASAP7_75t_R
+        6      0.7   AOI33xp33_ASAP7_75t_R
+     2281  864.681   DFFASRHQNx1_ASAP7_75t_R
+     4178 1.22E+03   DFFHQNx1_ASAP7_75t_R
+    14255  623.514   INVx1_ASAP7_75t_R
+       19    1.939   MAJIxp5_ASAP7_75t_R
+        2    0.262   MAJx2_ASAP7_75t_R
+     3910  228.031   NAND2xp33_ASAP7_75t_R
+     1158   84.418   NAND3xp33_ASAP7_75t_R
+      223   19.508   NAND4xp25_ASAP7_75t_R
+      109   11.125   NAND5xp2_ASAP7_75t_R
+      936   54.588   NOR2xp33_ASAP7_75t_R
+      322   23.474   NOR3xp33_ASAP7_75t_R
+      137   11.985   NOR4xp25_ASAP7_75t_R
+      172   17.554   NOR5xp2_ASAP7_75t_R
+        7    0.612   O2A1O1Ixp33_ASAP7_75t_R
+        5    0.583   OA211x2_ASAP7_75t_R
+        5     0.51   OA21x2_ASAP7_75t_R
+        5    0.875   OA222x2_ASAP7_75t_R
+        1    0.146   OA22x2_ASAP7_75t_R
+        1    0.146   OA33x2_ASAP7_75t_R
+      610   53.363   OAI211xp5_ASAP7_75t_R
+     3886  283.289   OAI21xp33_ASAP7_75t_R
+     1118  114.103   OAI221xp5_ASAP7_75t_R
+       19     2.77   OAI222xp33_ASAP7_75t_R
+      488    42.69   OAI22xp33_ASAP7_75t_R
+        1    0.102   OAI311xp33_ASAP7_75t_R
+       31    2.712   OAI31xp33_ASAP7_75t_R
+        2    0.233   OAI321xp33_ASAP7_75t_R
+       18    1.837   OAI32xp33_ASAP7_75t_R
+        1    0.117   OAI33xp33_ASAP7_75t_R
+       32    2.799   OR2x2_ASAP7_75t_R
+       62    5.424   OR3x1_ASAP7_75t_R
+       53    5.409   OR4x1_ASAP7_75t_R
+       22    2.566   OR5x1_ASAP7_75t_R
+      309   40.547   XNOR2xp5_ASAP7_75t_R
+      193   25.325   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\qfd_dv_stream_controls': 4451.653080
+     of which used for sequential elements: 2082.986280 (46.79%)
+

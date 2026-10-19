@@ -1,0 +1,617 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc6       admits   851 GB (avail 693, growth 97, headroom 0, waiters 0/0 GB) load 21/128 running 8 disk 5996 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2461552-1792432765 after 0 s
+{
+  "cells": 37515,
+  "masters": {
+    "INVx1_ASAP7_75t_R": 10910,
+    "NAND2xp33_ASAP7_75t_R": 3910,
+    "OAI21xp33_ASAP7_75t_R": 3886,
+    "DFFASRHQNx1_ASAP7_75t_R": 2280,
+    "DFFHQNx1_ASAP7_75t_R": 4178,
+    "NOR3xp33_ASAP7_75t_R": 322,
+    "OR3x1_ASAP7_75t_R": 62,
+    "NOR4xp25_ASAP7_75t_R": 137,
+    "NAND4xp25_ASAP7_75t_R": 219,
+    "NOR2xp33_ASAP7_75t_R": 893,
+    "NAND3xp33_ASAP7_75t_R": 1158,
+    "AOI22xp33_ASAP7_75t_R": 1354,
+    "AND4x1_ASAP7_75t_R": 50,
+    "AND3x1_ASAP7_75t_R": 73,
+    "AND2x2_ASAP7_75t_R": 90,
+    "OAI221xp5_ASAP7_75t_R": 1118,
+    "AOI21xp33_ASAP7_75t_R": 320,
+    "NAND5xp2_ASAP7_75t_R": 109,
+    "OAI22xp33_ASAP7_75t_R": 488,
+    "NOR5xp2_ASAP7_75t_R": 124,
+    "AOI211xp5_ASAP7_75t_R": 137,
+    "OR2x2_ASAP7_75t_R": 32,
+    "OR4x1_ASAP7_75t_R": 53,
+    "OAI33xp33_ASAP7_75t_R": 1,
+    "OAI31xp33_ASAP7_75t_R": 31,
+    "AND5x1_ASAP7_75t_R": 23,
+    "AOI221xp5_ASAP7_75t_R": 976,
+    "AO21x1_ASAP7_75t_R": 40,
+    "OA21x2_ASAP7_75t_R": 5,
+    "OA22x2_ASAP7_75t_R": 1,
+    "OR5x1_ASAP7_75t_R": 22,
+    "AO32x1_ASAP7_75t_R": 22,
+    "AOI33xp33_ASAP7_75t_R": 6,
+    "AO221x1_ASAP7_75t_R": 3,
+    "OAI211xp5_ASAP7_75t_R": 610,
+    "XNOR2xp5_ASAP7_75t_R": 309,
+    "XOR2xp5_ASAP7_75t_R": 193,
+    "AOI222xp33_ASAP7_75t_R": 557,
+    "OAI222xp33_ASAP7_75t_R": 19,
+    "OAI32xp33_ASAP7_75t_R": 18,
+    "OA211x2_ASAP7_75t_R": 5,
+    "AO222x2_ASAP7_75t_R": 17,
+    "OAI321xp33_ASAP7_75t_R": 2,
+    "OA222x2_ASAP7_75t_R": 5,
+    "AO22x1_ASAP7_75t_R": 2148,
+    "AOI31xp33_ASAP7_75t_R": 31,
+    "AOI32xp33_ASAP7_75t_R": 524,
+    "O2A1O1Ixp33_ASAP7_75t_R": 7,
+    "MAJIxp5_ASAP7_75t_R": 19,
+    "OAI311xp33_ASAP7_75t_R": 1,
+    "A2O1A1Ixp33_ASAP7_75t_R": 12,
+    "AOI311xp33_ASAP7_75t_R": 2,
+    "OA33x2_ASAP7_75t_R": 1,
+    "MAJx2_ASAP7_75t_R": 2
+  },
+  "native_ff": 6458,
+  "max_nonclock_load": 48,
+  "max_transparent_ultimate_load": 48,
+  "violations": [
+    [
+      17093,
+      48
+    ],
+    [
+      17166,
+      48
+    ],
+    [
+      17239,
+      48
+    ],
+    [
+      17312,
+      48
+    ],
+    [
+      17385,
+      48
+    ],
+    [
+      17458,
+      48
+    ],
+    [
+      17531,
+      48
+    ],
+    [
+      17604,
+      48
+    ],
+    [
+      17677,
+      48
+    ],
+    [
+      17750,
+      48
+    ],
+    [
+      17823,
+      48
+    ],
+    [
+      17896,
+      48
+    ],
+    [
+      17969,
+      48
+    ],
+    [
+      18042,
+      48
+    ],
+    [
+      18115,
+      48
+    ],
+    [
+      18188,
+      48
+    ],
+    [
+      18261,
+      48
+    ],
+    [
+      18334,
+      48
+    ],
+    [
+      18407,
+      48
+    ],
+    [
+      18480,
+      48
+    ],
+    [
+      18553,
+      48
+    ],
+    [
+      18626,
+      48
+    ],
+    [
+      18699,
+      48
+    ],
+    [
+      18772,
+      48
+    ],
+    [
+      18845,
+      48
+    ],
+    [
+      18918,
+      48
+    ],
+    [
+      18991,
+      48
+    ],
+    [
+      19064,
+      48
+    ],
+    [
+      19137,
+      48
+    ],
+    [
+      19210,
+      48
+    ],
+    [
+      19283,
+      48
+    ],
+    [
+      19333,
+      48
+    ],
+    [
+      19382,
+      48
+    ],
+    [
+      19431,
+      48
+    ],
+    [
+      19480,
+      48
+    ],
+    [
+      19529,
+      48
+    ],
+    [
+      19578,
+      48
+    ],
+    [
+      19627,
+      48
+    ],
+    [
+      19676,
+      48
+    ],
+    [
+      19725,
+      48
+    ],
+    [
+      19774,
+      48
+    ],
+    [
+      19823,
+      48
+    ],
+    [
+      19872,
+      47
+    ],
+    [
+      8,
+      48
+    ]
+  ],
+  "transparent_violations": [
+    [
+      8,
+      48
+    ],
+    [
+      17093,
+      48
+    ],
+    [
+      17166,
+      48
+    ],
+    [
+      17239,
+      48
+    ],
+    [
+      17312,
+      48
+    ],
+    [
+      17385,
+      48
+    ],
+    [
+      17458,
+      48
+    ],
+    [
+      17531,
+      48
+    ],
+    [
+      17604,
+      48
+    ],
+    [
+      17677,
+      48
+    ],
+    [
+      17750,
+      48
+    ],
+    [
+      17823,
+      48
+    ],
+    [
+      17896,
+      48
+    ],
+    [
+      17969,
+      48
+    ],
+    [
+      18042,
+      48
+    ],
+    [
+      18115,
+      48
+    ],
+    [
+      18188,
+      48
+    ],
+    [
+      18261,
+      48
+    ],
+    [
+      18334,
+      48
+    ],
+    [
+      18407,
+      48
+    ],
+    [
+      18480,
+      48
+    ],
+    [
+      18553,
+      48
+    ],
+    [
+      18626,
+      48
+    ],
+    [
+      18699,
+      48
+    ],
+    [
+      18772,
+      48
+    ],
+    [
+      18845,
+      48
+    ],
+    [
+      18918,
+      48
+    ],
+    [
+      18991,
+      48
+    ],
+    [
+      19064,
+      48
+    ],
+    [
+      19137,
+      48
+    ],
+    [
+      19210,
+      48
+    ],
+    [
+      19283,
+      48
+    ],
+    [
+      19333,
+      48
+    ],
+    [
+      19382,
+      48
+    ],
+    [
+      19431,
+      48
+    ],
+    [
+      19480,
+      48
+    ],
+    [
+      19529,
+      48
+    ],
+    [
+      19578,
+      48
+    ],
+    [
+      19627,
+      48
+    ],
+    [
+      19676,
+      48
+    ],
+    [
+      19725,
+      48
+    ],
+    [
+      19774,
+      48
+    ],
+    [
+      19823,
+      48
+    ],
+    [
+      19872,
+      47
+    ],
+    [
+      40384,
+      48
+    ],
+    [
+      40385,
+      48
+    ],
+    [
+      40386,
+      48
+    ],
+    [
+      40387,
+      48
+    ],
+    [
+      40388,
+      48
+    ],
+    [
+      40389,
+      48
+    ],
+    [
+      40390,
+      48
+    ],
+    [
+      40391,
+      48
+    ],
+    [
+      40392,
+      48
+    ],
+    [
+      40393,
+      48
+    ],
+    [
+      40394,
+      48
+    ],
+    [
+      40395,
+      48
+    ],
+    [
+      40396,
+      48
+    ],
+    [
+      40397,
+      48
+    ],
+    [
+      40398,
+      48
+    ],
+    [
+      40399,
+      48
+    ],
+    [
+      40400,
+      48
+    ],
+    [
+      40401,
+      48
+    ],
+    [
+      40402,
+      48
+    ],
+    [
+      40403,
+      48
+    ],
+    [
+      40404,
+      48
+    ],
+    [
+      40405,
+      48
+    ],
+    [
+      40406,
+      48
+    ],
+    [
+      40407,
+      48
+    ],
+    [
+      40408,
+      48
+    ],
+    [
+      40409,
+      48
+    ],
+    [
+      40410,
+      48
+    ],
+    [
+      40411,
+      48
+    ],
+    [
+      40412,
+      48
+    ],
+    [
+      40413,
+      48
+    ],
+    [
+      40414,
+      48
+    ],
+    [
+      40415,
+      48
+    ],
+    [
+      40416,
+      48
+    ],
+    [
+      40417,
+      48
+    ],
+    [
+      40418,
+      48
+    ],
+    [
+      40419,
+      48
+    ],
+    [
+      40420,
+      48
+    ],
+    [
+      40421,
+      48
+    ],
+    [
+      40422,
+      48
+    ],
+    [
+      40423,
+      48
+    ],
+    [
+      40424,
+      48
+    ],
+    [
+      40425,
+      48
+    ],
+    [
+      40426,
+      48
+    ],
+    [
+      40427,
+      48
+    ],
+    [
+      40428,
+      48
+    ],
+    [
+      40429,
+      48
+    ]
+  ],
+  "qualified": false,
+  "scope": "Actual ASAP7 TT primitive mapping. No physical timing/clock/geometry qualification. Boundary aliases require real predecessor copies."
+}
+Traceback (most recent call last):
+  File "<stdin>", line 25, in <module>
+AssertionError
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2461552-1792432765): exit 1

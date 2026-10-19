@@ -1,0 +1,35 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc6       admits   852 GB (avail 694, growth 97, headroom 0, waiters 0/0 GB) load 15/128 running 8 disk 5995 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2465599-1792432885 after 0 s
+{
+  "source_sha256": "3f5f5728de85ee42fa5e0ab3c34e5e76510877fa30dd905f82e64e8ee6e0ce62",
+  "source_top": "qfd_dv_stream_controls",
+  "candidate_top": "qfd_dv_stream_controls",
+  "limit": 24,
+  "rounds": 5,
+  "before_cells": 37515,
+  "after_cells": 40956,
+  "before_ff": 6458,
+  "after_ff": 6459,
+  "clock_loads": 6459,
+  "max_nonclock_load": 24,
+  "input_copy_counts": {
+    "rst_n": 95,
+    "cfg_v": 2,
+    "sw_i": 96,
+    "se_i": 50,
+    "xw_we": 25,
+    "xw_addr": 6
+  },
+  "added_edges": 0,
+  "equations_preserved": true,
+  "qualified": false,
+  "scope": "ABC native combinational cells; sequential primitives generic. Boundary copies require original-edge producer proof; no native clock/reset/physical qualification."
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2465599-1792432885): exit 0

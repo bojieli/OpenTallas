@@ -1,0 +1,4 @@
+STRICT_INITIAL_DIAGNOSTIC cycle28 tw_v0/1 x_v0/0 relaydiff1 controldiff1 twdatadiff1 xdatadiff1 MUT1
+[276000] %Fatal: tb_controls.sv:43: Assertion failed in tb_stream: STREAM_EQ_MISMATCH cycle28 MUT1
+%Error: native_valid/tb_controls.sv:43: Verilog $stop
+Aborting...

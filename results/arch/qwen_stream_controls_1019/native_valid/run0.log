@@ -1,0 +1,6 @@
+STRICT_INITIAL_DIAGNOSTIC cycle28 tw_v0/0 x_v0/0 relaydiff0 controldiff0 twdatadiff0 xdatadiff1 MUT0
+STREAM_NATIVE_QUALIFIED_EQ PASS edges10000 resets2 varyingSID/config concurrentrelay/taps/fullcompletion controls+allvalidpayload
+- native_valid/tb_controls.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.386 s; speed 258.970 us/s
+- Verilator: cpu 0.386 s on 1 threads; allocated 9 MB

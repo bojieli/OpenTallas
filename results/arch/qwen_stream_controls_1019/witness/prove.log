@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc6       admits   853 GB (avail 694, growth 97, headroom 0, waiters 0/0 GB) load 15/128 running 8 disk 5998 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2456256-1792432545 after 1 s
+STREAM_CONTROLS_EQ PASS edges10000 resets2 varyingSID/config concurrentrelay/taps/fullcompletion alloutputs
+[276000] %Fatal: tb_controls.sv:38: Assertion failed in tb_stream: STREAM_EQ_MISMATCH cycle28 MUT1
+[306000] %Fatal: tb_controls.sv:38: Assertion failed in tb_stream: STREAM_EQ_MISMATCH cycle31 MUT2
+[7006000] %Fatal: tb_controls.sv:36: Assertion failed in tb_stream: STREAM_RESET_MISMATCH cycle701 MUT3
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2456256-1792432545): exit 0

@@ -1,0 +1,61 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc6       admits   826 GB (avail 691, growth 113, headroom 0, waiters 0/0 GB) load 18/128 running 10 disk 5995 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2469182-1792432969 after 0 s
+{
+  "cells": 40956,
+  "native_ff": 6459,
+  "new_native_ff": [
+    [
+      "sc_copy_40895",
+      {
+        "hide_name": 1,
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "parameters": {},
+        "attributes": {
+          "src": "rtl/qwen_dv/qfd_dv_stream_packer.sv:200.2-202.28",
+          "keep": "1",
+          "dont_touch": "1",
+          "qwen_id": "sc_copy_40895"
+        },
+        "port_directions": {
+          "CLK": "input",
+          "D": "input",
+          "QN": "output",
+          "RESETN": "input",
+          "SETN": "input"
+        },
+        "connections": {
+          "CLK": [
+            2
+          ],
+          "D": [
+            19926
+          ],
+          "QN": [
+            43823
+          ],
+          "RESETN": [
+            43892
+          ],
+          "SETN": [
+            "1"
+          ]
+        }
+      }
+    ]
+  ],
+  "native_master_pin_connectivity_exact_after_emission": true,
+  "max_direct_nonclock": 24,
+  "max_transparent_ultimate": 24,
+  "source_sha256": "99de07870c754f1c76f3c45bc0dc5768318e748d8796954a16eaa22f72aa698e",
+  "clock_loads": 6459,
+  "qualified": false,
+  "initialization": "Only new consumer state is one exact asynchronous-reset open-copy FF; reset/source input equivalence implies identical value after assertion and forever by native equation induction. External predecessor copies must independently prove their reset/first qualified use."
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2469182-1792432969): exit 0

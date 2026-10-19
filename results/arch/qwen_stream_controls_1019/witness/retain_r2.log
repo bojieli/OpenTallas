@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc6       admits   820 GB (avail 686, growth 112, headroom 0, waiters 0/0 GB) load 19/128 running 10 disk 5997 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-stream-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2460067-1792432685 after 0 s
+{
+  "native_comb_master_census_preserved": true,
+  "enabled_ff_exact_feedback_mux_expansion": 2179,
+  "cells": 28878,
+  "max_nonclock_load": 25,
+  "retained_native_comb_cells": 20241,
+  "generic_sequential_not_native": true,
+  "qualified": false
+}
+
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2460067-1792432685): exit 0

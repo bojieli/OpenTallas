@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Size/emit a scalar exact-equation consumer fork and explicit upstream API."""
 import argparse,collections,copy,hashlib,json,pathlib
-p=argparse.ArgumentParser();p.add_argument('source');p.add_argument('--out',required=True);p.add_argument('--emit',action='store_true');a=p.parse_args()
-raw=pathlib.Path(a.source).read_bytes();j=json.loads(raw);m=j['modules']['qfd_dv_stream_packer'];m=copy.deepcopy(m);base=copy.deepcopy(m['cells']);origin={k:k for k in base};aliases={};ports=[];limit=24
+p=argparse.ArgumentParser();p.add_argument('source');p.add_argument('--out',required=True);p.add_argument('--emit',action='store_true');p.add_argument('--top',default='qfd_dv_stream_packer');p.add_argument('--input-boundary');a=p.parse_args()
+raw=pathlib.Path(a.source).read_bytes();j=json.loads(raw);m=j['modules'][a.top];m=copy.deepcopy(m);base=copy.deepcopy(m['cells']);origin={k:k for k in base};aliases={};ports=json.loads(pathlib.Path(a.input_boundary).read_text()) if a.input_boundary else [];limit=24
 nextbit=1+max(b for n in m['netnames'].values() for b in n['bits'] if isinstance(b,int))
 def net():
  global nextbit
@@ -45,17 +45,18 @@ while True:
     m['cells'][ln]['connections'][lp][li]=outs[b]
 # Expose each excess input group explicitly: actual predecessor copies required.
 loads,drivers=graph()
+input_orig={(r['port'],r['copy_bit']):(r['source_port'],r['source_bit']) for r in ports}
 for pn,pinfo in list(m['ports'].items()):
  if pinfo['direction']!='input' or pn=='ck':continue
- newbits=[]
- for bit,b in enumerate(pinfo['bits']):
+ for bit,b in enumerate(list(pinfo['bits'])):
   ls=loads.get(b,[])
+  op,ob=input_orig.get((pn,bit),(pn,bit));dest=op+'_copies'
   for n in range(1,(len(ls)+limit-1)//limit):
-   nb=net();aliases[nb]=b;idx=len(newbits);newbits.append(nb)
+   nb=net();aliases[nb]=b
+   destbits=m['ports'].setdefault(dest,{'direction':'input','bits':[]})['bits'];idx=len(destbits);destbits.append(nb)
    chosen=ls[n*limit:(n+1)*limit]
-   ports.append({'port':pn+'_copies','copy_bit':idx,'source_port':pn,'source_bit':bit,'loads':len(chosen),'reset':pn=='rst_n'})
+   ports.append({'port':dest,'copy_bit':idx,'source_port':op,'source_bit':ob,'loads':len(chosen),'reset':op=='rst_n'})
    for ln,lp,li in chosen:m['cells'][ln]['connections'][lp][li]=nb
- if newbits:m['ports'][pn+'_copies']={'direction':'input','bits':newbits}
 # Every cell, including new state, has an original exact equation under source aliases.
 for name,c in m['cells'].items():
  bc=base[origin[name]];assert c['type']==bc['type'] and c['parameters']==bc['parameters']
@@ -64,11 +65,11 @@ for name,c in m['cells'].items():
 loads,drivers=graph();viol=[(b,len(ls)) for b,ls in loads.items() if b not in clock and len(ls)>32];assert not viol,viol
 # One successor per transparent cell also bounds collapsed BUF/INV ultimate loads.
 assert all(len(loads.get(b,[]))<=1 for b,(cn,_) in drivers.items() if transparent(m['cells'][cn]))
-info={'source_sha256':hashlib.sha256(raw).hexdigest(),'source_top':'qfd_dv_stream_packer','candidate_top':'qfd_dv_stream_controls','limit':limit,'rounds':rounds,'before_cells':len(base),'after_cells':len(m['cells']),'before_ff':sum(ff(c) for c in base.values()),'after_ff':sum(ff(c) for c in m['cells'].values()),'clock_loads':sum(len(loads.get(b,[])) for b in clock),'max_nonclock_load':max(len(ls) for b,ls in loads.items() if b not in clock),'input_copy_counts':dict(collections.Counter(x['source_port'] for x in ports)),'added_edges':0,'equations_preserved':True,'qualified':False,'scope':'ABC native combinational cells; sequential primitives generic. Boundary copies require original-edge producer proof; no native clock/reset/physical qualification.'}
+info={'source_sha256':hashlib.sha256(raw).hexdigest(),'source_top':a.top,'candidate_top':'qfd_dv_stream_controls','limit':limit,'rounds':rounds,'before_cells':len(base),'after_cells':len(m['cells']),'before_ff':sum(ff(c) for c in base.values()),'after_ff':sum(ff(c) for c in m['cells'].values()),'clock_loads':sum(len(loads.get(b,[])) for b in clock),'max_nonclock_load':max(len(ls) for b,ls in loads.items() if b not in clock),'input_copy_counts':dict(collections.Counter(x['source_port'] for x in ports)),'added_edges':0,'equations_preserved':True,'qualified':False,'scope':'ABC native combinational cells; sequential primitives generic. Boundary copies require original-edge producer proof; no native clock/reset/physical qualification.'}
 out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=True);(out/'model.json').write_text(json.dumps(info,indent=2)+'\n');(out/'boundary.json').write_text(json.dumps(ports,indent=2)+'\n')
 if a.emit:
  # Old named aliases can merge nets on re-import: keep only explicit port/cell wires.
  m['netnames']={};m['attributes']={'keep_hierarchy':'1'}
- j['modules'].pop('qfd_dv_stream_packer');j['modules']['qfd_dv_stream_controls']=m
+ j['modules'].pop(a.top);j['modules']['qfd_dv_stream_controls']=m
  (out/'candidate.json').write_text(json.dumps(j)+'\n');(out/'correspondence.json').write_text(json.dumps({'origins':origin,'aliases':{str(k):v for k,v in aliases.items()},'equations_preserved':True,'source_sha256':info['source_sha256']})+'\n')
 print(json.dumps(info,indent=2))

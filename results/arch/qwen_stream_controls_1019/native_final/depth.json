@@ -1,0 +1,293 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_stream_controls",
+  "cells": 40956,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 0,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 6459,
+      "names": [
+        "ck"
+      ],
+      "driver": null,
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "_93253_",
+      "pin": "D",
+      "bit": 40488,
+      "generic_levels": 13,
+      "names": [
+        "_55003_"
+      ]
+    },
+    {
+      "cell": "_93254_",
+      "pin": "D",
+      "bit": 40492,
+      "generic_levels": 13,
+      "names": [
+        "_78660_"
+      ]
+    },
+    {
+      "cell": "_93255_",
+      "pin": "D",
+      "bit": 40496,
+      "generic_levels": 13,
+      "names": [
+        "_55002_"
+      ]
+    },
+    {
+      "cell": "_93256_",
+      "pin": "D",
+      "bit": 40500,
+      "generic_levels": 13,
+      "names": [
+        "_55001_"
+      ]
+    },
+    {
+      "cell": "sc_copy_40895",
+      "pin": "D",
+      "bit": 40492,
+      "generic_levels": 13,
+      "names": [
+        "_78660_"
+      ]
+    },
+    {
+      "cell": "_93287_",
+      "pin": "D",
+      "bit": 40564,
+      "generic_levels": 12,
+      "names": [
+        "_54967_"
+      ]
+    },
+    {
+      "cell": "_93288_",
+      "pin": "D",
+      "bit": 40568,
+      "generic_levels": 12,
+      "names": [
+        "_54964_"
+      ]
+    },
+    {
+      "cell": "_93289_",
+      "pin": "D",
+      "bit": 40572,
+      "generic_levels": 12,
+      "names": [
+        "_54962_"
+      ]
+    },
+    {
+      "cell": "_93290_",
+      "pin": "D",
+      "bit": 40576,
+      "generic_levels": 12,
+      "names": [
+        "_54960_"
+      ]
+    },
+    {
+      "cell": "_93291_",
+      "pin": "D",
+      "bit": 40580,
+      "generic_levels": 12,
+      "names": [
+        "_54958_"
+      ]
+    },
+    {
+      "cell": "_93292_",
+      "pin": "D",
+      "bit": 40584,
+      "generic_levels": 12,
+      "names": [
+        "_54956_"
+      ]
+    },
+    {
+      "cell": "_93293_",
+      "pin": "D",
+      "bit": 40588,
+      "generic_levels": 12,
+      "names": [
+        "_54953_"
+      ]
+    },
+    {
+      "cell": "_93294_",
+      "pin": "D",
+      "bit": 40592,
+      "generic_levels": 12,
+      "names": [
+        "_54952_"
+      ]
+    },
+    {
+      "cell": "_93295_",
+      "pin": "D",
+      "bit": 40596,
+      "generic_levels": 12,
+      "names": [
+        "_54951_"
+      ]
+    },
+    {
+      "cell": "_93296_",
+      "pin": "D",
+      "bit": 40600,
+      "generic_levels": 12,
+      "names": [
+        "_54950_"
+      ]
+    },
+    {
+      "cell": "_93297_",
+      "pin": "D",
+      "bit": 40604,
+      "generic_levels": 12,
+      "names": [
+        "_54949_"
+      ]
+    },
+    {
+      "cell": "_93298_",
+      "pin": "D",
+      "bit": 40608,
+      "generic_levels": 12,
+      "names": [
+        "_54947_"
+      ]
+    },
+    {
+      "cell": "_93299_",
+      "pin": "D",
+      "bit": 40612,
+      "generic_levels": 12,
+      "names": [
+        "_54945_"
+      ]
+    },
+    {
+      "cell": "_93300_",
+      "pin": "D",
+      "bit": 40616,
+      "generic_levels": 12,
+      "names": [
+        "_54942_"
+      ]
+    },
+    {
+      "cell": "_93301_",
+      "pin": "D",
+      "bit": 40620,
+      "generic_levels": 12,
+      "names": [
+        "_54940_"
+      ]
+    },
+    {
+      "cell": "_93302_",
+      "pin": "D",
+      "bit": 40624,
+      "generic_levels": 12,
+      "names": [
+        "_54938_"
+      ]
+    },
+    {
+      "cell": "_93303_",
+      "pin": "D",
+      "bit": 40628,
+      "generic_levels": 12,
+      "names": [
+        "_54937_"
+      ]
+    },
+    {
+      "cell": "_93304_",
+      "pin": "D",
+      "bit": 40632,
+      "generic_levels": 12,
+      "names": [
+        "_54936_"
+      ]
+    },
+    {
+      "cell": "_93305_",
+      "pin": "D",
+      "bit": 40636,
+      "generic_levels": 12,
+      "names": [
+        "_54934_"
+      ]
+    },
+    {
+      "cell": "_93306_",
+      "pin": "D",
+      "bit": 40640,
+      "generic_levels": 12,
+      "names": [
+        "_54931_"
+      ]
+    },
+    {
+      "cell": "_93307_",
+      "pin": "D",
+      "bit": 40644,
+      "generic_levels": 12,
+      "names": [
+        "_54930_"
+      ]
+    },
+    {
+      "cell": "_93308_",
+      "pin": "D",
+      "bit": 40648,
+      "generic_levels": 12,
+      "names": [
+        "_54929_"
+      ]
+    },
+    {
+      "cell": "_93309_",
+      "pin": "D",
+      "bit": 40652,
+      "generic_levels": 12,
+      "names": [
+        "_54927_"
+      ]
+    },
+    {
+      "cell": "_93310_",
+      "pin": "D",
+      "bit": 40656,
+      "generic_levels": 12,
+      "names": [
+        "_54926_"
+      ]
+    },
+    {
+      "cell": "_93311_",
+      "pin": "D",
+      "bit": 40660,
+      "generic_levels": 12,
+      "names": [
+        "_54925_"
+      ]
+    }
+  ],
+  "scope": "Actual native primitive graph with DFF explicitly recognized as sequential. Native gate counts are combinational depth, not Liberty delay/STA. Original clock input excluded from load violation classification.",
+  "highest_output_depth_note": "Endpoint list covers actual native FF inputs; no output timing qualification."
+}
