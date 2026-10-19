@@ -43,6 +43,8 @@ TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
 TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
 D2D_MASTER = 'qfd_d2d_static'
+DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
+DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
@@ -120,6 +122,12 @@ def gen_params(insts, hr_rows, image=IMAGE):
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
         rec['mu'] = dict(nu=nu, opseg=1)
+        if DHOBS_MASTER in masters:
+            # NU from the die; the compiled lists are the RTL defaults (384-b / 128-b vectors: no sidecar literal), checked
+            # against mu_opcal.dhobs_lists by audit (e)
+            out[DHOBS_MASTER] = dict(NU=nu, _source='MU-DQ-DHUSER (COORD 0kg): tt_ctlm.dh_user observer, OPSEG 0; NS / '
+                                     'USER_SEQ / STG_SEQ / RES_SEQ = RTL defaults = mu_opcal.dhobs_lists(compile_frame(16))')
+            rec['dhobs'] = dict(nu=nu)
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
@@ -128,6 +136,16 @@ def gen_params(insts, hr_rows, image=IMAGE):
 
 
 # ------------------------------------------------------------------------------------------------------------ RTL traps
+def dhobs_check(mod, frame=16):
+    """(e) the observer's RTL default lists == the compiled 4-user calendar's (mu_opcal.dhobs_lists): a drift between the
+    face's T image and the observer's list would raise mu_fault on the die.  -> list of failures."""
+    from qwen_static_schedule import mu_opcal as O
+    want = O.dhobs_lists(O.compile_frame(frame))
+    env = mod.env()
+    return [f'{DHOBS_MASTER}.{k} = {env.get(k)!r} (RTL default) != {want[k]:#x} compiled (mu_opcal.dhobs_lists F{frame})'
+            for k in DHOBS_LISTS if env.get(k) != want[k]]
+
+
 def trapped_params(mod):
     """sentinel-default parameters a module traps on: identifiers of a generate-if condition whose body raises."""
     import die_port_bind as DPB
@@ -166,6 +184,10 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
+        if mst == DHOBS_MASTER:
+            fails += dhobs_check(mods[mst])
+            if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):
+                fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
         tp = trapped_params(mods[mst])
         if not tp:
             continue
