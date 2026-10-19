@@ -1,5 +1,5 @@
 {
- "name": "hbm_su_pgslice_lg_light_d4g-r1-COMMIT",
+ "name": "hbm_su_pgslice_lg_light_d4g-r2-COMMIT",
  "block": "ot_hbm_su_static_pgslice_rgf_lp",
  "ref_tile": true,
  "owner": "Claude:TW-HBM-PGLG",
@@ -114,6 +114,19 @@
     "why": "drain delay line one short"
    },
    {
+    "name": "rg_mut23",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m23 23 300",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/tw_hbm_pglg_1019/m23/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "E-face relay u_erly bypassed (HBM-PGLG2)"
+   },
+   {
     "name": "rg_mut101",
     "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m101 101 300",
     "expect": "fail",
@@ -191,7 +204,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_su_pgslice_lg_light_d4g/hbm_su_pgslice_lg_light_d4g-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_su_pgslice_lg_light_d4g/hbm_su_pgslice_lg_light_d4g-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
