@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.qwen_gen2_integration.v1",
+  "status": "MODEL_ONLY_BLOCKED",
+  "release_qualified": false,
+  "input_sha256": "75e59e3fa24de85cd2a1f62c0b6df505a20580e120cf79d94fecf008c9171ea2",
+  "links": 446,
+  "payload_bits": 186347,
+  "naive_four_slot_data_ff_lower_bound": 745388,
+  "pointer_control_reset_face_ff": "UNPRICED",
+  "area_um2": null,
+  "ring_payload_over_2kb_links": 307,
+  "ring_payload_over_2kb_bits": 680088,
+  "nonunique_clock_ownership_links": 15,
+  "cb16": {
+    "links": 264,
+    "payload_bits": 136080
+  },
+  "groups": {
+    "qfd_c_b16_dv -> qfd_c_b16_dv": {
+      "links": 120,
+      "bits": 61872
+    },
+    "qfd_c_b16_dv -> qfd_dv_slice2_e": {
+      "links": 24,
+      "bits": 12336
+    },
+    "qfd_c_b16_dv -> qfd_dv_slice2_w": {
+      "links": 24,
+      "bits": 12336
+    },
+    "qfd_dv_slice2_e -> qfd_c_b16_dv": {
+      "links": 48,
+      "bits": 24768
+    },
+    "qfd_dv_slice2_e -> qfd_dv_slice2_w": {
+      "links": 2,
+      "bits": 1136
+    },
+    "qfd_dv_slice2_e -> qfd_dv_slice2_e": {
+      "links": 78,
+      "bits": 20964
+    },
+    "qfd_dv_slice2_w -> qfd_c_b16_dv": {
+      "links": 48,
+      "bits": 24768
+    },
+    "qfd_dv_slice2_w -> qfd_dv_slice2_e": {
+      "links": 4,
+      "bits": 1705
+    },
+    "qfd_dv_slice2_w -> qfd_dv_slice2_w": {
+      "links": 98,
+      "bits": 26462
+    }
+  },
+  "ambiguous_clock_examples": [
+    {
+      "cls": "NEIGHBOUR",
+      "src": "c16_E0_0",
+      "src_master": "qfd_c_b16_dv",
+      "src_root": [
+        "clk_rx/pll_r48[0]",
+        "clk_rx/pll_r99[0]"
+      ],
+      "dst": "c16_E0_1",
+      "dst_master": "qfd_c_b16_dv",
+      "dst_root": [
+        "clk_rx/pll_r94[0]"
+      ],
+      "bus": "n_dv_rsi_E0_0",
+      "bits": 514
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "c16_E0_1",
+      "src_master": "qfd_c_b16_dv",
+      "src_root": [
+        "clk_rx/pll_r94[0]"
+      ],
+      "dst": "c16_E0_0",
+      "dst_master": "qfd_c_b16_dv",
+      "dst_root": [
+        "clk_rx/pll_r48[0]",
+        "clk_rx/pll_r99[0]"
+      ],
+      "bus": "n_q3h_far_E0_1_0",
+      "bits": 516
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "c16_E0_1",
+      "src_master": "qfd_c_b16_dv",
+      "src_root": [
+        "clk_rx/pll_r94[0]"
+      ],
+      "dst": "c16_E0_0",
+      "dst_master": "qfd_c_b16_dv",
+      "dst_root": [
+        "clk_rx/pll_r48[0]",
+        "clk_rx/pll_r99[0]"
+      ],
+      "bus": "n_q3h_far_E0_1_1",
+      "bits": 516
+    }
+  ],
+  "latency": {
+    "landing_E": null,
+    "su_token_delta": null,
+    "mu_token_delta": null,
+    "reason": "Measured child/native pin clocks and phase/setup/hold-derived E are required; count is not a schedule."
+  },
+  "physical_adoption": false
+}
