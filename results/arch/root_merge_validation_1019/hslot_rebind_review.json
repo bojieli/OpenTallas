@@ -1,0 +1,9 @@
+{
+  "tool_commit": "e70a730b5",
+  "tests": "44 focused PASS including8 actual Git/filesystem recovery guards",
+  "dry_run": "original48helperfiles verified_original; finalODB/SDC/SPEF and5_route ODB hashes match frozen receipts",
+  "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+  "route_commit": "adb53b6fe4c72c83aaad830b707a708c9e712997",
+  "adoption": false,
+  "scope": "Bench-only source recovery; no physical or RTL change, source branch preserved without broad main import"
+}
