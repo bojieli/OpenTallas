@@ -139,15 +139,43 @@ def kv_programme_constants(kv_commit):
                 law='TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)')
 
 
-def rtl_txdp(commit):
-    t = git_show(commit, 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv')
-    out = {}
-    for end, core in (('C', 'qfd_d2d_static_core'), ('K', 'qkd_d2d_static_core')):
-        m = re.search(core + r"\s*#\([^;]*?\.TXDP\(PR \? \{8'd(\d+), 8'd(\d+), 8'd(\d+), 8'd(\d+)\}", t, re.S)
-        if not m:
-            raise SystemExit(f'layer_compile: PR TXDP of {core} not found')
-        out[end] = [int(x) for x in m.groups()][::-1]          # {p3, p2, p1, p0} -> [p0..p3]
-    return out
+D2D_RTL = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+D2D_IMAGE = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+
+
+def txdp_bound(rtl, image, end):
+    """TXDP the die master of END ('C' compute / 'K' KV) actually elaborates with, from source text.
+
+    Pre-QXF-LINK RTL hard-wires a literal vector in the core instance (PR ? {p3, p2, p1, p0}); from 6ef1a097f the wrapper
+    takes TXDP as a REQUIRED parameter (default 32'd0 refuses elaboration) and the die GEN binds D2D_TXDP_<END> of the
+    committed calendar image (kv_static.compiled_txdp).  Returns (ports [p0..p3], source tag); never a default."""
+    core, top = {'C': ('qfd_d2d_static_core', 'qfd_d2d_static'), 'K': ('qkd_d2d_static_core', 'qkd_d2d_static')}[end]
+    m = re.search(core + r"\s*#\([^;]*?\.TXDP\(PR \? \{8'd(\d+), 8'd(\d+), 8'd(\d+), 8'd(\d+)\}", rtl, re.S)
+    if m:
+        return [int(x) for x in m.groups()][::-1], 'rtl_literal'       # {p3, p2, p1, p0} -> [p0..p3]
+    if not re.search(r'module\s+' + top + r"\s*#\([^)]*parameter\s*\[31:0\]\s*TXDP\s*=\s*32'd0\b", rtl, re.S):
+        raise SystemExit(f'layer_compile: {top}: neither a literal PR TXDP nor a required TXDP parameter')
+    if image is None:
+        raise SystemExit(f'layer_compile: {top} takes a required TXDP but no calendar image was found at the commit')
+    m = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_" + end + r"\s*=\s*32'h([0-9a-fA-F]{8})\s*;", image)
+    if not m:
+        raise SystemExit(f'layer_compile: {D2D_IMAGE}: no D2D_TXDP_{end}')
+    v = int(m.group(1), 16)
+    return [(v >> (8 * b)) & 0xff for b in range(4)], 'image_parameter'
+
+
+def git_show_opt(commit, path):
+    r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{path}'], capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def rtl_txdp(compute_commit, kv_commit=None):
+    """bound TXDP per end: the compute master from the compute die's source commit, the KV master from the KV die's"""
+    out, src = {}, {}
+    for end, commit in (('C', compute_commit), ('K', kv_commit or compute_commit)):
+        out[end], kind = txdp_bound(git_show(commit, D2D_RTL), git_show_opt(commit, D2D_IMAGE), end)
+        src[end] = f'{commit}:{D2D_RTL if kind == "rtl_literal" else D2D_IMAGE} ({kind})'
+    return out, src
 
 
 def compile_stages(ba):
@@ -259,14 +287,16 @@ def main(argv=None):
     S = compile_stages(ba)
     kvp = kv_programme_constants(a.kv_commit)
     raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
-    hard = rtl_txdp(a.compute_commit)
+    hard, hard_src = rtl_txdp(a.compute_commit, a.kv_commit)
     for e in ('C', 'K'):
         if hard[e] != txd[e]:
             findings.append(dict(id=f'TXDP {e}', severity='FAIL', owner='Q-LINK / die leads',
-                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static PR=1 hard-wires TXDP {hard[e]} (ports 0..3); '
-                                      f'the die stages need {txd[e]}',
-                                 fix='make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), '
-                                     'or re-harden with the compiled vector'))
+                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static binds TXDP {hard[e]} (ports 0..3; '
+                                      f'{hard_src[e]}); the die stages need {txd[e]}',
+                                 fix=('commit this pass\'s d2d/d2d_cal_image.svh (D2D_TXDP_' + e + ') as the production image and '
+                                      're-GEN the die' if hard_src[e].endswith('(image_parameter)') else
+                                      'make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), '
+                                      'or re-harden with the compiled vector')))
     # ------------------------------------------------------------------ windows / extension X
     tp = json.load(open(ROOT / a.token_path))
     _, lay = L.program_profile(a.txl + 2, a.phy + 2, str(ROOT / a.token_path), host_stages=0, st_ofs=40,
