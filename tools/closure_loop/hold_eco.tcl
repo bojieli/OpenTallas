@@ -33,6 +33,18 @@ proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LI
   return [string toupper $c]
 }
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+# OT_PG_STRICT_LOADER_BEGIN
+# Opt-in source prototype. Frozen/copied ECO scripts must set OT_PG_HELPER
+# explicitly unless this script retains its repository-relative location.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  set ot_pg_helper [envd OT_PG_HELPER [file join [file dirname [info script]] .. .. physical common_flow native_pg_binding.tcl]]
+  if {![file isfile $ot_pg_helper]} { error "OT_PG_HELPER_MISSING: $ot_pg_helper" }
+  source $ot_pg_helper
+  foreach ot_pg_api {ot_pg_prepare ot_pg_assert_all_native} {
+    if {![llength [info commands $ot_pg_api]]} { error "OT_PG_HELPER_API_MISSING: $ot_pg_api" }
+  }
+}
+# OT_PG_STRICT_LOADER_END
 # read_db replaces LEF libraries with the ODB's inventory. Add any declared
 # new VT AFTER read_db, as vtswap_eco.tcl does, before swapping a master.
 proc ot_load_extra_vt_lefs {} {
@@ -436,6 +448,16 @@ set ot_fill {}
 foreach vt [envd OT_VT RVT] { set t [string map {SLVT SL LVT L RVT R} $vt]; lappend ot_fill FILLERxp5_ASAP7_75t_$t FILLER_ASAP7_75t_$t }
 filler_placement $ot_fill
 check_placement -verbose
+# OT_PG_STRICT_FINAL_BEGIN
+# Insertion, master replacement and filler placement invalidate earlier maps.
+# The final check visits native MASTER PG terminals, independent of PSM.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  global_connect
+  set ot_pg_final_block [ord::get_db_block]
+  set ot_pg_final_mapping [ot_pg_prepare $ot_pg_final_block]
+  ot_pg_assert_all_native $ot_pg_final_block $ot_pg_final_mapping
+}
+# OT_PG_STRICT_FINAL_END
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef
 foreach c $corners { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
