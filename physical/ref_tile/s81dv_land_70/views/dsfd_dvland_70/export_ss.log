@@ -18,25 +18,27 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
-OT_HYBRID CTS_MEASURE ss ck sinks=75 reference_scope=boundary boundary_sinks=75 min=94.21494871940544 mean=96.99639861574852 max=99.54875158456149 all_mean=96.99639861574852
-OT_HYBRID CTS_MEASURE ss ck_f sinks=295 reference_scope=boundary boundary_sinks=283 min=140.17539962608035 mean=142.33997434776126 max=145.8442678014071 all_mean=142.27772543380348
+OT_HYBRID CLOCK_RULE ss ck PASS pin_spread=3.1 scope=boundary sinks=77
+OT_HYBRID CTS_MEASURE ss ck sinks=77 reference_scope=boundary boundary_sinks=73 min=95.0995605511737 mean=97.10877793311016 max=98.1970481077853 all_mean=97.13176748367957
+OT_HYBRID CLOCK_RULE ss ck_f PASS pin_spread=4.5 scope=boundary sinks=295
+OT_HYBRID CTS_MEASURE ss ck_f sinks=295 reference_scope=boundary boundary_sinks=280 min=141.0685185418088 mean=143.576818022736 max=145.6108295317591 all_mean=143.56301590997978
 OT_ENTRIES LEVEL ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck -> u.fault$_DFFE_PN0P_/CLK wire=0 R=96.99639861574852 latency=45.34357573201274 phi=142.33997434776126
+OT_ENTRIES COMP ss ck -> rs__ot_rl0$_DFF_P_/CLK wire=0 R=97.10877793311016 latency=46.468040089625845 phi=143.576818022736
 OT_ENTRIES LEVEL ck_f deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_f -> u.bank[0][0]$_DFFE_PP_/CLK wire=0 R=142.33997434776126 latency=0.0 phi=142.33997434776126
-OT_ENTRIES DOMAIN core 833.333008ps IO4/71 boundary=139.55852445141818..144.89232731657424
-OT_ENTRIES DOMAIN lane 833.333008ps IO70/0 boundary=140.17539962608038..145.8442678014071
-OT_MULTI_ROOT RELATED_PATH lane -> core max slack=119.187386 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH lane -> core min slack=168.243454 (ordinary synchronous timing retained)
-OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=370 inputs=74 outputs=71 async_control_pins=16
-OT_ENTRIES COMP DONE ss 2 entries phi=142.33997434776126 boundary=139.55852445141818..145.8442678014071
+OT_ENTRIES COMP ss ck_f -> u_ot_pr_core.u.bank[0][0]$_DFFE_PP_/CLK wire=0 R=143.576818022736 latency=0.0 phi=143.576818022736
+OT_ENTRIES DOMAIN core 833.333008ps IO4/71 boundary=141.56760064079953..144.66508819741114
+OT_ENTRIES DOMAIN lane 833.333008ps IO70/0 boundary=141.06851854180877..145.61082953175912
+OT_MULTI_ROOT RELATED_PATH lane -> core max slack=138.551010 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core min slack=169.321411 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=372 inputs=74 outputs=71 async_control_pins=16
+OT_ENTRIES COMP DONE ss 2 entries phi=143.576818022736 boundary=141.06851854180877..145.61082953175912
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
 OT_IOREF clock-port ck (ot_entry_0): data input delays dropped
 OT_IOREF clock-port ck_f (ot_entry_1): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 75 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_1 boundary 283 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_0 boundary 73 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 280 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_lane (not an insertion-reference clock)
-OT_WS max -1.2327944221013354e-10 min 5.1463291961262314e-11
+OT_WS max -1.215421652212001e-10 min 5.908917799501978e-11
 OT_EXPORT_DONE
