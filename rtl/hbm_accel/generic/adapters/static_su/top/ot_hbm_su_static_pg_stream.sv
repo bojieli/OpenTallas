@@ -62,7 +62,7 @@ module ot_hbm_su_static_pg_stream #(
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
   assign su_rq[h*17+:17]={vmr_cmd[h*30+29],vmr_cmd[h*30+13+:16]};
   if(MULTIRATE)begin:g_multirate
-   ot_hbm_su_multirate_bridge u_bridge(
+   ot_hbm_su_multirate_bridge #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_bridge(
     .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
     .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
     .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
