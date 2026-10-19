@@ -31,6 +31,7 @@ from qwen_split import lane_groups as LG  # noqa: E402
 # QXF-SEAMK 10-18: + the KV forwarded-lane stations / landings (tools/qwen_kv_die/kv_fwd_lanes.py, qkd_rlysh0?_<S> /
 # qkd_landsh0?_<S>: same instance per relay station, a -> b, one stage each as the generator counts them)
 RELAY_RE = re.compile(r'^(qkd_rlys_\d+|qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rly_|qfd_rlyh0?_|qfd_landh?0?_)')
+FORWARDED_RE = re.compile(r'^(qkd_rlysh0?_\d+|qkd_landsh0?_\d+|qfd_rlyh0?_|qfd_landh?0?_)')
 RESET_MASTER_RE = re.compile(r'^(qfd_rst_rep|qkd_rst_region)')
 CLOCK_PORT_RE = re.compile(r'^(ck|clk|ck_\w+|clk_\w+|\w+_ck|\w+_clk|gclk|ck\d+|refclk|face_ck|fdi_ck|hck)$')
 RELAY_CTRL = {'ea', 'eb', 'en', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'ck_o', 'ckf', 'ck_s', 'fault', 'ck', 'rs'}
@@ -112,6 +113,18 @@ def age_fields(r, land_k, land_e=None):
         if row is not None and post >= 0 and ks == [int(row.get('K', -1)) % 8] and r['st'] == {int(row.get('n', -1)) + post}:
             return dict(age_edges=LG.lane_cycles(row) + post, landing_k=ks[0],
                         age_basis='lane_groups.lane_cycles: forwarded E + registered landing output + explicit plain post stages')
+        # A die endpoint may also have plain relay flops before the forwarded
+        # lane. Require the walked forwarded instance set to match the GEN
+        # chain exactly; unexplained frame counts alone never establish age.
+        stations = row.get('stations') if row else None
+        plain = r.get('plain_counts', set())
+        if (stations and len(stations) == int(row.get('n', -1)) and post >= 0
+                and ks == [int(row.get('K', -1)) % 8]
+                and r.get('forwarded_paths') == {frozenset(stations)} and len(plain) == 1
+                and min(plain) >= post and r['st'] == {len(stations) + min(plain)}):
+            return dict(age_edges=LG.lane_cycles(row) + min(plain), landing_k=ks[0],
+                        plain_relay_stages=min(plain),
+                        age_basis='exact GEN forwarded chain + individually walked plain relay flops')
     return dict(age_edges=None, landing_k=ks[0] if len(ks) == 1 else ks,
                 age_basis='landed path: missing lane metadata, mixed paths, or actual K differs from recorded K')
 
@@ -210,7 +223,7 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
             for i in range(na):
                 relay_out[(name, 'a', na - 1 - i)] = outpos.get(na - 1 - i)
     # resolve aliases: ('ALIAS', x) means the load continues on bit x with no stage
-    pairs = {}
+    pairs, path_kinds = {}, {}
 
     def terminal(inst, port, mst):
         if mst == '__alias__':
@@ -243,8 +256,14 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                     continue
                 if skip_pin(li, lp, lm):
                     continue
-                r = pairs.setdefault((si, sp, li, lp), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set()))
+                if seen not in path_kinds:
+                    forwarded = frozenset(q for q in seen if FORWARDED_RE.match(inst_master[q]))
+                    path_kinds[seen] = (forwarded, len(seen) - len(forwarded))
+                forwarded, plain = path_kinds[seen]
+                r = pairs.setdefault((si, sp, li, lp), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
+                                                           forwarded_paths=set(), plain_counts=set()))
                 r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands)
+                r['forwarded_paths'].add(forwarded); r['plain_counts'].add(plain)
     recs = []
     feeders = defaultdict(list)
     for (si, sp, li, lp) in pairs:

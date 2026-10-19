@@ -76,6 +76,13 @@ class NetlistWalk(unittest.TestCase):
         self.assertEqual(metadata['land']['K'], 0)
         self.assertEqual(N.age_fields(dict(st={15}, lands={('land',)}), {'land': 0}, metadata)['age_edges'], 9)
 
+    def test_walked_plain_prefix_requires_exact_forwarded_chain(self):
+        row = dict(E=3, K=3, cal=0, n=2, stations=['hop', 'land'], post_stages=1)
+        record = dict(st={6}, lands={('land',)}, forwarded_paths={frozenset(['hop', 'land'])}, plain_counts={4})
+        self.assertEqual(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'], 8)
+        record['forwarded_paths'] = {frozenset(['foreign_hop', 'land'])}
+        self.assertIsNone(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'])
+
     def test_shared_age_source_on_compute_seam(self):
         import record_bundles as RB
         f = ROOT / 'results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam'
