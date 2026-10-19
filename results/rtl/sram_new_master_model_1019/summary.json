@@ -1,0 +1,48 @@
+{
+  "qwen": {
+    "signal_count": 206,
+    "PG_count": 44,
+    "via_count": 408,
+    "new_outline_nm": [
+      52440,
+      21192
+    ],
+    "delta_area_um2": 2.51712,
+    "core_contained": true,
+    "old_nonrectangular_metal_components": 206,
+    "minimum_parallel_gap_nm": {
+      "M4": 50,
+      "M5": 72
+    },
+    "boundary_density_pins_per_um": {
+      "W": 4.860324650811627,
+      "E": 4.860324650811627
+    },
+    "scalar_failures": 0,
+    "spacing_failures": 0,
+    "wide_PRL_failures": 0
+  },
+  "sc2": {
+    "signal_count": 437,
+    "PG_count": 77,
+    "via_count": 870,
+    "new_outline_nm": [
+      216840,
+      43800
+    ],
+    "delta_area_um2": 10.40832,
+    "core_contained": true,
+    "old_nonrectangular_metal_components": 872,
+    "minimum_parallel_gap_nm": {
+      "M4": 50,
+      "M5": 72
+    },
+    "boundary_density_pins_per_um": {
+      "W": 5.0,
+      "E": 4.9771689497716896
+    },
+    "scalar_failures": 0,
+    "spacing_failures": 0,
+    "wide_PRL_failures": 0
+  }
+}
