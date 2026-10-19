@@ -1,0 +1,8 @@
+ot-run: ot-epyc5       admits   755 GB (avail 670, growth 142, headroom 0, waiters 0/0 GB) load 65/128 running 17 disk 1846 GB 
+ot-run: -> ot-epyc5
+ot-heavy: request 48G is charged 10G (class 'coll_lanes.py' measured peak 1.2G, n=1+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2496497-1792392065 after 0 s
+4 {"2": [3142.8, 3060.3, 1530.1], "4": [3363.5, 4365.3, 1091.3], "6": [3519.3, 5153.7, 858.9]} 1905.4
+5 {"2": [3226.9, 3132.0, 1566.0], "4": [3459.9, 4481.6, 1120.4], "6": [3625.1, 5334.6, 889.1]} 1949.7
+8 {"2": [3312.4, 3198.4, 1599.2], "4": [3559.2, 4598.7, 1149.7], "6": [3732.2, 5516.0, 919.3]} 2011.7
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2496497-1792392065): exit 0
