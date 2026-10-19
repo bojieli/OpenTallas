@@ -1,0 +1,80 @@
+%Warning-WIDTHEXPAND: ../src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:138:26: Operator SUB expects 24 bits on the LHS, but LHS's VARREF 'p_k' generates 18 bits.
+                                                                              : ... note: In instance 'tb_programme_held_user_join.dut'
+  138 |             q_s2 <= (p_k - 1'b1) * p_xks;
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: ../src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:181:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STATIC_SCHEDULE' generates 32 bits.
+                                                                             : ... note: In instance 'tb_programme_held_user_join.dut'
+  181 |     wire [AW-1:0]    w_a   = STATIC_SCHEDULE ? ((s1_a&{AW{s1_v}})|(a1_a&{AW{a1_v}})) : s1_v ? s1_a : use_q ? kq_a[0] : a1_a;
+      |                                              ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: ../src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:182:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STATIC_SCHEDULE' generates 32 bits.
+                                                                             : ... note: In instance 'tb_programme_held_user_join.dut'
+  182 |     wire [63:0]      w_m   = STATIC_SCHEDULE ? ((s1_m&{64{s1_v}})|({48'd0,a1_m}&{64{a1_v}})) : s1_v ? s1_m : use_q ? {48'd0, kq_m[0]} : {48'd0, a1_m};
+      |                                              ^
+%Warning-WIDTHTRUNC: ../src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:183:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STATIC_SCHEDULE' generates 32 bits.
+                                                                             : ... note: In instance 'tb_programme_held_user_join.dut'
+  183 |     wire [64*32-1:0] w_d   = STATIC_SCHEDULE ? ((s1_d&{2048{s1_v}})|({1536'd0,a1_d}&{2048{a1_v}})) : s1_v ? s1_d : use_q ? {1536'd0, kq_d[0]} : {1536'd0, a1_d};
+      |                                              ^
+%Warning-WIDTHEXPAND: ../src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:239:63: Operator NEQ expects 18 bits on the LHS, but LHS's VARREF 'p_xcs' generates 12 bits.
+                                                                              : ... note: In instance 'tb_programme_held_user_join.dut'
+  239 |                 (NATIVE_AFFINE!=0 && p_v && (p_xks!=1 || p_xcs!=p_k ||
+      |                                                               ^~
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:31:37: Operator OR expects 32 bits on the LHS, but LHS's CONST '24'h400000' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   31 |       lane_a[24*lane+:24]=24'h400000|(sa+lane);
+      |                                     ^
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:31:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'sa' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   31 |       lane_a[24*lane+:24]=24'h400000|(sa+lane);
+      |                                         ^
+%Warning-WIDTHTRUNC: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:31:26: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_programme_held_user_join'
+   31 |       lane_a[24*lane+:24]=24'h400000|(sa+lane);
+      |                          ^
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:32:55: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'sa' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   32 |       source_data[32*lane+:32]={16'(16'h3e00+((seed*17+sa-producer+lane)%1024)),16'd0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:32:58: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'producer' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   32 |       source_data[32*lane+:32]={16'(16'h3e00+((seed*17+sa-producer+lane)%1024)),16'd0};
+      |                                                          ^
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:35:100: Operator SHIFTR expects 28 bits on the LHS, but LHS's VARREF 'xb' generates 24 bits.
+                                                                                       : ... note: In instance 'tb_programme_held_user_join'
+   35 |   qfd_dv_stream stream(.ck(ck),.rst_n(rst),.sid(4'd0),.cfg_v(pv),.cfg_dir(2'd1),.cfg_tag(28'd1|((xb>>16)<<6)),.sw_i(1088'd0),.se_i(1088'd0),.so_e(),.so_w(),.xw_we(sv?8'hff:8'd0),.xw_addr(lane_a),.xw_data(source_data),.tw_we(),.tw_kind(),.tw_addr(),.tw_data(),.xt_v(xt_v),.xt_a(xt_a),.xt_d(xt_d),.xt_bad(xt_bad),.fault(stream_fault));
+      |                                                                                                    ^~
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:44:39: Operator ADD expects 32 bits on the LHS, but LHS's CONST '16'h3e00' generates 16 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   44 |       expected_data[16*i+:16]=16'h3e00+((seed*17+64*case_got+i)%1024);
+      |                                       ^
+%Warning-WIDTHTRUNC: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:44:30: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_programme_held_user_join'
+   44 |       expected_data[16*i+:16]=16'h3e00+((seed*17+64*case_got+i)%1024);
+      |                              ^
+%Warning-WIDTHEXPAND: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:61:27: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'producer' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_programme_held_user_join'
+   61 |           sv=1;sa=producer+8*j;
+      |                           ^
+%Warning-WIDTHTRUNC: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:61:18: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_programme_held_user_join'
+   61 |           sv=1;sa=producer+8*j;
+      |                  ^
+%Warning-WIDTHTRUNC: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:75:5: Logical operator IF expects 1 bit on the If, but If's VARREF 'errors' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_programme_held_user_join'
+   75 |     if(errors)$fatal(1,"PROGRAMME_HELD_USER_JOIN_FAIL");
+      |     ^~
+make: Entering directory '/srv/opentallas-scratch/claude/qwen-calendar-integration-1019/run/held_user_obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb_programme_held_user_join.cpp Vtb_programme_held_user_join___024root__0.cpp Vtb_programme_held_user_join__main.cpp Vtb_programme_held_user_join__ConstPool__0__Slow.cpp Vtb_programme_held_user_join___024root__Slow.cpp Vtb_programme_held_user_join___024root__0__Slow.cpp Vtb_programme_held_user_join__Syms__Slow.cpp > Vtb_programme_held_user_join__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb_programme_held_user_join__ALL.o Vtb_programme_held_user_join__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_programme_held_user_join__ALL.a    -pthread -lpthread -latomic   -o Vtb_programme_held_user_join
+rm Vtb_programme_held_user_join__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/qwen-calendar-integration-1019/run/held_user_obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.298 MB sources in 16 modules, into 0.602 MB in 7 C++ files needing 0.000 MB
+- Verilator: Walltime 2.781 s (elab=0.006, cvt=0.028, bld=2.733); cpu 0.054 s on 4 threads; allocated 50.430 MB

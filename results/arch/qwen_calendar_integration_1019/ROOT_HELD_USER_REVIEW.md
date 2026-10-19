@@ -72,3 +72,22 @@ calendar-copy digest, not an installed or authenticated production digest. It
 also prices128 partial-record assembly bits and the loaded-mask/loader state
 as additional to the earlier template and dynamic-state lower bounds. Current
 public PW and all actual receiver images remain unchanged.
+
+Selected held-user source now has an isolated default-off component,
+qfd_dv_held_user_xbase.sv. It snapshots two2-bit users and one16-bit context
+epoch, tracks two active lifetimes and sticky fault:23 declared FF/reset/clock
+pins. It inserts only user bits16..17 after exact canonical/class qualification;
+there is no address adder or indexed storage. A native stream→tap test passes
+576 source certificate cases/23040 BF16 publications, asserting both ME and XPF
+addresses and exact default-off behavior. Ten mutants reject address/user
+errors, replacement during a live lifetime, early retirement, wrong epoch,
+missing authentication/profile and noncanonical base.
+
+The source inputs are diagnostic contracts: publication, profile/all-copy auth,
+context epoch and final ME-read/XPF-use witnesses are not yet connected to
+production. The test's ME retirement is a diagnostic assertion after provider
+publication, not a real ME last-read proof. No wrapper or external API is
+activated. Prior storage models reserved six held-user/valid bits; retaining
+this independent component adds17 bits for held epoch and independent fault.
+Adjusted candidate totals would be2202FF+SRAM or3305FF, before physical mapping.
+No free sharing with the collector epoch/fault state is assumed.

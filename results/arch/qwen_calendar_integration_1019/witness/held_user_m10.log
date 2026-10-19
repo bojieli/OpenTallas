@@ -1,0 +1,4 @@
+PROGRAMME_HELD_USER_JOIN cases=576 got=23040 expected=23040 errors=577 fault=1 mut=10
+[1946920000] %Fatal: tb_programme_held_user_join.sv:75: Assertion failed in tb_programme_held_user_join: PROGRAMME_HELD_USER_JOIN_FAIL
+%Error: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:75: Verilog $stop
+Aborting...

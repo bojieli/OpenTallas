@@ -1,0 +1,8 @@
+NAMESPACE_DATA_MISMATCH case=2 word=0 seed=1 got=3e503e4f3e4e3e4d want=3e503e4f3e4e3e4d
+NAMESPACE_DATA_MISMATCH case=2 word=1 seed=1 got=3e903e8f3e8e3e8d want=3e903e8f3e8e3e8d
+NAMESPACE_DATA_MISMATCH case=2 word=2 seed=1 got=3ed03ecf3ece3ecd want=3ed03ecf3ece3ecd
+NAMESPACE_DATA_MISMATCH case=2 word=3 seed=1 got=3f103f0f3f0e3f0d want=3f103f0f3f0e3f0d
+PROGRAMME_HELD_USER_JOIN cases=576 got=22752 expected=23040 errors=4321 fault=1 mut=4
+[1946920000] %Fatal: tb_programme_held_user_join.sv:75: Assertion failed in tb_programme_held_user_join: PROGRAMME_HELD_USER_JOIN_FAIL
+%Error: ../src/rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv:75: Verilog $stop
+Aborting...

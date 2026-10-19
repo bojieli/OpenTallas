@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.qwen.held-user-xbase-source-component.v1",
+  "production_bound": false,
+  "default_ENABLE": 0,
+  "wrapper_instantiated": false,
+  "source_case_count": 576,
+  "native_BF16_publications": 23040,
+  "mutants_rejected": 10,
+  "declared_state_bits": {
+    "ME_user": 2,
+    "XPF_user": 2,
+    "context_epoch": 16,
+    "ME_active": 1,
+    "XPF_active": 1,
+    "fault": 1
+  },
+  "total_state_bits": 23,
+  "clock_pins": 23,
+  "reset_pins": 23,
+  "indexed_memory_bits": 0,
+  "namespace_scope": "exact-class canonical ME and XPF base bit insertion; actual stream\u2192tap address/payload publication, no Qwen arithmetic or real ME reads",
+  "diagnostic_inputs": [
+    "publication and context epoch",
+    "profile_matches and all_copies_authenticated",
+    "ME final-read and XPF final-use retirement witnesses"
+  ],
+  "source_inputs_bound_to_production": false,
+  "new_external_API_activated": false,
+  "existing_storage_model_held_user_valid_reservation_bits": 6,
+  "additional_bits_if_independent_fault_and_epoch_retained": 17,
+  "adjusted_storage_model_options_if_component_kept": {
+    "native_SRAM_FF": 2202,
+    "finite_FF": 3305
+  },
+  "binary_sha256": "87773cdf92594e793b015c4f543e5a411955025afb5e0c3152db91a91620a322",
+  "sha256": {
+    "rtl/qwen_dv/qfd_dv_held_user_xbase.sv": "4bf026fe65e1f9c989b8205f3759a1be246745345439be62d4d644b0819bf56d",
+    "rtl/test/mu_qwen_seq/tb_programme_held_user_join.sv": "f466b58076cd6a3b07f48055c59231f3d06cd2e80de00784360aa7d4a4ba9911",
+    "results/arch/qwen_calendar_integration_1019/held_user_native.sh": "7781ad9918430b9b3b53f312be56c282e674fd27c3fa5cdd30f4de89fd038bca",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m3.log": "5dbc17af6f39138072022c8c857c8c7242589a2ced6ecbcca306f8392fee6ec7",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m7.log": "b31b001bd8cbf34f858cad8b608e6cee0cc7e43029d03bbc240ff97c9a342274",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m1.log": "1d01fb86edf442aa23b4a13819e9976986034af83a9968286e3785c9c7ffac09",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m10.log": "2bcb4ffb3a9550ecc25ed9dfa94d243b23e27603462fb74ebced8c4988be46db",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m6.log": "b6d7cdda4e51f8cdb224755dde06af26f5dd5f018610dd7a6a6ec3a5f4d933db",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m8.log": "3d0473286960c0a3e9cd862e56d852413a297e678044dd1d5ad9f69cbd1fccc4",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m0.log": "fb75c74db1859b76a850bf38a8d7d73ec2ea3b9f7c7e0596914f94af1db19816",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m2.log": "c948325c839aa825d1a2640f589c25844772df12923f579005f85300234faa83",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m5.log": "09109b8068789265389c8deb7cbba858dbaeb6d7dfef2c37064617c272bc4eb2",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m9.log": "e5acb437e10bb0f3d6d81e4487b9de7654463d94129efd4e8de42cf071eeca45",
+    "results/arch/qwen_calendar_integration_1019/witness/held_user_m4.log": "e84183d5e4be28b45a10c5ebf6a14dd6afe7c664bee39c378d1f86d3779bf036"
+  }
+}
