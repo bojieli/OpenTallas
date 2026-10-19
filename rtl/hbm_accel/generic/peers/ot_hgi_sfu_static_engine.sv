@@ -19,7 +19,11 @@
 // opcodes fault and must dispatch through a real full-lane/side engine.
 module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  // HBM-SAFE-K9 (10-19): passed to the operand store (WPIPE bank-write landing stage, GCLK per-group regional roots)
- parameter integer WPIPE=0, GCLK=0)(
+ parameter integer WPIPE=0, GCLK=0,
+ // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate)
+ parameter integer WROT=0,
+ // LH-SU (10-19): lane_map pass-ring one-hot replication (ot_hdc_delay_ring OHREP)
+ parameter integer PASS_OHREP=0)(
  input wire clk,rst_n,
  input wire [4:0] clk_grp,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
@@ -55,14 +59,14 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  wire [383:0] vm_addr;
  wire [511:0] vm_data;
  wire store_fault;
- ot_hgi_sfu_static_quarter u_arithmetic(
+ ot_hgi_sfu_static_quarter #(.PASS_OHREP(PASS_OHREP)) u_arithmetic(
   .clk_control(clk),.rst_control_n(rst_n),.compiler_control(compiler_control),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .vi_q(vi_q),.rd_q(rd_q),.vi_re(vi_re),.vi_addr(vi_addr),
   .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.ro_v(ro_v),.ro_x(ro_x),
   .fault(lane_fault),.coll(lane_coll));
- ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK)) u_memory(
+ ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT)) u_memory(
   .clk(clk),.rst_n(rst_n),.clk_grp(clk_grp),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),

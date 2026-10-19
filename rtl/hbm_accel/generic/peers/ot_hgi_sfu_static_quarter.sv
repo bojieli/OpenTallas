@@ -18,7 +18,8 @@
 // Reduction results are exposed for an external compiler-scheduled reducer;
 // this block does not silently implement the old dynamic reduction controller.
 module ot_hgi_sfu_static_quarter #(
- parameter integer BTREE=0
+ parameter integer BTREE=0,
+ parameter integer PASS_OHREP=0   // LH-SU (10-19): lane_map pass-ring one-hot replication
 )(
  input wire clk_control,rst_control_n,
  input wire [1741:0] compiler_control,
@@ -43,7 +44,7 @@ module ot_hgi_sfu_static_quarter #(
 `else
  wire [1741:0] grid_control=control;
 `endif
- ot_hgi_sfu_arithmetic_grid #(.BTREE(BTREE)) u_grid(
+ ot_hgi_sfu_arithmetic_grid #(.BTREE(BTREE),.PASS_OHREP(PASS_OHREP)) u_grid(
  .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
  .control(grid_control),.vi_q(vi_q),.rd_q(rd_q),
  .vi_re(vi_re),.vm_we(vm_we),.kv_we(kv_we),.ro_v(ro_v),.fault(fault),.coll(coll),

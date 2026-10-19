@@ -25,7 +25,16 @@ module ot_hgi_sfu_core_split3 #(
  //   regional roots clk_st[4:0] (same die clock, neighbour-matched entries like clk_lane / clk_map); clk keeps the
  //   bridge + engine control. Crossings are flop-to-flop and judged per child pair (TT/FF spread <= 80 ps).
  parameter integer WPIPE=1,
- parameter integer GCLK=1
+ parameter integer GCLK=1,
+ // LH-SU (10-19, safe-design items 3/4/6; k9 default 1): WROT=1 bank-aligns every VM stage sector ONCE in the operand
+ //  store (a shared rotate by the sector's low address bits, after the WPIPE register), so each operand bank selects
+ //  among the 8 sectors' slot-b words (8:1 one-hot priority) instead of all 64 sector words with a per-word add and
+ //  decode: cuts the 735 ps / 20-level WPIPE sa_q -> bank w_addr_in stage and the 2,048-bit x 64-bank write
+ //  crossbar to 256 bits per bank. Pure restructuring: same edges, same last-sector-wins / collision-fault behaviour.
+ parameter integer WROT=1,
+ // LH-SU (10-19, safe-design item 3; k9 default 16): the 16 lane maps' 460-bit pass rings keep one one-hot copy per
+ //  16 bits (29 copies x 3 flops per lane) instead of one shared one-hot driving 1,381 loads. Same edges.
+ parameter integer PASS_OHREP=16
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [4:0] clk_st,
@@ -50,7 +59,7 @@ module ot_hgi_sfu_core_split3 #(
  wire [7:0] a_vi_re_w,a_vi_re_e,a_ro_v_w,a_ro_v_e,a_kv_we_w,a_kv_we_e;
  wire [191:0] a_vi_addr_w,a_vi_addr_e,a_kv_waddr_w,a_kv_waddr_e;
  wire [255:0] a_ro_x_w,a_ro_x_e,a_kv_wdata_w,a_kv_wdata_e;
- ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK)) u_core(
+ ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP)) u_core(
   .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_st(clk_st),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .io_word(io_word),.compiler_control(compiler_control),

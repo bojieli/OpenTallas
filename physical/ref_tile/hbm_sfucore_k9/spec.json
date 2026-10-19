@@ -1536,6 +1536,18 @@
      "verilator"
     ],
     "fail_witness": "results/rtl/hbm_safe_k9_1019/bench_witness/split_mutant_wpskew.log"
+   },
+   {
+    "name": "split_mutant_wrot",
+    "cmd": "OUT={RUN}/bench/wrot SFU_LG_R=23 CORE3=1 SYNC_RST=1 EQ_MUT=wrot bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wrot/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_safe_k9_1019/bench_witness/split_mutant_wrot.log"
    }
   ],
   "extra_paths": [

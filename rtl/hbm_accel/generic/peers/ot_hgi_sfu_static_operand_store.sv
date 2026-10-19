@@ -25,7 +25,12 @@ module ot_hgi_sfu_static_operand_store #(
  // (priced: SFU calendar write-landing +1; reads stay at their edges). GCLK=1: group g (0-3 operand, 4 output) runs on
  // its own regional root clk_grp[g] (its 16 macros + bank/crossbar logic sit in one floorplan column). Defaults 0 keep
  // every other user bit-identical (clk_grp unused).
- parameter integer WPIPE=0, GCLK=0
+ parameter integer WPIPE=0, GCLK=0,
+ // LH-SU (10-19, safe-design items 3/4/6): WROT=1 bank-aligns each of the 8 stage sectors ONCE here (shared by the
+ // four operand groups): slot b of sector s = the word j = (b - addr_lo) mod 16 when j < 8 (its mask bit), with the
+ // row hi or hi+1 (wrap = b < addr_lo). Each group bank then takes the highest-numbered sector hitting it (the same
+ // last-writer-wins order and same-bank collision fault as the per-word loop). Same edges; no schedule change.
+ parameter integer WROT=0
 )(
  input wire clk,rst_n,
  input wire [4:0] clk_grp,
@@ -108,6 +113,31 @@ module ot_hgi_sfu_static_operand_store #(
   assign w_stage_v=stage_v; assign w_stage_group=stage_group; assign w_stage_addr=stage_addr; assign w_stage_mask=stage_mask;
   assign w_stage_data=stage_data; assign w_vm_we=vm_we; assign w_vm_waddr=vm_waddr; assign w_vm_wdata=vm_wdata;
  end endgenerate
+ // ---- shared bank-aligned sector rotate (WROT)
+ localparam integer RBS=LWB-4;
+ wire [8*16*32-1:0] swr_d; wire [8*16-1:0] swr_m, swr_w; wire [8*RBS-1:0] swr_r0, swr_r1;
+ generate if(WROT)begin:g_wrot
+  for(genvar s=0;s<8;s=s+1)begin:g_s
+   wire [3:0] lo=w_stage_addr[LWB*s+:4];
+   wire [RBS-1:0] hi=w_stage_addr[LWB*s+4+:RBS];
+   assign swr_r0[RBS*s+:RBS]=hi;
+   assign swr_r1[RBS*s+:RBS]=hi+1'b1;
+   for(genvar b=0;b<16;b=b+1)begin:g_b
+    localparam [3:0] B4=b;
+`ifdef OT_SFU_STORE_MUT_WROT
+    // bench negative control: the rotate is off by one bank (every staged word lands in the neighbouring bank)
+    wire [3:0] d=B4-lo-4'd1;
+`else
+    wire [3:0] d=B4-lo;
+`endif
+    assign swr_m[16*s+b]=!d[3] && w_stage_mask[8*s+d[2:0]];
+    assign swr_w[16*s+b]=(B4<lo);
+    assign swr_d[32*(16*s+b)+:32]=w_stage_data[256*s+32*d[2:0]+:32];
+   end
+  end
+ end else begin:g_nowrot
+  assign swr_d=0; assign swr_m=0; assign swr_w=0; assign swr_r0=0; assign swr_r1=0;
+ end endgenerate
  wire [4:0] gck;
  for(genvar g=0;g<5;g=g+1)begin:g_gck
   assign gck[g]=GCLK?clk_grp[g]:clk;
@@ -132,10 +162,11 @@ module ot_hgi_sfu_static_operand_store #(
    assign sw[b]=w_stage_v[b] && w_stage_group[2*b+:2]==g;
   end
   ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(LWB),.AW(24),.NLW(0),
-   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8)) u_group(
+   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT)) u_group(
    .clk(gck[g]),.rst_n(rst_n),.rq(req),.rr(req),.ra(addr),.rd(data),
    .sr_v(8'd0),.sr_addr({8*LWB{1'b0}}),.sr_d(),.sr_rv(),
    .sw_v(sw),.sw_addr(w_stage_addr),.sw_mask(w_stage_mask),.sw_d(w_stage_data),
+   .swr_d(swr_d),.swr_m(swr_m),.swr_w(swr_w),.swr_r0(swr_r0),.swr_r1(swr_r1),
    .lw(1'b0),.lwa(24'd0),.lwd(32'd0),.s1_v(1'b0),.s1_a({LWB{1'b0}}),.s1_d(32'd0),
    .flt(group_fault[g]));
  end

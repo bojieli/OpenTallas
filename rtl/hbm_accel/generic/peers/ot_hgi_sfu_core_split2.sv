@@ -30,7 +30,11 @@ module ot_hgi_sfu_core_split2 #(
  parameter integer DRAIN_PIPE=0,
  // HBM-SAFE-K9 (10-19): WPIPE / GCLK passed to the operand store (bank-write landing stage; per-group store roots
  // clk_st[4:0]). Defaults 0 keep k7/k8/k9 bit-identical (clk_st unused).
- parameter integer WPIPE=0, GCLK=0
+ parameter integer WPIPE=0, GCLK=0,
+ // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate). Default 0 = bit-identical.
+ parameter integer WROT=0,
+ // LH-SU (10-19): lane_map pass-ring one-hot replication passed to the engine. Default 0 = bit-identical.
+ parameter integer PASS_OHREP=0
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [4:0] clk_st,
@@ -130,7 +134,7 @@ module ot_hgi_sfu_core_split2 #(
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
- ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK)) u_engine(
+ ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP)) u_engine(
   .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),

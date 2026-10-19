@@ -2,7 +2,9 @@
 `default_nettype none
 // Adapter for CLOSED ot_su12_sfu, whose lane index is physically fixed at5.
 // Four registered edges; native broadcast/retirement must price and bind them.
-module ot_hgi_sfu_lane_map #(parameter integer MUT_LANE=0) (
+module ot_hgi_sfu_lane_map #(parameter integer MUT_LANE=0,
+ // LH-SU (10-19): PASS_OHREP > 0 replicates the pass ring's one-hot per PASS_OHREP bits (ot_hdc_delay_ring OHREP)
+ parameter integer PASS_OHREP=0) (
  input wire clk, rst_n,
  input wire [3:0] lane_j,
  input wire [479:0] ld_terms,
@@ -24,7 +26,7 @@ module ot_hgi_sfu_lane_map #(parameter integer MUT_LANE=0) (
  reg [79:0] meta1,meta2;
  // ld is control, not retained payload: reset must not replay a ring slot.
  reg [3:0] ld_pipe;
- ot_hdc_delay_ring #(.W(460),.D(4),.RING(3)) u_pass (.clk(clk),.rst_n(rst_n),.d(i_pass[459:0]),.q(o_pass[459:0]));
+ ot_hdc_delay_ring #(.W(460),.D(4),.RING(3),.OHREP(PASS_OHREP)) u_pass (.clk(clk),.rst_n(rst_n),.d(i_pass[459:0]),.q(o_pass[459:0]));
  assign o_pass[460]=ld_pipe[3];
  reg [23:0] term1[0:19],pair2[0:9];
  always @(posedge clk) begin
