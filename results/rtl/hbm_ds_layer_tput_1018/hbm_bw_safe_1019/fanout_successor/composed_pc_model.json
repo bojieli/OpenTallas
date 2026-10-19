@@ -77,5 +77,13 @@
     "sram_ports_added": 0,
     "reset": "24validFF use bank reset_regions[4*g], same release edge; head identities unreset as existing",
     "status": "modeled before RTL; exact proof and actual mapped census pending"
+  },
+  "bridge_reset_pop_successor": {
+    "actual_f84_failure": "_53294 NAND2 root46 loads; upstream only PORTkr_rdy and rst_l1_bridge",
+    "change": "Internal pop qualifier omits redundant synchronous reset factor: reset dominates all canonical/local count and RP state updates. External out_v/in_rdy and push/reset behavior unchanged. Each out_rdy now directly feeds18localvalid gates pluscanonical.",
+    "added_ff": 0,
+    "added_data_edges": 0,
+    "reset_proof": "During !rst all pop consumers count/rp reset; no mem write depends on pop. Canonical fault reset dominates. Occupied-reset native producer exact proof+mutants required.",
+    "status": "model before RTL; actual combined census pending"
   }
 }

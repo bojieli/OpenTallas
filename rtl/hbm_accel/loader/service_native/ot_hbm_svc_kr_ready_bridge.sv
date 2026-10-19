@@ -21,11 +21,13 @@ module ot_hbm_svc_kr_ready_bridge #(parameter integer WIDTH=277,MUT=0,REGIONAL_V
  wire[N-1:0]push_regions,pop_regions,valid_regions;
  for(genvar r=0;r<N;r=r+1)begin:g_control
   assign push_regions[r]=rst_n&&((REGIONAL_VALID!=0)?in_v_regions[r]:in_v)&&((MUT==1)?in_rdy:ready_prev_regions[r]);
-  assign pop_regions[r]=rst_n&&valid_regions[r]&&out_rdy;
+  // Pop is internal: all ring count/RP consumers reset with priority.
+  // Omitting redundant reset factoring keeps consumer ready local.
+  assign pop_regions[r]=valid_regions[r]&&out_rdy;
  end
  ot_hbm_svc_ring_bw_safe #(.WIDTH(WIDTH),.DEPTH(3),.REGIONAL(1)) u_ring(
   .clk(clk),.rst_n(rst_n),.in_v(push),.in_data(in_data),
-  .out_v(out_v),.pop(rst_n&&out_v&&out_rdy),.out_data(out_data),
+  .out_v(out_v),.pop(out_v&&out_rdy),.out_data(out_data),
   .cnt(occupancy),.cnt_next(next_count),.fault(fault),
   .in_v_regions(push_regions),.pop_regions(pop_regions),.out_v_regions(valid_regions));
 endmodule
