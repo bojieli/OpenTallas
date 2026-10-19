@@ -5,14 +5,16 @@
 // calendar replay). The compiler image cal.mem / rec.txt / pre.mem / chk.mem come from tools/hbm_next/hnx_idx_union_vectors.py
 // (golden tools/hbm_next/isa_rows.idx_union). Checks: every done/fault edge equals the compiled edge, every output sector
 // (O, D, R tables, untouched neighbour words included) equals the golden, slice status 0. MUT: the engine's mutants.
+// 10-19: current SW slice ABI (H-NETLIST 0600 04fad9220: NC 3->2, local clients 0 ARGMAX / 1 IDX, code 2 replay): the
+// idx packet client is 1 (cq 676 / cr 548 / client_seq 6 / response 3); the H-MTP2 bench (client 2 of NC 3) predates it.
 module tb_hnx_idx_union;
     parameter integer MUT = 0;
     localparam integer NE = 16384, NPRE = 4096, NCHK = 1024, NREC = 64;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
     // slice calendar / ports
-    reg [1013:0] cq_all = 0; wire [821:0] cr_all;
-    reg [7:0] client_seq = 0; reg [3:0] response_enable = 0; reg [7:0] response_seq = 0;
+    reg [675:0] cq_all = 0; wire [547:0] cr_all;
+    reg [5:0] client_seq = 0; reg [2:0] response_enable = 0; reg [5:0] response_seq = 0;
     reg [7:0] bank_enable = 0; reg [15:0] bank_client = 0;
     reg [7:0] rslot_v = 0, wslot_v = 0; reg [23:0] rslot = 0, wslot = 0;
     reg [679:0] rq_bench = 0; wire [679:0] rq; wire [10279:0] rr;
@@ -25,10 +27,10 @@ module tb_hnx_idx_union;
     wire [135:0] vm_rq; wire [337:0] cq; wire [1:0] cq_seq; wire busy, done, fault;
     ot_hnx_idx_union_static #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .sid(2'd0), .go(go), .k(k), .n_rows(nr),
         .experts(ex), .pitch_k(kk), .a_mirror(a_mirror), .a_base(a_base), .a_str(a_str), .o_base(o_base), .d_base(d_base),
-        .r_base(r_base), .vm_rq(vm_rq), .vm_rr(rr[4*2056 +: 2056]), .cq(cq), .cq_seq(cq_seq), .cr(cr_all[2*274 +: 274]),
+        .r_base(r_base), .vm_rq(vm_rq), .vm_rr(rr[4*2056 +: 2056]), .cq(cq), .cq_seq(cq_seq), .cr(cr_all[1*274 +: 274]),
         .busy(busy), .done(done), .fault(fault));
     assign rq = {vm_rq, rq_bench[4*136-1:0]};   // IDX is the top read group (4 of 0..4)
-    always @* begin cq_all = 0; cq_all[2*338 +: 338] = cq; client_seq = 0; client_seq[4 +: 2] = cq_seq; end
+    always @* begin cq_all = 0; cq_all[1*338 +: 338] = cq; client_seq = 0; client_seq[2 +: 2] = cq_seq; end
     hfd_hgi_vms_static_SW slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
         .cq(cq_all), .cr(cr_all), .client_seq(client_seq), .response_enable(response_enable), .response_seq(response_seq),
         .bank_enable(bank_enable), .bank_client(bank_client), .hub_ring_enable(2'd0), .hub_ring_client(4'd0),
@@ -101,10 +103,10 @@ module tb_hnx_idx_union;
             response_enable = 0; response_seq = 0; go = 0;
             for (b = 0; b < 8; b = b + 1) begin
                 if (cal[e][b]) begin rslot_v[b] = 1; rslot[b*3 +: 3] = 3'd4; end
-                if (cal[e][8+b]) begin bank_enable[b] = 1; bank_client[b*2 +: 2] = 2'd2; end
+                if (cal[e][8+b]) begin bank_enable[b] = 1; bank_client[b*2 +: 2] = 2'd1; end
                 if (cal[e][16+b]) begin wslot_v[b] = 1; wslot[b*3 +: 3] = 3'd4; end
             end
-            if (cal[e][26]) begin response_enable[2] = 1; response_seq[4 +: 2] = cal[e][25:24]; end
+            if (cal[e][26]) begin response_enable[1] = 1; response_seq[2 +: 2] = cal[e][25:24]; end
             for (rec_i = 0; rec_i < nrec; rec_i = rec_i + 1) if (rG[rec_i] == e) begin
                     fd = $fopen("rec.txt", "r"); rc = $fscanf(fd, "%d %d\n", i, i);
                 for (i = 0; i <= rec_i; i = i + 1)
