@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   953 GB (avail 780, growth 113, headroom 0, waiters 0/0 GB) load 92/128 running 38 disk 315 GB 
+ot-run: ot-epyc5       admits   911 GB (avail 751, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 13 disk 1091 GB 
+ot-run: ot-epyc6       admits   404 GB (avail 376, growth 93, headroom 0, waiters 0/0 GB) load 43/128 running 16 disk 6065 GB 
+ot-run: ot-epyc7       admits   745 GB (avail 622, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 18 disk 6461 GB 
+ot-run: ot-epyc8       admits  1173 GB (avail 911, growth 90, headroom 0, waiters 0/0 GB) load 47/128 running 25 disk 365 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-d2d-emb-age-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-d2d-emb-age-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1089010-1792426454 after 0 s
+D2DEMBAGE calendar_sample=222
+D2DEMBAGE slot_pin_sample=225
+D2DEMBAGE_FAIL MUT0 cal222 out-1 slot225 fault0 abort1
+[2400000] %Fatal: tb_d2d_emb_age.sv:90: Assertion failed in tb_d2d_emb_age
+%Error: tb_d2d_emb_age.sv:90: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1089010-1792426454): exit 1

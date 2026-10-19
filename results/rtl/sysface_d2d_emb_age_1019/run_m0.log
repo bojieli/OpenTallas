@@ -1,0 +1,8 @@
+D2DEMBAGE calendar_sample=222
+D2DEMBAGE slot_pin_sample=225
+D2DEMBAGE payload_pin_sample=225 payload=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456789abc
+D2DEMBAGE_PASS MUT0 calendar_to_emb_rx_pin3
+- tb_d2d_emb_age.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 13.746 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

@@ -1,0 +1,6 @@
+D2DEMBAGE calendar_sample=222
+D2DEMBAGE slot_pin_sample=225
+D2DEMBAGE_FAIL MUT1 cal222 out-1 slot225 fault0 abort1 cause08 ep01
+[2400000] %Fatal: tb_d2d_emb_age.sv:90: Assertion failed in tb_d2d_emb_age
+%Error: tb_d2d_emb_age.sv:90: Verilog $stop
+Aborting...

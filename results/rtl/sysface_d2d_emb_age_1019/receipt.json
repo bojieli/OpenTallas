@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.qwen.safe3-embedding-age.v1",
+  "source_commit": "b30f8454c6db1309ee4ec7a154943f6c737b43f2",
+  "top": "qfd_d2d_static_ovl",
+  "params": {
+    "PR": 1,
+    "TXDP": "0x0a010308"
+  },
+  "verilator": "5.050",
+  "unit": "oth-ubuntu-1755376-1792426490",
+  "host": "ot-epyc8",
+  "calendar_sample": 222,
+  "emb_rx_pin_sample": 225,
+  "calendar_to_pin_age": 3,
+  "scope": "actual SAFE3 source/core wrapper, CRC valid static single frame; no die lane/provider or productionthroughput claim",
+  "source_hashes": {
+    "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "7de748addb336855cd9f1f3622dd59cff6ac6ff598a06f74e41a6963cceeb07b",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "b9088cd55b37d6a41476db6af7cf0f6d35c851659366a7aed9345439c6051d88",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "6927365f6d204079b19780ce74bbc1dddc6bd051a03d30061d6f6de2a15eb3bd",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  "bench_sha256": "e1de1d81bdc4fdab7fbb2879f7c114bb05cd5cabfcbfe0242c6ee5c2bd79d41c",
+  "early_fdi_mutant": "1edgeearly frame abortcause08; noemb_rx_v",
+  "earlier_fixture_failure": "firstprobe sent frame1edgeearly; preserved separately, no RTL change"
+}
