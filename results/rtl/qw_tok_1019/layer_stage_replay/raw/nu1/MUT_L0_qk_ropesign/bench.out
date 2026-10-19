@@ -1,0 +1,5 @@
+RTL_EXEC_BEGIN /srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu1/obj_n12/Vtb sha256=7ba89595a8c4d2e77ba02e76479b2703237c426caf994cc8f2911ec698b8ce86
+DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=row fixture=L0_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768
+    q: 512/512 mismatches, first (0, 0) got 0xbe2b4303 want 0xbd2223f0
+    k: 109/128 mismatches, first (1, 0) got 0x3db00000 want 0x40e00000
+BENCH_RC 1
