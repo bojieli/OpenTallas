@@ -24,8 +24,8 @@
   },
   {
    "stage": "S2 column matvec (XT1 slice: QKV/O/GU/down on real TP8 L0 ROMs)",
-   "1u": "RUNNABLE (QW-TOK xt1dh2, MU_NU 1)",
-   "4u": "RUNNABLE (QW-TOK xt1dh2, MU_NU 4)",
+   "1u": "PASS 10-19 QW-TOK xt1dh2 MU_NU 1: exact 64/64 at 8:4 and 4:2 (qkv 8, o 24, gu 8, down 24); first_rs 181",
+   "4u": "PASS 10-19 QW-TOK xt1dh2 MU_NU 4: exact 64/64, logs byte-identical to MU_NU 1 (user 0); NOBIND FAIL 0/64; GEN ROM bind audit PASS 768 tiles/7680 macros",
    "missing": "stand-ins: hr/x driven at slice pins (no tt_ctlm, no die relays), one near cluster",
    "owner": "QW-TOK"
   },
