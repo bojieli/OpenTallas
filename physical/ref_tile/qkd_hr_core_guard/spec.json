@@ -95,8 +95,9 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 129.6,
-  "h": 129.6
+  "w": 140.4,
+  "h": 140.4,
+  "exact": true
  },
  "macros": [],
  "pins": {
@@ -190,7 +191,7 @@
    "die_id"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1. | ROOT geometry redesign10-19: 129.6x129.6 ->140.4x140.4um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -218,9 +219,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-RELAYGEN",
-  "branch": "claude/kv-relaygen-guard-1019",
-  "tag": "mu2",
+  "owner": "CODEX:KV-RELAYGEN",
+  "branch": "codex/relaygen-guard-collect-1019",
+  "tag": "mu3",
   "purpose": "MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18) successor of qkd_hr_core_guard r4 (MU 0): u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu (4 user contexts, hc pos[17:16] user strip, in-order retire, pkgctl-MU report; same ports), core rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v (gen_cluster --wrap-only). Records results/rtl/mu_qwen_1018/hroot (+ peer endpoint edit, results/rtl/mu_qwen_1018/peer; benches re-run at Verilator 5.050 on main f573a6d2b: hroot/runs_guard2). Reset landing 2 stages (ROOT-RST default, recipe >= 3).",
   "benches": [
    {
@@ -328,5 +329,20 @@
  },
  "reset_relay_split": {
   "max_loads": 256
+ },
+ "slot_change_request": "KV coordinator/host parent: qkd_hr_core_guard exact childslot changes to140.4x140.4um from129.6x129.6; faces/names unchanged, pin locations redistribute across complete faces. Repack parent from final LEF; added cycles0.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "contract": "KV coordinator/host parent: qkd_hr_core_guard exact childslot changes to140.4x140.4um from129.6x129.6; faces/names unchanged, pin locations redistribute across complete faces. Repack parent from final LEF; added cycles0."
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
+  "2_reach": "PASS: outline140.4x140.4um, maximum diagonal<405um.",
+  "3_fanout": "FIXED: identical KEPT reset copies; order36copies/7982loads/max222, guard18copies/4062loads/max226; each<=256 at synthesis pass. Critical data fanout remains inherited.",
+  "4_depth": "PASS: unchanged guard stage496.8ps<600ps, prior TTsetup+64ps; no added logic in geometry/copy recovery.",
+  "5_storage": "PASS: guard instantiated module closure u_guard dq[8]x40=320bits and bq[8]x32=256bits; native MU context arrays4x163=652bits combined. No runtime-indexed array>2kb or shift delay line. Imported but uninstantiated order boot FIFOs are a separate blocked tile.",
+  "6_floorplan": "FIXED: no macros, one full std-cell band, aspect<=2, exact legalgrid outline140.4x140.4; measured pin counts map<=6/um. Measured synthesis area sizes core40-60%.",
+  "7_clock": "PASS inherited measured spread order20/18.5ps,guard13.1/12.7ps TT/FF; noncentral clock entry is measured within80ps. io_hold_margin0.03. New geometry CTS must remeasure.",
+  "8_schedule": "PASS: geometry and identical reset-copy fanout change no data/reset latency; static accelerator schedule unchanged; host ingress credits are external host protocol."
  }
 }
