@@ -15,7 +15,7 @@
     "cfg_state_bits_added": 337,
     "onehot_selection_bits_added": 128,
     "counter_bits_added": 448,
-    "total_estimated_added_state_bits": 953,
+    "total_estimated_added_state_bits": 889,
     "held_record_bits": 2048,
     "held_operand_bits": 1536,
     "successful_install_added_edges": 0,
@@ -50,5 +50,14 @@
     "edges_added": 0,
     "state_bits_added": 16,
     "proof": "allcopies capture exact n_run, same reset edge; defaultmode unchanged; mapped per-copy roots counted beforegate"
+  },
+  "word_protection": {
+    "basis": "71a hierarchicalmap FFreset eliminated; actualcombprefixes98..165loads from8row/6operand widewrite mux factoring; rptr_next128loads from16decoders",
+    "mechanism": "protected16bitwordmodule per8record/6operand word; addressdecode/prefix drives14word inputpins, eachwordenable<=32actualmuxloads. Replace8bitonehotshadowFF with4bitprivatepointerFFperbank andlocalonehotdecode: same rptr_nextcaptureedge, no new dataedge",
+    "record_operand_storage_bits_changed": 0,
+    "pointer_state_bits_delta": -64,
+    "successful_edges_added": 0,
+    "depth_budget_ps": 600,
+    "admission": "actualnative mapped all-driver/FFroot andlogicdepth proof required; noCTS based onsourceestimates"
   }
 }
