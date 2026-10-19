@@ -101,6 +101,8 @@ def test_compile_l0():
     sid = sl['u_s_0S']['sid']
     for t in tm['templates']:
         m = int(t['payload186'], 16) & 0xFFFF
+        if t['name'].startswith('gu.'):
+            continue                                     # G-unit job words (engine 2 args), not CTL beats
         if t['name'].startswith('vpx.'):
             assert m == 1 << sl[t['name'].split('.')[1]]['sid'], t['name']
         else:
@@ -142,7 +144,9 @@ def test_events_g8():
     T = json.loads((out / 'prog/ctl_templates.json').read_text())['templates']
     rows = [r for j in json.loads((out / 'prog/calendar.json').read_text())['job'] for r in j['rows']]
     ev = sch['events']
-    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in ev if e['kind'] == 'CTL'}
+    # slice-bound CTL beats only (the G-unit's own CTL row beats out of vo_n / vo_s are dir out, payload 'row R ...')
+    ev_ctl = [e for e in ev if e['kind'] == 'CTL' and e['dir'] == 'in']
+    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in ev_ctl}
     sid_of = {v['sid']: k for k, v in die.slices().items()}
     n = 0
     for r in rows:
@@ -155,9 +159,9 @@ def test_events_g8():
             if (m >> sid) & 1 and sl and sl.endswith('N' if r['engine'] == 0 else 'S'):
                 assert (sl, ti, r['issue'] + C.ctl_path(die, sl)['edges']) in ctl, (r, sl)
                 n += 1
-    assert n == sum(1 for e in ev if e['kind'] == 'CTL') and sch['row_ctl_events'] > 0
+    assert n == len(ev_ctl) and sch['row_ctl_events'] > 0
     for e in ev:
-        if e['kind'] == 'CTL':
+        if e['kind'] == 'CTL' and e['dir'] == 'in':
             tn = T[int(e['payload'].split()[1].rstrip(';'))]['name']
             assert tn.endswith(e['tag']), (e, tn)
         if e['kind'] == 'VS':

@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.s81_dv.family_bench.v1",
+ "family": "vpx (vp NORMR / POST coefficient rows)",
+ "layers": ["L0", "L2", "L14", "L20"],
+ "pass": true,
+ "vehicle": "real ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf, tb_s81sl_beat) on the 1M token's real layer chain (tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl, beat 37, L0); the 24 HC coefficients sit in the leaf store exactly as dsdv_gunit_l5 writes them (rows R..R+5 = pre, post, comb 0..3)",
+ "abi_proven": "vp op 7 NORMR a0 = R (hc_pre from leaf row R, imm 0) and POST a0 = R + 1 (post row, then comb rows R+2..R+5); the compiler emits the same op encoding with R = lower_gu GU_ROWS (attn 1000, ffn 1008; leaf store 1024 rows) -- the row number is an address, not part of the proven timing",
+ "scope": "per-leaf NORMR + vn norm + vq act-quant + POST on one beat leaf; NOT the 16-slice xfin NX snake / XQ all-gather (dv_layer_compile GAP_NORM_PRE) and NOT the hc_post y-row placement",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "host": "ot-epyc4 (S81-SLICE/VP, claude/s81-vpnorm-1018 5043d6876, cherry-picked)",
+ "run": "tools/s81_slice/beat_bench.sh <out> base 37 L0",
+ "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv (op 7 NORMR, POST order), bench rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv",
+ "measured_cycles": {"go_to_partial_normr": 115, "go_to_partial_norm_imm": 112, "rstd_to_y0": 18, "rstd_to_xq": 59, "post_cmd_to_last_hw": 63},
+ "base": {"witness": "results/rtl/s81_slice_1017/beat/g_b37/run.log", "verdict": "PASS"},
+ "base_imm": {"witness": "results/rtl/s81_slice_1017/beat/g_b37i/run.log", "verdict": "PASS"},
+ "mutants": [
+  {"name": "mutnormimm (NORMR ignores the row)", "define": "OT_S81SL_VP_MUT_NORMIMM", "failed": true, "witness": "results/rtl/s81_slice_1017/beat/g_mni/run.log"},
+  {"name": "mutpostlast (old POST row order)", "define": "OT_S81SL_VP_MUT_POSTLAST", "failed": true, "witness": "results/rtl/s81_slice_1017/beat/g_mpl/run.log"},
+  {"name": "muttree", "define": "OT_S81SL_MUT_TREE", "failed": true, "witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log"},
+  {"name": "mutcoef", "define": "OT_S81SL_TB_MUT_COEF", "failed": true, "witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log"}
+ ]
+}

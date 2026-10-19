@@ -26,7 +26,7 @@ BUILT RTL of record (origin/main 711fb3da3+; byte-identical files on claude/lb2-
   lep / lanes       ot_s81sl_slice_lep.sv:6-35        off-die rate <= 0.764 beats / cycle (landing FIFO DT 512); flow
                                                      control only inside the lane tiles
 
-hc coefficient path (GAP, RTL): the G-unit HC tail writes its 24 coefficients as six leaf-store rows (dsdv_gunit_l5.sv:7,
+hc coefficient path (FIXED 10-18 by vp op 7 NORMR + POST row order, S81-SLICE 5043d6876; history below): the G-unit HC tail writes its 24 coefficients as six leaf-store rows (dsdv_gunit_l5.sv:7,
 82, 101; order = dsdv_gunit_tail.sv:173-174: row R pre 0..3, R + 1 post 0..3, R + 2..R + 5 comb row-major), but
   * vp NORM takes hc_pre ONLY from the command immediate (ot_s81sl_vp.sv:285 n_pre <= cd_c[159:32]; vn.sv:69): the
     command body is a boot-loaded CTL template (seq_host 0x13) and no unit writes a CTL target-0 body at run time, so
@@ -148,15 +148,15 @@ def a_rows(rank):
 # s_7S (rank d+1), s_0N (rank d+2).
 LEGS = [('u_s_0S', 'W', 'u_s_7S'), ('u_s_7S', 'E', 'u_s_0S'), ('u_s_7N', 'E', 'u_s_0N')]
 
-GAP_PRE = dict(module='ot_s81sl_vp / dsdv_gunit_l5', port='c_d[159:32] NORM imm (ot_s81sl_vp.sv:285) <- leaf-store row R',
-               missing='hc_pre reaches vn only as the NORM command immediate (vp.sv:285, vn.sv:69); the G-unit L5 '
-                       'delivers it as leaf-store row R (gunit_l5.sv:82,101; tail.sv:173): no vp op loads n_pre from a '
-                       'row and no unit writes a CTL target-0 body at run time. Fix: vp op 7 NORMR (a0 = row; n_pre <= '
-                       'row a0 two edges later), re-gate s81dv_leaf (critical prefix)')
-GAP_POST = dict(module='ot_s81sl_vp / dsdv_gunit_l5', port='POST a0 rows (vp.sv:18,196,219) vs L5 rows R..R+5',
-                missing='POST reads comb at rows a0..a0+3 and post at a0+4; L5 writes post at R+1 BEFORE comb '
-                        'R+2..R+5 (tail.sv:173-174): no a0 matches (comb word 4j+k = comb[j][k] matches the golden). '
-                        'Fix: POST step 0 = post row a0, steps 1..4 = comb a0+1..a0+4 (a0 = R+1)')
+BENCH_VP = 'results/rtl/s81_layer_tput_1018/compiler/bench_vp'
+# (10-18: the former GAP_PRE / old GAP_POST RTL gaps are fixed by vp op 7 NORMR + the G-unit POST row order, bench_vp)
+GAP_NORM16 = dict(module='ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)', port='16-slice norm composition',
+                  missing='the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); '
+                          'the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed')
+GAP_POST = dict(module='tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)', port='POST a1 (y rows)',
+                missing='POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the '
+                        'y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store '
+                        'placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet')
 GAP_PLACE = dict(module='tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)', port='a_proj capture rows -> end slices',
                  missing='the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through '
                          'the real lep + lane tiles); the production rows of the own part at the 3 end slices (the '
@@ -170,13 +170,17 @@ GAP_FOLD = dict(module='ot_s81sl_vs (SU add) / TOKEN-PASS-S81', port='owner fold
 def lower(die, op, ctx):
     name = op['op']
     t0 = int(ctx.get('t_issue', 0))
-    if re.search(r'hc_pre$|\.norm\.(sumsq|rsqrt|scale)$', name):
-        # the HLOAD / GAIN / NORM / XFIN_GO sequence stays the compiler's norm lowering (lower_norm_smoke, seq_host bench);
-        # what it cannot carry is the runtime hc_pre (imm = 0 there)
-        return dict(status='PARTIAL', unit='slice vp NORM (hc_pre imm) + vn / vq / xr / xfin', insts=[ctx.get('slice')],
-                    gap=GAP_PRE)
+    if name.endswith('hc_pre'):
+        # TOK-S81-GAPS/VP 10-18: vp op 7 NORMR (S81-SLICE, cherry-picked 5043d6876) reads hc_pre from leaf row R, the row the
+        # G-unit L5 writes (lower_gu GU_ROWS); dv_layer_compile.lower_norm_smoke emits NORMR a0 = R as static templates
+        return dict(status='LOWERED', unit='slice vp NORMR (hc_pre = G-unit leaf row R) -> vn n_pre',
+                    insts=[ctx.get('slice')], gap=None, bench=BENCH_VP)
+    if re.search(r'\.norm\.(sumsq|rsqrt|scale)$', name):
+        return dict(status='PARTIAL', unit='slice vp NORMR + vn / vq / xr / xfin', insts=[ctx.get('slice')], gap=GAP_NORM16,
+                    bench=BENCH_VP)
     if name.endswith('hc_post'):
-        return dict(status='GAP', unit='slice vp POST (hc_post lanes)', insts=[ctx.get('slice')], gap=GAP_POST)
+        return dict(status='PARTIAL', unit='slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store',
+                    insts=[ctx.get('slice')], gap=GAP_POST, bench=BENCH_VP)
     if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather') \
             or re.search(r'substage_hop\d+$', name):
         rank = int(ctx.get('rank', 0))
