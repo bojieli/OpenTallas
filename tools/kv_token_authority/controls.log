@@ -1,0 +1,209 @@
+ot-run: ot-epyc4       admits  1127 GB (avail 845, growth 51, headroom 0, waiters 0/0 GB) load 40/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   647 GB (avail 509, growth 17, headroom 0, waiters 0/0 GB) load 40/128 running 6 disk 562 GB 
+ot-run: ot-epyc6       admits  1232 GB (avail 928, growth 65, headroom 0, waiters 0/0 GB) load 27/128 running 18 disk 559 GB 
+ot-run: ot-epyc7       admits   996 GB (avail 758, growth 61, headroom 0, waiters 0/0 GB) load 23/96 running 21 disk 502 GB 
+ot-run: ot-epyc8       admits  1219 GB (avail 910, growth 40, headroom 0, waiters 2/8 GB) load 11/128 running 11 disk 565 GB 
+ot-run: ot-pve1        admits   111 GB (avail 90, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1210 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 10/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-129740-1792446262 after 0 s
+$ /usr/bin/python3 -m unittest -v test_identity_verdict.py
+test_duplicates_and_order (test_identity_verdict.IdentityControls.test_duplicates_and_order) ... ok
+test_error_status_is_not_success (test_identity_verdict.IdentityControls.test_error_status_is_not_success) ... ok
+test_exact_identity_fields (test_identity_verdict.IdentityControls.test_exact_identity_fields) ... ok
+test_first_known_idle_and_trace_mask_control (test_identity_verdict.IdentityControls.test_first_known_idle_and_trace_mask_control) ... ok
+test_missing_run_or_admission (test_identity_verdict.IdentityControls.test_missing_run_or_admission) ... ok
+test_no_fallback_control (test_identity_verdict.IdentityControls.test_no_fallback_control) ... ok
+test_raw_startup_not_transaction (test_identity_verdict.IdentityControls.test_raw_startup_not_transaction) ... ok
+test_success_requires_actual_programme (test_identity_verdict.IdentityControls.test_success_requires_actual_programme) ... ok
+test_unknown_valid_and_malformed (test_identity_verdict.IdentityControls.test_unknown_valid_and_malformed) ... ok
+test_verdicts (test_identity_verdict.IdentityControls.test_verdicts) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+MUTANT_CAUGHT trace-mask: first-known idle malformed STATUS hidden
+MUTANT_CAUGHT fallback: wrong identity retired an owned request
+MUTANT_CAUGHT unguarded-startup: pre-authority error ledger mutated
+RETURN_CODE 0
+$ iverilog -V
+Icarus Verilog version 12.0 (stable) ()
+
+Copyright (c) 2000-2021 Stephen Williams (steve@icarus.com)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+Icarus Verilog Preprocessor version 12.0 (stable) ()
+
+Copyright (c) 1999-2021 Stephen Williams (steve@icarus.com)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+Icarus Verilog Parser/Elaborator version 12.0 (stable) ()
+
+Copyright (c) 1998-2021 Stephen Williams (steve@icarus.com)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+ FLAGS DLL vvp.tgt
+vvp.tgt: Icarus Verilog VVP Code Generator 12.0 (stable) ()
+
+Copyright (c) 2001-2021 Stephen Williams (steve@icarus.com)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+RETURN_CODE 0
+$ iverilog -g2012 -s tb -o base.vvp kva_identity_scoreboard.sv tb_identity_scoreboard.sv
+RETURN_CODE 0
+$ vvp base.vvp +CASE=0
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+IDENTITY_CONTROL_PASS case=0 errors=0 success=1
+tb_identity_scoreboard.sv:60: $finish called at 80 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=1
+KVA_RAW_STATUS known=0 valid=1 id=deadbeef
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+IDENTITY_CONTROL_PASS case=1 errors=0 success=1
+tb_identity_scoreboard.sv:60: $finish called at 90 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=2
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=2 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=3
+KVA_RAW_STATUS known=1 valid=1 id=deadbeef
+KVA_IDENTITY_ERROR STATUS identity has no fallback
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=3 errors=2 success=1
+tb_identity_scoreboard.sv:60: $finish called at 100 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=4
+KVA_IDENTITY_ERROR PROGRAMME_EXECUTED missing acceptance/run
+IDENTITY_CONTROL_PASS case=4 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 20 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=5
+IDENTITY_CONTROL_PASS case=5 errors=0 success=0
+tb_identity_scoreboard.sv:60: $finish called at 40 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=6
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR source-owned error STATUS
+IDENTITY_CONTROL_PASS case=6 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=7
+KVA_RAW_STATUS known=1 valid=x id=03071302
+KVA_IDENTITY_ERROR unknown STATUS valid after authority
+IDENTITY_CONTROL_PASS case=7 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=8
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR inactive or duplicate STATUS
+IDENTITY_CONTROL_PASS case=8 errors=1 success=1
+tb_identity_scoreboard.sv:60: $finish called at 90 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=9
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+KVA_IDENTITY_ERROR early successful STATUS
+IDENTITY_CONTROL_PASS case=9 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=10
+KVA_IDENTITY_ERROR wrong duplicate or unordered RESULT
+IDENTITY_CONTROL_PASS case=10 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=11
+KVA_IDENTITY_ERROR admission before monitor authority
+IDENTITY_CONTROL_PASS case=11 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ vvp base.vvp +CASE=12
+KVA_IDENTITY_ERROR unknown acceptance valid
+IDENTITY_CONTROL_PASS case=12 errors=1 success=0
+tb_identity_scoreboard.sv:60: $finish called at 50 (1s)
+RETURN_CODE 0
+$ iverilog -g2012 -s tb -o unguarded.vvp /tmp/kv-identity-ic8tgttc/unguarded.sv tb_identity_scoreboard.sv
+RETURN_CODE 0
+$ vvp unguarded.vvp +CASE=1
+KVA_RAW_STATUS known=0 valid=1 id=deadbeef
+KVA_IDENTITY_ERROR STATUS identity has no fallback
+FATAL: tb_identity_scoreboard.sv:27: STARTUP_AUTHORITY_ORACLE
+       Time: 20  Scope: tb
+RETURN_CODE 1
+MUTANT_CAUGHT unguarded STARTUP_AUTHORITY_ORACLE
+$ iverilog -g2012 -s tb -o trace_mask.vvp /tmp/kv-identity-ic8tgttc/trace_mask.sv tb_identity_scoreboard.sv
+RETURN_CODE 0
+$ vvp trace_mask.vvp +CASE=2
+KVA_RAW_STATUS known=1 valid=1 id=03071302
+FATAL: tb_identity_scoreboard.sv:32: FIRST_KNOWN_IDLE_ORACLE
+       Time: 20  Scope: tb
+RETURN_CODE 1
+MUTANT_CAUGHT trace_mask FIRST_KNOWN_IDLE_ORACLE
+$ iverilog -g2012 -s tb -o fallback.vvp /tmp/kv-identity-ic8tgttc/fallback.sv tb_identity_scoreboard.sv
+RETURN_CODE 0
+$ vvp fallback.vvp +CASE=3
+KVA_RAW_STATUS known=1 valid=1 id=deadbeef
+FATAL: tb_identity_scoreboard.sv:37: WRONG_IDENTITY_ORACLE
+       Time: 70  Scope: tb
+RETURN_CODE 1
+MUTANT_CAUGHT fallback WRONG_IDENTITY_ORACLE
+ALL_IDENTITY_CONTROLS_PASS
+ARTIFACTS_JSON {"fallback.fail.log": "KVA_RAW_STATUS known=1 valid=1 id=deadbeef\nFATAL: tb_identity_scoreboard.sv:37: WRONG_IDENTITY_ORACLE\n       Time: 70  Scope: tb\nRETURN_CODE 1\n", "trace_mask.fail.log": "KVA_RAW_STATUS known=1 valid=1 id=03071302\nFATAL: tb_identity_scoreboard.sv:32: FIRST_KNOWN_IDLE_ORACLE\n       Time: 20  Scope: tb\nRETURN_CODE 1\n", "unguarded.fail.log": "KVA_RAW_STATUS known=0 valid=1 id=deadbeef\nKVA_IDENTITY_ERROR STATUS identity has no fallback\nFATAL: tb_identity_scoreboard.sv:27: STARTUP_AUTHORITY_ORACLE\n       Time: 20  Scope: tb\nRETURN_CODE 1\n"}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-129740-1792446262): exit 0
