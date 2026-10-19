@@ -1,0 +1,158 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc8       admits  1167 GB (avail 911, growth 95, headroom 0, waiters 0/0 GB) load 40/128 running 27 disk 365 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1037057-1792426445 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 723 input pin flops (0 hard-child clock pins at +insertion), median arrival 774.320862 (range 759.509949 .. 795.160034)
+QDM reference pin g_pin.eq[188]$_DFF_P_/CLK clock arrival max 774.320862 min 741.616394 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 741.616394 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/s81sl_capc_p1_die_candidate/signoff.sdc (TT placement RC; diagnostic)
+Startpoint: cw_s_d[1]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: cw_s_d[1] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1    9.5562    0.0000    0.0000    0.0000 ^ clk (in)
+                                                 clk (net)
+                   14.2276    4.4883    4.4883 ^ clkbuf_sp_N162_r1/A (BUFx24_ASAP7_75t_R)
+     1   23.3247   14.4139   26.1428   30.6311 ^ clkbuf_sp_N162_r1/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N162_r1_net (net)
+                   93.6649   29.2050   59.8361 ^ clkbuf_sp_N162/A (BUFx24_ASAP7_75t_R)
+     2   46.1320   25.9372   49.9588  109.7949 ^ clkbuf_sp_N162/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N162_net (net)
+                   99.9513   30.2005  139.9953 ^ clkbuf_sp_N80/A (BUFx24_ASAP7_75t_R)
+     2   45.9043   26.2419   51.0259  191.0212 ^ clkbuf_sp_N80/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N80_net (net)
+                  108.2150   33.0597  224.0808 ^ clkbuf_sp_N39/A (BUFx24_ASAP7_75t_R)
+     2   33.8735   25.0010   51.1102  275.1911 ^ clkbuf_sp_N39/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N39_net (net)
+                   58.5434   16.4304  291.6215 ^ clkbuf_sp_N19/A (BUFx24_ASAP7_75t_R)
+     2   25.4551   20.6765   40.3182  331.9396 ^ clkbuf_sp_N19/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N19_net (net)
+                   36.7826    9.6019  341.5415 ^ clkbuf_sp_N18/A (BUFx24_ASAP7_75t_R)
+     2   16.7225   16.4182   33.7911  375.3326 ^ clkbuf_sp_N18/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N18_net (net)
+                   20.9852    4.3382  379.6708 ^ clkbuf_sp_N17/A (BUFx24_ASAP7_75t_R)
+     2   10.7307   12.9923   27.7376  407.4084 ^ clkbuf_sp_N17/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N17_net (net)
+                   13.6531    1.3287  408.7371 ^ clkbuf_sp_N16/A (BUFx24_ASAP7_75t_R)
+     2    4.5878   10.0238   24.0042  432.7413 ^ clkbuf_sp_N16/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N16_net (net)
+                   10.0313    0.2977  433.0390 ^ clkbuf_sp_L124_p1/A (HB4xp67_ASAP7_75t_R)
+     1    0.8038   22.6112   51.7933  484.8322 ^ clkbuf_sp_L124_p1/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p1_net (net)
+                   22.6119    0.0294  484.8617 ^ clkbuf_sp_L124_p2/A (HB4xp67_ASAP7_75t_R)
+     1    0.9236   24.1248   57.0157  541.8773 ^ clkbuf_sp_L124_p2/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p2_net (net)
+                   24.1259    0.0462  541.9236 ^ clkbuf_sp_L124_p3/A (HB4xp67_ASAP7_75t_R)
+     1    0.8595   23.2484   56.9934  598.9169 ^ clkbuf_sp_L124_p3/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p3_net (net)
+                   23.2493    0.0370  598.9539 ^ clkbuf_sp_L124_p4/A (HB4xp67_ASAP7_75t_R)
+     1    0.8921   23.6934   56.9673  655.9211 ^ clkbuf_sp_L124_p4/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p4_net (net)
+                   23.6943    0.0416  655.9627 ^ clkbuf_sp_L124_p5/A (HB4xp67_ASAP7_75t_R)
+     1    0.6413   20.2504   54.8234  710.7861 ^ clkbuf_sp_L124_p5/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p5_net (net)
+                   20.2505    0.0248  710.8109 ^ clkbuf_sp_L124_p6/A (BUFx2_ASAP7_75t_R)
+     1    0.7127    7.7072   20.5984  731.4092 ^ clkbuf_sp_L124_p6/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p6_net (net)
+                    7.7078    0.0329  731.4422 ^ clkbuf_sp_L124_p7/A (BUFx2_ASAP7_75t_R)
+     1    0.6464    7.2546   16.2804  747.7225 ^ clkbuf_sp_L124_p7/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p7_net (net)
+                    7.2550    0.0254  747.7479 ^ clkbuf_sp_L124_p8/A (BUFx2_ASAP7_75t_R)
+     1    2.4498   15.0540   20.2349  767.9828 ^ clkbuf_sp_L124_p8/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p8_net (net)
+                   15.0572    0.0989  768.0817 ^ clkbuf_sp_L124/A (BUFx24_ASAP7_75t_R)
+     8    5.9762   10.7077   24.8206  792.9022 ^ clkbuf_sp_L124/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_net (net)
+                   10.7134    0.2656  793.1678 ^ cw_s_d[1]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.6719   17.0144   48.5103  841.6781 ^ cw_s_d[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                 _0083_ (net)
+                   17.0146    0.0293  841.7074 ^ hold6173/A (BUFx2_ASAP7_75t_R)
+     1    0.6173    7.2704   19.3418  861.0492 ^ hold6173/Y (BUFx2_ASAP7_75t_R)
+                                                 net6172 (net)
+                    7.2708    0.0229  861.0721 ^ hold3957/A (BUFx2_ASAP7_75t_R)
+     1    0.6750    7.3675   16.1849  877.2570 ^ hold3957/Y (BUFx2_ASAP7_75t_R)
+                                                 net3956 (net)
+                    7.3681    0.0296  877.2866 ^ hold6174/A (BUFx2_ASAP7_75t_R)
+     1    0.7744    7.7640   16.4480  893.7346 ^ hold6174/Y (BUFx2_ASAP7_75t_R)
+                                                 net6173 (net)
+                    7.7646    0.0357  893.7703 ^ _1259_/A (INVx1_ASAP7_75t_R)
+     1    0.6002    6.5049    6.5394  900.3097 v _1259_/Y (INVx1_ASAP7_75t_R)
+                                                 net1091 (net)
+                    6.5051    0.0210  900.3307 v hold6175/A (BUFx2_ASAP7_75t_R)
+     1    0.6173    6.8711   17.2268  917.5576 v hold6175/Y (BUFx2_ASAP7_75t_R)
+                                                 net6174 (net)
+                    6.8715    0.0229  917.5804 v hold3958/A (BUFx2_ASAP7_75t_R)
+     1    0.5904    6.7933   17.2929  934.8734 v hold3958/Y (BUFx2_ASAP7_75t_R)
+                                                 net3957 (net)
+                    6.7936    0.0200  934.8934 v hold6176/A (BUFx2_ASAP7_75t_R)
+     1    0.6979    7.1133   17.4922  952.3856 v hold6176/Y (BUFx2_ASAP7_75t_R)
+                                                 net6175 (net)
+                    7.1139    0.0324  952.4180 v output1092/A (BUFx2_ASAP7_75t_R)
+     1    0.6034    6.8314   17.4012  969.8192 v output1092/Y (BUFx2_ASAP7_75t_R)
+                                                 net3958 (net)
+                    6.8317    0.0213  969.8405 v hold6177/A (BUFx2_ASAP7_75t_R)
+     1    0.6173    6.8717   17.3360  987.1766 v hold6177/Y (BUFx2_ASAP7_75t_R)
+                                                 net6176 (net)
+                    6.8721    0.0229  987.1995 v hold3959/A (BUFx2_ASAP7_75t_R)
+     1    0.4158    6.2953   16.9242 1004.1237 v hold3959/Y (BUFx2_ASAP7_75t_R)
+                                                 cw_s_d[1] (net)
+                    6.2954    0.0193 1004.1430 v cw_s_d[1] (out)
+                                     1004.1430   data arrival time
+
+                            833.3330  833.3330   clock core_clk (rise edge)
+                              0.0000  833.3330   clock network delay (propagated)
+                            -60.0000  773.3330   clock uncertainty
+                              0.0000  773.3330   clock reconvergence pessimism
+                            517.6539 1290.9869   output external delay
+                                     1290.9869   data required time
+-------------------------------------------------------------------------------------
+                                     1290.9869   data required time
+                                     -1004.1430   data arrival time
+-------------------------------------------------------------------------------------
+                                      286.8439   slack (MET)
+
+
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1037057-1792426445): exit 0

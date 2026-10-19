@@ -1,0 +1,33 @@
+{
+  "scope": "actual saved padfree candidate CTS FF diagnostic; not routed qualification",
+  "ff_launch_min_ps": [
+    139.45469000000003,
+    "cw_s_d[68]"
+  ],
+  "ff_launch_max_ps": [
+    168.35165999999992,
+    "cw_s_d[1]"
+  ],
+  "ff_capture_max_ps": [
+    75.25581999999997,
+    "rt_e[17]"
+  ],
+  "ff_hold_need_ps": [
+    -1.4947100000000546,
+    "rst_n"
+  ],
+  "clock_refs": {
+    "clk": {
+      "rise": 606.1,
+      "fall": 599.86273,
+      "min": 456.91019,
+      "max": 568.71771,
+      "src": "insertion.json child_flop boundary mean",
+      "bmin": 592.5,
+      "bmax": 626.4,
+      "n": 1172
+    }
+  },
+  "outputs_below25": [],
+  "comb": []
+}
