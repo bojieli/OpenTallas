@@ -72,10 +72,11 @@ rg=mg['fwd_lanes']['lanes'][0]
 assert (rg['G_reset_tree'],rg['R0_reset_tree'],rg['K'],rg['cal'],rg['safe_land_read_cycles'])==(20,32,6,-13,1),rg
 finalize_model(mg,{'external.s':16,'external.r':20})
 assert rg['K']==6
-assert (rg['K'] - LG.hop0_en_reg(dict(rg,n=1)) + LG.safe_land_reset_cycles(rg) + LG.safe_land_read_cycles(rg)) % 8 == rg['E']
+assert (rg['K'] - rg['cal']) % 8 == rg['E']
 grows=[dict(bid='a',n=1,E=3),dict(bid='b',n=1,E=3,class_master='qfd_landh0_180_NS_44x44')]
 LG.equalize(grows,4,{})
 assert [(r['K'],r['cal']) for r in grows]==[(4,1),(2,7)],grows
+assert (grows[1]['K'] - LG.hop0_en_reg(grows[1]) + LG.safe_land_reset_cycles(grows[1]) + LG.safe_land_read_cycles(grows[1])) % 8 == grows[1]['E']
 try: LG.safe_land_read_cycles({'safe_land_read_cycles':0},'qfd_landh_180_EN_44x44')
 except ValueError: pass
 else: raise AssertionError('gated output capture was not priced')
