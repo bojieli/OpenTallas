@@ -16,6 +16,7 @@ class PvStartEquality(unittest.TestCase):
         # This inherited bundle fixture has a long direct fork; allow space
         # for its single added station while testing the fork age accounting.
         K.width_reach = lambda bits: 1200.0
+        K.PIN_REACH = K.HOP_REACH = 1200.0
         m = _model(F)
         names = {'d2d_kv': 'kvs_attn', 'kvs_attn': 'pvw_0', 'kvs_ctl': 'pvw_1'}
         for it in m['insts']:
