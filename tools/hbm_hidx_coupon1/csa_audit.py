@@ -21,14 +21,29 @@ def walk(mod,path):
 walk('hidx_coupon1','hidx_coupon1')
 assert counts==dict(hidx_csa=36,hidx_csa_fa=312,hidx_csa_ha=132),counts
 native=json.loads(Path('out/native.json').read_text())
-count_outputs=[]; mask_outputs=[]
-for r in native['all_roots']:
- a=r['aliases']
- if any('.count0[' in x or '.count1[' in x for x in a):
-  # Include native count roots behind transparent aliases through endpoint ownership.
-  ds=[x for x in r['endpoints'] if x['kind']=='ff' and x['role']=='data']
-  if ds:count_outputs.append(dict(driver=r['name'],master=r['master'],loads=r['loads'],cap=r['cap'],real_selector_d=len(ds),aliases=a,endpoints=r['endpoints']))
- if r['kind']=='ff' and any('.mask[' in x for x in a):mask_outputs.append(dict(driver=r['name'],loads=r['loads'],cap=r['cap'],aliases=a))
+flat=json.loads(Path('out/netlist.json').read_text())['modules']['hidx_coupon1']
+bybit={r['bit']:r for r in native['all_roots']}
+drivers={b:(n,c) for n,c in flat['cells'].items() for p,bs in c['connections'].items() if c.get('port_directions',{}).get(p)=='output' for b in bs}
+def canonical(b,seen=frozenset()):
+ if b in bybit:return bybit[b]
+ assert b not in seen
+ n,c=drivers[b]
+ # The independent function-proven census already removed only BUF/INV cells.
+ ins=[q for p,bs in c['connections'].items() if c['port_directions'][p]=='input' for q in bs]
+ outs=[q for p,bs in c['connections'].items() if c['port_directions'][p]=='output' for q in bs]
+ assert len(ins)==len(outs)==1,(n,c['type'])
+ return canonical(ins[0],seen|{b})
+count_outputs=[];mask_outputs=[]
+for n,v in flat['netnames'].items():
+ if n.endswith('.count0') or n.endswith('.count1'):
+  for i,b in enumerate(v['bits']):
+   r=canonical(b);ds=[x for x in r['endpoints'] if x['kind']=='ff' and x['role']=='data']
+   count_outputs.append(dict(source=n+'['+str(i)+']',driver=r['name'],master=r['master'],loads=r['loads'],cap=r['cap'],real_selector_d=len(ds),aliases=r['aliases'],endpoints=r['endpoints']))
+ if n.endswith('.mask'):
+  for i,b in enumerate(v['bits']):
+   r=canonical(b);assert r['kind']=='ff'
+   mask_outputs.append(dict(source=n+'['+str(i)+']',driver=r['name'],loads=r['loads'],cap=r['cap'],aliases=r['aliases']))
+assert len(mask_outputs)==312
 assert len(count_outputs)==168,(len(count_outputs),'12 pc8 *4 +24pc16*5')
 assert all(x['real_selector_d']==12 and x['loads']==12 for x in count_outputs)
 assert native['summary']['ff']==2616
