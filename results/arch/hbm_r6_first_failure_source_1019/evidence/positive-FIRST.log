@@ -1,0 +1,4 @@
+CLOCK_CAUSAL_PASS stream_half_ps=417 serial_half_ps=556
+[6822000] %Fatal: tb.sv:10406: Assertion failed in tb: CP_FIXED_STARTUP_PHASE
+%Error: generated_clockfix/tb.sv:10406: Verilog $stop
+Aborting...

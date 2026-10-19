@@ -1,0 +1,171 @@
+}
+
+VlCoroutine Vtb___024root___eval_initial__TOP__Vtiming__70(Vtb___024root* vlSelf) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb___024root___eval_initial__TOP__Vtiming__70\n"); );
+    Vtb__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    auto& vlSelfRef = std::ref(*vlSelf).get();
+    // Body
+    while (VL_LIKELY(!vlSymsp->_vm_contextp__->gotFinish())) {
+        Vtb___024root____VbeforeTrig_hadc8ceac__0(vlSelf, 
+                                                  "@(posedge tb.clk)");
+        co_await vlSelfRef.__VtrigSched_hadc8ceac__0.trigger(0U, 
+                                                             nullptr, 
+                                                             "@(posedge tb.clk)", 
+                                                             "generated_clockfix/tb.sv", 
+                                                             10404);
+        if (VL_UNLIKELY((vlSelfRef.tb__DOT__station_start))) {
+            vlSelfRef.tb__DOT__startqt = vlSelfRef.tb__DOT__qt;
+            vlSelfRef.tb__DOT__root_seen = 0U;
+            if (VL_UNLIKELY((((vlSelfRef.tb__DOT__qt 
+                               != ((IData)(0x0000177bU) 
+                                   + VL_MULS_III(32, (IData)(0x00002328U), 
+                                                 (vlSelfRef.tb__DOT__episode 
+                                                  + vlSelfRef.tb__DOT__abort_mode)))) 
+                              & (~ ((0U != vlSelfRef.tb__DOT__abort_mode) 
+                                    & (0x0000177bU 
+                                       == vlSelfRef.tb__DOT__qt))))))) {
+                VL_WRITEF_NX("[%0t] %%Fatal: tb.sv:10406: Assertion failed in %m: CP_FIXED_STARTUP_PHASE\n",3, 'M',vlSymsp->name(),"tb", 'T',-9
+                             , '#',64,VL_TIME_UNITED_Q(1000));
+                VL_STOP_MT("generated_clockfix/tb.sv", 10406, "", false);
+            }
+            VL_WRITEF_NX("PROGRAMME_START episode=%0d qt=%0d st=%0d aborted=%0d\n",4
+                         , '~',32,vlSelfRef.tb__DOT__episode
+                         , '~',32,vlSelfRef.tb__DOT__qt
+                         , '~',32,vlSelfRef.tb__DOT__st
+                         , '#',1,((0U != vlSelfRef.tb__DOT__abort_mode) 
+                                  & (0x0000177bU == vlSelfRef.tb__DOT__qt)));
+        }
+        co_await vlSelfRef.__VdlySched.delay(1ULL, 
+                                             nullptr, 
+                                             "generated_clockfix/tb.sv", 
+                                             10409);
+        if (VL_UNLIKELY(((((IData)(vlSelfRef.tb__DOT__runrq) 
+                           & (IData)(vlSelfRef.tb__DOT__station__DOT__g_on__DOT__root_held_v)) 
+                          & (~ (IData)(vlSelfRef.tb__DOT__root_seen)))))) {
+            vlSelfRef.tb__DOT__root_seen = 1U;
+            VL_WRITEF_NX("ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d\n",5
+void Vtb___024root___nba_sequent__TOP__25(Vtb___024root* vlSelf) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb___024root___nba_sequent__TOP__25\n"); );
+    Vtb__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    auto& vlSelfRef = std::ref(*vlSelf).get();
+    // Body
+    if ((2U & (IData)(vlSelfRef.tb__DOT__cg__DOT__u_rel__DOT__u_rr__DOT__s))) {
+        vlSelfRef.tb__DOT__qt = ((IData)(1U) + vlSelfRef.tb__DOT__qt);
+    }
+}
+
+extern const VlWide<76>/*2431:0*/ Vtb__ConstPool__CONST_h802b3c89_0;
+
+void Vtb___024root___timing_resume(Vtb___024root* vlSelf) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb___024root___timing_resume\n"); );
+    Vtb__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    auto& vlSelfRef = std::ref(*vlSelf).get();
+    // Body
+    vlSelfRef.__VtrigSched_h8e97c8f9__0.moveToResumeQueue(
+                                                          "@( tb.runrq)");
+    vlSelfRef.__VtrigSched_hadc8cf6d__0.moveToResumeQueue(
+                                                          "@(negedge tb.clk)");
+    vlSelfRef.__VtrigSched_h8e97c6b5__0.moveToResumeQueue(
+                                                          "@(negedge tb.runrq)");
+    vlSelfRef.__VtrigSched_hd22e7c21__0.moveToResumeQueue(
+                                                          "@( tb.runrs)");
+    vlSelfRef.__VtrigSched_ha8f1a4ce__0.moveToResumeQueue(
+                                                          "@(negedge tb.stream)");
+    vlSelfRef.__VtrigSched_hd22d896d__0.moveToResumeQueue(
+                                                          "@(negedge tb.runrs)");
+    vlSelfRef.__VtrigSched_h99223823__0.moveToResumeQueue(
+                                                          "@( (tb.cg.u_rel.u_rr.s[1] & tb.cg.u_rel.u_rs.s[1]))");
+    vlSelfRef.__VtrigSched_ha8f1a40f__0.moveToResumeQueue(
+                                                          "@(posedge tb.stream)");
+    vlSelfRef.__VtrigSched_hadc8ceac__0.moveToResumeQueue(
+                                                          "@(posedge tb.clk)");
+    vlSelfRef.__VtrigSched_h8e97c8f9__0.resume("@( tb.runrq)");
+    vlSelfRef.__VtrigSched_hadc8cf6d__0.resume("@(negedge tb.clk)");
+    vlSelfRef.__VtrigSched_h8e97c6b5__0.resume("@(negedge tb.runrq)");
+    vlSelfRef.__VtrigSched_hd22e7c21__0.resume("@( tb.runrs)");
+    vlSelfRef.__VtrigSched_ha8f1a4ce__0.resume("@(negedge tb.stream)");
+    vlSelfRef.__VtrigSched_hd22d896d__0.resume("@(negedge tb.runrs)");
+    vlSelfRef.__VtrigSched_h99223823__0.resume("@( (tb.cg.u_rel.u_rr.s[1] & tb.cg.u_rel.u_rs.s[1]))");
+    vlSelfRef.__VtrigSched_ha8f1a40f__0.resume("@(posedge tb.stream)");
+    vlSelfRef.__VtrigSched_hadc8ceac__0.resume("@(posedge tb.clk)");
+    if ((0x0010000000000000ULL & vlSelfRef.__VactTriggered[19U])) {
+        vlSelfRef.__VdlySched.resume();
+    }
+}
+        // Inlined CFunc: _eval_triggers_vec__act
+        Vtb___024root___eval_triggers_vec__act__0(vlSelf);
+        Vtb___024root___eval_triggers_vec__act__1(vlSelf);
+    }
+    Vtb___024root___timing_ready(vlSelf);
+    Vtb___024root___trigger_orInto__act_vec_vec(vlSelfRef.__VactTriggered, vlSelfRef.__VactTriggeredAcc);
+#ifdef VL_DEBUG
+    if (VL_UNLIKELY(vlSymsp->_vm_contextp__->debug())) {
+        Vtb___024root___dump_triggers__act(vlSelfRef.__VactTriggered, "act"s);
+    }
+#endif
+    Vtb___024root___trigger_orInto__act_vec_vec(vlSelfRef.__VnbaTriggered, vlSelfRef.__VactTriggered);
+    __VactExecute = Vtb___024root___trigger_anySet__act(vlSelfRef.__VactTriggered);
+    if (__VactExecute) {
+        vlSelfRef.__VactTriggeredAcc.fill(0ULL);
+        Vtb___024root___timing_resume(vlSelf);
+        {
+            // Inlined CFunc: _eval_act
+            if ((0x0010000000000000ULL & vlSelfRef.__VactTriggered[19U])) {
+                Vtb___024root___act_sequent__TOP__0(vlSelf);
+            }
+            if ((0x0198000000000000ULL & vlSelfRef.__VactTriggered[19U])) {
+void Vtb___024root___eval_nba__0(Vtb___024root* vlSelf) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb___024root___eval_nba__0\n"); );
+    Vtb__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    auto& vlSelfRef = std::ref(*vlSelf).get();
+    // Body
+    if ((0x0000000000600000ULL & vlSelfRef.__VnbaTriggered[19U])) {
+        Vtb___024root___nba_sequent__TOP__0(vlSelf);
+    }
+    if ((2ULL & vlSelfRef.__VnbaTriggered[0U])) {
+        Vtb___024root___nba_sequent__TOP__1(vlSelf);
+        Vtb___024root___nba_sequent__TOP__3(vlSelf);
+        Vtb___024root___nba_sequent__TOP__4(vlSelf);
+        Vtb___024root___nba_sequent__TOP__5(vlSelf);
+        Vtb___024root___nba_sequent__TOP__6(vlSelf);
+        Vtb___024root___nba_sequent__TOP__7(vlSelf);
+        Vtb___024root___nba_sequent__TOP__8(vlSelf);
+        Vtb___024root___nba_sequent__TOP__9(vlSelf);
+        Vtb___024root___nba_sequent__TOP__10(vlSelf);
+        Vtb___024root___nba_sequent__TOP__11(vlSelf);
+        Vtb___024root___nba_sequent__TOP__12(vlSelf);
+        Vtb___024root___nba_sequent__TOP__13(vlSelf);
+        Vtb___024root___nba_sequent__TOP__14(vlSelf);
+        Vtb___024root___nba_sequent__TOP__15(vlSelf);
+        Vtb___024root___nba_sequent__TOP__16(vlSelf);
+        Vtb___024root___nba_sequent__TOP__17(vlSelf);
+        Vtb___024root___nba_sequent__TOP__18(vlSelf);
+        Vtb___024root___nba_sequent__TOP__19(vlSelf);
+        Vtb___024root___nba_sequent__TOP__20(vlSelf);
+        Vtb___024root___nba_sequent__TOP__21(vlSelf);
+        Vtb___024root___nba_sequent__TOP__22(vlSelf);
+        Vtb___024root___nba_sequent__TOP__23(vlSelf);
+        Vtb___024root___nba_sequent__TOP__24(vlSelf);
+        Vtb___024root___nba_sequent__TOP__25(vlSelf);
+        Vtb___024root___nba_sequent__TOP__27(vlSelf);
+        Vtb___024root___nba_sequent__TOP__28(vlSelf);
+        Vtb___024root___nba_sequent__TOP__29(vlSelf);
+void Vtb___024root___nba_sequent__TOP__441(Vtb___024root* vlSelf) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb___024root___nba_sequent__TOP__441\n"); );
+    Vtb__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    auto& vlSelfRef = std::ref(*vlSelf).get();
+    // Body
+    vlSelfRef.tb__DOT__cg__DOT__u_rel__DOT__u_rr__DOT__s 
+        = ((IData)(vlSelfRef.tb__DOT__cg__DOT__u_rel__DOT__u_rh__DOT__arm_n)
+            ? (1U | (2U & ((IData)(vlSelfRef.tb__DOT__cg__DOT__u_rel__DOT__u_rr__DOT__s) 
+                           << 1U))) : 0U);
+}
+
+extern const VlWide<9>/*287:0*/ Vtb__ConstPool__CONST_hf8696d9a_0;
+
+// Time scaled from 1-per-precision into a module's time units ("Unit"-ed, not "United")
+// Optimized assuming scale is always constant.
+// Can't use multiply in Q flavor, as might lose precision
+#define VL_TIME_ROUND(t, p) (((t) + ((p) / 2)) / (p))
+#define VL_TIME_UNITED_Q(scale) VL_TIME_ROUND(VL_TIME_Q(), static_cast<QData>(scale))
+#define VL_TIME_UNITED_D(scale) (VL_TIME_D() / static_cast<double>(scale))

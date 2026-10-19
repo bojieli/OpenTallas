@@ -1,0 +1,1576 @@
+{
+  "utc": "2026-10-19T22:53:55.620285+00:00",
+  "source_tip": "c7dda512c67625f0e4db6310981d979bacf35a40",
+  "actual_consumed_files": 47,
+  "allowed_superset": 53,
+  "files": [
+    {
+      "path": "obj_r6/Vtb",
+      "sha256": "d33cd9d200d98bd2d7711f7cf26f7a16d9e1b9bf93cfe103ac4a2156049ba987",
+      "bytes": 656078560
+    },
+    {
+      "path": "obj_r6/Vtb__verFiles.dat",
+      "sha256": "8894adae08f909ef11cd3cf2da5e5bc56a6de83721fcdaa4893168fe60d02410",
+      "bytes": 548334
+    },
+    {
+      "path": "build.log",
+      "sha256": "18f80675da16755706a4efa728fdec5bce00ad3d592990753f1e6ae822ec011a",
+      "bytes": 3801906
+    },
+    {
+      "path": "SELECTED_SOURCE_MANIFEST.json",
+      "sha256": "e8c2d3e2c50ae3eb411dc5c46f74422951c202a229782839e0988a34a86abc85",
+      "bytes": 27417
+    },
+    {
+      "path": "cache_inventory.json",
+      "sha256": "3ecaab4a5228e8804b5488a025b01812e7c595ae4705ea349eaca53e8708bd74",
+      "bytes": 17641
+    },
+    {
+      "path": "consumed_source_audit_FIRST_final.json",
+      "sha256": "f68106ef4dcaab1b02a8ed3605397fe95e53f00e68f6cf86f2168e641ceb33ca",
+      "bytes": 20296
+    },
+    {
+      "path": "generated_clockfix/adds.json",
+      "sha256": "8992f4c1da1ebf269ea321a4ba8f7c54e1a116abb6b4a3e5dcaa7145b71133e8",
+      "bytes": 597436
+    },
+    {
+      "path": "generated_clockfix/adds.mem",
+      "sha256": "d6f420abc48204459642b7f326515e3d757e2e66a850b96531a69e95f6f54cee",
+      "bytes": 64050
+    },
+    {
+      "path": "generated_clockfix/calendar0.json",
+      "sha256": "dbf51a99fa360d42e8e8a164b59be6eebf5671ab1e3d11ff62c86b106ce447b7",
+      "bytes": 6051
+    },
+    {
+      "path": "generated_clockfix/calendar0.mem",
+      "sha256": "72b3f715c12f0655527dcd78ee05b1aa82b1a813be3a1f49ec1f279c90f11400",
+      "bytes": 66560
+    },
+    {
+      "path": "generated_clockfix/calendar1.json",
+      "sha256": "962b9120a3b88945821006091c40bd3a22dd08519129740687162fec93d45c78",
+      "bytes": 1491
+    },
+    {
+      "path": "generated_clockfix/calendar1.mem",
+      "sha256": "e62d8a3af66d9671681ff64217dd2ae43f993166370f6b81b0d03de82b5bad5b",
+      "bytes": 66560
+    },
+    {
+      "path": "generated_clockfix/calendar2.json",
+      "sha256": "0635085ff536e849a8da4429bdfdfe926d87e47157387544a1443cd54981f85d",
+      "bytes": 5955
+    },
+    {
+      "path": "generated_clockfix/calendar2.mem",
+      "sha256": "78ab0d727d20ea7978b1f55c23a5e96b36c3c04c828558d83e60bfd9a00e3086",
+      "bytes": 66560
+    },
+    {
+      "path": "generated_clockfix/calendar3.json",
+      "sha256": "962b9120a3b88945821006091c40bd3a22dd08519129740687162fec93d45c78",
+      "bytes": 1491
+    },
+    {
+      "path": "generated_clockfix/calendar3.mem",
+      "sha256": "e62d8a3af66d9671681ff64217dd2ae43f993166370f6b81b0d03de82b5bad5b",
+      "bytes": 66560
+    },
+    {
+      "path": "generated_clockfix/gold.mem",
+      "sha256": "36d0c8dddbbad3b2310afbb3c161816665abe9179d04efa1f729bbd426c31eef",
+      "bytes": 18
+    },
+    {
+      "path": "generated_clockfix/input0.mem",
+      "sha256": "b30258d0b0c7d94a10ddd0dd0e431078a375edcd4406891ef20f1574743e20ac",
+      "bytes": 11520
+    },
+    {
+      "path": "generated_clockfix/input1.mem",
+      "sha256": "fde26a267bfd0e118519d8eb480d416ad58129a8c335bb4dceb94b2eb0dbc5a3",
+      "bytes": 11520
+    },
+    {
+      "path": "generated_clockfix/preload0.json",
+      "sha256": "b0ed7703e2d81fbd75fbc1b1debfae7b443265bcf598c573d317df05b5cae141",
+      "bytes": 21705
+    },
+    {
+      "path": "generated_clockfix/preload1.json",
+      "sha256": "238e285a72b096c74a35f79292a5db4e38f36aa0ad41ab80fd00cfa560d8cd58",
+      "bytes": 21705
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/config.mem",
+      "sha256": "0efd9bf7a0afacc75cd0a1732985a3f33a19720970667371f8b083b61b2af827",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/expected.mem",
+      "sha256": "46d1f24f4c8b8896b4788cc15d9dc5c6f22308d5255d33c801f8de54063aae2d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/manifest.json",
+      "sha256": "b5587d9f350ab3cd487f56b9f81df79490990030288b345fa0190d9bc3fae8ee",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/programme_params.svh",
+      "sha256": "be44370b4a6ba1c0e6fced8935829b407793ee375ad6a962656fbb75db13eebc",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/source.mem",
+      "sha256": "46d1f24f4c8b8896b4788cc15d9dc5c6f22308d5255d33c801f8de54063aae2d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col0/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/config.mem",
+      "sha256": "285e0cb95ff1dc88dde1c187c54ebc832ac952629894add068792f184c7ac612",
+      "bytes": 3621
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/expected.mem",
+      "sha256": "c78721be0e15594d734e5dccfba17dec7bc40da3a4dc563dc4c232a3530b5203",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/manifest.json",
+      "sha256": "e8d58b528d08a0ddd51ff9cd4af63a9a26c6f4f920a5a7b439d1f880d8e1f15a",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/programme_params.svh",
+      "sha256": "ca81d36250a9dcefb9bc880f44df2886622aad98b795cd719d2e88533149dac6",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/source.mem",
+      "sha256": "c78721be0e15594d734e5dccfba17dec7bc40da3a4dc563dc4c232a3530b5203",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col1/tb.sv",
+      "sha256": "55fdedef565fee10c0c3e88f2ff78a987c8e35500f3ff165c6896d6a7dbba726",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/config.mem",
+      "sha256": "4746d12b0586a41ba90cb9d2e4fcbb755650f84a3b99a69e4426667112ac5ee8",
+      "bytes": 3621
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/expected.mem",
+      "sha256": "d45e75ed571001060f8108ec734ead7cd6629ae9adb053840ffcf700820c1bfa",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/manifest.json",
+      "sha256": "95c524a7e0a048965085611f06f6267641bb831489728d365c75332ecbc43e77",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/programme_params.svh",
+      "sha256": "61fafd051e440bf5af7fdb0623f57ad8aec9f22f7c61d076158d27d0f554cf20",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/source.mem",
+      "sha256": "d45e75ed571001060f8108ec734ead7cd6629ae9adb053840ffcf700820c1bfa",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col2/tb.sv",
+      "sha256": "55fdedef565fee10c0c3e88f2ff78a987c8e35500f3ff165c6896d6a7dbba726",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/config.mem",
+      "sha256": "3fa24b047a68e615d445461155451cea5c372be8828a09c7e326b219bedefd21",
+      "bytes": 3266
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/expected.mem",
+      "sha256": "8f61b999664d9e66546d7a76e4fd0d91ea78be1bd52067960393f06a7a18526b",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/manifest.json",
+      "sha256": "44c16cddcdf7115a1b72dce16f7f141f7d3d06e0db26af0243e4a60b6fe77a50",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/programme_params.svh",
+      "sha256": "35612acd44f8d9f158b41acf4ac046a28544e1984f72c567502a2710fbeb079d",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/source.mem",
+      "sha256": "8f61b999664d9e66546d7a76e4fd0d91ea78be1bd52067960393f06a7a18526b",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col3/tb.sv",
+      "sha256": "e6dbcca785a67330c10db3bd1c774a05f78b8be65d2f24f27161791f2424fc4b",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/config.mem",
+      "sha256": "2d4ada93a01606a5571cc2705d45b39a0135ef98fe2b95966b184d81f6eeb2a2",
+      "bytes": 3408
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/expected.mem",
+      "sha256": "1114efde3400e8b61e1dd72dce37504b2ffe853306842ec8c4837d5d3bfea808",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/manifest.json",
+      "sha256": "fe01c5c2a744e28d27a23720437365735c202aaeff932829c7bf7c95ffc9eae1",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/programme_params.svh",
+      "sha256": "3884d556961f3cb0bb965c4f03ab5e1208484ac8e0e57275d320f5a32d80c9b1",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/source.mem",
+      "sha256": "1114efde3400e8b61e1dd72dce37504b2ffe853306842ec8c4837d5d3bfea808",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col4/tb.sv",
+      "sha256": "cb3bf5711e31a24a436e76ff95c7f0d52439dc4a1e695580442da0820514f9dd",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/config.mem",
+      "sha256": "5d3a39352001332a5bcfcc635b7ff68115595ecf92358523281df8fde3e935b3",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/expected.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/manifest.json",
+      "sha256": "3b479bd4cb6dc9dcf501bcdb722fdda940ee1249652fae3e6851c89d6fd77417",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/programme_params.svh",
+      "sha256": "41f6ef78feae46ae3e215aa74097c3458544cfb247e3f2e3702d2a8ea63e6c2f",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/source.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col5/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/config.mem",
+      "sha256": "316338a17bc52ccf2e34a2ce8dc32ab5b1ac64e09cf30f7a0ee2116aa7135ad9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/expected.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/manifest.json",
+      "sha256": "a5771f5c09e08fd69577dd0d0c62ad8d101bd63768e69a00a570bc369e672b66",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/programme_params.svh",
+      "sha256": "966f554c3b0151857f8a2ae199c191cd1b7fb99661aaa01ce0c1fa12f871e577",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/source.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col6/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/config.mem",
+      "sha256": "b6fc8974fdf56869fc8d51a0f67485cab51c0b3334db58a0bbee6c3c95b217d9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/expected.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/manifest.json",
+      "sha256": "6176542a02841dbf7021d76040e0a1665c2c8a53d88bdadc9c906a79fa12a9a6",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/programme_params.svh",
+      "sha256": "8bbfe69671fe881517fa8d43a2dff59e5cb490ee4a2dd61e1b4bc75b01c4663e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/source.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col7/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/config.mem",
+      "sha256": "288cedc430bda1a9d5fa20a4dc9a234aada6ed0597ec6b90ade0499595acfed4",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/expected.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/manifest.json",
+      "sha256": "b209dd5eef187959a4cf250043cf678824aab1c360b50054cc74cb765c9b39b5",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/programme_params.svh",
+      "sha256": "dad6b0200cafe836f0f06dc77eeff056b94daa0660ad72262dcb00cdc0860e5e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/source.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col8/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/config.mem",
+      "sha256": "c0f396d7c4149321edba4a88711d3ff2ddc191d78ae1465a61c4fd31d9a7f063",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/expected.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/manifest.json",
+      "sha256": "017e0d87522f8ec14cbd4b0e658d77b6bed7603fed78856c2b535e11714cf36a",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/programme_params.svh",
+      "sha256": "ad393a0ffcf773b8519162a181aeaf8173b2f59dcd931503e038fd8d4f76e11d",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/source.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q0/cols/col9/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q0/cols/cols_manifest.json",
+      "sha256": "0e1f822dbf32ac1de23e7fb75cf427628d4e0ad4cfebaa6dcc0de2910d069347",
+      "bytes": 2584
+    },
+    {
+      "path": "generated_clockfix/q0/cols/cols_params.svh",
+      "sha256": "da42e1418774ea90294131f867dc52553f302289fbad00e7aefc317c47f7797c",
+      "bytes": 166
+    },
+    {
+      "path": "generated_clockfix/q0/cols/config.mem",
+      "sha256": "64f533874fb9a9d99c4c4510d2910fce30bce1a65a7b53f0ac2716a98405a53f",
+      "bytes": 32873
+    },
+    {
+      "path": "generated_clockfix/q0/cols/config_mut.mem",
+      "sha256": "64f533874fb9a9d99c4c4510d2910fce30bce1a65a7b53f0ac2716a98405a53f",
+      "bytes": 32873
+    },
+    {
+      "path": "generated_clockfix/q0/cols/expected.mem",
+      "sha256": "2ca993076c24b31b24957a053b1626d1419f710d4ed8732d5b93930d18ae1427",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q0/cols/ref/config.mem",
+      "sha256": "21f6f9ae6db6ef98638ab9ab95257e2b6169f0d7ca719ad9e005775dfd52f5e0",
+      "bytes": 50765
+    },
+    {
+      "path": "generated_clockfix/q0/cols/ref/expected.mem",
+      "sha256": "2ca993076c24b31b24957a053b1626d1419f710d4ed8732d5b93930d18ae1427",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q0/cols/ref/manifest.json",
+      "sha256": "4cc1c06e684bfbd49dc3217b450bf7c5066b4272df960f17b7bfb0d5493e3acb",
+      "bytes": 2502
+    },
+    {
+      "path": "generated_clockfix/q0/cols/ref/programme_params.svh",
+      "sha256": "8264331779c2dd3e152d22800534f928aba4a7e41004c1b14eca57125a1b84a7",
+      "bytes": 203
+    },
+    {
+      "path": "generated_clockfix/q0/cols/ref/tb.sv",
+      "sha256": "4b645282dcd6cedaff3154418b6e036fe6d5e9474d64b8ffe96aedce8e0e841e",
+      "bytes": 2259
+    },
+    {
+      "path": "generated_clockfix/q0/occupancy.json",
+      "sha256": "2859100995d57be292837cc12b99f94e16f5c4d1a88b9a59d7aaf6b972b2dff9",
+      "bytes": 243
+    },
+    {
+      "path": "generated_clockfix/q0/quarter.mem",
+      "sha256": "2ca993076c24b31b24957a053b1626d1419f710d4ed8732d5b93930d18ae1427",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/config.mem",
+      "sha256": "ff230211d437571e42967f0d80bbdec429ea24f888d150ca3dd07a4e40511efd",
+      "bytes": 3053
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/expected.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/manifest.json",
+      "sha256": "fece6c2b7d1392c354853e38a6825dc8809a21f3537e3480c60f564008b512f2",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/programme_params.svh",
+      "sha256": "79f489d3c32a585aefc387b18757e5fee1b423fdd84f21b614b9a69b762d9af3",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/source.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col0/tb.sv",
+      "sha256": "7d484eee14353f8d03bbc2f49cfe98c91544e40c8440902e066b20e92dc9ac2e",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/config.mem",
+      "sha256": "4bac8885d5188f5f8cc32f5e9a435f293fe84ad1642cae7f8738d5f0b53700f4",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/expected.mem",
+      "sha256": "1324e780aa99bcd83b1ec7e33f4395d69ca8ebe707130a4ef5dc3f66ed2bb5de",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/manifest.json",
+      "sha256": "0d1e99bdb980bff93ccab71af437ebbe09e09f240f503d175be5a3ce33c1171d",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/programme_params.svh",
+      "sha256": "37abac6acf0ad2ce5a1a33b56809fadc2c14d663c6ec7801cd7669ef3184361e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/source.mem",
+      "sha256": "1324e780aa99bcd83b1ec7e33f4395d69ca8ebe707130a4ef5dc3f66ed2bb5de",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col1/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/config.mem",
+      "sha256": "2fa975834d8e9ddde45bcd547aed2739f9e7d8949b46619d82a17baea505d710",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/expected.mem",
+      "sha256": "d6d95ca69dda5b1898aea3201a166ae613de1b5a1a843ec45be35f4da3fca09e",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/manifest.json",
+      "sha256": "a261f167e282e39f02bfae39b74939ae714d7153518a717a6cfcda0816a5a0ba",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/programme_params.svh",
+      "sha256": "d0240452630bc1bc314e8e5969c973c220c40b1c5b91783925f3f2970dc5108b",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/source.mem",
+      "sha256": "d6d95ca69dda5b1898aea3201a166ae613de1b5a1a843ec45be35f4da3fca09e",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col2/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/config.mem",
+      "sha256": "e5eb0911ff31c2fa62347c729a5a5b7ed44a7f87d86b6c0d3c8ced1f8103ea51",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/expected.mem",
+      "sha256": "ead6a9370c10524cae33362db50e2c7d31a5e5b1fb114c30c6207bab41ca46e2",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/manifest.json",
+      "sha256": "36b6546cc990a9ec82499b75be4debd8edd8b220f7df50f1ffa964c651032dba",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/programme_params.svh",
+      "sha256": "51b834a3440935f385230425ad7a09d847ffb34ea30857b0cd20cbe3fe92fe70",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/source.mem",
+      "sha256": "ead6a9370c10524cae33362db50e2c7d31a5e5b1fb114c30c6207bab41ca46e2",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col3/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/config.mem",
+      "sha256": "85e6ad25afbb02d4c3afc576b5cabfd6945c620eb9b7c4c0c3ea4f3e8290f6fe",
+      "bytes": 3408
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/expected.mem",
+      "sha256": "0a8db7cbdcac88c99605eedb6a180f9c1c658670d6319101c8d66e0dfff35390",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/manifest.json",
+      "sha256": "8317f3f669bf4d91b86cf4a8a67bbd5094d6cec600880ee67228bbbf3d1078d8",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/programme_params.svh",
+      "sha256": "3884d556961f3cb0bb965c4f03ab5e1208484ac8e0e57275d320f5a32d80c9b1",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/source.mem",
+      "sha256": "0a8db7cbdcac88c99605eedb6a180f9c1c658670d6319101c8d66e0dfff35390",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col4/tb.sv",
+      "sha256": "cb3bf5711e31a24a436e76ff95c7f0d52439dc4a1e695580442da0820514f9dd",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/config.mem",
+      "sha256": "5d3a39352001332a5bcfcc635b7ff68115595ecf92358523281df8fde3e935b3",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/expected.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/manifest.json",
+      "sha256": "f2f099a110e95268b704cc9f7a9847f801a22ce64e8394646f1ea29e05047899",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/programme_params.svh",
+      "sha256": "41f6ef78feae46ae3e215aa74097c3458544cfb247e3f2e3702d2a8ea63e6c2f",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/source.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col5/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/config.mem",
+      "sha256": "316338a17bc52ccf2e34a2ce8dc32ab5b1ac64e09cf30f7a0ee2116aa7135ad9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/expected.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/manifest.json",
+      "sha256": "1be013659782e78ba2397831a01663b2863656a5c79cb34d10cab74e334e7003",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/programme_params.svh",
+      "sha256": "966f554c3b0151857f8a2ae199c191cd1b7fb99661aaa01ce0c1fa12f871e577",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/source.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col6/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/config.mem",
+      "sha256": "b6fc8974fdf56869fc8d51a0f67485cab51c0b3334db58a0bbee6c3c95b217d9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/expected.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/manifest.json",
+      "sha256": "2f4c8291f95c79749c412e5650450aed4446e3d30387aecd0e06e29056e37c5f",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/programme_params.svh",
+      "sha256": "8bbfe69671fe881517fa8d43a2dff59e5cb490ee4a2dd61e1b4bc75b01c4663e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/source.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col7/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/config.mem",
+      "sha256": "288cedc430bda1a9d5fa20a4dc9a234aada6ed0597ec6b90ade0499595acfed4",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/expected.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/manifest.json",
+      "sha256": "8db4fc3d61c7411f930a043ad491a6f28dec27577be4e5ba8d3ce18ee4ea7188",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/programme_params.svh",
+      "sha256": "dad6b0200cafe836f0f06dc77eeff056b94daa0660ad72262dcb00cdc0860e5e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/source.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col8/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/config.mem",
+      "sha256": "c0f396d7c4149321edba4a88711d3ff2ddc191d78ae1465a61c4fd31d9a7f063",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/expected.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/manifest.json",
+      "sha256": "48297194b138bf65cc8e173ea8751f456042b080f3e026611e969b9f9d0e41b1",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/programme_params.svh",
+      "sha256": "ad393a0ffcf773b8519162a181aeaf8173b2f59dcd931503e038fd8d4f76e11d",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/source.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q1/cols/col9/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q1/cols/cols_manifest.json",
+      "sha256": "55aa7f94d56c656ca2ba5c6a990506663b589ac89bb8e3e0c3071193916ec831",
+      "bytes": 2584
+    },
+    {
+      "path": "generated_clockfix/q1/cols/cols_params.svh",
+      "sha256": "7b6fd9c704bbf0d98e2feaa48857d598d558adbcc461b8f95c68ae3724afe082",
+      "bytes": 166
+    },
+    {
+      "path": "generated_clockfix/q1/cols/config.mem",
+      "sha256": "45b16b87e299b5fbca7b4f185f4378036ceab1e9ea4391b00b3e9efb0de24f02",
+      "bytes": 32092
+    },
+    {
+      "path": "generated_clockfix/q1/cols/config_mut.mem",
+      "sha256": "45b16b87e299b5fbca7b4f185f4378036ceab1e9ea4391b00b3e9efb0de24f02",
+      "bytes": 32092
+    },
+    {
+      "path": "generated_clockfix/q1/cols/expected.mem",
+      "sha256": "742a66d1b1498f2e1e5860a00193d5de0c28d4483607d59d7838a720222d01c2",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q1/cols/ref/config.mem",
+      "sha256": "4d708ce34f27aec98a0ba47fce3170a835ef8948d678b4834f5a6c0d2aca57c7",
+      "bytes": 49984
+    },
+    {
+      "path": "generated_clockfix/q1/cols/ref/expected.mem",
+      "sha256": "742a66d1b1498f2e1e5860a00193d5de0c28d4483607d59d7838a720222d01c2",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q1/cols/ref/manifest.json",
+      "sha256": "83140f5c252451dec89dbfca3c43ae8ddda1076bb149c2c55f9ffdcd0b1f5dc7",
+      "bytes": 2502
+    },
+    {
+      "path": "generated_clockfix/q1/cols/ref/programme_params.svh",
+      "sha256": "338b555449993c22c304063ebf62c81baa33a3c9fb053257d4ae2c7ef9291e0d",
+      "bytes": 203
+    },
+    {
+      "path": "generated_clockfix/q1/cols/ref/tb.sv",
+      "sha256": "4f59ee737f75d43c4bd98250931cc9fbe0a33ab7dc13a65200a7abae36825ce7",
+      "bytes": 2259
+    },
+    {
+      "path": "generated_clockfix/q1/occupancy.json",
+      "sha256": "15db43fed7d75cea74ddf88674e04dc301804d5592844413d90374b1d3664e60",
+      "bytes": 243
+    },
+    {
+      "path": "generated_clockfix/q1/quarter.mem",
+      "sha256": "742a66d1b1498f2e1e5860a00193d5de0c28d4483607d59d7838a720222d01c2",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/config.mem",
+      "sha256": "ff230211d437571e42967f0d80bbdec429ea24f888d150ca3dd07a4e40511efd",
+      "bytes": 3053
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/expected.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/manifest.json",
+      "sha256": "260db01acbc9a7930fbaf623873f37c9bbe5bd7d90d39c49caa755ab660809bd",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/programme_params.svh",
+      "sha256": "79f489d3c32a585aefc387b18757e5fee1b423fdd84f21b614b9a69b762d9af3",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/source.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col0/tb.sv",
+      "sha256": "7d484eee14353f8d03bbc2f49cfe98c91544e40c8440902e066b20e92dc9ac2e",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/config.mem",
+      "sha256": "5e3b1010e5477d7d0d26f8fb342f098551d10cfcc9f3d3b9b6b323f1ca7aa4f4",
+      "bytes": 3621
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/expected.mem",
+      "sha256": "c2c6b9bf1c072ebb55532e6c2f6721edeab30a4d1c3d2373139101711c88323a",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/manifest.json",
+      "sha256": "ead550be316849b43aebcd6380f6e2238062a47cf4f23fc4e76739eed6589f84",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/programme_params.svh",
+      "sha256": "ca81d36250a9dcefb9bc880f44df2886622aad98b795cd719d2e88533149dac6",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/source.mem",
+      "sha256": "c2c6b9bf1c072ebb55532e6c2f6721edeab30a4d1c3d2373139101711c88323a",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col1/tb.sv",
+      "sha256": "55fdedef565fee10c0c3e88f2ff78a987c8e35500f3ff165c6896d6a7dbba726",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/config.mem",
+      "sha256": "c555d24dd261b0b8a5395ee1ce8099dacbb3143caf84053bb368c7f02607cb80",
+      "bytes": 3621
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/expected.mem",
+      "sha256": "78070927319ccfcf370fe2e641e72811661c21b4907ae31809ebcd713556cfc4",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/manifest.json",
+      "sha256": "6210c0e8062cffc794d65eb79be5e38524387793f43ced522b5030104960b152",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/programme_params.svh",
+      "sha256": "61fafd051e440bf5af7fdb0623f57ad8aec9f22f7c61d076158d27d0f554cf20",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/source.mem",
+      "sha256": "78070927319ccfcf370fe2e641e72811661c21b4907ae31809ebcd713556cfc4",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col2/tb.sv",
+      "sha256": "55fdedef565fee10c0c3e88f2ff78a987c8e35500f3ff165c6896d6a7dbba726",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/config.mem",
+      "sha256": "7b23070eaebce4a559deabdc132c49014f71c627587d577b040eae4741c34b87",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/expected.mem",
+      "sha256": "ccd3b6fcafdf00c609ce7c860977022da73fa4051aa3824afbd1eb57847e9c2d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/manifest.json",
+      "sha256": "afca4b7fd2ed4a362321b2f84a0f5ba0ddf12e9555c8a647a78abbc8a9d2b664",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/programme_params.svh",
+      "sha256": "51b834a3440935f385230425ad7a09d847ffb34ea30857b0cd20cbe3fe92fe70",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/source.mem",
+      "sha256": "ccd3b6fcafdf00c609ce7c860977022da73fa4051aa3824afbd1eb57847e9c2d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col3/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/config.mem",
+      "sha256": "6cfa97ea3e5e7b87b3cdd2c5b91799e7b646465fda3e20652af3c31154d622d3",
+      "bytes": 3408
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/expected.mem",
+      "sha256": "865d43d90efafbb8088ca67c7cac95c9e5d98bd9ef00f56758554d7cc258a95b",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/manifest.json",
+      "sha256": "09a3631159b40af64c29f8d0abd9d3e8a16904badf375166c0a10554c0d34685",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/programme_params.svh",
+      "sha256": "3884d556961f3cb0bb965c4f03ab5e1208484ac8e0e57275d320f5a32d80c9b1",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/source.mem",
+      "sha256": "865d43d90efafbb8088ca67c7cac95c9e5d98bd9ef00f56758554d7cc258a95b",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col4/tb.sv",
+      "sha256": "cb3bf5711e31a24a436e76ff95c7f0d52439dc4a1e695580442da0820514f9dd",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/config.mem",
+      "sha256": "5d3a39352001332a5bcfcc635b7ff68115595ecf92358523281df8fde3e935b3",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/expected.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/manifest.json",
+      "sha256": "77cd81560bc0248c1dad3556626ff831e623e54f7a86f563828368ba604d2652",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/programme_params.svh",
+      "sha256": "41f6ef78feae46ae3e215aa74097c3458544cfb247e3f2e3702d2a8ea63e6c2f",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/source.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col5/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/config.mem",
+      "sha256": "316338a17bc52ccf2e34a2ce8dc32ab5b1ac64e09cf30f7a0ee2116aa7135ad9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/expected.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/manifest.json",
+      "sha256": "887c08981ef4bb2255d8a25e98444ad2a3daf8897fa80f55f3c79838a324c39e",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/programme_params.svh",
+      "sha256": "966f554c3b0151857f8a2ae199c191cd1b7fb99661aaa01ce0c1fa12f871e577",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/source.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col6/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/config.mem",
+      "sha256": "b6fc8974fdf56869fc8d51a0f67485cab51c0b3334db58a0bbee6c3c95b217d9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/expected.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/manifest.json",
+      "sha256": "8f3084bd78b6cc5bace512e349160a422f513421d96d9b2e8f71c48883d05fc0",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/programme_params.svh",
+      "sha256": "8bbfe69671fe881517fa8d43a2dff59e5cb490ee4a2dd61e1b4bc75b01c4663e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/source.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col7/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/config.mem",
+      "sha256": "288cedc430bda1a9d5fa20a4dc9a234aada6ed0597ec6b90ade0499595acfed4",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/expected.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/manifest.json",
+      "sha256": "ce868ffa44ce2516d2d93fa872fc38ab0bdff88bfcb046edb84e825c2ce3a272",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/programme_params.svh",
+      "sha256": "dad6b0200cafe836f0f06dc77eeff056b94daa0660ad72262dcb00cdc0860e5e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/source.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col8/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/config.mem",
+      "sha256": "c0f396d7c4149321edba4a88711d3ff2ddc191d78ae1465a61c4fd31d9a7f063",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/expected.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/manifest.json",
+      "sha256": "c95ff9616ed90d775919aac3ccaeb9e06599a3b32ba480e9c67c8cf1db776c71",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/programme_params.svh",
+      "sha256": "ad393a0ffcf773b8519162a181aeaf8173b2f59dcd931503e038fd8d4f76e11d",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/source.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q2/cols/col9/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q2/cols/cols_manifest.json",
+      "sha256": "16f8688151a72dbb5322bac002e67d921efc4fcbc896f6b8e573fc2a3ed2cc33",
+      "bytes": 2584
+    },
+    {
+      "path": "generated_clockfix/q2/cols/cols_params.svh",
+      "sha256": "9cbe96e9f6441909193421ead737024cdd264e01402c9dd4ec1ea109cc461d28",
+      "bytes": 166
+    },
+    {
+      "path": "generated_clockfix/q2/cols/config.mem",
+      "sha256": "db54864d9e7fc1fc17d65f6904cc63df164824134c8d990f13d86bfe04be0448",
+      "bytes": 32660
+    },
+    {
+      "path": "generated_clockfix/q2/cols/config_mut.mem",
+      "sha256": "db54864d9e7fc1fc17d65f6904cc63df164824134c8d990f13d86bfe04be0448",
+      "bytes": 32660
+    },
+    {
+      "path": "generated_clockfix/q2/cols/expected.mem",
+      "sha256": "5279373f4961565e52919db6d696c7cb07b229be631f7df2810c0128690c0bb7",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q2/cols/ref/config.mem",
+      "sha256": "c446c0201d4a12143dfd4863bc0a467e0eb88a1330aad4c95ecc46f73602813b",
+      "bytes": 50552
+    },
+    {
+      "path": "generated_clockfix/q2/cols/ref/expected.mem",
+      "sha256": "5279373f4961565e52919db6d696c7cb07b229be631f7df2810c0128690c0bb7",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q2/cols/ref/manifest.json",
+      "sha256": "55954a77ff0303f9e31a3d4bfdd0ad0e04f4f70c3ecd14a39b79bb5cd3a4b2e6",
+      "bytes": 2502
+    },
+    {
+      "path": "generated_clockfix/q2/cols/ref/programme_params.svh",
+      "sha256": "c1e2509677dbf3942862d6b54ccd64cac67630639a5f3918dfe6fee6dc3ee6a1",
+      "bytes": 203
+    },
+    {
+      "path": "generated_clockfix/q2/cols/ref/tb.sv",
+      "sha256": "2529d6b448ef8816b18a7ba695c9dbaac6770fc1c2e912e7adb79c5d0ed74170",
+      "bytes": 2259
+    },
+    {
+      "path": "generated_clockfix/q2/occupancy.json",
+      "sha256": "a3064d6ac7843a8db3c307b05b4fb270b1f60807f74f2a020b49387cc3fb470a",
+      "bytes": 243
+    },
+    {
+      "path": "generated_clockfix/q2/quarter.mem",
+      "sha256": "5279373f4961565e52919db6d696c7cb07b229be631f7df2810c0128690c0bb7",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/config.mem",
+      "sha256": "ff230211d437571e42967f0d80bbdec429ea24f888d150ca3dd07a4e40511efd",
+      "bytes": 3053
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/expected.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/manifest.json",
+      "sha256": "91ce7e8c911296407bca925a107f20505d3934fda1f0ce455c6a9dc25180d290",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/programme_params.svh",
+      "sha256": "79f489d3c32a585aefc387b18757e5fee1b423fdd84f21b614b9a69b762d9af3",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/source.mem",
+      "sha256": "0b0350548f9a41e33dfb324f8a0e797cabc28524eeeffdaa5cadfa21253a944f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col0/tb.sv",
+      "sha256": "7d484eee14353f8d03bbc2f49cfe98c91544e40c8440902e066b20e92dc9ac2e",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/config.mem",
+      "sha256": "50888443c28067bb29e1dde213c79a1786c0dff378424fa6a3f1d7ecc161dc66",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/expected.mem",
+      "sha256": "d07078d47fd164feea7bca7c0264a8d521ce755b1c69331642dcf90caf322d7d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/manifest.json",
+      "sha256": "56a1f74aac0fc61fcb3ee051b8e14690734b22e3c8285fa2a4e65df3b36108fe",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/programme_params.svh",
+      "sha256": "37abac6acf0ad2ce5a1a33b56809fadc2c14d663c6ec7801cd7669ef3184361e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/source.mem",
+      "sha256": "d07078d47fd164feea7bca7c0264a8d521ce755b1c69331642dcf90caf322d7d",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col1/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/config.mem",
+      "sha256": "98c96a6d95ab0c89c16b4bf34da06003fec76d8da3f25add3fb46ac62146ac72",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/expected.mem",
+      "sha256": "d28f541badddfc17b7fb1e4c813bd1d6f0d9ac23a91e53e3389acf2da0e270eb",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/manifest.json",
+      "sha256": "41b59927cb15ebac7729854c5001bf2a35b03303bc95a0dbff03780bf9ab97a5",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/programme_params.svh",
+      "sha256": "d0240452630bc1bc314e8e5969c973c220c40b1c5b91783925f3f2970dc5108b",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/source.mem",
+      "sha256": "d28f541badddfc17b7fb1e4c813bd1d6f0d9ac23a91e53e3389acf2da0e270eb",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col2/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/config.mem",
+      "sha256": "bce2806159aa76ea63419877bf91b869c1559ec6460956a0830ac06dd5a4bf3c",
+      "bytes": 3337
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/expected.mem",
+      "sha256": "82a6ec933ecc17dc6eb0dab2c9126dee02e8fcbf3332301d8d7063a4110a4be7",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/manifest.json",
+      "sha256": "c31f716beb2949ebfe2480a94b368329d371fdc6ff9495fa4959a01efb23416f",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/programme_params.svh",
+      "sha256": "51b834a3440935f385230425ad7a09d847ffb34ea30857b0cd20cbe3fe92fe70",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/source.mem",
+      "sha256": "82a6ec933ecc17dc6eb0dab2c9126dee02e8fcbf3332301d8d7063a4110a4be7",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col3/tb.sv",
+      "sha256": "17789386504a26a2ed0e22dd43350e006c31c592626523f2ae33d67245733223",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/config.mem",
+      "sha256": "f2d8875065b0db16ee5bced81712f8887fdf8b48341ccd9955a4737849c373a7",
+      "bytes": 3408
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/expected.mem",
+      "sha256": "ac327a54afde2004e8780e4ea0bac27101ed9ddb49fbff148e3f2e427cedd4d5",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/manifest.json",
+      "sha256": "e3c0ffd47ae7da71eab038e2d345be3e0853241232de80ff00f9a5466f0d4894",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/programme_params.svh",
+      "sha256": "3884d556961f3cb0bb965c4f03ab5e1208484ac8e0e57275d320f5a32d80c9b1",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/source.mem",
+      "sha256": "ac327a54afde2004e8780e4ea0bac27101ed9ddb49fbff148e3f2e427cedd4d5",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col4/tb.sv",
+      "sha256": "cb3bf5711e31a24a436e76ff95c7f0d52439dc4a1e695580442da0820514f9dd",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/config.mem",
+      "sha256": "5d3a39352001332a5bcfcc635b7ff68115595ecf92358523281df8fde3e935b3",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/expected.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/manifest.json",
+      "sha256": "46edba741df1919ee63bb186fb7d5e18636d6f2c832e7b0940676f88208cb758",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/programme_params.svh",
+      "sha256": "41f6ef78feae46ae3e215aa74097c3458544cfb247e3f2e3702d2a8ea63e6c2f",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/source.mem",
+      "sha256": "8cb9bfd4e708c774ba08d6e6665f14cfa8dfcbfd6071fdf06a839254f056ef2f",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col5/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/config.mem",
+      "sha256": "316338a17bc52ccf2e34a2ce8dc32ab5b1ac64e09cf30f7a0ee2116aa7135ad9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/expected.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/manifest.json",
+      "sha256": "d9f93e1e1f7c04fce4041d09504ffc7015ed808e826273dc0485ccfd17f39b2f",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/programme_params.svh",
+      "sha256": "966f554c3b0151857f8a2ae199c191cd1b7fb99661aaa01ce0c1fa12f871e577",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/source.mem",
+      "sha256": "1ff2d4ff0d858c636cf94c6b1f04737e8a9b9cfde3263c68728c36c0662a71f0",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col6/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/config.mem",
+      "sha256": "b6fc8974fdf56869fc8d51a0f67485cab51c0b3334db58a0bbee6c3c95b217d9",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/expected.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/manifest.json",
+      "sha256": "1c9e301f2c256782dd68e876d22f5aa548e21eddfc655efea7a5da03b452dee1",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/programme_params.svh",
+      "sha256": "8bbfe69671fe881517fa8d43a2dff59e5cb490ee4a2dd61e1b4bc75b01c4663e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/source.mem",
+      "sha256": "58dde55f22c4bb554cd6cf0391ae88651f6128e1ebdb2ce2f300e88d82085458",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col7/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/config.mem",
+      "sha256": "288cedc430bda1a9d5fa20a4dc9a234aada6ed0597ec6b90ade0499595acfed4",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/expected.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/manifest.json",
+      "sha256": "0c24aa911df9b68582de40a734de78b5ddc2cbc84b5ef0fb5a48759eb5b35e10",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/programme_params.svh",
+      "sha256": "dad6b0200cafe836f0f06dc77eeff056b94daa0660ad72262dcb00cdc0860e5e",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/source.mem",
+      "sha256": "270a65c62bacf09f5a5632601dfb0a1f83d5f883b485d90865eb10682e4122b8",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col8/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/config.mem",
+      "sha256": "c0f396d7c4149321edba4a88711d3ff2ddc191d78ae1465a61c4fd31d9a7f063",
+      "bytes": 3124
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/expected.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/manifest.json",
+      "sha256": "98dce08d018ee1f985287ca84fa0047ce7764d4c47ae40b82c44b2f5b8218958",
+      "bytes": 1815
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/programme_params.svh",
+      "sha256": "ad393a0ffcf773b8519162a181aeaf8173b2f59dcd931503e038fd8d4f76e11d",
+      "bytes": 153
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/source.mem",
+      "sha256": "5f7e7d4b4a23ce38dd9d2ca77865d4ca3498b97d49f7bdd8e510146b16081e10",
+      "bytes": 43680
+    },
+    {
+      "path": "generated_clockfix/q3/cols/col9/tb.sv",
+      "sha256": "bd94be0e43bd70a0878882ebcd3c7de3f384580db9f5602a429ad40b4a24a974",
+      "bytes": 2202
+    },
+    {
+      "path": "generated_clockfix/q3/cols/cols_manifest.json",
+      "sha256": "079b9ed9dab77bd9f11a24ada7a486546154082010974615d19e93c4494bbafd",
+      "bytes": 2584
+    },
+    {
+      "path": "generated_clockfix/q3/cols/cols_params.svh",
+      "sha256": "7b6fd9c704bbf0d98e2feaa48857d598d558adbcc461b8f95c68ae3724afe082",
+      "bytes": 166
+    },
+    {
+      "path": "generated_clockfix/q3/cols/config.mem",
+      "sha256": "457d69388c84f923f1006fbf016230aeaf1c48115af25056b5904469994f4de2",
+      "bytes": 32092
+    },
+    {
+      "path": "generated_clockfix/q3/cols/config_mut.mem",
+      "sha256": "457d69388c84f923f1006fbf016230aeaf1c48115af25056b5904469994f4de2",
+      "bytes": 32092
+    },
+    {
+      "path": "generated_clockfix/q3/cols/expected.mem",
+      "sha256": "6bc2926d76acba6c63f33454903a04bf8425d4d1c76469750aeaf1339a22de9c",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q3/cols/ref/config.mem",
+      "sha256": "ad6bc35445dd1709b96d26b29f83c85a4136f3e5255d95e475f9528eadea726a",
+      "bytes": 49984
+    },
+    {
+      "path": "generated_clockfix/q3/cols/ref/expected.mem",
+      "sha256": "6bc2926d76acba6c63f33454903a04bf8425d4d1c76469750aeaf1339a22de9c",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/q3/cols/ref/manifest.json",
+      "sha256": "6d3d384891a4267ca9c42a6ec8ea899baa64828a04ecf9e29cd09adccf1c42e1",
+      "bytes": 2502
+    },
+    {
+      "path": "generated_clockfix/q3/cols/ref/programme_params.svh",
+      "sha256": "338b555449993c22c304063ebf62c81baa33a3c9fb053257d4ae2c7ef9291e0d",
+      "bytes": 203
+    },
+    {
+      "path": "generated_clockfix/q3/cols/ref/tb.sv",
+      "sha256": "4f59ee737f75d43c4bd98250931cc9fbe0a33ab7dc13a65200a7abae36825ce7",
+      "bytes": 2259
+    },
+    {
+      "path": "generated_clockfix/q3/occupancy.json",
+      "sha256": "15db43fed7d75cea74ddf88674e04dc301804d5592844413d90374b1d3664e60",
+      "bytes": 243
+    },
+    {
+      "path": "generated_clockfix/q3/quarter.mem",
+      "sha256": "6bc2926d76acba6c63f33454903a04bf8425d4d1c76469750aeaf1339a22de9c",
+      "bytes": 407904
+    },
+    {
+      "path": "generated_clockfix/receipt.json",
+      "sha256": "c1fbf70359fb01d0a695dad3bdcb70d35643b5a0742436d8800578896dce4965",
+      "bytes": 41653
+    },
+    {
+      "path": "generated_clockfix/square0.mem",
+      "sha256": "04b8ab275356c162bd3e6fead3d9323f5decfcb430c1c663a128a6e2fb4ce8ff",
+      "bytes": 11520
+    },
+    {
+      "path": "generated_clockfix/square1.mem",
+      "sha256": "97ed282dad46ef392cba8bd5b00fe0f4dc6e75c47b81328106a26eb806775507",
+      "bytes": 11520
+    },
+    {
+      "path": "generated_clockfix/tb.sv",
+      "sha256": "f9773462d2b4c2ce3110571b555586513807421c0a26a262c00277ccfb04578a",
+      "bytes": 1981291
+    }
+  ],
+  "processes": "    PID    PPID COMMAND\n      1       0 /usr/lib/systemd/systemd --system --deserialize=93\n      2       0 [kthreadd]\n      3       2 [pool_workqueue_release]\n      4       2 [kworker/R-rcu_gp]\n      5       2 [kworker/R-sync_wq]\n      6       2 [kworker/R-kvfree_rcu_reclaim]\n      7       2 [kworker/R-slub_flushwq]\n      8       2 [kworker/R-netns]\n     10       2 [kworker/0:0H-kblockd]\n     13       2 [kworker/R-mm_percpu_wq]\n     14       2 [ksoftirqd/0]\n     15       2 [rcu_preempt]\n     16       2 [rcu_exp_par_gp_kthread_worker/1]\n     17       2 [rcu_exp_gp_kthread_worker]\n     18       2 [migration/0]\n     19       2 [kprobe-optimizer]\n     20       2 [idle_inject/0]\n     21       2 [cpuhp/0]\n     22       2 [cpuhp/1]\n     23       2 [idle_inject/1]\n     24       2 [migration/1]\n     25       2 [ksoftirqd/1]\n     27       2 [kworker/1:0H-kblockd]\n     28       2 [cpuhp/2]\n     29       2 [idle_inject/2]\n     30       2 [migration/2]\n     31       2 [ksoftirqd/2]\n     33       2 [kworker/2:0H-kblockd]\n     34       2 [cpuhp/3]\n     35       2 [idle_inject/3]\n     36       2 [migration/3]\n     37       2 [ksoftirqd/3]\n     39       2 [kworker/3:0H-kblockd]\n     40       2 [cpuhp/4]\n     41       2 [idle_inject/4]\n     42       2 [migration/4]\n     43       2 [ksoftirqd/4]\n     45       2 [kworker/4:0H-kblockd]\n     46       2 [cpuhp/5]\n     47       2 [idle_inject/5]\n     48       2 [migration/5]\n     49       2 [ksoftirqd/5]\n     51       2 [kworker/5:0H-kblockd]\n     52       2 [cpuhp/6]\n     53       2 [idle_inject/6]\n     54       2 [migration/6]\n     55       2 [ksoftirqd/6]\n     57       2 [kworker/6:0H-kblockd]\n     58       2 [cpuhp/7]\n     59       2 [idle_inject/7]\n     60       2 [migration/7]\n     61       2 [ksoftirqd/7]\n     63       2 [kworker/7:0H-kblockd]\n     64       2 [cpuhp/8]\n     65       2 [idle_inject/8]\n     66       2 [migration/8]\n     67       2 [ksoftirqd/8]\n     69       2 [kworker/8:0H-kblockd]\n     70       2 [cpuhp/9]\n     71       2 [idle_inject/9]\n     72       2 [migration/9]\n     73       2 [ksoftirqd/9]\n     75       2 [kworker/9:0H-kblockd]\n     76       2 [cpuhp/10]\n     77       2 [idle_inject/10]\n     78       2 [migration/10]\n     79       2 [ksoftirqd/10]\n     81       2 [kworker/10:0H-kblockd]\n     82       2 [cpuhp/11]\n     83       2 [idle_inject/11]\n     84       2 [migration/11]\n     85       2 [ksoftirqd/11]\n     87       2 [kworker/11:0H-kblockd]\n     88       2 [cpuhp/12]\n     89       2 [idle_inject/12]\n     90       2 [migration/12]\n     91       2 [ksoftirqd/12]\n     93       2 [kworker/12:0H-kblockd]\n     94       2 [cpuhp/13]\n     95       2 [idle_inject/13]\n     96       2 [migration/13]\n     97       2 [ksoftirqd/13]\n     99       2 [kworker/13:0H-kblockd]\n    100       2 [cpuhp/14]\n    101       2 [idle_inject/14]\n    102       2 [migration/14]\n    103       2 [ksoftirqd/14]\n    105       2 [kworker/14:0H-kblockd]\n    106       2 [cpuhp/15]\n    107       2 [idle_inject/15]\n    108       2 [migration/15]\n    109       2 [ksoftirqd/15]\n    111       2 [kworker/15:0H-kblockd]\n    112       2 [cpuhp/16]\n    113       2 [idle_inject/16]\n    114       2 [migration/16]\n    115       2 [ksoftirqd/16]\n    117       2 [kworker/16:0H-kblockd]\n    118       2 [rcu_exp_par_gp_kthread_worker/2]\n    119       2 [cpuhp/17]\n    120       2 [idle_inject/17]\n    121       2 [migration/17]\n    122       2 [ksoftirqd/17]\n    124       2 [kworker/17:0H-kblockd]\n    125       2 [cpuhp/18]\n    126       2 [idle_inject/18]\n    127       2 [migration/18]\n    128       2 [ksoftirqd/18]\n    130       2 [kworker/18:0H-kblockd]\n    131       2 [cpuhp/19]\n    132       2 [idle_inject/19]\n    133       2 [migration/19]\n    134       2 [ksoftirqd/19]\n    136       2 [kworker/19:0H-kblockd]\n    137       2 [cpuhp/20]\n    138       2 [idle_inject/20]\n    139       2 [migration/20]\n    140       2 [ksoftirqd/20]\n    142       2 [kworker/20:0H-kblockd]\n    143       2 [cpuhp/21]\n    144       2 [idle_inject/21]\n    145       2 [migration/21]\n    146       2 [ksoftirqd/21]\n    148       2 [kworker/21:0H-kblockd]\n    149       2 [cpuhp/22]\n    150       2 [idle_inject/22]\n    151       2 [migration/22]\n    152       2 [ksoftirqd/22]\n    154       2 [kworker/22:0H-kblockd]\n    155       2 [cpuhp/23]\n    156       2 [idle_inject/23]\n    157       2 [migration/23]\n    158       2 [ksoftirqd/23]\n    160       2 [kworker/23:0H-kblockd]\n    161       2 [cpuhp/24]\n    162       2 [idle_inject/24]\n    163       2 [migration/24]\n    164       2 [ksoftirqd/24]\n    166       2 [kworker/24:0H-kblockd]\n    167       2 [cpuhp/25]\n    168       2 [idle_inject/25]\n    169       2 [migration/25]\n    170       2 [ksoftirqd/25]\n    172       2 [kworker/25:0H-kblockd]\n    173       2 [cpuhp/26]\n    174       2 [idle_inject/26]\n    175       2 [migration/26]\n    176       2 [ksoftirqd/26]\n    178       2 [kworker/26:0H-kblockd]\n    179       2 [cpuhp/27]\n    180       2 [idle_inject/27]\n    181       2 [migration/27]\n    182       2 [ksoftirqd/27]\n    184       2 [kworker/27:0H-kblockd]\n    185       2 [cpuhp/28]\n    186       2 [idle_inject/28]\n    187       2 [migration/28]\n    188       2 [ksoftirqd/28]\n    190       2 [kworker/28:0H-kblockd]\n    191       2 [cpuhp/29]\n    192       2 [idle_inject/29]\n    193       2 [migration/29]\n    194       2 [ksoftirqd/29]\n    196       2 [kworker/29:0H-kblockd]\n    197       2 [cpuhp/30]\n    198       2 [idle_inject/30]\n    199       2 [migration/30]\n    200       2 [ksoftirqd/30]\n    202       2 [kworker/30:0H-kblockd]\n    203       2 [cpuhp/31]\n    204       2 [idle_inject/31]\n    205       2 [migration/31]\n    206       2 [ksoftirqd/31]\n    208       2 [kworker/31:0H-kblockd]\n    209       2 [cpuhp/32]\n    210       2 [idle_inject/32]\n    211       2 [migration/32]\n    212       2 [ksoftirqd/32]\n    214       2 [kworker/32:0H-kblockd]\n    215       2 [rcu_exp_par_gp_kthread_worker/3]\n    216       2 [cpuhp/33]\n    217       2 [idle_inject/33]\n    218       2 [migration/33]\n    219       2 [ksoftirqd/33]\n    221       2 [kworker/33:0H-kblockd]\n    222       2 [cpuhp/34]\n    223       2 [idle_inject/34]\n    224       2 [migration/34]\n    225       2 [ksoftirqd/34]\n    227       2 [kworker/34:0H-kblockd]\n    228       2 [cpuhp/35]\n    229       2 [idle_inject/35]\n    230       2 [migration/35]\n    231       2 [ksoftirqd/35]\n    233       2 [kworker/35:0H-kblockd]\n    234       2 [cpuhp/36]\n    235       2 [idle_inject/36]\n    236       2 [migration/36]\n    237       2 [ksoftirqd/36]\n    239       2 [kworker/36:0H-kblockd]\n    240       2 [cpuhp/37]\n    241       2 [idle_inject/37]\n    242       2 [migration/37]\n    243       2 [ksoftirqd/37]\n    245       2 [kworker/37:0H-kblockd]\n    246       2 [cpuhp/38]\n    247       2 [idle_inject/38]\n    248       2 [migration/38]\n    249       2 [ksoftirqd/38]\n    251       2 [kworker/38:0H-kblockd]\n    252       2 [cpuhp/39]\n    253       2 [idle_inject/39]\n    254       2 [migration/39]\n    255       2 [ksoftirqd/39]\n    257       2 [kworker/39:0H-kblockd]\n    258       2 [cpuhp/40]\n    259       2 [idle_inject/40]\n    260       2 [migration/40]\n    261       2 [ksoftirqd/40]\n    263       2 [kworker/40:0H-kblockd]\n    264       2 [cpuhp/41]\n    265       2 [idle_inject/41]\n    266       2 [migration/41]\n    267       2 [ksoftirqd/41]\n    269       2 [kworker/41:0H-kblockd]\n    270       2 [cpuhp/42]\n    271       2 [idle_inject/42]\n    272       2 [migration/42]\n    273       2 [ksoftirqd/42]\n    275       2 [kworker/42:0H-kblockd]\n    276       2 [cpuhp/43]\n    277       2 [idle_inject/43]\n    278       2 [migration/43]\n    279       2 [ksoftirqd/43]\n    281       2 [kworker/43:0H-kblockd]\n    282       2 [cpuhp/44]\n    283       2 [idle_inject/44]\n    284       2 [migration/44]\n    285       2 [ksoftirqd/44]\n    287       2 [kworker/44:0H-kblockd]\n    288       2 [cpuhp/45]\n    289       2 [idle_inject/45]\n    290       2 [migration/45]\n    291       2 [ksoftirqd/45]\n    293       2 [kworker/45:0H-kblockd]\n    294       2 [cpuhp/46]\n    295       2 [idle_inject/46]\n    296       2 [migration/46]\n    297       2 [ksoftirqd/46]\n    299       2 [kworker/46:0H-kblockd]\n    300       2 [cpuhp/47]\n    301       2 [idle_inject/47]\n    302       2 [migration/47]\n    303       2 [ksoftirqd/47]\n    305       2 [kworker/47:0H-kblockd]\n    306       2 [cpuhp/48]\n    307       2 [idle_inject/48]\n    308       2 [migration/48]\n    309       2 [ksoftirqd/48]\n    311       2 [kworker/48:0H-kblockd]\n    312       2 [rcu_exp_par_gp_kthread_worker/4]\n    313       2 [cpuhp/49]\n    314       2 [idle_inject/49]\n    315       2 [migration/49]\n    316       2 [ksoftirqd/49]\n    318       2 [kworker/49:0H-kblockd]\n    319       2 [cpuhp/50]\n    320       2 [idle_inject/50]\n    321       2 [migration/50]\n    322       2 [ksoftirqd/50]\n    324       2 [kworker/50:0H-kblockd]\n    325       2 [cpuhp/51]\n    326       2 [idle_inject/51]\n    327       2 [migration/51]\n    328       2 [ksoftirqd/51]\n    330       2 [kworker/51:0H-kblockd]\n    331       2 [cpuhp/52]\n    332       2 [idle_inject/52]\n    333       2 [migration/52]\n    334       2 [ksoftirqd/52]\n    336       2 [kworker/52:0H-kblockd]\n    337       2 [cpuhp/53]\n    338       2 [idle_inject/53]\n    339       2 [migration/53]\n    340       2 [ksoftirqd/53]\n    342       2 [kworker/53:0H-kblockd]\n    343       2 [cpuhp/54]\n    344       2 [idle_inject/54]\n    345       2 [migration/54]\n    346       2 [ksoftirqd/54]\n    348       2 [kworker/54:0H-kblockd]\n    349       2 [cpuhp/55]\n    350       2 [idle_inject/55]\n    351       2 [migration/55]\n    352       2 [ksoftirqd/55]\n    354       2 [kworker/55:0H-kblockd]\n    355       2 [cpuhp/56]\n    356       2 [idle_inject/56]\n    357       2 [migration/56]\n    358       2 [ksoftirqd/56]\n    360       2 [kworker/56:0H-kblockd]\n    361       2 [cpuhp/57]\n    362       2 [idle_inject/57]\n    363       2 [migration/57]\n    364       2 [ksoftirqd/57]\n    366       2 [kworker/57:0H-kblockd]\n    367       2 [cpuhp/58]\n    368       2 [idle_inject/58]\n    369       2 [migration/58]\n    370       2 [ksoftirqd/58]\n    372       2 [kworker/58:0H-kblockd]\n    373       2 [cpuhp/59]\n    374       2 [idle_inject/59]\n    375       2 [migration/59]\n    376       2 [ksoftirqd/59]\n    378       2 [kworker/59:0H-kblockd]\n    379       2 [cpuhp/60]\n    380       2 [idle_inject/60]\n    381       2 [migration/60]\n    382       2 [ksoftirqd/60]\n    384       2 [kworker/60:0H-kblockd]\n    385       2 [cpuhp/61]\n    386       2 [idle_inject/61]\n    387       2 [migration/61]\n    388       2 [ksoftirqd/61]\n    390       2 [kworker/61:0H-kblockd]\n    391       2 [cpuhp/62]\n    392       2 [idle_inject/62]\n    393       2 [migration/62]\n    394       2 [ksoftirqd/62]\n    396       2 [kworker/62:0H-kblockd]\n    397       2 [cpuhp/63]\n    398       2 [idle_inject/63]\n    399       2 [migration/63]\n    400       2 [ksoftirqd/63]\n    402       2 [kworker/63:0H-kblockd]\n    403       2 [cpuhp/64]\n    404       2 [idle_inject/64]\n    405       2 [migration/64]\n    406       2 [ksoftirqd/64]\n    408       2 [kworker/64:0H-kblockd]\n    409       2 [rcu_exp_par_gp_kthread_worker/5]\n    410       2 [cpuhp/65]\n    411       2 [idle_inject/65]\n    412       2 [migration/65]\n    413       2 [ksoftirqd/65]\n    415       2 [kworker/65:0H-kblockd]\n    416       2 [cpuhp/66]\n    417       2 [idle_inject/66]\n    418       2 [migration/66]\n    419       2 [ksoftirqd/66]\n    421       2 [kworker/66:0H-kblockd]\n    422       2 [cpuhp/67]\n    423       2 [idle_inject/67]\n    424       2 [migration/67]\n    425       2 [ksoftirqd/67]\n    427       2 [kworker/67:0H-kblockd]\n    428       2 [cpuhp/68]\n    429       2 [idle_inject/68]\n    430       2 [migration/68]\n    431       2 [ksoftirqd/68]\n    433       2 [kworker/68:0H-kblockd]\n    434       2 [cpuhp/69]\n    435       2 [idle_inject/69]\n    436       2 [migration/69]\n    437       2 [ksoftirqd/69]\n    439       2 [kworker/69:0H-kblockd]\n    440       2 [cpuhp/70]\n    441       2 [idle_inject/70]\n    442       2 [migration/70]\n    443       2 [ksoftirqd/70]\n    445       2 [kworker/70:0H-kblockd]\n    446       2 [cpuhp/71]\n    447       2 [idle_inject/71]\n    448       2 [migration/71]\n    449       2 [ksoftirqd/71]\n    451       2 [kworker/71:0H-kblockd]\n    452       2 [cpuhp/72]\n    453       2 [idle_inject/72]\n    454       2 [migration/72]\n    455       2 [ksoftirqd/72]\n    457       2 [kworker/72:0H-kblockd]\n    458       2 [cpuhp/73]\n    459       2 [idle_inject/73]\n    460       2 [migration/73]\n    461       2 [ksoftirqd/73]\n    463       2 [kworker/73:0H-kblockd]\n    464       2 [cpuhp/74]\n    465       2 [idle_inject/74]\n    466       2 [migration/74]\n    467       2 [ksoftirqd/74]\n    469       2 [kworker/74:0H-kblockd]\n    470       2 [cpuhp/75]\n    471       2 [idle_inject/75]\n    472       2 [migration/75]\n    473       2 [ksoftirqd/75]\n    475       2 [kworker/75:0H-kblockd]\n    476       2 [cpuhp/76]\n    477       2 [idle_inject/76]\n    478       2 [migration/76]\n    479       2 [ksoftirqd/76]\n    481       2 [kworker/76:0H-kblockd]\n    482       2 [cpuhp/77]\n    483       2 [idle_inject/77]\n    484       2 [migration/77]\n    485       2 [ksoftirqd/77]\n    487       2 [kworker/77:0H-kblockd]\n    488       2 [cpuhp/78]\n    489       2 [idle_inject/78]\n    490       2 [migration/78]\n    491       2 [ksoftirqd/78]\n    493       2 [kworker/78:0H-kblockd]\n    494       2 [cpuhp/79]\n    495       2 [idle_inject/79]\n    496       2 [migration/79]\n    497       2 [ksoftirqd/79]\n    499       2 [kworker/79:0H-kblockd]\n    500       2 [cpuhp/80]\n    501       2 [idle_inject/80]\n    502       2 [migration/80]\n    503       2 [ksoftirqd/80]\n    505       2 [kworker/80:0H-kblockd]\n    506       2 [rcu_exp_par_gp_kthread_worker/6]\n    507       2 [cpuhp/81]\n    508       2 [idle_inject/81]\n    509       2 [migration/81]\n    510       2 [ksoftirqd/81]\n    512       2 [kworker/81:0H-kblockd]\n    513       2 [cpuhp/82]\n    514       2 [idle_inject/82]\n    515       2 [migration/82]\n    516       2 [ksoftirqd/82]\n    518       2 [kworker/82:0H-kblockd]\n    519       2 [cpuhp/83]\n    520       2 [idle_inject/83]\n    521       2 [migration/83]\n    522       2 [ksoftirqd/83]\n    524       2 [kworker/83:0H-kblockd]\n    525       2 [cpuhp/84]\n    526       2 [idle_inject/84]\n    527       2 [migration/84]\n    528       2 [ksoftirqd/84]\n    530       2 [kworker/84:0H-kblockd]\n    531       2 [cpuhp/85]\n    532       2 [idle_inject/85]\n    533       2 [migration/85]\n    534       2 [ksoftirqd/85]\n    536       2 [kworker/85:0H-kblockd]\n    537       2 [cpuhp/86]\n    538       2 [idle_inject/86]\n    539       2 [migration/86]\n    540       2 [ksoftirqd/86]\n    542       2 [kworker/86:0H-kblockd]\n    543       2 [cpuhp/87]\n    544       2 [idle_inject/87]\n    545       2 [migration/87]\n    546       2 [ksoftirqd/87]\n    548       2 [kworker/87:0H-kblockd]\n    549       2 [cpuhp/88]\n    550       2 [idle_inject/88]\n    551       2 [migration/88]\n    552       2 [ksoftirqd/88]\n    554       2 [kworker/88:0H-kblockd]\n    555       2 [cpuhp/89]\n    556       2 [idle_inject/89]\n    557       2 [migration/89]\n    558       2 [ksoftirqd/89]\n    560       2 [kworker/89:0H-kblockd]\n    561       2 [cpuhp/90]\n    562       2 [idle_inject/90]\n    563       2 [migration/90]\n    564       2 [ksoftirqd/90]\n    566       2 [kworker/90:0H-kblockd]\n    567       2 [cpuhp/91]\n    568       2 [idle_inject/91]\n    569       2 [migration/91]\n    570       2 [ksoftirqd/91]\n    572       2 [kworker/91:0H-kblockd]\n    573       2 [cpuhp/92]\n    574       2 [idle_inject/92]\n    575       2 [migration/92]\n    576       2 [ksoftirqd/92]\n    578       2 [kworker/92:0H-kblockd]\n    579       2 [cpuhp/93]\n    580       2 [idle_inject/93]\n    581       2 [migration/93]\n    582       2 [ksoftirqd/93]\n    584       2 [kworker/93:0H-kblockd]\n    585       2 [cpuhp/94]\n    586       2 [idle_inject/94]\n    587       2 [migration/94]\n    588       2 [ksoftirqd/94]\n    590       2 [kworker/94:0H-kblockd]\n    591       2 [cpuhp/95]\n    592       2 [idle_inject/95]\n    593       2 [migration/95]\n    594       2 [ksoftirqd/95]\n    596       2 [kworker/95:0H-kblockd]\n    597       2 [cpuhp/96]\n    598       2 [idle_inject/96]\n    599       2 [migration/96]\n    600       2 [ksoftirqd/96]\n    602       2 [kworker/96:0H-kblockd]\n    603       2 [rcu_exp_par_gp_kthread_worker/7]\n    604       2 [cpuhp/97]\n    605       2 [idle_inject/97]\n    606       2 [migration/97]\n    607       2 [ksoftirqd/97]\n    609       2 [kworker/97:0H-kblockd]\n    610       2 [cpuhp/98]\n    611       2 [idle_inject/98]\n    612       2 [migration/98]\n    613       2 [ksoftirqd/98]\n    615       2 [kworker/98:0H-kblockd]\n    616       2 [cpuhp/99]\n    617       2 [idle_inject/99]\n    618       2 [migration/99]\n    619       2 [ksoftirqd/99]\n    621       2 [kworker/99:0H-kblockd]\n    622       2 [cpuhp/100]\n    623       2 [idle_inject/100]\n    624       2 [migration/100]\n    625       2 [ksoftirqd/100]\n    627       2 [kworker/100:0H-kblockd]\n    628       2 [cpuhp/101]\n    629       2 [idle_inject/101]\n    630       2 [migration/101]\n    631       2 [ksoftirqd/101]\n    633       2 [kworker/101:0H-kblockd]\n    634       2 [cpuhp/102]\n    635       2 [idle_inject/102]\n    636       2 [migration/102]\n    637       2 [ksoftirqd/102]\n    639       2 [kworker/102:0H-kblockd]\n    640       2 [cpuhp/103]\n    641       2 [idle_inject/103]\n    642       2 [migration/103]\n    643       2 [ksoftirqd/103]\n    645       2 [kworker/103:0H-kblockd]\n    646       2 [cpuhp/104]\n    647       2 [idle_inject/104]\n    648       2 [migration/104]\n    649       2 [ksoftirqd/104]\n    651       2 [kworker/104:0H-kblockd]\n    652       2 [cpuhp/105]\n    653       2 [idle_inject/105]\n    654       2 [migration/105]\n    655       2 [ksoftirqd/105]\n    657       2 [kworker/105:0H-kblockd]\n    658       2 [cpuhp/106]\n    659       2 [idle_inject/106]\n    660       2 [migration/106]\n    661       2 [ksoftirqd/106]\n    663       2 [kworker/106:0H-kblockd]\n    664       2 [cpuhp/107]\n    665       2 [idle_inject/107]\n    666       2 [migration/107]\n    667       2 [ksoftirqd/107]\n    669       2 [kworker/107:0H-kblockd]\n    670       2 [cpuhp/108]\n    671       2 [idle_inject/108]\n    672       2 [migration/108]\n    673       2 [ksoftirqd/108]\n    675       2 [kworker/108:0H-kblockd]\n    676       2 [cpuhp/109]\n    677       2 [idle_inject/109]\n    678       2 [migration/109]\n    679       2 [ksoftirqd/109]\n    681       2 [kworker/109:0H-kblockd]\n    682       2 [cpuhp/110]\n    683       2 [idle_inject/110]\n    684       2 [migration/110]\n    685       2 [ksoftirqd/110]\n    687       2 [kworker/110:0H-kblockd]\n    688       2 [cpuhp/111]\n    689       2 [idle_inject/111]\n    690       2 [migration/111]\n    691       2 [ksoftirqd/111]\n    693       2 [kworker/111:0H-kblockd]\n    694       2 [cpuhp/112]\n    695       2 [idle_inject/112]\n    696       2 [migration/112]\n    697       2 [ksoftirqd/112]\n    699       2 [kworker/112:0H-kblockd]\n    700       2 [rcu_exp_par_gp_kthread_worker/8]\n    701       2 [cpuhp/113]\n    702       2 [idle_inject/113]\n    703       2 [migration/113]\n    704       2 [ksoftirqd/113]\n    706       2 [kworker/113:0H-kblockd]\n    707       2 [cpuhp/114]\n    708       2 [idle_inject/114]\n    709       2 [migration/114]\n    710       2 [ksoftirqd/114]\n    712       2 [kworker/114:0H-kblockd]\n    713       2 [cpuhp/115]\n    714       2 [idle_inject/115]\n    715       2 [migration/115]\n    716       2 [ksoftirqd/115]\n    718       2 [kworker/115:0H-kblockd]\n    719       2 [cpuhp/116]\n    720       2 [idle_inject/116]\n    721       2 [migration/116]\n    722       2 [ksoftirqd/116]\n    724       2 [kworker/116:0H-kblockd]\n    725       2 [cpuhp/117]\n    726       2 [idle_inject/117]\n    727       2 [migration/117]\n    728       2 [ksoftirqd/117]\n    730       2 [kworker/117:0H-kblockd]\n    731       2 [cpuhp/118]\n    732       2 [idle_inject/118]\n    733       2 [migration/118]\n    734       2 [ksoftirqd/118]\n    736       2 [kworker/118:0H-kblockd]\n    737       2 [cpuhp/119]\n    738       2 [idle_inject/119]\n    739       2 [migration/119]\n    740       2 [ksoftirqd/119]\n    742       2 [kworker/119:0H-kblockd]\n    743       2 [cpuhp/120]\n    744       2 [idle_inject/120]\n    745       2 [migration/120]\n    746       2 [ksoftirqd/120]\n    748       2 [kworker/120:0H-kblockd]\n    749       2 [cpuhp/121]\n    750       2 [idle_inject/121]\n    751       2 [migration/121]\n    752       2 [ksoftirqd/121]\n    754       2 [kworker/121:0H-kblockd]\n    755       2 [cpuhp/122]\n    756       2 [idle_inject/122]\n    757       2 [migration/122]\n    758       2 [ksoftirqd/122]\n    760       2 [kworker/122:0H-kblockd]\n    761       2 [cpuhp/123]\n    762       2 [idle_inject/123]\n    763       2 [migration/123]\n    764       2 [ksoftirqd/123]\n    766       2 [kworker/123:0H-kblockd]\n    767       2 [cpuhp/124]\n    768       2 [idle_inject/124]\n    769       2 [migration/124]\n    770       2 [ksoftirqd/124]\n    772       2 [kworker/124:0H-kblockd]\n    773       2 [cpuhp/125]\n    774       2 [idle_inject/125]\n    775       2 [migration/125]\n    776       2 [ksoftirqd/125]\n    778       2 [kworker/125:0H-kblockd]\n    779       2 [cpuhp/126]\n    780       2 [idle_inject/126]\n    781       2 [migration/126]\n    782       2 [ksoftirqd/126]\n    784       2 [kworker/126:0H-kblockd]\n    785       2 [cpuhp/127]\n    786       2 [idle_inject/127]\n    787       2 [migration/127]\n    788       2 [ksoftirqd/127]\n    790       2 [kworker/127:0H-kblockd]\n    799       2 [kdevtmpfs]\n    800       2 [kworker/R-inet_frag_wq]\n    801       2 [rcu_tasks_kthread]\n    802       2 [rcu_tasks_rude_kthread]\n    803       2 [kauditd]\n    804       2 [khungtaskd]\n    806       2 [oom_reaper]\n    808       2 [kworker/R-writeback]\n    809       2 [kcompactd0]\n    810       2 [ksmd]\n    811       2 [khugepaged]\n    812       2 [kworker/R-kblockd]\n    813       2 [kworker/R-blkcg_punt_bio]\n    814       2 [kworker/R-kintegrityd]\n    816       2 [irq/9-acpi]\n    818       2 [kworker/R-tpm_dev_wq]\n    819       2 [kworker/R-ata_sff]\n    820       2 [kworker/R-md_bitmap]\n    821       2 [kworker/R-md_llbitmap_io]\n    822       2 [kworker/R-md_llbitmap_unplug]\n    823       2 [kworker/R-edac-poller]\n    825       2 [kworker/R-devfreq_wq]\n    826       2 [watchdogd]\n    827       2 [kworker/R-quota_events_unbound]\n    831       2 [irq/27-AMD-Vi0-Evt]\n    832       2 [irq/28-AMD-Vi0-PPR]\n    833       2 [irq/29-AMD-Vi0-GA]\n    834       2 [irq/30-AMD-Vi1-Evt]\n    835       2 [irq/31-AMD-Vi1-PPR]\n    836       2 [irq/32-AMD-Vi1-GA]\n    837       2 [irq/33-AMD-Vi2-Evt]\n    838       2 [irq/34-AMD-Vi2-PPR]\n    839       2 [irq/35-AMD-Vi2-GA]\n    840       2 [irq/36-AMD-Vi3-Evt]\n    841       2 [irq/37-AMD-Vi3-PPR]\n    842       2 [irq/38-AMD-Vi3-GA]\n    843       2 [kswapd0]\n    844       2 [ecryptfs-kthread]\n    845       2 [kworker/R-kthrotld]\n    846       2 [irq/41-pciehp]\n    847       2 [irq/42-pciehp]\n    848       2 [irq/43-pciehp]\n    849       2 [irq/44-pciehp]\n    850       2 [irq/52-pciehp]\n    851       2 [irq/53-pciehp]\n    852       2 [irq/54-pciehp]\n    853       2 [irq/55-pciehp]\n    854       2 [irq/60-pciehp]\n    855       2 [irq/61-pciehp]\n    856       2 [irq/62-pciehp]\n    857       2 [irq/63-pciehp]\n    858       2 [kworker/R-acpi_thermal_pm]\n    863       2 [kworker/R-mld]\n    864       2 [kworker/R-ipv6_addrconf]\n    865       2 [kworker/R-kstrp]\n    897       2 [kworker/u521:0]\n    898       2 [kworker/u522:0]\n    899       2 [kworker/u523:0]\n    900       2 [kworker/u524:0]\n    901       2 [kworker/u525:0]\n    902       2 [kworker/u526:0]\n    903       2 [kworker/u527:0]\n    904       2 [kworker/u528:0]\n    905       2 [kworker/u529:0]\n    926       2 [kworker/R-charger_manager]\n   1728       2 [kworker/R-nvme-wq]\n   1729       2 [kworker/R-nvme-reset-wq]\n   1730       2 [kworker/R-nvme-delete-wq]\n   1731       2 [kworker/R-nvme-auth-wq]\n   1733       2 [scsi_eh_0]\n   1734       2 [kworker/R-scsi_tmf_0]\n   1735       2 [scsi_eh_1]\n   1737       2 [kworker/R-scsi_tmf_1]\n   1756       2 [scsi_eh_2]\n   1757       2 [kworker/R-scsi_tmf_2]\n   1758       2 [scsi_eh_3]\n   1759       2 [kworker/R-scsi_tmf_3]\n   1761       2 [scsi_eh_4]\n   1762       2 [kworker/R-scsi_tmf_4]\n   1763       2 [scsi_eh_5]\n   1778       2 [kworker/R-scsi_tmf_5]\n   1779       2 [scsi_eh_6]\n   1781       2 [kworker/R-scsi_tmf_6]\n   1785       2 [scsi_eh_7]\n   1786       2 [kworker/R-scsi_tmf_7]\n   1787       2 [scsi_eh_8]\n   1790       2 [kworker/R-scsi_tmf_8]\n   1792       2 [scsi_eh_9]\n   1794       2 [kworker/R-scsi_tmf_9]\n   1805       2 [scsi_eh_10]\n   1807       2 [kworker/R-scsi_tmf_10]\n   1809       2 [scsi_eh_11]\n   1810       2 [kworker/R-scsi_tmf_11]\n   1811       2 [scsi_eh_12]\n   1812       2 [kworker/R-scsi_tmf_12]\n   1813       2 [scsi_eh_13]\n   1814       2 [kworker/R-scsi_tmf_13]\n   1815       2 [scsi_eh_14]\n   1816       2 [kworker/R-scsi_tmf_14]\n   1817       2 [scsi_eh_15]\n   1818       2 [kworker/R-scsi_tmf_15]\n   1819       2 [scsi_eh_16]\n   1820       2 [kworker/R-scsi_tmf_16]\n   1821       2 [scsi_eh_17]\n   1822       2 [kworker/R-scsi_tmf_17]\n   1876       2 [md0_raid1]\n   1878       2 [kworker/45:1H-kblockd]\n   1879       2 [kworker/46:1H-kblockd]\n   1881       2 [kworker/112:1H-kblockd]\n   1883       2 [kworker/47:1H-kblockd]\n   1884       2 [kworker/104:1H-kblockd]\n   1885       2 [kworker/105:1H-kblockd]\n   1886       2 [kworker/103:1H-kblockd]\n   1887       2 [kworker/32:1H-kblockd]\n   1890       2 [kworker/106:1H-kblockd]\n   1891       2 [kworker/107:1H-kblockd]\n   1892       2 [kworker/29:1H-kblockd]\n   1893       2 [kworker/30:1H-kblockd]\n   1906       2 [kworker/108:1H-kblockd]\n   1928       2 [kworker/88:1H-kblockd]\n   1936       2 [jbd2/md0-8]\n   1937       2 [kworker/R-ext4-rsv-conversion]\n   2047       2 [kworker/33:1H-kblockd]\n   2074       2 [kworker/R-kmpathd]\n   2075       2 [kworker/R-kmpath_handlerd]\n   2089       2 [kworker/2:1H-kblockd]\n   2090       2 [kworker/5:1H-kblockd]\n   2096       1 /usr/sbin/multipathd -d -s\n   2432       2 [kworker/R-ipmi-msghandler-remove-wq]\n   2440       1 /usr/sbin/mdadm --monitor --scan\n   2461       2 [kipmi0]\n   2700       2 [kworker/121:1H-kblockd]\n   2705       2 [kworker/111:1H-kblockd]\n   2706       2 [kworker/42:1H-kblockd]\n   2712       2 [kworker/48:1H-kblockd]\n   2783       2 [kworker/43:1H-kblockd]\n   2802       2 [kworker/R-cfg80211]\n   2809       2 [kworker/R-tls-strp]\n   2811       2 [kworker/R-bond0]\n   2846       2 [kworker/54:1H-kblockd]\n   2847       2 [kworker/99:1H-kblockd]\n   2848       2 [kworker/98:1H-kblockd]\n   2849       2 [kworker/41:1H-kblockd]\n   2850       2 [kworker/8:1H-kblockd]\n   2851       2 [kworker/40:1H-kblockd]\n   2852       2 [kworker/81:1H-kblockd]\n   2853       2 [kworker/84:1H-kblockd]\n   2854       2 [kworker/16:1H-kblockd]\n   2856       2 [kworker/87:1H-kblockd]\n   2857       2 [kworker/58:1H-kblockd]\n   2858       2 [kworker/56:1H-kblockd]\n   2859       2 [kworker/39:1H-kblockd]\n   2860       2 [kworker/4:1H-kblockd]\n   2861       2 [kworker/66:1H-kblockd]\n   2862       2 [kworker/68:1H-kblockd]\n   2863       2 [kworker/6:1H-kblockd]\n   2864       2 [kworker/95:1H-kblockd]\n   2865       2 [kworker/83:1H-kblockd]\n   2866       2 [kworker/9:1H-kblockd]\n   2867       2 [kworker/10:1H-kblockd]\n   2868       2 [kworker/72:1H-kblockd]\n   2869       2 [kworker/79:1H-kblockd]\n   2870       2 [kworker/44:1H-kblockd]\n   2871       2 [kworker/24:1H-kblockd]\n   2872       2 [kworker/73:1H-kblockd]\n   2873       2 [kworker/11:1H-kblockd]\n   2874       2 [kworker/0:1H-kblockd]\n   2875       2 [kworker/74:1H-kblockd]\n   2876       2 [kworker/75:1H-kblockd]\n   2877       2 [kworker/3:1H-kblockd]\n   2878       2 [kworker/76:1H-kblockd]\n   2879       2 [kworker/25:1H-kblockd]\n   2880       2 [kworker/26:1H-kblockd]\n   2881       2 [kworker/90:1H-kblockd]\n   2882       2 [kworker/89:1H-kblockd]\n   2883       2 [kworker/93:1H-kblockd]\n   2884       2 [kworker/91:1H-kblockd]\n   2885       2 [kworker/18:1H-kblockd]\n   2886       2 [kworker/96:1H-kblockd]\n   2887       2 [kworker/92:1H-kblockd]\n   2888       2 [kworker/27:1H-kblockd]\n   2889       2 [kworker/94:1H-kblockd]\n   2890       2 [kworker/28:1H-kblockd]\n   3061       2 [kworker/13:1H-kblockd]\n   3062       2 [kworker/15:1H-kblockd]\n   3072       1 /usr/sbin/cron -f -P\n   3076       1 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only\n   3080       2 [kworker/64:1H-kblockd]\n   3083       1 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers\n   3085       1 /usr/lib/polkit-1/polkitd --no-debug --log-level=notice\n   3092       1 /usr/lib/systemd/systemd-logind\n   3116       2 [kworker/77:1H-kblockd]\n   3158       1 /usr/sbin/agetty --noreset --noclear --issue-file=/etc/issue:/etc/issue.d:/run/issue.d:/usr/lib/issue.d - linux\n   3163       1 /usr/sbin/rsyslogd -n -iNONE\n   3285       1 /bin/sh /usr/lib/systemd/scripts/chronyd-starter.sh -n -F 1\n   3290       1 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal\n   3296       1 /usr/sbin/ModemManager\n   3335    3285 /usr/sbin/chronyd -n -F 1\n   3341    3335 /usr/sbin/chronyd -n -F 1\n   3358       2 [kworker/38:1H-kblockd]\n   3734       2 [kworker/50:1H-kblockd]\n   3864       2 [kworker/78:1H-kblockd]\n   3982       2 [kworker/53:1H-kblockd]\n   4111       2 [kworker/123:1H-kblockd]\n   4219       2 [kworker/70:1H-kblockd]\n   4220       2 [kworker/14:1H-kblockd]\n   4221       2 [kworker/97:1H-kblockd]\n   4226       2 [kworker/86:1H-kblockd]\n   4538       2 [kworker/1:1H-kblockd]\n   4963       2 [kworker/17:1H-kblockd]\n   4972       2 [kworker/67:1H-kblockd]\n   5231       2 [kworker/31:1H-kblockd]\n   5551       2 [kworker/49:1H-kblockd]\n   5890       2 [kworker/118:1H-kblockd]\n   5911       2 [kworker/124:1H-kblockd]\n   5912       2 [kworker/126:1H-kblockd]\n   5967       2 [kworker/23:1H-kblockd]\n   5973       2 [kworker/12:1H-kblockd]\n   6350       1 /usr/sbin/smartd -n\n   6593       2 [kworker/19:1H-kblockd]\n   6936       2 [kworker/127:1H-kblockd]\n   6987       2 [kworker/113:1H-kblockd]\n   7034       2 [kworker/100:1H-kblockd]\n   7035       2 [kworker/57:1H-kblockd]\n   7042       2 [kworker/122:1H-kblockd]\n   7043       2 [kworker/80:1H-kblockd]\n   7086       2 [kworker/120:1H-kblockd]\n   7137       2 [kworker/60:1H-kblockd]\n   7180       2 [kworker/36:1H-kblockd]\n   7263       2 [kworker/7:1H-kblockd]\n   7272       2 [kworker/125:1H-kblockd]\n   7312       2 [kworker/34:1H-kblockd]\n   7319       2 [kworker/116:1H-kblockd]\n   7362       2 [kworker/59:1H-kblockd]\n   9352       2 [kworker/51:1H-kblockd]\n   9677       2 [kworker/61:1H-kblockd]\n  10185       2 [kworker/35:1H-kblockd]\n  10523       1 /usr/bin/containerd\n  10991       2 [kworker/62:1H-kblockd]\n  11014       1 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock\n  11874       2 [kworker/37:1H-kblockd]\n  11875       2 [kworker/102:1H-kblockd]\n  11876       2 [kworker/101:1H-kblockd]\n  12110       1 /usr/bin/earlyoom -m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verilator_bin_dbg|cc1plus|cc1|g++|c++|clang++|ld|yosys|yosys-abc)$ --avoid ^(sshd|systemd|systemd-journal|dockerd|containerd|containerd-shim.*|sudo|bash)$\n  12579       2 [kworker/22:1H-kblockd]\n  12630       2 [kworker/20:1H-kblockd]\n  12631       2 [kworker/119:1H-kblockd]\n  12960       2 [kworker/69:1H-kblockd]\n  13333       2 [kworker/114:1H-kblockd]\n  13557       2 [kworker/115:1H-kblockd]\n  13613       2 [kworker/63:1H-kblockd]\n  13663       2 [kworker/117:1H-kblockd]\n  13673       2 [kworker/71:1H-kblockd]\n  13720       2 [kworker/55:1H-kblockd]\n  13725       2 [kworker/65:1H-kblockd]\n  13726       2 [kworker/82:1H-kblockd]\n  13963       2 [kworker/52:1H-kblockd]\n  14066       2 [kworker/21:1H-kblockd]\n  14067       2 [kworker/85:1H-kblockd]\n  15061       1 sshd-session: ubuntu [priv]\n  15066       1 /usr/lib/systemd/systemd --user --deserialize=12\n  15069   15066 (sd-pam)\n  15267   15061 sshd-session: ubuntu@notty\n  15268   15267 python3 -u - 5.0\n  15269       1 sshd-session: ubuntu [priv]\n  15443   15269 sshd-session: ubuntu@notty\n  16326       1 sshd-session: ubuntu [priv]\n  16510   16326 sshd-session: ubuntu@notty\n  23586       2 [kworker/109:1H-kblockd]\n  33061       2 [kworker/110:1H-kblockd]\n 723885   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/mu-die-s81/case_mu1 || { echo OT_RUN_NOCD otrun-ubuntu-3498110-409868414 >&2; exit 96; }; OT_HEAVY_PRIO=die /usr/local/bin/ot-heavy --mem 100 --tag otrun-ubuntu-3498110-409868414 --max-wait 120 -- bash /srv/opentallas-scratch/claude/mu-die-s81/case_mu1/run_all.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-3498110-409868414 $rc\" >&2; exit $rc\n 724034  723885 /usr/bin/bash /srv/opentallas-scratch/claude/mu-die-s81/case_mu1/run_all.sh\n 724074  724034 bash /srv/opentallas-scratch/claude/mu-die-s81/case_mu1/run.sh\n 724079  724074 /usr/bin/docker run --memory-swap=96g --rm --name dvrv-724074 --cpus=16 --memory=96g -v /srv/opentallas-scratch/claude/mu-die-s81/case_mu1:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc\n 724129       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id e0954421564663fd887b9ef79e3d305a7bc901462d5eed0bf6f29962c681e326 -address /run/containerd/containerd.sock\n 724165  724129 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc\n 724194  724165 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl\n 724195  724194 openroad -threads 16 -no_init -exit /work/run.tcl\n1096987   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/ref_gate || { echo OT_RUN_NOCD otrun-ubuntu-172560-434534421 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-172560-434534421 --max-wait 900 -- bash /tmp/ref_gate_hcoll_gq_issue_k2_1019_20261019-112756.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-172560-434534421 $rc\" >&2; exit $rc\n1097125 1096987 /usr/bin/bash /tmp/ref_gate_hcoll_gq_issue_k2_1019_20261019-112756.sh\n1097144 1097125 tee -p /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/execution.log\n1097238   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/ref_gate || { echo OT_RUN_NOCD otrun-ubuntu-176638-434537421 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-176638-434537421 --max-wait 900 -- bash /tmp/ref_gate_hcoll_gq_issue_k1_1019_20261019-112755.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-176638-434537421 $rc\" >&2; exit $rc\n1097377 1097238 /usr/bin/bash /tmp/ref_gate_hcoll_gq_issue_k1_1019_20261019-112755.sh\n1097399 1097377 tee -p /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/execution.log\n1174697   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/mu-die-s81/case_mab || { echo OT_RUN_NOCD otrun-ubuntu-3594845-415673053 >&2; exit 96; }; OT_HEAVY_PRIO=die /usr/local/bin/ot-heavy --mem 100 --tag otrun-ubuntu-3594845-415673053 --max-wait 120 -- bash /srv/opentallas-scratch/claude/mu-die-s81/case_mab/run_all.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-3594845-415673053 $rc\" >&2; exit $rc\n1174835 1174697 /usr/bin/bash /srv/opentallas-scratch/claude/mu-die-s81/case_mab/run_all.sh\n1174854 1174835 bash /srv/opentallas-scratch/claude/mu-die-s81/case_mab/run.sh\n1174857 1174854 /usr/bin/docker run --memory-swap=96g --rm --name dvrv-1174854 --cpus=16 --memory=96g -v /srv/opentallas-scratch/claude/mu-die-s81/case_mab:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc\n1174949       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id af54d523aaa15980702584b5b043a41619d4fe649a7f98d029155c55af3b9bbe -address /run/containerd/containerd.sock\n1174971 1174949 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc\n1174996 1174971 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl\n1174997 1174996 openroad -threads 16 -no_init -exit /work/run.tcl\n1175437   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/ref_gate || { echo OT_RUN_NOCD otrun-ubuntu-2065244-415678417 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 64 --tag otrun-ubuntu-2065244-415678417 --max-wait 900 -- bash /tmp/ref_gate_hdie_svc_vm_kshare_20261019-061335.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2065244-415678417 $rc\" >&2; exit $rc\n1175579 1175437 /usr/bin/bash /tmp/ref_gate_hdie_svc_vm_kshare_20261019-061335.sh\n1175743 1175579 tee -p /srv/opentallas-scratch/claude/ref_gate/hdie_svc_vm_kshare-20261019-061335/execution.log\n1291122   15066 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only\n1292647       2 [psimon]\n1292697       1 sshd: /usr/sbin/sshd -D [listener] 0 of 200-400 startups\n1292701       1 /usr/lib/systemd/systemd-journald\n1292710       1 /usr/libexec/udisks2/udisksd\n1292722       1 /usr/lib/systemd/systemd-resolved\n1292745       1 /usr/lib/systemd/systemd-udevd\n1292788       2 [psimon]\n1292790       1 /usr/lib/systemd/systemd-networkd\n1294109       1 /usr/libexec/fwupd/fwupd\n1304675       1 /usr/bin/python3 /usr/sbin/tuned -l -P\n1418443   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/ref_gate || { echo OT_RUN_NOCD otrun-ubuntu-1361327-437486494 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 24 --tag otrun-ubuntu-1361327-437486494 --max-wait 900 -- bash /tmp/ref_gate_hbm_su_pg_stream_b_safe2_1019_20261019-121732.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-1361327-437486494 $rc\" >&2; exit $rc\n1418581 1418443 /usr/bin/bash /tmp/ref_gate_hbm_su_pg_stream_b_safe2_1019_20261019-121732.sh\n1418599 1418581 tee -p /srv/opentallas-scratch/claude/ref_gate/hbm_su_pg_stream_b_safe2_1019-20261019-121732/execution.log\n1601314 1097125 timeout -k 60 14400 docker run --rm --name gate_grt_hcoll_gq_issue_k2_1019-20261019-112756 -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1601315 1601314 /usr/bin/docker run --memory-swap=48g --memory=48g -e LEC_CHECK=0 -e OT_CTS_MACRO_CLUSTER --rm --name gate_grt_hcoll_gq_issue_k2_1019-20261019-112756 -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1601332       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id bf1fd71b129157b7057050e14f6ae427284b44aea92cd9cb7580c1f2d7959971 -address /run/containerd/containerd.sock\n1601355 1601332 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1601388 1601355 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS=-allow_congestion -verbose GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1601682 1601388 make GENERATE_ARTIFACTS_ON_FAILURE=1 WORK_HOME=/work DESIGN_CONFIG=/work/config.mk GLOBAL_ROUTE_ARGS=-allow_congestion -verbose FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt\n1601698 1601682 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1601700 1601698 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1601711 1601700 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json\n1601712 1601711 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json\n1702413 1097377 timeout -k 60 14400 docker run --rm --name gate_grt_hcoll_gq_issue_k1_1019-20261019-112755 -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1702414 1702413 /usr/bin/docker run --memory-swap=48g --memory=48g -e LEC_CHECK=0 -e OT_CTS_MACRO_CLUSTER --rm --name gate_grt_hcoll_gq_issue_k1_1019-20261019-112755 -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1702433       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 3307aa3e346ddb5043793e6249b04d605262c2f1a8cca8ed07ef3d2fb2d89011 -address /run/containerd/containerd.sock\n1702456 1702433 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1702522 1702456 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS=-allow_congestion -verbose GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n1702784 1702522 make GENERATE_ARTIFACTS_ON_FAILURE=1 WORK_HOME=/work DESIGN_CONFIG=/work/config.mk GLOBAL_ROUTE_ARGS=-allow_congestion -verbose FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt\n1702800 1702784 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1702802 1702800 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1702813 1702802 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json\n1702814 1702813 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json\n1728617       2 [kworker/32:1-mm_percpu_wq]\n1817972 1175579 timeout -k 60 14400 docker run --rm --name gate_grt_hdie_svc_vm_kshare-20261019-061335 -v /srv/opentallas-scratch/claude/ref_gate/hdie_svc_vm_kshare-20261019-061335/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hdie_svc_vm_kshare-20261019-061335/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt\n1817973 1817972 /usr/bin/docker run --memory-swap=64g --memory=64g -e LEC_CHECK=0 -e OT_CTS_MACRO_CLUSTER --rm --name gate_grt_hdie_svc_vm_kshare-20261019-061335 -v /srv/opentallas-scratch/claude/ref_gate/hdie_svc_vm_kshare-20261019-061335/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hdie_svc_vm_kshare-20261019-061335/routes/gate/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt\n1817993       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 9822219f8e17714d5e6f5fb71a2b814242123c214f9b88581aa75b3813dd6f11 -address /run/containerd/containerd.sock\n1818018 1817993 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt\n1818046 1818018 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS=-allow_congestion -verbose GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt\n1818095 1818046 make GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 WORK_HOME=/work DESIGN_CONFIG=/work/config.mk GLOBAL_ROUTE_ARGS=-allow_congestion -verbose FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n1818111 1818095 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n1818113 1818111 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n1818124 1818113 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hbm_svc_vm_kshare_splitstrap_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_svc_vm_kshare_splitstrap_asap7_ref_gate/base/4_1_cts.json\n1818125 1818124 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hbm_svc_vm_kshare_splitstrap_asap7_ref_gate/base/4_1_cts.json\n1825255       2 [kworker/34:0-events]\n1827163       2 [kworker/23:0-events]\n1834101       2 [kworker/56:0-events]\n1874901       2 [kworker/58:0-mm_percpu_wq]\n1894070       2 [kworker/55:2-cgroup_free]\n1902575       2 [kworker/65:0-mm_percpu_wq]\n1903822       2 [kworker/78:2-events]\n1914541       2 [kworker/16:1-mm_percpu_wq]\n1938680       2 [kworker/9:0-mm_percpu_wq]\n1944936       2 [kworker/83:2-cgroup_free]\n1946829       2 [kworker/46:1-mm_percpu_wq]\n1949423       2 [kworker/124:2-cgroup_free]\n1949646       2 [kworker/4:2-events]\n1949748       2 [kworker/52:1-mm_percpu_wq]\n1949851       2 [kworker/102:2-events]\n1951408       2 [kworker/64:2-events]\n1952747       2 [kworker/2:0-mm_percpu_wq]\n1960941       2 [kworker/8:2-mm_percpu_wq]\n1968358       2 [kworker/114:0-events]\n1970043       2 [kworker/110:2-events]\n1970734       2 [kworker/122:0-mm_percpu_wq]\n1994987       2 [kworker/111:0-mm_percpu_wq]\n1995508       2 [kworker/121:1-mm_percpu_wq]\n1995632       2 [kworker/120:0-cgroup_free]\n1997213       2 [kworker/124:0-mm_percpu_wq]\n1998479       2 [kworker/113:1-cgroup_free]\n1999814       2 [kworker/126:0-mm_percpu_wq]\n2005358       2 [kworker/106:0-mm_percpu_wq]\n2017497       2 [kworker/97:2-mm_percpu_wq]\n2036340   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06 || { echo OT_RUN_NOCD otrun-ubuntu-2697898-446395569 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 24 --tag otrun-ubuntu-2697898-446395569 --max-wait 120 -- env FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/run_four_state_fullshape_06 four_state; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2697898-446395569 $rc\" >&2; exit $rc\n2036610 2036340 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/run_four_state_fullshape_06 four_state\n2048340       2 [kworker/1:2-mm_percpu_wq]\n2048470       2 [kworker/123:2-mm_percpu_wq]\n2050679       2 [kworker/17:0-events]\n2050823       2 [kworker/73:0-mm_percpu_wq]\n2051488       2 [kworker/49:1-events]\n2051835       2 [kworker/16:0-events]\n2051924       2 [kworker/11:1-cgroup_free]\n2052676       2 [kworker/26:2-mm_percpu_wq]\n2054170       2 [kworker/52:2-cgroup_free]\n2054378       2 [kworker/u516:3-flush-9:0]\n2055633       2 [kworker/41:2-events]\n2055649       2 [kworker/u520:12-flush-9:0]\n2056315       2 [kworker/u516:5-writeback]\n2057732       2 [kworker/115:1-cgroup_free]\n2058500       2 [kworker/24:1-mm_percpu_wq]\n2066970       2 [kworker/31:0-events]\n2068690       2 [kworker/117:0-events]\n2069844       2 [kworker/79:2-mm_percpu_wq]\n2070234       2 [kworker/107:0-memcg]\n2079725       2 [kworker/u512:0-bond0]\n2080522       2 [kworker/104:0-mm_percpu_wq]\n2088649       2 [kworker/15:0-events]\n2093276       2 [kworker/92:0-mm_percpu_wq]\n2094216       2 [kworker/32:2-cgroup_free]\n2094329       2 [kworker/96:2-cgroup_free]\n2094724       2 [kworker/62:0-mm_percpu_wq]\n2094744       2 [kworker/69:1-mm_percpu_wq]\n2097131       2 [kworker/127:2-mm_percpu_wq]\n2104906       2 [kworker/42:0-mm_percpu_wq]\n2105684       2 [kworker/67:0-events]\n2105824       2 [kworker/60:1-mm_percpu_wq]\n2105844       2 [kworker/50:0-mm_percpu_wq]\n2105845       2 [kworker/9:2-events]\n2106778       2 [kworker/83:1-mm_percpu_wq]\n2106991       2 [kworker/66:2-mm_percpu_wq]\n2107013       2 [kworker/87:0-mm_percpu_wq]\n2107211       2 [kworker/28:2-events]\n2107678       2 [kworker/80:0-mm_percpu_wq]\n2124013       2 [kworker/37:1-mm_percpu_wq]\n2124282       2 [kworker/24:2-memcg]\n2125071       2 [kworker/112:0-events]\n2125155       2 [kworker/113:0-events]\n2127021       2 [kworker/13:1-mm_percpu_wq]\n2127847       2 [kworker/14:0-mm_percpu_wq]\n2129803       2 [kworker/31:2-events]\n2130058       2 [kworker/89:2-events]\n2130369       2 [kworker/0:1-events]\n2131101       2 [kworker/33:2-cgroup_free]\n2131202       2 [kworker/68:2-events]\n2131327       2 [kworker/51:2-mm_percpu_wq]\n2131477       2 [kworker/u520:13-events_power_efficient]\n2131984       2 [kworker/59:1-mm_percpu_wq]\n2132151       2 [kworker/36:0-events]\n2132621       2 [kworker/18:1-mm_percpu_wq]\n2133472       2 [kworker/43:2-events]\n2134022       2 [kworker/90:1-events]\n2136874       2 [kworker/74:2-events]\n2137712       2 [kworker/56:1-mm_percpu_wq]\n2139518       2 [kworker/96:3-mm_percpu_wq]\n2139712       2 [kworker/5:1-events]\n2140248       2 [kworker/38:0-mm_percpu_wq]\n2145140       2 [kworker/u516:1-flush-9:0]\n2145734       2 [kworker/127:1-cgroup_free]\n2146113       2 [kworker/27:0-events]\n2146964       2 [kworker/39:1-cgroup_free]\n2147175       2 [kworker/19:2-mm_percpu_wq]\n2148641       2 [kworker/55:0-mm_percpu_wq]\n2152350       2 [kworker/29:0-mm_percpu_wq]\n2158841       2 [kworker/93:1-events]\n2161959       2 [kworker/50:1-mld]\n2165678       2 [kworker/100:2-events]\n2166250       2 [kworker/72:1-mm_percpu_wq]\n2169072       2 [kworker/61:2-mm_percpu_wq]\n2171914       2 [kworker/105:2-events]\n2172482       2 [kworker/44:2-events]\n2172694       2 [kworker/84:0-mm_percpu_wq]\n2173005       2 [kworker/85:0-events]\n2173128       2 [kworker/110:1-mm_percpu_wq]\n2174852       2 [kworker/u513:7-ext4-rsv-conversion]\n2175811       2 [kworker/4:0-events]\n2177500       2 [kworker/21:2-mm_percpu_wq]\n2177686       2 [kworker/75:0-mm_percpu_wq]\n2177900       2 [kworker/105:3-mm_percpu_wq]\n2178613       2 [kworker/79:0-events]\n2179457       2 [kworker/77:2-mm_percpu_wq]\n2180451       2 [kworker/26:1-events]\n2180656       2 [kworker/81:0-mm_percpu_wq]\n2180995       2 [kworker/108:2-mm_percpu_wq]\n2184708       2 [kworker/112:1-mm_percpu_wq]\n2185337       2 [kworker/10:1-mm_percpu_wq]\n2190432       2 [kworker/53:0-events]\n2192129       2 [kworker/41:0-cgroup_free]\n2195181       2 [kworker/22:0-events]\n2197397       2 [kworker/12:2-cgroup_free]\n2197569       2 [kworker/57:1-mm_percpu_wq]\n2197906       2 [kworker/76:0-events]\n2198469       2 [kworker/73:2-cgroup_free]\n2198718       2 [kworker/48:1-events]\n2199056       2 [kworker/125:1-mm_percpu_wq]\n2199160       2 [kworker/15:2-events]\n2199833       2 [kworker/98:0-mm_percpu_wq]\n2202176       2 [kworker/95:0-events]\n2208034       2 [kworker/111:1-cgroup_free]\n2208132       2 [kworker/30:2-mm_percpu_wq]\n2208143       2 [kworker/91:1-events]\n2208837       2 [kworker/51:1-inode_switch_wbs]\n2209214       2 [kworker/34:2-mm_percpu_wq]\n2225105       2 [kworker/7:1-mm_percpu_wq]\n2228481       2 [kworker/72:2-memcg]\n2228502       2 [kworker/19:1-events]\n2228605       2 [kworker/108:1]\n2228622       2 [kworker/u519:3-flush-9:0]\n2228688       2 [kworker/43:1-mm_percpu_wq]\n2228718       2 [kworker/78:1-cgroup_free]\n2228827       2 [kworker/120:2-mm_percpu_wq]\n2228848       2 [kworker/13:0]\n2228980       2 [kworker/54:1-mm_percpu_wq]\n2229072       2 [kworker/121:0-events]\n2229102       2 [kworker/69:0-events]\n2229180       2 [kworker/61:1-cgroup_free]\n2229290       2 [kworker/115:0-events]\n2229322       2 [kworker/123:1]\n2229498       2 [kworker/71:0-mm_percpu_wq]\n2229647       2 [kworker/64:1-mm_percpu_wq]\n2230824       2 [kworker/63:0-mm_percpu_wq]\n2230943       2 [kworker/118:0-mm_percpu_wq]\n2231079       2 [kworker/77:0-events]\n2231280       2 [kworker/0:0-events]\n2231300       2 [kworker/97:1]\n2231510       2 [kworker/109:1-mm_percpu_wq]\n2231671       2 [kworker/114:2-events]\n2231683       2 [kworker/116:0-events]\n2232137       2 [kworker/103:2-mm_percpu_wq]\n2232644       2 [kworker/106:2-mm_percpu_wq]\n2232882       2 [kworker/10:0-events]\n2233001       2 [kworker/53:1-mm_percpu_wq]\n2233289       2 [kworker/14:2-events]\n2233452       2 [kworker/86:1-mm_percpu_wq]\n2233726       2 [kworker/20:1-mm_percpu_wq]\n2233751       2 [kworker/70:2-mm_percpu_wq]\n2233899       2 [kworker/125:0-events]\n2234015       2 [kworker/23:1-mm_percpu_wq]\n2234131       2 [kworker/40:0-events]\n2234338       2 [kworker/60:0-events]\n2234359       2 [kworker/75:2-events]\n2234437       2 [kworker/39:2-mm_percpu_wq]\n2234468       2 [kworker/35:1-memcg]\n2234690       2 [kworker/12:1-mm_percpu_wq]\n2235022       2 [kworker/58:1-events]\n2235051       2 [kworker/u517:5-flush-9:0]\n2235162       2 [kworker/47:1-cgroup_free]\n2235270       2 [kworker/99:0-events]\n2235292       2 [kworker/22:1-mm_percpu_wq]\n2235473       2 [kworker/48:2-events]\n2236013       2 [kworker/66:1-events]\n2236600       2 [kworker/u513:2-ext4-rsv-conversion]\n2236926       2 [kworker/82:2-events]\n2236963       2 [kworker/u520:4-ext4-rsv-conversion]\n2237251       2 [kworker/104:2-events]\n2237321       2 [kworker/44:0-mm_percpu_wq]\n2237462       2 [kworker/74:1-events]\n2239370       2 [kworker/76:2-mm_percpu_wq]\n2239523       2 [kworker/37:2-memcg]\n2239544       2 [kworker/92:2-cgroup_free]\n2239545       2 [kworker/89:1-cgroup_free]\n2239681       2 [kworker/27:2-events]\n2245262       2 [kworker/u515:9-flush-9:0]\n2245749       2 [kworker/88:1-mm_percpu_wq]\n2245871       2 [kworker/29:1-events]\n2245879       2 [kworker/93:0-events]\n2246008       2 [kworker/95:1-mm_percpu_wq]\n2246117       2 [kworker/94:0-events]\n2246416       2 [kworker/30:0-events]\n2246838       2 [kworker/90:2-cgroup_free]\n2246858       2 [kworker/101:0-mm_percpu_wq]\n2246956       2 [kworker/2:2]\n2247057       2 [kworker/107:2-events]\n2247551       2 [kworker/33:1-cgroup_release]\n2247579       2 [kworker/38:1-cgroup_free]\n2247655       2 [kworker/3:2-events]\n2247959       2 [kworker/100:1-mm_percpu_wq]\n2262955       2 [kworker/45:2-memcg]\n2264504       2 [kworker/87:1]\n2264777       2 [kworker/u513:0-events_unbound]\n2265043       2 [kworker/42:1-cgroup_release]\n2265283   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916851-449383067 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916851-449383067 --max-wait 120 -- env OT_THREADS=4 SWEEP_LOW=11 SWEEP_HIGH=19 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916851-449383067 $rc\" >&2; exit $rc\n2265421 2265283 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01\n2265423   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916852-449383091 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916852-449383091 --max-wait 120 -- env OT_THREADS=4 SWEEP_LOW=20 SWEEP_HIGH=28 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916852-449383091 $rc\" >&2; exit $rc\n2265565 2265423 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01\n2265579   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916853-449383218 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916853-449383218 --max-wait 120 -- env OT_THREADS=4 SWEEP_LOW=2 SWEEP_HIGH=10 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916853-449383218 $rc\" >&2; exit $rc\n2265580   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916855-449383218 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916855-449383218 --max-wait 120 -- env OT_THREADS=4 SWEEP_LOW=38 SWEEP_HIGH=47 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_38_47_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916855-449383218 $rc\" >&2; exit $rc\n2265581   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916857-449383218 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916857-449383218 --max-wait 120 -- env OT_THREADS=4 FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash tools/hwin_private_package_1019/run_campaign.sh four_state /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916857-449383218 $rc\" >&2; exit $rc\n2265584   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916854-449383218 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916854-449383218 --max-wait 120 -- env OT_THREADS=4 SWEEP_LOW=29 SWEEP_HIGH=37 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2916854-449383218 $rc\" >&2; exit $rc\n2266257 2265580 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_38_47_01\n2266277 2265579 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01\n2266279 2265581 bash tools/hwin_private_package_1019/run_campaign.sh four_state /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01\n2266282 2265584 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01\n2266311 2265421 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01 sweep\n2266330 2265565 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01 sweep\n2266388 2266257 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_38_47_01 sweep\n2266425 2266277 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01 sweep\n2266468 2266279 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01 four_state\n2266499 2266282 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01 sweep\n2267932       2 [kworker/101:2]\n2267946       2 [kworker/u515:1-md_bitmap]\n2267949       2 [kworker/u515:4-events_power_efficient]\n2268239       2 [kworker/85:1-mm_percpu_wq]\n2268328       2 [kworker/18:0]\n2268338       2 [kworker/6:2-inode_switch_wbs]\n2268598       2 [kworker/u519:4-flush-9:0]\n2268599       2 [kworker/u519:5-flush-9:0]\n2268927       2 [kworker/5:0-mm_percpu_wq]\n2269041       2 [kworker/35:2-mm_percpu_wq]\n2269148       2 [kworker/11:2-mm_percpu_wq]\n2269156       2 [kworker/20:2]\n2269271       2 [kworker/40:2-events]\n2269373       2 [kworker/119:1-mm_percpu_wq]\n2269380       2 [kworker/118:1-events]\n2269404       2 [kworker/1:0-events]\n2271381       2 [kworker/u513:5-flush-9:0]\n2271382       2 [kworker/u513:8-ext4-rsv-conversion]\n2272417       2 [kworker/25:0-mm_percpu_wq]\n2272418       2 [kworker/62:1]\n2272426       2 [kworker/126:1-events]\n2273095       2 [kworker/u518:4-flush-9:0]\n2273096       2 [kworker/u518:5-flush-9:0]\n2273097       2 [kworker/u518:6-ext4-rsv-conversion]\n2273098       2 [kworker/u518:7-flush-9:0]\n2273361       2 [kworker/116:2-mm_percpu_wq]\n2273438       2 [kworker/71:2-events]\n2275293       2 [kworker/u515:0-flush-9:0]\n2275307       2 [kworker/u515:2-ext4-rsv-conversion]\n2275309       2 [kworker/u515:3-flush-9:0]\n2276590       2 [kworker/40:1-mm_percpu_wq]\n2276617       2 [kworker/47:0-mm_percpu_wq]\n2276620       2 [kworker/57:2]\n2276628       2 [kworker/u514:0-flush-9:0]\n2276629       2 [kworker/u514:1-ext4-rsv-conversion]\n2276631       2 [kworker/u514:3-md_bitmap]\n2276633       2 [kworker/u514:5-md_bitmap]\n2276635       2 [kworker/u512:2-bond0]\n2277105       2 [kworker/46:0-events]\n2277126       2 [kworker/92:1-events]\n2277137       2 [kworker/105:0]\n2277632       2 [kworker/68:1-mm_percpu_wq]\n2277652       2 [kworker/90:0-mm_percpu_wq]\n2277663       2 [kworker/6:1-mm_percpu_wq]\n2277682       2 [kworker/u516:0-md_bitmap]\n2278249       2 [kworker/88:2-events]\n2278269       2 [kworker/91:0]\n2278281       2 [kworker/69:2]\n2278699       2 [kworker/111:2-events]\n2278710       2 [kworker/9:1-events]\n2279925       2 [kworker/74:0-mm_percpu_wq]\n2279946       2 [kworker/59:2-events]\n2279956       2 [kworker/122:2-events]\n2280512       2 [kworker/102:1-mm_percpu_wq]\n2280539       2 [kworker/28:0-events]\n2280956       2 [kworker/36:1]\n2280970       2 [kworker/8:1-cgroup_free]\n2281393       2 [kworker/3:1-mm_percpu_wq]\n2281415       2 [kworker/98:2]\n2281496       2 [kworker/49:2-mm_percpu_wq]\n2281501       2 [kworker/70:1]\n2281513 1418581 /usr/bin/docker run --memory-swap=24g --memory=24g -e LEC_CHECK=0 -e OT_CTS_MACRO_CLUSTER --rm -e OT_GATE_SIGNOFF_SDC=/src/physical/ref_tile/hbm_su_pg_stream_b_safe2_1019/signoff.sdc -v /srv/opentallas-scratch/claude/ref_gate/hbm_su_pg_stream_b_safe2_1019-20261019-121732/src:/src:ro -v /srv/opentallas-scratch/claude/ref_gate/hbm_su_pg_stream_b_safe2_1019-20261019-121732/routes/gate/work/orfs:/work openroad/orfs:latest /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl\n2281535       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id a51dc26fa02187e32bc02e8537268dd97e8b342ad34fff9c28e8c50086bcf5b5 -address /run/containerd/containerd.sock\n2281559 2281535 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl\n2283150       2 [kworker/33:0-mm_percpu_wq]\n2283191       2 [kworker/u517:6-ext4-rsv-conversion]\n2283192       2 [kworker/u517:7-flush-9:0]\n2283694       2 [kworker/80:1-events]\n2283705       2 [kworker/82:1]\n2283716       2 [kworker/84:2-cgroup_free]\n2283800       2 [kworker/21:1-events]\n2283822       2 [kworker/63:2-events]\n2285760       2 [kworker/u516:2-events_unbound]\n2285761       2 [kworker/u516:4-events_unbound]\n2285762       2 [kworker/u516:6-ext4-rsv-conversion]\n2285763       2 [kworker/u516:7-flush-9:0]\n2285764       2 [kworker/u516:8-ext4-rsv-conversion]\n2286151       2 [kworker/60:2]\n2286152       2 [kworker/124:1]\n2286186       2 [kworker/u519:0-flush-9:0]\n2286320       2 [kworker/45:0-mm_percpu_wq]\n2286480       2 [kworker/99:2-events]\n2286494       2 [kworker/65:2-events]\n2286498       2 [kworker/20:0-events]\n2286507       2 [kworker/u515:5-ext4-rsv-conversion]\n2286508       2 [kworker/u515:6-ext4-rsv-conversion]\n2286509       2 [kworker/u515:7-flush-9:0]\n2287064       2 [kworker/81:2-events]\n2287085       2 [kworker/103:0]\n2287094       2 [kworker/17:1-events]\n2287101       2 [kworker/u515:8-flush-9:0]\n2287102       2 [kworker/u515:10-ext4-rsv-conversion]\n2287106       2 [kworker/22:2]\n2287258       2 [kworker/53:2-events]\n2287278       2 [kworker/25:1-cgroup_free]\n2287287       2 [kworker/86:2]\n2287296       2 [kworker/u515:11-flush-9:0]\n2287616       2 [kworker/109:2-events]\n2287638       2 [kworker/7:2]\n2287742       2 [kworker/119:0]\n2287822       2 [kworker/5:2-memcg]\n2287945       2 [kworker/67:2]\n2288182       2 [kworker/94:2-mm_percpu_wq]\n2288552       2 [kworker/54:0]\n2288558       2 [kworker/u519:1-flush-9:0]\n2288559       2 [kworker/u519:2-writeback]\n2288560       2 [kworker/u519:6-flush-9:0]\n2288561       2 [kworker/u519:7-ext4-rsv-conversion]\n2288593       2 [kworker/117:1]\n2290817       2 [kworker/u516:9-ext4-rsv-conversion]\n2290818       2 [kworker/u516:10-flush-9:0]\n2291070       2 [kworker/26:0]\n2291652       2 [kworker/u515:12-flush-9:0]\n2292244       2 [kworker/72:0]\n2292245       2 [kworker/120:1]\n2292407       2 [kworker/52:0-events]\n2292424       2 [kworker/u519:8-flush-9:0]\n2292425       2 [kworker/10:2]\n2292535       2 [kworker/u520:0-flush-9:0]\n2292536       2 [kworker/u520:1-flush-9:0]\n2292537       2 [kworker/u520:2-ext4-rsv-conversion]\n2292538       2 [kworker/u520:3-flush-9:0]\n2292539       2 [kworker/u520:5-events_power_efficient]\n2292540       2 [kworker/u520:6]\n2292596       2 [kworker/4:1-mm_percpu_wq]\n2292620       2 [kworker/12:0-events]\n2294502 2036610 vvp /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/run_four_state_fullshape_06/four_state/tb.vvp +reset_phase=8\n2294909       2 [kworker/u516:11]\n2294910       2 [kworker/u516:12]\n2295392       2 [kworker/u519:9-flush-9:0]\n2295393       2 [kworker/u519:10-writeback]\n2295520       2 [kworker/89:0-events]\n2295535       2 [kworker/u512:1]\n2295721       2 [kworker/107:1-mm_percpu_wq]\n2295751       2 [kworker/48:0-cgroup_free]\n2295796       2 [kworker/11:0-cgroup_free]\n2295913       2 [kworker/44:1-events]\n2295958       2 [kworker/u518:0-events_unbound]\n2295959       2 [kworker/u518:1-flush-9:0]\n2295960       2 [kworker/u518:2]\n2295961       2 [kworker/u518:3]\n2295962       2 [kworker/6:0]\n2296304       2 [kworker/28:1-mm_percpu_wq]\n2296932 2266425 python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=9 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01/uniform_ns9/obj -o tb\n2296933 2296932 perl /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=9 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01/uniform_ns9/obj -o tb\n2296936 2296933 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=9 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01/uniform_ns9/obj -o tb\n2296952 2266468 vvp /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01/four_state/tb.vvp +reset_phase=2\n2296953 2296936 sh -c -- make -C /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01/uniform_ns9/obj -f Vtb_dsdv_mu_hwin_early_capture.mk -j 4\n2296954 2296953 make -C /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01/uniform_ns9/obj -f Vtb_dsdv_mu_hwin_early_capture.mk -j 4\n2297054 2296954 g++ -Os -I. -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -DVL_TIME_CONTEXT -fcoroutines -include Vtb_dsdv_mu_hwin_early_capture__pch.h.fast -c Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp\n2297055 2297054 /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_dsdv_mu_hwin_early_capture__pch.h.fast Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp -D_FORTIFY_SOURCE=3 -quiet -dumpbase Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccpNrL7Q.s\n2297277       2 [kworker/u517:0-flush-9:0]\n2297336 2266311 python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=17 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01/nonuniform_short_ns17/obj -o tb\n2297337 2297336 perl /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=17 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01/nonuniform_short_ns17/obj -o tb\n2297340 2297337 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=17 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01/nonuniform_short_ns17/obj -o tb\n2297385 2297340 sh -c -- make -C /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01/nonuniform_short_ns17/obj -f Vtb_dsdv_mu_hwin_early_capture.mk -j 4\n2297386 2297385 make -C /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01/nonuniform_short_ns17/obj -f Vtb_dsdv_mu_hwin_early_capture.mk -j 4\n2297417 2297386 g++ -Os -I. -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -DVL_TIME_CONTEXT -fcoroutines -include Vtb_dsdv_mu_hwin_early_capture__pch.h.fast -c Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp\n2297418 2297417 /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_dsdv_mu_hwin_early_capture__pch.h.fast Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp -D_FORTIFY_SOURCE=3 -quiet -dumpbase Vtb_dsdv_mu_hwin_early_capture_vm_classes_3.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccyUThmy.s\n2297532   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native || { echo OT_RUN_NOCD otrun-ubuntu-2995065-450430618 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 4 --tag otrun-ubuntu-2995065-450430618 --max-wait 120 -- bash test/run_native.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2995065-450430618 $rc\" >&2; exit $rc\n2297670 2297532 /usr/bin/bash test/run_native.sh\n2297703       2 [kworker/u517:1-flush-9:0]\n2297704       2 [kworker/u517:2-flush-9:0]\n2297705       2 [kworker/u517:3-writeback]\n2297706       2 [kworker/u517:4-writeback]\n2297707       2 [kworker/u517:8-flush-9:0]\n2297708       2 [kworker/u517:9-flush-9:0]\n2297758 1292745 (udev-worker)\n2297762 1292745 (udev-worker)\n2297763 1292745 (udev-worker)\n2297764 1292745 (udev-worker)\n2297765 1292745 (udev-worker)\n2297766 1292745 (udev-worker)\n2297767 1292745 (udev-worker)\n2297768 1292745 (udev-worker)\n2297769 1292745 (udev-worker)\n2297770 1292745 (udev-worker)\n2297771 1292745 (udev-worker)\n2297772 1292745 (udev-worker)\n2297773 1292745 (udev-worker)\n2297774 1292745 (udev-worker)\n2297775 1292745 (udev-worker)\n2297776 1292745 (udev-worker)\n2297777 1292745 (udev-worker)\n2297778 1292745 (udev-worker)\n2297779 1292745 (udev-worker)\n2297780 1292745 (udev-worker)\n2297781 1292745 (udev-worker)\n2297782 1292745 (udev-worker)\n2297783 1292745 (udev-worker)\n2297784 1292745 (udev-worker)\n2297785 1292745 (udev-worker)\n2297786 1292745 (udev-worker)\n2297787 1292745 (udev-worker)\n2297788 1292745 (udev-worker)\n2297789 1292745 (udev-worker)\n2297790 1292745 (udev-worker)\n2297791 1292745 (udev-worker)\n2297792 1292745 (udev-worker)\n2297793 1292745 (udev-worker)\n2297794 1292745 (udev-worker)\n2297795 1292745 (udev-worker)\n2297796 1292745 (udev-worker)\n2297797 1292745 (udev-worker)\n2297798 1292745 (udev-worker)\n2297799 1292745 (udev-worker)\n2297800 1292745 (udev-worker)\n2297801 1292745 (udev-worker)\n2297802 1292745 (udev-worker)\n2297803 1292745 (udev-worker)\n2297804 1292745 (udev-worker)\n2297805 1292745 (udev-worker)\n2297806 1292745 (udev-worker)\n2297807 1292745 (udev-worker)\n2297808 1292745 (udev-worker)\n2297809 1292745 (udev-worker)\n2297810 1292745 (udev-worker)\n2297811 1292745 (udev-worker)\n2297812 1292745 (udev-worker)\n2297813 1292745 (udev-worker)\n2297814 1292745 (udev-worker)\n2297815 1292745 (udev-worker)\n2297816 1292745 (udev-worker)\n2297817 1292745 (udev-worker)\n2297818 1292745 (udev-worker)\n2297819 1292745 (udev-worker)\n2297820 1292745 (udev-worker)\n2297821 1292745 (udev-worker)\n2297822 1292745 (udev-worker)\n2297823 1292745 (udev-worker)\n2297824 1292745 (udev-worker)\n2297825 1292745 (udev-worker)\n2297826 1292745 (udev-worker)\n2297827 1292745 (udev-worker)\n2297828 1292745 (udev-worker)\n2297829 1292745 (udev-worker)\n2297830 1292745 (udev-worker)\n2297831 1292745 (udev-worker)\n2297832 1292745 (udev-worker)\n2297833 1292745 (udev-worker)\n2297834 1292745 (udev-worker)\n2297835 1292745 (udev-worker)\n2297836 1292745 (udev-worker)\n2297837 1292745 (udev-worker)\n2297838 1292745 (udev-worker)\n2297839 1292745 (udev-worker)\n2297840 1292745 (udev-worker)\n2297841 1292745 (udev-worker)\n2297842 1292745 (udev-worker)\n2297843 1292745 (udev-worker)\n2297844 1292745 (udev-worker)\n2297845 1292745 (udev-worker)\n2297846 1292745 (udev-worker)\n2297847 1292745 (udev-worker)\n2297848 1292745 (udev-worker)\n2297849 1292745 (udev-worker)\n2297850 1292745 (udev-worker)\n2297851 1292745 (udev-worker)\n2297852 1292745 (udev-worker)\n2297853 1292745 (udev-worker)\n2297854 1292745 (udev-worker)\n2297855 1292745 (udev-worker)\n2297856 1292745 (udev-worker)\n2297857 1292745 (udev-worker)\n2297858 1292745 (udev-worker)\n2297859 1292745 (udev-worker)\n2297860 1292745 (udev-worker)\n2297861 1292745 (udev-worker)\n2297862 1292745 (udev-worker)\n2297863 1292745 (udev-worker)\n2297864 1292745 (udev-worker)\n2297865 1292745 (udev-worker)\n2297866 1292745 (udev-worker)\n2297867 1292745 (udev-worker)\n2297868 1292745 (udev-worker)\n2297869 1292745 (udev-worker)\n2297870 1292745 (udev-worker)\n2297871 1292745 (udev-worker)\n2297872 1292745 (udev-worker)\n2297873 1292745 (udev-worker)\n2297874 1292745 (udev-worker)\n2297875 1292745 (udev-worker)\n2297876 1292745 (udev-worker)\n2297877 1292745 (udev-worker)\n2297878 1292745 (udev-worker)\n2297879 1292745 (udev-worker)\n2297880 1292745 (udev-worker)\n2297881 1292745 (udev-worker)\n2297882 1292745 (udev-worker)\n2297883 1292745 (udev-worker)\n2297884 1292745 (udev-worker)\n2297885 1292745 (udev-worker)\n2297886 1292745 (udev-worker)\n2297887 1292745 (udev-worker)\n2297888 1292745 (udev-worker)\n2297889 1292745 (udev-worker)\n2297890 1292745 (udev-worker)\n2297891 1292745 (udev-worker)\n2297892 1292745 (udev-worker)\n2297893 1292745 (udev-worker)\n2297894 1292745 (udev-worker)\n2297895 1292745 (udev-worker)\n2297896 1292745 (udev-worker)\n2297897 1292745 (udev-worker)\n2297898 1292745 (udev-worker)\n2297899 1292745 (udev-worker)\n2297900 1292745 (udev-worker)\n2297901 1292745 (udev-worker)\n2297902 1292745 (udev-worker)\n2297903 1292745 (udev-worker)\n2297904 1292745 (udev-worker)\n2297905 1292745 (udev-worker)\n2297906 1292745 (udev-worker)\n2297907 1292745 (udev-worker)\n2297908 1292745 (udev-worker)\n2297909 1292745 (udev-worker)\n2297910 1292745 (udev-worker)\n2297911 1292745 (udev-worker)\n2297912 1292745 (udev-worker)\n2297913 1292745 (udev-worker)\n2297914 1292745 (udev-worker)\n2297915 1292745 (udev-worker)\n2297916 1292745 (udev-worker)\n2297917 1292745 (udev-worker)\n2297918 1292745 (udev-worker)\n2297919 1292745 (udev-worker)\n2297920 1292745 (udev-worker)\n2297921 1292745 (udev-worker)\n2297922 1292745 (udev-worker)\n2297923 1292745 (udev-worker)\n2297924 1292745 (udev-worker)\n2297925 1292745 (udev-worker)\n2297926 1292745 (udev-worker)\n2297927 1292745 (udev-worker)\n2297928 1292745 (udev-worker)\n2297929 1292745 (udev-worker)\n2297930 1292745 (udev-worker)\n2297931 1292745 (udev-worker)\n2297932 1292745 (udev-worker)\n2297933 1292745 (udev-worker)\n2297934 1292745 (udev-worker)\n2297935 1292745 (udev-worker)\n2297936 1292745 (udev-worker)\n2297937 1292745 (udev-worker)\n2297938 1292745 (udev-worker)\n2297939 1292745 (udev-worker)\n2297940 1292745 (udev-worker)\n2297941 1292745 (udev-worker)\n2297942 1292745 (udev-worker)\n2297943 1292745 (udev-worker)\n2297944 1292745 (udev-worker)\n2297945 1292745 (udev-worker)\n2297946 1292745 (udev-worker)\n2297947 1292745 (udev-worker)\n2297948 1292745 (udev-worker)\n2297949 1292745 (udev-worker)\n2297950 1292745 (udev-worker)\n2297951 1292745 (udev-worker)\n2297952 1292745 (udev-worker)\n2297953 1292745 (udev-worker)\n2297954 1292745 (udev-worker)\n2297955 1292745 (udev-worker)\n2297956 1292745 (udev-worker)\n2297957 1292745 (udev-worker)\n2297958 1292745 (udev-worker)\n2297959 1292745 (udev-worker)\n2297960 1292745 (udev-worker)\n2297961 1292745 (udev-worker)\n2297962 1292745 (udev-worker)\n2297963 1292745 (udev-worker)\n2297964 1292745 (udev-worker)\n2297965 1292745 (udev-worker)\n2297966 1292745 (udev-worker)\n2297967 1292745 (udev-worker)\n2297968 1292745 (udev-worker)\n2297969 1292745 (udev-worker)\n2297970 1292745 (udev-worker)\n2297971 1292745 (udev-worker)\n2297972 1292745 (udev-worker)\n2297973 1292745 (udev-worker)\n2297974 1292745 (udev-worker)\n2297975 1292745 (udev-worker)\n2297976 1292745 (udev-worker)\n2297977 1292745 (udev-worker)\n2297978 1292745 (udev-worker)\n2297979 1292745 (udev-worker)\n2297980 1292745 (udev-worker)\n2297981 1292745 (udev-worker)\n2297982 1292745 (udev-worker)\n2297983 1292745 (udev-worker)\n2297984 1292745 (udev-worker)\n2297985 1292745 (udev-worker)\n2297986 1292745 (udev-worker)\n2297987 1292745 (udev-worker)\n2297988 1292745 (udev-worker)\n2297989 1292745 (udev-worker)\n2297990 1292745 (udev-worker)\n2297991 1292745 (udev-worker)\n2297992 1292745 (udev-worker)\n2297993 1292745 (udev-worker)\n2297994 1292745 (udev-worker)\n2297995 1292745 (udev-worker)\n2297996 1292745 (udev-worker)\n2297997 1292745 (udev-worker)\n2297998 1292745 (udev-worker)\n2297999 1292745 (udev-worker)\n2298000 1292745 (udev-worker)\n2298001 1292745 (udev-worker)\n2298002 1292745 (udev-worker)\n2298003 1292745 (udev-worker)\n2298004 1292745 (udev-worker)\n2298005 1292745 (udev-worker)\n2298006 1292745 (udev-worker)\n2298007 1292745 (udev-worker)\n2298008 1292745 (udev-worker)\n2298009 1292745 (udev-worker)\n2298010 1292745 (udev-worker)\n2298011 1292745 (udev-worker)\n2298012 1292745 (udev-worker)\n2298013 1292745 (udev-worker)\n2298014 1292745 (udev-worker)\n2298015 1292745 (udev-worker)\n2298016 1292745 (udev-worker)\n2298019 2266499 python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=34 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01/nonuniform_short_ns34/obj -o tb\n2298020 2298019 perl /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=34 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01/nonuniform_short_ns34/obj -o tb\n2298023 2298020 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=34 +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01/nonuniform_short_ns34/obj -o tb\n2298030 2266330 python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=26 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01/uniform_ns26/obj -o tb\n2298031 2298030 perl /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=26 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01/uniform_ns26/obj -o tb\n2298034 2298031 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --x-initial unique --x-assign unique -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style +define+OT_MEM_NO_INIT --top-module tb_dsdv_mu_hwin_early_capture +define+NSLOT_TEST=26 +define+MIN_D +define+SWEEP256 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/lib/ot_rst_relay.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv --Mdir /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01/uniform_ns26/obj -o tb\n2298039       2 [kworker/31:1-events]\n2298069       2 [kworker/99:1]\n2298075       2 [kworker/u517:10]\n2298077 2297670 /usr/bin/docker run --memory-swap=4g --memory=4g --rm -v /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native:/src -w /src -e CASE=reference_ff -e HELPER=candidate.tcl openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/test/probe.tcl\n2298099       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 5a84f952aad37ebb4605b831445c143164cfa28800ce02cdaf9c51b407493568 -address /run/containerd/containerd.sock\n2298113 2266388 /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_38_47_01/nonuniform_short_ns42/obj/tb +verilator+rand+reset+2 +verilator+seed+19 +rx_shift=1\n2298125 2298099 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/test/probe.tcl\n2298146   15443 bash -c cd /srv/opentallas-scratch/claude/hbm-record6-implement-1019 && python3 audit_consumed_sources.py --output consumed_source_audit_FIRST_final.json && python3 - <<'PY' import pathlib,hashlib,json,subprocess,datetime p=pathlib.Path(\".\"); h=lambda f:hashlib.file_digest(open(f,\"rb\"),\"sha256\").hexdigest() a=json.loads((p/\"consumed_source_audit_FIRST_final.json\").read_text()); paths=[p/\"obj_r6/Vtb\",p/\"obj_r6/Vtb__verFiles.dat\",p/\"build.log\",p/\"SELECTED_SOURCE_MANIFEST.json\",p/\"cache_inventory.json\",p/\"consumed_source_audit_FIRST_final.json\"]+sorted(x for x in (p/\"generated_clockfix\").rglob(\"*\") if x.is_file()) r={\"utc\":datetime.datetime.now(datetime.timezone.utc).isoformat(),\"source_tip\":a[\"private_tip\"],\"actual_consumed_files\":a[\"actual_files\"],\"allowed_superset\":a[\"expected_superset_files\"],\"files\":[{\"path\":str(x),\"sha256\":h(x),\"bytes\":x.stat().st_size}for x in paths],\"processes\":subprocess.check_output([\"ps\",\"-eo\",\"pid,ppid,args\"],text=True),\"memory\":subprocess.check_output([\"free\",\"-g\"],text=True),\"disk\":subprocess.check_output([\"df\",\"-BG\",\".\"],text=True)} pathlib.Path(\"FIRST_numeric_preflight.json\").write_text(json.dumps(r,indent=2)+\"\\n\"); print(\"PREFLIGHT\",h(\"FIRST_numeric_preflight.json\"),\"fixture_files\",len(paths)-6) PY\n2298148 2298146 python3 -\n2298149 2298148 ps -eo pid,ppid,args\n3135620   15443 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/safe-qw-slice-native-census || { echo OT_RUN_NOCD otrun-ubuntu-1576675-424442848 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 64 --tag otrun-ubuntu-1576675-424442848 --max-wait 120 -- bash run.sh; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-1576675-424442848 $rc\" >&2; exit $rc\n3135758 3135620 /usr/bin/bash run.sh\n3135775 3135758 yosys -p read_verilog -sv -DSYNTHESIS -DOT_QFD_DV_SAFE_STORAGE rtl/qwen_dv/qfd_dv_slice2_faces.sv rtl/qwen_dv/qfd_dv_slice2_rsafe.sv rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v rtl/qwen_dv/qfd_dv_su_lane.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/qwen_dv/qfd_dv_reset_tree.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v; chparam -set SU_LT 1 -set HD_W130 1 -set MU_NU 4 qfd_dv_slice2_w; hierarchy -check -top qfd_dv_slice2_w; synth -top qfd_dv_slice2_w -flatten -noabc; write_json out/netlist.json\n",
+  "memory": "               total        used        free      shared  buff/cache   available\nMem:            1133         140         285           1         715         992\nSwap:             71           0          71\n",
+  "disk": "Filesystem     1G-blocks  Used Available Use% Mounted on\n/dev/md0            879G  788G       46G  95% /\n"
+}
