@@ -57,6 +57,7 @@ module ot_hbm_su_static_quarter #(
    .clk_ctl(clk_ctl[g]),.clk_side(clk_side),.rst_n(rst_n),.pos({2'(QID),2'(g)}),.bridge_rst_n(bridge_rst_n),.control(control),
    .vmr_cmd(vmr_cmd[(2*g)*30+:60]),.vmw_cmd(vmw_cmd[(2*g)*39+:78]),
    .rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sel(red_sel),.slice_x(slice_x[g*32+:32]),
+   .tree_cmd(12'd0),.tree_o(),   // PRETREE 0 in this (pre-r5) quarter vehicle
    .lg_rq(lg_rq[(2*g)*17+:34]),.lg_wq(lg_wq[(2*g)*281+:562]),.lg_rr(lg_rr[(2*g)*257+:514]),
    .lg_w_done(lg_w_done[2*g+:2]),.fault(fault[g]));
  end

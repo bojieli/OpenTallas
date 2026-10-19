@@ -78,7 +78,12 @@ module ot_hbm_su_static_pgslice #(
  //   store-bank id checks), the far-command group check, the inject group select, the RF-drain port rule, the reducer
  //   'mine' select, the VM bank leaf quarter/bank checks and B39_NOOP = (qid==0). A strap of another class latches FAULT
  //   (pos_bad). Datapath edges unchanged; STRAP=0 ignores pos (tie it to {QID,G}).
- parameter integer STRAP=0
+ parameter integer STRAP=0,
+ // PRETREE (HH-6 / HBM-SURED 2026-10-18; default 0 = unchanged): the SU reducer ingress widening. tree_cmd {v,max,
+ //   cntB5,cntA5} at edge E takes ALL 32 lanes' ro_x of the issue block (quarter words 16G..16G+15 = half A, 64+16G..+15 =
+ //   half B; lanes >= the half's count are padding) into ot_hbm_su_red_pretree_s (clk_ctl): two golden csum8 16-word subtrees on tree_o, registered at E+50
+ //   (LAT 6). The quarter core joins the four slices (qcore_r5 PRETREE). One block per edge; no stall.
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -98,6 +103,8 @@ module ot_hbm_su_static_pgslice #(
  input wire [255:0] rf_dsec,
  input wire [11:0] red_sel,
  output reg [31:0] slice_x,
+ input wire [11:0] tree_cmd,           // PRETREE: {v, max, cntB5, cntA5} (this slice's counts, compiler-computed)
+ output wire [66:0] tree_o,            // PRETREE: {max, vB, xB, vA, xA}
  output wire [2*17-1:0] lg_rq, output wire [2*281-1:0] lg_wq,
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
  // COLLPORT ports (unused when COLLPORT=0)
@@ -495,10 +502,18 @@ module ot_hbm_su_static_pgslice #(
  wire ext=red_sel[10:8]==3'd0||red_sel[10:8]==3'd1||red_sel[10:8]==3'd3;
  wire red_bad=mine&&ext&&!ro_v[rn];
  always @(posedge clk_ctl)slice_x<=ro_x[rn*32+:32];
+ // ------------------------------------------------------------------ PRETREE: reducer ingress widening
+ wire pt_fault;
+ if(PRETREE!=0)begin:g_pretree
+  ot_hbm_su_red_pretree_s #(.LAT(6)) u_pt(.clk(clk_ctl),.rst_n(rst_n),.tree_cmd(tree_cmd),.ro_x(ro_x),.ro_v(ro_v),
+   .tree_o(tree_o),.fault(pt_fault));
+ end else begin:g_no_pretree
+  assign tree_o=67'd0; assign pt_fault=1'b0;
+ end
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl `OT_SU_ARST(rst_c))
   if(!rst_c)fault<=1'b0;
   else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
-          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad||pos_bad)fault<=1'b1;
+          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad||pos_bad||pt_fault)fault<=1'b1;
 endmodule
 `default_nettype wire

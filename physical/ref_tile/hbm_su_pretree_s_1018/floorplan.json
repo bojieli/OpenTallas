@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_su_pretree_s_1018",
+ "top": "ot_hbm_su_red_pretree_s",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  172.8,
+  216.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  170.64000000000001,
+  213.84
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 18000,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "ro_x",
+   "ro_v",
+   "tree_cmd"
+  ],
+  "E": [
+   "tree_o",
+   "fault"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/ref_tile/hbm_su_pretree_s_1018/kit.env",
+  "physical/ref_tile/hbm_su_pretree_s_1018/clock.sdc",
+  "physical/ref_tile/hbm_su_pretree_s_1018/signoff.sdc",
+  "physical/ref_tile/hbm_su_pretree_s_1018/pdn.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/pre_cts.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/post_cts.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/post_grt.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/pre_drt.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/pre_fill.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/post_fill.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/pre_grt.tcl",
+  "physical/ref_tile/hbm_su_pretree_s_1018/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}

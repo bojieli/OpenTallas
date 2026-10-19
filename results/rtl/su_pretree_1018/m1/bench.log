@@ -1,0 +1,10 @@
+MISMATCH 2: edge 631 (exp 631) tag 00000202 (exp 00000202) x c78f0006 (exp c78f0007)
+MISMATCH 3: edge 642 (exp 642) tag 00000203 (exp 00000203) x 44a60fa0 (exp 44a60fa1)
+MISMATCH 4: edge 673 (exp 673) tag 00000204 (exp 00000204) x 46548ea4 (exp 46548ea3)
+MISMATCH 6: edge 695 (exp 695) tag 00000206 (exp 00000206) x c07b9bda (exp c07b9bd9)
+MISMATCH 9: edge 771 (exp 771) tag 00000209 (exp 00000209) x 45f4e920 (exp 45f4e91e)
+FAIL tb_hbm_su_red_pretree MUT=1: 5 errors
+- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.289 s; speed 5.542 us/s
+- Verilator: cpu 0.213 s on 1 threads; allocated 16 MB
