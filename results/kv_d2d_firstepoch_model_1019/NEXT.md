@@ -1,0 +1,1 @@
+ROOT review fixed-image private component semantics and unresolved first-epoch source command/metadata/reset transport. No RTL or simulation authorized. Complete native/production price remains HOLD; preserve canonical endpoints and FRAME/bindNULL.

@@ -1,0 +1,51 @@
+{
+  "source": "5f2ce19bc",
+  "driver": "cda9d9f9d",
+  "frozen_run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub",
+  "qualification": "Source transition proof at HOST interface; downstream FRAME composition conditional, not an RTL simulation or physical receipt",
+  "inputs": {
+    "die.v.preexp": {
+      "sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+      "bytes": 3716857
+    },
+    "qkd_host_root_admission.sv": {
+      "sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "bytes": 45568
+    },
+    "qkd_d2d_cal_seq_bootcfg.sv": {
+      "sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+      "bytes": 7313
+    },
+    "qkd_host_rst_role_pins.sv": {
+      "sha256": "fb1f5dbfe76a33e302cd35d5c488d72ca9c2e658364384bc2a18d45202f265b4",
+      "bytes": 2552
+    },
+    "qkd_static_kv_boot_dispatch.sv": {
+      "sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "bytes": 11942
+    },
+    "ot_qwen_d2d_cal_seq.sv": {
+      "sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+      "bytes": 10555
+    },
+    "d2d_cal_image_mu.svh": {
+      "sha256": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae",
+      "bytes": 2812
+    },
+    "ot_qwen_sys_rst_seq.sv": {
+      "sha256": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+      "bytes": 4158
+    },
+    "ot_qwen_d2d_cal_seq_dies_mu.sv": {
+      "sha256": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+      "bytes": 4176
+    },
+    "ot_qwen_d2d_services.sv": {
+      "sha256": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+      "bytes": 14239
+    }
+  },
+  "proposal_status": "SOURCE_MODEL_ONLY; fixed image, no RTL/sim/native qualification",
+  "local_ff_allocation": 116,
+  "complete_native_price": null
+}
