@@ -207,6 +207,7 @@ def main(argv=None):
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core below the static D2D end')
     ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot relay trees')
     ap.add_argument('--v143', action='store_true', help='kvsys v1.4.3: G3S2 head staging, grown groups, regional reset roots')
+    ap.add_argument('--reserve-native-astk', action='store_true', help='native ASTK envelope (kv_die case --reserve-native-astk, OT_KV_ASTK_EXPAND=1): same geometry as the case')
     ap.add_argument('--fine', type=float, default=260.0)
     ap.add_argument('--coarse', type=float, default=1040.0)
     ap.add_argument('--bundle-centre', action='store_true', help='the old screen: every bus from one bundle-centre point')
@@ -215,7 +216,8 @@ def main(argv=None):
     ap.add_argument('--expand', type=Path, help='expand.json: flattened frames take their leaves\' top layer')
     a = ap.parse_args(argv)
     m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
-                host_trees=getattr(a, 'host_trees', False) or None, v143=getattr(a, 'v143', False) or None)
+                host_trees=getattr(a, 'host_trees', False) or None, v143=getattr(a, 'v143', False) or None,
+                reserve_native_astk=a.reserve_native_astk)
     M = K.masters(m, 1)
     tops = block_tops(a.lef, a.expand) if a.lef else None
     rec = dict(schema='opentallas.qwen_kvsys_window.v1', split=a.split, die_um=[m['die']['w'], m['die']['h']],
