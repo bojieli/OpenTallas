@@ -30,7 +30,7 @@ window image.  Every field is the decode of the BUILT RTL (main f93fea12a+, cred
       PV send >= GO + ceil(5 T / 4) + 150 (after the last fold score); PO = PVS + ceil(n / 2) + ceil(n / 250) + 4,
       n = ceil(T / 2); PVO = PO + 8 ceil(T / 32) + 55; the quarter-ST P.V leaves the entry of half PVH (ST < 2: E)
       as 160 words in 4 x 40-cycle windows from GO + PVO + 56 (fixed: SVC-PV3 logs, every T and seed); the jobs'
-      done pulse at both entries' jd one edge after the last P.V word.
+      done pulse at the P.V entry's jd one edge after the last P.V word, at the other entry pv_first - 6 (measured).
   HBM (elastic boundary, owner 10-15): the window ring of the 127 rows before this position is the compiler's image
   in each slice's own 2 PCs (tile t = dims 32 t .. 32 t + 31; rs_role tile map, dsdv_svc_rs_roles.svh); the own row
   is written by the job's OWN_ROW frame; GO waits W_SLACK edges after WIN_LOAD (64 sector reads a PC at DQ 8 credits).
@@ -73,6 +73,7 @@ PVS0, KPV, PV_LAT = 150, 55, 56
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
+JD_NOPV = -6                 # the half without the quarter's P.V: jd done = pv_first - 6 (bench_svc run1, both seeds)
 
 ROLE = {0: 0x01990c, 1: 0x04124d, 2: 0x04110f, 3: 0x040ace, 4: 0x040908, 5: 0x0400e9, 6: 0x01910b, 7: 0x040c4a,
         8: 0x055102, 9: 0x054a43, 10: 0x054900, 11: 0x0540e4, 12: 0x055101, 13: 0x054c65, 14: 0x02d906, 15: 0x02d447}
@@ -224,7 +225,7 @@ class Job:
         pv_first = self.go + self.pvo + PV_LAT
         return dict(at=at, words=words, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
                     po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + 159,
-                    done=pv_first + 160 - 1 + JD_LAT, nframes=len(self.frames))
+                    done=pv_first + 160 - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
 
     # ------------------------------------------------------------------ HBM window image (the 127 rows before pos)
     def hbm_image(self):
@@ -271,7 +272,9 @@ def build(fx, sched=None, die=None, tag=0, mutant=None):
     s = job.schedule(t_own, t_q, t_exp, ag['j_w'], ag['j_e'])
     from dv_layer_compile import SEQ
     s['issue'] = s['s_j'] - SEQ['svc_to_sj']
-    s['ls'] = max(s['done'] + ag['jd_w'], s['done'] + ag['jd_e']) - s['s_j']
+    dw, de = (s['done_nopv'], s['done']) if ST < 2 else (s['done'], s['done_nopv'])
+    s['done_w'], s['done_e'] = dw, de
+    s['ls'] = max(dw + ag['jd_w'], de + ag['jd_e']) - s['s_j']
     s['ages'] = ag
     return job, s
 
@@ -285,7 +288,7 @@ def bench_image(job, s, out, base=60):
     w = s['words']
     arg, jw = job_word(s['nframes'], job.tag)
     meta = [len(w), job.T, s['j_w'] + off, s['j_e'] + off, jw & 0xFFFFFFFF, jw >> 32, 0, s['pv_first'] + off,
-            s['done'] + off, s['go'] + off, s['at']['PV'] + off, ST, 0, 0, 0, 0]
+            s['done_e'] + off, s['go'] + off, s['at']['PV'] + off, ST, s['done_w'] + off, 0, 0, 0]
     img = job.hbm_image()
     meta[6] = len(img)
     sc, pv = job.expected_hex()
@@ -299,7 +302,7 @@ def bench_image(job, s, out, base=60):
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'] + off,
-               pv_last=s['pv_last'] + off, done=s['done'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
+               pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
     (out / 'image.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
@@ -334,7 +337,7 @@ def lower(die, op, ctx):
         r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
                               j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']), frames=s['at'], go=s['go'],
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
-                              done_pin=s['done'], ls=s['ls'], hbm_sectors=len(job.hbm_image()),
+                              done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),
                               q_words=len(s['words']), q_image=f'prog/svc/{ctx.get("layer")}/qwd.hex',
                               tag_rule='q headers carry {issuer slot, calendar row index}: re-emit with the final row '
                                        'index / per-slot header rows')]
@@ -347,7 +350,7 @@ def lower(die, op, ctx):
         pvh = 'u_rsv_11' if ST < 2 else 'u_rsv_05'
         ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', dir='out', kind='PV', tag='attn.pv',
                        payload=f'160 words (quarter {ST}: 4 x 40-cycle windows) to u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi'))
-        for inst, t in (('u_rsv_05', s['done']), ('u_rsv_11', s['done'])):
+        for inst, t in (('u_rsv_05', s['done_w']), ('u_rsv_11', s['done_e'])):
             ev.append(dict(cycle=t, inst=inst, port='jd', dir='out', kind='SVCDONE', tag='attn.job', payload='done'))
         r['events'] = ev
         im = job.hbm_image()
@@ -394,7 +397,7 @@ def main(argv=None):
     for mut in (None, 'slot', 'late'):
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
-        print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done', 'frames')}))
+        print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
 
 
 if __name__ == '__main__':

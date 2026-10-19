@@ -17,8 +17,8 @@ from pathlib import Path
 MUTANTS = {
     'slot': dict(what='OWN_ROW pos field = position - 1 (the own row lands in slot 126; slot 127 reads stale HBM)',
                  regex=r'SC MISMATCH|verdict=FAIL'),
-    'late': dict(what='PV frame driven 40 edges after the cycle the compiled PO / PVO assume (static p feed misses)',
-                 regex=r'first_fault_code=0*[1-9a-f][0-9a-f]*|verdict=FAIL'),
+    'late': dict(what='PV frame driven 40 edges after the cycle the compiled PO / PVO assume (the static p feed takes words that have not landed: P.V wrong)',
+                 regex=r'PV MISMATCH|first_fault_code=0*[1-9a-f]'),
 }
 LINE = re.compile(r'^SVCLOW .*$', re.M)
 SCHED = re.compile(r'^SVCLOW_SCHED .*$', re.M)
