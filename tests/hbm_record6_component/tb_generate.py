@@ -33,13 +33,13 @@ ot_hbm_su_bridge_release_s rel(.clk_serial(clk),.rst_n(runrq),.prog_busy(busy[0]
 integer clock_stream=0,clock_serial=0;time last_stream_ps=0,last_serial_ps=0;
 always @(posedge stream)begin
  clock_stream++;
- if(clock_stream>1&&($rtoi($realtime*1000+.5)-last_stream_ps)!=834)$fatal(1,"CLOCK_STREAM_PERIOD");
- last_stream_ps=$rtoi($realtime*1000+.5);
+ if(clock_stream>1&&($rtoi($realtime*1000+0.5)-last_stream_ps)!=834)$fatal(1,"CLOCK_STREAM_PERIOD");
+ last_stream_ps=$rtoi($realtime*1000+0.5);
 end
 always @(posedge clk)begin
  clock_serial++;
- if(clock_serial>1&&($rtoi($realtime*1000+.5)-last_serial_ps)!=1112)$fatal(1,"CLOCK_SERIAL_PERIOD");
- last_serial_ps=$rtoi($realtime*1000+.5);
+ if(clock_serial>1&&($rtoi($realtime*1000+0.5)-last_serial_ps)!=1112)$fatal(1,"CLOCK_SERIAL_PERIOD");
+ last_serial_ps=$rtoi($realtime*1000+0.5);
 end
 initial begin #200;if(clock_stream<2||clock_serial<2||!cg.locked||!rs||!rq)$fatal(1,"CLOCK_CAUSAL_GUARD");
  $display("CLOCK_CAUSAL_PASS stream_half_ps=417 serial_half_ps=556");end
