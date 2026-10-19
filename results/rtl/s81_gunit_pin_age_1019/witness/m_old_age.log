@@ -1,0 +1,175 @@
+GU KS 480 base 484
+GU_AGE_ISSUE edge=221 which=0 row=1000
+GU CW 221 201 000000000000000000000000000000000000000000000000000000007d1fffff
+GU ROOT 318 job 0 acc 24 431f7965
+GU ROOT 338 job 0 acc 0 c10cd567
+GU ROOT 358 job 0 acc 1 c122b318
+GU ROOT 378 job 0 acc 2 c0c48202
+GU RSQRT 392 job 0 41355148
+GU ROOT 398 job 0 acc 3 41210374
+GU ROOT 418 job 0 acc 4 c1a74e77
+GU ROOT 438 job 0 acc 5 c18148e8
+GU ROOT 458 job 0 acc 6 c0ab2fb3
+GU ROOT 478 job 0 acc 7 c0e6bc78
+GU ROOT 498 job 0 acc 8 3fcfa1f2
+GU ROOT 518 job 0 acc 9 bb1645d8
+GU ROOT 538 job 0 acc 10 c150698c
+GU ROOT 558 job 0 acc 11 4136d321
+GU ROOT 578 job 0 acc 12 bfd53db6
+GU ROOT 598 job 0 acc 13 3fd58316
+GU ROOT 618 job 0 acc 14 bb088973
+GU ROOT 638 job 0 acc 15 b9a45894
+GU ROOT 658 job 0 acc 16 bb33e8e0
+GU ROOT 678 job 0 acc 17 c00afa7a
+GU ROOT 698 job 0 acc 18 400b2d57
+GU_AGE_HP N edge=709 acc=23 source=1
+GU_AGE_HP N edge=710 acc=23 source=1
+GU_AGE_HP N edge=711 acc=23 source=3
+GU_AGE_HP S edge=711 acc=23 source=0
+GU_AGE_HP N edge=712 acc=23 source=3
+GU_AGE_HP S edge=712 acc=23 source=0
+GU_AGE_HP N edge=713 acc=23 source=5
+GU_AGE_HP S edge=713 acc=23 source=2
+GU_AGE_HP N edge=714 acc=23 source=5
+GU_AGE_HP S edge=714 acc=23 source=2
+GU_AGE_HP N edge=715 acc=23 source=7
+GU_AGE_HP S edge=715 acc=23 source=4
+GU_AGE_HP N edge=716 acc=23 source=7
+GU_AGE_HP S edge=716 acc=23 source=4
+GU_AGE_HP N edge=717 acc=23 source=9
+GU_AGE_HP S edge=717 acc=23 source=6
+GU_AGE_HP N edge=718 acc=23 source=9
+GU_AGE_HP S edge=718 acc=23 source=6
+GU ROOT 718 job 0 acc 19 ba12fd7a
+GU_AGE_HP N edge=719 acc=23 source=11
+GU_AGE_HP S edge=719 acc=23 source=8
+GU_AGE_HP N edge=720 acc=23 source=11
+GU_AGE_HP S edge=720 acc=23 source=8
+GU_AGE_HP N edge=721 acc=23 source=13
+GU_AGE_HP S edge=721 acc=23 source=10
+GU_AGE_HP N edge=722 acc=23 source=13
+GU_AGE_HP S edge=722 acc=23 source=10
+GU_AGE_HP N edge=723 acc=23 source=15
+GU_AGE_HP S edge=723 acc=23 source=12
+GU_AGE_HP N edge=724 acc=23 source=15
+GU_AGE_HP S edge=724 acc=23 source=12
+GU_AGE_HP S edge=725 acc=23 source=14
+GU_AGE_HP S edge=726 acc=23 source=14
+GU ROOT 738 job 0 acc 20 bc11c0b7
+GU ROOT 758 job 0 acc 21 babdd67b
+GU ROOT 778 job 0 acc 22 bae29fc1
+GU ROOT 798 job 0 acc 23 3c4576d0
+GU_AGE_RESULT S edge=1697 row=1000 last_hp_n=724 last_hp_s=726 issue=221 age_from_n=973
+GU_AGE_CONTRACT_FAIL S measured=973 expected=757
+GU OUT S 1697 00000000000000000000007efc7b327401472e6faf1e3279fb0e21ff47cbfffe00601
+ERR vo_s beat at layer edge 1697 (expected #0 at 1481)
+GU OUT S 1698 00000000000000000000007c55f15062a413c47718312075d8bf75ff4fcbfffe00601
+ERR vo_s beat at layer edge 1698 (expected #0 at 1481)
+GU_AGE_RESULT N edge=1699 row=1000 last_hp_n=724 last_hp_s=726 issue=221 age_from_n=975
+GU_AGE_CONTRACT_FAIL N measured=975 expected=759
+GU OUT N 1699 00000000000000000000007efc7b327401472e6faf1e3279fb0e21ff47cbfffe00601
+ERR vo_n beat at layer edge 1699 (expected #0 at 1483)
+GU OUT S 1699 00000000000000000000007b94256c74cb92fa754d51027ebb453fff57cbfffe00601
+ERR vo_s beat at layer edge 1699 (expected #0 at 1481)
+GU OUT N 1700 00000000000000000000007c55f15062a413c47718312075d8bf75ff4fcbfffe00601
+ERR vo_n beat at layer edge 1700 (expected #0 at 1483)
+GU OUT S 1700 00000000000000000000005d7e251c6a9dc5d27ec96bb07c056c2fff5fcbfffe00601
+ERR vo_s beat at layer edge 1700 (expected #0 at 1481)
+GU OUT N 1701 00000000000000000000007b94256c74cb92fa754d51027ebb453fff57cbfffe00601
+ERR vo_n beat at layer edge 1701 (expected #0 at 1483)
+GU OUT S 1701 00000000000000000000005e05b4d87efb74cc7b7fe7666ad2f585ff67cbfffe00601
+ERR vo_s beat at layer edge 1701 (expected #0 at 1481)
+GU OUT N 1702 00000000000000000000005d7e251c6a9dc5d27ec96bb07c056c2fff5fcbfffe00601
+ERR vo_n beat at layer edge 1702 (expected #0 at 1483)
+GU OUT S 1702 00000000000000000000007ecd7b36780603de787c25ae77afbb5bff6fcbfffe00601
+GU OUT N 1703 00000000000000000000005e05b4d87efb74cc7b7fe7666ad2f585ff67cbfffe00601
+GU OUT N 1704 00000000000000000000007ecd7b36780603de787c25ae77afbb5bff6fcbfffe00601
+GU_AGE_ISSUE edge=9405 which=1 row=1008
+GU CW 9405 201 000000000000000000000000000000000000000000000000000002007e1fffff
+GU ROOT 9502 job 1 acc 24 43270055
+GU ROOT 9522 job 1 acc 0 c05cc27a
+GU ROOT 9542 job 1 acc 1 3fc196f6
+GU ROOT 9562 job 1 acc 2 c0bee616
+GU RSQRT 9576 job 1 41312f29
+GU ROOT 9582 job 1 acc 3 3f0a2ba4
+GU ROOT 9602 job 1 acc 4 bfbc36a8
+GU ROOT 9622 job 1 acc 5 c08accce
+GU ROOT 9642 job 1 acc 6 c1133cd3
+GU ROOT 9662 job 1 acc 7 c051c930
+GU ROOT 9682 job 1 acc 8 4020980c
+GU ROOT 9702 job 1 acc 9 40fc755c
+GU ROOT 9722 job 1 acc 10 c100b0bd
+GU ROOT 9742 job 1 acc 11 c08b9044
+GU ROOT 9762 job 1 acc 12 c037daa6
+GU ROOT 9782 job 1 acc 13 409cc912
+GU ROOT 9802 job 1 acc 14 bf9e55fe
+GU ROOT 9822 job 1 acc 15 c0791feb
+GU ROOT 9842 job 1 acc 16 40b8b410
+GU ROOT 9862 job 1 acc 17 40193542
+GU ROOT 9882 job 1 acc 18 c08d8df8
+GU_AGE_HP N edge=9893 acc=23 source=1
+GU_AGE_HP N edge=9894 acc=23 source=1
+GU_AGE_HP N edge=9895 acc=23 source=3
+GU_AGE_HP S edge=9895 acc=23 source=0
+GU_AGE_HP N edge=9896 acc=23 source=3
+GU_AGE_HP S edge=9896 acc=23 source=0
+GU_AGE_HP N edge=9897 acc=23 source=5
+GU_AGE_HP S edge=9897 acc=23 source=2
+GU_AGE_HP N edge=9898 acc=23 source=5
+GU_AGE_HP S edge=9898 acc=23 source=2
+GU_AGE_HP N edge=9899 acc=23 source=7
+GU_AGE_HP S edge=9899 acc=23 source=4
+GU_AGE_HP N edge=9900 acc=23 source=7
+GU_AGE_HP S edge=9900 acc=23 source=4
+GU_AGE_HP N edge=9901 acc=23 source=9
+GU_AGE_HP S edge=9901 acc=23 source=6
+GU_AGE_HP N edge=9902 acc=23 source=9
+GU_AGE_HP S edge=9902 acc=23 source=6
+GU ROOT 9902 job 1 acc 19 c083130a
+GU_AGE_HP N edge=9903 acc=23 source=11
+GU_AGE_HP S edge=9903 acc=23 source=8
+GU_AGE_HP N edge=9904 acc=23 source=11
+GU_AGE_HP S edge=9904 acc=23 source=8
+GU_AGE_HP N edge=9905 acc=23 source=13
+GU_AGE_HP S edge=9905 acc=23 source=10
+GU_AGE_HP N edge=9906 acc=23 source=13
+GU_AGE_HP S edge=9906 acc=23 source=10
+GU_AGE_HP N edge=9907 acc=23 source=15
+GU_AGE_HP S edge=9907 acc=23 source=12
+GU_AGE_HP N edge=9908 acc=23 source=15
+GU_AGE_HP S edge=9908 acc=23 source=12
+GU_AGE_HP S edge=9909 acc=23 source=14
+GU_AGE_HP S edge=9910 acc=23 source=14
+GU ROOT 9922 job 1 acc 20 3fb8b620
+GU ROOT 9942 job 1 acc 21 411cb637
+GU ROOT 9962 job 1 acc 22 c0d6ce56
+GU ROOT 9982 job 1 acc 23 c1148961
+GU_AGE_RESULT S edge=10881 row=1008 last_hp_n=9908 last_hp_s=9910 issue=9405 age_from_n=973
+GU_AGE_CONTRACT_FAIL S measured=973 expected=757
+GU OUT S 10881 00000000000000000000007ae45d8e76901d947b7403e87e98ee93ff87cbfffe00601
+GU OUT S 10882 00000000000000000000007d41614a7b44c0b87d2347087dde2115ff8fcbfffe00601
+GU_AGE_RESULT N edge=10883 row=1008 last_hp_n=9908 last_hp_s=9910 issue=9405 age_from_n=975
+GU_AGE_CONTRACT_FAIL N measured=975 expected=759
+GU OUT N 10883 00000000000000000000007ae45d8e76901d947b7403e87e98ee93ff87cbfffe00601
+GU OUT S 10883 000000000000000000000078d8f82c72c7efc277909da27ef29a61ff97cbfffe00601
+GU OUT N 10884 00000000000000000000007d41614a7b44c0b87d2347087dde2115ff8fcbfffe00601
+GU OUT S 10884 00000000000000000000007a78055278d317e67eda4b7873486eafff9fcbfffe00601
+GU OUT N 10885 000000000000000000000078d8f82c72c7efc277909da27ef29a61ff97cbfffe00601
+GU OUT S 10885 0000000000000000000000794eb2867ef84aea74e756c4795b5e03ffa7cbfffe00601
+GU OUT N 10886 00000000000000000000007a78055278d317e67eda4b7873486eafff9fcbfffe00601
+GU OUT S 10886 00000000000000000000007ed6a616743051f87b10cabc7730c0fdffafcbfffe00601
+GU OUT N 10887 0000000000000000000000794eb2867ef84aea74e756c4795b5e03ffa7cbfffe00601
+GU OUT N 10888 00000000000000000000007ed6a616743051f87b10cabc7730c0fdffafcbfffe00601
+GU CW 11263 200 000000000000000000000000000000000000000000000000000000c07f1fffff
+GU OUT S 11363 000000000000000000000000000000000000000b2cad540381147a7fc7cbfffe00601
+GU OUT N 11365 000000000000000000000000000000000000000b2cad540381147a7fc7cbfffe00601
+GU OUT S 11484 00000000000000000000007cf088307d382b1e7ca55c907cf45571ffcfcbfffe00601
+GU OUT S 11485 000000000000000000000000000000000000007c82bf587d4158227fd7cbfffe00601
+GU OUT N 11486 00000000000000000000007cf088307d382b1e7ca55c907cf45571ffcfcbfffe00601
+GU OUT N 11487 000000000000000000000000000000000000007c82bf587d4158227fd7cbfffe00601
+ERR counts out n 0/15 s 0/15 cw 3/3  in n 828/828 s 827/827 roots 50/50 rsqrt 2/2
+GU_LAYER FAIL 35
+- /srv/opentallas-scratch/claude/codex-s81-gunit-pin-age-1019/src/tools/s81_dv/layer_prog/gu/tb_gu_layer.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 1.351 s; speed 9.176 us/s
+- Verilator: cpu 1.350 s on 1 threads; allocated 13 MB

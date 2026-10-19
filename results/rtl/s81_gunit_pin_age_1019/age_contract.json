@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.s81.gunit-hc-port-age.v1",
+  "source_commit": "47024feb3",
+  "RTL_source_origin": "7819cbc5e safe2",
+  "RTL_sha256": {
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv": "eea6018d01ec1a67d98a6e61ec6e2d9bc35713499403d44617318716386de5f1",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_p.sv": "8850383ef63e84b341f9da52ce7c2ae5a51cd847af851573b1e4e35f93a902b8"
+  },
+  "clock": "posedge ck actual DUT/monitor capture edges, cyc-base layer origin",
+  "common_origin": "last valid HP beat captured on vi_n",
+  "HC_LAT_N": 975,
+  "HC_LAT_S": 973,
+  "measurements": [
+    {
+      "port": "vo_s",
+      "edge": 1697,
+      "row": 1000,
+      "last_hp_n": 724,
+      "last_hp_s": 726,
+      "issue": 221,
+      "age_from_n": 973
+    },
+    {
+      "port": "vo_n",
+      "edge": 1699,
+      "row": 1000,
+      "last_hp_n": 724,
+      "last_hp_s": 726,
+      "issue": 221,
+      "age_from_n": 975
+    },
+    {
+      "port": "vo_s",
+      "edge": 10881,
+      "row": 1008,
+      "last_hp_n": 9908,
+      "last_hp_s": 9910,
+      "issue": 9405,
+      "age_from_n": 973
+    },
+    {
+      "port": "vo_n",
+      "edge": 10883,
+      "row": 1008,
+      "last_hp_n": 9908,
+      "last_hp_s": 9910,
+      "issue": 9405,
+      "age_from_n": 975
+    }
+  ],
+  "positive": "GU_LAYER PASS3jobs1655HP-SC15CTLperside50roots2rsqrt nofault",
+  "mutants": {
+    "old_759_757": "GU_LAYER FAIL35 plus explicit age-contract failures",
+    "wrong_plus1_976_974": "GU_LAYER FAIL35 plus four GU_AGE_CONTRACT_FAIL"
+  },
+  "compiler": "lower_gu constants unchanged pending native launch repair and source-gated integration",
+  "physical_admission": "BLOCKED safe2 native launch5>220ps; age witness grants no physical closure",
+  "price_vs_old_MCP": {
+    "extra_edges_per_HC_job": 216,
+    "at_1p2GHz_extra_ns": 180
+  }
+}
