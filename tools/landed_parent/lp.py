@@ -200,7 +200,7 @@ def parse_module(text: str, name: str) -> dict:
         elif mm.group(2):
             rng = mm.group(2)
         ports.append(dict(name=mm.group(3), dir={"input": "in", "output": "out", "inout": "inout"}[d], range=rng,
-                          item=it))
+                          item=f"{d} wire {rng + ' ' if rng else ''}{mm.group(3)}"))
     return dict(name=name, params=params, params_txt=params_txt, ports=ports, body=body)
 
 
@@ -304,6 +304,9 @@ class Parent:
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
+        self.preserve_ck = set(spec.get("preserve_clock_ports") or [])
+        if self.ck & self.preserve_ck:
+            raise SystemExit("a clock port cannot be both regional and preserved")
         self.reset_port = spec.get("reset_port")
         self.rst = spec.get("reset_net") or self.reset_port
         if self.reset_port not in self.ports:
@@ -342,7 +345,7 @@ class Parent:
 
     def graph(self):
         """drivers {net: {node}}, readers [(net, node, pin)]; node = inst name or 'port:<p>'"""
-        excl = self.ck | {self.rst} | self.static
+        excl = self.ck | self.preserve_ck | {self.rst} | self.static
         drv = {}
         for ins in self.insts:
             for pin, ex in ins["conns"].items():
@@ -696,7 +699,7 @@ class Parent:
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
-                   if p["dir"] == "in" and p["name"] not in self.ck | self.static | {self.rst}}
+                   if p["dir"] == "in" and p["name"] not in self.ck | self.preserve_ck | self.static | {self.rst, self.reset_port}}
         port_out = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"] if p["dir"] == "out"}
         no_rst = [i["inst"] for i in self.insts if t.get(i["inst"], 0) and not any(
             self.cports[i["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items())]
@@ -704,6 +707,7 @@ class Parent:
             lane="PARENTS-LANDED", generator="tools/landed_parent/lp.py", flat=S["top"], top=top_lp,
             standard="landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region "
                      "child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+            preserved_clock_ports=sorted(self.preserve_ck),
             regions={r: dict(clock_port=f"ck_{r}", children=sorted(i for i, rg in self.region.items() if rg == r))
                      for r in self.regions},
             D=self.D, E=self.E, K=self.K, added_edges_per_landing=self.A,
@@ -746,7 +750,7 @@ class Parent:
         RB = rt["RB"]
         t = P["t"]
         act_low = S.get("reset_active_low", True)
-        ins = [p for p in self.mod["ports"] if p["dir"] == "in" and p["name"] not in self.ck and p["name"] != self.reset_port]
+        ins = [p for p in self.mod["ports"] if p["dir"] == "in" and p["name"] not in self.ck | self.preserve_ck and p["name"] != self.reset_port]
         outs = [p for p in self.mod["ports"] if p["dir"] == "out"]
         W = {p["name"]: eval_width(p["range"], self.env) for p in self.mod["ports"]}
         maxoff = max([0] + [t.get(f"port:{p['name']}", 0) for p in outs] + [t.get(f"port:{p['name']}", 0) for p in ins])
@@ -775,10 +779,10 @@ class Parent:
             L.append(f"    wire [{w_ - 1}:0] fo_{n}, lo_{n};  reg [{w_ - 1}:0] dlo_{n} [0:{off}];")
             L.append(f"    always @(posedge clk) begin : g_dlo_{n} integer j; dlo_{n}[0] <= fo_{n}; "
                      f"for (j = 1; j <= {off}; j = j + 1) dlo_{n}[j] <= dlo_{n}[j - 1]; end")
-        ck = sorted(self.ck)
+        ck = sorted(self.ck | self.preserve_ck)
         fc = [f".{c}({{{W[c]}{{clk}}}})" for c in ck] + [f".{self.reset_port}({'rst' if S.get('reset_net') else 'rst_f'})"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
              [f".{p['name']}(fo_{p['name']})" for p in outs]
-        lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.reset_port}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
+        lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{c}({{{W[c]}{{clk}}}})" for c in sorted(self.preserve_ck)] + [f".{self.reset_port}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
         fm = f"{S['top']}_rsref" if P.get("resched") else S["top"]
@@ -867,9 +871,16 @@ def audit(spec: dict, rtl_text: str) -> dict:
     reg = {}
     for i in insts:
         cks = [n for pin, ex in i["conns"].items() for n in idents(ex) if re.fullmatch(r"ck_\w+", n)]
+        if not cks:
+            # Existing forwarded-clock output stations belong to the external
+            # interface domains, not to a fabricated local region clock.
+            cks = [ex.strip() for pin, ex in i["conns"].items()
+                   if pin in (spec.get("clock_pins") or [])
+                   and dirs[i["module"]].get(pin) == "in"
+                   and idents(ex) & set(spec.get("preserve_clock_ports") or [])]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
-        reg[i["inst"]] = cks[0][3:]
+        reg[i["inst"]] = cks[0][3:] if cks[0].startswith("ck_") else "external:" + cks[0]
     drv = {}
     for i in insts:
         for pin, ex in i["conns"].items():

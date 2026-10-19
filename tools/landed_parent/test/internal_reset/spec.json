@@ -24,7 +24,8 @@
    "name": "r0",
    "insts": [
     "ur",
-    "u0"
+    "u0",
+    "uf"
    ]
   },
   {
@@ -39,5 +40,8 @@
  "bench": {
   "cycles": 200,
   "reset_cycles": 16
- }
+ },
+ "preserve_clock_ports": [
+  "xk"
+ ]
 }

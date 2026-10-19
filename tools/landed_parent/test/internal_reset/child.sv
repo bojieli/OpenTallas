@@ -7,3 +7,7 @@ endmodule
 module lpt_rst(input wire clk,input wire rst_n,output reg rs);
  always @(posedge clk) rs <= rst_n;
 endmodule
+
+module lpt_fwd(input wire clk,input wire [7:0] x, output reg [7:0] y);
+ always @(posedge clk) y <= x;
+endmodule
