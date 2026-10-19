@@ -51,6 +51,27 @@ module svg_pair_old_reference #(parameter integer BANK=1)(
  end
 endmodule
 
+// Independent direct-source witness for raw assertion and E1/E2 release.
+module svg_pair_reset_release_witness #(parameter integer FIRST=1,BRANCH=1)(
+ input wire clk,raw_n,input wire [FIRST-1:0] first,input wire [BRANCH-1:0] branch,
+ output integer errors=0);
+ integer edge_count=0;
+ always @(negedge raw_n)begin
+  edge_count=0;#2;if(first!==0||branch!==0)begin errors=errors+1;$display("PAIR_RESET_ASSERT_FAIL");end
+ end
+ always @(posedge clk)begin
+  if(!raw_n)edge_count=0;
+  else begin
+   edge_count=edge_count+1;
+   #2;
+   if((edge_count==1&&(first!=={FIRST{1'b1}}||branch!==0))||
+      (edge_count==2&&(first!=={FIRST{1'b1}}||branch!=={BRANCH{1'b1}})))begin
+    errors=errors+1;$display("PAIR_RESET_RELEASE_FAIL edge=%0d first=%b branch=%b",edge_count,first,branch);
+   end
+  end
+ end
+endmodule
+
 module tb_svg_landing_pair_native;
  parameter integer MUT=0,J=1;
  reg sched_clk=0,pair_hbm_clk=0,pair_clk=0,return_clk=0;
@@ -64,6 +85,25 @@ module tb_svg_landing_pair_native;
  wire [1:0] complete_v,bank_fault;wire [3:0] complete_bank;
  wire [255:0] out_data;wire [2:0] out_ordinal;wire out_valid,phase_fault;
  ot_hbm_svg_landing_pair_native #(.J(J),.MUT(MUT)) dut(.*);
+ wire [73:0] hbranch;wire [35:0] pbranch;wire [33:0] rbranch;
+ assign hbranch[73:72]={dut.g_bank[1].u_bank.hreset,dut.g_bank[0].u_bank.hreset};
+ assign pbranch[35:33]={dut.prst,dut.g_bank[1].u_bank.sreset,dut.g_bank[0].u_bank.sreset};
+ assign rbranch[33]=dut.rrst;
+ genvar xb,xg,xi;generate for(xb=0;xb<2;xb=xb+1)begin:g_reset_bank
+  for(xg=0;xg<9;xg=xg+1)begin:g_reset_group
+   for(xi=0;xi<4;xi=xi+1)begin:g_reset_slice
+    assign hbranch[xb*36+xg*4+xi]=dut.g_bank[xb].u_bank.g_pin[xg].u_group.g_slice[xi].u_slice.rst_n;
+   end
+  end
+ end
+ for(xg=0;xg<33;xg=xg+1)begin:g_reset_return
+  assign pbranch[xg]=dut.u_ring.g_slice[xg].u_slice.sr;
+  assign rbranch[xg]=dut.u_ring.g_slice[xg].u_slice.dr;
+ end endgenerate
+ wire [31:0] hreset_errors,preset_errors,rreset_errors;
+ svg_pair_reset_release_witness #(.FIRST(4),.BRANCH(74)) u_hw(.clk(pair_hbm_clk),.raw_n(pair_hbm_rst_n),.first(dut.hphase0),.branch(hbranch),.errors(hreset_errors));
+ svg_pair_reset_release_witness #(.FIRST(2),.BRANCH(36)) u_pw(.clk(pair_clk),.raw_n(pair_rst_n),.first(dut.pphase0),.branch(pbranch),.errors(preset_errors));
+ svg_pair_reset_release_witness #(.FIRST(2),.BRANCH(34)) u_rw(.clk(return_clk),.raw_n(return_rst_n),.first(dut.rphase0),.branch(rbranch),.errors(rreset_errors));
  wire [31:0] ref_errors[0:1],ref_packets[0:1],ref_completes[0:1];
  genvar b;generate for(b=0;b<2;b=b+1)begin:g_reference
   svg_pair_old_reference #(.BANK(J+4*b)) u_reference(
@@ -180,7 +220,7 @@ module tb_svg_landing_pair_native;
   // Independent ownership/epoch/count/ordinal faults after clean balanced resets.
   for(k=0;k<4;k=k+1)begin
    pair_hbm_rst_n=0;pair_rst_n=0;return_rst_n=0;group_valid=0;read_v=0;in_v=0;stop=1;reserve_v=0;
-   idle(5);pair_hbm_rst_n=1;pair_rst_n=1;return_rst_n=1;idle(15);
+   idle(5);pair_hbm_rst_n=1;if(k==0)idle(2);pair_rst_n=1;if(k==0)idle(2);return_rst_n=1;idle(15);
    if(k!=0)begin
     reserve_v=1;reserve_bank=0;reserve_epoch=71;reserve_total=k==2?8:272;
     idle(1);reserve_v=0;idle(4);
@@ -192,7 +232,8 @@ module tb_svg_landing_pair_native;
    if(!bank_fault[0])begin errors=errors+1;$display("PAIR_IDENTITY_GUARD_FAIL case=%0d",k);end
    else $display("PAIR_IDENTITY_GUARD_PASS case=%0d",k);
   end
-  errors=errors+ref_errors[0]+ref_errors[1];
+  errors=errors+ref_errors[0]+ref_errors[1]+hreset_errors+preset_errors+rreset_errors;
+  $display("PAIR_RESET_GRAPH errors=%0d/%0d/%0d raw_first=4/2/2 branches=74/36/34 unequal_release=PASS",hreset_errors,preset_errors,rreset_errors);
   $display("SVG_NATIVE_PAIR %s mut=%0d J=%0d errors=%0d payload_groups=%0d masked_warm_groups=%0d windows=%0d independent_valid=%0d latency=%0d/%0d old_miter_errors=%0d/%0d packets=%0d/%0d",errors==0?"PASS":"FAIL",MUT,J,errors,data_outputs,warm_outputs,windows,independent_valid_cases,latency_min,latency_max,ref_errors[0],ref_errors[1],ref_packets[0],ref_packets[1]);
   if(errors)$fatal(1,"native landing pair mismatch");$finish;
  end
