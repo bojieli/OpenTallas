@@ -254,7 +254,10 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "job": {
   "owner": "Claude:S-QWCOL",
