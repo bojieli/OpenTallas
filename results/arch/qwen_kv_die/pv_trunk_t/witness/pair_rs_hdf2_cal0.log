@@ -1,0 +1,8 @@
+ot-run: -> ot-epyc4
+ot-heavy: request 20G is charged 18G (class 'pv_rtrunk_bench_hdf.sh' measured peak 9.2G, n=1+0 proved); the cap stays 20G
+ot-heavy: request 20G is charged 18G (class 'pv_rtrunk_bench_hdf.sh' measured peak 9.2G, n=1+0 proved); the cap stays 20G
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3099676-1792396361 after 0 s
+PV_PAIR_RS FAIL T=1000 beats=32 rserr=32 first_beat_age=321 out_age=271 rs_d=49 rs_mut=0
+rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3099676-1792396361): exit 0
