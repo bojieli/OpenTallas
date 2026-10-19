@@ -1,0 +1,5 @@
+# C199 stalled CTS preservation
+
+The original source d6d1730cb fallback stalled for thousands of hold-repair iterations with WNS -47.643 ps and TNS -2421.930 ps while the resized-cell count exceeded26,000. ROOT authorized stopping only its exact CTS container after source/snapshot/process/clock/endpoint evidence was saved. Docker container4d07082fc7c3 was verified as gate_cts_s81sf_bfcol_c199r-20261019-072007 and gracefully stopped; stop returned0. Original source snapshot and all ODB objects remain intact on ot-epyc7. No other job was stopped.
+
+The compressed raw evidence preserves the complete shipping manifest, source archive identity, saved CTS iteration tail, endpoint, clock/script records, exact container mounts and process census. Compression is lossless and the raw source-record SHA is in summary.json. This is a stalled failure, never a mutant PASS or timing qualification. The parent gate driver may continue failure collection independently. Before a successor, diagnose the actual worst path and source/floorplan structure; do not retry repair knobs.

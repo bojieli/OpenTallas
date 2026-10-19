@@ -1,0 +1,17 @@
+{
+  "source": "d6d1730cb",
+  "snapshot": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199r-20261019-072007",
+  "container_id": "4d07082fc7c3",
+  "container_name": "gate_cts_s81sf_bfcol_c199r-20261019-072007",
+  "action": "ROOT-authorized graceful docker stop after preserving source/process/clock/endpoint state",
+  "stop_exit": 0,
+  "last_saved_iterations": [
+    "    13090 |       0 |   26312 |            0 |    +3.6% | -47.643 | -2421.930 | g_bf.g_fqt.u_bf.g_l[7].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[54]$_DFF_P_/D",
+    "    13100 |       0 |   26332 |            0 |    +3.6% | -47.643 | -2421.930 | g_bf.g_fqt.u_bf.g_l[7].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[54]$_DFF_P_/D",
+    "    13110 |       0 |   26352 |            0 |    +3.6% | -47.643 | -2421.930 | g_bf.g_fqt.u_bf.g_l[7].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[54]$_DFF_P_/D",
+    "    13120 |       0 |   26372 |            0 |    +3.6% | -47.643 | -2421.930 | g_bf.g_fqt.u_bf.g_l[7].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[54]$_DFF_P_/D"
+  ],
+  "qualified": false,
+  "next": "source/floorplan/worst-path structural diagnosis; no repair-knob retry",
+  "original_pre_stop_sha256": "dce981605d09f0ec14aba761755bc22201ca6ff9e7c1358a5eebb64e857328dc"
+}
