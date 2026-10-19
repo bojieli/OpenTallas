@@ -1,0 +1,615 @@
+{
+  "classification": "Actual LEF masters/area; FF master prefix DFF/SDFF, transparent BUF/INV/HB2/HB4. Other includes comb and physical-only cells.",
+  "snapshots": {
+    "original": {
+      "comb_or_physical": {
+        "count": 32431,
+        "lef_area_um2": 2645.9055
+      },
+      "BUF_INV_HB": {
+        "count": 29481,
+        "lef_area_um2": 2461.35186
+      },
+      "FF": {
+        "count": 10967,
+        "lef_area_um2": 3265.32222
+      },
+      "hard_macro": {
+        "count": 4,
+        "lef_area_um2": 53293.863168
+      }
+    },
+    "control_baseline": {
+      "comb_or_physical": {
+        "count": 32431,
+        "lef_area_um2": 2645.9055
+      },
+      "BUF_INV_HB": {
+        "count": 29533,
+        "lef_area_um2": 2472.6951
+      },
+      "FF": {
+        "count": 10967,
+        "lef_area_um2": 3265.32222
+      },
+      "hard_macro": {
+        "count": 4,
+        "lef_area_um2": 53293.863168
+      }
+    },
+    "final": {
+      "comb_or_physical": {
+        "count": 33034,
+        "lef_area_um2": 2704.13802
+      },
+      "BUF_INV_HB": {
+        "count": 33596,
+        "lef_area_um2": 2930.90076
+      },
+      "FF": {
+        "count": 12122,
+        "lef_area_um2": 3647.27448
+      },
+      "hard_macro": {
+        "count": 4,
+        "lef_area_um2": 53293.863168
+      }
+    }
+  },
+  "deltas": {
+    "original_to_final": {
+      "added": {
+        "BUF_INV_HB": {
+          "count": 5299,
+          "lef_area_um2": 590.47542
+        },
+        "comb_or_physical": {
+          "count": 603,
+          "lef_area_um2": 58.23252
+        },
+        "FF": {
+          "count": 1155,
+          "lef_area_um2": 381.95226
+        }
+      },
+      "removed": {
+        "BUF_INV_HB": {
+          "count": 1184,
+          "lef_area_um2": 120.92652
+        }
+      },
+      "same_name_master_changes": [],
+      "masters": {
+        "BUFx6f_ASAP7_75t_R": {
+          "added_count": 1214,
+          "added_area_um2": 177.00120000000064,
+          "removed_count": 125,
+          "removed_area_um2": 18.225
+        },
+        "BUFx3_ASAP7_75t_R": {
+          "added_count": 2888,
+          "added_area_um2": 252.64223999999817,
+          "removed_count": 749,
+          "removed_area_um2": 65.52251999999959
+        },
+        "BUFx24_ASAP7_75t_R": {
+          "added_count": 95,
+          "added_area_um2": 41.55299999999994,
+          "removed_count": 22,
+          "removed_area_um2": 9.622800000000002
+        },
+        "BUFx4f_ASAP7_75t_R": {
+          "added_count": 58,
+          "added_area_um2": 6.765120000000005,
+          "removed_count": 5,
+          "removed_area_um2": 0.5831999999999999
+        },
+        "AND3x2_ASAP7_75t_R": {
+          "added_count": 18,
+          "added_area_um2": 1.8370800000000005,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx2_ASAP7_75t_R": {
+          "added_count": 174,
+          "added_area_um2": 12.684600000000032,
+          "removed_count": 209,
+          "removed_area_um2": 15.236100000000054
+        },
+        "BUFx10_ASAP7_75t_R": {
+          "added_count": 68,
+          "added_area_um2": 13.880159999999984,
+          "removed_count": 3,
+          "removed_area_um2": 0.61236
+        },
+        "DFFHQNx2_ASAP7_75t_R": {
+          "added_count": 287,
+          "added_area_um2": 87.87365999999963,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "HB4xp67_ASAP7_75t_R": {
+          "added_count": 264,
+          "added_area_um2": 26.943840000000147,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OA21x2_ASAP7_75t_R": {
+          "added_count": 23,
+          "added_area_um2": 2.34738,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx1_ASAP7_75t_R": {
+          "added_count": 231,
+          "added_area_um2": 10.103939999999962,
+          "removed_count": 25,
+          "removed_area_um2": 1.0935000000000001
+        },
+        "DFFASRHQNx1_ASAP7_75t_R": {
+          "added_count": 423,
+          "added_area_um2": 160.35083999999935,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND3x1_ASAP7_75t_R": {
+          "added_count": 140,
+          "added_area_um2": 12.247199999999983,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "DFFHQNx1_ASAP7_75t_R": {
+          "added_count": 309,
+          "added_area_um2": 90.10440000000047,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND4x1_ASAP7_75t_R": {
+          "added_count": 100,
+          "added_area_um2": 10.205999999999987,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx4_ASAP7_75t_R": {
+          "added_count": 24,
+          "added_area_um2": 2.4494399999999996,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "NAND2x1_ASAP7_75t_R": {
+          "added_count": 74,
+          "added_area_um2": 6.473520000000011,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND2x2_ASAP7_75t_R": {
+          "added_count": 29,
+          "added_area_um2": 2.536920000000001,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "TIEHIx1_ASAP7_75t_R": {
+          "added_count": 31,
+          "added_area_um2": 1.3559400000000008,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "NAND2x2_ASAP7_75t_R": {
+          "added_count": 41,
+          "added_area_um2": 5.977800000000004,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx2_ASAP7_75t_R": {
+          "added_count": 141,
+          "added_area_um2": 8.223120000000014,
+          "removed_count": 8,
+          "removed_area_um2": 0.4665599999999999
+        },
+        "NOR2x1_ASAP7_75t_R": {
+          "added_count": 39,
+          "added_area_um2": 3.4117200000000034,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AOI21x1_ASAP7_75t_R": {
+          "added_count": 44,
+          "added_area_um2": 5.132160000000001,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "DFFHQNx3_ASAP7_75t_R": {
+          "added_count": 136,
+          "added_area_um2": 43.62336,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx16f_ASAP7_75t_R": {
+          "added_count": 89,
+          "added_area_um2": 28.547639999999998,
+          "removed_count": 12,
+          "removed_area_um2": 3.8491199999999997
+        },
+        "OR4x1_ASAP7_75t_R": {
+          "added_count": 4,
+          "added_area_um2": 0.40824,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx12f_ASAP7_75t_R": {
+          "added_count": 30,
+          "added_area_um2": 7.873199999999995,
+          "removed_count": 6,
+          "removed_area_um2": 1.57464
+        },
+        "INVx4_ASAP7_75t_R": {
+          "added_count": 9,
+          "added_area_um2": 0.78732,
+          "removed_count": 3,
+          "removed_area_um2": 0.26244
+        },
+        "INVx3_ASAP7_75t_R": {
+          "added_count": 14,
+          "added_area_um2": 1.0206,
+          "removed_count": 2,
+          "removed_area_um2": 0.1458
+        },
+        "AO21x2_ASAP7_75t_R": {
+          "added_count": 18,
+          "added_area_um2": 1.8370800000000005,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND4x2_ASAP7_75t_R": {
+          "added_count": 20,
+          "added_area_um2": 2.3328,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AO21x1_ASAP7_75t_R": {
+          "added_count": 8,
+          "added_area_um2": 0.69984,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OA211x2_ASAP7_75t_R": {
+          "added_count": 7,
+          "added_area_um2": 0.8164799999999999,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OR3x1_ASAP7_75t_R": {
+          "added_count": 7,
+          "added_area_um2": 0.61236,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx6_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.11664
+        },
+        "INVx5_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 5,
+          "removed_area_um2": 0.5103
+        },
+        "CKINVDCx10_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.34992
+        },
+        "CKINVDCx14_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 3,
+          "removed_area_um2": 1.22472
+        },
+        "INVx11_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.18954
+        },
+        "CKINVDCx5p33_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 2,
+          "removed_area_um2": 0.64152
+        },
+        "CKINVDCx11_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.37908
+        },
+        "CKINVDCx8_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.32076
+        }
+      }
+    },
+    "control_baseline_to_final": {
+      "added": {
+        "BUF_INV_HB": {
+          "count": 5247,
+          "lef_area_um2": 579.13218
+        },
+        "comb_or_physical": {
+          "count": 603,
+          "lef_area_um2": 58.23252
+        },
+        "FF": {
+          "count": 1155,
+          "lef_area_um2": 381.95226
+        }
+      },
+      "removed": {
+        "BUF_INV_HB": {
+          "count": 1184,
+          "lef_area_um2": 120.92652
+        }
+      },
+      "same_name_master_changes": [],
+      "masters": {
+        "BUFx6f_ASAP7_75t_R": {
+          "added_count": 1214,
+          "added_area_um2": 177.00120000000064,
+          "removed_count": 125,
+          "removed_area_um2": 18.225
+        },
+        "BUFx3_ASAP7_75t_R": {
+          "added_count": 2888,
+          "added_area_um2": 252.64223999999817,
+          "removed_count": 749,
+          "removed_area_um2": 65.52251999999959
+        },
+        "BUFx4f_ASAP7_75t_R": {
+          "added_count": 58,
+          "added_area_um2": 6.765120000000005,
+          "removed_count": 5,
+          "removed_area_um2": 0.5831999999999999
+        },
+        "AND3x2_ASAP7_75t_R": {
+          "added_count": 18,
+          "added_area_um2": 1.8370800000000005,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx2_ASAP7_75t_R": {
+          "added_count": 174,
+          "added_area_um2": 12.684600000000032,
+          "removed_count": 209,
+          "removed_area_um2": 15.236100000000054
+        },
+        "BUFx10_ASAP7_75t_R": {
+          "added_count": 68,
+          "added_area_um2": 13.880159999999984,
+          "removed_count": 3,
+          "removed_area_um2": 0.61236
+        },
+        "DFFHQNx2_ASAP7_75t_R": {
+          "added_count": 287,
+          "added_area_um2": 87.87365999999963,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OA21x2_ASAP7_75t_R": {
+          "added_count": 23,
+          "added_area_um2": 2.34738,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "HB4xp67_ASAP7_75t_R": {
+          "added_count": 230,
+          "added_area_um2": 23.473800000000093,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx1_ASAP7_75t_R": {
+          "added_count": 231,
+          "added_area_um2": 10.103939999999962,
+          "removed_count": 25,
+          "removed_area_um2": 1.0935000000000001
+        },
+        "DFFASRHQNx1_ASAP7_75t_R": {
+          "added_count": 423,
+          "added_area_um2": 160.35083999999935,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx24_ASAP7_75t_R": {
+          "added_count": 77,
+          "added_area_um2": 33.6798,
+          "removed_count": 22,
+          "removed_area_um2": 9.622800000000002
+        },
+        "AND3x1_ASAP7_75t_R": {
+          "added_count": 140,
+          "added_area_um2": 12.247199999999983,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "DFFHQNx1_ASAP7_75t_R": {
+          "added_count": 309,
+          "added_area_um2": 90.10440000000047,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND4x1_ASAP7_75t_R": {
+          "added_count": 100,
+          "added_area_um2": 10.205999999999987,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx4_ASAP7_75t_R": {
+          "added_count": 24,
+          "added_area_um2": 2.4494399999999996,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "NAND2x1_ASAP7_75t_R": {
+          "added_count": 74,
+          "added_area_um2": 6.473520000000011,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND2x2_ASAP7_75t_R": {
+          "added_count": 29,
+          "added_area_um2": 2.536920000000001,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "TIEHIx1_ASAP7_75t_R": {
+          "added_count": 31,
+          "added_area_um2": 1.3559400000000008,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "NAND2x2_ASAP7_75t_R": {
+          "added_count": 41,
+          "added_area_um2": 5.977800000000004,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx2_ASAP7_75t_R": {
+          "added_count": 141,
+          "added_area_um2": 8.223120000000014,
+          "removed_count": 8,
+          "removed_area_um2": 0.4665599999999999
+        },
+        "NOR2x1_ASAP7_75t_R": {
+          "added_count": 39,
+          "added_area_um2": 3.4117200000000034,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AOI21x1_ASAP7_75t_R": {
+          "added_count": 44,
+          "added_area_um2": 5.132160000000001,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "DFFHQNx3_ASAP7_75t_R": {
+          "added_count": 136,
+          "added_area_um2": 43.62336,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx16f_ASAP7_75t_R": {
+          "added_count": 89,
+          "added_area_um2": 28.547639999999998,
+          "removed_count": 12,
+          "removed_area_um2": 3.8491199999999997
+        },
+        "OR4x1_ASAP7_75t_R": {
+          "added_count": 4,
+          "added_area_um2": 0.40824,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "BUFx12f_ASAP7_75t_R": {
+          "added_count": 30,
+          "added_area_um2": 7.873199999999995,
+          "removed_count": 6,
+          "removed_area_um2": 1.57464
+        },
+        "INVx4_ASAP7_75t_R": {
+          "added_count": 9,
+          "added_area_um2": 0.78732,
+          "removed_count": 3,
+          "removed_area_um2": 0.26244
+        },
+        "INVx3_ASAP7_75t_R": {
+          "added_count": 14,
+          "added_area_um2": 1.0206,
+          "removed_count": 2,
+          "removed_area_um2": 0.1458
+        },
+        "AO21x2_ASAP7_75t_R": {
+          "added_count": 18,
+          "added_area_um2": 1.8370800000000005,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AND4x2_ASAP7_75t_R": {
+          "added_count": 20,
+          "added_area_um2": 2.3328,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "AO21x1_ASAP7_75t_R": {
+          "added_count": 8,
+          "added_area_um2": 0.69984,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OA211x2_ASAP7_75t_R": {
+          "added_count": 7,
+          "added_area_um2": 0.8164799999999999,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "OR3x1_ASAP7_75t_R": {
+          "added_count": 7,
+          "added_area_um2": 0.61236,
+          "removed_count": 0,
+          "removed_area_um2": 0
+        },
+        "INVx6_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.11664
+        },
+        "INVx5_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 5,
+          "removed_area_um2": 0.5103
+        },
+        "CKINVDCx10_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.34992
+        },
+        "CKINVDCx14_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 3,
+          "removed_area_um2": 1.22472
+        },
+        "INVx11_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.18954
+        },
+        "CKINVDCx5p33_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 2,
+          "removed_area_um2": 0.64152
+        },
+        "CKINVDCx11_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.37908
+        },
+        "CKINVDCx8_ASAP7_75t_R": {
+          "added_count": 0,
+          "added_area_um2": 0,
+          "removed_count": 1,
+          "removed_area_um2": 0.32076
+        }
+      }
+    }
+  }
+}

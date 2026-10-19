@@ -1,0 +1,1408 @@
+ot-run: ot-epyc8       admits  1276 GB (avail 965, growth 72, headroom 0, waiters 0/0 GB) load 24/128 running 19 disk 287 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3997045-1792430298 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2457 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.337067 (range 335.226807 .. 402.407471)
+QDM reference pin c_native_tx_payload[183]$_DFF_P_/CLK clock arrival max 350.337067 min 335.580109 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 335.580109 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_d2d_static_safe3/signoff.sdc (FF placement RC; diagnostic)
+OT_CTLC split=_33792_/Y original_loads=263
+OT_CTLC split=_33794_/Y original_loads=32
+OT_CTLC split=_33870_/Y original_loads=264
+OT_CTLC split=_33872_/Y original_loads=32
+OT_CTLC split=_33948_/Y original_loads=260
+OT_CTLC split=_33950_/Y original_loads=33
+OT_CTLC split=_34026_/Y original_loads=33
+OT_CTLC split=_34099_/Y original_loads=32
+OT_CTLC split=_34172_/Y original_loads=32
+OT_CTLC split=_34245_/Y original_loads=261
+OT_CTLC split=_34247_/Y original_loads=33
+OT_CTLC split=_34329_/Y original_loads=33
+OT_CTLC split=_34404_/Y original_loads=32
+OT_CTLC split=_34503_/Y original_loads=32
+OT_CTLC split=_34576_/Y original_loads=260
+OT_CTLC split=_34578_/Y original_loads=33
+OT_CTLC split=_34653_/Y original_loads=33
+OT_CTLC split=_34725_/Y original_loads=32
+OT_CTLC split=_34798_/Y original_loads=32
+OT_CTLC split=_34871_/Y original_loads=261
+OT_CTLC split=_34873_/Y original_loads=33
+OT_CTLC split=_34949_/Y original_loads=33
+OT_CTLC split=_35021_/Y original_loads=32
+OT_CTLC split=_35098_/Y original_loads=32
+OT_CTLC split=_35172_/Y original_loads=260
+OT_CTLC split=_35174_/Y original_loads=33
+OT_CTLC split=_35274_/Y original_loads=33
+OT_CTLC split=_35346_/Y original_loads=32
+OT_CTLC split=_35419_/Y original_loads=32
+OT_CTLC split=_35491_/Y original_loads=260
+OT_CTLC split=_35494_/Y original_loads=32
+OT_CTLC split=_35569_/Y original_loads=33
+OT_CTLC split=_35641_/Y original_loads=33
+OT_CTLC split=_35713_/Y original_loads=32
+OT_CTLC split=_35785_/Y original_loads=260
+OT_CTLC split=_35787_/Y original_loads=33
+OT_CTLC split=_35866_/Y original_loads=33
+OT_CTLC split=_35940_/Y original_loads=32
+OT_CTLC split=_36038_/Y original_loads=32
+OT_CTLC split=_36111_/Y original_loads=260
+OT_CTLC split=_36113_/Y original_loads=32
+OT_CTLC split=_36186_/Y original_loads=256
+OT_CTLC split=_36188_/Y original_loads=33
+OT_CTLC split=_36263_/Y original_loads=263
+OT_CTLC split=_36265_/Y original_loads=32
+OT_CTLC split=_36340_/Y original_loads=264
+OT_CTLC split=_36342_/Y original_loads=32
+OT_CTLC split=_36416_/Y original_loads=33
+OT_CTLC split=_36488_/Y original_loads=33
+OT_CTLC split=_36560_/Y original_loads=32
+OT_CTLC split=_36637_/Y original_loads=32
+OT_CTLC split=_36711_/Y original_loads=32
+OT_CTLC split=_36812_/Y original_loads=33
+OT_CTLC split=_36884_/Y original_loads=32
+OT_CTLC split=_36956_/Y original_loads=32
+OT_CTLC split=_37027_/Y original_loads=33
+OT_CTLC split=_37099_/Y original_loads=33
+OT_CTLC split=_37171_/Y original_loads=32
+OT_CTLC split=_37243_/Y original_loads=32
+OT_CTLC split=_37315_/Y original_loads=32
+OT_CTLC split=_37392_/Y original_loads=33
+OT_CTLC split=_37466_/Y original_loads=32
+OT_CTLC split=_37563_/Y original_loads=32
+OT_CTLC split=_37636_/Y original_loads=33
+OT_CTLC split=_37708_/Y original_loads=33
+OT_CTLC split=_37780_/Y original_loads=32
+OT_CTLC split=_37852_/Y original_loads=32
+OT_CTLC split=_37924_/Y original_loads=32
+OT_CTLC split=_37996_/Y original_loads=33
+OT_CTLC split=_38068_/Y original_loads=33
+OT_CTLC split=_38140_/Y original_loads=32
+OT_CTLC split=_38212_/Y original_loads=33
+OT_CTLC split=_38284_/Y original_loads=33
+OT_CTLC split=_38356_/Y original_loads=32
+OT_CTLC split=_38428_/Y original_loads=32
+OT_CTLC split=_40573_/Y original_loads=175
+OT_CTLC split=_43845_/Y original_loads=150
+OT_CTLC split=_44009_/Y original_loads=18
+OT_CTLC split=_55536_/Y original_loads=349
+OT_CTLC split=_55543_/Y original_loads=298
+OT_CTLC split=_56137_/Y original_loads=21
+OT_CTLC split=_56277_/Y original_loads=21
+OT_CTLC split=_57054_/Y original_loads=19
+OT_CTLC split=_57935_/Y original_loads=23
+OT_CTLC split=_58861_/Y original_loads=17
+OT_CTLC split=_59716_/Y original_loads=41
+OT_CTLC split=_62762_/Y original_loads=269
+OT_CTLC split=_62765_/Y original_loads=271
+OT_CTLC split=_62768_/Y original_loads=32
+OT_CTLC split=_62895_/Y original_loads=270
+OT_CTLC split=_62897_/Y original_loads=33
+OT_CTLC split=c_cal_seg$_DFF_P_/QN original_loads=73
+OT_CTLC split=c_cal_seg_rx$_DFF_P_/QN original_loads=73
+OT_CTLC split=c_cal_start$_DFF_P_/QN original_loads=87
+OT_CTLC split=c_cal_start_rx$_DFF_P_/QN original_loads=80
+OT_CTLC split=c_cfg_addr\[0\]$_DFF_P_/QN original_loads=135
+OT_CTLC split=c_cfg_addr\[1\]$_DFF_P_/QN original_loads=70
+OT_CTLC split=c_cfg_addr\[2\]$_DFF_P_/QN original_loads=136
+OT_CTLC split=c_cfg_addr\[3\]$_DFF_P_/QN original_loads=136
+OT_CTLC split=c_cfg_addr\[4\]$_DFF_P_/QN original_loads=136
+OT_CTLC split=c_cfg_addr\[5\]$_DFF_P_/QN original_loads=111
+OT_CTLC split=c_cfg_data\[0\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[10\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[11\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[12\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[13\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[14\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[15\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[16\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[17\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[18\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[19\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[1\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[20\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[21\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[22\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[23\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[24\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[25\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[26\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[27\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[28\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[29\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[2\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[30\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[31\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[3\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[4\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[5\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[6\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[7\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[8\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[9\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_result_v$_DFF_P_/QN original_loads=320
+OT_CTLC split=u_core.u_end.g_dly\[0\].sr\[7\]$_DFF_PN0_/QN original_loads=553
+OT_CTLC split=u_core.u_end.g_dly\[1\].sr\[2\]$_DFF_PN0_/QN original_loads=553
+OT_CTLC split=u_core.u_end.g_dly\[2\].sr$_DFF_PN0_/QN original_loads=179
+OT_CTLC split=u_core.u_end.g_dly\[3\].sr\[9\]$_DFF_PN0_/QN original_loads=550
+OT_CTLC split=u_core.u_end.u_link.g_bank\[0\].u_store.hit_age0$_DFF_P_/QN original_loads=1096
+OT_CTLC split=u_core.u_end.u_link.g_bank\[0\].u_store.hit_age1$_DFF_P_/QN original_loads=1096
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[0\]$_DFF_P_/QN original_loads=51
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[1\]$_DFF_P_/QN original_loads=83
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[2\]$_DFF_P_/QN original_loads=27
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[3\]$_DFF_P_/QN original_loads=29
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[4\]$_DFF_P_/QN original_loads=19
+OT_CTLC split=u_core.u_end.u_link.u_ctl.cmd_ws\[5\]$_DFF_P_/QN original_loads=30
+OT_CTLC split=u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN original_loads=20
+OT_CTLC split=u_core.u_end.u_link.u_ctl.s1\[0\]$_DFFE_PN0N_/QN original_loads=47
+OT_CTLC split=u_core.u_end.u_link.u_ctl.s1\[1\]$_DFFE_PN0N_/QN original_loads=79
+OT_CTLC split=u_core.u_end.u_link.u_ctl.s1\[2\]$_DFFE_PN0N_/QN original_loads=19
+OT_CTLC split=u_core.u_end.u_link.u_ctl.s1\[3\]$_DFFE_PN0N_/QN original_loads=29
+OT_CTLC split=u_core.u_end.u_link.u_ctl.s1\[4\]$_DFFE_PN0N_/QN original_loads=28
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[0\]$_DFFE_PN0P_/QN original_loads=502
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P_/QN original_loads=996
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[2\]$_DFFE_PN0P_/QN original_loads=175
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[3\]$_DFFE_PN0P_/QN original_loads=89
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[4\]$_DFFE_PN0P_/QN original_loads=225
+OT_CTLC split=u_core.u_end.u_rxcal.seg1\[0\]$_DFFE_PP_/QN original_loads=516
+OT_CTLC split=u_core.u_end.u_rxcal.seg1\[1\]$_DFFE_PP_/QN original_loads=1027
+OT_CTLC split=u_core.u_end.u_rxcal.seg1\[2\]$_DFFE_PP_/QN original_loads=131
+OT_CTLC split=u_core.u_end.u_rxcal.seg1\[3\]$_DFFE_PP_/QN original_loads=259
+OT_CTLC split=u_core.u_end.u_rxcal.seg1\[4\]$_DFFE_PP_/QN original_loads=66
+OT_CTLC split=u_core.u_end.u_txcal.ev_port\[0\]$_DFFE_PN0P_/QN original_loads=49
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P_/QN original_loads=458
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[1\]$_DFFE_PN0P_/QN original_loads=971
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[2\]$_DFFE_PN0P_/QN original_loads=146
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[3\]$_DFFE_PN0P_/QN original_loads=62
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[4\]$_DFFE_PN0P_/QN original_loads=310
+OT_CTLC split=u_core.u_end.u_txcal.running$_DFF_PN0_/QN original_loads=46
+OT_CTLC split=u_core.u_end.u_txcal.seg1\[0\]$_DFFE_PP_/QN original_loads=516
+OT_CTLC split=u_core.u_end.u_txcal.seg1\[1\]$_DFFE_PP_/QN original_loads=1027
+OT_CTLC split=u_core.u_end.u_txcal.seg1\[2\]$_DFFE_PP_/QN original_loads=131
+OT_CTLC split=u_core.u_end.u_txcal.seg1\[3\]$_DFFE_PP_/QN original_loads=259
+OT_CTLC split=u_core.u_end.u_txcal.seg1\[4\]$_DFFE_PP_/QN original_loads=66
+OT_CTLC split=u_core.u_rec.epoch_begin$_DFF_PN0_/QN original_loads=304
+OT_CTLC split=u_core.u_rec.fq\[2\]$_DFF_PN0_/QN original_loads=31
+OT_CTLC split=u_core.u_reset_regions.rst_n\[0\]$_DFF_P_/QN original_loads=36
+OT_CTLC split=u_core.u_reset_regions.rst_n\[1\]$_DFF_P_/QN original_loads=159
+OT_CTLC split=u_core.u_reset_regions.rst_n\[4\]$_DFF_P_/QN original_loads=32
+OT_CTLC split=u_core.u_reset_regions.rst_n\[5\]$_DFF_P_/QN original_loads=32
+OT_CTLC split=u_core.u_reset_regions.rst_n\[6\]$_DFF_P_/QN original_loads=154
+OT_CTLC split=u_core.u_end.g_dly\[0\].sr\[7\]$_DFF_PN0__3156/H original_loads=35
+OT_CTLC split=u_core.u_end.g_dly\[1\].sr\[2\]$_DFF_PN0__3159/H original_loads=35
+OT_CTLC split=u_core.u_end.g_dly\[3\].sr\[9\]$_DFF_PN0__3170/H original_loads=35
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[0\]$_DFFE_PN0P__3941/H original_loads=32
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=63
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=29
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[1\]$_DFFE_PN0P__3995/H original_loads=61
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[4\]$_DFFE_PN0P__3998/H original_loads=20
+OT_CTLC split=u_core.u_rec.epoch_begin$_DFF_PN0__4027/H original_loads=19
+OT_CTLC split=ot_lpr_copy_00001/QN original_loads=21
+OT_CTLC split=ot_lpr_copy_00002/QN original_loads=145
+OT_CTLC split=ot_lpr_copy_00004/QN original_loads=32
+OT_CTLC split=ot_lpr_copy_00005/QN original_loads=41
+OT_CTLC split=ot_lpr_copy_00006/QN original_loads=33
+OT_CTLC split=ot_lpr_copy_00008/QN original_loads=21
+OT_CTLC split=_36110_/Y original_loads=33
+OT_CTLC split=_36262_/Y original_loads=34
+OT_CTLC split=_36263_/Y original_loads=19
+OT_CTLC split=_40618_/Y original_loads=69
+OT_CTLC split=_40627_/Y original_loads=69
+OT_CTLC split=_44004_/Y original_loads=18
+OT_CTLC split=_44009_/Y original_loads=17
+OT_CTLC split=_55535_/Y original_loads=44
+OT_CTLC split=_57077_/Y original_loads=20
+OT_CTLC split=_57104_/Y original_loads=61
+OT_CTLC split=_57107_/Y original_loads=29
+OT_CTLC split=_57913_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=65
+OT_CTLC split=_57924_/Y original_loads=33
+OT_CTLC split=_58910_/Y original_loads=63
+OT_CTLC split=_58916_/Y original_loads=32
+OT_CTLC split=_59718_/Y original_loads=17
+OT_CTLC split=_59722_/Y original_loads=65
+OT_CTLC split=_59724_/Y original_loads=33
+OT_CTLC split=u_core.u_end.g_dly\[0\].sr\[6\]$_DFF_PN0_/QN original_loads=35
+OT_CTLC split=u_core.u_end.g_dly\[1\].sr\[1\]$_DFF_PN0_/QN original_loads=35
+OT_CTLC split=u_core.u_end.g_dly\[3\].sr\[8\]$_DFF_PN0_/QN original_loads=35
+OT_CTLC split=ot_ctl_copy_00007/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00014/Y original_loads=22
+OT_CTLC split=ot_ctl_copy_00015/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00027/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00028/Y original_loads=21
+OT_CTLC split=ot_ctl_copy_00032/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00040/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00041/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00042/Y original_loads=20
+OT_CTLC split=ot_ctl_copy_00049/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00061/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00071/Y original_loads=20
+OT_CTLC split=ot_ctl_copy_00081/Y original_loads=20
+OT_CTLC split=ot_ctl_copy_00082/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00109/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00110/Y original_loads=21
+OT_CTLC split=ot_ctl_copy_00115/Y original_loads=20
+OT_CTLC split=ot_ctl_copy_00124/Y original_loads=22
+OT_CTLC split=ot_ctl_copy_00129/Y original_loads=20
+OT_CTLC split=ot_ctl_copy_00146/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00147/Y original_loads=21
+OT_CTLC split=ot_ctl_copy_00172/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00180/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00181/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_00191/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_00192/Y original_loads=25
+OT_CTLC split=ot_ctl_copy_00220/Y original_loads=32
+OT_CTLC split=ot_ctl_copy_00224/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00231/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_00232/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00243/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00244/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_00245/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00249/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00361/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_00362/Y original_loads=41
+OT_CTLC split=ot_ctl_copy_00369/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00377/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00380/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00405/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_00431/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00432/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00433/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00434/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00435/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_00436/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00437/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00439/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00440/QN original_loads=21
+OT_CTLC split=ot_ctl_copy_00441/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00443/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00444/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00445/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00446/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00447/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00448/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00449/QN original_loads=22
+OT_CTLC split=ot_ctl_copy_00451/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00452/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00453/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_00454/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00456/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00457/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00459/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00460/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00461/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_00462/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00463/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00464/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00465/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00467/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00468/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_00469/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00470/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00471/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_01090/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01146/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_01232/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01235/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_01236/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01252/QN original_loads=18
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=20
+OT_CTLC split=ot_ctl_copy_01343/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01382/QN original_loads=19
+OT_CTLC split=ot_ctl_copy_01387/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01388/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01394/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01426/QN original_loads=20
+OT_CTLC split=_36110_/Y original_loads=17
+OT_CTLC split=_36262_/Y original_loads=20
+OT_CTLC split=_57054_/Y original_loads=18
+OT_CTLC split=_57077_/Y original_loads=17
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57913_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59716_/Y original_loads=19
+OT_CTLC split=_59718_/Y original_loads=17
+OT_CTLC split=c_cal_start$_DFF_P_/QN original_loads=17
+OT_CTLC split=c_cfg_addr\[0\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=c_cfg_addr\[1\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=c_cfg_addr\[2\]$_DFF_P_/QN original_loads=18
+OT_CTLC split=c_cfg_addr\[3\]$_DFF_P_/QN original_loads=18
+OT_CTLC split=c_cfg_addr\[4\]$_DFF_P_/QN original_loads=18
+OT_CTLC split=c_cfg_addr\[5\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.running$_DFF_PN0_/QN original_loads=20
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[4\]$_DFFE_PN0P__3998/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00362/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01090/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01236/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01343/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01382/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01388/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01389/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01394/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01434/Y original_loads=18
+OT_CTLC split=ot_ctl_copy_01436/Y original_loads=19
+OT_CTLC split=ot_ctl_copy_01464/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01518/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=18
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57913_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[1\]$_DFF_P_/QN original_loads=18
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00440/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01236/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01252/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01343/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01388/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=17
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57913_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[1\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01343/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01388/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=17
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=18
+OT_CTLC split=u_core.u_end.u_rxcal.running$_DFF_PN0_/QN original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[1\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01399/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=17
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=18
+OT_CTLC split=u_core.u_end.u_rxcal.running$_DFF_PN0_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01140/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01399/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=17
+OT_CTLC split=_57107_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=18
+OT_CTLC split=c_cfg_rx_we$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.running$_DFF_PN0_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=u_core.u_end.u_txcal.ptr\[0\]$_DFFE_PN0P__3994/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01330/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01399/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_57054_/Y original_loads=17
+OT_CTLC split=_57921_/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=18
+OT_CTLC split=c_cfg_rx_we$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.running$_DFF_PN0_/QN original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[6\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00952/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01399/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_58910_/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=17
+OT_CTLC split=c_cfg_rx_we$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.running$_DFF_PN0_/QN original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[6\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_end.u_rxcal.ptr\[1\]$_DFFE_PN0P__3942/H original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01399/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=_59714_/Y original_loads=17
+OT_CTLC split=c_cfg_rx_we$_DFF_P_/QN original_loads=17
+OT_CTLC split=u_core.u_reset_regions.g_p\[0\].q\[6\]$_DFF_P_/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01475/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00992/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=_59721_/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00507/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=_59721_/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00507/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01472/Y original_loads=17
+OT_CTLC split=_59721_/Y original_loads=17
+OT_CTLC split=ot_ctl_copy_00472/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_00507/QN original_loads=17
+OT_CTLC split=ot_ctl_copy_01036/QN original_loads=17
+OT_CTLC_FINAL_EQUIVALENCE PASS same_master_all_signal_inputs=6711 copies_and_buffer_paths
+OT_CTLC PASS existing_stages_and_copies=45156 new_copies=1758 maximum_buffer_tree_terminal_load=16 same_master_and_inputs_at_clone=PASS added_FF_edges=0
+OT_CTLC_MANIFEST /data/control16_replica_manifest.tcl copied_cells=6711
+UNOBSERVED_TRANSPARENT_PRUNE count=1197 no_observable_port_or_signal_load_at_removal=1
+[WARNING ODB-0383] clkbuf_leaf2_83_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_81_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_82_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_78_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_77_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_69_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_68_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_67_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_66_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_65_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_64_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_76_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_61_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_62_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_63_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_60_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_50_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_51_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_48_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_46_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_49_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_45_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_47_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_44_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_43_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_38_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_41_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_42_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_40_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_39_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_37_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_36_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_35_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_34_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_33_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_32_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_31_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_30_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_29_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_28_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_27_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_26_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_25_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_23_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_22_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_21_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_20_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_19_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_17_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_16_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_15_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_11_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_9_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_7_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_6_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_5_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_4_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_552_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_537_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_551_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_550_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_549_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_556_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_555_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_554_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_553_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_547_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_548_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_539_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_540_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_541_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_543_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_544_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_542_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_538_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_545_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_546_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_501_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_500_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_499_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_493_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_495_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_447_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_449_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_450_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_465_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_494_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_448_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_466_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_492_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_467_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_491_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_490_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_489_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_488_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_487_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_485_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_486_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_484_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_483_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_482_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_481_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_480_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_479_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_477_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_475_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_474_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_473_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_472_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_471_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_469_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_464_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_463_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_461_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_460_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_458_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_456_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_454_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_452_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_446_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_444_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_433_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_432_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_430_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_429_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_428_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_426_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_424_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_422_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_419_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_417_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_416_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_415_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_414_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_413_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_411_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_409_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_407_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_405_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_404_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_402_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_400_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_398_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_396_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_394_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_393_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_392_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_391_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_390_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_389_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_382_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_388_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_387_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_386_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_385_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_384_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_381_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_380_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_374_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_373_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_375_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_377_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_376_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_357_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_356_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_366_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_0_ck is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_regs_0_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_1_0_ck is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_0_0_ck is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_3_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_2_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_4_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_6_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_5_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_8_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_7_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_9_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_10_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_12_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_11_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_13_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_14_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_15_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_16_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_17_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_18_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_20_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_19_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_21_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_22_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_23_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_24_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_25_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_26_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_27_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_28_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_29_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_30_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_31_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_32_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_33_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_34_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_35_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_36_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_37_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_38_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_39_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_40_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_97_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_96_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_68_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_67_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_71_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_70_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_69_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_73_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_85_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_82_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_72_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_84_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_81_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_80_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_79_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_78_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_77_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_76_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_83_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_75_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_74_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_95_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_94_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_93_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_86_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_87_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_92_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_91_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_90_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_88_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_89_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_54_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_64_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_55_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_56_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_57_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_58_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_66_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_65_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_41_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_53_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_51_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_52_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_42_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_50_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_43_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_49_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_44_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_45_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_48_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_46_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_47_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_59_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_60_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_61_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_62_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_63_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_0_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_0_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_111_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_110_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_109_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_108_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_107_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_106_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_105_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_104_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_103_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_102_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_101_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_100_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_99_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_98_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_97_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_96_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_95_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_94_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_93_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_92_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_91_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_90_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_89_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_88_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_87_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_86_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_85_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_84_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_80_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_79_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_75_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_74_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_71_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_70_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_73_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_72_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_59_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_57_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_55_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_54_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_53_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_52_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_56_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_58_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_24_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_18_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_14_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_13_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_12_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_10_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_8_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_3_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf2_2_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_536_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_535_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_534_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_533_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_532_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_531_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_530_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_529_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_528_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_527_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_526_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_525_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_524_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_523_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_522_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_521_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_520_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_519_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_518_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_517_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_516_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_515_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_514_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_513_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_512_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_511_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_510_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_509_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_508_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_507_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_506_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_505_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_504_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_503_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_502_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_498_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_497_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_496_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_445_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_443_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_442_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_441_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_440_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_439_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_438_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_437_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_436_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_435_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_434_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_427_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_425_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_423_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_421_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_420_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_418_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_412_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_410_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_408_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_406_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_371_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_369_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_368_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_367_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_358_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_365_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_363_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_362_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_361_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_359_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_360_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_364_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_370_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_395_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_397_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_399_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_401_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_403_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_431_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_451_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_453_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_455_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_457_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_459_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_462_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_468_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_470_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_476_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_478_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_383_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_379_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_378_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_372_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_355_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_354_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_353_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_352_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_351_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_350_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_349_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_348_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_347_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_346_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_345_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_344_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_342_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_343_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_341_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_339_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_340_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_338_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_336_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_337_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_334_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_333_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_332_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_331_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_330_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_329_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_327_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_328_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_325_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_326_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_324_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_323_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_322_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_321_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_320_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_319_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_318_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_316_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_317_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_315_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_314_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_313_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_312_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_310_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_311_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_309_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_308_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_307_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_306_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_305_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_304_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_303_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_302_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_301_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_300_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_299_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_298_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_297_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_296_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_294_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_295_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_293_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_292_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_291_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_290_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_289_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_288_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_287_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_286_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_285_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_283_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_284_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_281_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_282_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_280_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_278_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_279_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_275_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_273_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_274_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_272_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_270_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_271_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_269_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_267_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_268_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_266_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_264_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_265_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_262_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_263_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_261_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_260_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_258_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_259_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_257_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_256_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_255_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_253_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_254_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_252_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_251_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_250_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_249_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_248_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_247_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_246_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_244_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_245_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_242_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_243_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_241_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_239_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_240_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_237_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_238_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_235_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_236_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_234_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_233_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_231_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_232_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_230_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_229_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_227_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_228_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_226_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_224_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_225_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_222_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_223_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_221_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_220_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_218_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_219_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_217_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_215_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_216_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_213_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_214_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_212_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_211_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_210_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_209_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_207_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_208_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_206_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_204_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_205_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_202_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_203_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_200_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_201_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_198_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_199_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_196_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_197_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_194_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_195_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_192_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_193_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_190_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_191_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_188_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_189_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_186_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_187_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_184_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_185_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_182_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_183_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_180_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_181_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_179_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_177_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_178_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_175_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_176_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_173_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_174_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_172_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_171_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_170_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_168_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_169_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_167_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_166_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_165_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_164_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_162_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_163_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_161_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_160_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_159_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_158_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_156_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_157_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_154_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_155_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_153_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_152_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_151_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_149_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_150_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_148_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_147_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_146_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_145_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_144_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_142_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_143_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_141_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_140_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_139_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_137_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_138_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_136_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_134_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_135_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_133_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_131_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_132_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_129_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_130_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_128_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_127_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_125_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_126_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_123_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_124_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_121_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_122_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_120_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_119_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_118_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_116_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_117_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_114_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_115_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_112_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_113_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_110_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_111_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_109_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_108_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_107_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_106_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_105_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_104_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_103_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_101_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_102_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_100_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_99_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_98_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_1_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_1_1_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_0_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_0_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_1_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_1_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_2_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_2_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_3_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_3_1_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_0_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_1_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_2_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_3_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_4_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_5_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_6_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_7_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_0_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_1_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_2_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_3_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_4_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_5_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_6_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_7_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_8_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_9_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_10_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_11_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_12_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_13_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_14_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_4_15_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_0_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_1_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_2_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_3_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_4_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_5_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_6_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_7_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_8_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_9_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_10_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_11_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_12_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_13_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_14_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_15_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_16_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_17_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_18_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_19_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_20_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_21_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_22_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_23_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_24_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_25_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_26_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_27_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_28_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_29_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_30_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_5_31_0_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_0__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_1__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_2__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_3__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_4__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_5__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_6__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_7__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_8__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_9__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_10__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_11__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_12__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_13__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_14__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_15__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_16__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_17__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_18__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_20__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_22__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_24__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_25__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_26__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_27__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_28__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_29__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_30__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_31__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_32__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_33__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_34__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_35__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_36__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_37__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_38__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_39__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_40__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_41__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_42__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_43__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_44__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_45__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_46__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_47__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_48__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_49__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_50__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_51__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_52__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_53__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_54__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_55__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_56__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_57__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_58__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_59__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_60__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_61__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_62__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_6_63__f_ck_regs is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] wire22490 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_0_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_1_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_2_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_3_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_4_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_5_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_6_core_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] delaybuf_7_core_clk is marked do not touch and will be skipped in global connections.
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8777.76 um^2
+[INFO DPL-0008] Fixed instances area within core: 53741.27 um^2
+[INFO DPL-0009] Utilization: 48.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 78445 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      64454 |      4144 |     39167
+        1 |      42029 |      3300 |     27984
+        2 |      27496 |      2536 |     19851
+        3 |      19075 |      2027 |     15366
+        4 |      13951 |      1648 |     11391
+        5 |       9981 |      1324 |      8315
+        6 |       7443 |      1037 |      6168
+        7 |       6017 |       834 |      5021
+        8 |       4442 |       678 |      3687
+        9 |       3496 |       582 |      2908
+       10 |       2837 |       461 |      2307
+       20 |        364 |        74 |       290
+       30 |         89 |        21 |        68
+       40 |        123 |        19 |       104
+       50 |          6 |         2 |         4
+       53 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 53.
+[INFO DPL-0500] Runtime: 10.36s
+Placement Analysis
+---------------------------------
+total displacement      16644.7 u
+average displacement        0.2 u
+max displacement           12.0 u
+original HPWL          982776.6 u
+legalized HPWL         997418.2 u
+delta HPWL                    1 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2692 input pin flops (0 hard-child clock pins at +insertion), median arrival 351.210388 (range 335.047546 .. 398.413879)
+QDM reference pin c_native_tx_payload[302]$_DFF_P_/CLK clock arrival max 351.210388 min 337.639709 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 337.639709 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT after_recursive_control_replication boundary=3623 min=332.875641 mincell=rx_payload[87]$_DFF_P_ max=396.830383 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=63.95474200000001 setup_s=2.0058721350579845e-10 hold_s=-4.577754841861292e-12
+CONTROL_REPLICA_PROTOTYPE_DONE diagnostic_only=1 adoption=0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3997045-1792430298): exit 0

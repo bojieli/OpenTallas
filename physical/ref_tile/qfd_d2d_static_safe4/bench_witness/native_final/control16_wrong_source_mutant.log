@@ -1,0 +1,30 @@
+{
+  "verdict": "FAIL",
+  "proof": "Exact source-master and input-equation congruence, with induction over corresponding state",
+  "initial_state_contract": "Corresponding FF states established by existing reset/program initialization; no claim for unrelated uninitialized shadow states",
+  "original_nontransparent_masters": 43402,
+  "original_input_equations": 81291,
+  "original_ports": 3670,
+  "original_output_equations": 1175,
+  "new_nontransparent_driver_copies": 1745,
+  "new_copy_input_equations": 4785,
+  "errors": [
+    [
+      "copy_input",
+      "ot_ctl_copy_00001",
+      "_33792_",
+      "A",
+      [
+        "CELL WRONG_DRIVER QN 0"
+      ],
+      [
+        "CELL {c_cfg_addr\\[1\\]$_DFF_P_} QN 1"
+      ]
+    ]
+  ],
+  "error_count": 1
+}
+Traceback (most recent call last):
+  File "/home/ubuntu/scratch/codex-qw-ctlm-cones/check_control_inductive_equivalence.py", line 34, in <module>
+    (p/('control16_inductive_equivalence_mutant.json' if len(sys.argv)>1 else 'control16_inductive_equivalence.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2));assert not errors
+AssertionError

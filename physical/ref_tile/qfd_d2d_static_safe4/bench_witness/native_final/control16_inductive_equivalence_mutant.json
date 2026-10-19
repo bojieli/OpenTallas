@@ -1,0 +1,26 @@
+{
+  "verdict": "FAIL",
+  "proof": "Exact source-master and input-equation congruence, with induction over corresponding state",
+  "initial_state_contract": "Corresponding FF states established by existing reset/program initialization; no claim for unrelated uninitialized shadow states",
+  "original_nontransparent_masters": 43402,
+  "original_input_equations": 81291,
+  "original_ports": 3670,
+  "original_output_equations": 1175,
+  "new_nontransparent_driver_copies": 1745,
+  "new_copy_input_equations": 4785,
+  "errors": [
+    [
+      "copy_input",
+      "ot_ctl_copy_00001",
+      "_33792_",
+      "A",
+      [
+        "CELL WRONG_DRIVER QN 0"
+      ],
+      [
+        "CELL {c_cfg_addr\\[1\\]$_DFF_P_} QN 1"
+      ]
+    ]
+  ],
+  "error_count": 1
+}

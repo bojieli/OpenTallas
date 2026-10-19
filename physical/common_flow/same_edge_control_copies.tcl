@@ -91,6 +91,47 @@ proc ot_ctlc::copy_path {path source cacheName prefix} {
     }
     return $current
 }
+
+# Calendar event-port decode is a source-defined narrow control family. Native
+# TT on the pinned AND3x1 cone measured273ps input slew at16 owners versus260ps.
+# Cut this registered ev_v/ev_port family into8-terminal owners; identify it by
+# real sequential fanin, never a synthesis/CTS cell number.
+proc ot_ctlc::source_register {net {seen {}}} {
+ if {$net eq "NULL" || $net eq "" || $net in $seen} {return ""}
+ lappend seen $net
+ set drivers {};foreach t [$net getITerms] {if {[$t isOutputSignal]} {lappend drivers $t}}
+ if {[llength $drivers]!=1} {return ""}
+ set inst [[lindex $drivers 0] getInst];set mn [[$inst getMaster] getName]
+ if {[string match BUF* $mn] || [string match *INV* $mn] || $mn in {HB2xp67_ASAP7_75t_R HB4xp67_ASAP7_75t_R}} {
+  foreach t [$inst getITerms] {if {[$t isInputSignal]} {return [source_register [$t getNet] $seen]}}
+ }
+ variable origin
+ while {[dict exists $origin $inst]} {set inst [dict get $origin $inst]}
+ if {[[$inst getMaster] isSequential]} {return [$inst getName]}
+ return ""
+}
+proc ot_ctlc::terminal_limit {inst} {
+ variable limit
+
+ # The registered calendar port bits drive the same8-terminal decode groups.
+ # Native TT ev_port[0]/QN at16 owners measured264ps versus260ps.
+ variable origin
+ if {[[$inst getMaster] isSequential]} {
+  set owner $inst
+  while {[dict exists $origin $owner]} {set owner [dict get $origin $owner]}
+  if {[regexp {^u_core[.]u_end[.]u_(tx|rx)cal[.]ev_port} [$owner getName]]} {return 8}
+ }
+ if {![string match AND3x* [[$inst getMaster] getName]]} {return $limit}
+ set valid {};set ports {}
+ foreach t [$inst getITerms] {
+  if {![$t isInputSignal]} continue
+  set source [source_register [$t getNet]]
+  if {[regexp {^(u_core[.]u_end[.]u_(tx|rx)cal[.])ev_v} $source -> owner direction]} {lappend valid $owner}
+  if {[regexp {^(u_core[.]u_end[.]u_(tx|rx)cal[.])ev_port} $source -> owner direction]} {lappend ports $owner}
+ }
+ foreach owner $valid {if {$owner in $ports} {return 8}}
+ return $limit
+}
 set changed 1
 while {$changed} {
     set changed 0
@@ -106,11 +147,12 @@ while {$changed} {
             if {$net eq "NULL" || $net eq ""} continue
             if {[$net getSigType] eq "CLOCK"} continue
             set loads [ot_ctlc::loads $net]
-            if {[llength $loads] <= $ot_ctlc::limit} continue
+            set terminal_limit [ot_ctlc::terminal_limit $inst]
+            if {[llength $loads] <= $terminal_limit} continue
             set inmap [ot_ctlc::inputs $inst]
             # Retain the first chunk on the original, move each remaining chunk
             # to an exact same-edge copy. Clones are soft/unplaced for cone placement.
-            for {set offset $ot_ctlc::limit} {$offset < [llength $loads]} {incr offset $ot_ctlc::limit} {
+            for {set offset $terminal_limit} {$offset < [llength $loads]} {incr offset $terminal_limit} {
                 incr ot_ctlc::serial
                 if {$ot_ctlc::serial>$ot_ctlc::max_copies} {error "OT_CTLC bounded control replication exceeds10000 copies"}
                 set name [format "ot_ctl_copy_%05d" $ot_ctlc::serial]
@@ -129,7 +171,7 @@ while {$changed} {
                 $copy_net setSigType [$net getSigType]
                 ot_ctlc::connect [$copy findITerm [[$op getMTerm] getName]] $copy_net
                 set path_cache {}
-                foreach endpoint [lrange $loads $offset [expr {$offset+$ot_ctlc::limit-1}]] {
+                foreach endpoint [lrange $loads $offset [expr {$offset+$terminal_limit-1}]] {
                     lassign $endpoint load path
                     set sink_net [ot_ctlc::copy_path $path $copy_net path_cache $name]
                     set sink_inst [$load getInst]
@@ -203,7 +245,7 @@ foreach inst [$ot_ctlc::block getInsts] {
             if {[$net getSigType] eq "CLOCK"} continue
         set n [llength [ot_ctlc::loads $net]]
         if {$n > $maxload} {set maxload $n}
-        if {$n > $ot_ctlc::limit} {error "OT_CTLC output exceeds32 loads after recursion"}
+        if {$n > [ot_ctlc::terminal_limit $inst]} {error "OT_CTLC output exceeds32 loads after recursion"}
     }
 }
 puts "OT_CTLC PASS existing_stages_and_copies=$stages new_copies=$ot_ctlc::serial maximum_buffer_tree_terminal_load=$maxload same_master_and_inputs_at_clone=PASS added_FF_edges=0"
