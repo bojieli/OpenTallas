@@ -164,9 +164,21 @@ module ot_s81sl_lep_core #(
     localparam integer RX_NS=(H+16)/16;
     localparam integer NRX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*RX_NS:0;
     localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
-    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST;
+    localparam integer TX_NS=(H+16)/16;
+    localparam integer FRAME_NS=(2*H+15)/16;
+    localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_NS:0;
+    localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
+    localparam integer NHOST_RST=(MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0 )?37:0;
+    localparam integer TX_RSTBASE=4+NRX_MEMRST+NRX_OUTRST;
+    localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
+    localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
+    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST;
     wire [3+NRX_RST:0] rr;
-    ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
+      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else begin:g_reset_legacy
+      ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    end endgenerate
     wire rn = rr[3];                                   // host plane, outward-port valid, fault collector
     wire rnx = rr[2];                                  // RX landing + re-assembly
     reg [NL-1:0] rxv_r;
@@ -183,12 +195,14 @@ module ot_s81sl_lep_core #(
     // THOST is sent on t_v or on a change of {alive, st}; TKD on done.  A frame waits in its pending register while ring
     // beats (which never wait) take the lanes; a status-only change merges into a pending t_v frame; a second t_v / done
     // event while one is still pending is a sticky fault (the compiler's host slots respect the lane rate).
+    wire h_event,k_event;
     wire hp_go, kp_go, herr; wire [76:0] ph_d; wire [53:0] pk_d;
     generate if (HOST_EN != 0) begin : g_htx
     reg [76:0] thq; reg [53:0] tkq;
     always @(posedge clk) begin thq <= t_host; tkq <= t_kd; end
     reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; reg [11:0] st_l;
     wire ev_h = thq[64] || thq[76:65] != st_l, ev_k = tkq[53];
+    assign h_event=ev_h;assign k_event=ev_k;
     assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
     assign herr = he; assign ph_d = pd; assign pk_d = kd;
     always @(posedge clk or negedge rn)
@@ -208,6 +222,7 @@ module ot_s81sl_lep_core #(
             if (ev_k) begin pk_v <= 1'b1; kd <= tkq; if (pk_v && !kp_go) he <= 1'b1; end
         end
     end else begin : g_nhtx                            // HOST_EN 0: ring beats only (t_host / t_kd unread)
+    assign h_event=1'b0;assign k_event=1'b0;
     assign hp_go = 1'b0; assign kp_go = 1'b0; assign herr = 1'b0; assign ph_d = 77'd0; assign pk_d = 54'd0;
     end endgenerate
     wire push = rov || hp_go || kp_go;
@@ -241,6 +256,41 @@ module ot_s81sl_lep_core #(
     wire stamp = rov && wopen;
     wire bsel = stamp && wab;                          // this frame goes to pair B
     reg [2*H-1:0] fr;
+    genvar fc,fb;
+    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
+      for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
+        (* keep="true" *) reg rov_r,ph_r,pk_r;
+        wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
+        always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
+          if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;end
+          else begin
+            rov_r<=ro[0];
+            if(HOST_EN!=0) begin
+              if(hp) ph_r<=0;if(h_event) ph_r<=1;
+              if(kp) pk_r<=0;if(k_event) pk_r<=1;
+            end
+          end
+        for(fb=16*fc;fb<16*(fc+1) && fb<2*H;fb=fb+1) begin:g_bit
+          wire hd,kd;
+          if(fb>=4 && fb<81) assign hd=ph_d[fb-4];
+          else if(fb>=1 && fb<=3) assign hd=(3'd3>>(fb-1))&1'b1;
+          else assign hd=1'b0;
+          if(fb>=4 && fb<58) assign kd=pk_d[fb-4];
+          else if(fb>=1 && fb<=3) assign kd=(3'd4>>(fb-1))&1'b1;
+          else assign kd=1'b0;
+          wire base=rov_r?roq[fb]:(hp?hd:(kp?kd:1'b0));
+          if(fb>=TG && fb<TG+33) begin:g_tag
+`ifdef OT_S81SL_LEP_MUT_HSTAMP
+            assign fr[fb]=wopen?wtag[fb-TG]:base;
+`elsif OT_S81SL_LEP_MUT_TAGDROP
+            assign fr[fb]=base;
+`else
+            assign fr[fb]=(rov_r && wopen)?wtag[fb-TG]:base;
+`endif
+          end else assign fr[fb]=base;
+        end
+      end
+    end else begin:g_frame_legacy
     always @(*) begin
         fr = {2*H{1'b0}};
         if (rov) begin
@@ -255,6 +305,7 @@ module ot_s81sl_lep_core #(
         if (!rov && wopen) fr[TG +: 33] = wtag;        // MUTANT: host-plane frames inside a TX window are stamped
 `endif
     end
+    end endgenerate
     wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
     always @(posedge clk or negedge rn) if (!rn) sq <= 2'b00; else sq <= sq ^ pp;
@@ -285,8 +336,13 @@ module ot_s81sl_lep_core #(
         wire iss = n != 0 && cnt != 0;
         wire psh = pp[t / 2];
         wire wr = psh && (n != DT || iss);
+        if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
+            ot_sram_oldread_wreg #(.W(H+1),.AW(AT)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_NS+:TX_NS]),
+                .we(wr),.wa(wp),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(rp),.q(q));
+        end else begin:g_legacy_write
         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
             .wd({sq[t / 2], (t % 2 == 0) ? hf0 : hf1}), .re(iss), .ra(rp), .q(q));
+        end
         always @(posedge clk or negedge rt)
             if (!rt) begin wp <= 0; rp <= 0; n <= 0; inf <= 1'b0; of <= 1'b0; cr_q <= 1'b0; cnt <= CW'(CRED); ov <= 1'b0; end
             else begin
@@ -328,6 +384,7 @@ module ot_s81sl_lep_core #(
     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
+    wire [NL-1:0] rhostx,rksx;
     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
@@ -388,7 +445,11 @@ module ot_s81sl_lep_core #(
         // the head row (stored per row at write): lane 0 of a pair = XB / XQ ring beat, lane 1 = tag && land bits.
         if (MU_EN != 0) begin : g_sa
             wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
-            reg [DR-1:0] mk, mrk, mtk; reg hk;
+            reg [DR-1:0] mk,mrk,mtk,mhost,mks; reg hk;
+            wire host_d=(t==0) && !dq[0] && dq[3:1]==3'd1;
+            wire ks_d=(t==0) && !dq[0] && dq[3:1]==3'd2;
+            assign rhostx[t]=we[rp_nx]?host_d:mhost[rp_nx];
+            assign rksx[t]=we[rp_nx]?ks_d:mks[rp_nx];
             wire rd=(t%2==0)?dq[0]:1'b0;
             wire td=(t%2!=0)?dq[TG-H]:1'b0;
             assign rringx[t]=we[rp_nx]?rd:mrk[rp_nx];
@@ -400,7 +461,7 @@ module ot_s81sl_lep_core #(
 `endif
             integer jk;
             always @(posedge clk) begin
-                for(jk=0;jk<DR;jk=jk+1) if(we[jk]) begin mk[jk]<=kd; mrk[jk]<=rd; mtk[jk]<=td; end
+                for(jk=0;jk<DR;jk=jk+1) if(we[jk]) begin mk[jk]<=kd; mrk[jk]<=rd; mtk[jk]<=td;mhost[jk]<=host_d;mks[jk]<=ks_d; end
 `ifdef OT_S81SL_LEP_MUT_STALEHD
                 hk <= mk[rp];
 `else
@@ -619,11 +680,27 @@ module ot_s81sl_lep_core #(
             fh_v <= rel && hacc && h0[3:1] == 3'd1;
             fk_s <= rel && hacc && h0[3:1] == 3'd2 && ksp[52];
         end
-    always @(posedge clk) begin
+    if(MU_EN!=0 && RX_SRAM!=0) begin:g_host_local
+      for(c=0;c<37;c=c+1) begin:g_slice
+        (* keep="true" *) reg enable_r;
+        wire hit=(c<33)?rhostx[0]:rksx[0];
+        always @(posedge clk or negedge rr[HOST_RSTBASE+c])
+          if(!rr[HOST_RSTBASE+c]) enable_r<=0;else enable_r<=rnex[0] && rnex[1] && hit;
+        if(c<33) begin:g_host
+          localparam integer LO=16*c,SW=(514-LO<16)?514-LO:16;
+          always @(posedge clk) if(enable_r) fh_d[LO+:SW]<=h0[4+LO+:SW];
+        end else begin:g_key
+          localparam integer LO=16*(c-33),SW=(52-LO<16)?52-LO:16;
+          always @(posedge clk) if(enable_r) fk_d[LO+:SW]<=ksp[LO+:SW];
+        end
+      end
+    end else begin:g_host_legacy
+      always @(posedge clk) begin
         if (rel && hacc && h0[3:1] == 3'd1) fh_d <= h0[4 +: 514];
         if (rel && hacc && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
-        lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+      end
     end
+    always @(posedge clk) lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
     assign f_host = {fh_d, fh_v};
     assign f_ks = {fk_s, fk_d};
     assign f_lf = lf;
