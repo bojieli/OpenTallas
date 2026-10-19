@@ -262,12 +262,20 @@ module ot_hgi_sm_xload_cl2_ctl #(
             l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
         {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem; l_d <= l0_d;
     end
+    // l_dcs: the L1 data the C stage converts.  PIN_NATIVE n2 (10-18 gate n1: opt_merge folded the plain l_d into the
+    // kept l_dpo, so ONE flop drove the E-face pins AND the W-side C stage, sat mid-tile, 2,048 l_d_o ports were "not
+    // single-flop" for io_flop_at_pins and launched at 477 ps): the C stage reads its own kept copy l_dc (D = l0_d, same
+    // edge), so l_dpo has the pins as its only load and is anchored at the E face.  Same function, same edges.
+    wire [8*256-1:0] l_dcs;
     generate if (PIN_NATIVE != 0) begin : g_ldo
         (* keep = 1 *) reg [8*256-1:0] l_dpo;
-        always @(posedge clk) l_dpo <= l0_d;
+        (* keep = 1 *) reg [8*256-1:0] l_dc;
+        always @(posedge clk) begin l_dpo <= l0_d; l_dc <= l0_d; end
         assign l_d_o = l_dpo;
+        assign l_dcs = l_dc;
     end else begin : g_ldw
         assign l_d_o = l_d;
+        assign l_dcs = l_d;
     end endgenerate
     // quantiser valids registered with L1 (= l_v && bdm && l_wq[2] / [1] of cl)
     reg qv0_lo, qv0_hi;
@@ -286,7 +294,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
         c_g <= l_g; c_pp <= l_p; c_wq <= l_wq; c_wa <= {l_g, l_p};
         c_mhi <= l_wq[0] ^ (MUT == 4); c_mlo <= ~l_wq[0] ^ (MUT == 4);
         for (integer l = 0; l < 8; l = l + 1) for (integer tv = 0; tv < 8; tv = tv + 1)
-            c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_d[l*256 + 32*tv +: 32]) : 16'd0;
+            c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_dcs[l*256 + 32*tv +: 32]) : 16'd0;
     end
     // ---- emission decision E0 (as cl) ...
     reg [3:0] e_slot; reg e_has;
@@ -705,16 +713,20 @@ module ot_hgi_sm_xload_cl2_ctlx #(
     // synchroniser behind rp1, no port load); rq_n is the tile's reset: issuer and ctl body (RST_PRE: no second relay).
     // Edges: assert reaches the issuer / ctl body 2 edges after rst_n falls (was 0 / 0); release 3 edges after rst_n
     // rises for both (was 0 issuer / 3 ctl body; rn_o unchanged at 3).  Data / command edges unchanged.
+    // n2 (10-18 gate n1 probe: rn_o launched at 605 ps -- rn_o was rq_n itself, the reset net of 1,310 async clears):
+    // rn_o now leaves from its own kept flop rn_q (D = rp2, the same edge as rq_n), anchored at the E-face rn_o pin.
+    // rn_q == rq_n every cycle: rn_o assert / release edges unchanged.
     (* keep = 1 *) reg rp1;
-    (* keep = 1 *) reg rp2, rq_n;
+    (* keep = 1 *) reg rp2, rq_n, rn_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rp1 <= 1'b0; else rp1 <= 1'b1;
-    always @(posedge clk) begin rp2 <= rp1; rq_n <= rp2; end
+    always @(posedge clk) begin rp2 <= rp1; rq_n <= rp2; rn_q <= rp2; end
+    assign rn_o = rn_q;
     ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1),
                                .PIN_NATIVE(1), .RST_PRE(1)) u_w (
         .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rq_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
         .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
-        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn_o),
+        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(),
         .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(1024'd0),
         .l_d_o(l_d_o), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(2048'd0),

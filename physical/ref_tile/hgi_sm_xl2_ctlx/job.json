@@ -1,9 +1,9 @@
 {
- "name": "hgi_sm_xl2_ctlx-n1-COMMIT",
+ "name": "hgi_sm_xl2_ctlx-n2-COMMIT",
  "block": "ot_hgi_sm_xload_cl2_ctlx",
  "ref_tile": true,
  "owner": "Claude ELEM-GAPS/HBMN1-ctlx",
- "purpose": "native re-close of the d4g quadrant x-load ctl ot_hgi_sm_xload_cl2_ctlx (CLOSED q1-7af6f4406 native FAIL: l_d_o launch 403 ps on 580 pins, rst_n capture 455.7 ps): l_d_o from a dedicated kept pin-register copy of L1 (same edge), rst_n drives one kept async-clear flop at the S face + 2 plain release flops (issuer and ctl body clear from the relayed reset; release 3 edges for both, assert 2 edges). Data/command edges unchanged.",
+ "purpose": "native re-close of the d4g quadrant x-load ctl ot_hgi_sm_xload_cl2_ctlx (CLOSED q1-7af6f4406 native FAIL: l_d_o launch 403 ps on 580 pins, rst_n capture 455.7 ps): l_d_o from a dedicated kept pin-register copy of L1 (same edge), rst_n drives one kept async-clear flop at the S face + 2 plain release flops (issuer and ctl body clear from the relayed reset; release 3 edges for both, assert 2 edges). Data/command edges unchanged. n2 (10-18 gate n1 FAIL): opt_merge had folded the plain l_d into the kept l_d_o copy (one flop drove the E-face pins AND the W-side C stage, sat mid-tile, l_d_o not anchored); now the C stage reads its own kept copy l_dc, rn_o leaves from its own kept flop rn_q (= rq_n, same edge) instead of the 1,310-load reset net, CTS -no_obstruction_aware (SW macro-corner leaves 605 ps). Edges unchanged vs n1.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -45,7 +45,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock0 0",
     "expect": "pass",
     "pass_regex": "^XQL_QUAD_LOCK PASS",
-    "pass_witness": "results/rtl/rbh_xql_1018/witness/qlock_q0.log",
+    "pass_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q0.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -54,7 +54,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock1 1",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/rbh_xql_1018/witness/qlock_q1.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q1.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -63,7 +63,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock2 2",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/rbh_xql_1018/witness/qlock_q2.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q2.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -72,7 +72,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock3 3",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/rbh_xql_1018/witness/qlock_q3.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q3.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -81,7 +81,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock4 4",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/rbh_xql_1018/witness/qlock_q4.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q4.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -90,7 +90,7 @@
     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/qlock5 5",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/rbh_xql_1018/witness/qlock_q5.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_qlock_q5.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -99,7 +99,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref0 0",
     "expect": "pass",
     "pass_regex": "^XQL_QUAD_LOCK PASS",
-    "pass_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q0.log",
+    "pass_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q0.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -108,7 +108,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref1 1",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q1.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q1.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -117,7 +117,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref2 2",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q2.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q2.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -126,7 +126,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref3 3",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q3.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q3.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -135,7 +135,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref4 4",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q4.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q4.log",
     "threads": 8,
     "peak_ram_gb": 32
    },
@@ -144,7 +144,7 @@
     "cmd": "XQL_OLDREF=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh {RUN}/oldref5 5",
     "expect": "fail",
     "fail_regex": "^XQL_QUAD_LOCK FAIL",
-    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/oldref_q5.log",
+    "fail_witness": "results/rtl/eg_hbmn1_1018/witness/n2_oldref_q5.log",
     "threads": 8,
     "peak_ram_gb": 32
    }

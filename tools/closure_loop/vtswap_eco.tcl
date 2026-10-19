@@ -97,6 +97,18 @@ set ::nlow [expr {[dict get $c0 L] + [dict get $c0 SL]}]   ;# incremental LVT/SL
 set tt0 [ws max ss]; set ff0 [ws min ff]
 puts [format "OT_VTSWAP pre tt %.2f ff %.2f vt %s lvt_pct %.3f" $tt0 $ff0 $c0 [lvt_pct]]
 set swapped [dict create]; set frozen [dict create]; set capped 0
+# LOST-CLOSED (ROOT-1130): re-apply a closed attempt's recorded cell list first (inst <base>_ASAP7_75t_L per line)
+if {[info exists ::env(OT_VTSWAP_LIST)] && $::env(OT_VTSWAP_LIST) ne "" && [file exists $::env(OT_VTSWAP_LIST)]} {
+  set fh [open $::env(OT_VTSWAP_LIST) r]; set ra 0; set rm 0
+  foreach l [split [read $fh] "\n"] {
+    if {![regexp {^(\S+)\s+(\S+)_ASAP7_75t_L$} $l -> inst base]} continue
+    set i [$::blk findInst $inst]
+    if {$i eq "NULL" || $i eq "" || [[$i getMaster] getName] ne "${base}_ASAP7_75t_R"} { incr rm; continue }
+    if {[set_vt $inst $base L]} { dict set swapped $inst $base; incr ra; incr ::nlow } else { incr rm }
+  }
+  close $fh
+  puts [format "OT_VTSWAP reapply applied %d missing %d tt %.2f ff %.2f lvt_pct %.3f" $ra $rm [ws max ss] [ws min ff] [lvt_pct]]
+}
 for {set r 1} {$r <= $rounds} {incr r} {
   set tt [ws max ss]
   if {$tt >= $target} break

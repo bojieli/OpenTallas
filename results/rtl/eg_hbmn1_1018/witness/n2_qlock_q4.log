@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   203 GB (avail 411, growth 270, headroom 0, waiters 0/0 GB) load 81/128 running 26 disk 89 GB 
+ot-run: ot-epyc5       admits  1296 GB (avail 993, growth 86, headroom 0, waiters 0/0 GB) load 74/128 running 18 disk 2315 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/eg-hbmn1-ctlx/n2/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/eg-hbmn1-ctlx/n2/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1947931-1792372107 after 1 s
+ERR quadrant x-load differs from today's xql at cycle 201 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 202 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 203 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 205 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 206 (W en 11/11, E en 11/11)
+quadrant vs today's xql (pairs W0,1 = ref 0,1; E0,1 = ref 2,3): 10809 cycles compared, 8032 W beats, 5472 E beats, 2077 differ; W/E distinct beats 1670
+XQL_QUAD_LOCK FAIL 1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1947931-1792372107): exit 1
