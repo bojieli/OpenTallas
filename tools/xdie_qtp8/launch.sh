@@ -7,7 +7,7 @@ W=$(cd "$(dirname "$0")/../.." && pwd)
 # Q-COLLCAL 10-18: QTP8_RD / QTP8_OUT select a separate fleet stage dir / result dir (defaults = TOKEN-XDIE-QTP8)
 RD=${QTP8_RD:-/srv/opentallas-scratch/claude/xdie-qtp8-1018/src}
 OUTREL=${QTP8_OUT:-results/rtl/xdie_qtp8_1018}
-HOSTS="ot-epyc5 ot-epyc4 ot-pve1 ot-agidock128"
+HOSTS=${QTP8_HOSTS:-"ot-epyc5 ot-epyc4 ot-pve1 ot-agidock128"}  # TW3-QK 10-19: overridable (epyc6/7 spare)
 LOG=$W/$OUTREL/ot_run
 mkdir -p "$LOG"
 OK=()
