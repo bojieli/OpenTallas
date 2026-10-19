@@ -166,5 +166,44 @@
   "Vertical legs (gap x 260..300, 3.47 mm each): NO hard NS relay in the 40 um gap -- a 512/562-b NS relay needs >= 106 um of face at 4.84 pins/um. Stations = die-level forwarded-clock relay flops (CLOCKING STANDARD 10-18: forwarded half-cycle hops on long die lanes; tools/die_repeaters fclk equalize) placed by the die repeater flow inside the gap at the y points below; the 1,074-b bundles of each lane run on M6/M7 over the f_0L frame column (tiles cap at M5). Flop area per station 2 x 1,074 x ~0.3 um2 ~ 0.65k um2 in a 40 x 405 um gap window (~4% util). Retire the RTL stand-ins dsfd_dvrlyh_512_NS / _SN / 562_NS.",
   "Landing: the B lanes keep the A lanes' K (fixed-latency landed SerDes face); per-lane latency = stations below, entered in the compiler land plan K for copy-B users only (latency user is always copy A: 0 cycles to single-user)."
  ],
- "cost": "copy-B lanes 12-13 stations (vs 9 in p4l_mab on s_0N): +3..4 cycles on copy-B users' hop only, inside the 21,313.7-cycle slot; latency user unchanged (always copy A)"
+ "cost": "copy-B lanes 12-13 stations (vs 9 in p4l_mab on s_0N): +3..4 cycles on copy-B users' hop only, inside the 21,313.7-cycle slot; latency user unchanged (always copy A)",
+ "if_slot_3596": {
+  "source": "TW-S81/SERDES 10-19 00:50: landed column needs 3596.4 tall (children stack 1101.6)",
+  "assume": "A slots keep their attach (seam) side fixed: WS0 = 3939.52..7535.92, WS1 = 7635.92..11232.32, WN0 = 15391.68..18988.08, WN1 = 19088.08..22684.48",
+  "lk_WS2": {
+   "x": 0.0,
+   "y": 11332.32,
+   "w": 260,
+   "h": 3596.4,
+   "attach": {
+    "tx": [
+     260.0,
+     11417.32
+    ],
+    "rx": [
+     260.0,
+     11447.32
+    ]
+   },
+   "clear_to_WN0_um": 463.0
+  },
+  "lk_WS3": {
+   "x": 0.0,
+   "y": 243.12,
+   "w": 260,
+   "h": 3596.4,
+   "attach": {
+    "tx": [
+     260.0,
+     3754.52
+    ],
+    "rx": [
+     260.0,
+     3724.52
+    ]
+   }
+  },
+  "s_0N_option": "still infeasible: above WN1 2,315.5 um free",
+  "stations": "vertical legs +236 um each -> +1 station per B lane (13-14)"
+ }
 }
