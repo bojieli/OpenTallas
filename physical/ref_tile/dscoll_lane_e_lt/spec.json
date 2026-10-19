@@ -36,7 +36,7 @@
     225.936,
     49.68
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -46,7 +46,7 @@
     225.936,
     101.52
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -56,7 +56,7 @@
     225.936,
     153.36
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -66,7 +66,7 @@
     225.936,
     205.2
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -76,7 +76,7 @@
     225.936,
     257.04
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -86,7 +86,7 @@
     31.536,
     49.68
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -96,7 +96,7 @@
     31.536,
     101.52
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -106,7 +106,7 @@
     31.536,
     153.36
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -116,7 +116,7 @@
     31.536,
     205.2
    ],
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -126,7 +126,7 @@
     31.536,
     257.04
    ],
-   "orient": "R0"
+   "orient": "MY"
   }
  ],
  "pins": {
@@ -160,7 +160,7 @@
   "owner": "Claude:S81-LINKTO",
   "branch": "claude/s81-linkto-1018",
   "tag": "lt",
-  "purpose": "S81-LINKTO (coordinator 0hn decision 1, TOKEN-XDIE-S81): dsfd_coll_lane_e as the p4l end-slice masters instantiate it (ot_s81sl_slice_lep*: LCR 1 credit core faces) with the tile-top ACK timeout CH_BOARD 700 (was 400: ACK timeout 879 < the 1,106-cycle switched round trip of a 377.6 ns one-tier switch crossing -> go-back-N replays broke the static calendar, gate_g4 asbuilt 8,240/12,096 beats late); ch_b 1 on every switched lane. GFMT 1 / EPPIPE 2 as the closed rt kit; geometry = the closed dscoll_lane_w_rt outline / 10-SRAM memory-per-column plan mirrored (die face E, core face W, u_rb on the E column); recipe 1 as rt (the RTL registers every pin: lr / gearbox beat / LCR credit faces / flt). No other logic change (timer width 10 -> 11 b). Benches = the xdie_s81 vehicle (built tiles, SerDes on all lanes) + CH_BOARD 400 / ch_b 0 mutants. Clock: balanced pre-placed spine (physical/common_flow/clock_spine.tcl) instead of TritonCTS: the 6b4725cef --cts gate measured TT pin-flop spread 164.7 / FF 150.1 ps > 80 across the W die face and E core face (432 um apart) with CTS.",
+  "purpose": "S81-LINKTO (coordinator 0hn decision 1, TOKEN-XDIE-S81): dsfd_coll_lane_e as the p4l end-slice masters instantiate it (ot_s81sl_slice_lep*: LCR 1 credit core faces) with the tile-top ACK timeout CH_BOARD 700 (was 400: ACK timeout 879 < the 1,106-cycle switched round trip of a 377.6 ns one-tier switch crossing -> go-back-N replays broke the static calendar, gate_g4 asbuilt 8,240/12,096 beats late); ch_b 1 on every switched lane. GFMT 1 / EPPIPE 2 as the closed rt kit; geometry = the closed dscoll_lane_w_rt outline / 10-SRAM memory-per-column plan mirrored (die face E, core face W, u_rb on the E column; macros MY so the macro pin edges mirror too: gate2 with R0 macros had trial GRT overflow 6 on M5 in the centre channel at the u_rb column's rd_out/wd_in edge); recipe 1 as rt (the RTL registers every pin: lr / gearbox beat / LCR credit faces / flt). No other logic change (timer width 10 -> 11 b). Benches = the xdie_s81 vehicle (built tiles, SerDes on all lanes) + CH_BOARD 400 / ch_b 0 mutants. Clock: balanced pre-placed spine (physical/common_flow/clock_spine.tcl) instead of TritonCTS: the 6b4725cef --cts gate measured TT pin-flop spread 164.7 / FF 150.1 ps > 80 across the W die face and E core face (432 um apart) with CTS.",
   "views_to": "physical/ref_tile/dscoll_lane_e_lt/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_e_lt",
   "benches": [
