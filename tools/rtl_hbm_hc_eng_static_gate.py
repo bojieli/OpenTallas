@@ -104,7 +104,7 @@ def main():
     def add(t, **f):
         ev.setdefault(t, {}).update(f)
     slot = 1
-    T0 = 8
+    T0 = max(8, a.ding + 2) if a.split else 8   # HC-XRDU 10-18: landed ding (2 + XRD) must not put ingest events before t = 0
     if a.mode != 'g22':
         # phase A: the weight set (slot 1) from the 4 quadrants, quadrant q rows 6q..6q+5, 480 waves each
         for q in range(4):
