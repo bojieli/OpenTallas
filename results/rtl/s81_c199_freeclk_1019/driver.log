@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: ot-epyc6       admits   747 GB (avail 636, growth 113, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 6034 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-c199-freeclk
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-242588-1792429872 after 0 s
+baseline ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456']
+freeclk ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456']
+missing_edge ok ['[4667000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=0000000000400010']
+BF_TILE_FREECLK_EXACT PASS {"status": "PASS", "scope": "actual BF independent numerical + wake + transaction workload; every candidate valid/metadata/status edge equals default", "trace_lines": 124422, "trace_bytes": 6212138, "extra_data_edges": 0, "missing_edge_mutant": "actual DIFF TXN", "physical_and_power_qualified": false}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-242588-1792429872): exit 0

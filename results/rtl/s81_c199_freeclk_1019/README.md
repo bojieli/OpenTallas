@@ -1,0 +1,11 @@
+# Default-off C199 free-clock functional candidate
+
+Source e51975a97 (all114 shipped files source-hashed; source_binding.json). OT_BF_TILE_FREECLK changes only ot_v41_tile_clk: real free-running fclk drives its output; original reset synchronizer/edge remains. Default has the original ICG path. No timing constraints, masks, uncertainty, margin, data pipeline stage or master dimension is changed. Extra idle clocks are paid activity and require power review before adoption.
+
+The existing full independent BF numerical/wake/transaction workload compares baseline versus free-clock at actual selected recut/TCG/BXST2/FXST2/PINLAT1/HCOL1 parameters. Native wrapper RDRAIN200 supplies physical-column DRAIN200. Both positives pass456 numerical rows/912 value assertions,1,990,752 wake assertions, and124,422 cycles. All124,422 valid/metadata/busy/fault output-cycle trace lines are byte-identical (6,212,138bytes); raw baseline trace is losslessly compressed and both independent SHA-256 hashes retained. Invalid payload bits alone are masked in the trace; the valid bits and all valid payload/metadata are compared each cycle. No fixture expectation drives the tested RTL.
+
+The actual missing-clock-edge mutant fails at the first compared partial (DIFF TXN lane0 n0 at4667ns), rather than a build or infrastructure error. Transaction lags remain exactly baseline5.831min/14.994max/9.090mean ns; no extra valid data edge is introduced on this workload. Verilator5.050 ran via unpinned ot-run on ot-epyc6 unit oth-ubuntu-242588-1792429872, exit0.
+
+The runner terminal retains source_commit=unknown because the staged archive has no git checkout. The separate exact shipping-source manifest binds every consumed source byte to the committed candidate; no terminal field was rewritten or inferred. The initial relative-prep-path build failure remains outside this qualified run in remote out/; this receipt uses only out_r2/.
+
+No physical/native timing, finite-clock spread, reset removal, post-placement fill/escape, power or die adoption is claimed. Original C199 stalled CTS and native hold path evidence are preserved separately. Mapped synthesis/census is running before a ROOT gate-review packet; no physical gate has launched.

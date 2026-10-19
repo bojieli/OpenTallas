@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "scope": "actual BF independent numerical + wake + transaction workload; every candidate valid/metadata/status edge equals default",
+  "trace_lines": 124422,
+  "trace_bytes": 6212138,
+  "extra_data_edges": 0,
+  "missing_edge_mutant": "actual DIFF TXN",
+  "physical_and_power_qualified": false
+}
