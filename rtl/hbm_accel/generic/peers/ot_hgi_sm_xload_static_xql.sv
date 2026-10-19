@@ -198,7 +198,7 @@ endmodule
 // equal-age trees of depth T.  Pair p drives SMs 2p / 2p + 1.
 module ot_hgi_sm_xload_static_xql #(
     parameter integer PMAX   = 8,
-    parameter integer RD_LAT = 6,
+    parameter [63:0]  RD_LAT = 64'd6,    // scalar or per-bank vector, passed to the ctl (ot_hgi_sm_xload_cl2_ctl RD_LAT)
     parameter integer MUT    = 0,
     parameter integer NP     = 4,
     parameter integer T      = 2,

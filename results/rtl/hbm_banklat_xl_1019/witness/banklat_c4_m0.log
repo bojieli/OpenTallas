@@ -1,0 +1,23 @@
+SEED=7 CFG=4 BMUT=0 V=0000000000000006 RLM=6 DLT=0 LQ=0000000000000000 LR=0000000000000000 BK=6
+round 0 {fmt 0 P 2 K 9000}: 628 edges
+round 1 {fmt 0 P 6 K 1252}: 327 edges
+round 2 {fmt 0 P 3 K 478}: 106 edges
+round 3 {fmt 0 P 5 K 757}: 213 edges
+round 4 {fmt 0 P 7 K 178}: 192 edges
+round 5 {fmt 0 P 3 K 790}: 155 edges
+round 6 {fmt 0 P 6 K 1233}: 342 edges
+round 7 {fmt 0 P 5 K 80}: 140 edges
+round 8 {fmt 1 P 7 K 2400}: 430 edges
+round 9 {fmt 2 P 3 K 5312}: 385 edges
+round 10 {fmt 1 P 4 K 2240}: 293 edges
+round 11 {fmt 2 P 3 K 704}: 167 edges
+round 12 {fmt 1 P 5 K 5088}: 538 edges
+round 13 {fmt 2 P 8 K 2144}: 605 edges
+round 14 {fmt 1 P 3 K 4224}: 363 edges
+round 15 {fmt 2 P 4 K 5312}: 478 edges
+XLOAD_BANKLAT dut vs ref (+0 edges): 6703 cycles compared, 5888 dut beats, 0 differ; rq lanes off-stagger 0 (dut rq 26176); done ref 16 dut 16; fault ref 0 dut 0; lanefault ref 0 dut 0
+XLOAD_BANKLAT PASS CFG=4
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_banklat.sv:253: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 1.849 s; speed 7.343 us/s
+- Verilator: cpu 1.849 s on 1 threads; allocated 30 MB
