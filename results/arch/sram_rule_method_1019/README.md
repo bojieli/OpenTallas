@@ -17,6 +17,8 @@ outline 216.840 × 43.752 um. These families cannot inherit each other's
 physical qualification. Existing 21 Qwen leaf PG_HOLD receipts concern old
 masters and are not receipts for these proposed geometries.
 
+**Correction:** the following historical installed-image claim conflated the frozen calibration ID with the current image. See [IMAGE_PROVENANCE.md](IMAGE_PROVENANCE.md) for per-host raw receipts and exact scope.
+
 Actual installed image: `openroad/orfs:asap7lock`, image ID `af971398d91e`,
 repository digest `sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29`.
 Binary `/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad` SHA256
