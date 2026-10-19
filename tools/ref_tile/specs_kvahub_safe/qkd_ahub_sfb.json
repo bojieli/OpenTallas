@@ -1,0 +1,298 @@
+{
+ "name": "qkd_ahub_sfb",
+ "top": "qkd_ahub_static_dw_safe_native",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v",
+  "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+  "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v"
+ ],
+ "params": {},
+ "clock": "spine",
+ "clock_port": "ck",
+ "child_clock_ref": "boundary",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "stages": 2,
+  "reason": "the source lands it: the native face-copy netlist (4b05445f7) keeps the RTL's ot_rst_pipe u_rr landing -- the rst_n port drives exactly 2 sinks (the two kept synchroniser stages, uncapped census 5c1b25ec6: reset input loads max 2), then the regional relay pipes fan out with every load <= 24.  A kit landing would add 2 unpriced reset-release edges."
+ },
+ "pins": {
+  "N": [
+   "hs_start",
+   "hs_ep",
+   "hs_layer",
+   "hs_ctx",
+   "hs_cal_lo",
+   "hs_cal_r",
+   "hf",
+   "ck",
+   "rst_n"
+  ],
+  "S": [],
+  "W": [
+   "ap0",
+   "am0",
+   "fr_valid",
+   "fr_epoch",
+   "fr_rz",
+   "ap1",
+   "am1"
+  ],
+  "E": [
+   "ap2",
+   "am2",
+   "ap3",
+   "am3"
+  ]
+ },
+ "pin_ranges": {
+  "ap0": [
+   194.4,
+   229.68
+  ],
+  "am0": [
+   229.68,
+   259.2
+  ],
+  "fr_valid": [
+   301.32,
+   302.4
+  ],
+  "fr_epoch": [
+   295.2,
+   301.32
+  ],
+  "fr_rz": [
+   259.2,
+   295.2
+  ],
+  "ap1": [
+   302.4,
+   325.92
+  ],
+  "am1": [
+   325.92,
+   345.6
+  ],
+  "ap2": [
+   194.4,
+   229.68
+  ],
+  "am2": [
+   229.68,
+   259.2
+  ],
+  "ap3": [
+   259.2,
+   282.72
+  ],
+  "am3": [
+   282.72,
+   302.4
+  ],
+  "hs_start": [
+   194.4,
+   198.72
+  ],
+  "hs_ep": [
+   198.72,
+   226.8
+  ],
+  "hs_layer": [
+   226.8,
+   237.6
+  ],
+  "hs_ctx": [
+   237.6,
+   259.2
+  ],
+  "hs_cal_lo": [
+   410.4,
+   464.4
+  ],
+  "hs_cal_r": [
+   464.4,
+   475.2
+  ],
+  "hf": [
+   259.2,
+   280.8
+  ],
+  "ck": [
+   358.0,
+   360.0
+  ],
+  "rst_n": [
+   300.0,
+   304.0
+  ]
+ },
+ "outline": {
+  "w": 734.4,
+  "h": 540.0,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "macros": [],
+ "inter": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "safe_c9572",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "safe_c9573",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "safe_c9574",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "safe_c9575",
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf",
+   "count": 1,
+   "inst": "safe_c9576",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "the native face-copy source registers every pin itself (4b05445f7 face ledger: 627 signal ports, 645 distinct boundary FFs, every output owns a dedicated kept same-edge FF, every input lands in a FF first); a recipe pin register would add an unpriced edge to AP_OFS / FR_OFS (GEN7 binding AP[-40,-40,-38,-39], FR -7)."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "y",
+   "vo",
+   "fault"
+  ]
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:KV-AHUB 10-19",
+  "branch": "claude/kv-ahub-1019",
+  "tag": "sfb",
+  "purpose": "KV-AHUB 10-19: SAFE ahub from the face-copy native source; symmetric insertion-aware centre-fed spine (cure of the a7 routed boundary spread 88.9 ps); sfb",
+  "benches": [
+   {
+    "name": "ahub_face_m0",
+    "cmd": "bash tools/qwen_kv_die/ahub_safe/kit_face_bench.sh {RUN}/bench/m0 m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS mut=0 passes=7 Z_IN_STRIDE=4 zwords=680 .* FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8",
+    "pass_witness": "results/rtl/qwen_kv_ahub_safe_1019/m0.log"
+   },
+   {
+    "name": "ahub_face_d",
+    "cmd": "bash tools/qwen_kv_die/ahub_safe/kit_face_bench.sh {RUN}/bench/face_d face_d",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=0 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub_safe_1019/face_d.log"
+   },
+   {
+    "name": "ahub_face_sticky",
+    "cmd": "bash tools/qwen_kv_die/ahub_safe/kit_face_bench.sh {RUN}/bench/sticky sticky",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=0 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub_safe_1019/sticky.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/test/qwen_kv_die",
+   "tools/qwen_kv_die",
+   "physical/ref_tile/ot_nhb_zh_m5",
+   "physical/ref_tile/qkh_recip_ref",
+   "results/arch/kv_ahub_face_copy_1019",
+   "results/arch/kv_ahub_structural_source_1019",
+   "results/rtl/qwen_kv_ahub_safe_1019"
+  ],
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/qkd_ahub_sfb/views",
+  "record_to": "results/rtl/ref_tile/qkd_ahub_sfb"
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ },
+ "floorplan_note": "KV-AHUB 10-19 SAFE ahub from the face-copy source (4b05445f7+5c1b25ec6). Outline 734.4 x 540 = the die slot (unchanged); pins = the a7 die windows (unchanged faces/ranges). Children ALL R0 exactly on the 43.2 lattice (0 off-track pins on every child): zh2/zh3 at y 345.6 with their 268-bit S input faces DOWN to the logic band y 199.8-340.2; zh0/zh1 at y 43.2 R0 (input faces toward the 43.2-um S channel, fed around the macro from the band, <= ~300 um legs); recip R0 at 475.2,259.2 (inputs N, outputs S into the band). Std-cell rows are continuous around all children (one connected band, no islands). Clock: ONE entry ck (N centre x 358-360) -> centre-fed SYMMETRIC insertion-aware spine (clock_spine.tcl OT_SPINE_SYM=1, RC-calibrated balancing, safe-balance rollback): flop leaves on a bounding-box-centred bisection tree, the 5 hard children tap the tree at the node whose arrival + own insertion (ot_nhb_zh 246.5 / recip 238.7 ps) meets the latest flop leaf, instead of padding all 3,420 flops up to child-pin + insertion (a7: 1,035 ps TT insertion, routed boundary 914.5..1003.4 = 88.9 ps).",
+ "structural_change": "NEW kit (KV-AHUB 10-19, lead brief: SAFE ahub a7 from the face-copy source). (1) Source = the GEN7-fixed native face-copy netlist qkd_ahub_static_dw_safe_face_native (Codex 4b05445f7: 105 collapsed AM face identities restored as kept same-edge per-output FFs, 3,420 FF, every functional/reset load <= 24, 645 distinct boundary FFs; AP_OFS ffd9ffdaffd8ffd8 / FR_OFS -7 / Z_IN_STRIDE 4 = the actual GEN7 die binding, so no die offset change). (2) Clock (cures a7 native FAIL 2c8705059, routed boundary spread 88.9 TT): symmetric insertion-aware spine instead of the count-bisection spine whose pads chained every flop to the deepest child tap. (3) sfb",
+ "cycle_cost": "0 edges vs the face-copy source (same-edge copies, no relay/calendar change); vs the closed a7 view the die binding changes only to the GEN7 AP/FR the die already carries (AP[-40,-40,-38,-39], FR -7) and the hub publication law stays recip+75 (structural source 483ac4ba8)."
+}

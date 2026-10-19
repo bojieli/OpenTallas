@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.ahub.uncapped_every_driver_census.v1",
+  "status": "PASS",
+  "source_reparsed_sha256": "9d5a650e9827b231bb1f55e68e9cc7b2d92979a7e6989ea898d5f024ffe04142",
+  "physical_qualified": false,
+  "count_basis": "first nontransparent logical input pins and top-output port bits; all polarities, classes, endpoints and zero-load drivers retained",
+  "driver_role_counts": {
+    "comb": 6152,
+    "FF": 3420,
+    "macro": 306,
+    "clock": 1,
+    "reset": 1,
+    "top_input": 337,
+    "constant": 2
+  },
+  "driver_count": 10219,
+  "endpoint_count": 26732,
+  "maximum_by_role": {
+    "comb": 24,
+    "constant": 470,
+    "FF": 24,
+    "top_input": 23,
+    "clock": 3425,
+    "reset": 2,
+    "macro": 1
+  },
+  "all_over32_findings": [
+    {
+      "driver": [
+        "input",
+        "ck",
+        0
+      ],
+      "role": "clock",
+      "loads": 3425,
+      "clock_only": true,
+      "constant": false
+    },
+    {
+      "driver": [
+        "constant",
+        "0"
+      ],
+      "role": "constant",
+      "loads": 273,
+      "clock_only": false,
+      "constant": true
+    },
+    {
+      "driver": [
+        "constant",
+        "1"
+      ],
+      "role": "constant",
+      "loads": 470,
+      "clock_only": false,
+      "constant": true
+    }
+  ],
+  "unsafe_over32_findings": []
+}

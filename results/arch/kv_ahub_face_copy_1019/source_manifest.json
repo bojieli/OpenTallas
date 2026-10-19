@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.ahub.face_source_manifest.v1",
+  "source_base": "483ac4ba8",
+  "optional": true,
+  "native_qualified": false,
+  "fleet": "ot-epyc8:/srv/opentallas-scratch/claude/kv-ahub-face-copy-1019",
+  "files": {
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v": "57a9e0f37cb7a6ac77eb1c9714500030e4736f6cfa0c9c22a28b5d790c3976e1",
+    "tools/qwen_kv_die/ahub_safe/distribute_faces.py": "816dea35338f26da978ee6ccb6407a35d28033ed018afb92d15fb44b90cb9ced",
+    "tools/qwen_kv_die/ahub_safe/verify_faces.py": "eea1f356d0744bd72522a4eb4ff67b313f1137f86ea89204846b0859ffec7198",
+    "tools/qwen_kv_die/ahub_safe/face_geometry.py": "324db758ac4a6d3b5ab6b503a94f6295cd5b84f7c9c25cc443564d5cb806a920",
+    "tools/qwen_kv_die/ahub_safe/face_area.py": "4fbb850409109b194f030718d68b0f7aca35e2173888cec3366e1bb82b214e5c",
+    "tools/qwen_kv_die/ahub_safe/face_bench.sh": "741afd31de7acb6ea11df032851e6fad23a8886f6f11a6ff9a45532ecc19a184",
+    "tools/qwen_kv_die/ahub_safe/face_preflight.sh": "706aeda83bcbd6ce50bc5431828636b8b33a7444def393ae4d904afeea301166",
+    "tools/qwen_kv_die/ahub_safe/negative_face_checks.py": "c9ec50a0faefab1ec91f2468ff96c49b20a068e5c5fa932f24f35c8affc82fc4",
+    "tools/qwen_kv_die/ahub_safe/face_rtl_mutants.py": "265b2ded622a0b6792e853cc84dae380ca04e4032b36681fb009c02b6cd79840",
+    "tools/qwen_kv_die/ahub_safe/driver_census.py": "581df4ea3c118dd84255379dab9909fe789a9a0059fd9f36472a20bc0cbc2d86"
+  },
+  "proof_scope": "same-edge source/equation/reset/capture/output identity, load count, necessary boundary distance; no placed wire/clock/POR proof"
+}
