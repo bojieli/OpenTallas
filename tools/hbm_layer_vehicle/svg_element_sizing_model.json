@@ -133,11 +133,11 @@
     "landing_capacity": "two 256x256 macros, each packs FOUR 64-row landing blocks; never four macros/bank",
     "fifo_capacity": "two actual 8x285 dual-clock SRAMs",
     "outline_proposal_um": [
-      432.0,
-      259.2
+      380.16,
+      198.72
     ],
-    "aspect": 1.6666666666666667,
-    "macro_only_fill": 0.20163325102880658,
+    "aspect": 1.9130434782608696,
+    "macro_only_fill": 0.29886351437076075,
     "macro_placements": [
       {
         "kind": "landing",
@@ -162,7 +162,7 @@
         "bank": "j+4",
         "origin_um": [
           43.2,
-          172.8
+          129.6
         ],
         "orientation": "MX"
       },
@@ -171,7 +171,7 @@
         "bank": "j+4",
         "origin_um": [
           259.2,
-          172.8
+          129.6
         ],
         "orientation": "MX"
       }
@@ -179,21 +179,33 @@
     "all_macro_origins_on_43p2_lattice": true,
     "full_width_cell_band_y_um": [
       86.424,
-      172.8
+      129.6
     ],
-    "band_area_um2": 37314.432,
+    "band_area_um2": 16413.788159999996,
     "placement_util_target": [
       0.4,
       0.6
     ],
     "measured_stdcell_area_um2": null,
+    "outline_status": "reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits",
+    "earlier_generous_outline_um": [
+      432.0,
+      259.2
+    ],
+    "no_measured_need_for_earlier_padding": true,
+    "band_diagonal_um": 382.60396309499987,
+    "stdcell_area_range_for_full_band_40_60pct_um2": [
+      6565.515263999999,
+      9848.272895999997
+    ],
     "stdcell_band_height_at_50pct_um": null,
     "stdcell_band_rule": "select a single connected full-width placement band from measured area; unused access channels are routing reservations; final dimensions OPEN until synthesis",
     "access_channels_um": {
       "left": 43.2,
       "between_macro_columns": 43.17599999999999,
-      "right": 75.81600000000003,
-      "central_read_face_channel": 86.376
+      "right": 23.976000000000056,
+      "top": 25.896000000000015,
+      "central_read_face_channel": 43.17599999999999
     },
     "proposed_fullface_orientation": "bottom row R0 North-read faces band; upper row MX South-read faces band; write/mask face outward; canonical WE faces retain generous side channels",
     "clocks": [
@@ -218,7 +230,7 @@
       "total": 937
     },
     "face_proposal": "return261+stream-control copies on cache-facing full E/W face; split572 HBM inputs across remaining full faces; pin-register collars stay connected to central band",
-    "return_face_density_all261_over_full_height": 1.0069444444444444,
+    "return_face_density_all261_over_full_height": 1.3134057971014492,
     "communication": {
       "HBM_response_input_bits_per_edge": 570,
       "stream_landing_read_bits_per_edge": 512,
@@ -230,7 +242,7 @@
       "one_layer_channel_width_um_at_048_pitch": 12.528,
       "full_face_length_um_at_6pins_per_um": 43.5
     },
-    "max_external_density_at_capacity_6": "one face may carry <=1555 pins at259.2um, <=2592 at432um; explicit final pin enumeration and collar placement remain OPEN",
+    "max_external_density_at_capacity_6": "one face may carry <=1192 pins at198.72um, <=2280 at380.16um; explicit final pin enumeration and collar placement remain OPEN",
     "reach": "put selected-data/return-Q mass at cache-facing edge; place both landing output capture/select slices adjacent; no logical end-to-end tile wire assumed; mapped <=405um audit OPEN",
     "critical_fanout": "kept per16bit selection/ring slices; replicated reset/control distribution and inherited epoch/seen/count bank-mux fanout require mapped audit",
     "gate_ready": false

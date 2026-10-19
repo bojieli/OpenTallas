@@ -2,7 +2,7 @@
 def model():
     return dict(schema="opentallas.hbm-svg-regional-return.v1", opt_in_default=False,
       shape=dict(banks=8,pairs=4,pair_banks=[[j,j+4] for j in range(4)],payload_bits=256,
-        pair_region_um=[432.0,259.2],region_grid=[2,2],cache_root_regions=1),
+        pair_region_um=[380.16,198.72],region_grid=[2,2],cache_root_regions=1),
       clocks=dict(source_roots=4,forwarded_return_roots=4,cache_roots=1,physical_stream_trees=9,logical_stream_domains=5,
         roots_per_landing_pair=["HBM", "pair_stream", "forwarded_cache_phase"],frequency_relation="same fixed frequency, matched phase; separate physical roots",
         reset="two registered release stages/root, balanced common assertion and release",
