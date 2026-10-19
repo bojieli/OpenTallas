@@ -83,6 +83,20 @@ class T(unittest.TestCase):
         self.assertEqual(row[2], str(9 * 64))
         self.assertEqual(sorted(map(int, row[5].split(","))), [192, 192, 192])
 
+    def test_repeated_multibit_port_uses_named_alias(self):
+        nl = netlist(loads=0)
+        cells = nl["modules"]["top"]["cells"]
+        for i in range(3):
+            cells[f"u_m.repeat{i}"] = {"type": "$and", "port_directions": {"A": "input", "B": "input", "Y": "output"},
+                "connections": {"A": [10, 10], "B": [4, 4], "Y": [100+2*i, 101+2*i]}}
+        _, ys, tsv = self.run_nl(nl)
+        self.assertNotIn("{", ys)
+        self.assertIn("__c1__v2 2", ys)
+        self.assertIn("__c1__v2[0]", ys)
+        self.assertIn("__c1__v2[1]", ys)
+        self.assertIn("repeat1 A \\ot_rrs__", ys)
+        self.assertIn("3\t6\t0\t2\t2,2,2\tOK", tsv)
+
     def test_landing_family_name(self):
         _, _, tsv = self.run_nl(netlist(name="host_rst_n__ot_rlv"))
         self.assertIn("host_rst_n__ot_rlv\t3\t600", tsv)

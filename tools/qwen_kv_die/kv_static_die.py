@@ -304,6 +304,8 @@ def _boot_join(g):
     if f['module'] != 'qkd_kv_es_fan_root2' or 'bw' in f['inputs']:
         raise ValueError(f'kv_static_die BOOT: fanr is {f["module"]}')
     f.update(module='qkd_kv_es_fan_root2_b', source=BOOT_RTL, sha256=None)
+    if os.environ.get('OT_KV_MU', '0') == '1':   # KV-GRP-CTL/MU5 10-19: 4 KEPT rs_q copies (reset-relay split)
+        f['parameters'] = dict(f.get('parameters') or {}, RCOPIES=4)
     f['inputs']['bw'] = [dict(instance='embgw', port='bw', lo=0, width=BOOT_BW)]
     gw = by['embgw']
     gw.update(source=BOOT_GW[0], module=BOOT_GW[1], sha256=None, parameters=dict(BOOT_GW[2]))

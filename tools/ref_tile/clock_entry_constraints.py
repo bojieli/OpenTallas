@@ -16,6 +16,7 @@ import direct_macro_clock_entries
 import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
+import single_clock_contract
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -25,6 +26,9 @@ ENTRY_DOMAIN_API_VERSION = 1
 
 def signoff_period(spec):
     """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    actual = single_clock_contract.validate(spec)
+    if actual is not None:
+        return actual
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
     if 'signoff_period_ps' in route and not native_leaf(spec):
@@ -525,6 +529,28 @@ def landed_sdc(spec, root):
     seam = seam_window_sdc(spec)
     if rec is None:
         return seam
+    impl = rec.get("landing_implementation") or {}
+    if impl.get("direct_quarter_period_timing"):
+        if (rec["D"], rec["E"]) != (4, 2) or not 1 <= int(impl.get("chunk_bits", 0)) <= 24:
+            raise ValueError("direct landing requires proven D4/E2 and chunk_bits1..24")
+        residual = int(spec.get("landing_direct_residual_ps", -1))
+        if residual < 150:
+            raise ValueError("direct landing must explicitly preserve high-entry210/hold100 reserves: residual>=150ps")
+        # This block follows ot_ce_apply. Charge the full existing high-entry
+        # reserve plus the conservative default phase envelope; no MCP survives.
+        return ("# PL-KIT direct D4/E2; diagnostic/adoption requires source-pinned native phase receipt.\n"
+                "set ot_lp_direct_T [get_property [get_clocks core_clk] period]\n"
+                "set ot_lp_direct_roots [lmap c [get_clocks ot_entry_*] {get_full_name $c}]\n"
+                "set ot_lp_direct_clocks {}\n"
+                "foreach c [all_clocks] {\n"
+                " if {[ot_cf_root [get_full_name $c]] in $ot_lp_direct_roots} {lappend ot_lp_direct_clocks $c}\n"
+                "}\n"
+                "foreach a $ot_lp_direct_clocks {\n"
+                " foreach b $ot_lp_direct_clocks {\n"
+                "  if {[ot_cf_root [get_full_name $a]] eq [ot_cf_root [get_full_name $b]]} continue\n"
+                f"  set_clock_uncertainty -setup [expr {{{60 + residual}.0 + 0.75 * $ot_lp_direct_T}}] -from $a -to $b\n"
+                f"  set_clock_uncertainty -hold {25 + residual}.0 -from $a -to $b\n"
+                " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
     # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
@@ -980,22 +1006,40 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
-# Match ck_insertion.py's exported insertion.json boundary population: input
-# timing endpoints plus output timing launch registers, intersected with this root.
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
 proc ot_ce_boundary_cells {} {
-  set boundary {}
-  set inputs [all_inputs -no_clocks]
-  if {[llength $inputs]} {
-    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
-    }
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
   }
-  if {[llength [all_outputs]]} {
-    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
-    }
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
   }
-  return $boundary
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
 }
 # Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
 # (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
@@ -1755,3 +1799,49 @@ def direct_body(body, direct):
     masters = sorted({e['master'] for e in direct['entries']})
     return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
             + direct['bindings_tcl'] + body)
+
+
+# Generated clocks retain their actual phase/scenario constraints. This only
+# expands physical ownership/census; it creates no timing exceptions.
+CLOCK_FAMILY_TCL = (Path(__file__).resolve().parents[2] /
+                    "physical/common_flow/clock_family.tcl").read_text()
+
+def _clock_family_body(body):
+    for marker in ("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                   "set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                   "  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {",
+                   "proc ot_ce_clock_wire {pin clock} {"):
+        if body.count(marker) != 1:
+            raise ValueError("clock-entry body changed; revalidate generated-clock family extension")
+    body = body.replace("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                        "  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }\n  ot_cf_refresh")
+    body = body.replace("proc ot_ce_leaf_ownership {inputs outputs} {",
+                        "proc ot_ce_leaf_ownership {inputs outputs} {\n  ot_cf_refresh")
+    body = body.replace("set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                        "lassign [ot_cf_pins $clock] pins ot_ce_family_owners")
+    body = body.replace("foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {",
+                        "lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners\n    foreach pin $ot_ce_family_pins {")
+    body = body.replace("foreach c [all_clocks] {lappend actual [get_full_name $c]}",
+                        "foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}")
+    body = body.replace("  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {\n      set an [get_full_name $a]; set bn [get_full_name $b]",
+                        "  set ot_ce_family_clocks {}\n  foreach c [all_clocks] {\n    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}\n  }\n  foreach a $ot_ce_family_clocks {\n    foreach b $ot_ce_family_clocks {\n      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]")
+    body = body.replace("proc ot_ce_clock_wire {pin clock} {",
+                        "proc ot_ce_legacy_clock_wire {pin clock} {")
+    # Existing ordinary-clock selection/pre-CTS semantics stay unchanged.
+    wrapper = r'''
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
+'''
+    return CLOCK_FAMILY_TCL + wrapper + body
+
+BODY = _clock_family_body(BODY)
+LEAF_BODY = _clock_family_body(LEAF_BODY)
+LANDED_BODY = _clock_family_body(LANDED_BODY)

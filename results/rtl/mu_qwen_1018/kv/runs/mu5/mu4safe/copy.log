@@ -1,0 +1,35 @@
+FAIL MU4 check 82 cycle=9 fc=08 halt=1101
+FAIL MU4 check 166 cycle=9 fc=08 halt=1101
+FAIL MU4 check 250 cycle=9 fc=08 halt=1101
+FAIL MU4 check 334 cycle=9 fc=08 halt=1101
+FAIL MU4 check 418 cycle=9 fc=08 halt=1101
+FAIL MU4 check 502 cycle=9 fc=08 halt=1101
+FAIL MU4 check 586 cycle=9 fc=08 halt=1101
+FAIL MU4 check 670 cycle=9 fc=08 halt=1101
+FAIL MU4 check 754 cycle=9 fc=08 halt=1101
+FAIL MU4 check 838 cycle=9 fc=08 halt=1101
+FAIL MU4 check 922 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1006 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1090 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1174 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1258 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1342 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1426 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1510 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1594 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1678 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1762 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1846 cycle=9 fc=08 halt=1101
+FAIL MU4 check 1930 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2014 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2098 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2182 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2266 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2350 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2434 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2518 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2602 cycle=9 fc=08 halt=1101
+FAIL MU4 check 2686 cycle=9 fc=08 halt=1101
+[54406000] %Fatal: tb.sv:31: Assertion failed in tb_kv_ctl_mu4_safe: FAIL MU4 errors32 drain32 group32
+%Error: tb.sv:31: Verilog $stop
+Aborting...

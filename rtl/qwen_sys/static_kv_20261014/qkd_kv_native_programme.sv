@@ -10,7 +10,15 @@
 // group {pos[5:4],pos[0]} and address low fields {pos[2:1]} / {pos[3]} in place
 // of {pos[4:3]} / {pos[5]}; K rows are unchanged. 0 = the historical t[2:0] map.
 // MUT 7 (VMAP=1 only): the V-row group drops pos[0] (expected PC wrong).
-module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=0)(
+// KV-GRP-CTL/MU5 10-19 (SAFE checklist items 3 / 5; defaults keep every existing view unchanged):
+//   SRAM 1: the 36 x 5 x 32 b root table (5,760 runtime-indexed flops) lives in one ot_sram_1r1w_128x256_m1_r2c2
+//           (row = stage - 1, bits 32w+:32 = word w; boot words land one edge after the accept through the bit write
+//           mask, as the flop table's wq pipeline).  The read is issued on the start_p edge (address selected_stage - 1,
+//           the value sel_q takes); the macro's registered output is copied to t0..stop_q on the ld edge, exactly where
+//           the flop table was read: 0 added cycles.
+//   RCOPIES N > 1: N KEPT identical copies of reset_pin_n (family wire g_rc.rpv, ot_rst_split) for the synthesis
+//           reset-relay split (physical/common_flow/ot_rst_copies.py); reset_pin_n stays copy 0.
+module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=0,parameter integer RCOPIES=1,parameter integer SRAM=0)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[7:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,input wire[5:0]stage,input wire[15:0]epoch,input wire[17:0]token,
@@ -31,6 +39,11 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
  // rst_n falls (release unchanged: one edge). All internal reset pins are driven by this kept pin FF's Q.
  (* keep = "true" *) reg reset_pin_n;
  always @(posedge ck) reset_pin_n<=rst_n;
+ generate if(RCOPIES>1)begin:g_rc
+  (* keep = "true" *) reg[RCOPIES-2:0]rc_q;
+  always @(posedge ck)rc_q<={(RCOPIES-1){rst_n}};
+  (* keep = "true", ot_rst_split *) wire[RCOPIES-1:0]rpv={rc_q,reset_pin_n};
+ end endgenerate
  // Every functional input first lands at a dedicated pin register. Valid
  // flags reset; captured data are consumed only with their matching valid.
  (* keep = "true" *) reg cfg_we_p,start_p;
@@ -67,7 +80,7 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
   wq_stage<=36'd1<<cfg_stage;wq_word<=5'd1<<cfg_word;wq_data<=cfg_data_p[31:0];
  end
  genvar g;
- generate for(g=0;g<36;g=g+1)begin:g_stage
+ generate if(SRAM==0)begin:g_ftw for(g=0;g<36;g=g+1)begin:g_stage
   always @(posedge ck)if(wq_v&&wq_stage[g])begin
    if(wq_word[0])table0[g]<=wq_data;
    if(wq_word[1])table1[g]<=wq_data;
@@ -75,7 +88,7 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
    if(wq_word[3])table3[g]<=wq_data;
    if(wq_word[4])table_stop[g]<=wq_data;
   end
- end endgenerate
+ end end endgenerate
  // p2: shadow copies of the current stage's words 0..3 (the same values the table receives), read by the
  // cfg_word==4 ordering check instead of a 36-way table mux (p1: cfg_stage -> mux -> compares -> fault, 21 levels).
  reg[31:0]sh0,sh1,sh2,sh3;
@@ -93,6 +106,21 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
  // ld edge (cycle 0, which can never match) is gated off; stale tm* (>= 2, or all-ones after reset) cannot equal
  // cycle 1.
  reg ld;reg[5:0]sel_q;reg[31:0]tm0,tm1,tm2,tm3;
+ // root row read: flop table at sel_q (SRAM 0) or the macro row read on the start_p edge (SRAM 1)
+ wire[31:0]rt0,rt1,rt2,rt3,rts;
+ generate if(SRAM==0)begin:g_ft
+  assign rt0=table0[sel_q];assign rt1=table1[sel_q];assign rt2=table2[sel_q];assign rt3=table3[sel_q];
+  assign rts=table_stop[sel_q];
+ end else begin:g_sr
+  reg[5:0]wq_row;
+  always @(posedge ck)wq_row<=cfg_stage;
+  wire[255:0]rd;
+  ot_sram_1r1w_128x256_m1_r2c2 u_rows(.clk(ck),.r_ce_in(start_p),.r_addr_in({1'b0,selected_stage-6'd1}),.rd_out(rd),
+   .w_ce_in(wq_v),.w_addr_in({1'b0,wq_row}),.wd_in({96'd0,{5{wq_data}}}),
+   .w_mask_in({96'd0,{32{wq_word[4]}},{32{wq_word[3]}},{32{wq_word[2]}},{32{wq_word[1]}},{32{wq_word[0]}}}),
+   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+  assign rt0=rd[31:0];assign rt1=rd[63:32];assign rt2=rd[95:64];assign rt3=rd[127:96];assign rts=rd[159:128];
+ end endgenerate
  always @(posedge ck or negedge reset_pin_n)
   if(!reset_pin_n)begin tm0<=~32'd0;tm1<=~32'd0;tm2<=~32'd0;tm3<=~32'd0;end
   else begin tm0<=t0-((MUT==2)?32'd2:32'd1);tm1<=t1-32'd1;tm2<=t2-32'd1;tm3<=t3-32'd1;end
@@ -130,7 +158,7 @@ module qkd_kv_native_programme #(parameter integer MUT=0,parameter integer VMAP=
   end else begin
    done<=0;expected_valid<=0;ld<=0;
    if(ld)begin
-    t0<=table0[sel_q];t1<=table1[sel_q];t2<=table2[sel_q];t3<=table3[sel_q];stop_q<=table_stop[sel_q];
+    t0<=rt0;t1<=rt1;t2<=rt2;t3<=rt3;stop_q<=rts;
    end
    word_slot_q<=0;kvn_slot_q<=0;
    if(active)begin

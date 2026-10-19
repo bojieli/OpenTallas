@@ -1,0 +1,10 @@
+MISMATCH cyc 724 ref 00c4144714fca6ec16c15b08c0000000030000000a4 dut 0184144714fca6ec16c15b08c0000000000000000a4 (ref fc 00 dut fc 00 stage 5/5 ep 714f/714f)
+MISMATCH cyc 728 ref 0105144714fca6ec16c15b08c0000000000000000a8 dut 9405144714fca6ec16c15b08c0000000004000000a8 (ref fc 00 dut fc 00 stage 5/5 ep 714f/714f)
+MISMATCH cyc 729 ref 0005144714fca6ec16c15b08c0000000001000000a9 dut 0005144714fca6ec16c15b08c0000000005000000a9 (ref fc 00 dut fc 00 stage 5/5 ep 714f/714f)
+MISMATCH cyc 732 ref 9405144714fca6ec16c15b08c0000000004000000ac dut 4205144714fca6ec16c15b08c0000000008000000ac (ref fc 00 dut fc 00 stage 5/5 ep 714f/714f)
+MISMATCH cyc 736 ref 4205144714fca6ec16c15b08c0000000008000000b0 dut 00050c2079d960741645591bc000000001e0000006a (ref fc 00 dut fc 00 stage 5/3 ep 714f/079d)
+FAIL KV_LPRG_MU5_LOCKSTEP mismatches627611 faultsA0 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60
+- rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 1.082 s; speed 1.774 ms/s
+- Verilator: cpu 1.082 s on 1 threads; allocated 7 MB

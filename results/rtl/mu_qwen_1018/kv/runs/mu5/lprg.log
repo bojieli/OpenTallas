@@ -1,0 +1,5 @@
+PASS KV_LPRG_MU5_LOCKSTEP mismatches0 boots140 cycles959774 events231227 stage_done39361 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60 (codes 5 11 0 28 16)
+- rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 1.168 s; speed 1.644 ms/s
+- Verilator: cpu 1.167 s on 1 threads; allocated 7 MB

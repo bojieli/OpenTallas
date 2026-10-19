@@ -1,0 +1,74 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-epyc8       admits  1199 GB (avail 934, growth 95, headroom 0, waiters 0/0 GB) load 41/128 running 25 disk 341 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1594692-1792428008 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 723 input pin flops (0 hard-child clock pins at +insertion), median arrival 605.486816 (range 594.214478 .. 624.574524)
+QDM reference pin g_pin.eq[121]$_DFF_P_/CLK clock arrival max 605.486816 min 581.743103 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 581.743103 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/s81sl_capc_p1_die_candidate/signoff.sdc (TT placement RC; diagnostic)
+RC_IOREF platform internal_hold=15.867085 refmax=605.486816 refmin=581.743103 live_min=581.743103 out_hold=108.839714 inputs=722 outputs=451 C=25 U=25 relief=0
+RC_IOREF calibrated_stale_negative internal_hold=30.159374 refmax=605.486816 refmin=581.743103 live_min=502.827545 out_hold=30.318581 inputs=722 outputs=451 C=25 U=25 relief=0
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 723 input pin flops (0 hard-child clock pins at +insertion), median arrival 522.309875 (range 512.971008 .. 534.009094)
+QDM reference pin g_pin.eq[1]$_DFF_P_/CLK clock arrival max 522.309875 min 500.491913 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 500.491913 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+RC_IOREF calibrated_fresh internal_hold=30.159374 refmax=522.309875 refmin=500.491913 live_min=500.491913 out_hold=111.569756 inputs=722 outputs=451 C=25 U=25 relief=0
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 723 input pin flops (0 hard-child clock pins at +insertion), median arrival 605.486816 (range 594.214478 .. 624.574524)
+QDM reference pin g_pin.eq[121]$_DFF_P_/CLK clock arrival max 605.486816 min 581.743103 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 581.743103 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+RC_IOREF restored internal_hold=15.867085 refmax=605.486816 refmin=581.743103 live_min=581.743103 out_hold=108.839714 inputs=722 outputs=451 C=25 U=25 relief=0
+RC_IOREF actual_STA_PASS unchanged_C25_U25_Usetup60_relief0_repair_HM30_untouched no_repair no_ODB_write
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1594692-1792428008): exit 0

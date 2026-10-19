@@ -110,8 +110,10 @@ if MU:
     ROLES['writer'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv', 'qkd_kv_static_writer_native_mu', 1)
     # MU-KV-BOOT 10-19 (hroot README section 3): 4 token contexts (user = authority_epoch[1:0]) on the one boot-loaded
     # stage table + the compiled GAP[4][36] block (boot image MU form, kv_static_boot_join.BOOT_MU dispatcher)
-    ROLES['layer_programme'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv',
-                                'qkd_static_kv_layer_programme_mu', 1)
+    # KV-GRP-CTL/MU5 10-19 (SAFE checklist 4/5): the structural successor _mus (stage + GAP tables in two SRAM macros, row
+    # fetched on the stage-begin edge, registered event flags; same ports / outputs on every edge, 0 added cycles)
+    ROLES['layer_programme'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv',
+                                'qkd_static_kv_layer_programme_mus', 1)
     # MU-KV-PROG 10-19: the ownership calendar is the one lprg consumer in qkd_kvs_ctl with per-TOKEN state (a go while its
     # window is active faults); its _mu successor re-arms the window per user token start (results/rtl/mu_qwen_1018/kvprog)
     ROLES['ownership'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv', 'qkd_static_kv_ownership_calendar_mu', 1)
@@ -451,7 +453,7 @@ def template(root=ROOT):
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
-        'writer':dict(MUT=0,VMAP=1,**({'MU':1} if MU else {})),'writer_programme':dict(MUT=0,VMAP=1),
+        'writer':dict(MUT=0,VMAP=1,**({'MU':1} if MU else {})),'writer_programme':dict(MUT=0,VMAP=1,**({'RCOPIES':3,'SRAM':1} if MU else {})),   # MU5: root table SRAM + 3 reset copies
         'link':dict(MUT=0,NL=2,NTX=d2d_ntx_k(),PR=1,TXDP=d2d_txdp_k() if root == ROOT else compiled_txdp(root=root)),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),

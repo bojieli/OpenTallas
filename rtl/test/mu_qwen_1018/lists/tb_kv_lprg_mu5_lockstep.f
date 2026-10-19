@@ -1,0 +1,5 @@
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv

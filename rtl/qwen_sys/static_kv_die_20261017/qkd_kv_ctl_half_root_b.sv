@@ -12,7 +12,7 @@
 // as a writer lane 0 word (kvjc3_pc_chain writer_ages).  Boot is elastic (init phase): no compiled slot is added.
 // MUT (bench only): root2_b 1 = a boot word overrides a writer edge with no fault.
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0) (
+module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0, parameter integer RCOPIES = 1) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [4*288-1:0] es,
@@ -41,6 +41,13 @@ module qkd_kv_es_fan_root2_b #(parameter integer MUT = 0) (
     // ---- pin flops (identical to qkd_kv_es_fan_root) ----
     (* keep *) reg rs_q;
     always @(posedge ck) rs_q <= rst_n;
+    // KV-GRP-CTL/MU5 10-19: RCOPIES > 1 = that many KEPT identical copies of rs_q (family wire g_rc.rsv, ot_rst_split)
+    // for the synthesis reset-relay split (physical/common_flow/ot_rst_copies.py); default 1 = unchanged.
+    generate if (RCOPIES > 1) begin : g_rc
+        (* keep *) reg [RCOPIES-2:0] rc_q;
+        always @(posedge ck) rc_q <= {(RCOPIES-1){rst_n}};
+        (* keep, ot_rst_split *) wire [RCOPIES-1:0] rsv = {rc_q, rs_q};
+    end endgenerate
     reg [4*288-1:0] es_p; reg [19:0] dpc_p, epc_p; reg [1:0] dst_p, gen_p, est_p, egen_p;
     reg [58:0] id_p, eid_p; reg [28:0] ea_p; reg [17:0] tok_p; reg [15:0] ep_p; reg [7:0] ca_p; reg [63:0] cd_p;
     reg [3:0] ev_p; reg ss_p, cw_p;

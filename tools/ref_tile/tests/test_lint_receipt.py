@@ -119,5 +119,38 @@ class Receipt(unittest.TestCase):
         self.assertIn('refusing', res['error'])
 
 
+
+
+class NativeDataDependency(unittest.TestCase):
+    def test_helper_only_edit_changes_receipt_identity(self):
+        with tempfile.TemporaryDirectory() as d:
+            root, yosys = make_root(d)
+            here = root/'tools/ref_tile'; here.mkdir(parents=True)
+            for name in L.TOOL_FILES:
+                (here/name).write_text('# immutable Python implementation\n')
+            data = root/L.TOOL_DATA_FILES[0]; data.parent.mkdir(parents=True)
+            data.write_text('# native family implementation one\n')
+            with mock.patch.object(L, 'HERE', here):
+                a = L.key_of(L.components('policy',spec(),root,yosys))
+                data.write_text('# native family implementation two\n')
+                b = L.key_of(L.components('policy',spec(),root,yosys))
+            self.assertNotEqual(a,b)
+
+    def test_extracted_fleet_archive_imports_actual_generator(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as extracted:
+            root, _ = make_root(d)
+            payload = L.payload('policy',spec(),root,'test-key')
+            with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as archive:
+                self.assertTrue(set(L.TOOL_DATA_FILES) <= set(archive.getnames()))
+                archive.extractall(extracted)
+            script = ('import sys; sys.path.insert(0,'+repr(str(Path(extracted)/'tools/ref_tile'))+'); '
+                      'import clock_entry_constraints as C; '
+                      'assert "proc ot_cf_refresh" in C.CLOCK_FAMILY_TCL; print("GENERATOR_IMPORT_PASS")')
+            result = subprocess.run([sys.executable,'-I','-c',script],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            self.assertIn('GENERATOR_IMPORT_PASS',result.stdout)
+
+
 if __name__ == '__main__':
     unittest.main()
