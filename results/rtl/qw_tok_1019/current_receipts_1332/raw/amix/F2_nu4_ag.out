@@ -1,0 +1,19 @@
+# case F2_nu4_ag env DV2_FACE=2 DV2_MU_NU=4 args a b c d e f g i j --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G2/F2_nu4 host ot-epyc7 2026-10-19T12:29:34-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: PASS 24/24
+bench2 (b) MUT=0: PASS 8192/8192
+bench2 (c) MUT=0: PASS 640/640
+bench2 (d) MUT=0: PASS 256/256
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: PASS 1024/1024
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         162
+  consumer norm / scale (683 rows)             86             86         113
+  QK sum of squares (128)                      16             16          83
+  QK norm (128)                                16             16          43
+  SiLU * up (128)                              16             16         123
+bench2 (g) MUT=0: PASS 5/5
+bench2 (i) MUT=0: PASS 3/3
+bench2 (j) MUT=0: PASS 3/3
+# exit 0
