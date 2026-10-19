@@ -11,7 +11,7 @@ for token in 0 65536 151935;do
  "$out/obj/Vtb_embedding_join" +TOKEN="$token" +VECTORS="results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token$token" > "$out/token$token.log" 2>&1
  grep '^JOIN_PASS' "$out/token$token.log"
 done
-for mut in 1 2 3 4 5 6;do
+for mut in 1 2 3 4 5 6 7 8;do
  if "$out/obj/Vtb_embedding_join" +TOKEN=65536 +VECTORS=results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536 +MUT="$mut" > "$out/mut$mut.log" 2>&1;then echo "FAIL mutant$mut escaped";exit 1;fi
  grep 'JOIN_FAIL' "$out/mut$mut.log"
 done

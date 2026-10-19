@@ -24,7 +24,7 @@ module tb_embedding_join;
   if(cyc>=FILL+3&&cyc<FILL+67)begin pw_v=1;pw_idx=6'(cyc-FILL-3);pw_data=row[pw_idx];end
   if(mut==4&&cyc==FILL+66)pw_v=0;
   if(mut==5)core_start=(cyc==FILL+66);
-  if(cyc==EMB)cmd={4'hE,ETOK,357'd0,1'b0};
+  if(cyc==EMB)cmd={4'hE,(ETOK+((mut==7)?18'd1:18'd0)),357'd0,1'b0};
  end
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
@@ -40,7 +40,7 @@ module tb_embedding_join;
  .visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(n_done),.native_ret(n_ret),.fault(n_fault));
  qfd_embedding_word_provider prov(.ck(clk),.rst_n(rst_n),.word_v(pw_v),.word_data(pw_data),.word_token(ETOK+((mut==1)?18'd1:18'd0)),.word_index(pw_idx),
  .word_scale(pw_scale),.word_epoch(EEP+((mut==2)?16'd1:16'd0)),.expected_word_slot(cyc>=FILL+2&&cyc<FILL+67),.expected_token(ETOK),.expected_word(pw_idx),.expected_scale(pw_scale),
- .expected_epoch(EEP),.fill_begin(fill_begin),.fill_token(ETOK),.fill_epoch(EEP),.core_start(core_start),.core_token(ETOK+((mut==3)?18'd1:18'd0)),.core_epoch(EEP+((mut==6)?16'd1:16'd0)),
+ .expected_epoch(EEP),.fill_begin(fill_begin),.fill_token(ETOK),.fill_epoch(EEP),.core_start(core_start),.core_token(ETOK+((mut==3)?18'd1:18'd0)),.core_epoch(EEP+((mut==6)?16'd1:(mut==8)?16'd4:16'd0)),
  .embed_code_re(e_cre),.embed_code_addr(e_caddr),.embed_code_q(e_cq),.embed_scale_re(e_sre),.embed_scale_addr(e_saddr),.embed_scale_q(e_sq),
  .fault(p_fault));
 
