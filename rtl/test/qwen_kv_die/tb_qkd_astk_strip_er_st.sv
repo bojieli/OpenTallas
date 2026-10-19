@@ -19,8 +19,12 @@
 `ifndef KVD_RL
 `define KVD_RL 1
 `endif
+// +define+KVD_ZAGE=<age>: the compiler's Z start age (cal[31:16]); default 1000 (the RL 1 calendar).
+`ifndef KVD_ZAGE
+`define KVD_ZAGE 1000
+`endif
 module tb_qkd_astk_strip_er_st;
- localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=1000, Z_STRIDE=16, N=4;
+ localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=`KVD_ZAGE, Z_STRIDE=16, N=4;
  function automatic [31:0] score_word(input integer eng,addr,head);
   score_word=32'h30000000 | (eng<<12) | (addr<<2) | head;
  endfunction
@@ -149,8 +153,8 @@ module tb_qkd_astk_strip_er_st;
    @(negedge ck);
   end
   if(mism!=0)begin errors=errors+1;$display("FAIL lockstep mismatches=%0d",mism);end
-  if(errors==0)$display("PASS qkd_astk_strip_er_st lockstep vs qkd_astk_native_stack_w4_cal: %0d edges, scores %0d, lmax %0d, Z %0d, e reads %0d, erf %b, mut %0d, RL %0d",
-   cycle,score_checks,lmax_words,z_words,reads,erf_b,`KVD_STMUT,`KVD_RL);
+  if(errors==0)$display("PASS qkd_astk_strip_er_st lockstep vs qkd_astk_native_stack_w4_cal: %0d edges, scores %0d, lmax %0d, Z %0d, e reads %0d, erf %b, mut %0d, RL %0d, Z age %0d",
+   cycle,score_checks,lmax_words,z_words,reads,erf_b,`KVD_STMUT,`KVD_RL,`KVD_ZAGE);
   else $display("FAIL qkd_astk_strip_er_st errors=%0d mismatches=%0d mut %0d RL %0d",errors,mism,`KVD_STMUT,`KVD_RL);
   $finish;
  end
