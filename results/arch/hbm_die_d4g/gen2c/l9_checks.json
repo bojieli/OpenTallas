@@ -1,49 +1,10 @@
 {
- "contract": "GEN2 net/contract.json + l7_wire + l9 (local check 10-19)",
- "verdict": "FAIL",
- "fails": [
-  {
-   "cls": "RC",
-   "src": [
-    "sucore_SW",
-    "red_tag",
-    0
-   ],
-   "dst": [
-    "cxrc_SW_q",
-    "red_tag",
-    0
-   ],
-   "w": 32,
-   "bad": [
-    "unequal relay stages across bits [9, 10]"
-   ]
-  },
-  {
-   "cls": "RC",
-   "src": [
-    "sucore_NW",
-    "red_tag",
-    0
-   ],
-   "dst": [
-    "cxrc_NW_q",
-    "red_tag",
-    0
-   ],
-   "w": 32,
-   "bad": [
-    "unequal relay stages across bits [9, 10]"
-   ]
-  }
- ],
- "stale_gaps": [
-  "G-CIL-INJ",
-  "G-SMVM-XCMD"
- ],
- "open_gaps": [
-  "G-CIL-RC"
- ],
+ "contract": "GEN2 net/contract.json -> l7_wire -> l9_gen2c_views (local check 10-19)",
+ "functional": "PASS",
+ "fail_paths": 0,
  "paths": 1160,
- "strict_bind": "DIE_PORT_BIND PASS masters=148 instances=57209 input_unconnected=0 input_tied=0 (l9 on GEN2 net/contract.json)"
+ "stale_gaps": [],
+ "open_gaps": [],
+ "strict_bind": "DIE_PORT_BIND PASS masters=148 instances=57211 input_unconnected=0 input_tied=0 undriven=0 multi_driven=0",
+ "views": "v16_views: 190 cells, SYNTH 125, ROUTED_UNBOUND 65 (GEN2: 188 / 129 / 59)"
 }

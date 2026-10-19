@@ -242,6 +242,81 @@
   "new_edges": 4,
   "argmax_bits": 264
  },
+ "equal_age": [
+  {
+   "sink": "cxrc_NW_q.red_tag",
+   "producer": "sucore_NW.red_tag",
+   "stages": [
+    9,
+    10
+   ],
+   "padded_to": 10,
+   "short_trees": [
+    "rf1277_s008_l0"
+   ]
+  },
+  {
+   "sink": "cxrc_SW_q.red_tag",
+   "producer": "sucore_SW.red_tag",
+   "stages": [
+    9,
+    10
+   ],
+   "padded_to": 10,
+   "short_trees": [
+    "rf1279_s008_l0"
+   ]
+  }
+ ],
+ "equal_age_unpadded": [
+  {
+   "sink": "hb_idx__ctl.topk_o_base",
+   "producer": "col_idx.rec",
+   "stages": [
+    8,
+    13
+   ]
+  },
+  {
+   "sink": "hb_idx__op_NW.vm_rr",
+   "producer": "hb_idx__nwsh.a_rr",
+   "stages": [
+    31,
+    32
+   ]
+  }
+ ],
+ "pads": [
+  {
+   "after": "rf1277_s008_l0",
+   "to": "cxrc_NW_q",
+   "pads": 1,
+   "master": "hbfd_rly_48_NS"
+  },
+  {
+   "after": "rf1279_s008_l0",
+   "to": "cxrc_SW_q",
+   "pads": 1,
+   "master": "hbfd_rly_48_SN"
+  }
+ ],
+ "closed_gaps": [
+  {
+   "id": "G-CIL-INJ",
+   "paths": 200,
+   "evidence": "RELEASE_TREE H.STA.WIRE.1 (SU<->COLL inject cic/cxij/cij wired on GEN2; l7_wire INJ_RET 9 / B39_NOOP 1; GEN2b slice bench 4/4 PASS, 4 mutants FAIL)"
+  },
+  {
+   "id": "G-CIL-RC",
+   "paths": 84,
+   "evidence": "RELEASE_TREE H.STA.WIRE.5 (RC bound); red_tag equal age restored by the l9 pads (was 9/10 stages SW/NW)"
+  },
+  {
+   "id": "G-SMVM-XCMD",
+   "paths": 296,
+   "evidence": "RELEASE_TREE H.STA.WIRE.3 (static x-load issuer xl_<q>_ctl + xcal + xq -> sm on the die, own calendar)"
+  }
+ ],
  "table": [
   {
    "cls": "A",
@@ -391,8 +466,9 @@
    "note": "not a die instance: bound by the hcoll q2/q3 parent kits"
   }
  ],
+ "functional_fail": 0,
  "instances_before": 57198,
- "instances_after": 57209,
+ "instances_after": 57211,
  "problems": [],
  "verdict": "PASS"
 }

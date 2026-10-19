@@ -326,6 +326,137 @@ def idx_pair(c, rtl, problems, rep):
                       argmax_bits=W)
 
 
+RLY = re.compile(r'^hbfd_rly_(\d+)_(EW|WE|NS|SN)$')
+SITE = re.compile(r'lane row (\S+) (\d+)/(\d+) (EW|WE|NS|SN); site \(([-\d.]+), ([-\d.]+)\) um')
+STEP = {'SN': (0, 130.0), 'NS': (0, -130.0), 'WE': (130.0, 0), 'EW': (-130.0, 0)}
+
+
+def equal_age_pads(c, problems, rep, scope=None):
+    """EQUAL AGE per consumer port (root-clocked relay paths only).  The relay layer (relay_layer_d4f.py) packs a
+    port's bits into several buses by bundle (sucore_<q>.red_tag[7:0] rides 'red_tag+red_x', red_tag[31:8] rides
+    'red_sv+red_tag') and pads each bus tree to its own sinks, never across trees that meet at one consumer port: on
+    GEN2 cxrc_SW/NW red_tag arrived 10 / 9 stages (red_x 10, red_sv 9).  For every consumer port whose bits arrive
+    with unequal relay stage counts, the shorter trees get root-clocked pad stations (same relay master as their last
+    station, same clock/reset) between their last station and THIS consumer instance (every port of it the tree
+    feeds, so the co-travelling bits of other ports keep their mutual age).  Paths through landings are skipped
+    (landed latency = the land plan's K/E)."""
+    I = c['instances']
+    for it in range(4):
+        drv = {}
+        for e in c['edges']:
+            si, sp, slo, shi = e['source']; ki, kp, klo, khi = e['sink']
+            for b in range(khi - klo):
+                drv[(ki, kp, klo + b)] = (si, sp, slo + b)
+        todo = {}
+        sinks = collections.defaultdict(set)
+        for (ki, kp, kb) in drv:
+            if not I.get(ki, {}).get('master', '').startswith('hbfd'):
+                sinks[(ki, kp)].add(kb)
+        for (ki, kp), bits in sorted(sinks.items()):
+            groups = collections.defaultdict(dict)    # producer port -> {bit: (stages, last station)}
+            landed = set()
+            for b in bits:
+                cur, n, last = (ki, kp, b), 0, None
+                while True:
+                    d = drv.get(cur)
+                    if d is None:
+                        break
+                    si, sp, sb = d; m = I[si]['master']
+                    if m.startswith('hbfd') and sp in ('o', 'b'):
+                        if not RLY.match(m):
+                            landed.add(b)
+                        if last is None:
+                            last = si
+                        n += 1
+                        w = I[si]['ports']['i' if sp == 'o' else 'a']['bits']
+                        cur = (si, 'i' if sp == 'o' else 'a', sb % w); continue
+                    break
+                if n and d is not None and b not in landed:
+                    groups[(d[0], d[1])][b] = (n, last)
+            # one producer WORD (same producer port -> same consumer port) must arrive at one age; bits of different
+            # producers merged into one consumer port (fault ORs, status vectors) are separate words
+            for src, per in sorted(groups.items()):
+                counts = {v[0] for v in per.values()}
+                if len(counts) < 2:
+                    continue
+                tgt = max(counts)
+                if scope is not None and (ki, kp) not in scope:
+                    # not a compiled functional path: report only (latency of these words is not ours to move here)
+                    if it == 0:
+                        rep['equal_age_unpadded'].append(dict(sink=f'{ki}.{kp}', producer=f'{src[0]}.{src[1]}',
+                                                              stages=sorted(counts)))
+                    continue
+                for b, (n, last) in per.items():
+                    if n < tgt:
+                        k = (last, ki)
+                        if todo.get(k, tgt - n) != tgt - n:
+                            problems.append(f'equal age: tree end {last} -> {ki} needs two pad depths')
+                        todo[k] = tgt - n
+                rep['equal_age'].append(dict(sink=f'{ki}.{kp}', producer=f'{src[0]}.{src[1]}', stages=sorted(counts),
+                                             padded_to=tgt, short_trees=sorted({v[1] for v in per.values() if v[0] < tgt})))
+        if not todo:
+            return
+        for (last, ki), d in sorted(todo.items()):
+            L = I[last]; m = L['master']; mm = RLY.match(m)
+            if not mm:
+                problems.append(f'equal age: {last} is not a root-clocked relay ({m})'); continue
+            W = L['ports']['i']['bits']
+            sm = SITE.search(L.get('note') or '')
+            if not sm:
+                problems.append(f'equal age: {last} has no lane-row site'); continue
+            flow = sm.group(4); x, y = float(sm.group(5)), float(sm.group(6))
+            prev = last
+            stem = re.sub(r'_s\d+_l(\d+)$', r'_kq\g<1>', last)
+            crs = [x_ for x_ in c['clock_resets'] if x_['instance'] == last]
+            for j in range(d):
+                pn = f'{stem}_{ki}_p{j}'
+                if pn in I:
+                    problems.append(f'equal age: {pn} exists'); break
+                x += STEP[flow][0]; y += STEP[flow][1]
+                I[pn] = dict(copy.deepcopy(L), region=REGION,
+                             note=f'{REGION}: equal-age pad {j + 1}/{d} of {last} toward {ki}; lane row {pn} 0/1 {flow}; '
+                                  f'site ({x:.1f}, {y:.1f}) um')
+                c['edges'].append(dict(name=f'{pn}__t', bits=W, source=[prev, 'o', 0, W], sink=[pn, 'i', 0, W],
+                                       clock=crs[0]['domain'] if crs else 'stream', ready_or_credit=False,
+                                       allowed_exception=None, basis=f'{REGION}: equal-age pad chain', region=REGION))
+                for x_ in crs:
+                    c['clock_resets'].append(dict(x_, instance=pn, note=f'{REGION}: equal-age pad (as {last})'))
+                prev = pn
+            for e in c['edges']:
+                if e['source'][0] == last and e['sink'][0] == ki:
+                    e['source'] = [prev] + e['source'][1:]
+                    e['basis'] = (e.get('basis') or '') + f' | {REGION}: via equal-age pad(s) {d}'
+            rep['pads'].append(dict(after=last, to=ki, pads=d, master=m))
+    problems.append('equal age: not converged in 4 passes')
+
+
+GAP_EVIDENCE = {
+    'G-CIL-INJ': 'RELEASE_TREE H.STA.WIRE.1 (SU<->COLL inject cic/cxij/cij wired on GEN2; l7_wire INJ_RET 9 / B39_NOOP 1; '
+                 'GEN2b slice bench 4/4 PASS, 4 mutants FAIL)',
+    'G-SMVM-XCMD': 'RELEASE_TREE H.STA.WIRE.3 (static x-load issuer xl_<q>_ctl + xcal + xq -> sm on the die, own calendar)',
+    'G-CIL-RC': 'RELEASE_TREE H.STA.WIRE.5 (RC bound); red_tag equal age restored by the l9 pads (was 9/10 stages SW/NW)',
+}
+
+
+def sync_gaps(c, rep):
+    """as l7_wire: a gap whose compiled functional paths ALL pass bit-exactly (d4g_functional_bind, fork stations followed,
+    split parents resolved) is closed (kept, status 'closed' + closed_by with the evidence)."""
+    sys.path.insert(0, str(ROOT / 'tools' / 'hbm_die_v16'))
+    import d4g_functional_bind as FB
+    res = FB.check(c, FB.spec()) + FB.check_params(c, FB.param_rules())
+    st = collections.defaultdict(list)
+    for r in res:
+        st[r['gap']].append(r['status'])
+    for g in c.get('gaps', []):
+        s = st.get(g['id'])
+        if s and all(x == 'PASS' for x in s) and g.get('status') != 'closed':
+            g['status'] = 'closed'
+            g['closed_by'] = (f'{REGION}: tools/hbm_die_v16/d4g_functional_bind.py -- all {len(s)} compiled producer->consumer '
+                              f'paths/slot rules of this gap bound bit-exactly in this contract; ' + GAP_EVIDENCE.get(g['id'], ''))
+            rep['closed_gaps'].append(dict(id=g['id'], paths=len(s), evidence=GAP_EVIDENCE.get(g['id'], '')))
+    rep['functional_fail'] = sum(1 for r in res if r['status'] != 'PASS')
+
+
 def validate(c, problems, dup_ok=frozenset()):
     I = c['instances']
     seen = collections.defaultdict(int)
@@ -358,10 +489,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('contract'); ap.add_argument('out'); ap.add_argument('--report', required=True)
     ap.add_argument('--no-cx', action='store_true'); ap.add_argument('--no-idx-pair', action='store_true')
+    ap.add_argument('--no-pads', action='store_true')
     a = ap.parse_args()
     c = load(a.contract)
     rtl = F.Rtl(); problems = []
-    rep = dict(schema='opentallas.hbm_d4g_l9_gen2c_views.v1', input=str(a.contract), cx=[], idx={},
+    rep = dict(schema='opentallas.hbm_d4g_l9_gen2c_views.v1', input=str(a.contract), cx=[], idx={}, equal_age=[], equal_age_unpadded=[], pads=[], closed_gaps=[],
                table=[dict(cls=t[0], master=t[1], instances=t[2], view=t[3], note=t[4]) for t in TABLE])
     n0 = len(c['instances'])
     dup_before = frozenset(k for k, v in collections.Counter(e['name'] for e in c['edges']).items() if v > 1)
@@ -369,7 +501,13 @@ def main():
         split_cx(c, rtl, problems, rep)
     if not a.no_idx_pair:
         idx_pair(c, rtl, problems, rep)
+    if not a.no_pads:
+        sys.path.insert(0, str(ROOT / 'tools' / 'hbm_die_v16'))
+        import d4g_functional_bind as FB
+        scope = {(x['dst'][0], x['dst'][1]) for x in FB.resolve_split(c, FB.spec())}
+        equal_age_pads(c, problems, rep, scope)
     validate(c, problems, dup_before)
+    sync_gaps(c, rep)
     c['masters'] = dict(sorted(collections.Counter(i['master'] for i in c['instances'].values()).items()))
     s = c.get('summary', {})
     s.update(instances=len(c['instances']), masters=len(c['masters']), edges=len(c['edges']),
