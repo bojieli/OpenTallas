@@ -125,6 +125,35 @@
     "hf_7N": "l0 N 58 vs 59: add one half-cycle station on l0 (plan) or a D16 tile",
     "x_frame": "24 frames: lane N 6/6/6/7 at one E -> ages differ by 1; crs4 D4 window does not fit K+1; equal N per frame bundle in dv_plan (or a D8 crs4) -- frame owner; frame x lanes also lack the G1 hop-0 gate"
    }
+  },
+  {
+   "id": "G9",
+   "owner": "UNOWNED (no die lead): proposed new lane S81-HEADDIE under the coordinator; head die is a fifth die type, not one of the four die designs in results/fleet_viz/die_sources.json",
+   "severity": "blocks TOK.DS.LAYER.5 (LM head: head.hc_pre/norm.*, head.lm_head, head.argmax, head.argmax_merge, token.return) and TOK.DS.LAYER.6 (MTP draft: draft.head x5, draft.markov x5, draft.fixed): 19 ops GAP in lowering_head.json / lowering_mtp_draft.json",
+   "module": "head die (DeepSeek-V4.1 ROM array: 4 head dies at the ring's close -- LM head 129,280 x 5120 vocab quarter per die, DSpark drafter + Markov head, embedding, draft KV 112 SRAM macros, 8192-row ROM macros ping-pong, 4 HBM stacks per C10; docs/ARCHITECTURE_ATLAS.html 6.4 'Head and table dies', docs/ARCH_V41_RACK.md C10 + K2)",
+   "port": "no die top / GEN / bind of record: results/arch/s81_dv_1016/SPEC.md line 385 'LM head / argmax: on the head dies; unchanged by this die'; p4l/p4l3 bind tables hold no head master (only dsdv_svc_sx_hrow)",
+   "missing": "a head-die netlist (die top + bind table + strict die_port_bind) for dv_layer_compile to target; docs/ARCH_V41_RACK.md K2 'routed head-die floorplan' still open",
+   "existing": {
+    "rtl": [
+     "rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv + ot_rom_argmax_rows.sv (head argmax, R=128 return lanes, 32,320 rows/rank)",
+     "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv (+ L1 fused DSpark draft head, FH param, addend memory behavioural) and tb_dsrom_s81_fused_head_tp4.sv (TP4 rank chain, argmax_merge + broadcast)",
+     "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340(_h).sv, ot_dsrom_markov_bundle_glue.sv, ot_dsrom_mtp_seed_*.sv, ot_dsrom_mtp_seq.sv, ot_dsrom_mtp_link_rtt.sv, ot_dsrom_mtp_hrow_*.sv"
+    ],
+    "hardened": [
+     "physical/dsrom_fh_safe/closed/{elemA,elemB}/ot_dsrom_head_elem (closed 10-07, old SS flow)",
+     "physical/dsrom_fh_safe/closed/glue/ot_dsrom_head_bundle_glue",
+     "physical/dsrom_fh_safe/closed/ctl_oreg2|ctl_oreg3/ot_hdc_v41_fh_ctl",
+     "physical/dsrom_markov_head_driver (route kit)",
+     "physical/mtp_link_rtt/view_f9r10_d23p1_09dc8fad4 ot_dsrom_mtp_lrx_rtt"
+    ],
+    "fixtures": "HEAD fixture bit-exact (dv_layer_fixtures.py --layer HEAD, vocab quarter per rank); MTP fixture 572 ops (lb2-s81-mtp a64ea3dba)"
+   },
+   "plan": [
+    "1. (fast, unblocks a measured head number) head-layer vehicle bench: tb_dsrom_s81_fused_head_tp4 driven from the HEAD/MTP fixtures (LG = lm_head ROM-field accepted writes at the p4l field return rate, MK = Markov rows), Verilator 5.050 on the fleet; reports argmax + argmax_merge + broadcast cycles; lm_head matvec cycles from the ROM field element bench (same element as layer dies, 8192-row macro variant) -- composed, not a die run",
+    "2. head-die spec (cut analysis before RTL): element = the layer-die ROM field element with 8192-row macros + ot_dsrom_head_elem return path + head argmax per rank; drafter = markov head + fused-head addend banked per return lane (row-congruent placement); embedding + draft-KV SRAM; ring/serdes from the S81 lep/pdie lanes",
+    "3. die GEN + strict die_port_bind (same dv_bind flow as p4l3, landed crossings, neighbour clocking), then recut + dv_layer_compile --layer HEAD/mtp_draft on it"
+   ],
+   "status": "OPEN 10-18 22:55 (TOK-S81-GAPS/HEAD research): no head-die netlist exists; head/MTP layer runs cannot be measured on a die until step 3; step 1 is the interim measured vehicle"
   }
  ]
 }
