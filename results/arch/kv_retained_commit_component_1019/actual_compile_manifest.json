@@ -54,7 +54,12 @@
     },
     {
       "path": "results/arch/kv_retained_commit_component_1019/private/actual_ingress_reset_tb.sv",
-      "sha256": "c09b72399642a3624ec9e39a3afc51583ecd72e67ee4c5d0c4a3731731e5be3b"
+      "sha256": "8a4d72da871265f40ba205311aa2e2a271f71e852d91004a15d4428fb480a59c"
     }
-  ]
+  ],
+  "causal_mutant": {
+    "parameter": "ING_MUT=1",
+    "mechanism": "existing actual qkd_host_rx_class_admission MUT bypasses reservation",
+    "expected": "RESERVED_CSR_RESTART or RESERVATION_EXCLUSION_MISSING"
+  }
 }

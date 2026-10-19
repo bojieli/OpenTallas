@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Source-legal COMPONENT trace. Boot/link/drain inputs are explicit conditional
 // producers, not complete package receipts. No forced DUT state or reset input.
-module actual_ingress_reset_tb;
+module actual_ingress_reset_tb #(parameter ING_MUT=0);
  reg raw_por_n=0,refclk=0;always #1 refclk=~refclk;
  wire ck,locked; wire qualified_por=raw_por_n&&locked;
  qkd_pll_analog_model pll(.refclk(refclk),.por_n(raw_por_n),.pll_c(ck),.locked(locked));
@@ -16,7 +16,7 @@ module actual_ingress_reset_tb;
  .host_quiet(launch_quiet),.upstream_quiet(1'b1),.group_drained(32'hffffffff),.group_fault(32'b0),
  .native_mode(native),.ownership_valid(valid),.native_reserved(reserved),.active(active),.done(done),.configured(configured),.cycle(cycle),.fault(calendar_fault),.fault_code(fault_code));
  reg rx_v=0;reg[527:0]rx_d=0;wire rx_cr,host_v,host_cr,ingress_fault,launch_quiet,deferred,admission_open;wire[511:0]host_d;
- qkd_host_rx_class_admission ingress(.ck(ck),.rst_n(host_rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(rx_cr),
+ qkd_host_rx_class_admission #(.MUT(ING_MUT)) ingress(.ck(ck),.rst_n(host_rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(rx_cr),
  .native_reserved(reserved),.ownership_valid(valid),.host_v(host_v),.host_d(host_d),.host_cr(host_cr),
  .ctrl_cr(1'b0),.ing_crn(5'b0),.fault(ingress_fault),.launch_quiet(launch_quiet),.deferred(deferred),.admission_open(admission_open));
  wire tx_v;wire[511:0]tx_d;reg tx_cr=0;wire bridge_fault;
