@@ -434,6 +434,8 @@ def benches(kind):
     # mutant 6 (the in-tile core reset relay bypassed: children leave reset 3 edges early), 7 (u_bcdc0 input legs one stage
     # short), 8 (o_pc0 landing-calendar relay bypassed)
     sh = f'KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{kind}_m{{M}} {kind} {{M}}'
+    if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+        sh = 'OT_KV_DOMSPLIT=1 ' + sh
     wit = os.environ.get('KVS_KIT_RES', WIT)
     b = [dict(name=f'{kind}_lockstep', cmd=sh.replace('{M}', '0'), expect='pass', threads=4, peak_ram_gb=8,
               needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={kind} .* errors=0 mut=0',
