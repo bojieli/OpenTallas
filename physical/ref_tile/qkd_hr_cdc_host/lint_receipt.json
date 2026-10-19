@@ -128,14 +128,14 @@
     },
     "tool": {
      "cdc_sync_constraints.py": "a19cd09032f4060592af8e1590392e673095e686a15c75f0d041018de7bceb22",
-     "clock_entry_constraints.py": "e72e8beda5521c2f504b8de5ca70f672da9a6d4538c0c828fef201031565735c",
+     "clock_entry_constraints.py": "50e48bf7b88c5540f38b60ba9118bb34f0c319897b5769a3dbd37d413fb604ea",
      "gray_fifo_cdc_constraints.py": "e281f191526d4ffdcb9ab927607fe878679d04a5659b1e39d98f9166fe0a62d3"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T04:36:31-0700",
+   "created": "2026-10-19T04:37:24-0700",
    "host": "ot-epyc7",
-   "key": "0f1208d13deb889a24342db6fa9cafd9537bf9839c76af732d29f685b8e5126b",
+   "key": "9746d77980a556db8063eb5151b9e480be86e2b62962f9e1775563a60ff426d9",
    "record": {
     "counts": {
      "consumer": 0,
@@ -67270,7 +67270,7 @@
      "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_cdc.sv": "40ba47533b84ed2269eccf818b5aab5c7c255e791d45e3292b117d64db66b126"
     }
    },
-   "seconds": 14
+   "seconds": 16
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
