@@ -196,4 +196,39 @@ class ExpansionParameters(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'ledger incomplete'):
                 B.main(args)
 
+    def test_dynamic_leaf_also_in_native_bindings_requires_ledger(self):
+        self.expand()
+        p=self.run/'expand.json'; report=json.loads(p.read_text())
+        report.pop('parameter_instances'); report['leaves']={}; report.pop('frames',None)
+        p.write_text(json.dumps(report))
+        index={}
+        for mod,file in self.rtl.items():
+            for module in B.PB.parse_modules((self.root/file).read_text(),str(self.root/file)):
+                index[module.name]=module
+        configured=dict(E.K.BINDINGS)
+        for mod,file in self.rtl.items():
+            configured[mod]=dict(module=mod,file=file,ports={'a':['a'],'y':['y']})
+        args=[str(self.run/'case_kv/die.v'),'--expanded',str(p),'--out-dir',str(self.root/'bound'),
+              '--diagnostic-parameter-profiles']
+        with patch.object(E,'RTL',{}), patch.object(E.K,'BINDINGS',configured), \
+             patch.object(B.PB,'rtl_index',return_value=(index,{})):
+            with self.assertRaisesRegex(ValueError,'ledger incomplete'):
+                B.main(args)
+
+    def test_genuinely_nonexpanded_native_binding_compatible(self):
+        mod='ot_qwen_tp8_pv_slice_t'
+        d=self.run/'case_kv/die.v'
+        d.write_text(d.read_text().replace(' keep k',f' {mod} direct (.a(n_a),.y(n_y[0]));\n keep k'))
+        self.expand()
+        index={}
+        for module,file in self.rtl.items():
+            for entry in B.PB.parse_modules((self.root/file).read_text(),str(self.root/file)):
+                index[entry.name]=entry
+        configured=dict(E.K.BINDINGS)
+        configured[mod]=dict(module=mod,file=self.rtl[mod],ports={'a':['a'],'y':['y']})
+        args=[str(d),'--expanded',str(self.run/'expand.json'),'--out-dir',str(self.root/'bound'),
+              '--diagnostic-parameter-profiles']
+        with patch.object(E.K,'BINDINGS',configured), patch.object(B.PB,'rtl_index',return_value=(index,{})):
+            B.main(args)
+
 if __name__=='__main__': unittest.main(verbosity=2)
