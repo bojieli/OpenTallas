@@ -1,0 +1,83 @@
+{
+  "schema": "opentallas.safe_collective.regional_model.v1",
+  "status": "MODEL_ONLY_NO_IMPLEMENTATION_OR_GATE_ADOPTION",
+  "rows": [
+    {
+      "variant": "current",
+      "LU": 53,
+      "LS": 378,
+      "spans": {
+        "AR256": 797,
+        "ARGMAX1": 446
+      },
+      "P_R_banks_per_ring": 2,
+      "P_R_total_macro_area_um2": 57596.832,
+      "token_added_cycles": 0,
+      "token_cycles": 249577,
+      "added_cycles_percent": 0.0,
+      "throughput_loss_percent": 0.0
+    },
+    {
+      "variant": "A_unqualified_E2_target",
+      "LU": 61,
+      "LS": 386,
+      "spans": {
+        "AR256": 821,
+        "ARGMAX1": 462
+      },
+      "P_R_banks_per_ring": 2,
+      "P_R_total_macro_area_um2": 57596.832,
+      "token_added_cycles": 1744,
+      "token_cycles": 251321,
+      "added_cycles_percent": 0.6987823397188042,
+      "throughput_loss_percent": 0.6939332566717465
+    },
+    {
+      "variant": "B_gated_final_capture_model",
+      "LU": 65,
+      "LS": 390,
+      "spans": {
+        "AR256": 833,
+        "ARGMAX1": 470
+      },
+      "P_R_banks_per_ring": 4,
+      "P_R_total_macro_area_um2": 115193.664,
+      "token_added_cycles": 2616,
+      "token_cycles": 252193,
+      "added_cycles_percent": 1.0481735095782063,
+      "throughput_loss_percent": 1.037300797405162
+    }
+  ],
+  "landing_lane_widths": [
+    150,
+    150,
+    150,
+    150,
+    152,
+    152,
+    152,
+    152,
+    154,
+    153,
+    153,
+    153,
+    139,
+    139,
+    139,
+    138
+  ],
+  "total_bundle_bits": 2376,
+  "target_A_payload_state_bits": 11880,
+  "target_A_full_metadata_state": "UNDEFINED UNTIL INDEPENDENT RTL/SAFETY QUALIFICATION; payload count is not total",
+  "concrete_B_FIRST1_state_upper_bits": 23252,
+  "concrete_B_FIRST0_state_upper_bits": 23220,
+  "concrete_B_ICG_latches_FIRST1": 144,
+  "concrete_B_local_SRAM_macro_area_um2": 0,
+  "B_W180_measured_mapped_state_bits": 1746,
+  "B_W180_measured_area_um2": 616.2237,
+  "B_W180_measured_area_source": "SAFE-QW-LAND 62708ac8f W180; ff0368257 reset fix rebench live; smaller widths unmeasured",
+  "B_added_P_R_macros": 4,
+  "B_added_P_R_storage_bits": 69888,
+  "B_added_P_R_macro_area_um2": 57596.832,
+  "note": "A targets four crossings x2 added edges; B models x3 final-capture increments. Neither is an observed integrated calendar; root phase, startup, first operation and steady workloads require proof."
+}

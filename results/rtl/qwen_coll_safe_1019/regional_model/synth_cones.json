@@ -1,0 +1,39 @@
+{
+  "TX": {
+    "flops": 1155,
+    "flop_area_um2": 337.32288000000017,
+    "combinational_cells": 4699,
+    "combinational_area_um2": 662.3839799999739
+  },
+  "RX": {
+    "flops": 1152,
+    "flop_area_um2": 336.1856400000002,
+    "combinational_cells": 4848,
+    "combinational_area_um2": 716.1550199999984
+  },
+  "CONTROL": {
+    "flops": 99,
+    "flop_area_um2": 36.916559999999954,
+    "combinational_cells": 4917,
+    "combinational_area_um2": 746.6272200000299
+  },
+  "comb_union_cells": 10071,
+  "comb_union_area_um2": 1428.5629800001445,
+  "shared": {
+    "TX_RX": {
+      "cells": 4,
+      "area_um2": 0.37908000000000003
+    },
+    "TX_CONTROL": {
+      "cells": 26,
+      "area_um2": 1.7496
+    },
+    "RX_CONTROL": {
+      "cells": 4367,
+      "area_um2": 694.8536400000215
+    }
+  },
+  "source_archive_sha256": "0703d1de5062858cd576e1a50b34713b0e59af141838dbb56a84099c1b2358c5",
+  "source_odb": "ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_safe-20261019-084346/routes/gate/work/orfs/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/1_synth.odb",
+  "raw_cones_sha256": "a0ef786dd65b5f12e7eaadb6af00e45289b9f9920dbf3bdaec83565ab5461f85"
+}
