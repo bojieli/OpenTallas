@@ -76,6 +76,20 @@ module ot_s81ph_afifo_g_sram #(
     wire re=rrst_n&&have_next;
 `endif
     wire we=wrst_n&&wfire;
+`ifdef S81CTRL_SRAM_BANK64
+    localparam integer NB=(W+63)/64;
+    wire [NB*64-1:0] bank_q;
+    wire [NB*64-1:0] bank_wd={{(NB*64-W){1'b0}},w_d};
+    genvar mb;
+    generate for(mb=0;mb<NB;mb=mb+1) begin:g_bank
+        // Real compiler-native banks. Unused rows and tail bits remain paid.
+        ot_sram_1r1w2c_32x64_m1 u_mem (
+            .wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in({1'b0,ra}),
+            .rd_out(bank_q[mb*64+:64]),.w_ce_in(we),.w_addr_in({1'b0,wa}),
+            .wd_in(bank_wd[mb*64+:64]),.w_mask_in({64{1'b1}}));
+    end endgenerate
+    assign r_d=bank_q[W-1:0];
+`else
     wire [545:0] q;
     // Unused physical rows/columns are paid capacity, not fabricated data lanes.
     ot_sram_1r1w2c_16x546_m1 u_mem (
@@ -83,6 +97,7 @@ module ot_s81ph_afifo_g_sram #(
         .w_ce_in(we),.w_addr_in(wa),.wd_in({{(546-W){1'b0}},w_d}),
         .w_mask_in({546{1'b1}}));
     assign r_d=q[W-1:0];
+`endif
 `ifndef SYNTHESIS
     // Both active addresses must remain distinct at either physical clock edge.
     always @(posedge wclk or posedge rclk)
