@@ -2,7 +2,7 @@
 
 `su_landed_price.load` defaults to zero and requires the exact measured
 SU_LT1/HD_W1301/MU_NU4/FACE1 source plus receipt hash to enable +6 result edges.
-Receipt5753e895b compares candidatec4adbc1c3 to baseline9b41881fe, which already
+Schema-tagged receipt6576b05ca (same measurements as5753e895b) compares candidatec4adbc1c3 to baseline9b41881fe, which already
 includes the separately measured scalar+1. Input events match after explicit
 boot8→10 normalization. All118 S0DD and7 S1SD values/order match and move+6;
 46 input echoes and status/gather outputs retain their ages. Decomposition is

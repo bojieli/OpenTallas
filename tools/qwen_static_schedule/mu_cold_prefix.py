@@ -74,7 +74,11 @@ def validate(m):
     return True
 
 def build(admission,frame,source_text,*,token,position,context_epoch,image_epoch,generation,
-          d2d_rx_age=3,d2d_rx_measured=False,kv_rx_age=2,lp_input_age=3,lp_measured=False):
+          d2d_rx_age=3,d2d_rx_measured=False,kv_rx_age=3,kv_rx_measured=False,lp_input_age=3,lp_measured=False):
+    initial=admission['image']['initial_range']['entries']
+    emb=[t for t,w in initial if w&1 and w>>112==14 and ((w>>1)&7)==1]
+    if emb!=[61] or admission['root_timing']['emb_t']!=61:
+        raise ContractError('cold GI age63 is measured only for source INIT EMB61')
     old={c:admission_image(source_text,c) for c in CALS}
     txdp={end:[(int(re.search(r'OVL_TXDP_'+end+r' = 32\'h([0-9a-f]+)',source_text)[1],16)>>(8*i))&255 for i in range(4)] for end in ('C','K')}
     messages=[dict(src=c[0],cyc=e['time'],tx_port=e['port'],rx_port=e['port'],kind=e['kind'],beat=e['beat'])
@@ -141,11 +145,11 @@ def build(admission,frame,source_text,*,token,position,context_epoch,image_epoch
         if len(words)>16:raise ContractError('request/head segments cross SEG2')
         words += [0]*(16-len(words));words+=adm_images[c];words += [0]*(32-len(words));full_images[c]=words
     m=dict(schema='opentallas.mu.cold-start.v1',production_bound=False,verdict='BLOCKED',
-           blockers=['final SAFE KV witness checked age / compute die receive-lane phase unqualified','landed control/clock and absolute forwarded epoch join unqualified','actual production embedding consumer/token-epoch witness pending','full production programme identity not selected','Ecalendar/T MARK launch-to-decoder binding pending','canonical T stage-control image lacks production LEVEL/ordinary token-epoch closure'],
+           blockers=['final compute/KV die receive-lane/clock phase unqualified','landed control/clock and absolute forwarded epoch join unqualified','actual production embedding consumer/token-epoch witness pending','full production programme identity not selected','Ecalendar/T MARK launch-to-decoder binding pending','canonical T stage-control image lacks production LEVEL/ordinary token-epoch closure'],
            steady_period=admission['H'],admission_period=admission['H'],steady_runtime_delta_edges=0,
            raw_GI_INIT_to_L0=prefix['span'],calendar_reference='shared link calendar epoch; absolute forwarded-epoch offset unbound',
-           admission=dict(offset=adm_ofs,length=adm_len,seg2_base=16,images=adm_images,events=tab,source_AUTH_to_WITNESS_gap=replay_gap,KV_checked_age=kv_rx_age,KV_checked_age_measured=False),
-           image_identity=dict(epoch=image_epoch,digest64=f'{digest:016x}',cap=cap,artifact_sha256=admission['artifact_sha256'],profile='public command-class fixture; full arithmetic image separate'),
+           admission=dict(offset=adm_ofs,length=adm_len,seg2_base=16,images=adm_images,events=tab,source_AUTH_to_WITNESS_gap=replay_gap,KV_checked_age=kv_rx_age,KV_checked_age_measured=kv_rx_measured),
+           image_identity=dict(capability_guard_satisfied=bool(cap),epoch=image_epoch,digest64=f'{digest:016x}',cap=cap,artifact_sha256=admission['artifact_sha256'],profile='public command-class fixture; full arithmetic image separate'),
            context=dict(present=True,user=0,logical_kind=12,logical_beat=0,wire_beat=0,token=token,position=position,context_epoch=context_epoch,generation=generation,wire548=f'{record:0137x}',calendar_send=adm_ofs+send),
            init_range_source=dict(first=prefix['init_first'],cnt=prefix['init_cnt'],PW_sha256=admission['artifact_sha256']['pw.hex'],serialized_entries=admission['image']['initial_range']['entries']),
            init_selector=dict(enabled=True,user=0,stage=0,first=prefix['init_first'],cnt=prefix['init_cnt'],external_pin_edge=init,source='explicit registered init_u0 aligned DH stage0; no inference or reserved bit'),
@@ -163,6 +167,7 @@ def build(admission,frame,source_text,*,token,position,context_epoch,image_epoch
            full_calendar_images=full_images,seg1_base=seg1,
            absolute_startup=dict(forwarded_epoch_to_calendar_reference=None,FIRST_OFS=None,qualified=False),
            ordinary_identity_contract=dict(status='unresolved',rule='trace resident token/epoch at core_start and next preload; do not assume lookahead or change steady schedule'))
+    if not cap:m['blockers'].append('public fixture fusedcap0 fails full FACE cold guard; actual emittercap1 image required')
     m['init_selector'].update(T_entry=t_seg1+1,T_word=t_image[1],T_prefix_base=t_seg1)
     m['face_prefix_cfg_writes']=[dict(target=3,addr=i,data=w) for i,w in enumerate(steady_t_image+t_image)]
     m['face_prefix_cfg_writes'] += [dict(target=3,addr=128,data=t_seg1)]
@@ -173,18 +178,20 @@ def build(admission,frame,source_text,*,token,position,context_epoch,image_epoch
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--admission',type=Path,required=True);p.add_argument('--frame',type=Path,required=True);p.add_argument('--source-ovl',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--d2d-age-receipt',type=Path,required=True);p.add_argument('--provider-age-receipt',type=Path,required=True)
+    p.add_argument('--kv-age-receipt',type=Path,required=True);p.add_argument('--d2d-age-receipt',type=Path,required=True);p.add_argument('--provider-age-receipt',type=Path,required=True)
     p.add_argument('--token',type=int,required=True);p.add_argument('--position',type=int,required=True);p.add_argument('--context-epoch',type=lambda x:int(x,0),required=True);p.add_argument('--image-epoch',type=lambda x:int(x,0),required=True);p.add_argument('--generation',type=int,required=True)
     a=p.parse_args();fb=a.frame.read_bytes();fb=gzip.decompress(fb) if fb[:2]==b'\x1f\x8b' else fb
-    d2d=json.loads(a.d2d_age_receipt.read_text());provider=json.loads(a.provider_age_receipt.read_text())
+    kv=json.loads(a.kv_age_receipt.read_text());d2d=json.loads(a.d2d_age_receipt.read_text());provider=json.loads(a.provider_age_receipt.read_text())
+    if kv.get('schema')!='opentallas.qwen.kv-witness-age.v1' or kv.get('calendar_to_pin_age')!=3 or kv.get('source_commit')!='353123a8d':
+        raise ContractError('source-pinned353 release KV WITNESS checked-age receipt required')
     if d2d.get('schema')!='opentallas.qwen.safe3-embedding-age.v1' or d2d.get('calendar_to_pin_age')!=3:
         raise ContractError('source-pinned SAFE3 compute RX age receipt required')
     pe=provider.get('edges',{})
     if provider.get('schema')!='opentallas.qwen.face-provider-age.v1' or pe.get('first_complete_safe_sample',0)-pe.get('last_emb_rx_pin',0)!=3:
         raise ContractError('source-pinned actual FACE/provider safe-consume receipt required')
-    m=build(json.loads(a.admission.read_text()),json.loads(fb),a.source_ovl.read_text(),token=a.token,position=a.position,context_epoch=a.context_epoch,image_epoch=a.image_epoch,generation=a.generation,d2d_rx_age=d2d['calendar_to_pin_age'],d2d_rx_measured=True)
-    m['source_sha256']={name:hashlib.sha256(x.read_bytes()).hexdigest() for name,x in dict(admission=a.admission,frame=a.frame,ovl_source=a.source_ovl,compiler=Path(__file__),link_calendar=Path(L.__file__),face_calendar=Path(S.__file__),d2d_receipt=a.d2d_age_receipt,provider_receipt=a.provider_age_receipt).items()}
-    m['boundary_receipts']=dict(compute_d2d=d2d,face_provider=provider)
+    m=build(json.loads(a.admission.read_text()),json.loads(fb),a.source_ovl.read_text(),token=a.token,position=a.position,context_epoch=a.context_epoch,image_epoch=a.image_epoch,generation=a.generation,d2d_rx_age=d2d['calendar_to_pin_age'],d2d_rx_measured=True,kv_rx_age=kv['calendar_to_pin_age'],kv_rx_measured=True)
+    m['source_sha256']={name:hashlib.sha256(x.read_bytes()).hexdigest() for name,x in dict(admission=a.admission,frame=a.frame,ovl_source=a.source_ovl,compiler=Path(__file__),link_calendar=Path(L.__file__),face_calendar=Path(S.__file__),kv_receipt=a.kv_age_receipt,d2d_receipt=a.d2d_age_receipt,provider_receipt=a.provider_age_receipt).items()}
+    m['boundary_receipts']=dict(compute_d2d=d2d,kv_witness=kv,face_provider=provider)
     a.out.mkdir(parents=True,exist_ok=True);(a.out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
     for c,words in m['full_calendar_images'].items():(a.out/(c+'.memh')).write_text(''.join(f'{w:08x}\n' for w in words))
     print('COLD_PREFIX_MODEL',m['verdict'],json.dumps(m['plan'],sort_keys=True))

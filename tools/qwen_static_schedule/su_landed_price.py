@@ -1,6 +1,6 @@
 """Opt-in measured W SU_LT capture price; never silently adopt a native view.
 
-Receipt5753e895b compares c4adbc1c3 to9b41881fe (already scalar+1).
+Receipt6576b05ca compares c4adbc1c3 to9b41881fe (already scalar+1).
 This contract is separate from scalar result, CFG setup and reset timing.
 It does not reschedule the public F16 frame or qualify physical clock phases.
 """
@@ -8,7 +8,7 @@ import hashlib,json
 from pathlib import Path
 from .calendar import ScheduleError
 VARIANT='SU_LT1_HD_W1301_MU_NU4_FACE1'
-RECEIPT_SHA256='02a53ace89060f967298882e48ea9fa04a0af7960a52a5906f2ecf1e2a4b2085'
+RECEIPT_SHA256='682468dab3246125f775279b5f23efe7d47652f87d8c6b8c346fd673d0abd581'
 
 def load(*,variant=None,receipt=None):
     if variant is None:
@@ -19,7 +19,7 @@ def load(*,variant=None,receipt=None):
     path=Path(receipt);raw=path.read_bytes();r=json.loads(raw)
     if hashlib.sha256(raw).hexdigest()!=RECEIPT_SHA256:
         raise ScheduleError('SU landed source receipt hash mismatch')
-    if (r.get('status')!='SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE' or
+    if (r.get('schema')!='opentallas.qwen.su8_landed_timing.v1' or r.get('status')!='SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE' or
         r.get('baseline_core')!='9b41881fe' or r.get('landed_candidate')!='c4adbc1c3' or
         not r.get('input_events_normalized_exact')):
         raise ScheduleError('foreign/unqualified SU landed timing receipt')
@@ -32,9 +32,12 @@ def load(*,variant=None,receipt=None):
     if budget!=dict(issue_control=1,read_roundtrip=4,result_return=1,total=6):
         raise ScheduleError('SU landed timing decomposition differs from measured source')
     return dict(enabled=True,variant=variant,capture_edges=budget['total'],source_receipt_sha256=hashlib.sha256(raw).hexdigest(),
-                baseline_source=r['baseline_core'],candidate_source=r['landed_candidate'],receipt_commit='5753e895b',
+                baseline_source=r['baseline_core'],candidate_source=r['landed_candidate'],receipt_commit='6576b05ca',
                 scalar_capture_edges='baseline already includes+1; price separately',cfg_setup_edges='separate boot8→10+2',reset_guard_edges='separate; unbound',
-                production_bound=False,native_phase_qualified=False,apply_to_public_F16=False)
+                production_bound=False,native_phase_qualified=False,apply_to_public_F16=False,
+                other_unselected_contracts=dict(scalar_result_capture_edges=1,CFG_setup_edges=2,post_reset_boot_guard_edges=16,
+                    source='4ec4aa5f2; CFG receipt scalar_cfg64_census_report.json; guard dv_bench2.py RESET_WARM',
+                    apply_to_SU_capture_window=False,production_reset_to_epoch_bound=False))
 
 def capture_window(*,issue,baseline_last,span,contract):
     """Reserve a measured result stream; baseline issue reference/span retained.

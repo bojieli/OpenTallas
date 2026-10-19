@@ -7,7 +7,8 @@ class ColdPrefix(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
   p=ROOT/'results/rtl/mu_qwen_1018/admission'
-  cls.m=C.build(json.loads((p/'F16_P2/admission.json').read_text()),json.loads(gzip.decompress((p/'F16_P2/paired_frame.json.gz').read_bytes())),(p/'cold_prefix/source_ovl_release_img.svh').read_text(),token=777,position=5,context_epoch=0x48c,image_epoch=0xbeef,generation=2)
+  cls.a=json.loads((p/'F16_P2/admission.json').read_text());cls.f=json.loads(gzip.decompress((p/'F16_P2/paired_frame.json.gz').read_bytes()));cls.text=(p/'cold_prefix/source_ovl_release_img.svh').read_text()
+  cls.m=C.build(cls.a,cls.f,cls.text,token=777,position=5,context_epoch=0x48c,image_epoch=0xbeef,generation=2)
  def test_ordered_prefetch(self):
   self.assertTrue(C.validate(self.m));self.assertEqual(self.m['steady_period'],8053632)
   self.assertEqual(self.m['plan']['provider_core_sample'],self.m['plan']['provider_first_safe_sample'])
@@ -21,6 +22,10 @@ class ColdPrefix(unittest.TestCase):
  def test_wrong_T_selector(self):
   m=copy.deepcopy(self.m);m['init_selector']['T_entry']+=1
   with self.assertRaisesRegex(C.ContractError,'immutable cold prefix'):C.validate(m)
+ def test_other_INIT_timing_not_borrowed(self):
+  a=copy.deepcopy(self.a);a['root_timing']['emb_t']=60
+  with self.assertRaisesRegex(C.ContractError,'measured only'):
+   C.build(a,self.f,self.text,token=777,position=5,context_epoch=0x48c,image_epoch=0xbeef,generation=2)
  def test_wrong_context_image(self):
   m=copy.deepcopy(self.m);m['context']['wire548']=f"{int(m['context']['wire548'],16)^(1<<78):0137x}"
   with self.assertRaisesRegex(C.ContractError,'identity mismatch'):C.validate(m)

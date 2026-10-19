@@ -3,12 +3,13 @@
   "production_bound": false,
   "verdict": "BLOCKED",
   "blockers": [
-    "final SAFE KV witness checked age / compute die receive-lane phase unqualified",
+    "final compute/KV die receive-lane/clock phase unqualified",
     "landed control/clock and absolute forwarded epoch join unqualified",
     "actual production embedding consumer/token-epoch witness pending",
     "full production programme identity not selected",
     "Ecalendar/T MARK launch-to-decoder binding pending",
-    "canonical T stage-control image lacks production LEVEL/ordinary token-epoch closure"
+    "canonical T stage-control image lacks production LEVEL/ordinary token-epoch closure",
+    "public fixture fusedcap0 fails full FACE cold guard; actual emittercap1 image required"
   ],
   "steady_period": 8053632,
   "admission_period": 8053632,
@@ -17,7 +18,7 @@
   "calendar_reference": "shared link calendar epoch; absolute forwarded-epoch offset unbound",
   "admission": {
     "offset": 72,
-    "length": 1124,
+    "length": 1125,
     "seg2_base": 16,
     "images": {
       "C_tx": [
@@ -25,11 +26,11 @@
       ],
       "C_rx": [
         5010465,
-        287731712
+        287993856
       ],
       "K_tx": [
         816161,
-        287731712
+        287993856
       ],
       "K_rx": [
         287209504
@@ -46,7 +47,7 @@
         "arrive": 1095,
         "rx_out": 1097,
         "wr": 1083,
-        "checked_pin": 1097
+        "checked_pin": 1098
       },
       {
         "src": "K",
@@ -74,22 +75,23 @@
       },
       {
         "src": "K",
-        "cyc": 1101,
+        "cyc": 1102,
         "tx_port": 1,
         "rx_port": 1,
         "kind": 12,
         "beat": 0,
-        "arrive": 1117,
-        "rx_out": 1119,
-        "wr": 1105,
-        "checked_pin": 1120
+        "arrive": 1118,
+        "rx_out": 1120,
+        "wr": 1106,
+        "checked_pin": 1121
       }
     ],
     "source_AUTH_to_WITNESS_gap": 1057,
-    "KV_checked_age": 2,
-    "KV_checked_age_measured": false
+    "KV_checked_age": 3,
+    "KV_checked_age_measured": true
   },
   "image_identity": {
+    "capability_guard_satisfied": false,
     "epoch": 48879,
     "digest64": "ee7b8f0200f01522",
     "cap": 0,
@@ -113,7 +115,7 @@
     "context_epoch": 1164,
     "generation": 2,
     "wire548": "067e09180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b9ee3c0803c0548afbbd024600018480140",
-    "calendar_send": 1173
+    "calendar_send": 1174
   },
   "init_range_source": {
     "first": 52,
@@ -140,7 +142,7 @@
     "stage": 0,
     "first": 52,
     "cnt": 3,
-    "external_pin_edge": 1409,
+    "external_pin_edge": 1410,
     "source": "explicit registered init_u0 aligned DH stage0; no inference or reserved bit",
     "T_entry": 47,
     "T_word": 54788096,
@@ -148,16 +150,16 @@
   },
   "plan": {
     "auth_checked": 95,
-    "context_checked": 1192,
-    "head_reference": 1200,
-    "INIT_external_pin": 1409,
-    "INIT_raw_GI_pin": 1412,
-    "emb_start_pin": 1475,
-    "provider_core_sample": 1476,
-    "last_row_rx_pin": 1473,
-    "provider_first_safe_sample": 1476,
-    "first_L0_external_pin": 1743,
-    "first_L0_raw_GI_pin": 1746
+    "context_checked": 1193,
+    "head_reference": 1201,
+    "INIT_external_pin": 1410,
+    "INIT_raw_GI_pin": 1413,
+    "emb_start_pin": 1476,
+    "provider_core_sample": 1477,
+    "last_row_rx_pin": 1474,
+    "provider_first_safe_sample": 1477,
+    "first_L0_external_pin": 1744,
+    "first_L0_raw_GI_pin": 1747
   },
   "edge_ledger": {
     "raw_GI_INIT_to_cal_accept": {
@@ -213,7 +215,7 @@
     "K_tx": {
       "segment": 1,
       "user": 0,
-      "start": 1201,
+      "start": 1202,
       "calendar_image": [
         290848,
         290816,
@@ -226,7 +228,7 @@
     "C_rx": {
       "segment": 1,
       "user": 0,
-      "start": 1217,
+      "start": 1218,
       "calendar_image": [
         290848,
         290816,
@@ -239,404 +241,404 @@
   },
   "embedding_expected_decoder_events": [
     {
-      "time": 1408,
+      "time": 1409,
       "kind": "FILL",
       "port": 7,
       "arg": 0
     },
     {
-      "time": 1409,
+      "time": 1410,
       "kind": "EMBW",
       "port": 6,
       "arg": 64
     },
     {
-      "time": 1410,
+      "time": 1411,
       "kind": "EMBW",
       "port": 6,
       "arg": 0
     },
     {
-      "time": 1411,
+      "time": 1412,
       "kind": "EMBW",
       "port": 6,
       "arg": 1
     },
     {
-      "time": 1412,
+      "time": 1413,
       "kind": "EMBW",
       "port": 6,
       "arg": 2
     },
     {
-      "time": 1413,
+      "time": 1414,
       "kind": "EMBW",
       "port": 6,
       "arg": 3
     },
     {
-      "time": 1414,
+      "time": 1415,
       "kind": "EMBW",
       "port": 6,
       "arg": 4
     },
     {
-      "time": 1415,
+      "time": 1416,
       "kind": "EMBW",
       "port": 6,
       "arg": 5
     },
     {
-      "time": 1416,
+      "time": 1417,
       "kind": "EMBW",
       "port": 6,
       "arg": 6
     },
     {
-      "time": 1417,
+      "time": 1418,
       "kind": "EMBW",
       "port": 6,
       "arg": 7
     },
     {
-      "time": 1418,
+      "time": 1419,
       "kind": "EMBW",
       "port": 6,
       "arg": 8
     },
     {
-      "time": 1419,
+      "time": 1420,
       "kind": "EMBW",
       "port": 6,
       "arg": 9
     },
     {
-      "time": 1420,
+      "time": 1421,
       "kind": "EMBW",
       "port": 6,
       "arg": 10
     },
     {
-      "time": 1421,
+      "time": 1422,
       "kind": "EMBW",
       "port": 6,
       "arg": 11
     },
     {
-      "time": 1422,
+      "time": 1423,
       "kind": "EMBW",
       "port": 6,
       "arg": 12
     },
     {
-      "time": 1423,
+      "time": 1424,
       "kind": "EMBW",
       "port": 6,
       "arg": 13
     },
     {
-      "time": 1424,
+      "time": 1425,
       "kind": "EMBW",
       "port": 6,
       "arg": 14
     },
     {
-      "time": 1425,
+      "time": 1426,
       "kind": "EMBW",
       "port": 6,
       "arg": 15
     },
     {
-      "time": 1426,
+      "time": 1427,
       "kind": "EMBW",
       "port": 6,
       "arg": 16
     },
     {
-      "time": 1427,
+      "time": 1428,
       "kind": "EMBW",
       "port": 6,
       "arg": 17
     },
     {
-      "time": 1428,
+      "time": 1429,
       "kind": "EMBW",
       "port": 6,
       "arg": 18
     },
     {
-      "time": 1429,
+      "time": 1430,
       "kind": "EMBW",
       "port": 6,
       "arg": 19
     },
     {
-      "time": 1430,
+      "time": 1431,
       "kind": "EMBW",
       "port": 6,
       "arg": 20
     },
     {
-      "time": 1431,
+      "time": 1432,
       "kind": "EMBW",
       "port": 6,
       "arg": 21
     },
     {
-      "time": 1432,
+      "time": 1433,
       "kind": "EMBW",
       "port": 6,
       "arg": 22
     },
     {
-      "time": 1433,
+      "time": 1434,
       "kind": "EMBW",
       "port": 6,
       "arg": 23
     },
     {
-      "time": 1434,
+      "time": 1435,
       "kind": "EMBW",
       "port": 6,
       "arg": 24
     },
     {
-      "time": 1435,
+      "time": 1436,
       "kind": "EMBW",
       "port": 6,
       "arg": 25
     },
     {
-      "time": 1436,
+      "time": 1437,
       "kind": "EMBW",
       "port": 6,
       "arg": 26
     },
     {
-      "time": 1437,
+      "time": 1438,
       "kind": "EMBW",
       "port": 6,
       "arg": 27
     },
     {
-      "time": 1438,
+      "time": 1439,
       "kind": "EMBW",
       "port": 6,
       "arg": 28
     },
     {
-      "time": 1439,
+      "time": 1440,
       "kind": "EMBW",
       "port": 6,
       "arg": 29
     },
     {
-      "time": 1440,
+      "time": 1441,
       "kind": "EMBW",
       "port": 6,
       "arg": 30
     },
     {
-      "time": 1441,
+      "time": 1442,
       "kind": "EMBW",
       "port": 6,
       "arg": 31
     },
     {
-      "time": 1442,
+      "time": 1443,
       "kind": "EMBW",
       "port": 6,
       "arg": 32
     },
     {
-      "time": 1443,
+      "time": 1444,
       "kind": "EMBW",
       "port": 6,
       "arg": 33
     },
     {
-      "time": 1444,
+      "time": 1445,
       "kind": "EMBW",
       "port": 6,
       "arg": 34
     },
     {
-      "time": 1445,
+      "time": 1446,
       "kind": "EMBW",
       "port": 6,
       "arg": 35
     },
     {
-      "time": 1446,
+      "time": 1447,
       "kind": "EMBW",
       "port": 6,
       "arg": 36
     },
     {
-      "time": 1447,
+      "time": 1448,
       "kind": "EMBW",
       "port": 6,
       "arg": 37
     },
     {
-      "time": 1448,
+      "time": 1449,
       "kind": "EMBW",
       "port": 6,
       "arg": 38
     },
     {
-      "time": 1449,
+      "time": 1450,
       "kind": "EMBW",
       "port": 6,
       "arg": 39
     },
     {
-      "time": 1450,
+      "time": 1451,
       "kind": "EMBW",
       "port": 6,
       "arg": 40
     },
     {
-      "time": 1451,
+      "time": 1452,
       "kind": "EMBW",
       "port": 6,
       "arg": 41
     },
     {
-      "time": 1452,
+      "time": 1453,
       "kind": "EMBW",
       "port": 6,
       "arg": 42
     },
     {
-      "time": 1453,
+      "time": 1454,
       "kind": "EMBW",
       "port": 6,
       "arg": 43
     },
     {
-      "time": 1454,
+      "time": 1455,
       "kind": "EMBW",
       "port": 6,
       "arg": 44
     },
     {
-      "time": 1455,
+      "time": 1456,
       "kind": "EMBW",
       "port": 6,
       "arg": 45
     },
     {
-      "time": 1456,
+      "time": 1457,
       "kind": "EMBW",
       "port": 6,
       "arg": 46
     },
     {
-      "time": 1457,
+      "time": 1458,
       "kind": "EMBW",
       "port": 6,
       "arg": 47
     },
     {
-      "time": 1458,
+      "time": 1459,
       "kind": "EMBW",
       "port": 6,
       "arg": 48
     },
     {
-      "time": 1459,
+      "time": 1460,
       "kind": "EMBW",
       "port": 6,
       "arg": 49
     },
     {
-      "time": 1460,
+      "time": 1461,
       "kind": "EMBW",
       "port": 6,
       "arg": 50
     },
     {
-      "time": 1461,
+      "time": 1462,
       "kind": "EMBW",
       "port": 6,
       "arg": 51
     },
     {
-      "time": 1462,
+      "time": 1463,
       "kind": "EMBW",
       "port": 6,
       "arg": 52
     },
     {
-      "time": 1463,
+      "time": 1464,
       "kind": "EMBW",
       "port": 6,
       "arg": 53
     },
     {
-      "time": 1464,
+      "time": 1465,
       "kind": "EMBW",
       "port": 6,
       "arg": 54
     },
     {
-      "time": 1465,
+      "time": 1466,
       "kind": "EMBW",
       "port": 6,
       "arg": 55
     },
     {
-      "time": 1466,
+      "time": 1467,
       "kind": "EMBW",
       "port": 6,
       "arg": 56
     },
     {
-      "time": 1467,
+      "time": 1468,
       "kind": "EMBW",
       "port": 6,
       "arg": 57
     },
     {
-      "time": 1468,
+      "time": 1469,
       "kind": "EMBW",
       "port": 6,
       "arg": 58
     },
     {
-      "time": 1469,
+      "time": 1470,
       "kind": "EMBW",
       "port": 6,
       "arg": 59
     },
     {
-      "time": 1470,
+      "time": 1471,
       "kind": "EMBW",
       "port": 6,
       "arg": 60
     },
     {
-      "time": 1471,
+      "time": 1472,
       "kind": "EMBW",
       "port": 6,
       "arg": 61
     },
     {
-      "time": 1472,
+      "time": 1473,
       "kind": "EMBW",
       "port": 6,
       "arg": 62
     },
     {
-      "time": 1473,
+      "time": 1474,
       "kind": "EMBW",
       "port": 6,
       "arg": 63
     }
   ],
   "T_prefix": {
-    "start": 1197,
+    "start": 1198,
     "pin_events_relative_start": [
       [
         3,
@@ -1228,11 +1230,11 @@
       54788096,
       409728
     ],
-    "first_steady_start": 1740,
+    "first_steady_start": 1741,
     "steady_period": 251676
   },
   "Ecalendar": {
-    "cold_start": 1200,
+    "cold_start": 1201,
     "cold_seg": 1,
     "cold_seg1_base": 4,
     "cold_pin_events_relative_start": [
@@ -1649,7 +1651,7 @@
       0,
       0,
       5010465,
-      287731712,
+      287993856,
       0,
       0,
       0,
@@ -1683,7 +1685,7 @@
       0,
       0,
       816161,
-      287731712,
+      287993856,
       0,
       0,
       0,
@@ -2050,9 +2052,10 @@
     "admission": "d8fd9760444a38cbdf174eb2b39078aa5be22279a8eee5a908d3d2c007cbb886",
     "frame": "faae381db705e4fb8976972e143037e8f1d89a5e0761c65b84f6fa9c5bc3e614",
     "ovl_source": "8d0ef69e8da7689fd8bd835a6cf8ada5ae71b73838df81a8e0e7205193c69b35",
-    "compiler": "093bad903013ffed0015fa0a4ded586b5f6cebfc40b475597e30c8c89b173f1b",
+    "compiler": "d049aa341ec2d3ffd5ede1639761fa8f02c1decbe40449648b14cbff15f02048",
     "link_calendar": "512a30a90e146684ac92146da00bfb7a45f290bf2130b6e16480df9c6999eb6e",
     "face_calendar": "fc77c01090762b31b93f41434152de65ed6653d4793130c7c7def7687f930bf6",
+    "kv_receipt": "7947ba4add7937b41ccefd1b883695de7cd198efbd9e90d9b40edecf60fe1195",
     "d2d_receipt": "60a7c1ecd5e246e52f6cbcc621df2bc08fafabd704f307d69cbfe86d50dcb068",
     "provider_receipt": "860548b367a6315e099b85bb966741b7158e40cd6ae680a7d178105db2e080ee"
   },
@@ -2088,6 +2091,39 @@
       "bench_sha256": "e1de1d81bdc4fdab7fbb2879f7c114bb05cd5cabfcbfe0242c6ee5c2bd79d41c",
       "early_fdi_mutant": "1edgeearly frame abortcause08; noemb_rx_v",
       "earlier_fixture_failure": "firstprobe sent frame1edgeearly; preserved separately, no RTL change"
+    },
+    "kv_witness": {
+      "schema": "opentallas.qwen.kv-witness-age.v1",
+      "source_commit": "353123a8d",
+      "top": "qkd_d2d_static_ovl",
+      "params": {
+        "NTX": 3,
+        "SAFE_RC": 1,
+        "PR": 1,
+        "TXDP": "0x03030416"
+      },
+      "verilator": "5.050",
+      "unit": "oth-ubuntu-2825230-1792427136",
+      "host": "ot-epyc8",
+      "calendar_sample": 222,
+      "witness_pin_sample": 225,
+      "calendar_to_pin_age": 3,
+      "scope": "Exact release-tree353 target single valid CRC frame; not another KV variant, die-lane join or throughput proof",
+      "source_hashes": {
+        "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "99df5a4fa2213760a65db2fca365d02d6bc70c807ca31933b4ee87a07a231153",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "b96568a31a4cd8c4dc0c99dfce1a146bade6ea846f9be3fe4395a6a763eef6b4",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+      },
+      "bench_sha256": "a6f35f805f0ad52432452dc2a382551df4587606d30a763cbea238847a8d8636",
+      "early_fdi_mutant": "one edge early frame abort08/no record_rx_v"
     },
     "face_provider": {
       "schema": "opentallas.qwen.face-provider-age.v1",

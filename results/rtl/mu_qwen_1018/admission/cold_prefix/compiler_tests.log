@@ -1,16 +1,22 @@
-ot-run: ot-epyc6       admits   324 GB (avail 332, growth 105, headroom 0, waiters 0/0 GB) load 30/128 running 16 disk 6060 GB 
+ot-run: ot-epyc6       admits   282 GB (avail 308, growth 111, headroom 0, waiters 0/0 GB) load 44/128 running 16 disk 6044 GB
 ot-run: -> ot-epyc6
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-66350-1792426999 after 0 s
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-119304-1792428039 after 0 s
 test_changed_steady_period (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_changed_steady_period) ... ok
 test_concrete_T_and_E_variants (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_concrete_T_and_E_variants) ... ok
 test_context_reordered_after_INIT (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_context_reordered_after_INIT) ... ok
 test_omitted_INIT (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_omitted_INIT) ... ok
 test_omitted_context (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_omitted_context) ... ok
 test_ordered_prefetch (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_ordered_prefetch) ... ok
+test_other_INIT_timing_not_borrowed (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_other_INIT_timing_not_borrowed) ... ok
 test_reordered_prefetch_after_core (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_reordered_prefetch_after_core) ... ok
 test_wrong_INIT_range (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_wrong_INIT_range) ... ok
 test_wrong_T_selector (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_wrong_T_selector) ... ok
 test_wrong_context_image (qwen_static_schedule.test_mu_cold_prefix.ColdPrefix.test_wrong_context_image) ... ok
+test_actual_frame_capacity_and_period_with_declared_diagnostic_binding (qwen_static_schedule.test_mu_cold_lists.ColdLists.test_actual_frame_capacity_and_period_with_declared_diagnostic_binding) ... ok
+test_long_gap_preserves_minimum_prefetch (qwen_static_schedule.test_mu_cold_lists.ColdLists.test_long_gap_preserves_minimum_prefetch) ... ok
+test_no_implicit_phase (qwen_static_schedule.test_mu_cold_lists.ColdLists.test_no_implicit_phase) ... ok
+test_nominal_phase_cannot_go_before_admission_done (qwen_static_schedule.test_mu_cold_lists.ColdLists.test_nominal_phase_cannot_go_before_admission_done) ... ok
+test_prefix_once_and_repeated_steady (qwen_static_schedule.test_mu_cold_lists.ColdLists.test_prefix_once_and_repeated_steady) ... ok
 test_default_unchanged (qwen_static_schedule.test_su_landed_price.SULandedPrice.test_default_unchanged) ... ok
 test_five_measured_capture_windows (qwen_static_schedule.test_su_landed_price.SULandedPrice.test_five_measured_capture_windows) ... ok
 test_foreign_variant_rejected (qwen_static_schedule.test_su_landed_price.SULandedPrice.test_foreign_variant_rejected) ... ok
@@ -18,8 +24,8 @@ test_missing_receipt_rejected (qwen_static_schedule.test_su_landed_price.SULande
 test_unmeasured_zero_delta_rejected (qwen_static_schedule.test_su_landed_price.SULandedPrice.test_unmeasured_zero_delta_rejected) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 0.257s
+Ran 21 tests in 0.350s
 
 OK
-COLD_PREFIX_MODEL BLOCKED {"INIT_external_pin": 1409, "INIT_raw_GI_pin": 1412, "auth_checked": 95, "context_checked": 1192, "emb_start_pin": 1475, "first_L0_external_pin": 1743, "first_L0_raw_GI_pin": 1746, "head_reference": 1200, "last_row_rx_pin": 1473, "provider_core_sample": 1476, "provider_first_safe_sample": 1476}
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-66350-1792426999): exit 0
+COLD_PREFIX_MODEL BLOCKED {"INIT_external_pin": 1410, "INIT_raw_GI_pin": 1413, "auth_checked": 95, "context_checked": 1193, "emb_start_pin": 1476, "first_L0_external_pin": 1744, "first_L0_raw_GI_pin": 1747, "head_reference": 1201, "last_row_rx_pin": 1474, "provider_core_sample": 1477, "provider_first_safe_sample": 1477}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-119304-1792428039): exit 0
