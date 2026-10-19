@@ -1,0 +1,56 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc8       admits  1159 GB (avail 922, growth 110, headroom 0, waiters 1/12 GB) load 44/128 running 30 disk 339 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1611088-1792428109 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LEPMUH_STATS H->die ring 418 (M cut 338 same-cycle 338, landed 80, replayed 80) host 20/20 ks 19/19 | die->H ring 537/537/537 thost 60/60/60 tkd 61/61/61 frames M 658 R 658 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+PASS lep_muh: host-plane MU endpoint == single-user lep: 418 H->die ring beats (338 cut-through same cycle+bits with mu_rt, 80 landed + replayed), 20 HOST + 19 KS identical every cycle; die->H 658 frames same cycles (537 ring incl. 160 stamped, 60 THOST, 61 TKD); F1 faulted
+BENCH_PASS lepmuh MUT=none seed 5
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M->H TKD 7 (tag field 000190001)
+MISMATCH M->H THOST 7 (tag field 000190001)
+MISMATCH M->H TKD 8 (tag field 000190001)
+MISMATCH M->H THOST 8 (tag field 000190001)
+MISMATCH M->H TKD 9 (tag field 000190001)
+MISMATCH M->H TKD 10 (tag field 000190001)
+MISMATCH M->H THOST 9 (tag field 000190001)
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 40 hostplane 0 | faults 000
+FAIL lep_muh: ok 1 rx 0 tx 40 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=HSTAMP seed 1
+MUTANT_DETECTED lepmuh HSTAMP
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M->H ring 48 got tag 000000000 exp 000190001
+MISMATCH M->H ring 49 got tag 000000000 exp 000190001
+MISMATCH M->H ring 50 got tag 000000000 exp 000190001
+MISMATCH M->H ring 51 got tag 000000000 exp 000190001
+MISMATCH M->H ring 52 got tag 000000000 exp 000190001
+MISMATCH M->H ring 53 got tag 000000000 exp 000190001
+MISMATCH M->H ring 54 got tag 000000000 exp 000190001
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 160 hostplane 0 | faults 000
+FAIL lep_muh: ok 1 rx 0 tx 160 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=TAGDROP seed 1
+MUTANT_DETECTED lepmuh TAGDROP
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M landed 0 (ring 168) cyc 0 vs R 8297
+MISMATCH M landed 1 (ring 169) cyc 0 vs R 8298
+MISMATCH M landed 2 (ring 170) cyc 0 vs R 8300
+MISMATCH M ri 168 (ring 171) rt 8040012e exp 00000000 cyc 8297 vs R 8301
+MISMATCH M landed 3 (ring 172) cyc 0 vs R 8302
+MISMATCH M landed 4 (ring 173) cyc 0 vs R 8304
+MISMATCH M landed 5 (ring 174) cyc 0 vs R 8305
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 168, landed 80, replayed 0) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 324 tx 0 hostplane 0 | faults 101
+FAIL lep_muh: ok 0 rx 324 tx 0 hostplane 0 faults 101 F1 1
+BENCH_FAIL lepmuh MUT=LANDCUT seed 1
+MUTANT_DETECTED lepmuh LANDCUT
+Verilator 5.050 2026-07-01 rev v5.050
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 0/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+FAIL lep_muh: ok 0 rx 0 tx 0 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=KSOFF seed 1
+MUTANT_DETECTED lepmuh KSOFF
+SRAM_QUAL_PASS lepmuh
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1611088-1792428109): exit 0
