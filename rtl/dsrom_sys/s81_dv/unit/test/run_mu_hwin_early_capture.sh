@@ -24,7 +24,7 @@ run() {
   --Mdir "$case_dir/obj" -o tb > "$case_dir/build.log" 2>&1
  for seed in ${RUN_SEEDS:-1 19 313}; do
   local rc=0
-  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
+  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
   if [[ "$expected" == FAIL:* ]]; then
     [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
   elif [[ "$expected" == REJECT:* ]]; then
@@ -182,6 +182,13 @@ sweep)
   run uniform_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256
   run nonuniform_short_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL
  done
+ ;;
+calendar_mutants)
+ run long_d_positive tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256 +define+LONG_D
+ RUN_SEEDS=1 run wrong_wrap tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256 +define+LONG_D +define+NEXT_WRAP_MUTANT
+ RUN_SEEDS=1 run timestamp_shift tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+TIMESTAMP_MUTANT
+ RUN_SEEDS=1 run delayed_retirement tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+DELAY_RETIRE_MUTANT
+ RUN_SEEDS=1 SIM_RESET_PHASE=5 run reset_validity tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+OCCUPIED_RESET_STRESS +define+RESET_VALID_MUTANT
  ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac

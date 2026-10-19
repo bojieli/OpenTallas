@@ -70,6 +70,9 @@ ROUNDS=4, T0=1000+32*NS;
 `ifdef MIN_D
       for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) DK[cfg_e]=NS+2+13*cfg_e;
 `endif
+`ifdef LONG_D
+      DK[0]=RL-2;
+`endif
 `ifdef BAD_D
       DK[0]=NS+1;
 `endif
@@ -223,6 +226,21 @@ ROUNDS=4, T0=1000+32*NS;
        force dut.fire[0] = 1'bx;
     end
 `endif
+`ifdef TIMESTAMP_MUTANT
+    initial force dut.g_event_mem[0].due_at_start = dut.ts_event[0]+{11'd0,dut.eD[0]}+32'd1;
+`endif
+`ifdef DELAY_RETIRE_MUTANT
+    reg retire_due_delay=0;
+    always @(posedge ck) retire_due_delay<=anchor.due;
+    initial force dut.due=retire_due_delay;
+`endif
+`ifdef NEXT_WRAP_MUTANT
+    initial force dut.g_event_mem[0].pb_next =
+       (dut.g_event_mem[0].event_wrap && dut.adv[0]) ? SI'(1) : anchor.g_event_mem[0].pb_next;
+`endif
+`ifdef RESET_VALID_MUTANT
+    reg [NS-1:0] old_vld_snapshot;
+`endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
@@ -285,7 +303,15 @@ ROUNDS=4, T0=1000+32*NS;
         stc[0]=cyc;stu[0]=0;stp[0]=99;nst=1;
         @(posedge ck);#0.1;f_ks=0;
         repeat(reset_phase) begin @(posedge ck);#0.1;end
-        @(negedge ck);#0.17;rst_n=0; f_mc=0;f_mw=0;mu_rt=0;nst=0;
+        @(negedge ck);#0.17;
+`ifdef RESET_VALID_MUTANT
+        old_vld_snapshot=dut.vld;
+        if(old_vld_snapshot==0)$fatal(1,"RESET_VALID_MUTANT requires actual occupied table");
+`endif
+        rst_n=0; f_mc=0;f_mw=0;mu_rt=0;nst=0;
+`ifdef RESET_VALID_MUTANT
+        force dut.vld=old_vld_snapshot;
+`endif
         #0.01;
         if({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf}!==0)
            $fatal(1,"EARLY_RESET async assertion did not clear outputs");
