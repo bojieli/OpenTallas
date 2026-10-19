@@ -17,7 +17,7 @@ module tb_s81dv_frame;
     always #0.5 clk = ~clk;
     reg rst_n = 1'b0;
     reg go = 1'b0;
-    integer T, K, OPS, edge_n = 0;
+    integer T, K, OPS, PH, edge_n = 0;   // PH: the field phase the spine runs (+PH, default 0; TOK-S81-GAPS/XS multi-phase fields)
     // ---------------- spine + vector memory (as ot_v41_fieldtop_pq_static_w17w10)
     reg [31:0] vm [0:(1 << VAW) - 1];
     reg [8*1024-1:0] rom_dir;
@@ -28,6 +28,7 @@ module tb_s81dv_frame;
         if (!$value$plusargs("T=%d", T)) T = 3000;
         if (!$value$plusargs("K=%d", K)) K = 2048;
         if (!$value$plusargs("OPS=%d", OPS)) OPS = 8;
+        if (!$value$plusargs("PH=%d", PH)) PH = 0;
     end
     wire x_re; wire [VAW-1:0] x_addr; reg [64*32-1:0] x_q;
     integer k;
@@ -36,7 +37,7 @@ module tb_s81dv_frame;
     wire sp_ready, sp_idle, sp_fault;
     wire [0:0] w_we; wire [VAW-1:0] w_addr; wire [31:0] w_data; wire [31:0] phase_cycles; wire ev_go, ev_end; wire [1:0] ev_tag;
     ot_v41_spine_pq_static_w17w10 #(.PHW(10), .SAW(14), .R(1), .VAW(VAW), .VRD(64), .KMAX(6144), .BST(2), .PQ(1), .GSLACK(GSLACK)) u_sp (
-        .clk(clk), .rst_n(rst_n), .go(go), .i_ph(10'd0), .i_np(3'd0), .i_xbase({VAW{1'b0}}), .i_xps(VAW'(K)),
+        .clk(clk), .rst_n(rst_n), .go(go), .i_ph(PH[9:0]), .i_np(3'd0), .i_xbase({VAW{1'b0}}), .i_xps(VAW'(K)),
         .i_obase({VAW{1'b0}}), .i_ops(VAW'(OPS)), .i_fmt(2'd0), .ready(sp_ready), .idle(sp_idle), .x_re(x_re),
         .x_addr(x_addr), .x_q(x_q), .w_we(w_we), .w_addr(w_addr), .w_data(w_data),
         .f_cfg_go(), .f_cfg_ph(), .f_cfg_np(), .f_go(), .f_go_bf(), .f_go_tag(), .f_xs_v(), .f_xs_p(), .f_xs_b(), .f_xs_sv(),
