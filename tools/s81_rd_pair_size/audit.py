@@ -27,10 +27,14 @@ for netlist in sorted(Path('price').glob('*/mapped.v')):
                 if isinstance(bit,int):
                     if direction=='input':loads[bit]+=1
                     elif direction=='output':drivers[bit]=(name,cell['type'],port)
+    aliases=collections.defaultdict(list)
+    for name,net in mod['netnames'].items():
+        for index,bit in enumerate(net['bits']):
+            if isinstance(bit,int):aliases[bit].append(name+(f'[{index}]' if len(net['bits'])>1 else ''))
     sequential=[];all_bad=[]
     for bit,(name,typ,port) in drivers.items():
         if loads[bit]>32:
-            row=dict(net=bit,cell=name,type=typ,port=port,loads=loads[bit])
+            row=dict(net=bit,cell=name,type=typ,port=port,loads=loads[bit],aliases=aliases.get(bit,[]))
             all_bad.append(row)
             if typ.startswith(('DFF','SDF')):sequential.append(row)
     ports={p:sum(loads.get(b,0) for b in v['bits'] if isinstance(b,int)) for p,v in mod['ports'].items() if v['direction']=='input'}
