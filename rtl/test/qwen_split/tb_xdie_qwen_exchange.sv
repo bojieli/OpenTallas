@@ -60,7 +60,8 @@ module tb_xdie_qwen_exchange;
     parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
     parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
-    parameter integer C_OVL = 0;           // SAFE-QW-D2D 10-19: 1 = compute end is the MU re-close master qfd_d2d_static_ovl
+    parameter integer C_OVL = 0;
+    parameter integer C_SFMUT = 0;         // QW-D2D SAFE5: C_OVL 3 negative controls (ot_qwen_d2d_safe5.sv SFMUT)           // SAFE-QW-D2D 10-19: 1 = compute end is the MU re-close master qfd_d2d_static_ovl
                                            // (OVL 1, RC 1 reset copies; RX calendar started with the TX one, user 0)
                                            // 2 = mutant: the OVL RX-start port tied 0 (as the die must NOT bind it)
     parameter CALDIR = "cal";
@@ -145,7 +146,25 @@ module tb_xdie_qwen_exchange;
     wire c_prog_rxv, c_prog_auth, c_prog_ctx, c_prog_wslot, c_emb_v, c_emb_s, k_emb_slot;
     wire st_res = act && rel == 20;
     wire c_eb_x, c_endf_x; wire [7:0] c_fc_x;
-    generate if (C_OVL != 0) begin : g_c_ovl
+    generate if (C_OVL == 3) begin : g_c_sf   // QW-D2D SAFE5: compute end = qfd_d2d_static_ovl_sf (structurally safe master)
+        qfd_d2d_static_ovl_sf #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C), .SFMUT(C_SFMUT)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+            .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
+            .cal_start_rx(cstart), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(),
+            .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
+            .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
+            .native_tx_payload(c_tp0), .rx_payload(c_rxp), .native_rx_v(c_rxe0), .native_rx_slot(c_rxs0),
+            .native_rx_slot_kind(c_rk), .native_rx_slot_beat(c_rb),
+            .prog_witness_slot(c_prog_wslot), .prog_auth_slot(c_prog_auth), .prog_context_slot(c_prog_ctx), .prog_tx_observed_v(1'b0),
+            .prog_tx_record(548'd0), .prog_rx_v(c_prog_rxv), .emb_rx_v(c_emb_v), .emb_rx_slot(c_emb_s),
+            .kv_x3_slot(kv_x3_slot), .x3(x3), .x3_identity(x3_id), .x3_generation(x3_gen),
+            .status_epoch16(EP), .vm_drained(1'b1), .collective_drained(1'b1), .collective_busy(1'b0),
+            .crom_fault(1'b0), .execution_active(1'b1), .admit_ready(1'b1),
+            .result_v(st_res), .result_done(1'b1), .result_fault(1'b0), .result_cause(4'd0), .result_tag(op_tag),
+            .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
+            .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
+            .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
+        assign c_eb_x = u_c.u_core.eb; assign c_endf_x = u_c.u_core.u_end.end_fault; assign c_fc_x = u_c.u_core.u_end.fault_cause;
+    end else if (C_OVL != 0) begin : g_c_ovl
         qfd_d2d_static_ovl #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
             .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
             .cal_start_rx(C_OVL == 2 ? 1'b0 : cstart), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(),

@@ -1,0 +1,65 @@
+{
+ "builder": "tools/mem_compiler/build_sparse_pin_sram.py",
+ "builder_sha256": "6ac9e20f547aad7decad95f52c9f55be9d4febac8b2b4b5e777454e010d70cf6",
+ "macros": {
+  "ot_sram_1r1w_64x137_m1_r2c2_p192": {
+   "area_um2": 2644.957,
+   "delta": {
+    "area_pct": 0.0,
+    "area_um2": 0.0,
+    "height_nm": 0,
+    "width_nm": 0
+   },
+   "height_um": 45.672,
+   "kind": "sram",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true,
+     "R": true
+    },
+    "R0": {
+     "L": true,
+     "R": true
+    }
+   },
+   "pin_faces": {
+    "E": {
+     "min_pitch_um": 0.192,
+     "pins": 229,
+     "pins_per_um": 5.231,
+     "span_um": 43.776
+    },
+    "W": {
+     "min_pitch_um": 0.192,
+     "pins": 229,
+     "pins_per_um": 5.231,
+     "span_um": 43.776
+    }
+   },
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 44.476,
+    "height_um": 46.44,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_sram_1r1w_64x137_m1_r2c2_p192",
+   "views": {
+    "ot_sram_1r1w_64x137_m1_r2c2_p192.json": "aff40d6bdd2648d6b00e9cfbc404f7cc4e98f0fda7d2f89eb1f518b4db1cb17d",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192.lef": "7bb394f9e8b38bc8488cffca708a683d2a8183c65d1a510877b11bd5e0500a72",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192.v": "ebf1e916a989e0f3762fd38c4663e7deb7c6a73a845b056c5e9c3a174006fa1c",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192_bb.v": "0d9e68c62d4f898c5c9e2cbf91510784bda914d97214441bd76fcb1de47d0124",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192_ff.lib": "5539a292bf9dc20a46a5cd49b88b78046033047ada9ae0b86f8e049902c93dbe",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192_ss.lib": "8c37d4ebdcfe859d2e2d3d9950b34d0e1108f29ed685cee6928bc8381b4f8ed1",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192_tt.lib": "944a50cd6ea0dd029bd6644aeea4749c5ca754dc21ed1649aabf9e058cd59584"
+   },
+   "width_um": 57.912
+  }
+ },
+ "pin_pitch_um": 0.192
+}

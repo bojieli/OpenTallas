@@ -47,6 +47,7 @@ import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
+from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -186,8 +187,14 @@ def check_hold_budget(s: dict) -> None:
     pr = s.get("pin_regs") or {}
     # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
     # (pin_regs off with that reason) qualifies under the same rule and the same native audit
-    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
+    if s.get("kind") == "cluster" and s.get("cluster_level", 1) == 1 and s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import check as check_registered_cluster
+        try:
+            check_registered_cluster(s, ROOT)
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            raise SpecError(str(exc)) from exc
+    elif s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles, two-level clusters, or evidence-guarded level 1 candidates')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -319,18 +326,32 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    fc = rl.get("first_copies")
+    if fc is not None:
+        if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
+            raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
+        if st != 2:
+            raise SpecError('spec: balanced first_copies requires exactly two landing stages')
+        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+            raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
+        plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
     if cp is not None:
         # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
         # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
         if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
-                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= (1024 if fc is not None else 64) for n in cp.values())):
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
         if not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
+            raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
         plan["copies"] = dict(cp)
+    elif fc is not None:
+        raise SpecError('spec: first_copies requires final copies')
     return plan
 
 
@@ -366,6 +387,8 @@ def reset_relay_split_vars(s: dict) -> list:
     rl = reset_landing_plan(s)
     if rl and rl.get("enable") and rl.get("copies"):
         out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    if rl and rl.get("enable") and rl.get("first_copies"):
+        out.append("--orfs-var OT_RST_LAND_FIRST_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["first_copies"].items())))
     return out
 
 
@@ -463,7 +486,7 @@ def pin_hook_wrapper(s: dict) -> bool:
     kits that were valid before regenerate byte-identically (the new cases used to raise SpecError)."""
     if not (s.get("io_flop_at_pins") and s.get("recipe", 1) >= 2):
         return False
-    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops") or s.get("pin_hook_after_flops"))
+    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
 
 
 def pin_hook_flops_only(s: dict) -> bool:
@@ -525,14 +548,6 @@ def gen_pin_hooks(s: dict) -> dict:
         if not (ROOT / rel).is_file():
             raise SpecError(f"missing pin hook: {rel}")
         pre_gpl.insert(-1, f"source /src/{rel}")
-    # Cone partitions must see the actual fixed pin anchors, rather than adding
-    # those flops to a region before their face locations are known.
-    for rel in s.get("pin_hook_after_flops", []):
-        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
-            raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
-        if not (ROOT / rel).is_file():
-            raise SpecError(f"missing pin hook: {rel}")
-        pre_gpl.append(f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -1226,31 +1241,13 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason = str(fr.get("pin_bound", "")).strip()
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
-    if isinstance(structural, dict) and not reason:
-        # Gate-rule exception: root must approve it; verify the geometry rather
-        # than accepting claimed utilisation/channel numbers as a low-fill escape.
-        band = structural.get("std_band_y_um", [])
-        lattice = 43.2
-        valid = (str(structural.get("why", "")).strip()
-                 and str(structural.get("approved_by", "")).strip()
-                 and len(blocks) >= 4 and len(band) == 2)
-        if valid:
-            lo, hi = map(float, band)
-            density = float(std_area) / ((W - 2 * CORE_MARGIN) * (hi - lo)) if hi > lo else 0
-            valid = (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6)
-            for block in blocks:
-                valid = valid and block.get("kind") == "macro"
-                valid = valid and all(abs(block[axis] / lattice - round(block[axis] / lattice)) < 1e-6
-                                      for axis in ("x", "y"))
-                valid = valid and (block["y"] + block["h"] <= lo or block["y"] >= hi)
-            for i, block in enumerate(blocks):
-                for other in blocks[i + 1:]:
-                    gx = max(block["x"] - other["x"] - other["w"], other["x"] - block["x"] - block["w"])
-                    gy = max(block["y"] - other["y"] - other["h"], other["y"] - block["y"] - block["h"])
-                    valid = valid and max(gx, gy) >= CHANNEL_UM - 1e-6
-        if valid:
-            reason = str(structural["why"]).strip()
-            reason_kind = "lattice/channel-bound gate-rule exception"
+    if structural is not None:
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        if errors:
+            return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
+                    "fix measured sizing geometry; actual placement verification is also required")
+        reason = str(structural["why"]).strip()
+        reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
@@ -1652,7 +1649,7 @@ def spec_io_budget(s: dict) -> tuple:
 def io_budget_env(s: dict) -> dict:
     """OT_IO_*_BUDGET_PS for a tightened single-clock boundary ({} = nominal 0.2 T, kits unchanged)"""
     fin, fout = spec_io_budget(s)
-    if (fin, fout) == (0.2, 0.2):
+    if (fin, fout) == (0.2, 0.2) and not s.get('single_clock_contract'):
         return {}
     signoff = clock_entry_constraints.signoff_period(s)
     return {"OT_IO_IN_BUDGET_PS": round(signoff * fin, 3), "OT_IO_OUT_BUDGET_PS": round(signoff * fout, 3)}
@@ -1674,7 +1671,8 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1707,7 +1705,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
             + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
-            + "\nset_propagated_clock [all_clocks]\n")
+            + "\nset_propagated_clock [all_clocks]\n"
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -1934,18 +1933,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
     post_plain = ([] if multi else [f"source /src/{QDM}/post_plain.tcl"]) + btcl
     pre_ref = (["estimate_parasitics -placement"] if multi else [f"source /src/{QDM}/pre_ref_skew.tcl"]) + btcl
-    stage_hooks = {"post_cts.tcl": list(post_plain), "post_grt.tcl": list(post_plain),
+    stage_hooks = {"post_cts.tcl": post_plain, "post_grt.tcl": post_plain,
                    "pre_drt.tcl": pre_ref, "pre_fill.tcl": pre_ref,
-                   "post_fill.tcl": list(post_plain)}
-    # Read-only physical invariants after clock/data repair, with frozen source.
-    for rel in s.get("post_stage_audits", []):
-        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
-            raise SpecError("post_stage_audits must name safe relative repo Tcl files")
-        if not (ROOT / rel).is_file():
-            raise SpecError(f"missing post-stage audit: {rel}")
-        for name in ("post_cts.tcl", "post_grt.tcl", "post_fill.tcl"):
-            stage_hooks[name].append(f"source /src/{rel}")
-        post_drt.append(f"source /src/{rel}")
+                   "post_fill.tcl": post_plain}
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
             "post_drt.tcl": "\n".join(post_drt) + "\n",
             **{name: "\n".join(lines) + "\n" for name, lines in stage_hooks.items()},
@@ -2250,12 +2240,13 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("post_stage_audits", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+    out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
@@ -2364,7 +2355,12 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
-    r, j = s["route"], s.get("job", {})
+    r, j = s["route"], dict(s.get("job", {}))
+    if s.get("single_clock_contract"):
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
+    if s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
     tag = j.get("tag", "ref")

@@ -81,6 +81,7 @@ SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_st
  "$S/qkd_native_attention_record.sv" "$D/ot_qwen_d2d_static.sv" "$D/ot_qwen_d2d_services.sv" "$Q/qfd_kvn_static_transport.sv"
  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv"
  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+ "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192.v" "$D/ot_qwen_d2d_safe5.sv"
  "$Q/qfd_native59_dv_service.sv" "$Q/qfd_native59_q_export_control.sv" "$Q/qfd_native59_command_context.sv"
  "$Q/qfd_native59_static_service.sv" "$Q/qfd_native59_record_endpoint.sv" "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv"
  "$S/qkd_native_attention_programme.sv" "$S/qkd_native59_descriptor_producer.sv" "$S/qkd_native_attention_static_ctl.sv"
@@ -89,7 +90,7 @@ SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_st
  "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv")
 KATTN=rtl/test/qwen_split/xdie_kvs14c/qkd_kvs_attn_kvs14c.sv
 mkdir -p "$OUT"
-sha256sum "${SRC_COMMON[@]}" "$KATTN" "$D/ot_qwen_d2d_dies.sv" "$D/ot_qwen_d2d_dies_ovl.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
+sha256sum "${SRC_COMMON[@]}" "$KATTN" "$D/ot_qwen_d2d_dies.sv" "$D/ot_qwen_d2d_dies_ovl.sv" "$D/ot_qwen_d2d_dies_ovl_sf.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
 want=("$@")
 one() {
   local name=$1 exp=$2 calf=$3 gf="$4 ${XQ_G:-}" mod=${5:-} o=$OUT/$1 kattn=$KATTN
@@ -103,7 +104,7 @@ one() {
   # the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K; QXF-LINK F4): no source patching
   $V --binary --timing -j "${JOBS:-4}" -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
      -DOT_MEM_NO_INIT -I"$o/cal" --top-module tb_xdie_qwen_exchange $gf -GCALDIR="\"$o/cal\"" --Mdir "$o/obj" \
-     "${SRC_COMMON[@]}" "$kattn" "$D/ot_qwen_d2d_dies.sv" "$D/ot_qwen_d2d_dies_ovl.sv" > "$o/build.log" 2>&1 || {
+     "${SRC_COMMON[@]}" "$kattn" "$D/ot_qwen_d2d_dies.sv" "$D/ot_qwen_d2d_dies_ovl.sv" "$D/ot_qwen_d2d_dies_ovl_sf.sv" > "$o/build.log" 2>&1 || {
        if [ "$exp" = BUILD_FAIL ] && grep -q 'D2D_TXDP_NOT_COMPILED' "$o/build.log"; then
          echo "$name expect=$exp got=BUILD_FAIL -> OK"; grep -m2 'D2D_TXDP_NOT_COMPILED' "$o/build.log" | sed 's/^/    /'; cp "$o/build.log" "$o/run.log"
        else echo "$name expect=$exp got=BUILD_FAIL -> UNEXPECTED"; grep -m6 '%Error' "$o/build.log"; fi
