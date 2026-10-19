@@ -93,6 +93,21 @@ REVIEWED = {
         sha256=('6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b',),
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
+    # ELEM-GAPS/HBMB 2026-10-18: the HBM service SPSC FIFO, the SAME reviewed source and sha256 as the async_gray_fifo
+    # profile (async_gray_fifo_constraints.SOURCES): ot_async_fifo structure -- binary/Gray wr_/rd_ pointers updated on
+    # their own edge, async_reg 2-flop syncs wr_gray -> wr_gray_r1 -> wr_gray_r2 (reader) and rd_gray -> rd_gray_w1 ->
+    # rd_gray_w2 (writer), online flags wr_online / rd_online synchronised the same way; storage mem[wr_bin] written
+    # on wr_fire on the Gray update edge; rd_data = mem[rd_bin] (FWFT).  read-valid = rd_reset && wr_online_r2 &&
+    # !empty, empty = (rd_gray == wr_gray_r2) COMBINATIONAL: 'conditioned_neq' = the conditioned reset/online terms AND
+    # the 'link' Gray inequality (reset 'rd_reset' = the u_rd_reset pipe output).
+    'ot_hbm_svc_async_fifo': dict(
+        path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv',
+        sha256=('3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1',),
+        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
+                ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
+                ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        valid='conditioned_neq', read_stage=None, rd_rst_wire='rd_reset', rd_rst_conditioner='u_rd_reset'),
 }
 STORAGE = re.compile(r'mem\[\d+\](?:\[\d+\])?')
 RESERVED_ATTRIBUTE = re.compile(rb'\b(?:src|hdlname|module\w*|cell_\w*|keep_hierarchy)\s*=')
@@ -651,6 +666,9 @@ def _unsat(aig, po, abc):
 
 def _valid_lit(net, aig, fifo, memo):
     kind, terms = fifo['valid']
+    if kind == 'and_neq':   # AND(terms[0]) & OR_i(a_i ^ b_i)
+        neq = _valid_lit(net, aig, dict(valid=('neq', terms[1])), memo)
+        return aig.and_(_valid_lit(net, aig, dict(valid=('and', terms[0])), memo), neq)
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -845,19 +863,26 @@ def _lint(spec, root):
         if r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
         else:
-            empty = bits_of(scope, 'rd_empty')
+            empty = bits_of(scope, 'rd_empty') if r['valid'] == 'conditioned' else [None]
             # rd_domain_rst_n: the reviewed source's own wire; if synthesis dropped the name, the reviewed
             # rd_reset_conditioner output (ot_async_fifo EXT_RST 0 places it in a generate block).
-            rst = [net.bit_of.get(prefix + 'rd_domain_rst_n')]
+            rst = [net.bit_of.get(prefix + r.get('rd_rst_wire', 'rd_domain_rst_n'))]
             if not isinstance(rst[0], int):
+                cname = re.escape(r.get('rd_rst_conditioner', 'rd_reset_conditioner'))
                 conditioner = [c for c, b in scopes if b == RESET_SYNC[0] and
-                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?rd_reset_conditioner', c)]
+                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?' + cname, c)]
                 rst = bits_of(conditioner[0], 'reset_pipe')[-1:] if len(conditioner) == 1 else [None]
             if len(empty) != 1 or not isinstance(rst[0], int) or len(stage['wonl'][5][-1]) != 1:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
-            if net.domain(empty[0]) != reader:
-                raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
-            valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
+            if r['valid'] == 'conditioned_neq':
+                pairs = tuple(zip(stage['rptr'][4], stage['wptr'][5][-1]))
+                if not pairs or net.domain(rst[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
+                valid = ('and_neq', (((rst[0], 1), (stage['wonl'][5][-1][0], 1)), pairs))
+            else:
+                if net.domain(empty[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
+                valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid,
                           storage=set(storage), chains={c[0]: len(c[4]) for c in chains},
                           pointer_max_delay_ps=round(min(period[writer], period[reader]) - SETUP_UNCERTAINTY_PS, 3),
@@ -974,16 +999,17 @@ def _lint(spec, root):
         fid = next(iter(owners))
         fifo = fifos[fid]
         kind, terms = fifo['valid']
-        if kind == 'neq':
+        ands, pairs = (terms[0], terms[1]) if kind == 'and_neq' else \
+            ((), terms) if kind == 'neq' else (terms, None)
+        v = 1
+        if pairs is not None:
             v = 0
-            for a, b in terms:
+            for a, b in pairs:
                 x, y = _bdd_of(net, bdd, a, level, cache), _bdd_of(net, bdd, b, level, cache)
                 v = bdd.ite(v, 1, bdd.ite(x, bdd.neg(y), y))
-        else:
-            v = 1
-            for b, polarity in terms:
-                x = _bdd_of(net, bdd, b, level, cache)
-                v = bdd.ite(v, x if polarity else bdd.neg(x), 0)
+        for b, polarity in ands:
+            x = _bdd_of(net, bdd, b, level, cache)
+            v = bdd.ite(v, x if polarity else bdd.neg(x), 0)
         invalid = bdd.neg(v)
         fn = _bdd_of(net, bdd, net.flops[q]['d'], level, cache)
         for s in sorted(net.cone(net.flops[q]['d']) & fifo['storage']):
