@@ -1,0 +1,61 @@
+ot-run: ot-epyc4       admits  1116 GB (avail 838, growth 50, headroom 0, waiters 0/0 GB) load 36/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 513, growth 19, headroom 0, waiters 0/0 GB) load 47/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1230 GB (avail 920, growth 60, headroom 0, waiters 0/0 GB) load 25/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1069 GB (avail 800, growth 52, headroom 0, waiters 0/0 GB) load 16/96 running 14 disk 6269 GB 
+ot-run: ot-epyc8       admits  1329 GB (avail 987, growth 53, headroom 0, waiters 0/0 GB) load 20/128 running 15 disk 54 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-180969-1792449910 after 0 s
+input/cells.lef: OK
+input/loaded_caps.json.gz: OK
+input/make_tracks.tcl: OK
+input/metal.json.gz: OK
+input/native_arc_domains.json: OK
+input/native_clock_cell.json: OK
+input/native_pin_geometry.json.gz: OK
+input/positions.json: OK
+input/setRC.tcl: OK
+input/tech.lef: OK
+kit/bundle_headroom_model.py: OK
+kit/bundle_model.py: OK
+kit/cut_diagnose.py: OK
+kit/dft/__init__.py: OK
+kit/dft/liberty.py: OK
+kit/lib_SHA256SUMS: OK
+kit/model.py: OK
+kit/refine.sh: OK
+kit/render.py: OK
+kit/run.sh: OK
+kit/tree_refinement.py: OK
+kit/vendor/strict_contract.py: OK
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-bundle-model-1019/kit/bundle_headroom_model.py", line 202, in <module>
+    assert x>=r['x0'] and x+it['w']<=r['x1'] and y>=r['row0'] and y+3<=r['row0']+r['rows'],(g,it['w'],r)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('pair[0]', 248, {'x0': 0, 'x1': 491, 'row0': 17, 'rows': 17, 'bucket': 2, 'area_um2': 55.783080000000005, 'capacity_um2': 121.69926000000001, 'ordinary_fill': 0.4583682760273152})
+Command exited with non-zero status 1
+	Command being timed: "python3 kit/bundle_headroom_model.py"
+	User time (seconds): 3.11
+	System time (seconds): 0.16
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 185728
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 54318
+	Voluntary context switches: 1
+	Involuntary context switches: 8
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-180969-1792449910): exit 1

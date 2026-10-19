@@ -1,0 +1,28 @@
+{
+  "mode": "Read-only frozen source siteplan native TT/FFcap+CQtable/RSMT cut proof; no engine",
+  "resource": "16GB 2threads; previous identical native library/11449tree proof passed",
+  "source_parent": "a770fac11",
+  "inputs": [
+    {
+      "path": "out/site_plan.json.gz",
+      "sha256": "0c7ca2c997ea6198b149a9fe7007efdadff19264f6966847c8ef7e8997020075"
+    },
+    {
+      "path": "kit/tree_refinement.py",
+      "sha256": "cdeab17f9725bf5e600dd16ff5c3973e8635884cd54e769bfe3b6bb1ae95b22b"
+    },
+    {
+      "path": "kit/render_bundle.py",
+      "sha256": "0b22971e35d0213f516754be943143bc0cb7db90d900f8a8aca82ee7d5d883c9"
+    },
+    {
+      "path": "kit/cut_diagnose.py",
+      "sha256": "8d6b8064390d34024fb1a09091833a06ce09cb452d1013b0d7a27beffd8cbec2"
+    },
+    {
+      "path": "kit/lib_SHA256SUMS",
+      "sha256": "6e5afb1a8e1246588bd38d36e70424766b754c5f5c670dfa9a17794db03398d4"
+    }
+  ],
+  "invocation": "sha256sum -c REFINE_SHA256SUMS; docker pinned image16470cea Python tree_refinement, cut_diagnose, render_bundle; sha256sum -c REFINE_SHA256SUMS"
+}

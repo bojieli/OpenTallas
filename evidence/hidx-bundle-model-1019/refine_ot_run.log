@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       admits  1097 GB (avail 826, growth 58, headroom 0, waiters 0/0 GB) load 38/128 running 16 disk 433 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 512, growth 20, headroom 0, waiters 0/0 GB) load 54/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1221 GB (avail 912, growth 55, headroom 0, waiters 0/0 GB) load 22/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1072 GB (avail 801, growth 50, headroom 0, waiters 0/0 GB) load 16/96 running 14 disk 6268 GB 
+ot-run: ot-epyc8       admits  1324 GB (avail 987, growth 61, headroom 0, waiters 0/0 GB) load 19/128 running 16 disk 53 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-182423-1792449997 after 0 s
+out/site_plan.json.gz: OK
+kit/tree_refinement.py: OK
+kit/render_bundle.py: OK
+kit/cut_diagnose.py: OK
+kit/lib_SHA256SUMS: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz: OK
+{"nets": 11449, "corners": {"TT": {"total_RMST_length_um": 237339.77199999976, "max_tree_root_path_um": 257.748, "cap_over_limit": 0}, "FF": {"total_RMST_length_um": 237339.77199999976, "max_tree_root_path_um": 257.748, "cap_over_limit": 0}}, "TT_outside": 0, "FF_outside": 0, "cuts": {"M4_full": {"max_segment_crossings": 1247, "cut_um": 14.661000000000008}, "M4_inside_band": {"max_segment_crossings": 1108, "cut_um": 88.587}, "M3_full": {"max_segment_crossings": 1653, "cut_um": 68.445}, "gross_M4_tracks_full_face": 2925, "gross_M4_tracks_core": 2835, "gross_M4_tracks_inside_band": 585, "gross_M3_tracks_full_face": 2925, "gross_M3_tracks_core": 2835, "scope": "Gross pitch-only capacities before real PG/cell blockage/spacing/access, not a routability PASS"}, "clock": {"TT": {"real_sink_input_cap_fF": 1378.6333439999328, "budget265_BUFx24_input_cap_fF": 622.8189, "total_model_input_cap_before_wire_fF": 2001.4522439999328, "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"}, "FF": {"real_sink_input_cap_fF": 1515.9170399999464, "budget265_BUFx24_input_cap_fF": 690.9477499999999, "total_model_input_cap_before_wire_fF": 2206.8647899999464, "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"}}}
+{"all": {"peak": 1247, "cut_um": 14.661000000000008, "by_kind": {"output": 372, "input": 208, "internal": 667}}, "band": {"peak": 1108, "cut_um": 88.587, "by_kind": {"output": 385, "input": 23, "internal": 700}}}
+Traceback (most recent call last):
+  File "/work/kit/render_bundle.py", line 4, in <module>
+    from PIL import Image,ImageDraw,ImageFont
+ModuleNotFoundError: No module named 'PIL'
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-182423-1792449997): exit 1

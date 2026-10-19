@@ -1,0 +1,6 @@
+{
+  "mode": "SOURCE_ONLY positive BUF graph139 nativebuffers, no actualdesignmutation",
+  "source_commit": "2e0ed40ec",
+  "resource": "4GB 2threads;11145cells/97655pinrects only, no2.117MPG scan",
+  "invocation": "sha256sum -c CLOCK_SHA256SUMS && python3 kit/clock_candidate.py && sha256sum -c CLOCK_SHA256SUMS"
+}

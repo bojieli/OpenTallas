@@ -1,0 +1,50 @@
+ot-run: ot-epyc4       admits  1080 GB (avail 817, growth 61, headroom 0, waiters 0/0 GB) load 34/128 running 16 disk 413 GB 
+ot-run: ot-epyc5       admits   481 GB (avail 394, growth 39, headroom 0, waiters 0/0 GB) load 32/128 running 7 disk 911 GB 
+ot-run: ot-epyc6       admits  1222 GB (avail 912, growth 54, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 5716 GB 
+ot-run: ot-epyc7       admits  1083 GB (avail 808, growth 41, headroom 0, waiters 0/0 GB) load 14/96 running 13 disk 6272 GB 
+ot-run: ot-epyc8       admits  1247 GB (avail 929, growth 50, headroom 0, waiters 0/0 GB) load 19/128 running 11 disk 65 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-spread-model-v2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-spread-model-v2-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-152968-1792448648 after 0 s
+input/cells.lef: OK
+input/loaded_caps.json.gz: OK
+input/metal.json.gz: OK
+input/native_arc_domains.json: OK
+input/native_clock_cell.json: OK
+input/native_pin_geometry.json.gz: OK
+input/positions.json: OK
+input/setRC.tcl: OK
+kit/dft/__init__.py: OK
+kit/dft/liberty.py: OK
+kit/lib_SHA256SUMS: OK
+kit/model.py: OK
+kit/refine.sh: OK
+kit/render.py: OK
+kit/run.sh: OK
+kit/tree_refinement.py: OK
+kit/vendor/strict_contract.py: OK
+out/MODEL.json: OK
+out/site_plan.json.gz: OK
+out/all_native_wire_cap_ledger.json.gz: OK
+input/cells.lef: OK
+input/loaded_caps.json.gz: OK
+input/metal.json.gz: OK
+input/native_arc_domains.json: OK
+input/native_clock_cell.json: OK
+input/native_pin_geometry.json.gz: OK
+input/positions.json: OK
+input/setRC.tcl: OK
+kit/dft/__init__.py: OK
+kit/dft/liberty.py: OK
+kit/lib_SHA256SUMS: OK
+kit/model.py: OK
+kit/refine.sh: OK
+kit/render.py: OK
+kit/run.sh: OK
+kit/tree_refinement.py: OK
+kit/vendor/strict_contract.py: OK
+out/MODEL.json: OK
+out/site_plan.json.gz: OK
+out/all_native_wire_cap_ledger.json.gz: OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-152968-1792448648): exit 0

@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 32/128 running 15 disk 414 GB 
+ot-run: ot-epyc5       admits   485 GB (avail 396, growth 40, headroom 0, waiters 0/0 GB) load 47/128 running 7 disk 911 GB 
+ot-run: ot-epyc6       admits  1206 GB (avail 904, growth 60, headroom 0, waiters 0/0 GB) load 21/128 running 18 disk 5716 GB 
+ot-run: ot-epyc7       admits  1041 GB (avail 782, growth 54, headroom 0, waiters 0/0 GB) load 17/96 running 16 disk 6272 GB 
+ot-run: ot-epyc8       admits  1229 GB (avail 917, growth 55, headroom 0, waiters 0/0 GB) load 16/128 running 12 disk 74 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-spread-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-spread-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-147520-1792447912 after 0 s
+input/cells.lef: OK
+input/loaded_caps.json.gz: OK
+input/metal.json.gz: OK
+input/native_clock_cell.json: OK
+input/native_pin_geometry.json.gz: OK
+input/positions.json: OK
+input/setRC.tcl: OK
+kit/model.py: OK
+kit/run.sh: OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-147520-1792447912): exit 1

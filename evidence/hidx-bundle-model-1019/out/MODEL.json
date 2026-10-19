@@ -1,0 +1,626 @@
+{
+  "scope": "SOURCE MODEL ONLY; original actual70042checkpoint untouched; NO engine/ODB generation/CTS/route",
+  "canonical_cells": 8265,
+  "source_ledger_scalar_port_aliases": {
+    "clk[0]": "clk"
+  },
+  "cells": 11145,
+  "ff": 2904,
+  "added_ff": 0,
+  "added_edges": 0,
+  "all_legal_rows": 504,
+  "allocation_rows": 104,
+  "cohorts": 27,
+  "cohort_count": {
+    "pair[0]": 348,
+    "pair[1]": 348,
+    "pair[2]": 348,
+    "pair[3]": 348,
+    "pair[4]": 348,
+    "pair[5]": 348,
+    "quad[0]": 496,
+    "quad[10]": 496,
+    "quad[11]": 496,
+    "quad[1]": 496,
+    "quad[2]": 496,
+    "quad[3]": 496,
+    "quad[4]": 496,
+    "quad[5]": 496,
+    "quad[6]": 496,
+    "quad[7]": 496,
+    "quad[8]": 496,
+    "quad[9]": 496,
+    "slice[0]": 345,
+    "slice[1]": 345,
+    "slice[2]": 345,
+    "slice[3]": 345,
+    "slice[4]": 345,
+    "slice[5]": 345,
+    "slice[6]": 345,
+    "slice[7]": 345,
+    "slice[8]": 345
+  },
+  "regions": {
+    "slice[0]": {
+      "x0": 0,
+      "x1": 430,
+      "row0": 0,
+      "rows": 17,
+      "bucket": 0,
+      "area_um2": 44.87724,
+      "capacity_um2": 106.5798,
+      "ordinary_fill": 0.4210670314637483
+    },
+    "quad[10]": {
+      "x0": 430,
+      "x1": 1160,
+      "row0": 0,
+      "rows": 17,
+      "bucket": 0,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 180.9378,
+      "ordinary_fill": 0.4203062046736503
+    },
+    "slice[1]": {
+      "x0": 1360,
+      "x1": 1790,
+      "row0": 0,
+      "rows": 17,
+      "bucket": 1,
+      "area_um2": 44.87724,
+      "capacity_um2": 106.5798,
+      "ordinary_fill": 0.4210670314637483
+    },
+    "quad[2]": {
+      "x0": 1790,
+      "x1": 2520,
+      "row0": 0,
+      "rows": 17,
+      "bucket": 1,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 180.9378,
+      "ordinary_fill": 0.4203062046736503
+    },
+    "pair[0]": {
+      "x0": 0,
+      "x1": 491,
+      "row0": 17,
+      "rows": 17,
+      "bucket": 2,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 121.69926000000001,
+      "ordinary_fill": 0.4583682760273152
+    },
+    "quad[7]": {
+      "x0": 491,
+      "x1": 1160,
+      "row0": 17,
+      "rows": 17,
+      "bucket": 2,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 165.81834,
+      "ordinary_fill": 0.4586300888068232
+    },
+    "slice[2]": {
+      "x0": 1360,
+      "x1": 1790,
+      "row0": 17,
+      "rows": 17,
+      "bucket": 3,
+      "area_um2": 44.87724,
+      "capacity_um2": 106.5798,
+      "ordinary_fill": 0.4210670314637483
+    },
+    "quad[11]": {
+      "x0": 1790,
+      "x1": 2520,
+      "row0": 17,
+      "rows": 17,
+      "bucket": 3,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 180.9378,
+      "ordinary_fill": 0.4203062046736503
+    },
+    "slice[3]": {
+      "x0": 0,
+      "x1": 314,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 4,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "slice[6]": {
+      "x0": 314,
+      "x1": 628,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 4,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "quad[8]": {
+      "x0": 628,
+      "x1": 1160,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 4,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 139.61808000000002,
+      "ordinary_fill": 0.5446950710108605
+    },
+    "slice[4]": {
+      "x0": 1360,
+      "x1": 1674,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 5,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "slice[5]": {
+      "x0": 1674,
+      "x1": 1988,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 5,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "quad[1]": {
+      "x0": 1988,
+      "x1": 2520,
+      "row0": 34,
+      "rows": 18,
+      "bucket": 5,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 139.61808000000002,
+      "ordinary_fill": 0.5446950710108605
+    },
+    "pair[2]": {
+      "x0": 0,
+      "x1": 491,
+      "row0": 52,
+      "rows": 17,
+      "bucket": 6,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 121.69926000000001,
+      "ordinary_fill": 0.4583682760273152
+    },
+    "quad[9]": {
+      "x0": 491,
+      "x1": 1160,
+      "row0": 52,
+      "rows": 17,
+      "bucket": 6,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 165.81834,
+      "ordinary_fill": 0.4586300888068232
+    },
+    "pair[3]": {
+      "x0": 1360,
+      "x1": 1851,
+      "row0": 52,
+      "rows": 17,
+      "bucket": 7,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 121.69926000000001,
+      "ordinary_fill": 0.4583682760273152
+    },
+    "quad[3]": {
+      "x0": 1851,
+      "x1": 2520,
+      "row0": 52,
+      "rows": 17,
+      "bucket": 7,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 165.81834,
+      "ordinary_fill": 0.4586300888068232
+    },
+    "pair[1]": {
+      "x0": 0,
+      "x1": 491,
+      "row0": 69,
+      "rows": 17,
+      "bucket": 8,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 121.69926000000001,
+      "ordinary_fill": 0.4583682760273152
+    },
+    "quad[6]": {
+      "x0": 491,
+      "x1": 1160,
+      "row0": 69,
+      "rows": 17,
+      "bucket": 8,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 165.81834,
+      "ordinary_fill": 0.4586300888068232
+    },
+    "pair[5]": {
+      "x0": 1360,
+      "x1": 1851,
+      "row0": 69,
+      "rows": 17,
+      "bucket": 9,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 121.69926000000001,
+      "ordinary_fill": 0.4583682760273152
+    },
+    "quad[4]": {
+      "x0": 1851,
+      "x1": 2520,
+      "row0": 69,
+      "rows": 17,
+      "bucket": 9,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 165.81834,
+      "ordinary_fill": 0.4586300888068232
+    },
+    "slice[7]": {
+      "x0": 0,
+      "x1": 314,
+      "row0": 86,
+      "rows": 18,
+      "bucket": 10,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "slice[8]": {
+      "x0": 314,
+      "x1": 628,
+      "row0": 86,
+      "rows": 18,
+      "bucket": 10,
+      "area_um2": 44.87724,
+      "capacity_um2": 82.40616,
+      "ordinary_fill": 0.5445859872611465
+    },
+    "quad[0]": {
+      "x0": 628,
+      "x1": 1160,
+      "row0": 86,
+      "rows": 18,
+      "bucket": 10,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 139.61808000000002,
+      "ordinary_fill": 0.5446950710108605
+    },
+    "pair[4]": {
+      "x0": 1360,
+      "x1": 1851,
+      "row0": 86,
+      "rows": 18,
+      "bucket": 11,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 128.85804000000002,
+      "ordinary_fill": 0.43290337180357547
+    },
+    "quad[5]": {
+      "x0": 1851,
+      "x1": 2520,
+      "row0": 86,
+      "rows": 18,
+      "bucket": 11,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 175.57236000000003,
+      "ordinary_fill": 0.43315063942866633
+    }
+  },
+  "ordinary_area_um2": 1651.1850000000002,
+  "band_capacity_um2": 3821.1264,
+  "ordinary_band_fill": 0.4321199633699634,
+  "clock_spine": {
+    "x_um": [
+      64.8,
+      75.6
+    ],
+    "width_um": 10.8,
+    "rows": 104,
+    "area_um2": 303.264,
+    "source_sink_contacts": 2904,
+    "source_sink_cap_fF": 1378.633344,
+    "reference": "Actual INT8253clockcells/75.85974um2 at2782sinks; scaling is sensitivity, NOT clock implementation",
+    "scaled_reference_area_um2": 79.18644319194824,
+    "conservative_all_BUFx24_cells": 265,
+    "conservative_native_area_um2": 115.911,
+    "conservative_added_clock_input_cap_fF": 622.8189,
+    "clockcell": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "liberty_sha256": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817",
+      "cell_body_sha256": "e276824c5b43a8ea60f7dcb29a9d045725c6abdee4d05d1a34dc82d1c859f54a",
+      "input_A_cap_fF": 2.35026,
+      "lef_width_um": 1.62,
+      "lef_height_um": 0.27,
+      "area_um2": 0.4374
+    },
+    "conservative_spine_fill": 0.3822115384615385,
+    "site_capacity_at6_BUFx24_per_row": 624,
+    "area_to55percent_after265_BUFx24_um2": 334.52352,
+    "actual_tree": null,
+    "actual_spread": null
+  },
+  "density_windows": [
+    {
+      "window_um": [
+        2.7,
+        2.7
+      ],
+      "maximum_fill": 0.808,
+      "origin_um": [
+        49.30200000000001,
+        66.42
+      ],
+      "scope": "EXACT exhaustive every legal site/row aligned window"
+    },
+    {
+      "window_um": [
+        5.4,
+        5.4
+      ],
+      "maximum_fill": 0.6705,
+      "origin_um": [
+        79.704,
+        72.63
+      ],
+      "scope": "EXACT exhaustive every legal site/row aligned window"
+    },
+    {
+      "window_um": [
+        10.8,
+        10.8
+      ],
+      "maximum_fill": 0.61625,
+      "origin_um": [
+        77.868,
+        56.16
+      ],
+      "scope": "EXACT exhaustive every legal site/row aligned window"
+    },
+    {
+      "window_um": [
+        5.4,
+        0.27
+      ],
+      "maximum_fill": 0.72,
+      "origin_um": [
+        4.428,
+        56.16
+      ],
+      "scope": "EXACT exhaustive every legal site/row aligned window"
+    }
+  ],
+  "wire": {
+    "actual_checkpoint_geometry": {
+      "nonclock_driver_nets": 11449,
+      "total_hpwl_um": 341876.8085,
+      "total_unobstructed_star_um": 483493.7155,
+      "maximum_direct_branch_um": 148.128,
+      "internal_max_direct_branch_um": 63.306,
+      "hpwl_cap_over_limit": [],
+      "star_cap_over_limit_count": 147
+    },
+    "model": {
+      "nonclock_driver_nets": 11449,
+      "total_hpwl_um": 233036.70750000002,
+      "total_unobstructed_star_um": 308053.38550000003,
+      "maximum_direct_branch_um": 183.618,
+      "internal_max_direct_branch_um": 27.39949999999999,
+      "hpwl_cap_over_limit": [],
+      "star_cap_over_limit_count": 8
+    }
+  },
+  "wire_model": {
+    "source": "Exact native MTerm largest-access-rectangle centers and real BPin centers",
+    "signal_R_kohm_per_um": 0.0265684,
+    "signal_C_fF_per_um": 0.16579,
+    "scope": "Pin-access-specific HPWL floor and unobstructed rectilinear-star construction; obstacle detours/vias/real tree unknown. Neither is extracted RC or a timing closure.",
+    "TT_setup": "Source ideal-wire +262.959503ps only; model adds nonzero wire cap but no characterized path replay yet",
+    "FF_hold": "Unqualified: no actual clock/neighbor phase; no zero-clock or arrival-padding proof"
+  },
+  "native_PG": {
+    "reference_checkpoint_sha256": "70042afe82ff76fc2657f45fb6c2a89f91eed2993add8e9dc89f2fc612fc88a6",
+    "actual_reference_shapes": 2117134,
+    "actual_reference_vias": 39895,
+    "actual_reference_terminal_contacts": 22290,
+    "geometry_cost": {
+      "M5:wire:POWER": {
+        "shapes": 26,
+        "rectangle_area_sum_um2": 424.62575999999973
+      },
+      "M2:wire:POWER": {
+        "shapes": 252,
+        "rectangle_area_sum_um2": 617.2588799999977
+      },
+      "M1:wire:POWER": {
+        "shapes": 252,
+        "rectangle_area_sum_um2": 617.2588799999977
+      },
+      "M4:via:POWER": {
+        "shapes": 13104,
+        "rectangle_area_sum_um2": 30.820608000001435
+      },
+      "M5:via:POWER": {
+        "shapes": 6552,
+        "rectangle_area_sum_um2": 36.16704000000044
+      },
+      "V4:via:POWER": {
+        "shapes": 13104,
+        "rectangle_area_sum_um2": 7.547903999998404
+      },
+      "M3:wire:POWER": {
+        "shapes": 6552,
+        "rectangle_area_sum_um2": 20.049120000000407
+      },
+      "M3:via:POWER": {
+        "shapes": 13104,
+        "rectangle_area_sum_um2": 34.33247999999957
+      },
+      "V3:via:POWER": {
+        "shapes": 13104,
+        "rectangle_area_sum_um2": 5.6609279999998465
+      },
+      "M2:via:POWER": {
+        "shapes": 6804,
+        "rectangle_area_sum_um2": 628.9889760000003
+      },
+      "V2:via:POWER": {
+        "shapes": 19656,
+        "rectangle_area_sum_um2": 6.368543999999827
+      },
+      "M1:via:POWER": {
+        "shapes": 252,
+        "rectangle_area_sum_um2": 617.1772320000008
+      },
+      "V1:via:POWER": {
+        "shapes": 952560,
+        "rectangle_area_sum_um2": 308.62943999995923
+      },
+      "M5:wire:GROUND": {
+        "shapes": 26,
+        "rectangle_area_sum_um2": 424.7131200000001
+      },
+      "M2:wire:GROUND": {
+        "shapes": 253,
+        "rectangle_area_sum_um2": 619.7083199999977
+      },
+      "M1:wire:GROUND": {
+        "shapes": 253,
+        "rectangle_area_sum_um2": 619.7083199999977
+      },
+      "M4:via:GROUND": {
+        "shapes": 13156,
+        "rectangle_area_sum_um2": 30.942912000001442
+      },
+      "M5:via:GROUND": {
+        "shapes": 6578,
+        "rectangle_area_sum_um2": 36.310560000000365
+      },
+      "V4:via:GROUND": {
+        "shapes": 13156,
+        "rectangle_area_sum_um2": 7.577855999998388
+      },
+      "M3:wire:GROUND": {
+        "shapes": 6578,
+        "rectangle_area_sum_um2": 20.128680000000443
+      },
+      "M3:via:GROUND": {
+        "shapes": 13156,
+        "rectangle_area_sum_um2": 34.4687199999994
+      },
+      "V3:via:GROUND": {
+        "shapes": 13156,
+        "rectangle_area_sum_um2": 5.683391999999846
+      },
+      "M2:via:GROUND": {
+        "shapes": 6831,
+        "rectangle_area_sum_um2": 631.4849640000003
+      },
+      "V2:via:GROUND": {
+        "shapes": 19734,
+        "rectangle_area_sum_um2": 6.393815999999826
+      },
+      "M1:via:GROUND": {
+        "shapes": 253,
+        "rectangle_area_sum_um2": 619.6263480000008
+      },
+      "V1:via:GROUND": {
+        "shapes": 956340,
+        "rectangle_area_sum_um2": 309.85415999987526
+      },
+      "M1:pin:POWER": {
+        "shapes": 11145,
+        "rectangle_area_sum_um2": 110.07899999999341
+      },
+      "M1:pin:GROUND": {
+        "shapes": 11145,
+        "rectangle_area_sum_um2": 110.07899999999341
+      },
+      "M5:bpin:POWER": {
+        "shapes": 26,
+        "rectangle_area_sum_um2": 424.62575999999973
+      },
+      "M5:bpin:GROUND": {
+        "shapes": 26,
+        "rectangle_area_sum_um2": 424.7131200000001
+      }
+    },
+    "metal_area_scope": "Raw rectangle sums, including overlaps; not occupied union or free routing capacity",
+    "source_model_only": "New site positions require real native PG/contact/short re-audit after a separately granted placement; no current checkpoint mutation"
+  },
+  "assignment": {
+    "method": "Actual native graph gives27 independent cohorts; cap-weighted actual-port Hungarian assignment of12quads; all4 choices of3 doubled18row buckets, exact15small-cohort assignment; best within-bucket ordering;16 local native-hyperedge barycentric iterations; real native functional FF/INV/BUF atoms and168 independent twelve-FF capture bundles with actual gap/cell geometry",
+    "double_buckets": [
+      4,
+      5,
+      10
+    ],
+    "cohort_groups": {
+      "10": [
+        "quad[0]",
+        "slice[7]",
+        "slice[8]"
+      ],
+      "0": [
+        "quad[10]",
+        "slice[0]"
+      ],
+      "3": [
+        "quad[11]",
+        "slice[2]"
+      ],
+      "5": [
+        "quad[1]",
+        "slice[4]",
+        "slice[5]"
+      ],
+      "1": [
+        "quad[2]",
+        "slice[1]"
+      ],
+      "7": [
+        "quad[3]",
+        "pair[3]"
+      ],
+      "9": [
+        "quad[4]",
+        "pair[5]"
+      ],
+      "11": [
+        "quad[5]",
+        "pair[4]"
+      ],
+      "8": [
+        "quad[6]",
+        "pair[1]"
+      ],
+      "2": [
+        "quad[7]",
+        "pair[0]"
+      ],
+      "4": [
+        "quad[8]",
+        "slice[3]",
+        "slice[6]"
+      ],
+      "6": [
+        "quad[9]",
+        "pair[2]"
+      ]
+    }
+  },
+  "open": [
+    "ROOT model PNG/source review",
+    "New exact placement grant",
+    "Actual post-placement PG/short/strict/identity proof",
+    "Actual signal access/routes/cap/slew/setup",
+    "Actual2904sink CTS clockcap/wire/insertion/spread",
+    "Real parent boundary and hold repair cost",
+    "Whole HIDX reset/storage/ownership/throughput release"
+  ]
+}

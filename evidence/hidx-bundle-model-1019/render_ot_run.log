@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits  1093 GB (avail 823, growth 58, headroom 0, waiters 0/0 GB) load 55/128 running 16 disk 432 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 513, growth 19, headroom 0, waiters 0/0 GB) load 45/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1220 GB (avail 910, growth 55, headroom 0, waiters 0/0 GB) load 26/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1074 GB (avail 802, growth 50, headroom 0, waiters 0/0 GB) load 17/96 running 14 disk 6268 GB 
+ot-run: ot-epyc8       admits  1331 GB (avail 988, growth 49, headroom 0, waiters 0/0 GB) load 17/128 running 14 disk 52 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-183590-1792450072 after 1 s
+out/site_plan.json.gz: OK
+kit/tree_refinement.py: OK
+kit/render_bundle.py: OK
+kit/cut_diagnose.py: OK
+kit/lib_SHA256SUMS: OK
+out/site_plan.json.gz: OK
+kit/tree_refinement.py: OK
+kit/render_bundle.py: OK
+kit/cut_diagnose.py: OK
+kit/lib_SHA256SUMS: OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-183590-1792450072): exit 0

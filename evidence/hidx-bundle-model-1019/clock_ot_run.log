@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits  1115 GB (avail 837, growth 50, headroom 0, waiters 0/0 GB) load 39/128 running 15 disk 431 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 512, growth 19, headroom 0, waiters 0/0 GB) load 39/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1219 GB (avail 910, growth 55, headroom 0, waiters 0/0 GB) load 31/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1075 GB (avail 803, growth 50, headroom 0, waiters 0/0 GB) load 21/96 running 14 disk 6267 GB 
+ot-run: ot-epyc8       admits  1338 GB (avail 993, growth 49, headroom 0, waiters 0/0 GB) load 18/128 running 14 disk 49 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-185318-1792450167 after 0 s
+out/site_plan.json.gz: OK
+kit/clock_candidate.py: OK
+input/native_pin_geometry.json.gz: OK
+input/native_clock_cell.json: OK
+input/positions.json: OK
+{"root": 1, "regional": 27, "leaf": 111, "buffers": 139, "max_fanout": 32, "native_clock_sinks": 2904, "area_um2": 60.7986, "spine_area_um2": 303.264, "spine_average_fill": 0.2004807692307692, "TT_buffer_input_cap_fF": 326.68614, "FF_buffer_input_cap_fF": 362.42165000000006, "native_TT_FF_sink_cap_fF": [1378.633344, 1515.91704], "nominal_clock_RSMT_wire_um": 5605.335000000005, "nominal_clock_wire_cap_fF": 815.1614477100006, "source_clock_pin_to_root": "Fixed W(0,70.2) source ingress outside graph wireledger; real ingress/access/cap/phase OPEN", "max139term_PGcost": 278, "max265budgetterm_PGcost": 530, "physical_native_PG_binding": "Future cells require a92 MTerm-complete domain binding AT BIRTH and actual conductor/contact/short audit; existing22290 contacts do not cover new clock cells", "clocktrack_reservation": "111 leaf longH trunks <=128 separately recorded conservative band Hray reservations; actual chosen tree/landing/clockroute OPEN", "budget265area_um2": 115.911, "remaining_budget_buffers": 126}
+out/site_plan.json.gz: OK
+kit/clock_candidate.py: OK
+input/native_pin_geometry.json.gz: OK
+input/native_clock_cell.json: OK
+input/positions.json: OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-185318-1792450167): exit 0

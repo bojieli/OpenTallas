@@ -1,0 +1,235 @@
+{
+  "scope": "READONLY refinement of frozen SOURCE MODEL; same coordinates/source/load/edge counts, no physical engine",
+  "site_plan_sha256": "0c7ca2c997ea6198b149a9fe7007efdadff19264f6966847c8ef7e8997020075",
+  "nets": 11449,
+  "topology": "Native-pin rectilinear MST plus explicit unobstructed M3V/M4H doglegs; shared collinear same-net segments unioned. Real track assignment, PG avoidance, pin access, vias and extracted timing remain OPEN.",
+  "corners": {
+    "TT": {
+      "total_RMST_length_um": 237339.77199999976,
+      "max_tree_root_path_um": 257.748,
+      "cap_over_limit": []
+    },
+    "FF": {
+      "total_RMST_length_um": 237339.77199999976,
+      "max_tree_root_path_um": 257.748,
+      "cap_over_limit": []
+    }
+  },
+  "FF_CQ_domain": {
+    "total": 2904,
+    "TT_outside": [],
+    "FF_outside": [],
+    "scope": "All2904 FF native load-axis checks with actual corner pin caps and nominal wire model. No early-CQ or hold guarantee."
+  },
+  "clock": {
+    "TT": {
+      "real_sink_input_cap_fF": 1378.6333439999328,
+      "budget265_BUFx24_input_cap_fF": 622.8189,
+      "total_model_input_cap_before_wire_fF": 2001.4522439999328,
+      "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"
+    },
+    "FF": {
+      "real_sink_input_cap_fF": 1515.9170399999464,
+      "budget265_BUFx24_input_cap_fF": 690.9477499999999,
+      "total_model_input_cap_before_wire_fF": 2206.8647899999464,
+      "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"
+    }
+  },
+  "cuts": {
+    "M4_full": {
+      "max_segment_crossings": 1247,
+      "cut_um": 14.661000000000008
+    },
+    "M4_inside_band": {
+      "max_segment_crossings": 1108,
+      "cut_um": 88.587
+    },
+    "M3_full": {
+      "max_segment_crossings": 1653,
+      "cut_um": 68.445
+    },
+    "gross_M4_tracks_full_face": 2925,
+    "gross_M4_tracks_core": 2835,
+    "gross_M4_tracks_inside_band": 585,
+    "gross_M3_tracks_full_face": 2925,
+    "gross_M3_tracks_core": 2835,
+    "scope": "Gross pitch-only capacities before real PG/cell blockage/spacing/access, not a routability PASS"
+  },
+  "native_libraries": {
+    "TT": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    ],
+    "FF": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+      }
+    ]
+  },
+  "actual_native_CQ_domains": {
+    "TT": [
+      {
+        "type": "cell_rise",
+        "template": "delay_template_7x7",
+        "axis_roles": {
+          "1": "input_net_transition",
+          "2": "total_output_net_capacitance"
+        },
+        "axes": {
+          "1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "2": [
+            0.72,
+            1.44,
+            2.88,
+            5.76,
+            11.52,
+            23.04,
+            46.08
+          ]
+        },
+        "native_source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "native_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "template_body_sha256": "b64392fbcd7be3191574611ea78aeb07c8a3afdfee083a686d562643aecfb2a0"
+      },
+      {
+        "type": "cell_fall",
+        "template": "delay_template_7x7",
+        "axis_roles": {
+          "1": "input_net_transition",
+          "2": "total_output_net_capacitance"
+        },
+        "axes": {
+          "1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "2": [
+            0.72,
+            1.44,
+            2.88,
+            5.76,
+            11.52,
+            23.04,
+            46.08
+          ]
+        },
+        "native_source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "native_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "template_body_sha256": "b64392fbcd7be3191574611ea78aeb07c8a3afdfee083a686d562643aecfb2a0"
+      }
+    ],
+    "FF": [
+      {
+        "type": "cell_rise",
+        "template": "delay_template_7x7",
+        "axis_roles": {
+          "1": "input_net_transition",
+          "2": "total_output_net_capacitance"
+        },
+        "axes": {
+          "1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "2": [
+            0.72,
+            1.44,
+            2.88,
+            5.76,
+            11.52,
+            23.04,
+            46.08
+          ]
+        },
+        "native_source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "native_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+        "template_body_sha256": "b64392fbcd7be3191574611ea78aeb07c8a3afdfee083a686d562643aecfb2a0"
+      },
+      {
+        "type": "cell_fall",
+        "template": "delay_template_7x7",
+        "axis_roles": {
+          "1": "input_net_transition",
+          "2": "total_output_net_capacitance"
+        },
+        "axes": {
+          "1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "2": [
+            0.72,
+            1.44,
+            2.88,
+            5.76,
+            11.52,
+            23.04,
+            46.08
+          ]
+        },
+        "native_source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "native_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+        "template_body_sha256": "b64392fbcd7be3191574611ea78aeb07c8a3afdfee083a686d562643aecfb2a0"
+      }
+    ]
+  },
+  "original_merged_TT_unbound_axis_receipt_tables": 2
+}

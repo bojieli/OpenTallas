@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-spread-model-1019/kit/model.py", line 39, in <module>
+    if drv['cell'] is None and ports[drv['pin']]['net'] not in clocknets:
+                               ~~~~~^^^^^^^^^^^^
+KeyError: 'clk[0]'

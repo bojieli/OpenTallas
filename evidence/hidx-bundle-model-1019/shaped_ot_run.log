@@ -1,0 +1,57 @@
+ot-run: ot-epyc4       admits  1116 GB (avail 838, growth 50, headroom 0, waiters 0/0 GB) load 34/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   649 GB (avail 511, growth 19, headroom 0, waiters 0/0 GB) load 47/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1220 GB (avail 911, growth 55, headroom 0, waiters 0/0 GB) load 26/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1075 GB (avail 803, growth 50, headroom 0, waiters 0/0 GB) load 16/96 running 14 disk 6269 GB 
+ot-run: ot-epyc8       admits  1331 GB (avail 988, growth 52, headroom 0, waiters 0/0 GB) load 19/128 running 15 disk 53 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-bundle-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-181626-1792449948 after 0 s
+input/cells.lef: OK
+input/loaded_caps.json.gz: OK
+input/make_tracks.tcl: OK
+input/metal.json.gz: OK
+input/native_arc_domains.json: OK
+input/native_clock_cell.json: OK
+input/native_pin_geometry.json.gz: OK
+input/positions.json: OK
+input/setRC.tcl: OK
+input/tech.lef: OK
+kit/bundle_headroom_model.py: OK
+kit/bundle_model.py: OK
+kit/cut_diagnose.py: OK
+kit/dft/__init__.py: OK
+kit/dft/liberty.py: OK
+kit/lib_SHA256SUMS: OK
+kit/model.py: OK
+kit/refine.sh: OK
+kit/render.py: OK
+kit/run.sh: OK
+kit/tree_refinement.py: OK
+kit/vendor/strict_contract.py: OK
+{"cells": 11145, "cohorts": 27, "ordinary_area_um2": 1651.1850000000002, "density_windows": [{"window_um": [2.7, 2.7], "maximum_fill": 0.808, "origin_um": [49.30200000000001, 66.42], "scope": "EXACT exhaustive every legal site/row aligned window"}, {"window_um": [5.4, 5.4], "maximum_fill": 0.6705, "origin_um": [79.704, 72.63], "scope": "EXACT exhaustive every legal site/row aligned window"}, {"window_um": [10.8, 10.8], "maximum_fill": 0.61625, "origin_um": [77.868, 56.16], "scope": "EXACT exhaustive every legal site/row aligned window"}, {"window_um": [5.4, 0.27], "maximum_fill": 0.72, "origin_um": [4.428, 56.16], "scope": "EXACT exhaustive every legal site/row aligned window"}]}
+{"actual_checkpoint_geometry": {"nonclock_driver_nets": 11449, "total_hpwl_um": 341876.8085, "total_unobstructed_star_um": 483493.7155, "maximum_direct_branch_um": 148.128, "internal_max_direct_branch_um": 63.306, "hpwl_cap_over_limit": [], "star_cap_over_limit_count": 147}, "model": {"nonclock_driver_nets": 11449, "total_hpwl_um": 233036.70750000002, "total_unobstructed_star_um": 308053.38550000003, "maximum_direct_branch_um": 183.618, "internal_max_direct_branch_um": 27.39949999999999, "hpwl_cap_over_limit": [], "star_cap_over_limit_count": 8}}
+	Command being timed: "python3 kit/bundle_headroom_model.py"
+	User time (seconds): 15.12
+	System time (seconds): 1.26
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:16.38
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1517932
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 473594
+	Voluntary context switches: 1
+	Involuntary context switches: 29
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 5656
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-181626-1792449948): exit 0
