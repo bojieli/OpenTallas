@@ -58,9 +58,14 @@ def main(a):
                 manifest_sha256=sha(a.manifest),row_policy_sha256=sha(a.policy),driver_sha256=sha(__file__),
                 power_qualified=False,timing_qualified=False,production_admitted=False,steps=[])
     def command(code):
+        display=code if not code.startswith('set stage_clocks ') else 'set stage_clocks {explicit manifest '+str(len(names))+' cells}'
+        step=dict(command=display,command_sha256=hashlib.sha256(code.encode()).hexdigest(),status=None)
+        record['steps'].append(step)
+        (out/'record.json').write_text(json.dumps(record,indent=1)+'\n')
+        print('CLOCK_PDN_BEGIN '+display,flush=True)
         status=int(d.evalTclString('set stage_code [catch {'+code+'} stage_message]; set stage_code'))
         message=d.evalTclString('set stage_message')
-        record['steps'].append(dict(command=code,status=status,message=message))
+        step.update(status=status,message=message if not code.startswith('set stage_clocks ') else str(len(names))+' explicit clock cells')
         (out/'record.json').write_text(json.dumps(record,indent=1)+'\n')
         print(json.dumps(record['steps'][-1]),flush=True)
         if status:raise ValueError('native stage rejected: '+message)
@@ -94,6 +99,16 @@ def main(a):
             raise ValueError('programme/GEN/clock manifest differs from planned PG blueprint')
         if geometry(b)!=reference['cell_geometry_sha256'] or rect(b.getCoreArea())!=reference['actual_core_dbu']:
             raise ValueError('generated PDN changed pinned cell geometry/core/clock coordinates')
+        if a.command=='generate':
+            if not a.pdn_source or record['input_odb_sha256']!=reference['output_odb_sha256']:
+                raise ValueError('exact prepared ODB and original pinned PDN source required')
+            if any(len(b.findNet(n).getSWires()) for n in ('VDD','VSS')):
+                raise ValueError('original PDN generation requires supply-wire-free prepared ODB')
+            record['original_pdn_sources']={path:sha(path) for path in [a.pdn_source,*a.pdn_companion]}
+            command('source {'+a.pdn_source+'}')
+            command('pdngen -failed_via_report {'+str(out/'failed_vias.rpt')+'}')
+            d.writeDb(str(out/'generated_pdn.odb'))
+            record['generated_odb_sha256']=sha(out/'generated_pdn.odb')
         actual=mesh(b)
         if actual!=reference['planned_core_mesh_from_actual_shapes']:raise ValueError('actual generated mesh differs from planned source-bound blueprint')
         record.update(reference_sha256=sha(a.reference),actual_generated_mesh_sha256=digest(actual),
@@ -107,7 +122,9 @@ def main(a):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command',choices=('prepare','verify'))
+    p.add_argument('command',choices=('prepare','generate','verify'))
     for n in ('odb','manifest','policy','out','tool-source','gen-source'):p.add_argument('--'+n,required=True)
     p.add_argument('--reference')
+    p.add_argument('--pdn-source')
+    p.add_argument('--pdn-companion',action='append',default=[])
     main(p.parse_args())

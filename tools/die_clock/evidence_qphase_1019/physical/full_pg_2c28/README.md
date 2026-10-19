@@ -6,12 +6,12 @@ M1 pin shapes/orientation, opposite-M8 clearance and two actual M9 contacts.
 
 Independent actual ODB geometry audit4159935 (expected physical-row FAIL):
 
--42,981 cells:36,286 regional and6,695 spine,765 regional trees.
--All763 required spine endpoints appear exactly once; no missing/extra endpoint.
--Zero spine or ALL-clock full-footprint overlaps.
--7,457 routed stages; worst actual-pin route401.058um, source entry88.819um.
--Regional actual direct maximum365.138um, zero>405um; fanout12. Spine fanout2.
--42,850 clock cells lack physical rows; this is not a physical PASS.
+- 42,981 cells:36,286 regional and6,695 spine,765 regional trees.
+- All763 required spine endpoints appear exactly once; no missing/extra endpoint.
+- Zero spine or ALL-clock full-footprint overlaps.
+- 7,457 routed stages; worst actual-pin route401.058um, source entry88.819um.
+- Regional actual direct maximum365.138um, zero>405um; fanout12. Spine fanout2.
+- 42,850 clock cells lack physical rows; this is not a physical PASS.
 
 Independent actual PG audit4159936 exit0 is a constraint receipt, not an
 admission result: zero opposite-M8 phase conflicts and zero1.08um halo conflicts
@@ -35,7 +35,7 @@ native existing-grid import exits137 at the62GB container before generating
 rails; its source and failure remain immutable. The separate source prototype
 now prepares fixed clocks/rows before original PDN, with an exact source-bound
 planned mesh and mandatory actual generated-mesh/contact/short/continuity
-verification. See `../../../../README_qwen_pre_pdn.md` for ordering/ownership.
+verification. See [ordering/ownership](../../../README_qwen_pre_pdn.md).
 
 Remote original artifacts:
 `ot-epyc4:/srv/opentallas-scratch/claude/qwen-clock-phase-1019/pg_safe_sites/`
