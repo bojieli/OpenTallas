@@ -229,11 +229,7 @@ def probe_base(b, live):
                     guard=("OT_HOLD_GUARD start" in t), hm_auto=re.findall(r"OT_HM_AUTO.*", t)[-1:],
                     hm_proj=[int(x) for x in re.findall(r"OT_HM_(?:GUARD: margin \S+ kept|AUTO HM auto-reduced)[^~\n]*~(\d+) buffers", t)][-1:],
                     sync=re.findall(r"OT_HOLD_MM sync: SS setup ws ([-\d.]+) / FF hold ws ([-\d.]+)", t)[-1:],
-                    stall=("OT_HOLD_STALL" in t),
-                    # (ROOT-CIO 2026-10-19, TW3-S81 daemon bug) the stage's hold repair runs under the daemon's
-                    # HOLD-STOP cap (tools/orfs_hold_mm.tcl prints "OT_HOLD_STOP stage=<s>: ... skipped|capped" before
-                    # the repair and "OT_HOLD_STOP stage=<s> done" after it): flat by design up to the cap
-                    hold_stop=bool(re.search(r"OT_HOLD_STOP stage=\S+?(?::| done)", t)))
+                    stall=("OT_HOLD_STALL" in t))
         if rows:
             hold["rows"] = len(rows)
             hold["first"] = [rows[0][0], int(rows[0][2]), float(rows[0][5]), float(rows[0][6])]
@@ -683,11 +679,6 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
     last = hd.get("cur_last")
     ws = ser[-1][2] if ser else (last[2] if last else None)
     if ws is None or ws >= 0:
-        return None
-    if hd.get("hold_stop"):
-        # (ROOT-CIO 2026-10-19, TW3-S81: dsrom-qelem-qs5f-ob-...-196759197 was EARLY_FAIL_HOLD after its capped HOLD-STOP
-        # replay had completed) a repair under OT_HOLD_STOP is already the daemon's decision: the flow caps it at the
-        # measured buffer count and the post-route hold ECO repairs the residue -- never judged again
         return None
     its, bufs = (ser[-1][0], ser[-1][1]) if ser else (0, 0)
     n = (hd.get("found") or [None])[-1]

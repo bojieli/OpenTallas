@@ -2480,9 +2480,6 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
-         # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
-         # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
-         + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

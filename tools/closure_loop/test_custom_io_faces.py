@@ -206,27 +206,3 @@ def test_place_pin_with_pin_size_is_literal():
     m = C.PLACE.fullmatch(line)
     assert m and m.group('pin') == 'do0[0]' and m.group('layer') == 'M3'
     assert C.PLACE.fullmatch(line.replace('-pin_size {0.018 0.144}', '-pin_size {0.018}')) is None
-
-
-def test_custom_io_without_force_flag_is_literal():
-    # RESUB-2 2026-10-19: tools/qwen_split/qfd_d2d_n_face_pins.py writes place_pin without -force_to_die_boundary
-    import custom_io_faces as C
-    line = "place_pin -pin_name {admit_ready} -layer M4 -location {0.042000 120.348000} -pin_size {0.084000 0.024000}"
-    m = C.PLACE.fullmatch(line)
-    assert m and m.group('pin') == 'admit_ready'
-
-
-def test_custom_io_against_pin_regions_compares_per_port():
-    # RESUB-2 2026-10-19: qfd_d2d_static r9j (literal custom IO) vs closed r8c (pin regions): only ck moved E -> N
-    import custom_io_faces as C
-    old = C.regions_as_map(C.regions("(--pin-region '^(a|ck)(\\[|$)=right' --pin-region '^(b)(\\[|$)=top')"))
-    new = {"status": "verified", "faces": {"a[0]": "E", "a[1]": "E", "b[0]": "N", "ck": "N"}}
-    r = C.compare(new, old)
-    assert r["status"] == "changed" and r["changed_pins"] == 1 and r["examples"] == {"ck": ["E", "N"]}, r
-    same = dict(new, faces=dict(new["faces"], ck="E"))
-    assert C.compare(same, old)["status"] == "same"
-    split = dict(new, faces=dict(new["faces"], **{"a[1]": "W"}))
-    assert C.compare(split, old)["status"] == "unverified"
-    missing = dict(new, faces={k: v for k, v in new["faces"].items() if k != "b[0]"})
-    assert C.compare(missing, old)["status"] == "unverified"
-    assert C.regions_as_map({"status": "verified", "faces": {}})["status"] == "absent"

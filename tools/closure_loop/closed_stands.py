@@ -368,11 +368,7 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             if old_custom["status"] == "verified" and old_regions["faces"]:
                 return refuse("slot_change closed custom IO plus nonempty pin-region rules are ambiguous")
             if custom["status"] != "absent" or old_custom["status"] != "absent":
-                # (RESUB-2 2026-10-19) a literal custom IO kit against a pin-region kit: the pin regions are the
-                # other side's literal face map (qfd_d2d_static r9j custom IO vs closed r8c regions)
-                comparison = custom_io_faces.compare(
-                    custom if custom["status"] != "absent" else custom_io_faces.regions_as_map(regions),
-                    old_custom if old_custom["status"] != "absent" else custom_io_faces.regions_as_map(old_regions))
+                comparison = custom_io_faces.compare(custom, old_custom)
                 face_evidence[closed_name] = comparison
                 facts["custom_io_face_comparisons"] = face_evidence
                 if comparison["status"] == "unverified":
@@ -556,58 +552,6 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                           f"closed {last['name']} (a moved outline / pin face is slot_change)")
         return admit(f"{rr['cell']} native audit FAIL: {'; '.join(over)} (receipt {rr['source']}); {rtl_note}, "
                      f"same outline, {pins_note}; fix: {rr['fix'].strip()[:200]}")
-    if kind == "pin_order":
-        # (REFILL-0400/PO-LINK 2026-10-19, pin_order rule c81a8f458; Gate-Rule: relaxing, submit-time only) a CLOSED
-        # view whose own bus bit order is chunk-scrambled on an abutted joint (PPL ordered groups do not keep chunk
-        # order): the abutted-joint audit (tools/hier_contract/abutted_joint_audit.py) names it, and the same RTL /
-        # outline / pin faces are re-kitted with an ordered bit layout (route.pin_balance or an exact io_tcl).
-        if not txt("source", 3) or rr["source"].strip().startswith("/"):
-            return refuse("pin_order needs \"source\": the COMMITTED abutted-joint audit hand-off / JSON that names the "
-                          "view (results/arch/abutted_joints_<date>/handoff_<die>.md)")
-        src = rr["source"].strip()
-        text = None
-        for ref in (new_commit, "origin/main"):
-            try:
-                text = show(ref, src) if ref else None
-            except Exception:  # noqa: BLE001
-                text = None
-            if text:
-                break
-        if not text:
-            return refuse(f"pin_order source {src!r} is not readable at the job's commit or origin/main")
-        if not re.search(r"(?<![A-Za-z0-9_])" + re.escape(str(blk)) + r"(?![A-Za-z0-9_])", text):
-            return refuse(f"pin_order: the audit {src!r} does not name {blk}")
-        if not txt("fix", 20):
-            return refuse("pin_order needs \"fix\": the ordered layout the new kit uses (route.pin_balance + per-port "
-                          "pin_ranges, mirrored range / pin_order_desc, or an exact io_tcl)")
-        if rtl[last["name"]][0] == "differs":
-            return refuse(f"pin_order is a pin-layout re-kit, but the RTL differs from closed {last['name']} "
-                          f"({rtl[last['name']][1]}): that is rtl_change")
-
-        def kit_env(sp):
-            m = KIT_RE.search(((sp.get("stages") or {}).get("route") or {}).get("cmd") or "")
-            c = str((sp.get("source") or {}).get("commit") or "")
-            try:
-                return show(c, f"{m.group(1)}/kit.env") if m else None
-            except Exception:  # noqa: BLE001
-                return None
-        ordered = lambda e: bool(e) and ("OT_PIN_BALANCE_H=" in e or re.search(r"^PINEX=0\s*$", e, re.M))  # noqa: E731
-        new_env, old_env = kit_env(spec), kit_env(last.get("spec_submitted") or last["spec"])
-        if not ordered(new_env):
-            return refuse("pin_order: the new kit.env has no ordered bit layout (OT_PIN_BALANCE_H from route.pin_balance, "
-                          "or PINEX=0 from an exact io_tcl)")
-        if ordered(old_env):
-            return refuse(f"pin_order: closed {last['name']} already had an ordered bit layout; a re-route repeats it "
-                          f"(fix the neighbour's range / pin_order_desc, or the die netlist's bit mapping)")
-        g_new, g_old = (new_rec or {}).get("geom") or {}, (recs[last["name"]] or {}).get("geom") or {}
-        f_new = ((new_rec or {}).get("pin_regions") or {}).get("faces")
-        f_old = ((recs[last["name"]] or {}).get("pin_regions") or {}).get("faces")
-        moved = [k for k in ("FW", "FH") if g_new.get(k) != g_old.get(k)] + (["pin faces"] if f_new != f_old else [])
-        if moved:
-            return refuse(f"pin_order keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
-                          f"closed {last['name']} (a moved outline / pin face is slot_change)")
-        return admit(f"abutted-joint audit {src} names {blk}: closed bit order undefined; {rtl[last['name']][1]}, same "
-                     f"outline and pin faces; fix: {rr['fix'].strip()[:200]}")
     if kind == "flow_failure":
         # (ROOT-0945 2026-10-18, relaxing, submit-time) the retry of an ADMITTED re-route that failed in the harness /
         # flow (earlyoom kill, crash): it inherits the failed job's admission, so the failed job must be on record.

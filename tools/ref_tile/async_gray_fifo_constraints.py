@@ -460,22 +460,10 @@ proc ot_ag_online_merged {scope role domains} {
   # merges them into ONE chain that keeps a single scope's name.  Admit a missing online crossing only when (a) no mapped
   # cell of this scope's online chain is left (it was merged away, not left unaudited) and (b) another FIFO scope with
   # the same writer/reader domains has that online crossing audited.  Gray pointers and payload are never merged here.
-  # HBM-KITS-B 10-18 (hdie_svc_vm_kshare gate e1d441878): the reviewed FIFO resets BOTH sides from wr_rst_n&&rd_rst_n, so
-  # the writer-side online chain of a core->hbm FIFO (wr_online on core, wr_online_r1/r2 on hbm) is bit-identical to the
-  # reader-side chain of an hbm->core FIFO (rd_online on core, rd_online_w1/w2 on hbm); synthesis merged u_cmd wr_online
-  # into lane[0].u_fill rd_online.  Admit that as the same launch->capture clock pair with the role swapped, under the
-  # same two conditions; the bounded crossing it is admitted against is the actual audited one.
   if {[llength [get_cells -quiet "$scope.${role}*"]]} {return 0}
-  set swapped [string map {wr_online rd_online rd_online wr_online} $role]
-  set reversed [list [lindex $domains 1] [lindex $domains 0]]
   dict for {other od} $::ot_ag_fifo_domains {
-    if {$other eq $scope} continue
-    if {$od eq $domains && [dict exists $::ot_ag_seen [list $other $role]]} {
+    if {$other ne $scope && $od eq $domains && [dict exists $::ot_ag_seen [list $other $role]]} {
       puts "OT_ASYNC_GRAY MERGED_ONLINE $scope $role -> $other"
-      return 1
-    }
-    if {$od eq $reversed && [dict exists $::ot_ag_seen [list $other $swapped]]} {
-      puts "OT_ASYNC_GRAY MERGED_ONLINE $scope $role -> $other $swapped"
       return 1
     }
   }
