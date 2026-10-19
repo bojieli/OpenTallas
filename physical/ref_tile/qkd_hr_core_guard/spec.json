@@ -2,7 +2,7 @@
  "name": "qkd_hr_core_guard",
  "top": "qkd_hr_core_guard",
  "sources": [
-  "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_guard.v",
+  "rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v",
   "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
@@ -85,7 +85,8 @@
   "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
-  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -209,7 +210,7 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
  "pin_regs": {
   "enable": true,
@@ -217,41 +218,99 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HROOT",
-  "branch": "claude/kv-hroot-1018",
-  "tag": "r4",
-  "purpose": "HOST root cluster r2 child qkd_hr_core_guard (pre-route gate + route; parent qkd_host_root is CRITICAL)",
+  "owner": "Claude:MU-KV-KITS",
+  "branch": "claude/mu-kv-kits-1019",
+  "tag": "mu1",
+  "purpose": "MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18) successor of qkd_hr_core_guard r4 (MU 0): u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu (4 user contexts, hc pos[17:16] user strip, in-order retire, pkgctl-MU report; same ports), core rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v (gen_cluster --wrap-only). Records results/rtl/mu_qwen_1018/hroot. Reset landing 2 stages (ROOT-RST default, recipe >= 3).",
   "benches": [
    {
-    "name": "cluster_lockstep",
+    "name": "guard_mu_lint",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu lint_guard_mu; rc=$?; cat {RUN}/bench/mu/lint_guard_mu.log; exit $rc",
     "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 24,
+    "pass_regex": "^PASS LINT_GUARD_MU qkd_hr_core_guard",
+    "threads": 4,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py exact --out {RUN}/bench/cg_exact",
-    "pass_regex": "CLUSTER_GATE PASS exact runs_pass=6/6",
-    "min_count_regex": "CLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=(\\d+)"
+    "pass_witness": "results/rtl/mu_qwen_1018/hroot/runs/mu/lint_guard_mu.log"
    },
    {
-    "name": "cluster_child_mutant",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 24,
+    "name": "guard_mu_e2e",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu tb_mu_hroot_e2e; rc=$?; cat {RUN}/bench/mu/tb_mu_hroot_e2e.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS MU_HROOT_E2E rounds=3 steps=12",
+    "threads": 4,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_guard",
-    "fail_regex": "CLUSTER_GATE FAIL mutant",
-    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_guard.log"
+    "pass_witness": "results/rtl/mu_qwen_1018/hroot/runs/mu/tb_mu_hroot_e2e.log"
+   },
+   {
+    "name": "guard_mu_ep1",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu ep1; rc=$?; cat {RUN}/bench/mu/ep1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "ERR cyc \\d+ endpoint protocol_fault",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/hroot/runs/mut/ep1.log"
+   },
+   {
+    "name": "guard_mu_ep2",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu ep2; rc=$?; cat {RUN}/bench/mu/ep2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "retire late \\(waited for global drains",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/hroot/runs/mut/ep2.log"
    }
   ],
   "reroute_reason": {
-   "kind": "flow_failure",
-   "failed_job": "qkd_hr_core_guard-r4-011e8419d",
-   "failure": "routed on ot-epyc5 without the TT overlay / OT_CTS_FIX_HOOKS (daemon pipefail path-pick bug, fixed main 59a8139a8); ttb_routed_at_TC failed"
-  }
+   "kind": "rtl_change",
+   "why": "rtl_change: MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18): u_rank__u_native qkd_host_native_token_endpoint_cancel -> qkd_host_native_token_endpoint_cancel_mu (same ports; 4 user contexts, hc pos[17:16] user strip, in-order retire, pkgctl-MU report); bench results/rtl/mu_qwen_1018/hroot (tb_mu_hroot_e2e PASS, ep1/ep2 FAIL witnesses); MU 0 core unchanged"
+  },
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv",
+   "rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv",
+   "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+   "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_guard_mu.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_hroot_e2e.f",
+   "rtl/test/mu_qwen_1018/run_mu_hroot.sh",
+   "rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv"
+  ]
  },
  "children": [],
  "inter": [],
@@ -259,5 +318,9 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

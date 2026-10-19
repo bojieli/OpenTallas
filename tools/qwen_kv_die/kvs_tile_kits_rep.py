@@ -300,7 +300,10 @@ def spec(S, kind):
         outline=dict(w=W, h=H, exact=True), layer_cap='M5', macros=sram_macros(S, kind, pins, rng, W, H), pins=pins,
         pin_ranges=rng,
         route=dict(pd=0.5, threads=8, peak_ram_gb=32 if kind.startswith(('grp', 'pc')) else 16, hold_margin_ns=0.03,
-                   io_hold_margin_ns=0.03, macro_halo_um=5.4),     # KITS 10-18: boundary margin >= 0.025
+                   io_hold_margin_ns=0.03, macro_halo_um=5.4,      # KITS 10-18: boundary margin >= 0.025
+                   # HKV-PCH2 10-19: pc / pc_h N face i_next (~800 b in 132 um): PPL ordered groups of 32 left 8-slot
+                   # section tails and PPL-0086 stranded a group at 3_2 (gate 20261019-001742); 16-pin chunks fit.
+                   **(dict(pin_group_max=16) if kind.startswith('pc') else {})),
         recipe=3, purpose=purpose,
         job=dict(owner=os.environ.get('KVS_KIT_OWNER', 'Claude:KV-INTEG2'),
                  branch=os.environ.get('KVS_KIT_BRANCH', 'claude/kv-integ2-kits-1018'), tag=TAG, purpose=purpose,
@@ -322,6 +325,8 @@ def spec(S, kind):
                     critical=CRITICAL.get(kind)))
     if sdc:
         sp['sdc_extra'] = [sdc]
+    if 'hrst_n' in resets and len(resets) > 1:      # HKV-PCH2 10-19: single-clock landing cannot land hrst_n
+        sp['reset_landing'] = dict(enable=False, reason="Two reset domains: rst_n is the core_clk (ck) reset, hrst_n the hclk (hck, 1024 ps, asynchronous root) reset of the HBM-side front / return / cal / ecc / cdc logic.  The flow's landing (OT_RST_LAND) lands every reset_ports input on ONE clock (ck), which would move the hclk reset release onto core_clk flops -- an unsynchronised ck->hck reset crossing the RTL does not have.  Until the landing supports a per-port clock, both resets stay as the RTL drives them (HKV-PCH2 10-19).")
     return kit, sp
 
 

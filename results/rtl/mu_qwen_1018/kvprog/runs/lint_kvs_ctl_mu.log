@@ -1,0 +1,49 @@
+# lint --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module qkd_kvs_ctl (Verilator 5.050, fleet ot-epyc4), tile file qkd_kvs_tiles_hroot_ff_k_mu.sv; files = lists/lint_kvs_ctl_mu.f; rc=0
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:78:17: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_wrn.u_wrn.u_writer.half_data'
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:179:42: ... Location of first driving block
+  179 |                 else if (slot && !ix[0]) half_data[256*h +: 256] <= wd[256*h +: 256];
+      |                                          ^~~~~~~~~
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:179:42: ... Location of other driving block
+  179 |                 else if (slot && !ix[0]) half_data[256*h +: 256] <= wd[256*h +: 256];
+      |                                          ^~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:189:25: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_wrn.u_wrn.u_writer.g_lane[0].es_data'
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:198:25: ... Location of first driving block
+  198 |                         es_data[127:0] <= assembled_row[256*q +: 128] ^ ((MUT == 1 && q == 0) ? 128'd1 : 128'd0);
+      |                         ^~~~~~~
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:212:25: ... Location of other driving block
+  212 |                         es_data[255:128] <= assembled_row[256*q+128 +: 128];
+      |                         ^~~~~~~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:189:25: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_wrn.u_wrn.u_writer.g_lane[1].es_data'
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:198:25: ... Location of first driving block
+  198 |                         es_data[127:0] <= assembled_row[256*q +: 128] ^ ((MUT == 1 && q == 0) ? 128'd1 : 128'd0);
+      |                         ^~~~~~~
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:212:25: ... Location of other driving block
+  212 |                         es_data[255:128] <= assembled_row[256*q+128 +: 128];
+      |                         ^~~~~~~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:189:25: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_wrn.u_wrn.u_writer.g_lane[2].es_data'
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:198:25: ... Location of first driving block
+  198 |                         es_data[127:0] <= assembled_row[256*q +: 128] ^ ((MUT == 1 && q == 0) ? 128'd1 : 128'd0);
+      |                         ^~~~~~~
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:212:25: ... Location of other driving block
+  212 |                         es_data[255:128] <= assembled_row[256*q+128 +: 128];
+      |                         ^~~~~~~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:189:25: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_wrn.u_wrn.u_writer.g_lane[3].es_data'
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:198:25: ... Location of first driving block
+  198 |                         es_data[127:0] <= assembled_row[256*q +: 128] ^ ((MUT == 1 && q == 0) ? 128'd1 : 128'd0);
+      |                         ^~~~~~~
+                      rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv:212:25: ... Location of other driving block
+  212 |                         es_data[255:128] <= assembled_row[256*q+128 +: 128];
+      |                         ^~~~~~~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv:53:17: Signal has multiple driving blocks with different clocking: 'qkd_kvs_ctl.u_fanr.bw_p'
+                      rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv:51:9: ... Location of first driving block
+   51 |         bw_p[292:1] <= bw[292:1];
+      |         ^~~~
+                      rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv:54:75: ... Location of other driving block
+   54 |     always @(posedge ck or negedge rs_q) if (!rs_q) bw_p[0] <= 1'b0; else bw_p[0] <= bw[0];
+      |                                                                           ^~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.874 MB sources in 45 modules, into 0.941 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.153 s (elab=0.027, cvt=0.084, bld=0.000); cpu 0.153 s on 1 threads; allocated 52.387 MB
+PASS LINT_KVS_CTL_MU qkd_kvs_ctl (u_own = qkd_static_kv_ownership_calendar_mu MU 1)

@@ -181,6 +181,82 @@ def landed_raw_pins(view, root):
     return landed_record_pins(view, root)['raw']
 
 
+def _lib_pin_blocks(text):
+    """{pin name: its Liberty pin(...) group text} of an ETM (quoted or bare names, bus bits included)"""
+    out = {}
+    for m in re.finditer(r'\bpin\s*\(\s*"?([^")\s]+)"?\s*\)\s*\{', text):
+        depth, i = 1, m.end()
+        while depth and i < len(text):
+            depth += {'{': 1, '}': -1}.get(text[i], 0)
+            i += 1
+        out[m[1]] = text[m.end():i - 1]
+    return out
+
+
+def landed_unused_pins(view, root):
+    """HBM-PGLG2 10-19: the UNLOADED input pins of a hard child, proven by its CLOSED route's ROUTED NETLIST.
+    KIND0 kind0_l4_leaf1 keeps clock ports clk_insert_0..3 / clk_stage_4 that drive nothing inside the closed leaf; the
+    landed pgslice parent ties them to the region root with the leaf's real clock pins, and clock_entries.tcl refused
+    the root ("must reach only standard-cell clock pins").  Evidence: <record route>/unloaded_pins.json written by
+    tools/ref_tile/unloaded_pins.py from the closed route's 6_final.v (no instance connection, no assign reads the
+    port bit).  Never classified by name.  Every listed pin is cross-checked against the leaf's routed ETMs at every
+    corner (pin group present, capacitance 0, no timing group, not a clock, never a related_pin) and must not be a
+    bound clock pin of the record; any mismatch fails closed.  [] for a child without a closed-record link
+    (port_latency.json) or without the evidence file (every existing kit: byte-identical)."""
+    view = Path(view)
+    try:
+        pl = json.loads((view / 'port_latency.json').read_text())
+    except (OSError, ValueError):
+        return []
+    job = pl.get('job') if isinstance(pl, dict) else None
+    if not job:
+        return []
+    vpath = Path(root) / 'results' / 'closure_loop' / job / 'verdict.json'
+    try:
+        verdict = json.loads(vpath.read_text())
+    except (OSError, ValueError):
+        return []
+    routes = [r.get('to') for r in (verdict.get('job_spec') or {}).get('record') or []
+              if isinstance(r, dict) and str(r.get('from', '')).endswith('/record/route')]
+    if len(routes) != 1 or not routes[0]:
+        return []
+    epath = Path(root) / routes[0] / 'unloaded_pins.json'
+    if not epath.is_file():
+        return []
+    where = f'{view}: unloaded-pin evidence {epath}'
+    if verdict.get('status') != 'CLOSED' or verdict.get('job') != job:
+        raise ValueError(f'{where}: {vpath} is not the CLOSED record of {job}')
+    try:
+        ev = json.loads(epath.read_text())
+        pins = ev['unloaded']
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        raise ValueError(f'{where}: unreadable ({e})')
+    if (ev.get('schema') != 1 or ev.get('job') != job or ev.get('top') != view.name or not ev.get('netlist_sha256')
+            or not isinstance(pins, list) or not all(isinstance(x, str) and x for x in pins) or len(set(pins)) != len(pins)):
+        raise ValueError(f'{where}: not the routed-netlist evidence of {view.name} / {job}')
+    bound = set((pl.get('control_roles') or {}).get('clocks') or [])
+    try:
+        bound |= set(json.loads((view / 'insertion.json').read_text()).get('clock_measurements') or {})
+    except (OSError, ValueError):
+        pass
+    for c in CORNERS:
+        lib = view / f'{view.name}_{c}.lib'
+        try:
+            text = lib.read_text()
+        except OSError as e:
+            raise ValueError(f'{where}: {lib} missing ({e})')
+        blocks = _lib_pin_blocks(text)
+        related = set(re.findall(r'related_pin\s*:\s*"?([^";\s]+)"?\s*;', text))
+        for pin in pins:
+            b = blocks.get(pin)
+            cap = re.search(r'capacitance\s*:\s*([-\d.eE+]+)\s*;', b or '')
+            if (b is None or not re.search(r'direction\s*:\s*input\s*;', b) or not cap or float(cap[1]) != 0.0
+                    or 'timing' in b or re.search(r'clock\s*:\s*true', b) or pin in related or pin in bound):
+                raise ValueError(f'{where}: {pin} is not an unloaded input of the routed ETM {lib.name} '
+                                 '(needs capacitance 0, no timing group, not a clock / related pin / bound clock)')
+    return sorted(pins)
+
+
 def landed_record_pins(view, root):
     """ROOT-INF21 10-19 (coordinator INF.21.1, pgslice_lg children): the closed-record clock reference of a hard child
     with raw clock pins (no routed boundary flops), for BOTH record models:
@@ -197,9 +273,12 @@ def landed_record_pins(view, root):
     "anchor": pin with the largest R (None for 'hybrid'), "R": {pin: {corner: mean}}}.  "raw" pins are judged against
     "ref" = the boundary CTS root with the largest TT boundary mean; "cotimed" boundary pins likewise (post-CTS SDC and
     pre-route gate); the post-CTS tap delays every pin except "anchor" by R(anchor) - R(p) (landed_tap_targets).
-    Children whose pins all have routed boundary flops read no record (empty result, kits byte-identical)."""
+    Children whose pins all have routed boundary flops read no record (empty result, kits byte-identical).
+    HBM-PGLG2 10-19: "unused" = the child's routed-netlist-proven UNLOADED input pins (landed_unused_pins),
+    in every result; a region root may reach them (clock_entries.tcl ::ot_ce_landed_unused), nothing is measured."""
     view = Path(view)
-    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={})
+    unused = landed_unused_pins(view, root)
+    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={}, unused=unused)
     ins = json.loads((view / 'insertion.json').read_text())
     cm = ins.get('clock_measurements') or {}
     raw_like = sorted(p for p, r in cm.items() if any(not (r.get(c) or {}).get('boundary') for c in CORNERS))
@@ -296,7 +375,7 @@ def landed_record_pins(view, root):
         out[pin] = dict(ref=ref, tol=tol, refs=refs, record=record, verdict=vrel)
         R[pin] = {c: refs[c][1] for c in CORNERS}
     if not multi:
-        return dict(model='hybrid', raw=out, cotimed={}, anchor=None, R=R)
+        return dict(model='hybrid', raw=out, cotimed={}, anchor=None, R=R, unused=unused)
     for p in bounded:
         R[p] = {c: bmean(p, c) for c in CORNERS}
     meas = pl.get('clock_reference')
@@ -311,7 +390,7 @@ def landed_record_pins(view, root):
                                      f'view reference {R[p][c]}')
     cotimed = {p: dict(ref=ref, tol=tol, record=record, verdict=vrel) for p in bounded if p != ref}
     anchor = max(ports, key=lambda p: (R[p]['tt'], -ports.index(p)))
-    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R)
+    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R, unused=unused)
 
 
 def landed_raw_targets(spec, root):
@@ -416,6 +495,16 @@ def landed_pre_cts_tcl(spec, root):
     if raw:
         out.append('set ::ot_ce_landed_raw [dict create ' + ' '.join(
             f'{{{k}}} {{ref {v["ref"]}}}' for k, v in sorted(raw.items())) + ']')
+    # HBM-PGLG2 10-19: routed-netlist-proven unloaded child input pins a region root may reach (no sink, no arc)
+    unused, seen = [], set()
+    for ch in spec.get('children', []):
+        view = Path(root) / ch['view']
+        if view.name in seen:
+            continue
+        seen.add(view.name)
+        unused.extend(f'{view.name}/{p}' for p in landed_record_pins(view, root)['unused'])
+    if unused:
+        out.append('set ::ot_ce_landed_unused [dict create ' + ' '.join(f'{{{k}}} 1' for k in sorted(unused)) + ']')
     return out
 
 
@@ -436,8 +525,25 @@ def landed_sdc(spec, root):
         return ""
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
+    ring = {L["name"]: (str(L.get("ring") or "").split() or [""])[0] for L in rec.get("landings") or []}
+    ring = {n: (g[6:-2] if g.startswith("u_lpl_") and g.endswith("_w") else n) for n, g in ring.items()}
+    shared = any(g != n for n, g in ring.items())
     o = [f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, multicycle -setup {E} -hold {D - 1}"]
-    if names:
+    if names and shared:
+        o += ["set ot_lp_pairs {" + " ".join(f"{ring[n]} {n}" for n in names) + "}",
+              "set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }",
+              "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
+              "  set ot_lw $ot_lp_ring($ot_ln)",
+              "  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]",
+              "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+              "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }",
+              "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
+              "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+              f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
+              f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
+              'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
+    elif names:
         o += ["set ot_lp_lands {" + " ".join(names) + "}", "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
               "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
               "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",

@@ -66,7 +66,8 @@ SOURCED = dict(
     embed_cycles=272,            # token_path_1018 embed xdie (priced): KV-die embedding row -> compute die
     kv_service=1555,             # measured-old-RTL KV-die static attention service (qwen_attention_rate_1015)
     d2d_record=32,               # 2 KB a KV die a layer over a 512-b lane (s81_balance_1018 section 2, modelled)
-    host_return=134,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6)
+    host_return=135,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6) + 1 edge pkgctl MU two-stage die
+                                 # reports (MU-KV-HCTL2 10-19: report -> retire +1 in qkd_host_ctl)
     ar_words=256,                # 4,096 FP32 = 256 x 512-b words an all-reduce (TP8 production shape)
     lu=53, ls=378,               # implemented UCIe / SerDes collective latencies (dv2f14bi calendar LS 378, qcollcal3_1018)
     users=4,
@@ -166,8 +167,10 @@ def head_blocks(p):
     # token is in the per-user token bank (mu_opcal.EMB_T); the embedding request / host return consume that token, so the
     # priced embedding window (d2d_o, host, the embed_cycles fetch) starts there and the block grows by it
     o = p.get("head_tok_ofs", 0)
+    # token_pad (MU-KV-BOOT 10-19, default 0 = unchanged): idle cycles at the end of the token so the latency user's token
+    # period is a multiple of the KV die's 768-edge HBM-beat cycle (as the single-user KV image's padded period)
     out.append(("head", dict(windows=fin({"d2d_o": [(o, o + p["d2d_record"])], "host": [(o, o + p["host_return"])]},
-                                         "head"), length=o + e)))
+                                         "head"), length=o + e + p.get("token_pad", 0))))
     return out
 
 
@@ -209,11 +212,14 @@ def single_user_period(p, layers=36):
 
 
 # ---- interval bookkeeping -----------------------------------------------------------------------------------------
+SELF_OK = ("kv.lp",)   # MU-KV-BOOT: resources whose windows may overlap the SAME user's (one context's own events)
+
+
 class Reservations:
     def __init__(self):
         self.r = {}
 
-    def collides(self, wins, t0):
+    def collides(self, wins, t0, owner=None):
         for res, iv in wins.items():
             have = self.r.get(res)
             if not have:
@@ -228,6 +234,9 @@ class Reservations:
                         lo = m + 1
                     else:
                         hi = m
+                if res in SELF_OK and owner is not None:           # kv.lp: unit windows, own ones are no clash
+                    while lo < len(have) and have[lo][0] < B and have[lo][2] == owner:
+                        lo += 1
                 if lo < len(have) and have[lo][0] < B:
                     return (res, A, B, have[lo])
         return None
@@ -239,9 +248,9 @@ class Reservations:
             for a, b in iv:
                 bisect.insort(lst, (a + t0, b + t0, owner))
 
-    def earliest(self, wins, t):
+    def earliest(self, wins, t, owner=None):
         while True:
-            c = self.collides(wins, t)
+            c = self.collides(wins, t, owner)
             if c is None:
                 return t
             res, A, B, h = c
@@ -552,6 +561,328 @@ def dv_user_fields(users=4):
                "a filler's first entry T_0 >= 4 + (NU - 1); no two users' entries / segment ends on one edge",
                "fillers' ME work = LOCAL SEG entries of their own segments (the dh start runs the ME programme for user 0 "
                "only) at a non-zero base, without SU o-sync waits (the head's SU accepted count is user 0's)"])
+
+
+# ---- KV layer programme GAP table (MU-KV-BOOT 10-19; hroot README section 3 / 6.3) ------------------------------------
+# qkd_static_kv_layer_programme_mu #(.MU(1)) (in qkd_kvs_ctl) runs 4 token contexts, user = authority_epoch[1:0] (the
+# epoch {seq14, user2} convention of ot_qwen_tp8_token_epoch_allocator_mu), all on the ONE boot-loaded 36-stage row
+# table; GAP[u][s-1] = the idle cycles user u waits before its stage s (for stage 1: after its start is accepted).
+# Boot image MU form (target 1, 471 words): 0..323 rows (36 x 9 roots), 324 digest64, 325 epoch16, 326..469 GAP[u][s-1]
+# u-major (word 326 + 36u + s - 1, low 32 bits, upper 32 must be 0), 470 seal.  Edge model of the RTL as built (checked
+# by rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv against the emitted event list): a context that begins stage s on cycle B
+# (e_begin; the start-accept cycle for stage 1 with GAP 0) fires root k on B + row[k] and stage_done on B + stage_end;
+# stage s + 1 begins on that stage_done cycle + GAP[u][s]; any two contexts with an event (begin, any root, done) on one
+# cycle is the sticky fault_code[4] -> the compiler must never emit it.
+KV_LP_ROOTS = ("ctrl_go", "kgo", "vgo", "attention_issue", "attention_run", "writer_start", "link_start", "expected_quiet",
+               "stage_end")                                          # tools/qwen_static_kv/layer_programme.FIELDS
+KV_LP_WORDS, KV_LP_DIGEST, KV_LP_EPOCH, KV_LP_GAP0, KV_LP_SEAL_MU = 327, 324, 325, 326, 470
+KV_LP_SEAL = 0x514B564C59523336
+KV_USERS, KV_STAGES = 4, 36
+KV_EPOCH_CONVENTION = ("user = authority_epoch[1:0] = epoch[1:0] of every lprg event (allocator_mu epoch {seq14, user2}); "
+                       "the writer / PC calendars take the stage user from that epoch (row 64 + l + 256 u, kv_user_rows)")
+KV_SRC_IMAGE = "results/arch/qwen_kv_static_programme_1017/die/target1.hex"      # kv_static_programme --profile die
+KV_HBM_BEAT = 768        # core edges a cycle of the core 625 u / HBM 768 u beat (qkd_static_kv_phase_launch next_gap)
+KV_META_HOLD = 8         # qkd_static_kv_phase_launch META_HOLD_CORE (die template): another user's go within it faults
+KV_ATT_END = 1784        # qkd_native_attention_programme busy run .. run + compiled_end (cal_gen STRETCH 1, SERVICE_END
+                         # 1777; MU-KV-PROG kvprog README section 2): a second user's issue inside it is a sticky fault
+KV_GO_ROOTS = ("ctrl_go", "kgo", "vgo")
+KV_OWN_SEAL = 0x514B564D
+
+
+def _kv_phase_profile():
+    """the die phase-launch profile the KV image was aligned with (kv_static_programme --profile die report: PH0, the
+    SAFE window, the lprg -> group relay edges)"""
+    r = json.loads((ROOT / "results/arch/qwen_kv_static_programme_1017/die/report.json").read_text())["profile"]
+    return dict(PH0=r["phase"]["PH0"], lo=r["phase"]["SAFE_LOW_U"], hi=r["phase"]["SAFE_HIGH_U"], groups=r["groups"])
+
+
+KV_PHASE = _kv_phase_profile()
+
+
+def kv_launch_gap(c):
+    """qkd_static_kv_phase_launch next_gap (u) of a root emitted on core cycle c of the frame (frame cycle 0 = token run
+    start of user 0's first token, at HBM-beat phase 0 = the image's TOKEN_START_PHASE_U; kv_static_programme.launch_gap)"""
+    c2 = c + 1 + KV_PHASE["groups"] + 1
+    return (KV_PHASE["PH0"] - 625 * (c2 + 1)) % KV_HBM_BEAT or KV_HBM_BEAT
+
+
+def kv_launch_legal(row, b):
+    """every go root of a stage that begins on cycle b sits inside the phase launch's SAFE window"""
+    return all(KV_PHASE["lo"] <= kv_launch_gap(b + row[n]) <= KV_PHASE["hi"] for n in KV_GO_ROOTS)
+
+
+def kv_attention_window(row):
+    """[issue, run + KV_ATT_END] of a stage row, as (offset, length): the attention programme's exclusive span"""
+    return row["attention_run"] + KV_ATT_END + 1 - row["attention_issue"]
+
+
+def kv_rows_from_image(words):
+    """the 36 stage rows {root: cycle} of a single-user layer image (327 words, layer_programme.assemble_rows)"""
+    if len(words) != KV_LP_WORDS or words[-1] != KV_LP_SEAL:
+        raise ScheduleError(f"KV layer image: {len(words)} words / seal {words[-1]:x} (want 327, seal at 326)")
+    return [dict(zip(KV_LP_ROOTS, words[9 * s:9 * s + 9])) for s in range(KV_STAGES)]
+
+
+def kv_stage_tokens(cal):
+    """per user, every whole token of the calendar: its start (the first unit of the token: the cycle the host start is
+    accepted) and the 36 KV-service window starts (one per layer: the 'kvs' window).  Works on compile_calendar and on
+    mu_opcal.compile_frame output (both end a token with the 'head' block)."""
+    out = {}
+    for u, seq in cal["schedule"].items():
+        toks, cur = [], None
+        for name, t0, b in seq:
+            if cur is None:
+                cur = dict(start=t0, kvs=[])
+            if "kvs" in b["windows"]:
+                cur["kvs"] += [t0 + a for a, _ in b["windows"]["kvs"]]
+            if name == "head":
+                if len(cur["kvs"]) == KV_STAGES:
+                    toks.append(cur)
+                cur = None
+        out[u] = toks
+    return out
+
+
+def kv_gap_table(cal):
+    """GAP[u][s] (4 x 36) from the KV service windows of the calendar: the extra spacing of user u's KV window of layer
+    s (from its token start for s = 0, from its layer s - 1 window otherwise) over the latency user's.  The relative
+    offset of every user to user 0 at a stage index is then the calendar's, on the KV programme's own stage frame.
+    Refuses (ScheduleError): user 0 not all 0, a negative gap, or a user whose tokens need different tables (the RTL
+    holds ONE table per user, played every token)."""
+    toks = kv_stage_tokens(cal)
+    if not toks.get(0):
+        raise ScheduleError("KV GAP: the latency user has no whole token in the calendar")
+    r0 = toks[0][0]
+
+    def spacing(t):
+        return [t["kvs"][0] - t["start"]] + [t["kvs"][j] - t["kvs"][j - 1] for j in range(1, KV_STAGES)]
+    ref = spacing(r0)
+    nu = cal["inputs"]["users"] if "inputs" in cal else len(toks)
+    gaps, per_user = [], {}
+    for u in range(KV_USERS):
+        if u >= nu or not toks.get(u):
+            gaps.append([0] * KV_STAGES)                             # an absent user: never started
+            per_user[u] = dict(tokens=0, patterns=0)
+            continue
+        pats = {tuple(a - b for a, b in zip(spacing(t), ref)) for t in toks[u]}
+        per_user[u] = dict(tokens=len(toks[u]), patterns=len(pats))
+        if len(pats) != 1:
+            raise ScheduleError(f"KV GAP: user {u} has {len(pats)} different KV stage patterns over its {len(toks[u])} "
+                                f"tokens; the KV layer programme plays one GAP table per user (a periodic frame with one "
+                                f"pattern per user is required)")
+        g = list(pats.pop())
+        if min(g) < 0 or max(g) >= 2 ** 32:
+            raise ScheduleError(f"KV GAP: user {u} gap out of range {min(g)}..{max(g)}")
+        gaps.append(g)
+    if any(gaps[0]):
+        raise ScheduleError(f"KV GAP: latency user gaps not all 0: {gaps[0]}")
+    return gaps, per_user
+
+
+def kv_programme_events(rows, gaps, starts, period=None, detail=False):
+    """the KV layer programme's own event set: {cycle: [(user, token, stage, kind)]} for every (user, token start) in
+    `starts` ({user: [start cycles]}) played with `rows` and `gaps`; cycles mod `period` for a periodic frame.  Also the
+    per-stage attention busy windows [B + attention_issue, B + attention_run + KV_ATT_END] and each token's last cycle
+    (detail: also every go root (cycle, user, token, stage, root) and every stage begin)."""
+    ev, win, ends, gos, begins = {}, [], [], [], []
+    for u, ss in starts.items():
+        for k, s0 in enumerate(ss):
+            b = s0 + gaps[u][0]
+            for s in range(KV_STAGES):
+                if s:
+                    b += gaps[u][s]
+                r = rows[s]
+                for kind, o in [("stage_start", 0)] + [(n, r[n]) for n in KV_LP_ROOTS[:8]] + [("stage_done", r["stage_end"])]:
+                    c = b + o
+                    ev.setdefault(c % period if period else c, []).append((u, k, s + 1, kind))
+                win.append((b + r["attention_issue"], b + r["attention_run"] + KV_ATT_END + 1, u, k, s + 1))
+                for n in KV_GO_ROOTS:
+                    gos.append((b + r[n], u, k, s + 1, n))
+                begins.append((u, k, s + 1, b))
+                b += r["stage_end"]
+            ends.append((u, k, s0, b))
+    if detail:
+        return ev, win, ends, gos, begins
+    return ev, win, ends
+
+
+def check_kv_programme(rows, gaps, starts, period=None):
+    """asserts on the KV programme's own event set (the RTL's collision rule and its single attention service):
+    no cycle carries two users' events; the attention busy windows [issue, run + 1784] of different users are disjoint
+    (cyclic when `period`); two users' go roots are > META_HOLD_CORE edges apart; every stage begins on user 0's
+    launch (ctrl_go / kgo / vgo) inside the phase launch's SAFE window at its frame cycle (kv_launch_legal); a user's next start comes after its previous token's last stage_done (a start while active
+    faults); user 0 gaps 0.  Returns counts; raises ScheduleError naming the first violation."""
+    if any(gaps[0]):
+        raise ScheduleError(f"KV GAP: latency user gaps not all 0: {gaps[0]}")
+    ev, win, ends, gos, begins = kv_programme_events(rows, gaps, starts, period, detail=True)
+    for c in sorted(ev):
+        us = {e[0] for e in ev[c]}
+        if len(us) > 1:
+            raise ScheduleError(f"KV programme collision on cycle {c}: {ev[c]}")
+    ws = sorted(win)
+    if period:
+        ws = sorted(ws + [(a + period, b + period, u, k, s) for a, b, u, k, s in ws])
+    for x, y in zip(ws, ws[1:]):
+        if y[0] < x[1] and y[2] != x[2]:
+            raise ScheduleError(f"KV attention service windows overlap: {x} {y}")
+    gs = sorted((g[0] % period,) + g[1:] for g in gos) if period else sorted(gos)
+    if period:
+        gs = gs + [(g[0] + period,) + g[1:] for g in gs]
+    for x, y in zip(gs, gs[1:]):
+        if y[1] != x[1] and y[0] - x[0] <= KV_META_HOLD:
+            raise ScheduleError(f"KV launches of two users within META_HOLD_CORE {KV_META_HOLD}: {x} {y}")
+    off = [(u, k, s, b) for u, k, s, b in begins if not kv_launch_legal(rows[s - 1], b)]
+    if off:
+        raise ScheduleError(f"KV launches outside the phase window (user, token, stage, begin): {off[:4]}")
+    for u, ss in starts.items():
+        mine = sorted((s0, e) for uu, k, s0, e in ends if uu == u)
+        nxt = [s for s, _ in mine[1:]] + ([mine[0][0] + period] if period and mine else [])
+        for (s0, e), n in zip(mine, nxt):
+            if n <= e:
+                raise ScheduleError(f"KV programme: user {u} starts at {n} while its token from {s0} runs to {e}")
+    return dict(events=sum(len(v) for v in ev.values()), event_cycles=len(ev), service_windows=len(win), collisions=0)
+
+
+def kv_ownership_roots_mu(rows, gaps):
+    """target 3 under MU (qkd_static_kv_ownership_calendar_mu, MU-KV-PROG): every go (a user's stage-1 start) re-arms
+    the window, so leave / deadline are the maximum over users of go -> stage-36 expected_quiet + 1 and go -> token end
+    (stage 36 done), GAP bubbles included; user 0 alone = the single-user roots.  [enter 3, leave, deadline, seal]"""
+    lv, dl = [], []
+    for g in gaps:
+        b36 = sum(rows[s]["stage_end"] + g[s + 1] for s in range(KV_STAGES - 1))
+        lv.append(b36 + rows[-1]["expected_quiet"] + 1)
+        dl.append(b36 + rows[-1]["stage_end"])
+    own = [3, max(lv), max(dl), KV_OWN_SEAL]
+    if not 3 < own[1] < own[2] < 2 ** 32:
+        raise ScheduleError(f"KV ownership roots out of order: {own}")
+    return own, dict(leave_per_user=lv, deadline_per_user=dl)
+
+
+def kv_layer_image_mu(words, gaps):
+    """the MU boot image of target 1 (471 words) from the single-user image (327 words) and GAP[4][36]"""
+    kv_rows_from_image(words)
+    if len(gaps) != KV_USERS or any(len(g) != KV_STAGES for g in gaps):
+        raise ScheduleError("KV GAP table must be 4 x 36")
+    flat = [g for row in gaps for g in row]
+    if any(not 0 <= g < 2 ** 32 for g in flat):
+        raise ScheduleError("KV GAP words are 32-bit")
+    img = list(words[:KV_LP_GAP0]) + flat + [KV_LP_SEAL]
+    assert len(img) == KV_LP_SEAL_MU + 1 and img[KV_LP_SEAL_MU] == KV_LP_SEAL
+    return img
+
+
+# MU-KV-BOOT 10-19: the KV-consistent periodic frame.  The op-granular frame of record (mu_opcal F 16, 13,708 tok/s) gives
+# users 1..3 15 / 8 / 7 tokens a frame, every one with its own KV stage pattern (one pattern per token): one GAP table per
+# user cannot play it (kv_gap_table refuses it; F 3..16 likewise).  F 2 gives every filler one token a frame (one
+# pattern).  Compiled on the KV image's stage frame with the KV programme's own constraints as calendar resources
+# (kv_frame_params: kv.lp edges + launch holds, kv.att attention busy span, launch phase legality, token pad to 768),
+# the default filler starts leave user 3 no whole token in the frame; these starts (kv_frame_search seed 1, try 2) pass
+# kv_gap_table + check_kv_programme: 11,982.4 tok/s (user 0 4,808 tok/s at the padded period).
+KV_FRAME_F = 2
+KV_FRAME_STARTS = (4409, 4066, 4308)
+
+
+def kv_frame_starts(cal):
+    """{user: [token start cycles]} of a calendar (the cycles each user's host start must be accepted)"""
+    return {u: [t["start"] for t in ts] for u, ts in kv_stage_tokens(cal).items()}
+
+
+def kv_frame_params(rows):
+    """the calendar on the KV die's own stage frame: layer period = the image's stage length (stages 2..36), L0 extra =
+    stage 1's excess (the link-calendar token path; mu_calendar SOURCED layer_period 6,886 is the composed estimate);
+    the KV layer programme's edges reserved as resource kv.lp (mu_opcal.kv_lp_windows: begin, roots, done of every
+    user's stage, rigid with its kvs window; the go roots 9 edges wide = the phase launch's META_HOLD_CORE 8 + 1), so the
+    frame compiler never places two users' events on one edge or two users' launches inside one held-metadata window;
+    kv_service = the RTL attention busy window (kv_attention_window, MU-KV-PROG kvprog README section 3); every filler KV
+    stage placed where its launches are phase-legal (kv_phase_quantum: mu_opcal steps the group to the next legal
+    cycle; the image's launches are legal at user 0's phases only, 219 of 768 shifts a stage are legal), and
+    the latency user's token padded to a multiple of 768 (token_pad, as the single-user image's 249,600)"""
+    lp = rows[1]["stage_end"]
+    p = dict(layer_period=lp, l0_extra=rows[0]["stage_end"] - lp, kv_lp_rows=rows, kv_service=kv_attention_window(rows[1]),
+             kv_phase_quantum=KV_HBM_BEAT)
+    from . import mu_opcal as O
+    t0 = single_user_period(dict(SOURCED, users=KV_USERS, occupancy="measured", head_chunks=8, head_tok_ofs=O.EMB_T, **p))
+    p["token_pad"] = (-t0) % KV_HBM_BEAT
+    return p
+
+
+def kv_frame_of_record(rows, F=KV_FRAME_F, starts=KV_FRAME_STARTS):
+    """compile the periodic frame (mu_opcal.compile_frame) on the KV image's stage frame and its KV GAP table;
+    check_kv_programme on the frame"""
+    from . import mu_opcal as O
+    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None)
+    gaps, per_user = kv_gap_table(cal)
+    st = kv_frame_starts(cal)
+    chk = check_kv_programme(rows, gaps, st, cal["H"])
+    return cal, gaps, st, chk, per_user
+
+
+def kv_frame_search(rows, F=KV_FRAME_F, seed=1, tries=400, spread=3000):
+    """seeded search of filler first starts around round(k P / 4) whose frame passes kv_gap_table + check_kv_programme"""
+    import random
+    from . import mu_opcal as O
+    rnd = random.Random(seed)
+    fp = kv_frame_params(rows)
+    base = [round(k * fp["layer_period"] / KV_USERS) for k in range(1, KV_USERS)]
+    for i in range(tries):
+        st = base if i == 0 else [b + rnd.randint(-spread, spread) for b in base]
+        try:
+            cal = O.compile_frame(F, p=fp, starts=st)
+            gaps, _ = kv_gap_table(cal)
+            check_kv_programme(rows, gaps, kv_frame_starts(cal), cal["H"])
+        except ScheduleError:
+            continue
+        return st, cal
+    raise ScheduleError(f"kv_frame_search: no collision-free frame in {tries} tries")
+
+
+def kv_gap_receipt(words, F=KV_FRAME_F, starts=KV_FRAME_STARTS, image_source=KV_SRC_IMAGE):
+    """the MU-KV-BOOT receipt: GAP table, MU image layout, the KV event-set checks, the epoch convention, and why the
+    op-granular frame of record is refused"""
+    rows = kv_rows_from_image(words)
+    cal, gaps, st, chk, per_user = kv_frame_of_record(rows, F, starts)
+    rec = None
+    try:
+        from . import mu_opcal as O
+        kv_gap_table(O.compile_frame(16, p=kv_frame_params(rows)))
+    except ScheduleError as e:
+        rec = str(e)
+    ev, _, ends = kv_programme_events(rows, gaps, st, cal["H"])
+    return dict(schema="opentallas.qwen.mu_kv_gap.v1", grade="compiled (KV image rows of record + mu_opcal frame)",
+                epoch_convention=KV_EPOCH_CONVENTION, image_source=image_source,
+                image_layout=dict(rows=[0, 323], digest64=KV_LP_DIGEST, epoch16=KV_LP_EPOCH,
+                                  gap=[KV_LP_GAP0, KV_LP_SEAL_MU - 1], gap_order="u-major: 326 + 36 u + (s - 1)",
+                                  seal=KV_LP_SEAL_MU, seal_word=f"{KV_LP_SEAL:016x}", words=KV_LP_SEAL_MU + 1),
+                frame=dict(F=F, H=cal["H"], T=cal["T"], filler_first_starts=list(starts) if starts else None,
+                           tokens_per_frame=cal["tokens_per_frame"], aggregate_tok_s=round(cal["aggregate_tok_s"], 1),
+                           users=[dict(user=x["user"], tok_s=round(x["tok_s"], 1)) for x in cal["users"]]),
+                token_starts=st, gaps=gaps, gap_patterns_per_user=per_user, checks=chk,
+                ownership_mu=dict(zip(("words", "per_user"), kv_ownership_roots_mu(rows, gaps))),
+                frame_params={k: v for k, v in kv_frame_params(rows).items() if k != "kv_lp_rows"},
+                user0_gaps_all_zero=not any(gaps[0]),
+                token_last_cycle={f"u{u}_t{k}": e for u, k, _, e in ends},
+                frame_of_record_refused=rec,
+                stage_frame_note="KV image stage frames (6,836 / 7,070 cycles, link calendar) differ from mu_calendar's "
+                                 "6,886 layer period: same-stage offsets between users are the calendar's; the event and "
+                                 "service checks run on the image frames (the RTL timeline)")
+
+
+def kv_event_list(rows, gaps, starts, period=None):
+    """the bench's expected event list: one line per event cycle 'cycle user stage mask' (mask bit i = KV_LP event i:
+    0 stage_start, 1..8 the roots ctrl_go .. expected_quiet, 9 stage_done), sorted by cycle (no wrap)"""
+    kinds = ["stage_start"] + list(KV_LP_ROOTS[:8]) + ["stage_done"]
+    ev, _, _ = kv_programme_events(rows, gaps, starts, None)
+    out = []
+    for c in sorted(ev):
+        us = {e[0] for e in ev[c]}
+        if len(us) != 1:
+            raise ScheduleError(f"KV event list: collision on cycle {c}")
+        m = 0
+        for e in ev[c]:
+            m |= 1 << kinds.index(e[3])
+        st = max(e[2] for e in ev[c] if e[3] != "stage_done") if any(e[3] != "stage_done" for e in ev[c]) else ev[c][0][2]
+        out.append((c, ev[c][0][0], st, m))
+    return out
 
 
 def summary(cal):

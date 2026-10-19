@@ -13,17 +13,19 @@ macro behavioural models etc.).  For every instance of the die top:
              (--allow-model MODULE: e.g. an analog PHY or a ROM bit array) -- the die master itself must be real;
   * PORTS    every port the die connects exists in the RTL (DIE_PORT_NOT_IN_RTL), every RTL input is connected
              (INPUT_UNCONNECTED), no input bit is tied to a constant / 'z by the die (INPUT_TIED), outputs left open are
-             listed (OUTPUT_OPEN, informational);
+             listed and fail (OUTPUT_OPEN);
   * WIDTHS   die connection width == RTL port width evaluated with the INSTANCE's parameter overrides (#(...)) over the
              module's defaults (WIDTH_MISMATCH);
   * PADS     DEDUPE (owner rule 19:50 10-15, fewer distinct tiles): a standard master used below its width may tie its
              DECLARED spare input bits low (--pad-file / DIE_V.pads.json, per master with a reason and per-port bit ranges
-             or a logical width); undeclared ties, ties high and 'z stay INPUT_TIED; spare outputs are OUTPUT_OPEN
-             (informational) as before;
+             or a logical width); undeclared ties, ties high and 'z stay INPUT_TIED.  A declaration on an OUTPUT port
+             (TOK-S81-GAPS/SVCP 10-19) names spare output bits by the same rule: those bits may stay open / unread
+             (a role-unused face of a hardened-once master, lane padding), counted as spare_out_bits; an undeclared
+             open output port is OUTPUT_OPEN and an undeclared driven bit nothing reads is unread_net_bits (fail);
   * NETS     bit-level: every die-net bit read by an input has exactly one driver (an output port of a bound instance or a
              top input) -- UNDRIVEN / MULTI_DRIVEN.
 
-Exit 0 only when every count is zero (OUTPUT_OPEN excepted).  JSON record with --out.
+Exit 0 only when every error count is zero. Outputs must reach a die input or a top output.  JSON record with --out.
 
     python3 tools/die_port_bind.py DIE_V [--top dsfd_die] [--rtl-root rtl ...] [--rtl-file F ...] [-f FILELIST ...]
                                    [--define NAME ...] [--allow-model MODULE ...] [--prefer FILE ...] --out JSON
@@ -662,6 +664,17 @@ def load_pads(obj):
     return pads
 
 
+def _spare_port(pads, mst, pn, inst, width, spare_out):
+    """an open output port is spare when a pad declaration (instance entry first, then master) covers ALL its bits"""
+    key = (mst, pn, inst) if (mst, pn, inst) in pads else (mst, pn)
+    if key not in pads or width is None:
+        return False
+    if pad_bits(pads[key], width) >= set(range(width)):
+        spare_out[mst] += width
+        return True
+    return False
+
+
 def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None):
     """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
     numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port[, instance]): bit spec}
@@ -669,6 +682,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
     on any undeclared bit, still fails.  Every other tied input fails."""
     pads = pads or {}
     nets, tin, tout, insts = parse_die(die_v, top)
+    spare_drv = set()            # (net, bit) driven by a DECLARED spare output bit (pad declaration on an output port)
+    spare_out = defaultdict(int)  # (master) -> declared spare output bits seen
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
     drv_cnt = defaultdict(lambda: defaultdict(int))
@@ -724,7 +739,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if not bits:
                 if d == 'input':
                     rec['input_unconnected'].add(pn)
-                elif d == 'output':
+                elif d == 'output' and not _spare_port(pads, mst, pn, inst, mod.width(pn, env), spare_out):
                     rec['output_open'].add(pn)
                 continue
             w = mod.width(pn, env)
@@ -745,6 +760,9 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                     rec['unparsed_conn'].add(pn)
                 elif d == 'output':
                     drv_cnt[b[0]][b[1]] += 1
+                    if (len(bits) - 1 - k_msb) in pset:
+                        spare_drv.add((b[0], b[1]))
+                        spare_out[mst] += 1
                 elif d == 'input':
                     rd[b[0]].add(b[1])
                 else:                                   # inout (a bundled pass-through face, e.g. a PHY DFI bundle):
@@ -754,7 +772,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if pn not in cm:
                 if d == 'input':
                     rec['input_unconnected'].add(pn)
-                elif d == 'output':
+                elif d == 'output' and not _spare_port(pads, mst, pn, inst, mod.width(pn, env), spare_out):
                     rec['output_open'].add(pn)
     for n in tout:
         w, lo = nets[n]
@@ -763,7 +781,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         for i, c in dc.items():
             if drv_cnt[n].get(i, 0) == 0:
                 drv_cnt[n][i] += c
-    undriven, multi = defaultdict(int), defaultdict(int)
+    undriven, multi, unread = defaultdict(int), defaultdict(int), defaultdict(int)
     for n, bs in rd.items():
         dc = drv_cnt.get(n, {})
         for i in bs:
@@ -774,16 +792,19 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 multi[n] += 1
     for n, dc in drv_cnt.items():
         for i, c in dc.items():
+            if i not in rd.get(n, ()) and n not in tin and (n, i) not in spare_drv:
+                unread[n] += 1
             if c > 1 and i not in rd.get(n, ()):
                 multi[n] += 1
     # ---------------- summary
     S = dict(masters=len(masters), instances=sum(r['instances'] for r in masters.values()),
              unbound_masters=0, stub_masters=0, ambiguous_masters=0, port_not_in_rtl=0, width_mismatch=0,
              input_unconnected=0, input_tied=0, unparsed_connections=0, duplicate_port_connections=0, undriven_net_bits=sum(undriven.values()),
-             multi_driven_net_bits=sum(multi.values()), top_assigns=len(findings['TOP_ASSIGN']),
+             multi_driven_net_bits=sum(multi.values()), unread_net_bits=sum(unread.values()), output_open_ports=0, top_assigns=len(findings['TOP_ASSIGN']),
              params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']),
              strap_ports=sum(len(r['straps']) for r in masters.values()),
-             pad_bits=sum(sum(r['pad_bits'].values()) for r in masters.values()))
+             pad_bits=sum(sum(r['pad_bits'].values()) for r in masters.values()),
+             spare_out_bits=sum(spare_out.values()))
     out_m = {}
     for mst, r in sorted(masters.items()):
         bad = []
@@ -795,12 +816,12 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if mst in amb:
                 S['ambiguous_masters'] += 1; bad.append('AMBIGUOUS')
         for key, tag in (('die_port_not_in_rtl', 'PORT_NOT_IN_RTL'), ('width_mismatch', 'WIDTH_MISMATCH'),
-                         ('input_unconnected', 'INPUT_UNCONNECTED'), ('input_tied', 'INPUT_TIED'),
+                         ('input_unconnected', 'INPUT_UNCONNECTED'), ('output_open', 'OUTPUT_OPEN'), ('input_tied', 'INPUT_TIED'),
                          ('unparsed_conn', 'UNPARSED'), ('duplicate_port', 'DUPLICATE_PORT')):
             if r[key]:
                 bad.append(tag)
                 S[{'die_port_not_in_rtl': 'port_not_in_rtl', 'unparsed_conn': 'unparsed_connections',
-                   'duplicate_port': 'duplicate_port_connections'}.get(key, key)] += len(r[key])
+                   'duplicate_port': 'duplicate_port_connections', 'output_open': 'output_open_ports'}.get(key, key)] += len(r[key])
         out_m[mst] = dict(verdict='PASS' if not bad else 'FAIL', fails=bad, instances=r['instances'], rtl=r['rtl'],
                           kind=r['kind'], ambiguous_defs=amb.get(mst), examples=r['examples'],
                           param_sets=dict(list(r['param_sets'].items())[:8]),
@@ -813,11 +834,12 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                           width_mismatch={p: sorted(v) for p, v in sorted(r['width_mismatch'].items())[:max_list]},
                           unparsed_conn=sorted(r['unparsed_conn'])[:max_list],
                           duplicate_port=sorted(r['duplicate_port'])[:max_list])
-    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports', 'pad_bits') and S[k]]
+    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports', 'pad_bits', 'spare_out_bits') and S[k]]
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
-                undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
+                unread_nets=dict(sorted(unread.items(), key=lambda kv: -kv[1])[:200]),
+                unread_classes=_classes(unread), undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
                 multi_driven_nets=dict(sorted(multi.items(), key=lambda kv: -kv[1])[:200]),
                 top_assigns=findings['TOP_ASSIGN'][:20], params_not_in_rtl=findings['PARAM_NOT_IN_RTL'][:40])
 
