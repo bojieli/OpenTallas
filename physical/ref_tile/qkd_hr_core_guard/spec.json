@@ -190,7 +190,7 @@
    "die_id"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 14 KEPT identical copies (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_split.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -210,7 +210,7 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.03
  },
  "pin_regs": {
   "enable": true,
@@ -218,9 +218,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:MU-KV-GUARD2",
-  "branch": "claude/mu-kv-guard2-1019",
-  "tag": "mu1",
+  "owner": "Claude:KV-RELAYGEN",
+  "branch": "claude/kv-relaygen-guard-1019",
+  "tag": "mu2",
   "purpose": "MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18) successor of qkd_hr_core_guard r4 (MU 0): u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu (4 user contexts, hc pos[17:16] user strip, in-order retire, pkgctl-MU report; same ports), core rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v (gen_cluster --wrap-only). Records results/rtl/mu_qwen_1018/hroot (+ peer endpoint edit, results/rtl/mu_qwen_1018/peer; benches re-run at Verilator 5.050 on main f573a6d2b: hroot/runs_guard2). Reset landing 2 stages (ROOT-RST default, recipe >= 3).",
   "benches": [
    {
@@ -321,6 +321,12 @@
  "keep_pin_regs": true,
  "reset_landing": {
   "enable": true,
-  "stages": 2
+  "stages": 2,
+  "copies": {
+   "host_rst_n": 14
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 256
  }
 }

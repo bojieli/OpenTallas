@@ -18,6 +18,15 @@ set ot_pr_regs [expr {!([info exists ::env(OT_RST_LAND)] && $::env(OT_RST_LAND) 
 set ot_rl_on [expr {[info exists ::env(OT_RST_LAND)] && $::env(OT_RST_LAND) eq "1"}]
 set ot_rl_n [expr {[info exists ::env(OT_RST_LAND_STAGES)] && [string is integer -strict $::env(OT_RST_LAND_STAGES)] ? $::env(OT_RST_LAND_STAGES) : 2}]
 if {$ot_rl_on && ($ot_rl_n < 1 || $ot_rl_n > 4)} { error "OT_RST_LAND: OT_RST_LAND_STAGES must be 1..4, got $ot_rl_n" }
+set ot_rl_cp [dict create]
+if {[info exists ::env(OT_RST_LAND_COPIES)] && [string trim $::env(OT_RST_LAND_COPIES)] ne ""} {
+  foreach it [split $::env(OT_RST_LAND_COPIES) ","] {
+    if {![regexp {^([A-Za-z_][A-Za-z0-9_]*)=([0-9]+)$} [string trim $it] -> cpn cpc] || $cpc < 1 || $cpc > 64} {
+      error "OT_RST_LAND_COPIES: expected port=N (1..64), got $it"
+    }
+    dict set ot_rl_cp $cpn $cpc
+  }
+}
 set ot_pr_top $::env(DESIGN_NAME)
 set ot_pr_clk [split [expr {[info exists ::env(OT_PIN_REGS_CLOCK)] ? $::env(OT_PIN_REGS_CLOCK) : ""}] ","]
 if {![llength $ot_pr_clk]} { error "OT_PIN_REGS: OT_PIN_REGS_CLOCK not set" }
@@ -109,6 +118,16 @@ foreach p $ports {
     for {set k 0} {$k < $ot_rl_n} {incr k} {
       append v "  (* keep *) reg \[$a:$b\] ${n}__ot_rl$k;\n  always @(posedge $ck) ${n}__ot_rl$k <= $prev;\n"
       set prev "${n}__ot_rl$k"
+    }
+    # KV-RELAYGEN 2026-10-19 (OT_RST_LAND_COPIES "port=N,..."): the last landing stage gets N-1 KEPT identical copies
+    # <port>__ot_rlc beside it; <port>__ot_rlv = {copies, last stage} is the copy family that ot_rst_split.tcl spreads
+    # the core's reset loads over (<= OT_RST_SPLIT_MAX each).  The chain text and the core connection are unchanged.
+    if {[dict exists $ot_rl_cp $n] && [dict get $ot_rl_cp $n] > 1} {
+      set c [dict get $ot_rl_cp $n]
+      if {$w != 1} { error "OT_RST_LAND_COPIES: $n is $w bits wide (copies need a 1-bit reset)" }
+      append v "  (* keep *) reg \[[expr {$c - 2}]:0\] ${n}__ot_rlc;\n  always @(posedge $ck) ${n}__ot_rlc <= {[expr {$c - 1}]{${n}__ot_rl[expr {$ot_rl_n - 2}]}};\n"
+      append v "  wire \[[expr {$c - 1}]:0\] ${n}__ot_rlv = {${n}__ot_rlc, $prev};\n"
+      if {$ot_rl_n < 2} { error "OT_RST_LAND_COPIES: needs OT_RST_LAND_STAGES >= 2" }
     }
     lappend conn ".$n\($prev\)"; append tsv "$n\t$d\t$w\t0\treset\n"
     append rl_tsv "$n\t$w\t$ot_rl_n\t$ck\n"; incr nland
