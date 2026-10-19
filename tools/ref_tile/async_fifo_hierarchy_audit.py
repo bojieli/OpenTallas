@@ -194,8 +194,12 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
                 input_domains={k:sorted(v)for k,v in sorted(input_uses.items())},
                 payload_consumer_public_nets={k:sorted(v)for k,v in sorted(payload_targets.items())},
                 payload_output_ports={k:sorted(v)for k,v in sorted(payload_outputs.items())},
-                payload_consumer_bits={scope:{i:sorted(v)for i,v in data.items()}for scope,data in target_bits.items()},
-                payload_output_bits={scope:{i:sorted(v)for i,v in data.items()}for scope,data in output_bits.items()},
+                # deterministic key order (HBMA-SVC 10-17): bit dicts were filled in set-iteration order, so the generated
+                # SDC differed run to run (PYTHONHASHSEED) and the native_cts_sdc stale check failed on a fresh kit
+                payload_consumer_bits={scope:{i:sorted(v)for i,v in sorted(data.items(),key=lambda kv:_bit_key(kv[0]))}
+                                       for scope,data in sorted(target_bits.items())},
+                payload_output_bits={scope:{i:sorted(v)for i,v in sorted(data.items(),key=lambda kv:_bit_key(kv[0]))}
+                                     for scope,data in sorted(output_bits.items())},
                 bit_graph_required=require_bit_graph,
                 violations=violations,physical_admitted=False)
 
@@ -211,3 +215,8 @@ if __name__=='__main__':
         if name in clock_domains:p.error('duplicate clock root')
         clock_domains[name]=domain
     print(json.dumps(audit(json.load(open(a.json)),a.top,clock_domains),indent=2))
+
+
+def _bit_key(k):
+    """numeric bit indices first in numeric order, anything else after in string order"""
+    return (0,int(k),'')if str(k).isdigit()else(1,0,str(k))

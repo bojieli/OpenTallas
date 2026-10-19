@@ -259,8 +259,8 @@
  "job": {
   "owner": "Claude:S-QWCOL",
   "branch": "claude/s-qwcol-1018",
-  "tag": "n1",
-  "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face",
+  "tag": "n2",
+  "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face | n2: Q seat bank as decoded constant-index slices (n1c gate synth smoke timed out at 2700 s on the 8 x 16384-b runtime part-select writes + 512-b read); function unchanged",
   "extra_paths": [
    "rtl/test/qwen_split",
    "results/arch/qwen_split_compute_1014/q_n59_1017",

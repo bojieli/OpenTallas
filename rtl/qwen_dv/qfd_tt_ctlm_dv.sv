@@ -34,6 +34,15 @@
 // ready / idle / progress, so the head's ME availability checks have no DV producer (rule c).  The check moved into the
 // slices: a station word outside its STN window faults the station (ag5 stn bit), which this block returns as the ME
 // fault.  Gap G10 (contract change requested in lanes/Q-CTLM.md): ag += stn_busy restores a head-side idle check.
+// STAGE_ME (QLB-PROG 10-18, G-C3; opt-in, 0 = as built): ONE installed image runs every stage of a token (qfd_sys_face
+//   installs the PW1024 + DW8 image once per epoch), so the stage start must not restart the decode-layer ME programme in
+//   stages that have none, and the ROM relocation must follow the RUNNING stage.  STAGE_ME = 1:
+//   (a) the dh h_start starts the ME programme (base 0, head fixed-issue calendar, XPF schedule) only for the decode
+//       stages 1 .. LAST_STAGE-1; stage 0 (embedding) and LAST_STAGE (LM head) run their calendar segments only;
+//   (b) command_stage (= the ot_qwen_tp8_rom_relocate stage, sys_face head_stage) is the running stage, latched from dh on
+//       the stage start edge, instead of the image's CALS stage (PW1017 [17:12]): as built, all 36 layers would read the
+//       weights of the one layer named in the image.
+//   0 extra edges on the issue path (the stage latch loads on the same edge as tok_r / pos_r).
 // MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
 //   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
 //   8 = coll_busy clears on the ar_last rise only (the pre-widening rule).
@@ -48,7 +57,8 @@ module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
     parameter integer MUT = 0,
     parameter integer LAST_STAGE = 37,
-    parameter integer HARD_HR = 1
+    parameter integer HARD_HR = 1,
+    parameter integer STAGE_ME = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -114,6 +124,8 @@ module qfd_tt_ctlm_dv #(
     assign cal_image_ready = c_ready;
 
     // ------------------------------------------------------------------ token / ME start (was seq_su's st face)
+    // STAGE_ME: the ME programme starts only in decode stages (see the header)
+    wire        s_me = (STAGE_ME == 0) ? s_start : (s_start && s_stage != 6'd0 && s_stage < LAST_STAGE[5:0]);
     reg  [17:0] tok_r, pos_r;
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
@@ -123,10 +135,10 @@ module qfd_tt_ctlm_dv #(
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
             if (s_start) begin tok_r <= s_tok; pos_r <= s_pos; end
-            st_h <= s_start | c_seg;
-            if (s_start) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
+            st_h <= s_me | c_seg;
+            if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_r; st_pos <= pos_r; st_base <= c_base; end
-            if (s_start && c_seg) start_fault <= 1'b1;
+            if (s_me && c_seg) start_fault <= 1'b1;
             emb_start <= c_emb; emb_token <= tok_r;
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
@@ -159,6 +171,10 @@ module qfd_tt_ctlm_dv #(
     assign rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1};
     wire unused_me = &{1'b0, actual_me_observe[14:0]};
     generate if (HARD_HR != 0) begin : g_hard_hr
+        // STAGE_ME (b) lives INSIDE the hard head leaf (ot_qfd_tt_ctlm_static_hr latches loaded_stage from the image CALS
+        // word and relocates rom_cmd with it): the running-stage latch needs a stage/start port on that leaf, i.e. new
+        // h16c RTL + a re-route (S-QWCOL 10-18).  Part (a) (ME start only in decode stages) is here in the parent.
+        if (STAGE_ME != 0) initial $error("qfd_tt_ctlm_dv: STAGE_ME=1 with HARD_HR=1 needs the h16c leaf with a running-stage port");
         ot_qfd_tt_ctlm_static_hr u_hr (
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
             .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
@@ -181,7 +197,8 @@ module qfd_tt_ctlm_dv #(
         always @(posedge ck or negedge rst_n)
             if (!rst_n) begin loaded_stage <= 6'd0; relocation_sticky <= 1'b0; ib_r <= 380'd0; end
             else begin
-                if (pw[74] && pw[73:64] == 10'd1017 && pw[63:32] == 32'h43414c53) loaded_stage <= pw[17:12];
+                if (STAGE_ME != 0) begin if (s_start) loaded_stage <= s_stage; end
+                else if (pw[74] && pw[73:64] == 10'd1017 && pw[63:32] == 32'h43414c53) loaded_stage <= pw[17:12];
                 if (relocation_fault) relocation_sticky <= 1'b1;
                 ib_r <= ib;
             end

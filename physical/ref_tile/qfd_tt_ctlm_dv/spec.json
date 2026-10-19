@@ -13,7 +13,9 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
  ],
  "params": {
-  "XPF_TRANSPORT_EDGES": 1
+  "XPF_TRANSPORT_EDGES": 15,
+  "STAGE_ME": 0,
+  "HARD_HR": 1
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -210,8 +212,8 @@
  "job": {
   "owner": "Claude:S-QWCOL",
   "branch": "claude/s-qwcol-1018",
-  "tag": "c1",
-  "purpose": "dv2f14 W-column die master qfd_tt_ctlm_dv as a cluster: hard child = the TT head leaf h16c (ot_qfd_tt_ctlm_static_hr, HARD_HR=1, exact edges), soft calendar qfd_dv_cmd_cal with its 2 SRAMs + XPF + pin registers in the parent",
+  "tag": "c2",
+  "purpose": "dv2f14 W-column die master qfd_tt_ctlm_dv as a cluster: hard child = the TT head leaf h16c (ot_qfd_tt_ctlm_static_hr, HARD_HR=1, exact edges), soft calendar qfd_dv_cmd_cal with its 2 SRAMs + XPF + pin registers in the parent | c2 params: XPF_TRANSPORT_EDGES 15 = hr register + measured hr lane age 14 (QLB-PROG 3fac5f0ef ctlm_image.json); STAGE_ME 0: the die adopts STAGE_ME 1 (QLB-PROG), but its part (b) running-stage relocation sits inside the hard h16c leaf (ot_qfd_tt_ctlm_static_hr latches loaded_stage from the image CALS word) -> needs h16c RTL (stage port) + re-route before this kit can take STAGE_ME 1",
   "extra_paths": [
    "rtl/test/qwen_dv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
