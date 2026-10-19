@@ -1,0 +1,368 @@
+
+qkd_ahub_static_dw.sv:100-145
+100:     reg  [15:0] prev_ep;
+101:     wire [16:0] age_nx = start ? 17'd1 : {1'b0, age} + 17'd1;     // io age of the NEXT cycle
+102:     wire        live   = start || active;
+103:     wire        emit   = live && $signed({2'b0, age_nx}) == tgt;
+104:     wire        bad_t  = start && (tgt < 19'sd1 || tgt > 19'sd65535);
+105:     always @(posedge ck or negedge rst_n) begin
+106:         if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; end
+107:         else begin
+108:             fr_valid <= emit;
+109:             if (start) begin active <= !bad_t; age <= 16'd1; published <= 1'b0; xf <= bad_t; end
+110:             else begin
+111:                 if (active) age <= age_nx[15:0];
+112:                 if (active && rz_publish) published <= 1'b1;
+113:                 if (rz_publish && !active) xf <= 1'b1;                           // a publication outside any pass
+114:                 if (emit) active <= 1'b0;                                          // once per pass
+115:             end
+116:             if (emit && !published) xf <= 1'b1;                                   // rz late: export before publication
+117:             if (active && age_nx[16]) xf <= 1'b1;                                  // slot beyond the age range
+118:         end
+119:     end
+120:     always @(posedge ck)
+121:         if (emit) begin
+122:             fr_rz    <= (MUT == 2) ? {rz_vector[127:64], rz_vector[31:0], rz_vector[63:32]} : rz_vector;
+123:             fr_epoch <= (MUT == 3) ? prev_ep : rz_epoch;
+124:             prev_ep  <= rz_epoch;
+125:         end
+126:     always @(posedge ck or negedge rst_n)
+127:         if (!rst_n) fault <= 1'b0; else fault <= xf || hub_fault;
+128: endmodule
+129: 
+130: // ---- the die element: wires only (u_io leaf + the sealed static hub composition) ------------------------------------
+131: // Die ports (kv_static_die AHUB binding): hs <- kvs_attn ahs (165 b), ap<s> <- astk_<STACKS[s]>.ap (43 b: {data 32, any,
+132: // k 4, hh 2, g, type 2, valid}, LSB first), am<s> -> astk_<STACKS[s]>.am (36 b: {data 32, hh 2, g, valid}), fr -> pvfin.fr,
+133: // hf -> seq.hf / the attention fault tree.  ONE clock entry ck (the parent builds its own tree over its children).
+134: module qkd_ahub_static_dw #(
+135:     parameter [63:0] AP_OFS = {4{16'd2}},
+136:     parameter integer FR_OFS = 0,
+137:     parameter integer Z_IN_STRIDE = 16,
+138:     parameter integer ZW_RLY = 0,
+139:     parameter integer ZR_RLY = 0,
+140:     parameter integer RX_RLY = 1,
+141:     parameter integer RY_RLY = 1,
+142:     parameter integer MUT = 0
+143: ) (
+144:     input  wire          ck,
+145:     input  wire          rst_n,
+
+qkd_ahub_static_dw.sv:208-268
+208:     wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RX_RLY + RY_RLY);
+209:     qkd_ahub_static_core_cal #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10)) u_core (
+210:         .cal({hub_cal[191:176], recip_return, hub_cal[175:0]}),
+211:         .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
+212:         .active_layer(layer), .T(T),
+213:         .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh), .si_k(si_k), .si_any(si_any),
+214:         .si_epoch(si_epoch), .si_layer(si_layer), .si_data(si_data),
+215:         .am(am), .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
+216:         .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+217:         .rz_valid(rz_valid), .rz_head(rz_head), .rz_data(rz_data), .rz_epoch(rz_epoch), .rz_publish(rz_publish),
+218:         .rz4(rz_vector), .fault(hub_fault));
+219:     genvar a;
+220:     generate for (a = 0; a < 4; a = a + 1) begin : g_zh
+221:         wire [267:0] zi;  wire [67:0] zo, zot;
+222:         ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(ck),
+223:             .d({zh_start[a], zh_we[128*a +: 128], zh_sid[128*a +: 128], zh_iv[4*a +: 4], zh_g[a], zh_p[6*a +: 6]}), .q(zi));
+224:         ot_nhb_zh u_zh (.clk(ck), .rst_n(rr[2 + a]), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]),
+225:                         .ziv(zi[10:7]), .zg(zi[6]), .zp(zi[5:0]), .root(zot[63:0]), .zerr(zot[67:64]));
+226:         ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(ck), .d(zot), .q(zo));
+227:         assign zh_root[64*a +: 64] = zo[63:0];  assign zh_err[4*a +: 4] = zo[67:64];
+228:     end endgenerate
+229:     wire [32:0] rx;  wire [33:0] ry, ryt;
+230:     ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rx (.clk(ck), .d({rc_v, rc_x}), .q(rx));
+231:     ot_qkh_recip_leaf u_recip (.clk(ck), .rst_n(rr[6]), .v(rx[32]), .x(rx[31:0]), .y(ryt[31:0]), .vo(ryt[32]),
+232:                                .fault(ryt[33]));
+233:     ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ry (.clk(ck), .d(ryt), .q(ry));
+234:     assign rc_y = ry[31:0];  assign rc_vo = ry[32];  assign rc_fault = ry[33];
+235: endmodule
+
+ot_qkd_ahub_static_cal_gen.sv:38-44
+38:     ot_rst_pipe #(.REGIONS(4),.STAGES(2)) u_rr (.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
+39:     reg active,parity;reg [15:0] epoch;reg [5:0] layer;
+40:     reg [63:0] LMAX_IN_AGE,Z_IN_AGE;reg [15:0] LMAX_ISSUE_AGE,Z_START_AGE,RECIP_ISSUE_AGE,RECIP_RETURN_AGE,RZ_PUBLISH_AGE;
+41:     always @(posedge clk)if(start)
+42:         {RZ_PUBLISH_AGE,RECIP_RETURN_AGE,RECIP_ISSUE_AGE,Z_START_AGE,LMAX_ISSUE_AGE,Z_IN_AGE,LMAX_IN_AGE}<=cal;
+43:     // Z blocks per stack follow the context length exactly as the stack control emits them; absent blocks stay
+44:     // unwritten and read as zero in ot_nhb_zh, the reference zero-leaf tree.
+
+ot_qkd_ahub_static_cal_gen.sv:78-104
+78:     reg start_b;
+79:     always @(posedge clk or negedge rn[0])
+80:         if(!rn[0])begin active<=0;age<=0;epoch<=0;parity<=0;layer<=0;start_b<=0;lm_b<=0;z_b<=0;end
+81:         else begin
+82:             start_b<=start;lm_b<=lm_slot;z_b<=z_slot;
+83:             if(start)begin active<=1;age<=0;epoch<=request_epoch;parity<=active_layer_parity;layer<=active_layer;lm_b<=0;z_b<=0;end
+84:             else if(active && age!=16'hffff)age<=age+1'b1;
+85:         end
+86:     always @(posedge clk)begin any_b<=si_any;hh_b<=slot_h;k_b<=slot_k;data_b<=si_data;end
+87:     reg [31:0] lm[0:15];
+88:     reg [15:0] lany;
+89:     reg [127:0] zseen[0:3];
+90:     reg [15:0] lm_seen;
+91:     reg [3:0] done_seen;
+92:     always @(posedge clk or negedge rn[1])
+93:         if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
+94:         else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;for(integer a=0;a<4;a=a+1)zseen[a]<=0;end
+95:         else begin
+96:             for(integer a=0;a<4;a=a+1)begin
+97:                 if(lm_b[a])begin lany[4*a+hh_b[2*a+:2]]<=any_b[a];lm_seen[4*a+hh_b[2*a+:2]]<=1;end
+98:                 if(done_slot[a])done_seen[a]<=1;
+99:                 if(z_b[a])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
+100:             end
+101:         end
+102:     always @(posedge clk)for(integer a=0;a<4;a=a+1)if(lm_b[a])lm[4*a+hh_b[2*a+:2]]<=data_b[32*a+:32];
+103:     always @(posedge clk or negedge rn[0])if(!rn[0])zh_start<=0;else zh_start<={4{start_b}};
+104:     always @(posedge clk)begin
+
+ot_qkd_ahub_static_cal_gen.sv:160-192
+160:     reg [3:0] rz_seen;
+161:     for(genvar a=0;a<4;a=a+1)assign rz4[32*a+:32]=rz[a];
+162:     always @(posedge clk or negedge rn[3])
+163:         if(!rn[3])begin rc_v<=0;rz_valid<=0;rz_publish<=0;rz_seen<=0;rz_epoch<=0;end
+164:         else begin
+165:             rc_v<=recip_issue&&!start;rz_valid<=recip_return&&!start;
+166:             rz_publish<=active && edge_age==RZ_PUBLISH_AGE && !start;
+167:             rz_epoch<=epoch;
+168:             if(start)rz_seen<=0;else if(recip_return)rz_seen[return_head]<=1;
+169:         end
+170:     always @(posedge clk)begin
+171:         rc_x<=zroot_q[64*recip_head+:32];
+172:         rz_head<=return_head;rz_data<=rc_y;
+173:         if(recip_return)rz[return_head]<=rc_y;
+174:     end
+175:     always @(posedge clk or negedge rn[3])
+176:         if(!rn[3])fault<=0;
+177:         else if(start)fault<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0]);
+178:         else if(active)begin
+179:             if(active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||
+180:                 (m_issue && lm_seen!=16'hffff) ||
+181:                 ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||
+182:                     zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask)) ||
+183:                 (active && edge_age==16'd1 && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||
+184:                     RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4)) ||
+185:                 (edge_age==RZ_PUBLISH_AGE && rz_seen!=4'hf))fault<=1;
+186:             for(integer a=0;a<4;a=a+1)begin
+187:                 if(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a]))fault<=1;
+188:                 if(si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||
+189:                     si_type[2*a+:2]!=(lm_slot[a]?0:z_slot[a]?1:2) ||
+190:                     ((lm_slot[a]||z_slot[a]) && si_hh[2*a+:2]!=slot_h[2*a+:2]) ||
+191:                     (z_slot[a] && si_k[4*a+:4]!=slot_k[4*a+:4])))fault<=1;
+192:             end
+
+ot_nhb_tiles.sv:98-110
+98:     ot_rst_relay #(.REGIONS(6), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+99:     // pin flops (zs_we / sid / start / issue)
+100:     reg         start_q;
+101:     reg [127:0] zs_we_q, sid_q;
+102:     reg [3:0]   ziv_p;
+103:     reg         zg_p;
+104:     reg [5:0]   zp_p;
+105:     always @(posedge clk or negedge rr[4])
+106:         if (!rr[4]) begin start_q <= 1'b0; zs_we_q <= 128'd0; ziv_p <= 4'd0; end
+107:         else begin start_q <= start; zs_we_q <= zs_we; ziv_p <= ziv; end
+108:     always @(posedge clk) begin sid_q <= sid; zg_p <= zg; zp_p <= zp; end
+109:     // stage 0 (hub_p's issue registers, one edge later): lane valids and read addresses {g, pair}
+110:     reg [ZW-1:0]   ziv0, ziv1;
+
+ot_nhb_tiles.sv:141-147
+141:         ot_hdc_delay #(.W(8), .D(ADD_LAT), .RESET(1)) u_i (.clk(clk), .rst_n(rr[gz]),
+142:                                                            .d({ziv1[gz], zg1, zi1[6*gz +: 6]}), .q(zwi[8*gz +: 8]));
+143:         wire [1:0] err;
+144:         ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(1)) u_add (.clk(clk), .rst_n(rr[gz]), .valid_in(ziv1[gz]),
+145:             .a(za_r[32*gz +: 32]), .b(zb_r[32*gz +: 32]), .y(zy[32*gz +: 32]), .err(err), .valid_out(zvo[gz]));
+146:         assign zerr_o[gz] = zvo[gz] && (err != 2'd0);
+147:     end endgenerate
+
+ot_nhb_tiles.sv:166-175
+166:     always @(posedge clk or negedge rr[5]) begin
+167:         if (!rr[5]) zv <= 0;
+168:         else if (start_q) zv <= 0;
+169:         else for (e_ = 0; e_ < 128; e_ = e_ + 1) begin
+170:             for (z_ = 0; z_ < ZW; z_ = z_ + 1) if (zw_oh[z_][e_]) zv[e_] <= 1'b1;
+171:             if (zs_we_q[e_]) zv[e_] <= 1'b1;
+172:         end
+173:     end
+174:     always @(posedge clk or negedge rr[5]) if (!rr[5]) zerr <= 4'd0; else zerr <= zerr_o;
+175: endmodule
+
+ot_qkh_recip_leaf.sv:1-100
+1: `timescale 1ns/1ps
+2: // Hardened reciprocal boundary: pin registers add two cycles; core arithmetic
+3: // and rounding match ot_qwen_nearhbm_recip_p. Local reset copies bound fanout.
+4: module ot_qkh_recip_leaf (
+5:  input wire clk, rst_n, v,
+6:  input wire [31:0] x,
+7:  output reg [31:0] y,
+8:  output reg vo, fault
+9: );
+10:  wire [0:0] rr;
+11:  ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+12:  reg [31:0] xq;
+13:  reg vq;
+14:  always @(posedge clk) xq <= x;
+15:  always @(posedge clk or negedge rr[0])
+16:    if (!rr[0]) vq <= 1'b0; else vq <= v;
+17:  wire [31:0] cy;
+18:  wire cv, cf;
+19:  // kvsys-elements r2 2026-10-14 (native pin audit: rst_n capture 233.9 ps > 190): the core takes the local synchronised
+20:  // reset like every other flop here; the raw pin no longer fans into the core's reset tree.
+21:  ot_qkh_recip_core u_core (.clk(clk), .rst_n(rr[0]), .v(vq), .x(xq), .y(cy), .vo(cv), .fault(cf));
+22:  always @(posedge clk) y <= cy;
+23:  always @(posedge clk or negedge rr[0])
+24:    if (!rr[0]) begin vo <= 1'b0; fault <= 1'b0; end
+25:    else begin vo <= cv; fault <= cf; end
+26: endmodule
+27: module ot_qkh_recip_core #(
+28:     parameter integer LA = 7,
+29:     parameter integer LM = 7
+30: ) (
+31:     input  wire        clk,
+32:     input  wire        rst_n,
+33:     input  wire        v,
+34:     input  wire [31:0] x,
+35:     output wire [31:0] y,
+36:     output wire        vo,
+37:     output wire        fault
+38: );
+39:     wire [9:0] rr;
+40:     ot_rst_relay #(.REGIONS(10)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+41:     localparam integer IT = 2 * LM + LA;
+42:     localparam integer DEPTH = 1 + 3 * IT;      // 64 at LA 7, LM 7
+43:     wire [DEPTH:0] vd;
+44:     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rr[0]), .v(v), .vd(vd));
+45:     assign vo = vd[DEPTH];
+46: 
+47:     reg [31:0] y0, d1;
+48:     always @(posedge clk) begin
+49:         // Keep the short pipeline bit-exact with the full pipeline when its
+50:         // bit seed exceeds the supported finite-denominator range.
+51:         y0 <= (!x[31] && x[30:23] != 8'hff && x > 32'h7EF311C7)
+52:             ? 32'h00000000 : 32'h7EF311C7 - x;
+53:         d1 <= x;
+54:     end
+55:     wire [31:0] yi [0:3];
+56:     wire [31:0] dd [0:2];
+57:     wire [31:0] m [0:2];
+58:     wire [31:0] s [0:2];
+59:     wire [31:0] yd [0:2];
+60:     wire [8:0] f;
+61:     assign yi[0] = y0;
+62:     assign dd[0] = d1;
+63:     genvar k;
+64:     generate
+65:         for (k = 0; k < 3; k = k + 1) begin : g_nr
+66:             if (k < 2) begin : g_d
+67:                 ot_hdc_delay #(.W(32), .D(IT)) d_d (clk, rst_n, dd[k], dd[k+1]);
+68:             end
+69:             ot_qwen_nearhbm_qmul #(.LAT(LM)) m_m (clk, rr[1+3*k], vd[1 + IT*k], dd[k], yi[k], m[k], f[3*k]);
+70:             ot_qwen_nearhbm_qadd #(.LAT(LA)) a_s (clk, rr[2+3*k], vd[1 + IT*k + LM], 32'h40000000, {~m[k][31], m[k][30:0]}, s[k], f[3*k+1]);
+71:             ot_hdc_delay #(.W(32), .D(LM + LA)) d_y (clk, rst_n, yi[k], yd[k]);
+72:             ot_qwen_nearhbm_qmul #(.LAT(LM)) m_y (clk, rr[3+3*k], vd[1 + IT*k + LM + LA], yd[k], s[k], yi[k+1], f[3*k+2]);
+73:         end
+74:     endgenerate
+75:     assign y = yi[3];
+76:     assign fault = |f;
+77: endmodule
+
+ot_qwen_nearhbm_sfu_p.sv:15-35
+15: module ot_qwen_nearhbm_qadd #(parameter integer LAT = 7) (
+16:     input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
+17:     output wire [31:0] y, output wire fault
+18: );
+19:     wire [1:0] err;
+20:     wire vo;
+21:     ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+22:                                          .valid_out(vo));
+23:     assign fault = vo && (err != 2'd0);
+24: endmodule
+25: 
+26: module ot_qwen_nearhbm_qmul #(parameter integer LAT = 6) (
+27:     input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
+28:     output wire [31:0] y, output wire fault
+29: );
+30:     wire [1:0] err;
+31:     wire vo;
+32:     ot_hdc_fp32_mul_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+33:                                          .valid_out(vo));
+34:     assign fault = vo && (err != 2'd0);
+35: endmodule
+
+ot_hdc_fp32_add_lat_nr.sv:43-57
+43:     // ---- A1 ----------------------------------------------------------------------------------------
+44:     wire [7:0]  a_field = a[30:23];
+45:     wire [7:0]  b_field = b[30:23];
+46:     wire [7:0]  a_exp = (a_field == 8'd0) ? 8'd1 : a_field;
+47:     wire [7:0]  b_exp = (b_field == 8'd0) ? 8'd1 : b_field;
+48:     wire [23:0] a_man = {(a_field != 8'd0), a[22:0]};
+49:     wire [23:0] b_man = {(b_field != 8'd0), b[22:0]};
+50:     wire nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
+51:     wire a_zero = (a[30:0] == 31'd0);
+52:     wire b_zero = (b[30:0] == 31'd0);
+53:     wire bypass = nonfinite || a_zero || b_zero;
+54:     wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+55:     wire cmp_c;
+56:     wire [30:0] cmp_s;
+57:     ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+
+ot_hdc_fp32_add_lat_nr.sv:198-219
+198:     wire [1:0]  u_err;
+199:     wire [31:0] u_code;
+200:     wire [7:0]  u_exp;
+201:     wire [23:0] rnd;
+202:     assign {u_v, u_byp, u_zero, u_sign, u_err, u_code, u_exp, rnd, rnd_c} = c2_in;
+203:     wire [23:0] man = rnd_c ? {1'b1, rnd[23:1]} : rnd;
+204:     wire [8:0]  e = {1'b0, u_exp} + {8'd0, rnd_c};
+205:     wire subnormal = (e == 9'd1) && !man[23];
+206:     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
+207:     wire over = (u_exp == 8'hff) || (e >= 9'd255);
+208:     always @(posedge clk or negedge rst_n) begin
+209:         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+210:         else begin
+211:             valid_out <= u_v;
+212:             if (u_byp) begin y <= u_code; err <= u_err; end
+213:             else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+214:             else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+215:             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+216:         end
+217:     end
+218: endmodule
+219: 
+
+ot_hdc_fp32_mul_lat.sv:237-272
+237:     wire carry = !o_sub && rnd_c;
+238:     wire [23:0] man = carry ? {1'b1, rnd[23:1]} : rnd;
+239:     wire signed [11:0] floor_ = o_fl + {11'd0, carry};
+240:     wire over = !o_sub && (floor_ > 12'sd127);
+241:     wire [7:0] field = floor_[7:0] + 8'd127;
+242:     wire sub_carry = o_sub && rnd[23];
+243:     wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
+244:                              : {o_sign, field, man[22:0]};
+245:     // C6: encode | refusals -> y
+246:     localparam integer W6 = 1 + 1 + 2 + 1 + 32;
+247:     wire [W6-1:0] c6;
+248:     ot_hdc_w11_cut #(.W(W6), .CUT(CUT6), .VB(DRST ? -1 : W6-1)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
+249:     wire        e_v, e_byp, e_over;
+250:     wire [1:0]  e_err;
+251:     wire [31:0] e_code;
+252:     assign {e_v, e_byp, e_err, e_over, e_code} = c6;
+253:     generate if (DRST != 0) begin : g_output_reset
+254:     always @(posedge clk or negedge rst_n) begin
+255:         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+256:         else begin
+257:             valid_out <= e_v;
+258:             if (e_byp) begin y <= 32'd0; err <= e_err; end
+259:             else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+260:             else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+261:         end
+262:     end
+263:     end else begin : g_output_valid_reset
+264:         always @(posedge clk or negedge rst_n) begin
+265:             if (!rst_n) valid_out <= 1'b0;
+266:             else valid_out <= e_v;
+267:         end
+268:         always @(posedge clk) begin
+269:             if (e_byp) begin y <= 32'd0; err <= e_err; end
+270:             else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+271:             else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+272:         end

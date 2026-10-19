@@ -1,0 +1,18 @@
+{
+  "supersedes_inference_in": "1f4241db0",
+  "preserve_prior_packet": true,
+  "selected_dispatch": [
+    "kvpc_{stack}_{slot}: qkd_kvs_pc(_h)",
+    "u_pc: qkd_static_kv_pc_path_fan_nc_b",
+    "u_pce: qkd_static_kv_pc_path_emb_nc_b",
+    "u_path: qkd_static_kv_pc_path_nc",
+    "u_ctrl: qkd_ctrl_pc_host_static_nc",
+    "u_sched: qkd_ctrl_pc_sched_nc"
+  ],
+  "exact_selected_fo": "fo <= fo | fi | ctl_fault | port_fault | ecc_fault | f_ecdc | f_cmd | f_early | f_tag | raw_bad | native_observer_fault",
+  "source": "pc/source/qkd_ctrl_pc_nc.sv:264",
+  "clock": "selected hck",
+  "reset": "hr_q, sampled hrst; asynchronous clear of fo",
+  "legacy_not_selected": "qkd_ctrl_strip.sv qkd_ctrl_pc uses nonsticky fo but qkd_ctrl_kc from this same file remains the selected KC master",
+  "implication": "No unsupported short-pulse loss claim; kf omitted remains actual export gap."
+}

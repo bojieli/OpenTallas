@@ -1,0 +1,170 @@
+{
+  "revision": "4db097403",
+  "scope": "All 128 selected GEN7 qkd_host_pc_slice_die land_er[260] producer DAGs; source-only, no native/timing/simulation qualification",
+  "instances": "selected_instances.json",
+  "primitive_count_rule": "One sticky detector state per instance; OR inputs, registers and ports are propagation aliases, not additional primitive detectors.",
+  "local_primitive": {
+    "module": "qkd_host_static_pc_emback",
+    "path_template": "hsl_{stack}_{slot}.u_slice.u_static.fault",
+    "instances": 128,
+    "storage": "1 sticky FF per instance",
+    "clock": "ck_static = wrapper ck = n_clk_core_{stack}[0]",
+    "clear": "asynchronous negedge rst_n where rst_n=host_r; PINCAP=1 host_r=host_rn, a plain posedge ck sample of selected host_rst_n face",
+    "initial_value": 0,
+    "set_predicates": [
+      {
+        "id": "landing_queue_overflow",
+        "expr": "a[0] && n0==4",
+        "context": "a is registered land_es; n0 is landing queue occupancy. No simultaneous-pop exemption in source."
+      },
+      {
+        "id": "host_queue_or_header",
+        "expr": "b[0] && (n1==4 || !b[287] || !b[286])",
+        "context": "b is registered host_es; n1 host queue occupancy. Source joins overflow/header errors into one fault FF."
+      },
+      {
+        "id": "excess_credit",
+        "expr": "er[259] && !launch && credit==4",
+        "context": "The 2b10 credit case alone faults; simultaneous launch/credit uses default no update."
+      },
+      {
+        "id": "completion_without_owner_or_wrong_write",
+        "expr": "ev && !fault && (on==0 || ew!=writes[orr])",
+        "context": "ev/ew are registered real boot-demux normal completion_v/we; on and writes track actual launched static words."
+      },
+      {
+        "id": "controller_fault_forwarded",
+        "expr": "er[260]",
+        "context": "er is registered u_boot.normal_er; this is incoming fault propagation, not a new detector leaf."
+      }
+    ],
+    "detector_dependencies": {
+      "a": "registered land_es",
+      "b": "registered u_station.host_es",
+      "er": "registered normal_er",
+      "ev/ew": "registered u_boot normal_completion_v/we",
+      "queue_state": "q0/q1 each 4 entries; n0/n1 3-bit, w/r pointers 2-bit",
+      "ownership_state": "owners/writes each 64 bits; ow/orr 6-bit, on 7-bit",
+      "credit": "3-bit reset4; launch=pending && !fault && credit!=0 && on<64",
+      "normal_completion_origin": "Actual controller completion observer through ES merge own phase, wrapper pin capture, completion ownerdemux. See boot_control_dependencies."
+    }
+  },
+  "propagation_nodes": [
+    {
+      "path": "u_static.land_er[260]",
+      "equation": "assign land_er={land_fault,land_credit,land_data,land_valid}",
+      "kind": "output alias"
+    },
+    {
+      "path": "u_static.land_fault",
+      "equation": "land_fault <= er[260] | fault",
+      "clock": "ck_static",
+      "clear": "async rst_n to0",
+      "kind": "nonsticky OR-register; fault input is sticky"
+    },
+    {
+      "path": "u_static.er",
+      "equation": "er <= ctrl_er (=normal_er from u_boot)",
+      "clock": "ck_static",
+      "clear": "async rst_n to0",
+      "kind": "registered bundle alias"
+    },
+    {
+      "path": "u_boot.normal_er",
+      "equation": "qualified ? raw_normal_er : 261b0; qualified=verified&&!fault",
+      "kind": "combinational conditional alias"
+    },
+    {
+      "path": "u_boot.u_boot.normal_er (=raw_normal_er)",
+      "equation": "normal_er <= normal ? ctrl_er : 261b0; normal=boot_done&&boot_ok",
+      "clock": "ck_boot",
+      "clear": "async hbm_r to0",
+      "kind": "registered conditional alias"
+    },
+    {
+      "path": "qkd_host_pc_slice_die.ctrl_er_q -> er_s",
+      "equation": "ctrl_er_q<=ctrl_er on ck; er_s=(PINCAP&&MUT!=3)?ctrl_er_q:ctrl_er",
+      "clock": "ck_boot=ck",
+      "clear": "NONE for ctrl_er_q",
+      "kind": "pin capture; selected default PINCAP1/MUT0"
+    },
+    {
+      "path": "kvpc.pc__her -> n_ler -> hsl.ctrl_er",
+      "equation": "qkd_kvs_pc(_h).u_pc.her -> u_pce.u_esm.her",
+      "kind": "selected wrapper wire aliases"
+    },
+    {
+      "path": "u_pc.u_pce.u_esm.her[260]",
+      "equation": "her[260] <= own && er[260]; own <= !emb_boot_ready",
+      "clock": "ck",
+      "clear": "her async rs_q to0, own async rs_q to1; rs_q<=rst_n on ck",
+      "kind": "phase-gated registered alias; this masks controller fault outside boot ownership"
+    },
+    {
+      "path": "u_pc.u_pce.u_path.u_ctrl.u_cdc.er[260]",
+      "equation": "er_f <= f_core | native_intake_fault",
+      "kind": "registered alias to upstream primitive ledger",
+      "primitive_reference": "../pc/primitive_inventory.json; coordinate pc_return_leaf owns detailed controller detectors and selected reset derivation"
+    }
+  ],
+  "boot_control_dependencies": {
+    "important": "These states control whether a controller error can reach land_er. They are not OR-exported as land_er[260] causes. boot fault has its separate boot_fault/sfo path.",
+    "hbm_reset": "Wrapper hbm_rn<=hbm_rst_n on ck; hbm_r=hbm_rn when PINCAP1; all boot state async hbm_r clear. Distinct from host reset.",
+    "completion_demux_fault": {
+      "storage": "sticky fault FF in qkd_static_completion_ownerdemux",
+      "set": [
+        "launch_v && count==64 && !retire",
+        "completion_v && !retire"
+      ],
+      "retire": "completion_v && count!=0 && completion_we==wr[rp] && !fault",
+      "clock": "ck_boot",
+      "clear": "async hbm_r to0",
+      "owners": "64-bit owner+wr,6-bit wp/rp,7-bit count; normal_completion_v<=!owner[rp], boot_completion_v<=owner[rp] only on valid retire"
+    },
+    "completion_check_fault": {
+      "storage": "sticky check_fault FF",
+      "clock": "ck_boot",
+      "clear": "async hbm_r to0",
+      "set": [
+        "waiting&&!verified&&timer>=TIMEOUT",
+        "boot_go&&(!empty||retired!=0)",
+        "!qualified&&normal_es[0]",
+        "boot_completion_v&&(retired==4||boot_completion_we!=!retired[0])"
+      ],
+      "verified": "latches1 only test_done&&test_ok&&retired==4&&empty&&!fault; reset0; not independently cleared on new boot_go in source"
+    },
+    "base_fault": {
+      "storage": "sticky qkd_hbm_boot_static.fault",
+      "set": "!normal&&normal_es[0]",
+      "clock": "ck_boot",
+      "clear": "async hbm_r to0"
+    },
+    "boot_test_status": {
+      "storage": "done/ok/cause state in qkd_hbm_boot_pc (terminal per transaction, not lifetime sticky fault FF)",
+      "clock": "ck_boot_test=ck",
+      "clear": "async hbm_r; new start in IDLE/FIN clears done/ok/cause",
+      "failure_predicates": [
+        "busy&&er[260] -> cause1",
+        "busy&&timer>=TIMEOUT -> cause2",
+        "WAIT_RD&&er[0]&&(er[258]||er[256:1]!=pattern) -> cause3"
+      ],
+      "return_input": "test_er registered from ctrl_er while !normal; ctrl_er includes ES merge ownership and wrapper pin capture"
+    },
+    "boot_fault_equation": "base_fault | demux_fault | check_fault",
+    "separate_routes": "u_slice.boot_fault -> wrapper sfo via per-PC onehot. u_static.fault -> u_station.host_fault. Neither incoming station fault_i nor ES merge m_fault|emb_fault is an OR input to land_er."
+  },
+  "missing_or_unqualified": [
+    "Absolute boot/host/core/HBM phases, reset pulse widths and real first-use offsets are not established by source logic.",
+    "No native proof that selected macro views preserve every detector/storage state; source DAG only.",
+    "Controller er[260] expansion delegated to pc_return_leaf ledger; do not stop at CDC fault alias or count er_f as a separate detector.",
+    "Other selected ctrl_er bits260-downward have their own data/SECDED semantics; er[258] is separate data error and not OR input to host land_fault unless boot test consumes it.",
+    "Complete sticky-health-to-STATUS/host-retirement/admission integration and deadline model remains parent-owned."
+  ],
+  "suppression_classification": {
+    "status": "SOURCE_SEMANTIC_QUALIFICATION_ONLY_NO_PROVEN_LEGAL_LOST_FAULT",
+    "witness": null,
+    "validity_obligation": "A legal witness must satisfy actual selected command ownership/boot schedule/reset assumptions, assert a real detector predicate, and show its required observation is lost at STATUS/host retirement/admission. A raw unqualified er bit is not such an obligation.",
+    "reason": "ES merge directs controller er to HOST only while own; runtime own0 instead exposes er to embedding endpoint. Boot gates intentionally suppress normal responses before validated boot completion. Controller er_f source is sticky until its reset; it may survive boot gating and be observed later.",
+    "recommended_action": "Prove phase transition, pending/retirement drain and real reset ordering for selected schedule; do not bypass qualifiers or capture raw er to create faults on healthy boot."
+  }
+}

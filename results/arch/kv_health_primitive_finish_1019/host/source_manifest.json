@@ -1,0 +1,83 @@
+{
+  "revision": "4db097403",
+  "die": "/home/ubuntu/artifacts/kv-pc-health-join-1019/die_bound.v",
+  "die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "sources": [
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+      "snapshot": "source/qkd_host_pc_slice_die.sv",
+      "sha256": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+      "bytes": 7406
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv",
+      "snapshot": "source/qkd_host_pc_slice.sv",
+      "sha256": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+      "bytes": 2891
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv",
+      "snapshot": "source/qkd_host_static_pc_emback.sv",
+      "sha256": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+      "bytes": 3139
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv",
+      "snapshot": "source/qkd_hbm_boot_static_completion.sv",
+      "sha256": "fd4d71c80b86adb7ccbea8aac2d1060c3f1b02eeff6198af5ed3fcdbdb0b8612",
+      "bytes": 2682
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv",
+      "snapshot": "source/qkd_hbm_boot_static.sv",
+      "sha256": "2dfe24158efe1d80c724a0fdfdfab6f96540c93a80c45c4474bf8a67a866963b",
+      "bytes": 1667
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv",
+      "snapshot": "source/qkd_hbm_boot_pc.sv",
+      "sha256": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+      "bytes": 1899
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv",
+      "snapshot": "source/qkd_static_completion_ownerdemux.sv",
+      "sha256": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+      "bytes": 1504
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "snapshot": "source/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "sha256": "90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe",
+      "bytes": 15623
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+      "snapshot": "source/qkd_static_kv_pc_path_emb.sv",
+      "sha256": "20aefbf588250017a2136f8fdf69eebd15eb9461ff714e3e2a6659b0ddd3d749",
+      "bytes": 7439
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+      "snapshot": "source/qkd_static_kv_pc_es_merge_b.sv",
+      "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+      "bytes": 6306
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "master_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+      "module": "qkd_kvs_pc",
+      "snapshot": "source/qkd_kvs_pc.sv",
+      "sha256": "768601918ced5e1432306db69714f65b550ab7096f588d0d91e70cde999b7a11",
+      "bytes": 7634
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "master_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+      "module": "qkd_kvs_pc_h",
+      "snapshot": "source/qkd_kvs_pc_h.sv",
+      "sha256": "e4308631e9403eedc28e6137b83f9185009b0583569a3a9d03118bc8c9f5ddab",
+      "bytes": 7487
+    }
+  ]
+}

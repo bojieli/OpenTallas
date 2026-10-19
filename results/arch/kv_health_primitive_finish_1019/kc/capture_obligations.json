@@ -1,0 +1,41 @@
+{
+  "classification": "SOURCE_LOCAL_TRANSITION_OBLIGATIONS_NOT_PROVEN_SELECTED_SCHEDULE_WITNESSES",
+  "no_false_fault_policy": [
+    "Only a real valid-qualified detector event is retained. Unknown no-reset startup state, invalid arithmetic err, unowned return data and intentionally suppressed boot buses are not detector events.",
+    "Retained events carry the source request/pass/epoch ownership at the detection edge. A later source start/reset cannot relabel an old event to a new request.",
+    "No quiet/reset window or dynamic backpressure is introduced."
+  ],
+  "obligations": [
+    {
+      "id": "KC_LOCAL_OVERFLOW",
+      "source_legal_transition": "On core edge e with rs_q=1, kv_q=1 and w_rdy=0, f_ovf becomes1. With rs_q held1, kf becomes1 on e+1; every actual selected kc_* kf port is omitted.",
+      "observable_obligation": "Command rejection must veto the owning request's commit and future use; no selected external kf connection supplies that obligation.",
+      "global_legal_trace_status": "FIFO saturation reaching this edge under actual static production schedule has not been proved here. The source detector and omitted connection are exact; do not manufacture a healthy-traffic overflow witness.",
+      "capture_requirement": "Retain the qualified write-rejection event locally, with its command identity, before rs_q clearing; connect actual retained health to collector."
+    },
+    {
+      "id": "KC_HBM_FORWARDING",
+      "source_legal_transition": "Each qkd_ctrl_pc_host_static_nc fo is an HBM sticky registered OR of local causes and fi with self-hold until hr_q reset; each inserted qkd_rlys_1 forwards without reset. KC f1/f2/kf reset independently in core.",
+      "observable_obligation": "Any valid controller error remains attributable through actual HBM relay edges into a live core capture, or is retained before the independent source reset erases it.",
+      "global_legal_trace_status": "No selected legal loss trace asserted. Ordinary fixed-phase HBM/core crossing is not automatically a lost pulse; prove actual clocks/reset releases/PLL behavior and source event width. No-reset startup X is not a fault.",
+      "capture_requirement": "Source-local sticky capture uses detector enable and ownership, not raw fi startup. Price and verify independent reset/PLL event retention separately."
+    },
+    {
+      "id": "AHUB_START_PRIORITY",
+      "source_legal_transition": "Core edge e with !reset, start=1 and valid start parameters executes fault<=0 regardless of old fault or simultaneous zh_err/rc_fault. IO forwards pre-edge core fault, so this is not proof every past error vanishes at hf.",
+      "observable_obligation": "An earlier valid-owned pass error must veto its commit and survive a subsequent start/reset; a coincident old-pass arithmetic pulse must retain old identity rather than become a new-pass event.",
+      "global_legal_trace_status": "Selected schedule must establish whether old valid returns can coincide with start, whether hf already exposed a previous fault, and whether prior pass was already committed. No legal coincident production trace proved here.",
+      "capture_requirement": "Capture valid_out&&err!=0 with originating pass at arithmetic return or prove actual draining/spacing. Capture local protocol predicates under their exact !start&&active guard; never OR invalid raw err into global health."
+    },
+    {
+      "id": "HOST_OWN_BOOT_GATING",
+      "source_legal_transition": "her[260] captures own&&er[260], own derived from !emb_boot_ready; host boot path presents normal_er only under its verified/nonfault ownership condition.",
+      "observable_obligation": "Only genuine valid/owned controller or HOST detector faults must survive. Inactive/unowned er bits and intentional boot suppression have no standalone fault meaning.",
+      "global_legal_trace_status": "No selected legal lost causal event asserted from gating alone. Match exact controller event, command ownership, boot verification and export edge before claiming a loss.",
+      "capture_requirement": "Use source detector predicate and ownership before a clear can erase it, not ungated er[260]. Keep boot fault as its own separately exposed source."
+    }
+  ],
+  "absolute_status": null,
+  "host_commit_calendar": null,
+  "raw_por_pll_event_retention_implemented": false
+}

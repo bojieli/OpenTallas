@@ -1,0 +1,848 @@
+{
+  "status": "SOURCE_DAG_RESOLVED_NATIVE_PHASE_AND_RETIREMENT_CAPTURE_UNQUALIFIED",
+  "selected_commit": "4db097403",
+  "selected_die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "selected_instance_line": "  qkd_ahub_static_dw #(.Z_IN_STRIDE(4)) ahub (.ap0(n_ap_WS__r6[42:0]), .am0(n_am_WS[35:0]), .ap1(n_ap_WN__r7[42:0]), .am1(n_am_WN[35:0]), .ap2(n_ap_ES__r7[42:0]), .am2(n_am_ES[35:0]), .ap3(n_ap_EN__r8[42:0]), .am3(n_am_EN[35:0]), .ck(n_clk_core_c[0]), .hf(n_hf[0]), .hs_start(n_ks_ahs__r46[0]), .hs_ep(n_ks_ahs__r46[16:1]), .hs_layer(n_ks_ahs__r46[22:17]), .hs_ctx(n_ks_ahs__r46[36:23]), .hs_cal_lo(n_ks_ahs__r46[148:37]), .hs_cal_r(n_ks_ahs__r46[164:149]), .fr_valid(n_ks_ahfr[0]), .fr_epoch(n_ks_ahfr[16:1]), .fr_rz(n_ks_ahfr[144:17]), .rst_n(n_rrs_n_rst_die_t8__m_0__g3_s6[0]));",
+  "selected_parameters": {
+    "Z_IN_STRIDE": 4,
+    "AP_OFS": "4 x 16d2 (default)",
+    "FR_OFS": 0,
+    "ZW_RLY": 0,
+    "ZR_RLY": 0,
+    "RX_RLY": 1,
+    "RY_RLY": 1,
+    "MUT": 0
+  },
+  "clock": "n_clk_core_c[0]",
+  "selected_reset_port": "n_rrs_n_rst_die_t8__m_0__g3_s6[0]",
+  "reset_structure": [
+    "port -> ot_rst_pipe REGIONS7 STAGES2 -> rr[0..6]",
+    "rr[1] -> core ot_rst_pipe REGIONS4 STAGES2 -> rn[0..3]",
+    "rr[2+h] -> each Z ot_rst_relay REGIONS6 SYNC_STAGES2 TREE_STAGES1 -> rr[0..5]",
+    "rr[6] -> reciprocal leaf ot_rst_relay REGIONS1 default depths -> rr[0]",
+    "leaf rr[0] -> reciprocal core ot_rst_relay REGIONS10 default depths -> rr[0..9]"
+  ],
+  "reset_definition_limit": "ot_rst_pipe/ot_rst_relay definitions not in supplied snapshot; named parameter wiring exact, absolute release/phase not qualified",
+  "counts": {
+    "primitive_pass_scoped_detector_registers": 2,
+    "arithmetic_error_channels": 25,
+    "z_add_channels": 16,
+    "reciprocal_channels": 9,
+    "qualified_independent_physical_health_count": null
+  },
+  "primitive_rows": [
+    {
+      "id": "ahub.u_io.xf",
+      "kind": "primitive_pass_scoped_sticky_detector",
+      "clock": "n_clk_core_c[0]",
+      "async_clear": "!ahub.rr[0]",
+      "start_replacement": "xf <= bad_t; bad_t = start && (tgt < 1 || tgt > 65535)",
+      "set_predicates": [
+        "rz_publish && !active (only in !start branch)",
+        "emit && !published (evaluated after start branch; can override start replacement)",
+        "active && age_nx[16] (evaluated after start branch; can override start replacement)"
+      ],
+      "dependencies": [
+        "start",
+        "tgt",
+        "active",
+        "published",
+        "age_nx",
+        "rz_publish"
+      ],
+      "hold": "No set or start holds prior xf",
+      "sticky_across_start": false,
+      "source": "qkd_ahub_static_dw.sv:110-130"
+    },
+    {
+      "id": "ahub.u_core.fault",
+      "kind": "primitive_pass_scoped_sticky_detector",
+      "clock": "n_clk_core_c[0]",
+      "async_clear": "!ahub.u_core.rn[3]",
+      "start_replacement": "(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])",
+      "set_qualification": "!start && active; all listed predicates and each stack check are nested in this guard",
+      "exact_rtl": "    always @(posedge clk or negedge rn[3])\n        if(!rn[3])fault<=0;\n        else if(start)fault<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0]);\n        else if(active)begin\n            if(active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||\n                (m_issue && lm_seen!=16'hffff) ||\n                ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||\n                    zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask)) ||\n                (active && edge_age==16'd1 && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||\n                    RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4)) ||\n                (edge_age==RZ_PUBLISH_AGE && rz_seen!=4'hf))fault<=1;\n            for(integer a=0;a<4;a=a+1)begin\n                if(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a]))fault<=1;\n                if(si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||\n                    si_type[2*a+:2]!=(lm_slot[a]?0:z_slot[a]?1:2) ||\n                    ((lm_slot[a]||z_slot[a]) && si_hh[2*a+:2]!=slot_h[2*a+:2]) ||\n                    (z_slot[a] && si_k[4*a+:4]!=slot_k[4*a+:4])))fault<=1;\n            end\n        end\n",
+      "dependencies": [
+        "held parity/layer/epoch",
+        "zh_err[15:0]",
+        "rc_fault",
+        "rc_vo!=recip_return",
+        "lm_seen",
+        "done_seen",
+        "zseen[0..3]",
+        "zmask",
+        "command calendar",
+        "rz_seen",
+        "si_valid/type/identity/group/head/block"
+      ],
+      "sticky_across_start": false,
+      "note": "active is set on start and is not cleared by publication/end in this module; it remains 1 until reset or another start"
+    },
+    {
+      "id": "ahub.g_zh[0].u_zh.g_z[0].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[0].u_zh.zvo[0] && (ahub.g_zh[0].u_zh.g_z[0].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[0].u_zh.ziv1[0]",
+      "reset_chain": [
+        "ahub.rr[2]",
+        "ahub.g_zh[0].u_zh.rr[0]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[0].u_zh.zerr_o[0]",
+        "ahub.g_zh[0].u_zh.zerr[0] (one register, rr[5])",
+        "ahub.zh_err[0] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[0].u_zh.g_z[1].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[0].u_zh.zvo[1] && (ahub.g_zh[0].u_zh.g_z[1].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[0].u_zh.ziv1[1]",
+      "reset_chain": [
+        "ahub.rr[2]",
+        "ahub.g_zh[0].u_zh.rr[1]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[0].u_zh.zerr_o[1]",
+        "ahub.g_zh[0].u_zh.zerr[1] (one register, rr[5])",
+        "ahub.zh_err[1] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[0].u_zh.g_z[2].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[0].u_zh.zvo[2] && (ahub.g_zh[0].u_zh.g_z[2].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[0].u_zh.ziv1[2]",
+      "reset_chain": [
+        "ahub.rr[2]",
+        "ahub.g_zh[0].u_zh.rr[2]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[0].u_zh.zerr_o[2]",
+        "ahub.g_zh[0].u_zh.zerr[2] (one register, rr[5])",
+        "ahub.zh_err[2] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[0].u_zh.g_z[3].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[0].u_zh.zvo[3] && (ahub.g_zh[0].u_zh.g_z[3].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[0].u_zh.ziv1[3]",
+      "reset_chain": [
+        "ahub.rr[2]",
+        "ahub.g_zh[0].u_zh.rr[3]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[0].u_zh.zerr_o[3]",
+        "ahub.g_zh[0].u_zh.zerr[3] (one register, rr[5])",
+        "ahub.zh_err[3] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[1].u_zh.g_z[0].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[1].u_zh.zvo[0] && (ahub.g_zh[1].u_zh.g_z[0].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[1].u_zh.ziv1[0]",
+      "reset_chain": [
+        "ahub.rr[3]",
+        "ahub.g_zh[1].u_zh.rr[0]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[1].u_zh.zerr_o[0]",
+        "ahub.g_zh[1].u_zh.zerr[0] (one register, rr[5])",
+        "ahub.zh_err[4] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[1].u_zh.g_z[1].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[1].u_zh.zvo[1] && (ahub.g_zh[1].u_zh.g_z[1].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[1].u_zh.ziv1[1]",
+      "reset_chain": [
+        "ahub.rr[3]",
+        "ahub.g_zh[1].u_zh.rr[1]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[1].u_zh.zerr_o[1]",
+        "ahub.g_zh[1].u_zh.zerr[1] (one register, rr[5])",
+        "ahub.zh_err[5] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[1].u_zh.g_z[2].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[1].u_zh.zvo[2] && (ahub.g_zh[1].u_zh.g_z[2].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[1].u_zh.ziv1[2]",
+      "reset_chain": [
+        "ahub.rr[3]",
+        "ahub.g_zh[1].u_zh.rr[2]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[1].u_zh.zerr_o[2]",
+        "ahub.g_zh[1].u_zh.zerr[2] (one register, rr[5])",
+        "ahub.zh_err[6] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[1].u_zh.g_z[3].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[1].u_zh.zvo[3] && (ahub.g_zh[1].u_zh.g_z[3].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[1].u_zh.ziv1[3]",
+      "reset_chain": [
+        "ahub.rr[3]",
+        "ahub.g_zh[1].u_zh.rr[3]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[1].u_zh.zerr_o[3]",
+        "ahub.g_zh[1].u_zh.zerr[3] (one register, rr[5])",
+        "ahub.zh_err[7] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[2].u_zh.g_z[0].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[2].u_zh.zvo[0] && (ahub.g_zh[2].u_zh.g_z[0].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[2].u_zh.ziv1[0]",
+      "reset_chain": [
+        "ahub.rr[4]",
+        "ahub.g_zh[2].u_zh.rr[0]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[2].u_zh.zerr_o[0]",
+        "ahub.g_zh[2].u_zh.zerr[0] (one register, rr[5])",
+        "ahub.zh_err[8] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[2].u_zh.g_z[1].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[2].u_zh.zvo[1] && (ahub.g_zh[2].u_zh.g_z[1].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[2].u_zh.ziv1[1]",
+      "reset_chain": [
+        "ahub.rr[4]",
+        "ahub.g_zh[2].u_zh.rr[1]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[2].u_zh.zerr_o[1]",
+        "ahub.g_zh[2].u_zh.zerr[1] (one register, rr[5])",
+        "ahub.zh_err[9] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[2].u_zh.g_z[2].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[2].u_zh.zvo[2] && (ahub.g_zh[2].u_zh.g_z[2].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[2].u_zh.ziv1[2]",
+      "reset_chain": [
+        "ahub.rr[4]",
+        "ahub.g_zh[2].u_zh.rr[2]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[2].u_zh.zerr_o[2]",
+        "ahub.g_zh[2].u_zh.zerr[2] (one register, rr[5])",
+        "ahub.zh_err[10] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[2].u_zh.g_z[3].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[2].u_zh.zvo[3] && (ahub.g_zh[2].u_zh.g_z[3].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[2].u_zh.ziv1[3]",
+      "reset_chain": [
+        "ahub.rr[4]",
+        "ahub.g_zh[2].u_zh.rr[3]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[2].u_zh.zerr_o[3]",
+        "ahub.g_zh[2].u_zh.zerr[3] (one register, rr[5])",
+        "ahub.zh_err[11] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[3].u_zh.g_z[0].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[3].u_zh.zvo[0] && (ahub.g_zh[3].u_zh.g_z[0].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[3].u_zh.ziv1[0]",
+      "reset_chain": [
+        "ahub.rr[5]",
+        "ahub.g_zh[3].u_zh.rr[0]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[3].u_zh.zerr_o[0]",
+        "ahub.g_zh[3].u_zh.zerr[0] (one register, rr[5])",
+        "ahub.zh_err[12] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[3].u_zh.g_z[1].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[3].u_zh.zvo[1] && (ahub.g_zh[3].u_zh.g_z[1].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[3].u_zh.ziv1[1]",
+      "reset_chain": [
+        "ahub.rr[5]",
+        "ahub.g_zh[3].u_zh.rr[1]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[3].u_zh.zerr_o[1]",
+        "ahub.g_zh[3].u_zh.zerr[1] (one register, rr[5])",
+        "ahub.zh_err[13] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[3].u_zh.g_z[2].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[3].u_zh.zvo[2] && (ahub.g_zh[3].u_zh.g_z[2].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[3].u_zh.ziv1[2]",
+      "reset_chain": [
+        "ahub.rr[5]",
+        "ahub.g_zh[3].u_zh.rr[2]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[3].u_zh.zerr_o[2]",
+        "ahub.g_zh[3].u_zh.zerr[2] (one register, rr[5])",
+        "ahub.zh_err[14] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.g_zh[3].u_zh.g_z[3].u_add.g_nr.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "ahub.g_zh[3].u_zh.zvo[3] && (ahub.g_zh[3].u_zh.g_z[3].err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat_nr",
+      "LAT": 7,
+      "NR": 1,
+      "input_valid": "ahub.g_zh[3].u_zh.ziv1[3]",
+      "reset_chain": [
+        "ahub.rr[5]",
+        "ahub.g_zh[3].u_zh.rr[3]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.g_zh[3].u_zh.zerr_o[3]",
+        "ahub.g_zh[3].u_zh.zerr[3] (one register, rr[5])",
+        "ahub.zh_err[15] (ZW_RLY=ZR_RLY=0)",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (one register) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[0].m_m.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[0].m_m.vo && (g_nr[0].m_m.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[1]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[1]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[0]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[0].a_s.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[0].a_s.vo && (g_nr[0].a_s.err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat",
+      "LAT": 7,
+      "input_valid": "vd[8]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[2]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[1]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[0].m_y.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[0].m_y.vo && (g_nr[0].m_y.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[15]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[3]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[2]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[1].m_m.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[1].m_m.vo && (g_nr[1].m_m.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[22]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[4]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[3]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[1].a_s.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[1].a_s.vo && (g_nr[1].a_s.err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat",
+      "LAT": 7,
+      "input_valid": "vd[29]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[5]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[4]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[1].m_y.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[1].m_y.vo && (g_nr[1].m_y.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[36]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[6]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[5]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[2].m_m.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[2].m_m.vo && (g_nr[2].m_m.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[43]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[7]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[6]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[2].a_s.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[2].a_s.vo && (g_nr[2].a_s.err != 0)",
+      "source_master": "ot_hdc_fp32_add_lat",
+      "LAT": 7,
+      "input_valid": "vd[50]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[8]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[7]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    },
+    {
+      "id": "ahub.u_recip.u_core.g_nr[2].m_y.u.error_channel",
+      "kind": "primitive_valid_qualified_arithmetic_channel",
+      "encoded_error_width": 2,
+      "independent_channel_count": 1,
+      "sticky": false,
+      "clock": "n_clk_core_c[0]",
+      "predicate": "g_nr[2].m_y.vo && (g_nr[2].m_y.err != 0)",
+      "source_master": "ot_hdc_fp32_mul_lat",
+      "LAT": 7,
+      "input_valid": "vd[57]",
+      "reset_chain": [
+        "ahub.rr[6]",
+        "ahub.u_recip.rr[0]",
+        "ahub.u_recip.u_core.rr[9]"
+      ],
+      "start_clear": false,
+      "forward_path": [
+        "ahub.u_recip.u_core.f[8]",
+        "u_recip.u_core.fault=|f (combinational OR)",
+        "u_recip.fault (registered cf, leaf rr[0])",
+        "ahub.rc_fault via u_ry N=1",
+        "ahub.u_core.fault (!start && active)",
+        "ahub.u_io.fault (registered) -> ahub.hf"
+      ]
+    }
+  ],
+  "forwarding_aliases": [
+    {
+      "id": "ahub.u_io.fault / ahub.hf / n_hf[0]",
+      "kind": "registered_forwarding_OR",
+      "equation": "fault_next = xf || hub_fault",
+      "clock": "n_clk_core_c[0]",
+      "async_clear": "!ahub.rr[0]",
+      "sticky": false,
+      "start_clear": false,
+      "note": "Uses old xf/hub_fault on start edge; output falls only when both source states have cleared and propagated"
+    },
+    {
+      "id": "ahub.g_zh[h].u_zh.zerr[a]",
+      "count": 16,
+      "kind": "registered_forwarding_pulse",
+      "equation": "zerr_next=zvo && err!=0",
+      "async_clear": "!u_zh.rr[5]",
+      "sticky": false,
+      "start_clear": false
+    },
+    {
+      "id": "ahub.u_recip.u_core.fault",
+      "kind": "combinational_forwarding_OR",
+      "equation": "|f[8:0]",
+      "sticky": false
+    },
+    {
+      "id": "ahub.u_recip.fault",
+      "kind": "registered_forwarding_pulse",
+      "equation": "fault_next=cf",
+      "async_clear": "!u_recip.rr[0]",
+      "sticky": false,
+      "start_clear": false
+    },
+    {
+      "id": "ahub.rc_fault",
+      "kind": "relay_forwarding_pulse",
+      "equation": "u_ry N=1 forwards ryt[33]",
+      "sticky": false
+    }
+  ],
+  "context_state": [
+    {
+      "id": "ahub.u_io.active/published/age",
+      "clear": "rr[0] low -> 0; start sets active=!bad_t, age=1, published=0",
+      "update": "active && rz_publish sets published; emit clears active; active increments age",
+      "purpose": "export timing detector context"
+    },
+    {
+      "id": "ahub.u_core.active/age/epoch/parity/layer",
+      "clear": "rn[0] low -> 0; start active=1 age=0 and captures identity",
+      "update": "active age saturates at ffff; no end-of-pass active clear",
+      "purpose": "core detector context"
+    },
+    {
+      "id": "ahub.u_core.lany/lm_seen/done_seen/zseen[0:3]",
+      "clear": "rn[1] low or start_b -> 0",
+      "update": "calendar slot seen bits accumulated",
+      "purpose": "slot completeness context, not independent detector"
+    },
+    {
+      "id": "ahub.u_core.rz_seen",
+      "clear": "rn[3] low or start ->0",
+      "update": "recip_return sets return head bit"
+    },
+    {
+      "id": "ahub.g_zh[h].u_zh.zv",
+      "count": 4,
+      "clear": "rr[5] low or start_q -> 0",
+      "update": "result or leaf writes set valid bits; zm payload not cleared",
+      "purpose": "zero-leaf semantic validity; not a fault register"
+    },
+    {
+      "id": "ahub.u_recip.u_core.u_v",
+      "clear": "core rr[0] resets valid delay line",
+      "purpose": "DEPTH=64 vline; no start input; clocks all core_c"
+    }
+  ],
+  "arithmetic_predicates": {
+    "common": "E_NONE=0 E_NONFINITE=1 E_OVERFLOW=2; channel valid_out && err!=0; err is registered each edge independently of validity",
+    "nonfinite": "a[30:23]==ff || b[30:23]==ff (takes error priority over zero bypass)",
+    "add_overflow": "!u_byp && !u_zero && ((u_exp==ff) || ({1b0,u_exp}+rnd_c >=255))",
+    "mul_overflow": "!e_byp && e_over; e_over pipelines (!o_sub && floor_>127)",
+    "underflow": "subnormal/rounded zero handled without a separate error code",
+    "reset": "output/valid async reset in selected Z NR adder and default DRST1 mul; reciprocal add DRST depends OT_FP_DATA_NORST preprocessor, valid always reset; consumers must qualify err"
+  },
+  "capture_risks": [
+    "core start has priority over every incoming arithmetic/protocol cause and replaces previous fault",
+    "io xf start replaces history; last two set predicates use old active/published and can override that replacement",
+    "arithmetic pipelines have no start clear and may return old-pass pulses while core captures new identity",
+    "Z start clears zv only, not arithmetic valid pipeline or zerr; exact pass spacing/drain must be proved",
+    "hf is delayed forwarding, not permanent retirement health; upstream start clears must not erase retirement history",
+    "native reset release, first-use legal ages, source-to-retirement STATUS/host veto remain outside this bounded source analysis"
+  ],
+  "source_manifest": [
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/qkd_ahub_static_dw.sv",
+      "sha256": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_qkd_ahub_static_cal_gen.sv",
+      "sha256": "88ebd7162acaebaaf55d1c370fecc4de84172850ed8eb45d6278572a30e54302"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_nhb_tiles.sv",
+      "sha256": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_qkh_recip_leaf.sv",
+      "sha256": "6653404863ded7cb9a859973113bcff00ddec1ef933396b26cd9513b9026f061"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_qwen_nearhbm_sfu_p.sv",
+      "sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_hdc_fp32_add_lat_nr.sv",
+      "sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-health-plane-model-1019/primitive/source/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/kv-pc-health-join-1019/die_bound.v",
+      "sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6"
+    }
+  ]
+}

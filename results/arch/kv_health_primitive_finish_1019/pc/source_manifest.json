@@ -1,0 +1,104 @@
+[
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv",
+    "snapshot": "source/qkd_ctrl_pc_nc.sv",
+    "sha256": "14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv",
+    "snapshot": "source/qkd_ctrl_pc_children.sv",
+    "sha256": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv",
+    "snapshot": "source/qkd_static_kv_pc_path_nc.sv",
+    "sha256": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv",
+    "snapshot": "source/qkd_static_kv_pc_path_fan_nc_b.sv",
+    "sha256": "90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+    "snapshot": "source/qkd_static_kv_pc_es_merge_b.sv",
+    "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+    "snapshot": "source/qkd_embedding_static_map.sv",
+    "sha256": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+    "snapshot": "source/ot_qkvd_kcmd_tap.sv",
+    "sha256": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv",
+    "snapshot": "source/qkd_ctrl_pc_host_static_core.sv",
+    "sha256": "f1447f7011da1da58835db48cb2dd7323d6afd0ea58a91b5384d0d3b83a3fccb"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+    "snapshot": "source/ot_qkd_static_emb_cdc.sv",
+    "sha256": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv",
+    "snapshot": "source/qkd_static_kv_pc_es_merge.sv",
+    "sha256": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/q5_20261009/ot_qfd_kv_landing_ecc.sv",
+    "snapshot": "source/ot_qfd_kv_landing_ecc.sv",
+    "sha256": "13c418c84138997b139dcb98ebd8ec3e93d1c6961d9e41a49ddb92ebf01bc851"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+    "snapshot": "source/ot_qkd_static_ctrl_pc_emb.sv",
+    "sha256": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+    "snapshot": "source/ot_qkd_static_kv_timing.sv",
+    "sha256": "ed202e8000388e48b7feda209c38382b5991386bf6d209b5a03ec88dd2abbce4"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+    "snapshot": "source/qkd_static_kv_write_observer.sv",
+    "sha256": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+    "snapshot": "source/qkd_host_static_pc.sv",
+    "sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/lib/ot_async_fifo.sv",
+    "snapshot": "source/ot_async_fifo.sv",
+    "sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc"
+  },
+  {
+    "revision": "4db097403",
+    "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "snapshot": "source/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97"
+  }
+]
