@@ -212,6 +212,13 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # stack's PV pair in_e lanes: W stacks pvw_<p>.ie = in_e[255:0], E stacks .iee = in_e[511:256]).  ASTK_W re-cut: not done
 # (the frame keeps 220.32 um; the P.V tree columns are gone, so the strip has slack -- follow-up with its kit).
 ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
+# Owner-selected physical strip successor: parameters and read ages must move together.
+# Legacy/default sources keep their existing one-edge internal links and centralized e-read.
+ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '0') == '1'
+ASTK_RL = int(os.environ.get('OT_KV_ASTK_RL', '3' if ASTK_EXPAND else '1'))
+ASTK_Z_STRIDE = 4     # actual CLOSED qkd_astk_ctl_s parameter; stride-16 benches are separate evidence
+if ASTK_RL < 1 or (not ASTK_EXPAND and ASTK_RL != 1):
+    raise ValueError('kv_static_die: ASTK RL changes require OT_KV_ASTK_EXPAND=1 and positive RTL link latency')
 ASTK_FILE = 'rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv'
 ACAL = ['cal[31:16]', 'cal[47:32]', 'cal[15:0]']            # astk cal = {EXP base, Z start, LMAX start} (LSB first: LMAX)
 ECTL_ST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv'
@@ -1211,6 +1218,7 @@ def bindings():
     if ASTK_ST:
         for mn in ('qkd_astk', 'qkd_astk_n'):
             out[mn] = dict(module='qkd_astk_strip_er_die', file=ASTK_FILE,
+                parameters=dict(RL=ASTK_RL, Z_STRIDE=ASTK_Z_STRIDE),
                 ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
                            **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
                            **{f'vh{k}': [f'vh{k}'] for k in range(4)},
@@ -1485,7 +1493,7 @@ def _die_joins(m, K, B, add, fk, rec):
                 fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
             bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
         rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
-                            'e quad -> pvw in_e at ASTK_ERL (7: ERL 3 + 4 tap pin-register edges, KV-ERTAP) after the fork; record astk_eread: fork + 7 + pve stages vs the '
+                            f'e quad -> pvw in_e at ASTK_ERL {ASTK_ERL} after the fork; record astk_eread: fork + ASTK_ERL + pve stages vs the '
                             'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
     # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
     if SEQ_S and 'seq' in by:
@@ -2028,13 +2036,19 @@ def record(m):
                 attn_landing=dict(enabled=ATTN_LAND, added_edges=ATTN_LAND_EDGES if ATTN_LAND else {},
                                   codec_edges=2 if ATTN_LAND else 1,
                                   schedule_binding='compiler must compose launch edges with actual die relay/land ages'),
-                **({'astk_eread': astk_eread(m)} if ASTK_ST else {}),
+                **({'astk_eread': astk_eread(m), 'astk_internal': dict(
+                    expanded=ASTK_EXPAND, relay_edges=ASTK_RL, z_stride=ASTK_Z_STRIDE,
+                    eread_edges=ASTK_ERL, fault_join_edges=1 if ASTK_EXPAND else 0,
+                    owner_issue_edges=[2 + e * (2 + ASTK_RL) for e in range(8)] if ASTK_EXPAND else None,
+                    calendar_status='PRODUCTION_CALENDAR_MEASUREMENT_REQUIRED' if ASTK_EXPAND else 'LEGACY',
+                    eread_law='7 + 7*(2+RL): 8 owner leaves with input/output flops and resettable inter-owner relays'
+                              if ASTK_EXPAND else 'EP3 + request2 + response2')} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})
 
 
 # KV-ERTAP 2026-10-18: qkd_astk_er_tap_st registers every pin (route b18fa696b NEEDS_RTL, I2O hold): read pin -> response
 # pin = the EP's ERL 3 + 2 request-side + 2 response-side pin-register edges.
-ASTK_ERL = 7
+ASTK_ERL = 7 + 7 * (2 + ASTK_RL) if ASTK_EXPAND else 7
 
 
 def astk_eread(m):
