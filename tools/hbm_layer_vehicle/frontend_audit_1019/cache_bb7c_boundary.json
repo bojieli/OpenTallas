@@ -1,0 +1,184 @@
+{
+  "top": "ot_hbm_svc_static_sm_packed136_native_safe",
+  "mapped_sha256": "b3ea333064fc39d03310314956b3fd46e00b0d33583ae8d3390f6a34680d755d",
+  "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+  "input_ports": {
+    "clk": {
+      "width": 1,
+      "bits": {
+        "functional_or_mixed": 1
+      },
+      "max_collapsed_load": 8328
+    },
+    "rst_n": {
+      "width": 1,
+      "bits": {
+        "functional_or_mixed": 1
+      },
+      "max_collapsed_load": 8
+    },
+    "open_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "open_bank": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "open_epoch": {
+      "width": 16,
+      "bits": {
+        "all_FF_D": 16
+      },
+      "max_collapsed_load": 1
+    },
+    "open_count": {
+      "width": 7,
+      "bits": {
+        "all_FF_D": 7
+      },
+      "max_collapsed_load": 1
+    },
+    "open_tag_base": {
+      "width": 10,
+      "bits": {
+        "all_FF_D": 10
+      },
+      "max_collapsed_load": 1
+    },
+    "sector_v": {
+      "width": 4,
+      "bits": {
+        "all_FF_D": 4
+      },
+      "max_collapsed_load": 1
+    },
+    "sector_index": {
+      "width": 96,
+      "bits": {
+        "all_FF_D": 96
+      },
+      "max_collapsed_load": 1
+    },
+    "sector_epoch": {
+      "width": 64,
+      "bits": {
+        "all_FF_D": 64
+      },
+      "max_collapsed_load": 1
+    },
+    "sector_data": {
+      "width": 1024,
+      "bits": {
+        "all_FF_D": 1024
+      },
+      "max_collapsed_load": 1
+    },
+    "read_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "read_bank": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "read_epoch": {
+      "width": 16,
+      "bits": {
+        "all_FF_D": 16
+      },
+      "max_collapsed_load": 1
+    },
+    "read_row": {
+      "width": 6,
+      "bits": {
+        "all_FF_D": 6
+      },
+      "max_collapsed_load": 1
+    },
+    "read_tag": {
+      "width": 10,
+      "bits": {
+        "all_FF_D": 10
+      },
+      "max_collapsed_load": 1
+    },
+    "retire_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "retire_bank": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "retire_epoch": {
+      "width": 16,
+      "bits": {
+        "all_FF_D": 16
+      },
+      "max_collapsed_load": 1
+    }
+  },
+  "output_ports": {
+    "block_ready": {
+      "width": 2,
+      "origins": {
+        "FF_Q": 2
+      }
+    },
+    "bank_owned": {
+      "width": 2,
+      "origins": {
+        "FF_Q": 2
+      }
+    },
+    "busy": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "fault": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "out_packet": {
+      "width": 1099,
+      "origins": {
+        "SRAM_OUTPUT": 1088,
+        "FF_Q": 11
+      }
+    }
+  },
+  "clock_roots": [
+    {
+      "net": "clk bit=2",
+      "sinks": 8328,
+      "cell_types": {
+        "DFFHQNx1_ASAP7_75t_R": 7378,
+        "DFFASRHQNx1_ASAP7_75t_R": 945,
+        "ot_sram_1r1w_128x256_m1_r2c2": 5
+      }
+    }
+  ]
+}

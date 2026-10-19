@@ -1,0 +1,69 @@
+{
+  "source_commit": "e26d92503",
+  "master": "ot_sram_1r1w2c_32x64_m1",
+  "source_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.json": "b29a2cbba8646cf6b05367e317af4162a25a0ddf101309507459966522c7c8f5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ss.lib": "0c7692196d7fc8e8b123455828956499e24ac24d5781de273a0253b63a4b1880"
+  },
+  "area": {
+    "array_efficiency": 0.12082243861936355,
+    "array_height_um": 3.456,
+    "array_width_um": 19.3536,
+    "bank_control_height_um": 0.0,
+    "cell_area_um2": 0.03265919999999999,
+    "cell_col_pitch_um": 0.3024,
+    "cell_row_pitch_um": 0.108,
+    "column_height_um": 13.623163260579265,
+    "core_height_um": 17.079163260579264,
+    "core_width_um": 31.8536,
+    "data_array_area_um2": 66.88604159999998,
+    "decoder_width_um": 12.5,
+    "density_mb_per_mm2": 3.6994916782824925,
+    "geometry_constants_um": {
+      "column_fixed": 9.082108840386176,
+      "column_per_mux_bit": 0.5,
+      "control_extra": 1.5,
+      "decoder_fixed": 4.0,
+      "decoder_per_row_bit": 0.45,
+      "fuse_compare_per_spare": 0.6,
+      "rom_column_fixed": 5.0,
+      "rom_decoder_fixed": 3.2
+    },
+    "macro_area_um2": 553.589568,
+    "macro_height_um": 17.304,
+    "macro_width_um": 31.992,
+    "outline": {
+      "aligned_v2": {
+        "delta_height_nm": 24,
+        "delta_width_nm": 24,
+        "height_um": 17.304,
+        "row_multiple": false,
+        "rule": "H and W = 0.024 mod 0.048 um: pins on track at origin 0 mod 0.048 in R0/MX/MY/R180, M5 crossing on both pin edges",
+        "v1_height_um": 17.28,
+        "v1_width_um": 31.968,
+        "width_um": 31.992
+      },
+      "pin_limited": false,
+      "pin_stretch_um": 0.0,
+      "pins_per_edge": 103,
+      "signal_pins": 206,
+      "snap_overhead_um2": 8.374
+    },
+    "physical_array_area_um2": 66.8860416
+  },
+  "owner_immutable_bits": 47,
+  "mutable_bits_per_owner": 160,
+  "owner_count": 4,
+  "macro_area_total_um2": 2214.358272,
+  "new_capture_ring_bits_per_owner": 1112,
+  "new_link_ring_bits_per_owner": 1160,
+  "proposed_forwarding_bits_per_owner": 23,
+  "issue_reservation_state": "OPEN: exact native handshake proof required; not priced as zero",
+  "native_return_edges_to_pair": 4,
+  "primitive_only_qualification": true,
+  "max_stage_reach_um": 405
+}

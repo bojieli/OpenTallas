@@ -1,0 +1,1298 @@
+[
+  {
+    "job": "issuer_baseline",
+    "top": "ot_hbm_svc_sm_issuer_rel",
+    "mapped_sha256": "9e7ae0e1736d3f0f7fa993f6d74672f96c594e3b07910a89c63479da29664d1c",
+    "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+    "input_ports": {
+      "clk": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 1895
+      },
+      "rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 303
+      },
+      "desc_we": {
+        "width": 1,
+        "bits": {
+          "all_FF_D": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_addr": {
+        "width": 8,
+        "bits": {
+          "all_FF_D": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_data": {
+        "width": 256,
+        "bits": {
+          "all_FF_D": 256
+        },
+        "max_collapsed_load": 1
+      },
+      "run_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 4
+      },
+      "run_base": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 4
+      },
+      "run_count": {
+        "width": 9,
+        "bits": {
+          "functional_or_mixed": 9
+        },
+        "max_collapsed_load": 6
+      },
+      "run_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "ids_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 18
+      },
+      "ids_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "ids": {
+        "width": 54,
+        "bits": {
+          "functional_or_mixed": 54
+        },
+        "max_collapsed_load": 1
+      },
+      "reserve_ready": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 3
+      },
+      "block_ready": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 1
+      },
+      "cache_ready": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "cache_owned": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "program_done": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 22
+      }
+    },
+    "output_ports": {
+      "running": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "run_done": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "fault": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "reserve_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "reserve_base": {
+        "width": 32,
+        "origins": {
+          "FF_Q": 32
+        }
+      },
+      "reserve_row_base": {
+        "width": 15,
+        "origins": {
+          "FF_Q": 15
+        }
+      },
+      "reserve_total": {
+        "width": 12,
+        "origins": {
+          "constant": 4,
+          "COMBINATIONAL": 8
+        }
+      },
+      "reserve_bank": {
+        "width": 2,
+        "origins": {
+          "FF_Q": 2
+        }
+      },
+      "reserve_epoch": {
+        "width": 16,
+        "origins": {
+          "FF_Q": 16
+        }
+      },
+      "reserve_rows": {
+        "width": 7,
+        "origins": {
+          "FF_Q": 7
+        }
+      },
+      "reserve_tag_base": {
+        "width": 10,
+        "origins": {
+          "FF_Q": 10
+        }
+      },
+      "start_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "start_bank": {
+        "width": 2,
+        "origins": {
+          "COMBINATIONAL": 2
+        }
+      },
+      "start_epoch": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 16
+        }
+      },
+      "program_start_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "program_start_base": {
+        "width": 11,
+        "origins": {
+          "COMBINATIONAL": 11
+        }
+      },
+      "program_start_limit": {
+        "width": 12,
+        "origins": {
+          "COMBINATIONAL": 12
+        }
+      },
+      "program_start_loops": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 16
+        }
+      },
+      "program_start_ctx": {
+        "width": 46,
+        "origins": {
+          "COMBINATIONAL": 46
+        }
+      }
+    },
+    "clock_roots": [
+      {
+        "net": "clk bit=2",
+        "sinks": 1895,
+        "cell_types": {
+          "DFFHQNx1_ASAP7_75t_R": 1713,
+          "DFFASRHQNx1_ASAP7_75t_R": 180,
+          "ot_sram_1r1w_128x256_m1_r2c2": 2
+        }
+      }
+    ]
+  },
+  {
+    "job": "pc_owner",
+    "top": "ot_hbm_svc_prefetch_overlap_owner_rel_id",
+    "mapped_sha256": "8c4f8c2104c22ac0d56dd937f89b77939368e4dab7a6b3cd997b5ac0ed685999",
+    "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+    "input_ports": {
+      "pc_id": {
+        "width": 5,
+        "bits": {
+          "all_FF_D": 5
+        },
+        "max_collapsed_load": 1
+      },
+      "clk": {
+        "width": 1,
+        "bits": {
+          "all_FF_clock": 1
+        },
+        "max_collapsed_load": 1634
+      },
+      "rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 1629
+      },
+      "descriptor_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 162
+      },
+      "descriptor_base": {
+        "width": 30,
+        "bits": {
+          "no_load": 27,
+          "functional_or_mixed": 3
+        },
+        "max_collapsed_load": 1
+      },
+      "descriptor_pcs": {
+        "width": 20,
+        "bits": {
+          "functional_or_mixed": 20
+        },
+        "max_collapsed_load": 2
+      },
+      "descriptor_row_base": {
+        "width": 15,
+        "bits": {
+          "functional_or_mixed": 15
+        },
+        "max_collapsed_load": 1
+      },
+      "descriptor_total": {
+        "width": 12,
+        "bits": {
+          "functional_or_mixed": 12
+        },
+        "max_collapsed_load": 1
+      },
+      "descriptor_bank": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "descriptor_epoch": {
+        "width": 16,
+        "bits": {
+          "functional_or_mixed": 16
+        },
+        "max_collapsed_load": 1
+      },
+      "block_active": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "block_base": {
+        "width": 30,
+        "bits": {
+          "no_load": 27,
+          "functional_or_mixed": 3
+        },
+        "max_collapsed_load": 1
+      },
+      "block_pcs": {
+        "width": 20,
+        "bits": {
+          "functional_or_mixed": 20
+        },
+        "max_collapsed_load": 2
+      },
+      "block_row_base": {
+        "width": 15,
+        "bits": {
+          "functional_or_mixed": 15
+        },
+        "max_collapsed_load": 2
+      },
+      "block_total": {
+        "width": 12,
+        "bits": {
+          "functional_or_mixed": 12
+        },
+        "max_collapsed_load": 1
+      },
+      "block_bank": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "block_epoch": {
+        "width": 16,
+        "bits": {
+          "functional_or_mixed": 16
+        },
+        "max_collapsed_load": 1
+      },
+      "stop": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "k_ready": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "kr_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "kr_tag": {
+        "width": 17,
+        "bits": {
+          "functional_or_mixed": 17
+        },
+        "max_collapsed_load": 31
+      },
+      "kr_beat": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 9
+      },
+      "response_take": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 32
+      }
+    },
+    "output_ports": {
+      "k_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "k_addr": {
+        "width": 30,
+        "origins": {
+          "COMBINATIONAL": 30
+        }
+      },
+      "k_len": {
+        "width": 4,
+        "origins": {
+          "COMBINATIONAL": 2,
+          "constant": 2
+        }
+      },
+      "k_tag": {
+        "width": 17,
+        "origins": {
+          "FF_Q": 17
+        }
+      },
+      "response_ok": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "response_ordinal": {
+        "width": 11,
+        "origins": {
+          "COMBINATIONAL": 11
+        }
+      },
+      "response_epoch": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 16
+        }
+      },
+      "response_bank": {
+        "width": 2,
+        "origins": {
+          "COMBINATIONAL": 2
+        }
+      },
+      "fault": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "issue_done": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      }
+    },
+    "clock_roots": [
+      {
+        "net": "clk bit=7",
+        "sinks": 1634,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1629,
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      }
+    ]
+  },
+  {
+    "job": "issuer_cohort_current",
+    "top": "ot_hbm_svc_sm_issuer_rel",
+    "mapped_sha256": "2a875de1943f15318e57567335237ec76a7fc96cb11edade7aa8e50b0d9f5905",
+    "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+    "input_ports": {
+      "clk": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 1911
+      },
+      "rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 323
+      },
+      "desc_we": {
+        "width": 1,
+        "bits": {
+          "all_FF_D": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_addr": {
+        "width": 8,
+        "bits": {
+          "all_FF_D": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_data": {
+        "width": 256,
+        "bits": {
+          "all_FF_D": 256
+        },
+        "max_collapsed_load": 1
+      },
+      "run_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 5
+      },
+      "run_base": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 4
+      },
+      "run_count": {
+        "width": 9,
+        "bits": {
+          "functional_or_mixed": 9
+        },
+        "max_collapsed_load": 6
+      },
+      "run_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "ids_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "ids_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 3
+      },
+      "ids": {
+        "width": 54,
+        "bits": {
+          "functional_or_mixed": 54
+        },
+        "max_collapsed_load": 1
+      },
+      "ids_cohort": {
+        "width": 16,
+        "bits": {
+          "functional_or_mixed": 16
+        },
+        "max_collapsed_load": 2
+      },
+      "reserve_ready": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "block_ready": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 1
+      },
+      "cache_ready": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "cache_owned": {
+        "width": 2,
+        "bits": {
+          "functional_or_mixed": 2
+        },
+        "max_collapsed_load": 1
+      },
+      "program_done": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 20
+      }
+    },
+    "output_ports": {
+      "running": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "run_done": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "fault": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "reserve_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "reserve_base": {
+        "width": 32,
+        "origins": {
+          "FF_Q": 32
+        }
+      },
+      "reserve_row_base": {
+        "width": 15,
+        "origins": {
+          "FF_Q": 15
+        }
+      },
+      "reserve_total": {
+        "width": 12,
+        "origins": {
+          "constant": 4,
+          "COMBINATIONAL": 8
+        }
+      },
+      "reserve_bank": {
+        "width": 2,
+        "origins": {
+          "FF_Q": 2
+        }
+      },
+      "reserve_epoch": {
+        "width": 16,
+        "origins": {
+          "FF_Q": 16
+        }
+      },
+      "reserve_rows": {
+        "width": 7,
+        "origins": {
+          "FF_Q": 7
+        }
+      },
+      "reserve_tag_base": {
+        "width": 10,
+        "origins": {
+          "FF_Q": 10
+        }
+      },
+      "start_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "start_bank": {
+        "width": 2,
+        "origins": {
+          "COMBINATIONAL": 2
+        }
+      },
+      "start_epoch": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 16
+        }
+      },
+      "program_start_v": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "program_start_base": {
+        "width": 11,
+        "origins": {
+          "COMBINATIONAL": 11
+        }
+      },
+      "program_start_limit": {
+        "width": 12,
+        "origins": {
+          "COMBINATIONAL": 12
+        }
+      },
+      "program_start_loops": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 16
+        }
+      },
+      "program_start_ctx": {
+        "width": 46,
+        "origins": {
+          "COMBINATIONAL": 46
+        }
+      }
+    },
+    "clock_roots": [
+      {
+        "net": "clk bit=2",
+        "sinks": 1911,
+        "cell_types": {
+          "DFFHQNx1_ASAP7_75t_R": 1713,
+          "DFFASRHQNx1_ASAP7_75t_R": 196,
+          "ot_sram_1r1w_128x256_m1_r2c2": 2
+        }
+      }
+    ]
+  },
+  {
+    "job": "collector_current",
+    "top": "ot_hbm_router_ids_static",
+    "mapped_sha256": "07e8fe081a28348bf9dab55018ca1864ffced6b9f9840c591aabcca7b5a33b59",
+    "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+    "input_ports": {
+      "clk": {
+        "width": 1,
+        "bits": {
+          "all_FF_clock": 1
+        },
+        "max_collapsed_load": 494
+      },
+      "rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 2
+      },
+      "run_v": {
+        "width": 1,
+        "bits": {
+          "all_FF_D": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "run_layer": {
+        "width": 8,
+        "bits": {
+          "all_FF_D": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "topk_go": {
+        "width": 1,
+        "bits": {
+          "all_FF_D": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "topk_rec": {
+        "width": 156,
+        "bits": {
+          "all_FF_D": 68,
+          "no_load": 88
+        },
+        "max_collapsed_load": 1
+      },
+      "cq": {
+        "width": 338,
+        "bits": {
+          "all_FF_D": 274,
+          "no_load": 64
+        },
+        "max_collapsed_load": 1
+      },
+      "cq_seq": {
+        "width": 2,
+        "bits": {
+          "all_FF_D": 2
+        },
+        "max_collapsed_load": 1
+      }
+    },
+    "output_ports": {
+      "ids_v": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "ids_layer": {
+        "width": 8,
+        "origins": {
+          "FF_Q": 8
+        }
+      },
+      "ids": {
+        "width": 54,
+        "origins": {
+          "FF_Q": 54
+        }
+      },
+      "ids_cohort": {
+        "width": 16,
+        "origins": {
+          "FF_Q": 16
+        }
+      },
+      "fault": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      }
+    },
+    "clock_roots": [
+      {
+        "net": "clk bit=2",
+        "sinks": 494,
+        "cell_types": {
+          "DFFHQNx1_ASAP7_75t_R": 455,
+          "DFFASRHQNx1_ASAP7_75t_R": 39
+        }
+      }
+    ]
+  },
+  {
+    "job": "group_frontier",
+    "top": "ot_hbm_svc_sm_group_rel_sram_id",
+    "mapped_sha256": "04278754a9de54c2c97b93133bb74a125b8f33a81099f4b91a901e35b259cafe",
+    "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+    "input_ports": {
+      "id_stack": {
+        "width": 2,
+        "bits": {
+          "all_FF_D": 2
+        },
+        "max_collapsed_load": 2
+      },
+      "id_sm": {
+        "width": 3,
+        "bits": {
+          "all_FF_D": 3
+        },
+        "max_collapsed_load": 5
+      },
+      "stream_clk": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 9310
+      },
+      "stream_rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 880
+      },
+      "hbm_clk": {
+        "width": 1,
+        "bits": {
+          "all_FF_clock": 1
+        },
+        "max_collapsed_load": 145
+      },
+      "hbm_rst_n": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "return_pair_clk": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 1
+      },
+      "return_local_clk": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 1
+      },
+      "return_pair_hbm_clk": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 5
+      },
+      "stream_bank_clk": {
+        "width": 2,
+        "bits": {
+          "no_load": 2
+        },
+        "max_collapsed_load": 0
+      },
+      "hbm_fifo_clk": {
+        "width": 2,
+        "bits": {
+          "no_load": 2
+        },
+        "max_collapsed_load": 0
+      },
+      "hbm_pc_clk": {
+        "width": 4,
+        "bits": {
+          "all_FF_clock": 4
+        },
+        "max_collapsed_load": 1600
+      },
+      "program_cfg_we": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "program_cfg_addr": {
+        "width": 11,
+        "bits": {
+          "functional_or_mixed": 11
+        },
+        "max_collapsed_load": 1
+      },
+      "program_cfg_data": {
+        "width": 256,
+        "bits": {
+          "functional_or_mixed": 256
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_we": {
+        "width": 1,
+        "bits": {
+          "all_FF_D": 1
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_addr": {
+        "width": 8,
+        "bits": {
+          "all_FF_D": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "desc_data": {
+        "width": 256,
+        "bits": {
+          "all_FF_D": 256
+        },
+        "max_collapsed_load": 1
+      },
+      "run_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 4
+      },
+      "run_base": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 4
+      },
+      "run_count": {
+        "width": 9,
+        "bits": {
+          "functional_or_mixed": 9
+        },
+        "max_collapsed_load": 6
+      },
+      "run_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "ids_v": {
+        "width": 1,
+        "bits": {
+          "functional_or_mixed": 1
+        },
+        "max_collapsed_load": 18
+      },
+      "ids_layer": {
+        "width": 8,
+        "bits": {
+          "functional_or_mixed": 8
+        },
+        "max_collapsed_load": 1
+      },
+      "ids": {
+        "width": 54,
+        "bits": {
+          "functional_or_mixed": 54
+        },
+        "max_collapsed_load": 1
+      },
+      "k_rdy": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 2
+      },
+      "k_wr_done": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 1
+      },
+      "kr_v": {
+        "width": 4,
+        "bits": {
+          "functional_or_mixed": 4
+        },
+        "max_collapsed_load": 3
+      },
+      "kr_tag": {
+        "width": 68,
+        "bits": {
+          "functional_or_mixed": 68
+        },
+        "max_collapsed_load": 55
+      },
+      "kr_beat": {
+        "width": 16,
+        "bits": {
+          "functional_or_mixed": 16
+        },
+        "max_collapsed_load": 10
+      },
+      "kr_data": {
+        "width": 1024,
+        "bits": {
+          "functional_or_mixed": 1024
+        },
+        "max_collapsed_load": 19
+      }
+    },
+    "output_ports": {
+      "running": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "run_done": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "program_active": {
+        "width": 1,
+        "origins": {
+          "FF_Q": 1
+        }
+      },
+      "fault": {
+        "width": 1,
+        "origins": {
+          "COMBINATIONAL": 1
+        }
+      },
+      "sm_packet": {
+        "width": 1099,
+        "origins": {
+          "QUALIFIED_BOUNDARY_OUTPUT": 1099
+        }
+      },
+      "sm_command": {
+        "width": 83,
+        "origins": {
+          "FF_Q": 83
+        }
+      },
+      "expected_request": {
+        "width": 43,
+        "origins": {
+          "FF_Q": 43
+        }
+      },
+      "lt0": {
+        "width": 1082,
+        "origins": {
+          "FF_Q": 1082
+        }
+      },
+      "lt1": {
+        "width": 1082,
+        "origins": {
+          "FF_Q": 1082
+        }
+      },
+      "lb0": {
+        "width": 570,
+        "origins": {
+          "FF_Q": 570
+        }
+      },
+      "lb1": {
+        "width": 570,
+        "origins": {
+          "FF_Q": 570
+        }
+      },
+      "fm": {
+        "width": 12,
+        "origins": {
+          "FF_Q": 12
+        }
+      },
+      "k_v": {
+        "width": 4,
+        "origins": {
+          "COMBINATIONAL": 4
+        }
+      },
+      "k_addr": {
+        "width": 120,
+        "origins": {
+          "COMBINATIONAL": 120
+        }
+      },
+      "k_len": {
+        "width": 16,
+        "origins": {
+          "COMBINATIONAL": 8,
+          "constant": 8
+        }
+      },
+      "k_tag": {
+        "width": 68,
+        "origins": {
+          "FF_Q": 68
+        }
+      },
+      "k_we": {
+        "width": 4,
+        "origins": {
+          "constant": 4
+        }
+      },
+      "k_wdata": {
+        "width": 1024,
+        "origins": {
+          "constant": 1024
+        }
+      },
+      "k_wstrb": {
+        "width": 128,
+        "origins": {
+          "constant": 128
+        }
+      },
+      "kr_rdy": {
+        "width": 4,
+        "origins": {
+          "COMBINATIONAL": 4
+        }
+      }
+    },
+    "clock_roots": [
+      {
+        "net": "stream_clk bit=7",
+        "sinks": 9308,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1053,
+          "DFFHQNx1_ASAP7_75t_R": 8253,
+          "ot_sram_1r1w_128x256_m1_r2c2": 2
+        }
+      },
+      {
+        "net": "hbm_pc_clk bit=27",
+        "sinks": 1600,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1597,
+          "DFFHQNx1_ASAP7_75t_R": 3
+        }
+      },
+      {
+        "net": "hbm_pc_clk bit=28",
+        "sinks": 1600,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1597,
+          "DFFHQNx1_ASAP7_75t_R": 3
+        }
+      },
+      {
+        "net": "hbm_pc_clk bit=29",
+        "sinks": 1600,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1597,
+          "DFFHQNx1_ASAP7_75t_R": 3
+        }
+      },
+      {
+        "net": "hbm_pc_clk bit=30",
+        "sinks": 1600,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 1597,
+          "DFFHQNx1_ASAP7_75t_R": 3
+        }
+      },
+      {
+        "net": "hbm_clk bit=9",
+        "sinks": 145,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 143,
+          "DFFHQNx1_ASAP7_75t_R": 2
+        }
+      },
+      {
+        "net": "return_pair_hbm_clk bit=19",
+        "sinks": 4,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 4
+        }
+      },
+      {
+        "net": "return_pair_hbm_clk bit=20",
+        "sinks": 4,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 4
+        }
+      },
+      {
+        "net": "return_pair_hbm_clk bit=21",
+        "sinks": 4,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 4
+        }
+      },
+      {
+        "net": "return_pair_hbm_clk bit=22",
+        "sinks": 4,
+        "cell_types": {
+          "DFFASRHQNx1_ASAP7_75t_R": 4
+        }
+      }
+    ]
+  }
+]
