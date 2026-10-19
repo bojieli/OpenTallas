@@ -91,6 +91,11 @@
    "h": "M4",
    "v": "M5",
    "group_max": 1
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
   }
  },
  "macros": [
@@ -168,6 +173,7 @@
  "clock_cts_roots": [
   "clk_program"
  ],
+ "cts_sink_note": "9,290 sinks in 259 x 130 um: gate 1 spread 118 ps > 80 at TT -> balanced sink clusters",
  "pin_regs": {
   "enable": false,
   "reason": "every input lands in a kept pin flop and every output leaves a flop in the RTL (+1/+1 edge, the d4g ot_hbm_idx_qctl_static pin rule, lockstep-proven); automatic pin registers would add an unpriced edge"
