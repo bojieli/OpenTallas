@@ -96,7 +96,7 @@
  ],
  "outline": {
   "w": 302.4,
-  "h": 259.2,
+  "h": 267.84,
   "exact": true
  },
  "macros": [
@@ -184,7 +184,7 @@
    "hb_cr"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 36 KEPT identical copies (sized from the 7,982 reset loads the synthesis pass saw on gate r5a) (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_copies.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged. | ROOT geometry redesign10-19: 172.8x172.8 ->198.72x177.12um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence. | SRAM recovery: default-off canonical OT_HOST_BOOT_FIFO_DEFAULT=1 for this kit; two host boot payloadFIFOs(logical8entries,285/290payloadbits) use6 real32x128_p192 SRAM macros with next-head synchronous prefetch and RAW bypass. Per-FIFO metadata72/80bits remains flops; old runtime-indexed>2kb payloadfloparrays removed from elaborated SRAMvehicle. Actualboot_dispatch_debt+compatplain covered. Candidate302.4x259.2um with>=24.84umchannels and one fullwidthstdcellband. Addedcycles0 only after full-cycleequivPASS; actualSS/FFphysicalclosure pending. | S2 physical sizing only: two-word payload caches plus bank-local registered one-hot select. External latency0 evidenced by c53f5cc71; footprint unqualified.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 36 KEPT identical copies (sized from the 7,982 reset loads the synthesis pass saw on gate r5a) (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_copies.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged. | ROOT geometry redesign10-19: 172.8x172.8 ->198.72x177.12um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence. | SRAM recovery: default-off canonical OT_HOST_BOOT_FIFO_DEFAULT=1 for this kit; two host boot payloadFIFOs(logical8entries,285/290payloadbits) use6 real32x128_p192 SRAM macros with next-head synchronous prefetch and RAW bypass. Per-FIFO metadata72/80bits remains flops; old runtime-indexed>2kb payloadfloparrays removed from elaborated SRAMvehicle. Actualboot_dispatch_debt+compatplain covered. Candidate302.4x259.2um with>=24.84umchannels and one fullwidthstdcellband. Addedcycles0 only after full-cycleequivPASS; actualSS/FFphysicalclosure pending. | S2 physical sizing only: two-word payload caches plus bank-local registered one-hot select. External latency0 evidenced by c53f5cc71; footprint unqualified. | S2 local-copy redesign: same-edge RAW per16bits, bank-local issue PC, front onehot, per-PC map credit/head decode and per16bit output stack enables; balanced reset12first/288final, both2edges, strict snapshot identity. 600kcycle+30kindependent+causalmutantsPASS. Diagnostic synthesis only until mapped census satisfies <=32 and measuredband/reach.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -4140,7 +4140,10 @@
   "enable": true,
   "stages": 2,
   "copies": {
-   "host_rst_n": 36
+   "host_rst_n": 288
+  },
+  "first_copies": {
+   "host_rst_n": 12
   }
  },
  "reroute_reason": {
@@ -4148,7 +4151,7 @@
   "reason": "Replace >2kb hostboot runtime-indexed flopFIFOs by realSRAMmacro+prefetchhead/RAW bypass; source and exact leafslot changed; historical routedflopviews cannot qualify this architecture."
  },
  "reset_relay_split": {
-  "max_loads": 256
+  "max_loads": 32
  },
  "slot_change_request": "ROOT/KVhost parent: qkd_hr_core_order s1 requires exact302.4x259.2um instead172.8square;6 SRAMmacros43.2lattice, outlinearea78,382.08um2 (+162.5%); host parent MUSTrepack fromnewLEF andpricearea; unchanged portnames/faces, zero measuredfunctional addedcycles afterproof; physicalclosure pending.",
  "safe_design_checklist": {
