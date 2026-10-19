@@ -198,10 +198,11 @@ module ot_v41_bmul2_rne_prepare_rp #(
     if (RS != 0) begin : g_x4s
         // stage 4a (RSPLIT): shift, guard, sticky, round-up decision and zero test; the increment follows the register
 `ifdef OT_BF_FOREP
-        wire [23:0] ret0 = rs_k[5]  ? (sig24 >> rs_k[4:0])   : 24'd0;
-        wire [23:0] ret1 = rs_k[11] ? (sig24 >> rs_k[10:6])  : 24'd0;
-        wire [23:0] ret2 = rs_k[17] ? (sig24 >> rs_k[16:12]) : 24'd0;
-        wire [23:0] ret = {ret2[23:16], ret1[15:8], ret0[7:0]};
+        // round 2: explicit log shifter (ot_v41_forep_shr, in ot_v41_fadd_rp.sv): copy c's shift bits drive bit range
+        // c of every stage, copy c's in-range bit gates result slice c (rr census: one slice copy drove 33-40)
+        wire [23:0] shr;
+        ot_v41_forep_shr #(.W(24), .SW(5), .K(3)) u_shr (.shk({rs_k[16:12], rs_k[10:6], rs_k[4:0]}), .d(sig24), .q(shr));
+        wire [23:0] ret = {rs_k[17] ? shr[23:16] : 8'd0, rs_k[11] ? shr[15:8] : 8'd0, rs_k[5] ? shr[7:0] : 8'd0};
         wire        inr3 = rs_k[23];
         wire [4:0]  gi  = rs_k[22:18] - 5'd1;
         wire        grd = inr3 && sig24[gi];

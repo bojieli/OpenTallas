@@ -13,6 +13,8 @@ module ot_v41_segtree5_rp #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer OSW = 3,       // FOREP: otree_oh = one-hot of otree[OSW-1:0] (the caller's segment index)
+    parameter integer OHK = 2,       // FOREP: kept copies of otree_oh
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
 ) (
@@ -30,11 +32,15 @@ module ot_v41_segtree5_rp #(
     output reg  [31:0]              oval,
     output reg                      oerr,
     output reg                      fault
+`ifdef OT_BF_FOREP
+    , output reg [(OHK << OSW)-1:0]  otree_oh    // OHK kept copies of onehot(otree[OSW-1:0]), same edge as otree
+`endif
 );
     localparam integer PW = $clog2(NT);
     localparam integer LW = $clog2(LV + 1);
     localparam integer QW = $clog2(QD);
-    localparam integer NP = (NT + 1) / 2;   // tree pairs (one reset copy each)
+    localparam integer NP = (NT + 1) / 2;
+    localparam integer ONW = 1 << OSW;   // tree pairs (one reset copy each)
     // FOREP (S81-C199-FANOUT 2026-10-19, opt-in OT_BF_FOREP, default off = unchanged): kept same-edge register copies and
     // registered one-hot decodes so no flop drives > ~32 loads.  (1) sv: kept copies per consumer slice (e_d 4 x 8 bits,
     // the tree one-hot halves, the level decodes) -- the original keeps the control.  (2) the event's slot one-hot e_oh /
@@ -151,11 +157,11 @@ module ot_v41_segtree5_rp #(
     reg [2:0]    x_pos;
     always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
 `ifdef OT_BF_FOREP
-    (* keep *) reg [NH-1:0] x_ohd;       // kept copy of x_oh for the high half of the held read
+    (* keep *) reg [3*NH-1:0] x_ohd;     // 3 kept copies of x_oh, bytes 1-3 of the held read (x_oh: byte 0)
     reg xy_eq;                           // (e_t, e_l) == (x_t, x_l): next cycle's (x == y) of the forward
     always @(posedge clk) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
-        x_oh <= e_oh; x_above <= e_above; x_ohd <= e_oh;
+        x_oh <= e_oh; x_above <= e_above; x_ohd <= {3{e_oh}};
         x_toh <= e_toh;
         x_pos <= use_q ? h_p : tpos[e_t];
         xy_eq <= e_t == x_t && e_l == x_l;
@@ -189,6 +195,7 @@ module ot_v41_segtree5_rp #(
     wire [NP-1:0] y_vg;                         // per tree pair kept copies of y_v (g_yv below)
     (* keep *) reg [NP-1:0] y_fg, y_eg;         // per tree pair copies of y_f / y_e
     (* keep *) reg [2:0]    y_fwc;              // copies of y_fw, one per ~11 bits of u_held
+    (* keep *) reg [NP-1:0] y_addg;             // per tree pair copies of y_add (id_t / t_dec)
 `endif
     // STAGE 2b (x2) -- decide from registers
     wire y_have = |y_hv;
@@ -220,13 +227,14 @@ module ot_v41_segtree5_rp #(
         for (tj = 0; tj < NT; tj = tj + 1) begin
             hv_t = |(have[tj*LV +: LV] & y_oh[tj*LV +: LV]);
             ab_t = |(have[tj*LV +: LV] & y_above[tj*LV +: LV]);
-            id_t = infl[tj] == (y_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
 `ifdef OT_BF_FOREP
+            id_t = infl[tj] == (y_addg[tj / 2] ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
             ea_t = (EARLY != 0) && y_fg[tj / 2] && !hv_t && !ab_t && id_t;
             tp_t = y_l == LV[LW-1:0] || ea_t;
             t_inc[tj] = y_vg[tj / 2] && y_toh[tj] && !tp_t && (hv_t || y_fg[tj / 2]);
-            t_dec[tj] = y_vg[tj / 2] && y_toh[tj] && y_add;
+            t_dec[tj] = y_vg[tj / 2] && y_toh[tj] && y_addg[tj / 2];
 `else
+            id_t = infl[tj] == (y_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
             ea_t = (EARLY != 0) && y_f && !hv_t && !ab_t && id_t;
             tp_t = y_l == LV[LW-1:0] || ea_t;
             t_inc[tj] = y_v && y_toh[tj] && !tp_t && (hv_t || y_f);
@@ -264,8 +272,9 @@ module ot_v41_segtree5_rp #(
             r_ab[gi / GS] = r_ab[gi / GS] | (have_nx[gi] & x_above[gi]);
             r_he[gi / GS] = r_he[gi / GS] | (herr[gi] & x_oh[gi]);
 `ifdef OT_BF_FOREP
-            if (x_oh[gi])  r_hd[32*(gi / GS) +: 16] = r_hd[32*(gi / GS) +: 16] | held[gi][15:0];
-            if (x_ohd[gi]) r_hd[32*(gi / GS) + 16 +: 16] = r_hd[32*(gi / GS) + 16 +: 16] | held[gi][31:16];
+            if (x_oh[gi])  r_hd[32*(gi / GS) +: 8] = r_hd[32*(gi / GS) +: 8] | held[gi][7:0];
+            for (int c = 0; c < 3; c++)
+                if (x_ohd[c*NH + gi]) r_hd[32*(gi / GS) + 8*(c+1) +: 8] = r_hd[32*(gi / GS) + 8*(c+1) +: 8] | held[gi][8*(c+1) +: 8];
 `else
             if (x_oh[gi]) r_hd[32*(gi / GS) +: 32] = r_hd[32*(gi / GS) +: 32] | held[gi];
 `endif
@@ -287,7 +296,7 @@ module ot_v41_segtree5_rp #(
         y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
 `ifdef OT_BF_FOREP
-        y_fwc <= {3{r_fw}}; y_fg <= {NP{x_f}}; y_eg <= {NP{x_e}};
+        y_fwc <= {3{r_fw}}; y_fg <= {NP{x_f}}; y_eg <= {NP{x_e}}; y_addg <= {NP{x_add}};
 `endif
     end
     // kept copies of the x2 operand for the held writes, one per slot group
@@ -384,6 +393,9 @@ module ot_v41_segtree5_rp #(
         for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
         oval <= y_d;
         otree <= y_t;
+`ifdef OT_BF_FOREP
+        otree_oh <= {OHK{ONW'(1) << y_t[OSW-1:0]}};
+`endif
     end
 `ifdef QP_CHECK
     // the x1 partials against the direct reductions at x2, and the local forms against the global decision

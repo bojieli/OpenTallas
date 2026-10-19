@@ -101,7 +101,7 @@ module ot_v41_bterm4_w10 #(
     reg signed [11:0] p1_q [0:31];       // P2S: p1_p << sh[1:0]
     reg [2:0]         p1_sq [0:31];      // P2S: sh[4:2]
 `ifdef OT_BF_FOREP
-    (* keep *) reg [3*32-1:0] p1_sqb;    // FOREP: kept copy of p1_sq for the high half of each term
+    (* keep *) reg [3*3*32-1:0] p1_sqb;  // FOREP: 3 kept copies of p1_sq, slices 1-3 of each term (p1_sq: slice 0)
 `endif
     reg [7:0]         xc, wc;
     reg [3:0]         xs, ws, xf, wf;
@@ -189,7 +189,7 @@ module ot_v41_bterm4_w10 #(
 `endif
                 p1_sq[i] <= pa_sh[i][4:2];
 `ifdef OT_BF_FOREP
-                p1_sqb[3*i +: 3] <= pa_sh[i][4:2];
+                for (int c = 0; c < 3; c++) p1_sqb[96*c + 3*i +: 3] <= pa_sh[i][4:2];
 `endif
             end
         end
@@ -198,14 +198,14 @@ module ot_v41_bterm4_w10 #(
     // -- P2: terms (units of 2^-18) and CSA 32 -> CSAM ---------------------------------------
     reg [32*W-1:0] terms;
 `ifdef OT_BF_FOREP
-    reg [W-1:0] t_lo, t_hi;
+    reg [W-1:0] t_s [0:3];
     always @(*) begin
         for (i = 0; i < 32; i = i + 1)
             if (P2S != 0 && P1S != 0) begin
-                // low half shifted by p1_sq, high half by its kept copy p1_sqb (the same value)
-                t_lo = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
-                t_hi = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sqb[3*i +: 3], 2'b00};
-                terms[W*i +: W] = {t_hi[W-1:W/2], t_lo[W/2-1:0]};
+                // quarter slice 0 shifted by p1_sq, slices 1-3 by its kept copies (the same value)
+                t_s[0] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+                for (int c = 0; c < 3; c++) t_s[c+1] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sqb[96*c + 3*i +: 3], 2'b00};
+                for (int b = 0; b < W; b++) terms[W*i + b] = t_s[(b * 4) / W][b];
             end else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
 `else

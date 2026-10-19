@@ -292,11 +292,11 @@ module ot_v41_fadd2_rp #(
     end else begin : g_fw6
         assign sh7k = {4{sh7}};
     end
-    wire [26:0] n7a = val7 << sh7k[4:0];
-    wire [26:0] n7b = val7 << sh7k[9:5];
-    wire [26:0] n7c = val7 << sh7k[14:10];
+    // round 2: explicit log shifter, copy c of every stage's select drives bit range c (~9 muxes per copy)
+    wire [26:0] n7;
+    ot_v41_forep_shl #(.W(27), .SW(5), .K(3)) u_n7 (.shk(sh7k[14:0]), .d(val7), .q(n7));
     localparam integer W7 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
-    wire [W7-1:0] o7 = {v7, byp7, sg7, z7, er7, code7, ex7 - {3'd0, sh7k[19:15]}, {n7c[26:18], n7b[17:9], n7a[8:0]}};
+    wire [W7-1:0] o7 = {v7, byp7, sg7, z7, er7, code7, ex7 - {3'd0, sh7k[19:15]}, n7};
     wire [W7-1:0] i8;
     ot_v41_cut #(.W(W7), .EN(CUT[7])) u_c7 (.clk(clk), .rst_n(rst_n), .d(o7), .q(i8));
 `else
@@ -347,14 +347,15 @@ module ot_v41_fadd2_rp #(
     wire        subn9 = (exo9 == 8'd1) && !man9[23];
     wire [31:0] enc9 = {sg9, subn9 ? 8'd0 : exo9, man9[22:0]};
     wire        over9 = (ex9 >= 8'hff) || (exo9 >= 8'hff);
-    wire        bypl, byph;
+    wire        bypl, byph, bype;
     if (CUT[8]) begin : g_fr8
         (* keep *) reg r_l;
         (* keep *) reg r_h;
-        always @(posedge clk) begin r_l <= o8[69]; r_h <= o8[69]; end
-        assign bypl = r_l; assign byph = r_h;
+        (* keep *) reg r_e;      // round 2: the err select takes its own copy (r_h drove 34)
+        always @(posedge clk) begin r_l <= o8[69]; r_h <= o8[69]; r_e <= o8[69]; end
+        assign bypl = r_l; assign byph = r_h; assign bype = r_e;
     end else begin : g_fw8
-        assign bypl = byp9; assign byph = byp9;
+        assign bypl = byp9; assign byph = byp9; assign bype = byp9;
     end
     // output register: next state formed once (bypass applied per half with its own copy), then registered in two
     // reset halves (identical function)
@@ -369,7 +370,7 @@ module ot_v41_fadd2_rp #(
         end
     end
     wire [31:0] y_d = {byph ? code9[31:16] : yn_d[31:16], bypl ? code9[15:0] : yn_d[15:0]};
-    wire [1:0]  err_d = byph ? er9 : errn_d;
+    wire [1:0]  err_d = bype ? er9 : errn_d;
 `else
     wire        cy9 = rnd9[24];
     wire [23:0] man9 = cy9 ? rnd9[24:1] : rnd9[23:0];

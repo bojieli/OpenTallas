@@ -56,7 +56,7 @@ module ot_v41_bf16_lanes3 #(
     output wire              oerr,
     output wire              fault
 `ifdef OT_BF_FOREP
-    , output wire [2:0]      ov_k      // FOREP: 3 kept copies of ov (same edge), one per consumer slice in the column
+    , output wire [4:0]      ov_k      // FOREP: 5 kept copies of ov (same edge), one per consumer slice in the column
 `endif
 );
     localparam integer HW = $clog2(NCHB);
@@ -232,8 +232,8 @@ module ot_v41_bf16_lanes3 #(
         assign lvvld[lv+1] = vp[LATT-1];
 `ifdef OT_BF_FOREP
         if (lv == 3) begin : g_ovk
-            (* keep *) reg [2:0] vk;
-            always @(posedge clk or negedge rst_lv) if (!rst_lv) vk <= '0; else vk <= {3{vp[LATT-2]}};
+            (* keep *) reg [4:0] vk;
+            always @(posedge clk or negedge rst_lv) if (!rst_lv) vk <= '0; else vk <= {5{vp[LATT-2]}};
             assign ov_k = vk;
         end
 `endif

@@ -625,13 +625,13 @@ module ot_v41_bf_col #(
     ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(gclk_c), .rst_n(rst_mp), .d(one), .q(pr_pass));
     wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
 `ifdef OT_BF_FOREP
-    // the last stage of the pair tag line as an explicit register plus 2 kept copies of `both` (q_val halves)
+    // the last stage of the pair tag line as an explicit register plus 4 kept copies of `both` (q_val bytes)
     wire [TG+2:0] pr_t1;
     ot_hdc_delay #(.W(TG + 3), .D(LAT - 1)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t1));
     reg [TG+2:0] pr_tq;
-    (* keep *) reg [1:0] pr_bk;
-    always @(posedge gclk_c) begin pr_tq <= pr_t1; pr_bk <= {2{pr_t1[1]}}; end
+    (* keep *) reg [3:0] pr_bk;
+    always @(posedge gclk_c) begin pr_tq <= pr_t1; pr_bk <= {4{pr_t1[1]}}; end
     assign pr_t = pr_tq;
 `else
     ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
@@ -642,7 +642,8 @@ module ot_v41_bf_col #(
         if (!rst_mpv) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
     wire        q_v = pr_vp[LAT-1];
 `ifdef OT_BF_FOREP
-    wire [31:0] q_val = {pr_bk[1] ? pr_sum[31:16] : pr_pass[31:16], pr_bk[0] ? pr_sum[15:0] : pr_pass[15:0]};
+    wire [31:0] q_val = {pr_bk[3] ? pr_sum[31:24] : pr_pass[31:24], pr_bk[2] ? pr_sum[23:16] : pr_pass[23:16],
+                         pr_bk[1] ? pr_sum[15:8] : pr_pass[15:8], pr_bk[0] ? pr_sum[7:0] : pr_pass[7:0]};
 `else
     wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
 `endif
@@ -671,7 +672,7 @@ module ot_v41_bf_col #(
     // ---------------- optional BF16 lanes -------------------------------------------------------------------
     wire bf_v, bf_err, bf_final;
 `ifdef OT_BF_FOREP
-    wire [2:0] bf_vk;      // kept copies of bf_v: [0] b_val[15:0], [1] b_val[31:16], [2] err / tag / final
+    wire [4:0] bf_vk;      // kept copies of bf_v: [0..3] b_val bytes, [4] err / tag / final
 `endif
     wire [31:0] bf_val;
     wire [TG-1:0] bf_tree;
@@ -712,7 +713,7 @@ module ot_v41_bf_col #(
     end else begin : g_nobf
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
 `ifdef OT_BF_FOREP
-        assign bf_vk = 3'b000;
+        assign bf_vk = 5'b00000;
 `endif
         assign bf_err = 1'b0; assign b_fault = 1'b0;
     end
@@ -722,33 +723,47 @@ module ot_v41_bf_col #(
     wire [TG:0] qq_t = (BP == 1 && fam) ? q4_t : pr_t[TG+2:2];
     wire        b_v = qq_v | bf_v;
 `ifdef OT_BF_FOREP
-    wire [31:0] b_val = {bf_vk[1] ? bf_val[31:16] : qq_val[31:16], bf_vk[0] ? bf_val[15:0] : qq_val[15:0]};
-    wire        b_err = bf_vk[2] ? bf_err : qq_err;
-    wire [TG-1:0] b_tag = bf_vk[2] ? bf_tree : qq_t[TG:1];
-    wire        b_final = bf_vk[2] ? bf_final : qq_t[0];
+    wire [31:0] b_val = {bf_vk[3] ? bf_val[31:24] : qq_val[31:24], bf_vk[2] ? bf_val[23:16] : qq_val[23:16],
+                         bf_vk[1] ? bf_val[15:8] : qq_val[15:8], bf_vk[0] ? bf_val[7:0] : qq_val[7:0]};
+    wire        b_err = bf_vk[4] ? bf_err : qq_err;
+    wire [TG-1:0] b_tag = bf_vk[4] ? bf_tree : qq_t[TG:1];
+    wire        b_final = bf_vk[4] ? bf_final : qq_t[0];
 `else
     wire [31:0] b_val = bf_v ? bf_val : qq_val;
     wire        b_err = bf_v ? bf_err : qq_err;
     wire [TG-1:0] b_tag = bf_v ? bf_tree : qq_t[TG:1];
-    wire [TRW-1:0] b_tree = b_tag[TRW-1:0];
-    wire [2:0]     b_pos = b_tag[TG-1 -: 3];
     wire        b_final = bf_v ? bf_final : qq_t[0];
 `endif
+    wire [TRW-1:0] b_tree = b_tag[TRW-1:0];
+    wire [2:0]     b_pos = b_tag[TG-1 -: 3];
 
     // ---------------- segment tree -> partial ---------------------------------------------------------------------
     wire t_v, t_err;
     wire [TRW-1:0] t_tree;
     wire [2:0]     t_pos;
     wire [31:0] t_val;
+`ifdef OT_BF_FOREP
+    // FOREP: the segment tables are read through 2 kept ONE-HOT copies of the tree's segment index (registered with
+    // otree inside the tree; otree's low bits drove 78-137 loads): copy 0 -> row (+ the idle bit), copy 1 -> idx / n
+    wire [2*NSEG-1:0] t_soh;
+`endif
     if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
 `ifdef OT_BF_RSTPART
-    ot_v41_segtree5_rp #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_pin(b_rst_v[5]), .in_v(b_v),
+    ot_v41_segtree5_rp #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)
+`ifdef OT_BF_FOREP
+        , .OSW(SW), .OHK(2)
+`endif
+        ) u_tree (.clk(gclk_c), .rst_pin(b_rst_v[5]), .in_v(b_v),
 `else
     ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
 `endif
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
+        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault)
+`ifdef OT_BF_FOREP
+        , .otree_oh(t_soh)
+`endif
+        );
     end else if (FAST != 0 && QPIPE != 0) begin : g_tr3
     ot_v41_segtree4 #(.XR(0), .XC(QX >= 8 ? 4 : 1), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
@@ -768,6 +783,32 @@ module ot_v41_bf_col #(
     reg [4:0] o_seg, o_n;
     reg [2:0] o_pos;
     wire [SW-1:0] t_seg = t_tree[SW-1:0];
+`ifdef OT_BF_FOREP
+    reg [15:0] rs_row, rl_row; reg [4:0] rs_idx, rs_n, rl_idx, rl_n;
+    always @* begin
+        rs_row = '0; rl_row = '0; rs_idx = '0; rs_n = '0; rl_idx = '0; rl_n = '0;
+        for (int e = 0; e < NSEG; e++) begin
+            if (t_soh[e]) begin rs_row = rs_row | so_row_c[e]; rl_row = rl_row | s_row_c[e]; end
+            if (t_soh[NSEG + e]) begin rs_idx = rs_idx | b_so_idx[e]; rs_n = rs_n | b_so_n[e];
+                                       rl_idx = rl_idx | s_idx[e]; rl_n = rl_n | s_n[e]; end
+        end
+    end
+    always @(posedge gclk_c or negedge rst_mt) begin
+        if (!rst_mt) o_v <= 1'b0;
+        else o_v <= t_v && !(QK != 0 ? rs_row[15] : rl_row[15]);   // row bit 15: an idle half of a pair emits nothing
+    end
+    always @(posedge gclk_c) begin
+        o_val <= t_val; o_err <= t_err;
+`ifdef QP_MUTANT_SHADOW
+        if (0) begin                                                           // negative control: live tables
+`else
+        if (QK != 0) begin
+`endif
+            o_row <= rs_row; o_seg <= rs_idx; o_n <= rs_n; end
+        else begin o_row <= rl_row; o_seg <= rl_idx; o_n <= rl_n; end
+        o_pos <= (MTP != 0) ? t_pos : 3'd0;
+    end
+`else
     always @(posedge gclk_c or negedge rst_mt) begin
         if (!rst_mt) o_v <= 1'b0;
         else o_v <= t_v && !(QK != 0 ? so_row_c[t_seg][15] : s_row_c[t_seg][15]);   // row bit 15: an idle half of a pair emits nothing
@@ -783,6 +824,7 @@ module ot_v41_bf_col #(
         else begin o_row <= s_row_c[t_seg]; o_seg <= s_idx[t_seg]; o_n <= s_n[t_seg]; end
         o_pos <= (MTP != 0) ? t_pos : 3'd0;
     end
+`endif
     assign pv = o_v; assign pval = o_val; assign prow = o_row;
     assign pseg = o_seg; assign pnseg = o_n; assign perr = o_err;
     assign ppos = o_pos;
