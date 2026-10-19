@@ -1,0 +1,54 @@
+ot-run: ot-epyc4       admits  1035 GB (avail 822, growth 97, headroom 0, waiters 0/0 GB) load 78/128 running 30 disk 308 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/land-clock-schema-1019
+ot-run: ot-epyc6       admits   323 GB (avail 327, growth 101, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 6057 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/land-clock-schema-1019
+ot-run: ot-epyc8       admits  1219 GB (avail 932, growth 79, headroom 0, waiters 0/0 GB) load 36/128 running 24 disk 355 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/land-clock-schema-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/land-clock-schema-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2843117-1792427138 after 0 s
+test_actual_land_certificate (test_land_generated_clocks.Contract.test_actual_land_certificate) ... ok
+test_custom_hooks (test_land_generated_clocks.Contract.test_custom_hooks) ... ok
+test_exact_phase_preserved (test_land_generated_clocks.Contract.test_exact_phase_preserved) ... ok
+test_foreign_and_double_prefix (test_land_generated_clocks.Contract.test_foreign_and_double_prefix) ... ok
+test_missing_case (test_land_generated_clocks.Contract.test_missing_case) ... ok
+test_native_foreign_lineage (test_land_generated_clocks.Contract.test_native_foreign_lineage) ... ok
+test_native_liberty_semantics (test_land_generated_clocks.Contract.test_native_liberty_semantics) ... ok
+test_native_positive (test_land_generated_clocks.Contract.test_native_positive) ... ok
+test_native_wrong_phase (test_land_generated_clocks.Contract.test_native_wrong_phase) ... ok
+test_phase_collapse (test_land_generated_clocks.Contract.test_phase_collapse) ... ok
+test_reserves_and_enable_witness (test_land_generated_clocks.Contract.test_reserves_and_enable_witness) ... ok
+test_stale_behavior_and_params (test_land_generated_clocks.Contract.test_stale_behavior_and_params) ... ok
+test_stale_source (test_land_generated_clocks.Contract.test_stale_source) ... ok
+test_wrong_edges_and_master (test_land_generated_clocks.Contract.test_wrong_edges_and_master) ... ok
+test_wrong_phase (test_land_generated_clocks.Contract.test_wrong_phase) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.277s
+
+OK
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Error: run.tcl, 12 LAND: foreign primary source
+ 
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+LAND_NATIVE_PASS
+ 
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Error: run.tcl, 11 LAND: wrong root_rise (0.0 != 8.75)
+ 
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2843117-1792427138): exit 0
