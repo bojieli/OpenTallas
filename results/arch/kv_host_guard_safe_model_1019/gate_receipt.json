@@ -1,0 +1,788 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "qkd_hr_core_guard_frc",
+  "verdict": "PASS",
+  "generated": "2026-10-19T12:40:22-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": null,
+  "source_binding": {
+    "schema": "opentallas.ref_tile.source_snapshot.v1",
+    "start_commit": "a5201f50f37fbc9ece26577ce8f9fe7b0a46e62f",
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "bff44e9bbd37fa7592f1e9100a595788c46ae0a7dca67a01a729ecfe4d6c6ba3",
+    "manifest_sha256": "9da8eb6f4f0ef4226231cb168e8133df3c81f44cf13fb63544bab9d8ac082c61"
+  },
+  "clock": {
+    "max_root_sinks": 6201,
+    "root": "port:ck_core",
+    "cts": true,
+    "tt_insertion_ps": 239.3,
+    "tt_spread_ps": 51.4,
+    "tt_pin_spread_ps": 29.2,
+    "ff_insertion_ps": 199.7,
+    "ff_spread_ps": 53.5,
+    "ff_pin_spread_ps": 29.2,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "ck_core",
+        "clock": "core_clk",
+        "tt": {
+          "clock_family": {
+            "core_clk": 6108
+          },
+          "boundary": {
+            "n": 1198,
+            "mean": 219.6,
+            "min": 210.1,
+            "max": 239.3
+          },
+          "all": {
+            "n": 6108,
+            "mean": 215.6,
+            "min": 187.9,
+            "max": 239.3
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 215.6,
+            "max_slew": 13.5,
+            "max_late": -27.7,
+            "pins": [
+              {
+                "pin": "u_ot_pr_core.u_rank__u_guard.markers.g_sram.u_storage/clk",
+                "arr": 187.9,
+                "slew": 13.5,
+                "late": -27.7,
+                "net": "clknet_1_0__leaf_ck_core"
+              }
+            ]
+          },
+          "macro_libs": 1,
+          "child_flop": {
+            "boundary": {
+              "n": 1198,
+              "mean": 219.6,
+              "min": 210.1,
+              "max": 239.3
+            },
+            "all": {
+              "n": 6108,
+              "mean": 215.6,
+              "min": 187.9,
+              "max": 239.3
+            },
+            "refs": {
+              "ot_sram_1r1w_128x64_m1_p192": {
+                "basis": "no reference: raw pin arrival",
+                "ref_ps": 0.0,
+                "pins": 1
+              }
+            },
+            "soft": {
+              "boundary": {
+                "n": 1198,
+                "mean": 219.6,
+                "min": 210.1,
+                "max": 239.3
+              },
+              "all": {
+                "n": 6107,
+                "mean": 215.6,
+                "min": 202.7,
+                "max": 239.3
+              }
+            }
+          }
+        },
+        "ff": {
+          "boundary": {
+            "n": 1198,
+            "mean": 179.2,
+            "min": 170.5,
+            "max": 199.7
+          },
+          "all": {
+            "n": 6108,
+            "mean": 175.3,
+            "min": 146.2,
+            "max": 199.7
+          },
+          "child_flop": {
+            "boundary": {
+              "n": 1198,
+              "mean": 179.2,
+              "min": 170.5,
+              "max": 199.7
+            },
+            "all": {
+              "n": 6108,
+              "mean": 175.3,
+              "min": 146.2,
+              "max": 199.7
+            },
+            "refs": {
+              "ot_sram_1r1w_128x64_m1_p192": {
+                "basis": "no reference: raw pin arrival",
+                "ref_ps": 0.0,
+                "pins": 1
+              }
+            },
+            "soft": {
+              "boundary": {
+                "n": 1198,
+                "mean": 179.2,
+                "min": 170.5,
+                "max": 199.7
+              },
+              "all": {
+                "n": 6107,
+                "mean": 175.3,
+                "min": 164.6,
+                "max": 199.7
+              }
+            }
+          },
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 175.3,
+            "max_slew": 11.5,
+            "max_late": -29.1,
+            "pins": [
+              {
+                "pin": "u_ot_pr_core.u_rank__u_guard.markers.g_sram.u_storage/clk",
+                "arr": 146.2,
+                "slew": 11.5,
+                "late": -29.1,
+                "net": "clknet_1_0__leaf_ck_core"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "tt_child_flop_refs": {
+      "ot_sram_1r1w_128x64_m1_p192": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 1
+      }
+    },
+    "ff_child_flop_refs": {
+      "ot_sram_1r1w_128x64_m1_p192": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 1
+      }
+    },
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,201 sinks on the largest root; measured TT insertion 239.3 ps, FF insertion 199.7 ps, TT pin-flop spread 29.2 ps, FF pin-flop spread 29.2 ps (spread <= 80 ps)"
+  },
+  "items": [],
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "tile",
+    "skip_incremental_repair": true,
+    "rc": "0",
+    "grt_s": 133,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 404158,
+        "usage": 99230,
+        "pct": 24.55,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 494074,
+        "usage": 115663,
+        "pct": 23.41,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 378960,
+        "usage": 19804,
+        "pct": 5.23,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 374092,
+        "usage": 15525,
+        "pct": 4.15,
+        "overflow": 0
+      },
+      {
+        "layer": "M6",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M2",
+      24.55
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  },
+  "port_latency": {
+    "schema": "opentallas.ref_tile.port_latency.v1",
+    "top": "qkd_hr_core_guard",
+    "ports": {
+      "ck_core": {
+        "dir": "input",
+        "register_edges": 0,
+        "width": 1,
+        "reason": "clock"
+      },
+      "token_epoch_valid": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "token_epoch": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 16,
+        "reason": "pin register"
+      },
+      "native_pr": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 143,
+        "reason": "pin register"
+      },
+      "native_kv_drained": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_vm_drained": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_collective_drained": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_host_drained": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_collective_busy": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_kv_flush": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "service_ready": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "service_abort": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "local_service_epoch": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 16,
+        "reason": "pin register"
+      },
+      "service_diag_raw": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 26,
+        "reason": "pin register"
+      },
+      "service_status": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 32,
+        "reason": "pin register"
+      },
+      "die_id": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 3,
+        "reason": "pin register"
+      },
+      "por_n": {
+        "dir": "input",
+        "register_edges": 0,
+        "width": 1,
+        "reason": "reset"
+      },
+      "pll_locked": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "transport_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 8,
+        "reason": "pin register"
+      },
+      "link_physical_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "local_tk": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 93,
+        "reason": "pin register"
+      },
+      "record_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "program_ready": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "hc": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 182,
+        "reason": "pin register"
+      },
+      "host_rst_n": {
+        "dir": "input",
+        "register_edges": 0,
+        "width": 1,
+        "reason": "reset"
+      },
+      "est": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "slice_boot_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 128,
+        "reason": "pin register"
+      },
+      "ctrl_completion_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "service_faults": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 24,
+        "reason": "pin register"
+      },
+      "service_faults_o": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "peer_protocol_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "coordinator_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "host_recovery_clear": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "root_mux_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_context_owned": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__u_control__service_ready": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__program_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__ingress_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__commit_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "host_observer_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__peer_link_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__source_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__dispatch_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__bootbarrier_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__marker_consumer_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "cancel_release_gen": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 2,
+        "reason": "pin register"
+      },
+      "cancel_release_tag": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 59,
+        "reason": "pin register"
+      },
+      "cancel_release_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "cancel_released": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "certificate_prefix": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 32,
+        "reason": "pin register"
+      },
+      "certificate_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_request_cr": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_request_gen": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 2,
+        "reason": "pin register"
+      },
+      "native_request_pos": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 18,
+        "reason": "pin register"
+      },
+      "native_request_tag": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 59,
+        "reason": "pin register"
+      },
+      "native_request_token": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 18,
+        "reason": "pin register"
+      },
+      "native_request_trace": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 32,
+        "reason": "pin register"
+      },
+      "native_request_v": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_result_cause": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 4,
+        "reason": "pin register"
+      },
+      "native_result_cr": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_result_cycles": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 32,
+        "reason": "pin register"
+      },
+      "native_result_done": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_result_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_result_gen": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 2,
+        "reason": "pin register"
+      },
+      "native_result_tag": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 59,
+        "reason": "pin register"
+      },
+      "native_result_token": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 18,
+        "reason": "pin register"
+      },
+      "native_result_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "native_result_value": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 32,
+        "reason": "pin register"
+      },
+      "u_rank__done_d": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 64,
+        "reason": "pin register"
+      },
+      "u_rank__done_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__ing_cls": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 2,
+        "reason": "pin register"
+      },
+      "u_rank__ing_d": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 16,
+        "reason": "pin register"
+      },
+      "u_rank__ing_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__begin_fault": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__guarded_physical": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 8,
+        "reason": "pin register"
+      },
+      "u_rank__guarded_transport": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 8,
+        "reason": "pin register"
+      },
+      "u_rank__guarded_tk": {
+        "dir": "output",
+        "register_edges": 1,
+        "width": 93,
+        "reason": "pin register"
+      },
+      "u_rank__pending_advertised": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "u_rank__pending_epoch": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 16,
+        "reason": "pin register"
+      },
+      "u_rank__service_begin_epoch": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 16,
+        "reason": "pin register"
+      },
+      "u_rank__service_begin_v": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      }
+    },
+    "source_commit": null,
+    "evidence": {
+      "ot_pin_regs.tsv": "ea992915468186c4d1c1fc30468cd329b33ba55c3a60222930aa964c71051021",
+      "ot_pin_regs_wrapper.v": "335b6c662e3ba25a1b46a299adabe901e3766e4e5c0b8fee2283577f98debec4"
+    },
+    "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+    "control_roles": {
+      "clocks": [
+        "ck_core"
+      ],
+      "resets": [
+        "host_rst_n",
+        "por_n"
+      ],
+      "excluded_data_ports": [],
+      "source_sha256": {},
+      "reset_meaning": "source RTL polarity and reset semantics preserved: direct wiring, or a landed reset (plain registers copy the value; assertion and release delayed by the stage count)",
+      "reset_landing": {
+        "por_n": 2,
+        "host_rst_n": 2
+      }
+    },
+    "source_note": "gate snapshot None: not a git commit; the route's CLOSED record carries the bound report"
+  },
+  "reset_landing": {
+    "max_sinks": 2,
+    "ports": [
+      {
+        "port": "host_rst_n",
+        "sinks": 1,
+        "flops": 1,
+        "macros": 0
+      },
+      {
+        "port": "por_n",
+        "sinks": 1,
+        "flops": 1,
+        "macros": 0
+      }
+    ],
+    "over": [],
+    "waived": false,
+    "ok": true
+  },
+  "gate_file_sha256": "7ea3980ea5a559043b23b6fc85e1f0231cc3e63192a23b63673ff63e4afe061b"
+}

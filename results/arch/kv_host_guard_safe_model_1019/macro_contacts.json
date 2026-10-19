@@ -1,0 +1,3381 @@
+{
+  "sha256": "5d86bdfc3a88e4078b9b7cf4289981ce9a253621d2693bf34fb902a7ff6a6de0",
+  "size_um": [
+    33.696,
+    27.54
+  ],
+  "area_um2": 927.9878399999999,
+  "face_contact_counts": {
+    "W": 105,
+    "E": 104
+  },
+  "contacts_per_um": {
+    "W": 3.812636165577342,
+    "E": 3.776325344952796
+  },
+  "signal_clock_rectangles": [
+    {
+      "pin": "clk",
+      "use": "CLOCK",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        0.768,
+        0.024,
+        0.792
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_ce_in",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        0.96,
+        0.024,
+        0.984
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[0]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        1.152,
+        0.024,
+        1.176
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[1]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        1.344,
+        0.024,
+        1.368
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[2]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        1.536,
+        0.024,
+        1.56
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[3]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        1.728,
+        0.024,
+        1.752
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[4]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        1.92,
+        0.024,
+        1.944
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[5]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        2.112,
+        0.024,
+        2.136
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "r_addr_in[6]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        2.304,
+        0.024,
+        2.328
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[0]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        2.496,
+        0.024,
+        2.52
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[1]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        2.688,
+        0.024,
+        2.712
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[2]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        2.88,
+        0.024,
+        2.904
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[3]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        3.072,
+        0.024,
+        3.096
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[4]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        3.264,
+        0.024,
+        3.288
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[5]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        3.456,
+        0.024,
+        3.48
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[6]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        3.648,
+        0.024,
+        3.672
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[7]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        3.84,
+        0.024,
+        3.864
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[8]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.032,
+        0.024,
+        4.056
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[9]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.224,
+        0.024,
+        4.248
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[10]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.416,
+        0.024,
+        4.44
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[11]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.608,
+        0.024,
+        4.632
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[12]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.8,
+        0.024,
+        4.824
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[13]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        4.992,
+        0.024,
+        5.016
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[14]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        5.184,
+        0.024,
+        5.208
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[15]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        5.376,
+        0.024,
+        5.4
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[16]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        5.568,
+        0.024,
+        5.592
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[17]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        5.76,
+        0.024,
+        5.784
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[18]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        5.952,
+        0.024,
+        5.976
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[19]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        6.144,
+        0.024,
+        6.168
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[20]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        6.336,
+        0.024,
+        6.36
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[21]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        6.528,
+        0.024,
+        6.552
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[22]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        6.72,
+        0.024,
+        6.744
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[23]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        6.912,
+        0.024,
+        6.936
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[24]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        7.104,
+        0.024,
+        7.128
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[25]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        7.296,
+        0.024,
+        7.32
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[26]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        7.488,
+        0.024,
+        7.512
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[27]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        7.68,
+        0.024,
+        7.704
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[28]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        7.872,
+        0.024,
+        7.896
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[29]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        8.064,
+        0.024,
+        8.088
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[30]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        8.256,
+        0.024,
+        8.28
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[31]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        8.448,
+        0.024,
+        8.472
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[32]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        8.64,
+        0.024,
+        8.664
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[33]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        8.832,
+        0.024,
+        8.856
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[34]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.024,
+        0.024,
+        9.048
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[35]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.216,
+        0.024,
+        9.24
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[36]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.408,
+        0.024,
+        9.432
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[37]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.6,
+        0.024,
+        9.624
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[38]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.792,
+        0.024,
+        9.816
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[39]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        9.984,
+        0.024,
+        10.008
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[40]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        10.176,
+        0.024,
+        10.2
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[41]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        10.368,
+        0.024,
+        10.392
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[42]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        10.56,
+        0.024,
+        10.584
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[43]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        10.752,
+        0.024,
+        10.776
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[44]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        10.944,
+        0.024,
+        10.968
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[45]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        11.136,
+        0.024,
+        11.16
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[46]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        11.328,
+        0.024,
+        11.352
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[47]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        11.52,
+        0.024,
+        11.544
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[48]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        11.712,
+        0.024,
+        11.736
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[49]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        11.904,
+        0.024,
+        11.928
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[50]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        12.096,
+        0.024,
+        12.12
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[51]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        12.288,
+        0.024,
+        12.312
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[52]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        12.48,
+        0.024,
+        12.504
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[53]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        12.672,
+        0.024,
+        12.696
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[54]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        12.864,
+        0.024,
+        12.888
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[55]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        13.056,
+        0.024,
+        13.08
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[56]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        13.248,
+        0.024,
+        13.272
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[57]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        13.44,
+        0.024,
+        13.464
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[58]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        13.632,
+        0.024,
+        13.656
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[59]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        13.824,
+        0.024,
+        13.848
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[60]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.016,
+        0.024,
+        14.04
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[61]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.208,
+        0.024,
+        14.232
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[62]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.4,
+        0.024,
+        14.424
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "rd_out[63]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.592,
+        0.024,
+        14.616
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_ce_in",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.784,
+        0.024,
+        14.808
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[0]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        14.976,
+        0.024,
+        15.0
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[1]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        15.168,
+        0.024,
+        15.192
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[2]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        15.36,
+        0.024,
+        15.384
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[3]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        15.552,
+        0.024,
+        15.576
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[4]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        15.744,
+        0.024,
+        15.768
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[5]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        15.936,
+        0.024,
+        15.96
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "w_addr_in[6]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        16.128,
+        0.024,
+        16.152
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[0]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        16.32,
+        0.024,
+        16.344
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[1]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        16.512,
+        0.024,
+        16.536
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[2]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        16.704,
+        0.024,
+        16.728
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[3]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        16.896,
+        0.024,
+        16.92
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[4]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        17.088,
+        0.024,
+        17.112
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[5]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        17.28,
+        0.024,
+        17.304
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[6]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        17.472,
+        0.024,
+        17.496
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[7]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        17.664,
+        0.024,
+        17.688
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[8]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        17.856,
+        0.024,
+        17.88
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[9]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        18.048,
+        0.024,
+        18.072
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[10]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        18.24,
+        0.024,
+        18.264
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[11]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        18.432,
+        0.024,
+        18.456
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[12]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        18.624,
+        0.024,
+        18.648
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[13]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        18.816,
+        0.024,
+        18.84
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[14]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.008,
+        0.024,
+        19.032
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[15]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.2,
+        0.024,
+        19.224
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[16]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.392,
+        0.024,
+        19.416
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[17]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.584,
+        0.024,
+        19.608
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[18]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.776,
+        0.024,
+        19.8
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[19]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        19.968,
+        0.024,
+        19.992
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[20]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        20.16,
+        0.024,
+        20.184
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[21]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        20.352,
+        0.024,
+        20.376
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[22]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        20.544,
+        0.024,
+        20.568
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[23]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        0.0,
+        20.736,
+        0.024,
+        20.76
+      ],
+      "face": "W"
+    },
+    {
+      "pin": "wd_in[24]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        0.768,
+        33.696,
+        0.792
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[25]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        0.96,
+        33.696,
+        0.984
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[26]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        1.152,
+        33.696,
+        1.176
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[27]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        1.344,
+        33.696,
+        1.368
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[28]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        1.536,
+        33.696,
+        1.56
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[29]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        1.728,
+        33.696,
+        1.752
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[30]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        1.92,
+        33.696,
+        1.944
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[31]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        2.112,
+        33.696,
+        2.136
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[32]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        2.304,
+        33.696,
+        2.328
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[33]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        2.496,
+        33.696,
+        2.52
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[34]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        2.688,
+        33.696,
+        2.712
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[35]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        2.88,
+        33.696,
+        2.904
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[36]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        3.072,
+        33.696,
+        3.096
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[37]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        3.264,
+        33.696,
+        3.288
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[38]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        3.456,
+        33.696,
+        3.48
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[39]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        3.648,
+        33.696,
+        3.672
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[40]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        3.84,
+        33.696,
+        3.864
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[41]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.032,
+        33.696,
+        4.056
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[42]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.224,
+        33.696,
+        4.248
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[43]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.416,
+        33.696,
+        4.44
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[44]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.608,
+        33.696,
+        4.632
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[45]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.8,
+        33.696,
+        4.824
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[46]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        4.992,
+        33.696,
+        5.016
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[47]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        5.184,
+        33.696,
+        5.208
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[48]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        5.376,
+        33.696,
+        5.4
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[49]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        5.568,
+        33.696,
+        5.592
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[50]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        5.76,
+        33.696,
+        5.784
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[51]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        5.952,
+        33.696,
+        5.976
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[52]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        6.144,
+        33.696,
+        6.168
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[53]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        6.336,
+        33.696,
+        6.36
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[54]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        6.528,
+        33.696,
+        6.552
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[55]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        6.72,
+        33.696,
+        6.744
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[56]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        6.912,
+        33.696,
+        6.936
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[57]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        7.104,
+        33.696,
+        7.128
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[58]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        7.296,
+        33.696,
+        7.32
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[59]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        7.488,
+        33.696,
+        7.512
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[60]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        7.68,
+        33.696,
+        7.704
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[61]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        7.872,
+        33.696,
+        7.896
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[62]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        8.064,
+        33.696,
+        8.088
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "wd_in[63]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        8.256,
+        33.696,
+        8.28
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[0]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        8.448,
+        33.696,
+        8.472
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[1]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        8.64,
+        33.696,
+        8.664
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[2]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        8.832,
+        33.696,
+        8.856
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[3]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.024,
+        33.696,
+        9.048
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[4]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.216,
+        33.696,
+        9.24
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[5]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.408,
+        33.696,
+        9.432
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[6]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.6,
+        33.696,
+        9.624
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[7]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.792,
+        33.696,
+        9.816
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[8]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        9.984,
+        33.696,
+        10.008
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[9]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        10.176,
+        33.696,
+        10.2
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[10]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        10.368,
+        33.696,
+        10.392
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[11]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        10.56,
+        33.696,
+        10.584
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[12]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        10.752,
+        33.696,
+        10.776
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[13]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        10.944,
+        33.696,
+        10.968
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[14]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        11.136,
+        33.696,
+        11.16
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[15]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        11.328,
+        33.696,
+        11.352
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[16]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        11.52,
+        33.696,
+        11.544
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[17]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        11.712,
+        33.696,
+        11.736
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[18]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        11.904,
+        33.696,
+        11.928
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[19]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        12.096,
+        33.696,
+        12.12
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[20]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        12.288,
+        33.696,
+        12.312
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[21]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        12.48,
+        33.696,
+        12.504
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[22]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        12.672,
+        33.696,
+        12.696
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[23]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        12.864,
+        33.696,
+        12.888
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[24]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        13.056,
+        33.696,
+        13.08
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[25]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        13.248,
+        33.696,
+        13.272
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[26]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        13.44,
+        33.696,
+        13.464
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[27]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        13.632,
+        33.696,
+        13.656
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[28]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        13.824,
+        33.696,
+        13.848
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[29]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.016,
+        33.696,
+        14.04
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[30]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.208,
+        33.696,
+        14.232
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[31]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.4,
+        33.696,
+        14.424
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[32]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.592,
+        33.696,
+        14.616
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[33]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.784,
+        33.696,
+        14.808
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[34]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        14.976,
+        33.696,
+        15.0
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[35]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        15.168,
+        33.696,
+        15.192
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[36]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        15.36,
+        33.696,
+        15.384
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[37]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        15.552,
+        33.696,
+        15.576
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[38]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        15.744,
+        33.696,
+        15.768
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[39]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        15.936,
+        33.696,
+        15.96
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[40]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        16.128,
+        33.696,
+        16.152
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[41]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        16.32,
+        33.696,
+        16.344
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[42]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        16.512,
+        33.696,
+        16.536
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[43]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        16.704,
+        33.696,
+        16.728
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[44]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        16.896,
+        33.696,
+        16.92
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[45]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        17.088,
+        33.696,
+        17.112
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[46]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        17.28,
+        33.696,
+        17.304
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[47]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        17.472,
+        33.696,
+        17.496
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[48]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        17.664,
+        33.696,
+        17.688
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[49]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        17.856,
+        33.696,
+        17.88
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[50]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        18.048,
+        33.696,
+        18.072
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[51]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        18.24,
+        33.696,
+        18.264
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[52]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        18.432,
+        33.696,
+        18.456
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[53]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        18.624,
+        33.696,
+        18.648
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[54]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        18.816,
+        33.696,
+        18.84
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[55]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.008,
+        33.696,
+        19.032
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[56]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.2,
+        33.696,
+        19.224
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[57]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.392,
+        33.696,
+        19.416
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[58]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.584,
+        33.696,
+        19.608
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[59]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.776,
+        33.696,
+        19.8
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[60]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        19.968,
+        33.696,
+        19.992
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[61]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        20.16,
+        33.696,
+        20.184
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[62]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        20.352,
+        33.696,
+        20.376
+      ],
+      "face": "E"
+    },
+    {
+      "pin": "w_mask_in[63]",
+      "use": "SIGNAL",
+      "layer": "M4",
+      "rect": [
+        33.672,
+        20.544,
+        33.696,
+        20.568
+      ],
+      "face": "E"
+    }
+  ],
+  "pg_rectangles": [
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        0.384,
+        33.396,
+        0.48
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        1.152,
+        33.396,
+        1.248
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        1.92,
+        33.396,
+        2.016
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        2.688,
+        33.396,
+        2.784
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        3.456,
+        33.396,
+        3.552
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        4.224,
+        33.396,
+        4.32
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        4.992,
+        33.396,
+        5.088
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        5.76,
+        33.396,
+        5.856
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        6.528,
+        33.396,
+        6.624
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        7.296,
+        33.396,
+        7.392
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        8.064,
+        33.396,
+        8.16
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        8.832,
+        33.396,
+        8.928
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        9.6,
+        33.396,
+        9.696
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        10.368,
+        33.396,
+        10.464
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        11.136,
+        33.396,
+        11.232
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        11.904,
+        33.396,
+        12.0
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        12.672,
+        33.396,
+        12.768
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        13.44,
+        33.396,
+        13.536
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        14.208,
+        33.396,
+        14.304
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        14.976,
+        33.396,
+        15.072
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        15.744,
+        33.396,
+        15.84
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        16.512,
+        33.396,
+        16.608
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        17.28,
+        33.396,
+        17.376
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        18.048,
+        33.396,
+        18.144
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        18.816,
+        33.396,
+        18.912
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        19.584,
+        33.396,
+        19.68
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        20.352,
+        33.396,
+        20.448
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        21.12,
+        33.396,
+        21.216
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        21.888,
+        33.396,
+        21.984
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        22.656,
+        33.396,
+        22.752
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        23.424,
+        33.396,
+        23.52
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        24.192,
+        33.396,
+        24.288
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        24.96,
+        33.396,
+        25.056
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        25.728,
+        33.396,
+        25.824
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        26.496,
+        33.396,
+        26.592
+      ],
+      "face": null
+    },
+    {
+      "pin": "VDD",
+      "use": "POWER",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        27.264,
+        33.396,
+        27.36
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        0.768,
+        33.396,
+        0.864
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        1.536,
+        33.396,
+        1.632
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        2.304,
+        33.396,
+        2.4
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        3.072,
+        33.396,
+        3.168
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        3.84,
+        33.396,
+        3.936
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        4.608,
+        33.396,
+        4.704
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        5.376,
+        33.396,
+        5.472
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        6.144,
+        33.396,
+        6.24
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        6.912,
+        33.396,
+        7.008
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        7.68,
+        33.396,
+        7.776
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        8.448,
+        33.396,
+        8.544
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        9.216,
+        33.396,
+        9.312
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        9.984,
+        33.396,
+        10.08
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        10.752,
+        33.396,
+        10.848
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        11.52,
+        33.396,
+        11.616
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        12.288,
+        33.396,
+        12.384
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        13.056,
+        33.396,
+        13.152
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        13.824,
+        33.396,
+        13.92
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        14.592,
+        33.396,
+        14.688
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        15.36,
+        33.396,
+        15.456
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        16.128,
+        33.396,
+        16.224
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        16.896,
+        33.396,
+        16.992
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        17.664,
+        33.396,
+        17.76
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        18.432,
+        33.396,
+        18.528
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        19.2,
+        33.396,
+        19.296
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        19.968,
+        33.396,
+        20.064
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        20.736,
+        33.396,
+        20.832
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        21.504,
+        33.396,
+        21.6
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        22.272,
+        33.396,
+        22.368
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        23.04,
+        33.396,
+        23.136
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        23.808,
+        33.396,
+        23.904
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        24.576,
+        33.396,
+        24.672
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        25.344,
+        33.396,
+        25.44
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        26.112,
+        33.396,
+        26.208
+      ],
+      "face": null
+    },
+    {
+      "pin": "VSS",
+      "use": "GROUND",
+      "layer": "M4",
+      "rect": [
+        0.3,
+        26.88,
+        33.396,
+        26.976
+      ],
+      "face": null
+    }
+  ],
+  "pg_access_status": "Interior M4 PG rails; complete geometric via/contact connectivity unqualified. Signal M4 contact face geometry only; hierarchy PG/OBS crossings need truthful access proof."
+}

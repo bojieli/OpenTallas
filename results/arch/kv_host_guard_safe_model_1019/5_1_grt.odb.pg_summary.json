@@ -1,0 +1,57 @@
+{
+  "total_master_pg_pins": 74510,
+  "bad": 20480,
+  "missing_iterm": 0,
+  "protected_bad": 698,
+  "bad_by_master": {
+    "BUFx24_ASAP7_75t_R": 736,
+    "BUFx3_ASAP7_75t_R": 1334,
+    "BUFx6f_ASAP7_75t_R": 238,
+    "BUFx10_ASAP7_75t_R": 12,
+    "BUFx4f_ASAP7_75t_R": 76,
+    "BUFx2_ASAP7_75t_R": 17678,
+    "BUFx12_ASAP7_75t_R": 2,
+    "BUFx16f_ASAP7_75t_R": 2,
+    "CKINVDCx14_ASAP7_75t_R": 14,
+    "CKINVDCx20_ASAP7_75t_R": 10,
+    "INVx8_ASAP7_75t_R": 14,
+    "INVx11_ASAP7_75t_R": 4,
+    "INVx2_ASAP7_75t_R": 78,
+    "INVx3_ASAP7_75t_R": 88,
+    "INVx4_ASAP7_75t_R": 42,
+    "BUFx8_ASAP7_75t_R": 34,
+    "INVx5_ASAP7_75t_R": 54,
+    "CKINVDCx6p67_ASAP7_75t_R": 8,
+    "BUFx4_ASAP7_75t_R": 12,
+    "INVx6_ASAP7_75t_R": 14,
+    "CKINVDCx8_ASAP7_75t_R": 6,
+    "CKINVDCx5p33_ASAP7_75t_R": 12,
+    "INVx1_ASAP7_75t_R": 8,
+    "BUFx5_ASAP7_75t_R": 2,
+    "CKINVDCx12_ASAP7_75t_R": 2
+  },
+  "bad_by_protection": {
+    "1": 698,
+    "0": 19782
+  },
+  "actual_role_net_pairs": {
+    "POWER->VDD:POWER": 27015,
+    "GROUND->VSS:GROUND": 27015,
+    "POWER->:": 10240,
+    "GROUND->:": 10240
+  },
+  "bad_by_instance_prefix": {
+    "clkbuf_leaf_": 590,
+    "place": 1558,
+    "load_slew": 20,
+    "wire": 22,
+    "output": 888,
+    "input": 1508,
+    "clkbuf_": 94,
+    "clkbuf_regs_": 2,
+    "clkload": 570,
+    "delaybuf_": 12,
+    "rebuffer": 4,
+    "hold": 15212
+  }
+}
