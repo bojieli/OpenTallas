@@ -9,3 +9,5 @@ Last-mile paths avoid A0 obstacles only; they do not legalize reset packages alo
 Data-child inventory separately prices413children/263634FF inclcontrol/3.066139mm2summed outlines. It excludes A0 state and physical reset/clock package outlines. Largest data child1132FF; no>2kb waiver.
 
 A full opt-in MODELv8 is running with independent p0/p1 reset pads and per-half absolute sample-age tags. MUT9 offsets only the first receiverp1 release, complementing actualregionalMUT8. Production RTL/compiler remain unchanged.
+
+Connection-level reset successor/consumer branching has maximum4abstract loads per existing reset driver in this construction. This counts each A0 port as an unqualified abstract load and does not replace native package/port capacitance and fanout checks; abstract_reset_driver_loads.json retains exact counts.

@@ -10,7 +10,7 @@ from qc_safe_graph import ROOT,extract
 S=1000;GRID=43200;GAP=20000
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--anchor-bounds',action='store_true');p.add_argument('--placement-hint');p.add_argument('--hint-only',action='store_true');p.add_argument('--shelf-hint',action='store_true');p.add_argument('--greedy-hint',action='store_true');p.add_argument('--soft-reach',action='store_true',help='diagnostic legal packing minimizing sum of405um reach overruns');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
+ p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--grid-domains',action='store_true');p.add_argument('--anchor-bounds',action='store_true');p.add_argument('--placement-hint');p.add_argument('--hint-only',action='store_true');p.add_argument('--shelf-hint',action='store_true');p.add_argument('--greedy-hint',action='store_true');p.add_argument('--soft-reach',action='store_true',help='diagnostic legal packing minimizing sum of405um reach overruns');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--native-pins',help='compiled safe endpoint plan; exact local child pin offsets');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
  knots=sorted([(0,0),(c['outline_um']['w'],W)]+[(x+d,y+d)for x,y in zip(oldx,cols)for d in [0,457.92]])
  def mx(x):
   for(oa,na),(ob,nb)in zip(knots,knots[1:]):
@@ -151,6 +151,7 @@ def main():
     for constraint in constraints:constraint.only_enforce_if(active)
     m.add_assumption(active);assume[active.index]=i
    ee.append(dict(e,src=src,dst=dst,reach_target_um=reach,reach_basis='exact native child bit-pin Manhattan'if bounds is not None else'center diagnostic (A0/boundary pins unqualified)'))
+ anchor_limits={};grid_domain_sizes={}
  anchor_receipt=dict(enabled=a.anchor_bounds,projection_bounds=0,contradictions=[])
  if a.anchor_bounds:
   import heapq
@@ -173,11 +174,26 @@ def main():
     if value!=dist[u]:continue
     for v,cost in arcs[si].get(u,{}).items():
      if value+cost<dist.get(v,10**18):dist[v]=value+cost;owner[v]=owner[u];heapq.heappush(heap,(value+cost,v))
+   anchor_limits[si]=dist
    for k,j in jobs.items():
     if k in dist:m.add(sx*j['x']+sy*j['y']<=dist[k]);anchor_receipt['projection_bounds']+=1
    for k,(x,y)in fixed.items():
     if dist[k]<sx*x+sy*y:anchor_receipt['contradictions'].append(dict(projection=[sx,sy],anchor=owner[k],endpoint=k,shortfall_um=(sx*x+sy*y-dist[k])/S))
   print('CP_ANCHOR_BOUNDS',anchor_receipt,flush=True)
+ if a.grid_domains:
+  assert a.anchor_bounds and not(a.soft_reach or a.core)
+  obstacles=[(round(cols[int(t['inst'][4])]*S),round(t['at'][1]*S),round(457.92*S),round(1166.4*S))for t in c['tiles']]
+  for k,j in jobs.items():
+   w,h=round(j['w']*S),round(j['h']*S);allowed=[]
+   for ix in range(1,math.floor((W*S-GAP-w)/GRID)+1):
+    x=ix*GRID
+    for iy in range(1,math.floor((H*S-GAP-h)/GRID)+1):
+     y=iy*GRID
+     if any(sx*x+sy*y>anchor_limits[si].get(k,10**18)for si,(sx,sy)in enumerate(signs)):continue
+     if any(not(x+w+GAP<=u or u+bw+GAP<=x or y+h+GAP<=v or v+bh+GAP<=y)for u,v,bw,bh in obstacles):continue
+     allowed.append((ix,iy))
+   m.add_allowed_assignments([j['ix'],j['iy']],allowed);grid_domain_sizes[k]=len(allowed)
+  sizes=sorted(grid_domain_sizes.values());print('CP_GRID_DOMAINS','min',min(sizes),'median',sizes[len(sizes)//2],'max',max(sizes),'empty',[k for k,v in grid_domain_sizes.items()if not v],flush=True)
  if a.soft_reach:
   assert not a.core,'soft-reach cannot produce a hard infeasibility core'
   m.minimize(sum(overruns))
@@ -193,7 +209,7 @@ def main():
    out=Path(a.out+'.best.json');out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(receipt,indent=1)+'\n')
    print('CP_SOFT_WITNESS','overrun_um',receipt['total_overrun_um'],'violations',len(violations),'wall',self.wall_time,flush=True)
  status=solver.solve(m,PlacementWitness());name=solver.status_name(status);print('CP_PLACE_STATUS',name,'wall',time.time()-started,flush=True)
- result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,empty_space_zones=a.zones,forward_bank_stage=a.forward_bank,extra_forward_children=len(extras),extra_forward_state_bits=sum(v["bits"]for v in extras.values()),extra_forward_outline_area_mm2=len(extras)*103.68*129.6/1e6,forward_read_reach_um=a.forward_read_reach,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',anchor_bounds=anchor_receipt,soft_reach=a.soft_reach,total_overrun_um=(solver.objective_value/S if a.soft_reach and status in [cp_model.OPTIMAL,cp_model.FEASIBLE] else None),placement_hint=a.placement_hint,native_pin_plan=a.native_pins,native_pin_bits_checked=native_bits,native_pin_pairs=len(native_bounds),release_ready=False)
+ result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,empty_space_zones=a.zones,forward_bank_stage=a.forward_bank,extra_forward_children=len(extras),extra_forward_state_bits=sum(v["bits"]for v in extras.values()),extra_forward_outline_area_mm2=len(extras)*103.68*129.6/1e6,forward_read_reach_um=a.forward_read_reach,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',grid_domain_sizes=grid_domain_sizes,anchor_bounds=anchor_receipt,soft_reach=a.soft_reach,total_overrun_um=(solver.objective_value/S if a.soft_reach and status in [cp_model.OPTIMAL,cp_model.FEASIBLE] else None),placement_hint=a.placement_hint,native_pin_plan=a.native_pins,native_pin_bits_checked=native_bits,native_pin_pairs=len(native_bounds),release_ready=False)
  if status==cp_model.INFEASIBLE:
   result['infeasible_edge_core']=[ee[assume[i]] for i in solver.sufficient_assumptions_for_infeasibility() if i in assume]
   print('CP_PLACE_CORE',[(e['src'],e['dst'],e['net'])for e in result['infeasible_edge_core']],flush=True)
