@@ -250,7 +250,7 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
             for i in range(na):
                 relay_out[(name, 'a', na - 1 - i)] = outpos.get(na - 1 - i)
     # resolve aliases: ('ALIAS', x) means the load continues on bit x with no stage
-    pairs, path_kinds = {}, {}
+    pairs, path_kinds, path_ages = {}, {}, {}
 
     def terminal(inst, port, mst):
         if mst == '__alias__':
@@ -288,14 +288,19 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                     forwarded = frozenset(q[0] for q in seen if FORWARDED_RE.match(inst_master[q[0]]))
                     path_kinds[seen] = (forwarded, len(seen) - len(forwarded))
                 forwarded, plain = path_kinds[seen]
+                age_key = (n, lands, forwarded, plain)
+                if age_key not in path_ages:
+                    path_ages[age_key] = age_fields(dict(st={n}, lands={lands}, forwarded_paths={forwarded},
+                                                        plain_counts={plain}), land_k, land_e)
                 logical_port = lp
                 if (lm in ('qkd_rlyi_258', 'qkd_rlyi_258s') and lp == 'y'
                         and getattr(mods[lm], 'source_sha256', None) == PV_TRUNK_ROLE_SHA):
                     logical_port = f'y__{lpos}_{lpos}' if lpos >= 256 else 'y__255_0'
                 r = pairs.setdefault((si, sp, li, logical_port), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),
-                                                           forwarded_paths=set(), plain_counts=set()))
+                                                           forwarded_paths=set(), plain_counts=set(), effective_ages=set()))
                 r['st'].add(n); r['bits'].add(lpos); r['lands'].add(lands)
                 r['forwarded_paths'].add(forwarded); r['plain_counts'].add(plain)
+                r['effective_ages'].add(path_ages[age_key]['age_edges'])
     recs = []
     feeders = defaultdict(list)
     for (si, sp, li, lp) in pairs:
@@ -305,9 +310,16 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
         if len(feeders[(li, lp)]) > 1:            # a concatenated input fed by several sources: name the slice (generator rule)
             dp = f"{lp}__{max(r['bits'])}_{min(r['bits'])}"
         bid = DRS.bus_id(si, sp, li, dp)
-        if len(r['st']) > 1:
+        coherent = len(r['effective_ages']) == 1 and None not in r['effective_ages']
+        if len(r['st']) > 1 and not coherent:
             problems.append(f'{bid}: bits with different stages {sorted(r["st"])} (max taken)')
         ages = age_fields(r, land_k, land_e)
+        if coherent and (ages['age_edges'] is None or len(r['st']) > 1):
+            ages = dict(age_edges=next(iter(r['effective_ages'])),
+                        age_basis='every physical bit path individually proved at the same source-to-pin age')
+        elif len(r['effective_ages'] - {None}) > 1:
+            problems.append(f'{bid}: bits with different proved ages {sorted(r["effective_ages"] - {None})}')
+            ages['age_edges'] = None
         if ages['age_edges'] is None:
             problems.append(f"{bid}: unresolved landed age ({ages['age_basis']})")
         recs.append(dict(id=bid, src=dict(inst=si, port=sp, master=r['sm']), dst=dict(inst=li, port=dp, master=r['lm']),
