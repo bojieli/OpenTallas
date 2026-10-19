@@ -1,0 +1,253 @@
+{
+  "status": "CAPACITY_ONLY_NOT_A_BUILD_GRANT",
+  "outline_um": [
+    604.8,
+    734.4
+  ],
+  "band_um": [
+    2.16,
+    302.4,
+    602.64,
+    345.6
+  ],
+  "halo_um": 10.8,
+  "positions": [
+    {
+      "role": "TX",
+      "lane": 0,
+      "bank": 0,
+      "box": [
+        43.2,
+        43.2,
+        260.04,
+        86.952
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 0,
+      "bank": 1,
+      "box": [
+        43.2,
+        129.6,
+        260.04,
+        173.352
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 0,
+      "bank": 2,
+      "box": [
+        43.2,
+        216.0,
+        260.04,
+        259.752
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 0,
+      "bank": 3,
+      "box": [
+        43.2,
+        388.8,
+        260.04,
+        432.552
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 0,
+      "bank": 4,
+      "box": [
+        43.2,
+        475.2,
+        260.04,
+        518.952
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 1,
+      "bank": 0,
+      "box": [
+        345.6,
+        43.2,
+        562.44,
+        86.952
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 1,
+      "bank": 1,
+      "box": [
+        345.6,
+        129.6,
+        562.44,
+        173.352
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 1,
+      "bank": 2,
+      "box": [
+        345.6,
+        216.0,
+        562.44,
+        259.752
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 1,
+      "bank": 3,
+      "box": [
+        345.6,
+        388.8,
+        562.44,
+        432.552
+      ]
+    },
+    {
+      "role": "TX",
+      "lane": 1,
+      "bank": 4,
+      "box": [
+        345.6,
+        475.2,
+        562.44,
+        518.952
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 0,
+      "bank": 0,
+      "box": [
+        43.2,
+        561.6,
+        94.608,
+        601.5600000000001
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 0,
+      "bank": 1,
+      "box": [
+        129.6,
+        561.6,
+        181.00799999999998,
+        601.5600000000001
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 0,
+      "bank": 2,
+      "box": [
+        216.0,
+        561.6,
+        267.408,
+        601.5600000000001
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 0,
+      "bank": 3,
+      "box": [
+        302.4,
+        561.6,
+        353.808,
+        601.5600000000001
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 0,
+      "bank": 4,
+      "box": [
+        388.8,
+        561.6,
+        440.208,
+        601.5600000000001
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 1,
+      "bank": 0,
+      "box": [
+        43.2,
+        648.0,
+        94.608,
+        687.96
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 1,
+      "bank": 1,
+      "box": [
+        129.6,
+        648.0,
+        181.00799999999998,
+        687.96
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 1,
+      "bank": 2,
+      "box": [
+        216.0,
+        648.0,
+        267.408,
+        687.96
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 1,
+      "bank": 3,
+      "box": [
+        302.4,
+        648.0,
+        353.808,
+        687.96
+      ]
+    },
+    {
+      "role": "RX",
+      "lane": 1,
+      "bank": 4,
+      "box": [
+        388.8,
+        648.0,
+        440.208,
+        687.96
+      ]
+    }
+  ],
+  "halo_or_band_errors": [],
+  "lattice_um": 43.2,
+  "band_area_um2": 25940.735999999997,
+  "macro_area_um2": 115414.47360000001,
+  "outline_area_um2": 444165.11999999994,
+  "A_observed_std_fill": 0.48093315471079934,
+  "H_observed_std_fill": 0.517060888326376,
+  "minimum_macro_origin_pitch_y_um": 86.4,
+  "old_outline_growth_pct": 66.43356643356641,
+  "parent_fit": null,
+  "boundary_native": null,
+  "clock": null,
+  "global_density_grant": null,
+  "actual_source_register_assignment": null,
+  "reach_qualification": false,
+  "central_point_to_furthest_macro_corner_lower_bound_um": 623.1600000000001,
+  "not_endpoint_proof": "Corner envelope proves a central arbitrary source is not universally within405; actual pin-to-register graph must be assigned, not inferred."
+}
