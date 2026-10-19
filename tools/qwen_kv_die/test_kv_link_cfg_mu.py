@@ -24,6 +24,8 @@ from pathlib import Path
 over = json.loads(sys.argv[1])
 if over.get('stages'):
     i = P.LINK_ARGS.index('--die-stages'); P.LINK_ARGS[i + 1] = over['stages']
+if over.get('codec') is not None:
+    i = P.LINK_ARGS.index('--kv-codec'); P.LINK_ARGS[i + 1] = str(over['codec'])
 if over.get('drop_mu') and '--mu' in P.LINK_ARGS:
     P.LINK_ARGS.remove('--mu')
 td = tempfile.mkdtemp()
@@ -66,6 +68,17 @@ class LinkCfgMu(unittest.TestCase):
         self.assertNotIn('--mu', r['args'])
         self.assertTrue(r.get('check', {}).get('equal'), r.get('refused'))
         self.assertEqual(r['words'][64], 8)
+
+    def test_codec2_txdp_matches_both_images(self):
+        for r in (self.mu, self.su):
+            self.assertTrue(r['check']['txdp_k_agree'])
+            self.assertEqual(r['check']['kv_codec'], 2)
+            self.assertEqual(r['check']['txdp_k_image'], 0x03030416)
+
+    def test_mutant_codec1_refused_even_with_equal_k_words(self):
+        r = probe(True, codec=1)
+        self.assertEqual(r['words'], r['want'])
+        self.assertIn('TXDP codec differs', r['refused'])
 
     def test_mu_slot_present_only_in_mu(self):
         d = [i for i, (a, b) in enumerate(zip(self.mu['words'], self.su['words'])) if a != b]

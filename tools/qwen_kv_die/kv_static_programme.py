@@ -222,6 +222,8 @@ def link_image_check(words, cal=None, img=None, root=None):
         rec.update(txdp_k_image=int(re.search(r"D2D_TXDP_K = 32'h([0-9a-fA-F]+);", txt).group(1), 16),
                    txdp_k_die_codec=_L.txdp_word(cal['txd']['K']), kv_codec=int(_link_kv_codec()))
         rec['txdp_k_agree'] = rec['txdp_k_image'] == rec['txdp_k_die_codec']
+        if not rec['txdp_k_agree']:
+            raise ValueError(f"target 11 TXDP codec differs from {img}: image {rec['txdp_k_image']:#010x}, die {rec['txdp_k_die_codec']:#010x}; recompile both pair images for the die codec")
     return rec
 
 
