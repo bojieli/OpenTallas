@@ -8,6 +8,14 @@ module tb_ot_hbm_su_static_pgslice_rgf_lp;
     always @(posedge clk) rst_dl <= {rst_dl[2:0], rst};
     reg [3:0] fi_pos;
     wire [3:0] li_pos = fi_pos;
+    reg [3:0] fi_pos_r0;
+    wire [3:0] li_pos_r0 = fi_pos_r0;
+    reg [3:0] fi_pos_r1;
+    wire [3:0] li_pos_r1 = fi_pos_r1;
+    reg [3:0] fi_pos_r2;
+    wire [3:0] li_pos_r2 = fi_pos_r2;
+    reg [3:0] fi_pos_r3;
+    wire [3:0] li_pos_r3 = fi_pos_r3;
     reg [1741:0] fi_control;
     reg [1741:0] dli_control [0:0];  wire [1741:0] li_control = fi_control;
     always @(posedge clk) begin : g_dli_control integer j; dli_control[0] <= fi_control; for (j = 1; j <= 0; j = j + 1) dli_control[j] <= dli_control[j - 1]; end
@@ -70,13 +78,17 @@ module tb_ot_hbm_su_static_pgslice_rgf_lp;
     always @(posedge clk) begin : g_dlo_fault integer j; dlo_fault[0] <= fo_fault; for (j = 1; j <= 8; j = j + 1) dlo_fault[j] <= dlo_fault[j - 1]; end
     wire [561:0] fo_su_wq, lo_su_wq;  reg [561:0] dlo_su_wq [0:8];
     always @(posedge clk) begin : g_dlo_su_wq integer j; dlo_su_wq[0] <= fo_su_wq; for (j = 1; j <= 8; j = j + 1) dlo_su_wq[j] <= dlo_su_wq[j - 1]; end
-    ot_hbm_su_static_pgslice_rgf u_flat (.ck(clk), .rst_n(rst_f), .pos(fi_pos), .control(fi_control), .vmr_cmd(fi_vmr_cmd), .vmw_cmd(fi_vmw_cmd), .rf_bword(fi_rf_bword), .rf_bcmd(fi_rf_bcmd), .rf_dsec(fi_rf_dsec), .red_sel(fi_red_sel), .tree_cmd(fi_tree_cmd), .dw_v(fi_dw_v), .dw_row(fi_dw_row), .dw_d(fi_dw_d), .su_rr(fi_su_rr), .ij_v(fi_ij_v), .ij_row(fi_ij_row), .ij_bad(fi_ij_bad), .pg_fault(fi_pg_fault), .slice_x(fo_slice_x), .tree_o(fo_tree_o), .pt_ro_x(fo_pt_ro_x), .pt_ro_v(fo_pt_ro_v), .inj_q(fo_inj_q), .fault(fo_fault), .su_wq(fo_su_wq));
-    ot_hbm_su_static_pgslice_rgf_lp #(.MUT(MUT)) u_lp (.ck_s(clk), .ck_r0(clk), .ck_r1(clk), .ck_r2(clk), .ck_r3(clk), .rst_n(rst), .pos(li_pos), .control(li_control), .vmr_cmd(li_vmr_cmd), .vmw_cmd(li_vmw_cmd), .rf_bword(li_rf_bword), .rf_bcmd(li_rf_bcmd), .rf_dsec(li_rf_dsec), .red_sel(li_red_sel), .tree_cmd(li_tree_cmd), .dw_v(li_dw_v), .dw_row(li_dw_row), .dw_d(li_dw_d), .su_rr(li_su_rr), .ij_v(li_ij_v), .ij_row(li_ij_row), .ij_bad(li_ij_bad), .pg_fault(li_pg_fault), .slice_x(lo_slice_x), .tree_o(lo_tree_o), .pt_ro_x(lo_pt_ro_x), .pt_ro_v(lo_pt_ro_v), .inj_q(lo_inj_q), .fault(lo_fault), .su_wq(lo_su_wq));
+    ot_hbm_su_static_pgslice_rgf u_flat (.ck(clk), .rst_n(rst_f), .pos(fi_pos), .pos_r0(fi_pos_r0), .pos_r1(fi_pos_r1), .pos_r2(fi_pos_r2), .pos_r3(fi_pos_r3), .control(fi_control), .vmr_cmd(fi_vmr_cmd), .vmw_cmd(fi_vmw_cmd), .rf_bword(fi_rf_bword), .rf_bcmd(fi_rf_bcmd), .rf_dsec(fi_rf_dsec), .red_sel(fi_red_sel), .tree_cmd(fi_tree_cmd), .dw_v(fi_dw_v), .dw_row(fi_dw_row), .dw_d(fi_dw_d), .su_rr(fi_su_rr), .ij_v(fi_ij_v), .ij_row(fi_ij_row), .ij_bad(fi_ij_bad), .pg_fault(fi_pg_fault), .slice_x(fo_slice_x), .tree_o(fo_tree_o), .pt_ro_x(fo_pt_ro_x), .pt_ro_v(fo_pt_ro_v), .inj_q(fo_inj_q), .fault(fo_fault), .su_wq(fo_su_wq));
+    ot_hbm_su_static_pgslice_rgf_lp #(.MUT(MUT)) u_lp (.ck_s(clk), .ck_r0(clk), .ck_r1(clk), .ck_r2(clk), .ck_r3(clk), .rst_n(rst), .pos(li_pos), .pos_r0(li_pos_r0), .pos_r1(li_pos_r1), .pos_r2(li_pos_r2), .pos_r3(li_pos_r3), .control(li_control), .vmr_cmd(li_vmr_cmd), .vmw_cmd(li_vmw_cmd), .rf_bword(li_rf_bword), .rf_bcmd(li_rf_bcmd), .rf_dsec(li_rf_dsec), .red_sel(li_red_sel), .tree_cmd(li_tree_cmd), .dw_v(li_dw_v), .dw_row(li_dw_row), .dw_d(li_dw_d), .su_rr(li_su_rr), .ij_v(li_ij_v), .ij_row(li_ij_row), .ij_bad(li_ij_bad), .pg_fault(li_pg_fault), .slice_x(lo_slice_x), .tree_o(lo_tree_o), .pt_ro_x(lo_pt_ro_x), .pt_ro_v(lo_pt_ro_v), .inj_q(lo_inj_q), .fault(lo_fault), .su_wq(lo_su_wq));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc, nc, bad;
     initial begin
         nc = 0; bad = 0;
         fi_pos = {$urandom};
+        fi_pos_r0 = {$urandom};
+        fi_pos_r1 = {$urandom};
+        fi_pos_r2 = {$urandom};
+        fi_pos_r3 = {$urandom};
         fi_control = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
         fi_vmr_cmd = {$urandom,$urandom};
         fi_vmw_cmd = {$urandom,$urandom,$urandom};

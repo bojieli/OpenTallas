@@ -60,7 +60,8 @@ def rtl():
     w(" parameter integer QID=1, G=2, STRAP=1, PRETREE=0, GMUT=0")
     w(")(")
     ports = [
-        "input wire ck", "input wire rst_n", "input wire [3:0] pos", "input wire [1741:0] control",
+        "input wire ck", "input wire rst_n", "input wire [3:0] pos", "input wire [3:0] pos_r0", "input wire [3:0] pos_r1",
+        "input wire [3:0] pos_r2", "input wire [3:0] pos_r3", "input wire [1741:0] control",
         "input wire [59:0] vmr_cmd", "input wire [77:0] vmw_cmd", "input wire [127:0] rf_bword", "input wire [35:0] rf_bcmd",
         "input wire [255:0] rf_dsec", "input wire [11:0] red_sel", "output wire [31:0] slice_x", "input wire [11:0] tree_cmd",
         "output wire [66:0] tree_o", "output wire [1023:0] pt_ro_x", "output wire [31:0] pt_ro_v",
@@ -95,7 +96,7 @@ def rtl():
         rf_in = "rf_u" if inner else f"rly{1 if r == 0 else 2}_q[705:542]"
         di_in = f"di{r}" if inner else f"rly{1 if r == 0 else 2}_q[541:0]"
         w(f" // ---- region r{r} (store group {r}: h {r % 2}, hi {r // 2}; lanes / banks {8 * r}..{8 * r + 7})")
-        w(f" ot_hbm_su_pgrg_rg #(.R({r}),.QID(QID),.G(G),.STRAP(STRAP),.MUT(GMUT)) u_rg{r}(.ck(ck),.rst_n(rst_n),.pos(pos),"
+        w(f" ot_hbm_su_pgrg_rg #(.R({r}),.QID(QID),.G(G),.STRAP(STRAP),.MUT(GMUT)) u_rg{r}(.ck(ck),.rst_n(rst_n),.pos(pos_r{r}),"
           f".control({c_in}),.rf_u({rf_in}),.di({di_in})," + ",".join(f".ctl{j}(ctl_r{r}_{j})" for j in range(8)) +
           f",.lid(lid_r{r}),.rd_q(rdq_r{r}),.lo(lo_r{r}),.b_rv(brv_r{r}),.b_ra(bra_r{r}),.b_wv(bwv_r{r}),.b_wa(bwa_r{r}),"
           f".b_wd(bwd_r{r}),.bq(bq_r{r}),.ret(ret_r{r}));")
@@ -163,7 +164,7 @@ def lp_spec():
         clock_pins=[f"clk_stage_{k}" for k in range(8)] + [f"clk_insert_{k}" for k in range(4)]
         + ["clk", "clk_rd", "clk_ws"] + [f"clk_macro{k}" for k in range(6)] + ["ck"],
         reset_port="rst_n", reset_pins=["rst_n"], reset_region="s",
-        regions=regions, port_regions={p: "s" for p in ins_ports}, static=["pos"],
+        regions=regions, port_regions={p: "s" for p in ins_ports}, static=["pos", "pos_r0", "pos_r1", "pos_r2", "pos_r3"],
         D=2, E=1, reach_um=405,
         mut_child="u_sout",
         bench=dict(cycles=1500, reset_cycles=8, sim="verilator"),
@@ -176,7 +177,8 @@ KIT = "tools/ref_tile/specs_hbm_su3/hbm_su_pgslice_lg_light_d4g.json"
 KIND0_VIEW = "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical"
 BANK_VIEW = "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical"
 W_PORTS = [("control", 1742), ("vmr_cmd", 60), ("vmw_cmd", 78), ("rf_bword", 128), ("rf_bcmd", 36), ("rf_dsec", 256),
-           ("red_sel", 12), ("tree_cmd", 12), ("dw_v", 2), ("dw_row", 18), ("dw_d", 1024), ("pos", 4)]
+           ("red_sel", 12), ("tree_cmd", 12), ("dw_v", 2), ("dw_row", 18), ("dw_d", 1024), ("pos", 4),
+           ("pos_r0", 4), ("pos_r1", 4), ("pos_r2", 4), ("pos_r3", 4)]
 E_PORTS = [("su_wq", 562), ("su_rr", 514), ("ij_v", 4), ("ij_row", 36), ("ij_bad", 1), ("pg_fault", 1), ("slice_x", 32),
            ("tree_o", 67), ("fault", 1), ("inj_q", 1024), ("pt_ro_x", 1024), ("pt_ro_v", 32)]
 PITCH = 0.2                                    # um per pin on the data ranges (5 / um)
@@ -245,9 +247,9 @@ def kit_spec(ram_gb=56):  # 10-19: 24 GB was SIGTERMed (24.5 GB RSS, 2 instances
         clock="multiple_cts_roots", clock_ports=["ck_s", "ck_r0", "ck_r1", "ck_r2", "ck_r3"],
         clock_data_paths="related_same_frequency",
         clock_relationship=dict(kind="same_pll_fixed_phase", ratio=[1, 1], phase_ps=0),
-        clock_entry_domains={"core": dict(ratio=[1, 1], ports=["ck_s"], inputs=[n for n, _ in W_PORTS] + ["rst_n"] +
+        clock_entry_domains={"core": dict(ratio=[1, 1], ports=["ck_s"], inputs=[n for n, _ in W_PORTS if not n.startswith("pos_r")] + ["rst_n"] +
                                           [n for n, _ in E_PORTS if n not in outs], outputs=[n for n, _ in E_PORTS if n in outs]),
-                             **{f"r{r}": dict(ratio=[1, 1], ports=[f"ck_r{r}"], inputs=[], outputs=[]) for r in range(4)}},
+                             **{f"r{r}": dict(ratio=[1, 1], ports=[f"ck_r{r}"], inputs=[f"pos_r{r}"], outputs=[]) for r in range(4)}},
         landed_record=f"{WIT}/lp/{TOP}_lp_record.json",
         landed_note=("TW-HBM-PGLG 10-19: lp.py landed parent of the wires-only flat parent " + TOP + " (5 regions, 16 "
                      "landings D 2 / E 1, reset runs depth 4); offsets vs ot_hbm_su_static_pgslice_lg: frames r1/r2 +2, "

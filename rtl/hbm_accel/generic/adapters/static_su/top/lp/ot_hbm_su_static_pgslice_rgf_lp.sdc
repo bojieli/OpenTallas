@@ -39,3 +39,7 @@ foreach ot_ln $ot_lp_lands {
 puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_r0 ck_r1 ck_r2 ck_r3}] }
 set_case_analysis 0 [get_ports {pos[*]}]   ;# identity strap
+set_case_analysis 0 [get_ports {pos_r0[*]}]   ;# identity strap
+set_case_analysis 0 [get_ports {pos_r1[*]}]   ;# identity strap
+set_case_analysis 0 [get_ports {pos_r2[*]}]   ;# identity strap
+set_case_analysis 0 [get_ports {pos_r3[*]}]   ;# identity strap

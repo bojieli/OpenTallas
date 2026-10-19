@@ -58,7 +58,7 @@ module ot_hbm_su_static_pgslice_rg #(
  wire [561:0] su_wq; wire [513:0] su_rr; wire [3:0] ij_v; wire [35:0] ij_row; wire ij_bad, pg_fault;
  ot_hbm_su_static_pgslice_rgf_lp #(.QID(QID),.G(G),.STRAP(STRAP),.PRETREE(PRETREE),.GMUT((MUT<100)?MUT:0),
   .MUT((MUT>100)?MUT-100:0)) u_core(
-  .ck_s(clk_ctl),.ck_r0(ck_r0),.ck_r1(ck_r1),.ck_r2(ck_r2),.ck_r3(ck_r3),.rst_n(rst_n),.pos(pos),.control(control),
+  .ck_s(clk_ctl),.ck_r0(ck_r0),.ck_r1(ck_r1),.ck_r2(ck_r2),.ck_r3(ck_r3),.rst_n(rst_n),.pos(pos),.pos_r0(pos),.pos_r1(pos),.pos_r2(pos),.pos_r3(pos),.control(control),
   .vmr_cmd(vmr_cmd),.vmw_cmd(vmw_cmd),.rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sel(red_sel),
   .slice_x(slice_x),.tree_cmd(tree_cmd),.tree_o(tree_o),.pt_ro_x(pt_ro_x),.pt_ro_v(pt_ro_v),.inj_q(inj_q),.dw_v(dw_v),
   .dw_row(dw_row),.dw_d(dw_d),.fault(fault),.su_wq(su_wq),.su_rr(su_rr),.ij_v(ij_v),.ij_row(ij_row),.ij_bad(ij_bad),

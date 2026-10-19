@@ -183,23 +183,6 @@
   },
   {
    "name": "4",
-   "net": "di0",
-   "src_region": "s",
-   "dst_region": "r1",
-   "src_nodes": [
-    "u_sin"
-   ],
-   "width": 542,
-   "readers": [
-    "u_rly1.d"
-   ],
-   "ring": "u_lpl_4_w (ck_s)",
-   "read": "u_lpl_4_r (ck_r1)",
-   "added_edges": 2,
-   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
-  },
-  {
-   "name": "5",
    "net": "control",
    "src_region": "s",
    "dst_region": "r1",
@@ -210,6 +193,23 @@
    "readers": [
     "u_rly1.d",
     "u_rg1.control"
+   ],
+   "ring": "u_lpl_4_w (ck_s)",
+   "read": "u_lpl_4_r (ck_r1)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "di0",
+   "src_region": "s",
+   "dst_region": "r1",
+   "src_nodes": [
+    "u_sin"
+   ],
+   "width": 542,
+   "readers": [
+    "u_rly1.d"
    ],
    "ring": "u_lpl_5_w (ck_s)",
    "read": "u_lpl_5_r (ck_r1)",
@@ -253,6 +253,23 @@
   },
   {
    "name": "8",
+   "net": "di3",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_sin"
+   ],
+   "width": 542,
+   "readers": [
+    "u_rly2.d"
+   ],
+   "ring": "u_lpl_8_w (ck_s)",
+   "read": "u_lpl_8_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  },
+  {
+   "name": "9",
    "net": "control",
    "src_region": "s",
    "dst_region": "r2",
@@ -263,23 +280,6 @@
    "readers": [
     "u_rly2.d",
     "u_rg2.control"
-   ],
-   "ring": "u_lpl_8_w (ck_s)",
-   "read": "u_lpl_8_r (ck_r2)",
-   "added_edges": 2,
-   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_8_w.* -to u_lpl_8_r.*"
-  },
-  {
-   "name": "9",
-   "net": "di3",
-   "src_region": "s",
-   "dst_region": "r2",
-   "src_nodes": [
-    "u_sin"
-   ],
-   "width": 542,
-   "readers": [
-    "u_rly2.d"
    ],
    "ring": "u_lpl_9_w (ck_s)",
    "read": "u_lpl_9_r (ck_r2)",
@@ -432,7 +432,7 @@
  "flops": {
   "landing": 42150,
   "pads": 4800,
-  "reset": 248
+  "reset": 228
  },
  "communicating_region_pairs": {
   "landed": [
@@ -556,6 +556,8 @@
    "su_wq": 8
   },
   "reset_release_added_edges": 4,
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 8
  },
  "warnings": [
