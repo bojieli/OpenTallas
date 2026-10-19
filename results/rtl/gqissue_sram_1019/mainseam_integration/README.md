@@ -1,0 +1,5 @@
+The full current-main seam integrates the SRAM quantizer with the preserved main land-fault and registered KQ-share behavior. Positive gather, four fault scenarios, AQ13 golden, scale equivalence and eight mutants pass their required outcomes. Exact run logs and source inventory are retained here.
+
+This snapshot uses the earlier offset8/direct-read SRAM mechanism. Final source4903cd023 changes it to offset7 plus a full-cycle local read capture, preserving the same externally measured nine-stage quantizer line and AQ latency13/II1; its separate exact golden and wrong-slot evidence is in the parent result directory. These are distinct, explicitly identified proof scopes.
+
+The original controller stopped after mutant3; the durable resume builds only mutants4 through7 and the KQ-share mutant, verifies all eight exact witnesses, and records real fleet exit0. Physical qualification remains blocked by the original gate's TT setup and clock-spread failures; this evidence is not a release receipt.

@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: ot-epyc7       admits   743 GB (avail 621, growth 101, headroom 0, waiters 0/0 GB) load 71/96 running 25 disk 6469 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam
+ot-run: -> ot-epyc7
+ot-heavy: request 24G is charged 14G (class 'run_coll_gq_bench.sh' measured peak 5.7G, n=8+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2734817-1792422481 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ PASS rows=6 loops=2 vm_words_checked=2644 reads=3104 writes=5288 isa_passthrough=38 gather_edges_F72R2=91
+COLLQ FAULT PASS scenario=1 gq0100 ra0000 rb0000 ks0000 ld0000
+COLLQ FAULT PASS scenario=2 gq1111 ra1111 rb0000 ks0000 ld1111
+COLLQ FAULT PASS scenario=3 gq0000 ra0000 rb0000 ks0010 ld0000
+COLLQ FAULT PASS scenario=4 gq1100 ra0000 rb1110 ks0000 ld1100
+COLLQ FAULTS PASS 4
+COLLQ AQ13 AQ_TREE13_EXACT_PASS blocks1024 elements32768 checks1133 latency13 II1 warmreset
+COLLQ SCALE13R_EQ PASS checks=2097152 subnormal_results=52693
+COLLQ MUTANT m1 REJECTED: COLLQ VM q0 b2 unreserved write cyc179 sector 0092 (exp 1 004a)
+COLLQ unexpected fault gq1111 ra1111 rb1111 rs0000 ks0000
+COLLQ FAIL errors=973
+COLLQ MUTANT m2 REJECTED: COLLQ DATA row2 q0 seg0 word18 got 0000000000000000000000000000767777767777777677777677777677777877 exp 0000000000000000000000000000777878777878787778787778787778787978
+COLLQ DATA row3 q3 seg1 word8 got 0000000000000000000000000000000000000000000000007e7e7e7d7d7d7d7e exp 0000000000000000000000000000000000000000000000007f7f7f7e7e7e7e7f
+COLLQ FAIL errors=64

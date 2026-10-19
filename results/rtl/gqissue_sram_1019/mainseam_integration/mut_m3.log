@@ -1,0 +1,26 @@
+COLLQ VM q0 b4 unreserved write cyc179 sector 004c (exp 0 0000)
+COLLQ VM q1 b4 unreserved write cyc179 sector 20dc (exp 0 0000)
+COLLQ VM q2 b4 unreserved write cyc179 sector 4004 (exp 0 0000)
+COLLQ VM q3 b4 unreserved write cyc179 sector 6094 (exp 0 0000)
+COLLQ VM q0 b2 unreserved write cyc180 sector 00da (exp 0 0000)
+COLLQ VM q1 b2 unreserved write cyc180 sector 2092 (exp 0 0000)
+COLLQ VM q2 b2 unreserved write cyc180 sector 404a (exp 0 0000)
+COLLQ VM q3 b2 unreserved write cyc180 sector 6002 (exp 0 0000)
+COLLQ VM q0 b4 unreserved write cyc181 sector 00dc (exp 1 0094)
+COLLQ VM q1 b4 unreserved write cyc181 sector 2094 (exp 1 2004)
+COLLQ VM q2 b4 unreserved write cyc181 sector 404c (exp 1 40dc)
+COLLQ VM q3 b4 unreserved write cyc181 sector 6004 (exp 1 604c)
+COLLQ VM q0 b0 unreserved write cyc182 sector 0050 (exp 1 0048)
+COLLQ VM q0 b2 unreserved write cyc182 sector 004a (exp 0 0000)
+COLLQ VM q1 b0 unreserved write cyc182 sector 20e0 (exp 1 20d8)
+COLLQ VM q1 b2 unreserved write cyc182 sector 20da (exp 0 0000)
+COLLQ VM q2 b0 unreserved write cyc182 sector 4008 (exp 1 4000)
+COLLQ VM q2 b2 unreserved write cyc182 sector 4002 (exp 0 0000)
+COLLQ VM q3 b0 unreserved write cyc182 sector 6098 (exp 1 6090)
+COLLQ VM q3 b2 unreserved write cyc182 sector 6092 (exp 0 0000)
+COLLQ unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
+COLLQ FAIL errors=5558
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.290 s; speed 7.031 us/s
+- Verilator: cpu 0.290 s on 1 threads; allocated 14 MB

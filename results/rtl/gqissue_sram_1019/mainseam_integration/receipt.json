@@ -1,0 +1,47 @@
+{
+  "source_root": "/srv/opentallas-scratch/claude/codex-gqissue-sram-1019/src_mainseam",
+  "fleet_host": "ot-epyc7",
+  "verilator": "5.050",
+  "full_integration_variant": "SRAM offset8/directread current-main lower-module seam",
+  "final_rtl_commit": "4903cd023",
+  "final_variant": "offset7 plus full-cycle macro-local capture; AQ latency13/II1 unchanged by focused golden proof",
+  "coverage": {
+    "positive": "6 rows /2loops/2644VMwords",
+    "faults": 4,
+    "aq13": "1024blocks/32768elements/warmreset",
+    "scale": "2097152checks",
+    "mutants_rejected": [
+      "m1",
+      "m2",
+      "m3",
+      "m4",
+      "m5",
+      "m6",
+      "m7",
+      "kq1"
+    ]
+  },
+  "qualification": "functional evidence only; physical gate pending/known TTsetup+clockspread failure; no submit",
+  "resume": "Original controller vanished afterm3; durable resume reused completed objects/logs, built onlym4..m7,kq1. Realot-run terminal exit0.",
+  "logs_sha256": {
+    "aq13.log": "04a75a5f6527cf03e137d8f3b2ab1d5d8907629b4521bbf3de04a1d92f921a4e",
+    "gq.f1.log": "3a0863ec18d09a8f9945eba4ef0c1120f8733dd301ae8a245e018d8e051be041",
+    "gq.f2.log": "3b3cf4c19d820587c5e5ea16659915eb64c85fb84d44756dc9aee810142909b7",
+    "gq.f3.log": "6941a89a567dc9d5dd533d1ffd099dbd857337250199df9b59ab390e24c87019",
+    "gq.f4.log": "292063bccb47a07583c1f87b1bc5f2ba3f1f25e57698725dbdc118881c22fc45",
+    "gq.s0.log": "38ae6210194ee48e3effeb4e1a34402cbcf1bae0bdc6b57d9ffdf533a35434c0",
+    "mut_kq1.log": "3c8acda23af493d0e855ea6f7e19fea3cf4ea50f29ab62a35fe324a7c6528aa2",
+    "mut_m1.log": "ba7f815cfc323a67d2f0db431774fe93fa0ef31b283ceb060ce794efb3261a51",
+    "mut_m2.log": "41b437a426ac8b13f7a5b1541b28eb8d844054aad3df925184c91c755497e4d1",
+    "mut_m3.log": "8560ee802af624018ea713f0b62268254d68346dc07bce6726dec344e4388821",
+    "mut_m4.log": "9f4992ae77e771625220ef3ef9fdc23dd9d85ccae9a5c7f5beeda4e971850b45",
+    "mut_m5.log": "f66d98c7cb8520eacff3053ba6081a92c1982d7a75d972f916d914336ca59a01",
+    "mut_m6.log": "d90edda8eadcb036934f87c76dffb361ee642ca690918126df69e62b2ec96d69",
+    "mut_m7.log": "7a62df666a760a1fd6343c535478d19f95620d25b7b1adc753d46295a6f7f1c1",
+    "original_partial_receipt.log": "3e51a8214dd4c7ba212a635dcab7da736fa35bf8da843964de13c15f20738947",
+    "resume_receipt.log": "4e4ec545edee2e17f97a53a8a76cec1fb57c6251b6da886a04da8584079f3677",
+    "sc13r.log": "b9b81ceccdadb757db90c6aad2a6cfd3725951361928860b7a7f4f193e2b5de4",
+    "schedule_check.log": "e066a300a9076d622944f845db382508ba44f90d5b1b5b211793f83db1cc61a4",
+    "vec.log": "a70079b0a35f7e63348ce7ab4d3619c5d27ad426fb0d7aa06d78d586587fdb28"
+  }
+}
