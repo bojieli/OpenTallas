@@ -337,6 +337,11 @@ def _facebuf(ln):     # the output-face BUF/INV of a launch chain (the outhold h
     return ln.replace('(* keep = 1, dont_touch = 1 *)', '(* keep = 1 *)', 1) if y in _pnets else ln
 out = [_facebuf(ln) for ln in out]
 rep['face_buf_dont_touch_removed'] = sum(1 for ln in out if re.match(r'^\s*\(\* keep = 1 \*\) (BUF|INV|HB)', ln))
+# NO dont_touch at all (gate 657ad3fd4: RSZ-3006 timing-driven GPL cannot buffer a net whose loads are dont_touch BUFs).
+# keep = 1 stays (Yosys preserves every native cell); the ORFS floorplan runs no remove_buffers, and the physical resizer
+# may size / buffer like any tile.  The <= 24 logical fanout is a source property re-checked by the gate's textbook lint.
+out = [ln.replace('(* keep = 1, dont_touch = 1 *)', '(* keep = 1 *)', 1) for ln in out]
+rep['dont_touch_left'] = sum(1 for ln in out if 'dont_touch' in ln)
 rep['ff_dont_touch_removed'] = sum(1 for ln in out if re.match(r'^\s*\(\* keep = 1 \*\) DFF', ln))
 open(out_path, 'w').write('\n'.join(out))
 rep.update(removed_ff=len([c for c in removed if isff(cells[c][0])]), added_cells=len(added), retimed=len(rep['retime']), nsplit=len(rep['split']))
