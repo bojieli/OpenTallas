@@ -51,7 +51,8 @@ for p in ('tools', 'tools/s81_dv', 'tools/s81', 'tools/s81_static_control'):
 import numpy as np  # noqa: E402
 from rtl_v41_rom_array import Mat  # noqa: E402
 
-OPS = [r'^attn\.a_proj$']
+OPS = [r'^attn\.a_proj$', r'^attn\.(wq_b|wo_a|wo_b|idx\.q|cmp\.wk)$', r'^ffn\.(router|shared_gu|experts_gu|down)$',
+       r'^eng\.wkv$']   # the others: xs_place.py (TOK-S81-GAPS/XS)
 FIX = Path.home() / 'scratch/layerbench-s81/fixtures/L0'
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_xs'
 NSEG = 5
@@ -227,6 +228,10 @@ def xs_roms(tmp, out):
 
 # ------------------------------------------------------------------------------------------------ compiler hook
 def lower(die, op, ctx):
+    if op['op'] != 'attn.a_proj':
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import xs_place
+        return xs_place.lower_placed(die, op, ctx)
     sl = ctx['slice']
     g, pl = placement(die, sl)
     insts = [p['frame'] for p in pl] + [sl]
