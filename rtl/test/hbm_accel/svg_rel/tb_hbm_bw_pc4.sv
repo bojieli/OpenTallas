@@ -17,6 +17,12 @@ module tb_hbm_bw_pc4;
  wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire[3:0]pcf,owf;
  reg[3:0]kv;reg[29:0]kaddr[0:3];reg[3:0]klen[0:3];reg[16:0]ktag[0:3];
  for(genvar p=0;p<4;p=p+1)begin:g_pc
+`ifdef H9B
+  wire[5:0]ofs;assign owf[p]=|ofs;
+  localparam integer RP=(p*118/32)%118;
+  localparam integer RELOAD=118+RP+((RP+118+p)%2);
+  ot_hbm_svc_pc_ctrl_leaf_cfg_h9b u(.pc_id(5'(p)),.refresh_reload(8'(RELOAD)),.owner_fault_split(ofs),
+`else
 `ifdef MR
 `ifdef SAFE
   ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)
@@ -30,11 +36,16 @@ module tb_hbm_bw_pc4;
 `else
   ot_hbm_svc_pc_ctrl_leaf #(.P(p)) u(
 `endif
+`endif
    .clk(hbm),.rst_n(rst_n),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(1'b0),.k_addr(kaddr[p]),.k_len(klen[p]),.k_tag(ktag[p]),
    .k_wdata(256'b0),.k_wstrb(32'b0),.kr_v(rv_[p]),.kr_rdy(1'b1),.kr_tag(rt[p*17+:17]),.kr_beat(rb[p*4+:4]),.kr_data(rd[p*256+:256]),
    .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
    .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),
-   .col_strb(col_strb[p*32+:32]),.dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(pcf[p]),.owner_fault(owf[p]));
+   .col_strb(col_strb[p*32+:32]),.dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(pcf[p])
+`ifndef H9B
+   ,.owner_fault(owf[p])
+`endif
+  );
  end
  assign row_v[31:4]=0;assign col_v[31:4]=0;assign col_we[31:4]=0;
  tb_svg_rel_dram_sparse dram(.clk(hbm),.rst_n(rst_n),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),

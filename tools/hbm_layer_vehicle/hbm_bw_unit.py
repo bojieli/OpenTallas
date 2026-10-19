@@ -84,7 +84,7 @@ def write_blk(blks, path):
         for row, slot, w in blks:
             f.write("%07x\n" % ((row << 11) | (slot << 8) | w))
 
-FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv", "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
+FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv", "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_mr.sv",
@@ -95,7 +95,7 @@ FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv", 
 
 def run(a):
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
-    defs = (["MR","SAFE"] if a.safe else (["MR"] if a.mr else [])) + (["MRKEY0"] if a.mrkey0 else []) + (["GAPS"] if a.gaps else [])
+    defs = (["H9B"] if a.h9b else (["MR","SAFE"] if a.safe else (["MR"] if a.mr else []))) + (["MRKEY0"] if a.mrkey0 else []) + (["GAPS"] if a.gaps else [])
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -133,7 +133,7 @@ def main():
     g = sp.add_parser("gen"); g.add_argument("--pattern", required=True); g.add_argument("--out", required=True)
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
-    r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
+    r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
     r.add_argument("--gaps", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()

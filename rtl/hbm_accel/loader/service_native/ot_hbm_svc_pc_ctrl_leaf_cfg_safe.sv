@@ -81,7 +81,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[18:0]incoming_row={4'b0,incoming[29:15]};
     wire[4:0]incoming_pc=incoming[6:2]^incoming[11:7]^incoming[16:12];
     wire[3:0]length=i_len;
-    wire legal=length>=1 && length<=4 && (!i_we || length==1) &&
+    wire legal;wire raw_legal=length>=1 && length<=4 && (!i_we || length==1) &&
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
     wire wr,cv,cwe,caq;wire[4:0]cb,cc;
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
@@ -93,22 +93,37 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire j_v,j_rdy;
     wire response_take=j_v&&j_rdy;
     assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=QD;
+    wire kfront_fault;
     generate if(KREG!=0)begin:g_kreg
-        ot_hbm_svc_pin_skid2 #(.WIDTH(340)) u_skid(
-            .clk(clk),.rst_n(lrst_n),.in_v(k_v),.in_r(k_rdy),
-            .in_data({k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata}),
-            .out_v(i_v),.out_r(i_rdy),.out_data({i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}));
+        // Released H9b native pin contract: pure data/valid capture, then a
+        // three-entry ring. No external pin controls a wide payload mux.
+        reg kp_we,kv_q,k_rdy_seen,k_rdy_q;
+        reg[29:0]kp_addr;reg[3:0]kp_len;reg[16:0]kp_tag;reg[31:0]kp_strb;reg[255:0]kp_data;
+        always @(posedge clk)begin kp_we<=k_we;kp_addr<=k_addr;kp_len<=k_len;kp_tag<=k_tag;kp_strb<=k_wstrb;kp_data<=k_wdata;end
+        wire kp_legal=kp_len>=1&&kp_len<=4&&(!kp_we||kp_len==1)&&
+          {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
+          {1'b0,kp_addr}+kp_len<=31'd703125000;
+        wire[2:0]n,nn;
+        ot_hbm_svc_ring_h9b #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(lrst_n),
+          .in_v(kv_q&&k_rdy_seen),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
+          .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
+          .cnt(n),.cnt_next(nn),.fault(kfront_fault));
+        always @(posedge clk)if(!lrst_n)begin kv_q<=0;k_rdy_seen<=0;k_rdy_q<=0;end
+          else begin kv_q<=k_v;k_rdy_seen<=k_rdy_q;k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
+        assign k_rdy=k_rdy_q;
     end else begin:g_raw_k
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
-        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
+        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;assign legal=raw_legal;assign kfront_fault=0;
     end endgenerate
 
     assign j_v=head_valid&&!sticky&&!pc_fault;
     generate if(KRREG!=0)begin:g_krreg
-        ot_hbm_svc_pin_skid2 #(.WIDTH(277)) u_skid(
+        reg ready_q;
+        always @(posedge clk)if(!lrst_n)ready_q<=0;else ready_q<=kr_rdy;
+        ot_hbm_svc_pin_skid2_h9 #(.WIDTH(277)) u_skid(
             .clk(clk),.rst_n(lrst_n),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-            .out_v(kr_v),.out_r(kr_rdy),.out_data({kr_tag,kr_beat,kr_data}));
+            .out_v(kr_v),.out_r(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
     end else begin:g_raw_kr
         assign kr_v=j_v;assign j_rdy=kr_rdy;
         assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
@@ -126,7 +141,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
         assign col_data=head[255:0];assign col_strb=head[287:256];
     end endgenerate
-    assign owner_fault=sticky;
+    reg owner_fault_q;
+    always @(posedge clk)if(!lrst_n)owner_fault_q<=0;else owner_fault_q<=sticky||kfront_fault;
+    assign owner_fault=owner_fault_q;
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
         wire[QW-1:0]wpay_raddr=cv?rp+1'b1:rp;
@@ -189,7 +206,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;
         end else begin
             k_wr_done<=0;
-            if(i_v&&!legal)sticky<=1;
+            if((i_v&&!legal)||kfront_fault)sticky<=1;
             if(accepted)wp<=wp+QW'(length);
             count<=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
             unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
