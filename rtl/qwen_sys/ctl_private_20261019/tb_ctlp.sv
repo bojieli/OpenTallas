@@ -131,13 +131,18 @@ initial begin
  scenario=14;reset_all();
  for(integer s=0;s<36;s=s+1)for(integer f=0;f<5;f=f+1)if(s*5+f<179)wc(s*5+f,wr(s,f));
  w_cfg_we=1;w_cfg_addr=179;w_cfg_data=wr(35,4);tick();w_cfg_we=0;w_start=1;w_stage=36;tick();w_start=0;
- if(!w0.wq_v||!w0.start_p)$fatal(1,"FINAL_WRITE_WITNESS_MISSING");
- $display("CTLP_FINAL_PENDING_WRITE edge=%0d row=%0d raw_read=%b write=%b",edges,w0.cfg_stage,w0.start_p,w0.wq_v);
+ if(!w0.wq_v||!w0.start_p||w0.wq_stage!=(36'd1<<35)||w0.wq_word!=5'b10000||w0.wq_data!=wr(35,4))$fatal(1,"FINAL_WRITE_WITNESS_MISSING");
+ $display("CTLP_FINAL_PENDING_WRITE edge=%0d next_cfg_stage=%0d final_row=35 final_word=4 raw_read=%b write=%b",edges,w0.cfg_stage,w0.start_p,w0.wq_v);
  idle(5);if(!w_fault[0])$fatal(1,"FINAL_PENDING_START_NOT_REJECTED");
  // Reset interrupts an accepted write before its delayed memory commit.
  scenario=12;reset_all();w_cfg_we=1;w_cfg_addr=0;w_cfg_data=4;tick();w_cfg_we=0;rst_n=0;idle(4);rst_n=1;idle(5);boot_w();start_w(2,3);
  // Reset independently interrupts first read and row landing.
  for(integer r=0;r<3;r=r+1)begin scenario=3+r;reset_all();boot_w();w_start=1;w_stage=36;tick();w_start=0;idle(r);reset_all();boot_w();start_w(1,4);end
+ // Programme exact write/read/landing reset interruption and complete re-boot.
+ scenario=15;reset_all();p_cfg_we=1;p_cfg_addr=0;p_cfg_data=3;tick();p_cfg_we=0;rst_n=0;idle(4);rst_n=1;idle(5);boot_p();start_p(5);
+ for(integer r=0;r<3;r=r+1)begin
+  scenario=16+r;reset_all();boot_p();p_start=1;tick();p_start=0;idle(r);reset_all();boot_p();start_p(6);
+ end
  scenario=13;reset_all();boot_w();w_stage=1;w_start=1;tick();w_stage=2;tick();w_start=0;idle(40);if(!w_fault[0])$fatal(1,"ACTIVE_START_NOT_REJECTED");
  scenario=6;reset_all();wc(1,4);idle(3);if(!w_fault[0])$fatal(1,"WRITER_BAD_ADDR_NOT_REJECTED");
  scenario=7;reset_all();wc(0,8);wc(1,4);wc(2,12);wc(3,16);wc(4,22);idle(3);if(!w_fault[0])$fatal(1,"WRITER_BAD_ORDER_NOT_REJECTED");
@@ -145,6 +150,6 @@ initial begin
  scenario=9;reset_all();boot_p();p_programme_digest=0;p_programme_epoch=16'h20;p_authority_epoch=16'h20;p_authority_valid=1;p_programme_authorized=1;idle(3);p_start=1;tick();p_start=0;idle(4);if(!p_fault[0])$fatal(1,"BAD_DIGEST_NOT_REJECTED");
  scenario=10;reset_all();boot_p();p_programme_digest=64'hc15aee1097de2341;p_programme_epoch=16'h21;idle(3);p_start=1;tick();p_start=0;idle(4);if(!p_fault[0])$fatal(1,"BAD_EPOCH_NOT_REJECTED");
  scenario=11;reset_all();boot_w();w_cfg_we=1;w_cfg_addr=180;w_start=1;w_stage=1;tick();w_cfg_we=0;w_start=0;idle(5);if(!w_fault[0])$fatal(1,"CFG_START_NOT_REJECTED");
- $display("CTLP_PASS checked_edges=%0d scenarios=14 original_enable0_enable1_all_outputs",checked);$finish;
+ $display("CTLP_PASS checked_edges=%0d scenarios=18 original_enable0_enable1_all_outputs",checked);$finish;
 end
 endmodule
