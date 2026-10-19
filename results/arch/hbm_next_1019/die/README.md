@@ -15,6 +15,49 @@ Lane HBM-NEXT-DIE (programme HBM-NEXT-PROG, owner go 10-19 00:05). Branch `claud
 - The column is 2,803.68 x 7,300.8 um.
 - x-only tile growth (717.12 x 1598.4) would make the SM row 26.66 mm, wider than the 25.5-mm usable reticle short side, so it was rejected by construction.
 
+## ADOPTED (Phase-1 binding constraints, STUDY.md @ claude/hbm-next-1019 794bd51a0): `f4c_t5`
+
+Phase-1 (HBM-NEXT) made two things binding:
+- the taller re-shaped SM tile, ~632 x 1,824 um (frame 23.8 x 31.5 = 752 mm²);
+- 5 COLL delivery lanes.
+
+`f4c_t5` applies both to the f4c re-pack:
+- **SM tile.** 630.72 x 1,814.4 um on the 43.2 lattice (+4 / +5 steps) = 1.144 mm² ≥ 1.122; aspect 2.9. The SM column is 2,631.0 x 7,819.2 um.
+- **COLL.** L = 5 delivery lanes, giving COLL_VM / COLL_RING / COLL_EP bits x1.25.
+- **SU groups.** The SU-group HC-client / SFU-group plan blocks are set to the GEN2 grant outlines (216 um, slot 259.2 um), not the d4f-era 500 x 500 / 500 x 800 placeholders. This lets the one-row quadrant band fit the 11.7-mm quadrant.
+
+| plan | die mm | mm² | cut v / h | bit-mm | stages_bw | longest | relay flops at 405 (landed regions) | reticle margin short / long |
+|---|---|---:|---|---:|---:|---:|---:|---|
+| d4g (P = 1) | 20.20 x 31.77 | 641.8 | 0.397 / 0.431 | 0.797 M | 7.04 | 10.8 mm | 2.24 M | 5.80 / 1.23 mm |
+| f4w_t: Phase-1 tile, d4g band template grown | 23.89 x 33.50 | 800.4 | 0.407 / 0.433 | 0.810 M | 7.21 | 10.5 mm | n/a | **fails reticle** (33.5 > 32.5) |
+| **f4c_t5 (ADOPTED)** | **23.89 x 29.01** | **693.1** | **0.469 / 0.399** | **0.694 M** | **6.23** | **10.0 mm** | **2.01 M** | 2.11 / 3.99 mm |
+| f4c_t + COLL x2 reserve | 23.89 x 29.01 | 693.1 | 0.585 / 0.417 | 0.808 M | 6.69 | 10.0 mm | | |
+
+**Frame size.**
+- The Phase-1 frame arithmetic assumed the d4g band and got 31.5 mm. Put through the d4g evaluator (f4w_t), the d4g band with the Phase-1 tile comes out at 33.5 mm, over the reticle.
+- The re-packed band makes the die 693 mm²: 59 mm² under the 752 budget and 50 under ~743. That slack is reserve for:
+  - the HC N-row engine (Phase-1 gate 1);
+  - the VM growth Phase-1 calls "worth doing if the area is free" (2^18 → 2^18.6 words, +~0.6 x VM);
+  - the real SM4 / ATT4 outlines.
+
+**Clocking.** 76 regions, all ≤ 4 mm except the SM columns, which carry their inner landed regions. There are 369 landed crossings (206402 b). The maximum hop count is 30.
+
+**Pins.**
+- hnx_rp4lp4 W/E: 3,705 pins each, densest 3.3 / um.
+- COLL W face 5.05 b/um at L = 5, which is ≤ 6.
+- File: `physical/hbm_next/die/f4c_t5/`.
+
+**Die case.** The stand-in case runs on the fleet as `case_f4c_t5`; see the lane file for the verdict.
+
+The sections below record the first pass (f4c, the D2-scaled tile 673.92 x 1,684.8). Their method, cuts and costs carry over to f4c_t5, with these per-plan numbers:
+
+| | f4c_t5 |
+|---|---|
+| SM_HBM | 5.25 stages |
+| SM_X | 6.46 stages |
+| COLL_VM | 14.5 hops at 405 |
+| COLL x2 reserve | 0.585 |
+
 ## 1. Floorplan candidates (`plan/plan_p4.json`, PNGs in `plan/`)
 
 | plan | die mm | mm² | density | cut v / h | bit-mm | stages_bw | longest link | relay flops (graph) | reticle margin short / long |

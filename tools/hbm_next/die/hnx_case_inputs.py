@@ -70,7 +70,7 @@ ANCHOR = [  # GEN2 die slots that are not plan blocks: home next to their functi
 ]
 
 
-def legalize(G, P, P0, W, H, moved):
+def legalize(G, P, P0, W, H, moved, G0):
     """GEN2 corner engines as GEN2 places them (IDX scorer idx_s0 / idx_s1 in the W PHY corners, the single HC engine
     hc_eng in the S-E PHY corner); every other non-plan slot (and any slot that overlaps) goes to the nearest free 43.2-um
     site around its functional anchor.  Plan blocks without a GEN2 slot (the plan-graph abstractions hce_*, idxs_*, vmb_*)
@@ -88,6 +88,21 @@ def legalize(G, P, P0, W, H, moved):
             fixed[s['name']] = (ph_n['x'] - 60.0 - w, H - 32.4 - h)
         elif s['name'] == 'hc_eng':
             fixed[s['name']] = (max(ph_s['x'] + ph_s['w'], pcr) + 60.0, 32.4)
+    orig = {t['name']: t['origin'] for t in G0['slots'] if t.get('origin')}
+    for s in slots:                     # PHY-row leaves keep their d4g offset to their PHY; HC targets to the HC engine
+        m = re.match(r'^(wbk|refcfg|fs)_(SW|NW)$', s['name'])
+        o = orig.get(s['name'])
+        if m and o:
+            st = m.group(2)
+            fixed[s['name']] = (o['x'] + P[f'phy_{st}']['x'] - P0[f'phy_{st}']['x'], o['y'] + P[f'phy_{st}']['y'] - P0[f'phy_{st}']['y'])
+    wk = next(t for t in slots if t['name'] == 'wbk_SW')     # hc_eng E of the PHY-row K-port (as GEN2)
+    if 'wbk_SW' in fixed:
+        fixed['hc_eng'] = (max(fixed['hc_eng'][0], fixed['wbk_SW'][0] + wk['outline']['w'] + 16.0), fixed['hc_eng'][1])
+    for s in slots:
+        o = orig.get(s['name'])
+        if s['name'] in ('hc_eng_tgt', 'hc_tbl_tgt') and o:
+            he = orig['hc_eng']
+            fixed[s['name']] = (o['x'] + fixed['hc_eng'][0] - he['x'], o['y'] + fixed['hc_eng'][1] - he['y'])
     log = {}
     placed = []
     todo = []
@@ -184,14 +199,14 @@ def main():
     P = json.loads((pd / 'compact.P.json').read_text())
     W, H = json.loads((pd / 'compact.metrics.json').read_text())['die_um']
     P0 = json.loads((FRAME / 'd4g_phy.compact.P.json').read_text())
-    G0 = json.loads((D4G / 'grants_d4g.json').read_text())
+    G0 = json.loads((FRAME / 'grants_d4g_3ca4d2b98.json').read_text())   # GEN2 grants incl. the hardened hb_ckgen pins (3ca4d2b98)
     out = ROOT / a.out
     out.mkdir(parents=True, exist_ok=True)
     # ---------------------------------------------------------------- grants
     G = copy.deepcopy(G0)
     G['die'] = 'hnx_hbm_p4'; G['version'] = f'hnx.{a.tag}.1'; G['owner'] = 'HBM-NEXT-DIE'; G['updated'] = '2026-10-19'
     G['floorplan'] = dict(file=str((pd / 'compact.P.json').relative_to(ROOT)), candidate=a.tag, die_um=[W, H],
-                          derived_from='results/arch/hbm_die_d4g/grants_d4g.json (d4g.2, copied; slots moved with their plan block)',
+                          derived_from='results/arch/hbm_die_d4g/grants_d4g.json @ claude/hd4g-gen2-1018 3ca4d2b98 (copied to physical/hbm_next/die/frame_d4g_copy/grants_d4g_3ca4d2b98.json; slots moved with their plan block)',
                           stand_in='SM slots keep the P = 1 outline 1939.68 x 6955.2 inside the P = 4 column slot (SM4 view pending)')
     moved = collections.Counter()
     loc = {}
@@ -219,7 +234,7 @@ def main():
         s['hnx_moved_with'] = b
         loc[s['name']] = (o['x'] + s['outline']['w'] / 2, o['y'] + s['outline']['h'] / 2, b)
         moved[rule] += 1
-    legal = legalize(G, P, P0, W, H, moved)
+    legal = legalize(G, P, P0, W, H, moved, G0)
     G['hnx_moved'] = dict(moved)
     G['hnx_legalized'] = legal
     (out / f'grants_hnx_{a.tag}.json').write_text(json.dumps(G, indent=1))
@@ -231,7 +246,7 @@ def main():
     for n, r in P.items():
         rg = region_of(n)
         if rg is None:                         # strip: 4-mm boxes from the W edge
-            rg = f'strip_{int((r["x"] + r["w"] / 2) // 3000)}'
+            rg = f'strip_{int((r["x"] + r["w"] / 2) // 2500)}'
         blocks_region[n] = rg
     members = collections.defaultdict(list)
     for n, rg in blocks_region.items():

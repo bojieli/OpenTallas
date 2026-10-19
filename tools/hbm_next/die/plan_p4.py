@@ -99,7 +99,7 @@ def sm_row(P0, W, smw, smh, north, H):
     return out, top
 
 
-def quadrant_core_c(P0, q, BY, W, vmh='inner'):
+def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None):
     """F4-C quadrant band (W-quadrant S frame, x from the die W edge): row A = 8 VM banks on the SM row inner face,
     row B = 4 SU groups (SU slot + HC client + SFU group (+ quant)) over the 4 SMs, quadrant core at the inner end."""
     out = {}
@@ -119,8 +119,8 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner'):
         out[f'vmb_{q}{2 * g + 1}'] = R(x + vw + 20.0, BY, vw, vh)
         out[f'su_{q}{g}'] = R(x, rowB, suw, suh)
         cx = x + suw + 40.0
-        fw, fh = dims(f'sfu_{q}{g}'); out[f'sfu_{q}{g}'] = R(cx, rowB, fw, fh)
-        hw, hh = dims(f'hc_{q}{g}'); out[f'hc_{q}{g}'] = R(cx, rowB + fh + 60.0, hw, hh)
+        fw, fh = (side, side) if side else dims(f'sfu_{q}{g}'); out[f'sfu_{q}{g}'] = R(cx, rowB, fw, fh)
+        hw, hh = (side, side) if side else dims(f'hc_{q}{g}'); out[f'hc_{q}{g}'] = R(cx, rowB + fh + 60.0, hw, hh)
         if f'quant_{q}{g}' in P0:              # quantiser in the bank row, beside its bank pair (QUANT_VM)
             qw, qh = dims(f'quant_{q}{g}'); out[f'quant_{q}{g}'] = R(x + 2 * vw + 60.0, BY, qw, qh)
         x = cx + max(hw, fw) + ga
@@ -185,18 +185,18 @@ def strip_c(P0, ys, W, sh, coll_d):
     return out
 
 
-def plan_f4c(P0, tw, th, vmh, coll_d=500.0):
+def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None):
     smw, smh = sm_dims(tw, th)
     W = round(2 * (EDGE + 4 * smw + sum(GAPS) + CH / 2), 2)
     BY = 2056.0 + smh + 200.0
     tops = []
     cores = {}
     for q in ('SW', 'NW'):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side)
         assert right <= W / 2 - CH / 2 + 1e-6, (q, 'core overruns centre channel', right, W / 2 - CH / 2)
         cores[q] = c; tops.append(top)
     for q, src in (('SE', 'SW'), ('NE', 'NW')):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side)
         cores[q] = {n: S.mirror_x(r, W) for n, r in c.items()}; tops.append(top)
     ys = max(tops) + 100.0
     SH = 1800.0
@@ -318,6 +318,8 @@ def main():
     ap.add_argument('--coll-x', type=float, default=1.0)
     ap.add_argument('--coll-d', type=float, default=500.0, help='F4-C: preferred distance (um) of the COLL pair centre from the die centre line')
     ap.add_argument('--suffix', default='')
+    ap.add_argument('--grp-side', type=float, default=None, help='F4-C: SU-group HC client / SFU group plan blocks at this square size '
+                    '(GEN2 grant outlines are 216 x 216; the d4g plan blocks 500 x 500 / 500 x 800 are d4f-era placeholders)')
     ap.add_argument('--png', action='store_true')
     a = ap.parse_args()
     P0 = json.loads((FRAME / 'd4g_phy.compact.P.json').read_text())
@@ -332,7 +334,7 @@ def main():
         elif t == 'f4w':
             P, W, H = plan_f4w(P0, a.tile_w, a.tile_h)
         elif t == 'f4c':
-            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d)
+            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side)
         tag = t + a.suffix
         ov, outside, ret = checks(P, W, H)
         G = graph_for(P, a.coll_x if t != 'd4g' else 1.0)
@@ -345,7 +347,7 @@ def main():
                         cut_v=cut['worst_v'], cut_h=cut['worst_h'], cut_over_060=cut['over_060'], graph_bit_mm=ev['sum_bits_mm'],
                         stages_bw=ev['stages_bw'], per_class=ev['per_class'], longest_class_um=ev['by_class_longest_um'],
                         relay_flops=ev['graph_relay_flops'], overlaps=len(ov), overlap_pairs=ov[:10], outside=outside, reticle=ret,
-                        sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0)
+                        sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, grp_side=a.grp_side if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0)
         r = res[tag]
         print(tag, f"{W/1000:.2f}x{H/1000:.2f}={r['die_mm2']} cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']} bitmm {ev['sum_bits_mm']/1e6:.3f}M "
               f"stg {ev['stages_bw']} ovl {len(ov)} out {len(outside)} ret {ret['ok']} SM_HBM {ev['per_class'].get('SM_HBM', {}).get('stages_bw')} "

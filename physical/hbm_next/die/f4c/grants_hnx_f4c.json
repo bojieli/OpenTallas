@@ -12,7 +12,7 @@
    25274.24,
    27972.8
   ],
-  "derived_from": "results/arch/hbm_die_d4g/grants_d4g.json (d4g.2, copied; slots moved with their plan block)",
+  "derived_from": "results/arch/hbm_die_d4g/grants_d4g.json @ claude/hd4g-gen2-1018 3ca4d2b98 (copied to physical/hbm_next/die/frame_d4g_copy/grants_d4g_3ca4d2b98.json; slots moved with their plan block)",
   "stand_in": "SM slots keep the P = 1 outline 1939.68 x 6955.2 inside the P = 4 column slot (SM4 view pending)"
  },
  "source_contract": {
@@ -15631,7 +15631,118 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "pins": [],
+   "pins": [
+    {
+     "name": "refclk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      52.8,
+      57.6
+     ],
+     "offset": 57.564,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      57.6,
+      62.4
+     ],
+     "offset": 62.364,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      26.4,
+      31.2
+     ],
+     "offset": 31.164,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      31.2,
+      36.0
+     ],
+     "offset": 35.964,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      36.0,
+      40.8
+     ],
+     "offset": 36.252,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "por_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      40.8,
+      45.6
+     ],
+     "offset": 40.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      48.0,
+      52.8
+     ],
+     "offset": 48.06,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      52.8,
+      57.6
+     ],
+     "offset": 52.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      57.6,
+      62.4
+     ],
+     "offset": 57.66,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      62.4,
+      67.2
+     ],
+     "offset": 62.46,
+     "offset_basis": "routed view LEF pin centre"
+    }
+   ],
    "notes": "die clock root: PLL analog core = allowed modelled hard core (owner rule 10-14 08:05); reset release = real RTL; first tree level = four quadrant roots (die CTS, tools/hbm_die_v15/view_case.py --die-clock)",
    "granted": "H-DIE 2026-10-15T17:30-07:00",
    "children": [
@@ -15827,7 +15938,6 @@
     "clock_source": "clocks created at the PLL output pins; generated clocks (divide_by 1) at the four pll_* outputs = die clock-tree roots; por_* timed against their own forwarded clock"
    },
    "home_rule": "d4f: E column centre above the ep_N row",
-   "pins_d4f_dropped": 10,
    "hnx_moved_with": "tkm_SW"
   },
   {
@@ -18101,8 +18211,8 @@
     "h": 64.8
    },
    "origin": {
-    "x": 19762.754,
-    "y": 2013.2,
+    "x": 17086.32,
+    "y": 1971.216,
     "orient": "R0"
    },
    "clock_entry": {
@@ -18139,8 +18249,8 @@
     "h": 64.8
    },
    "origin": {
-    "x": 19633.155,
-    "y": 2013.2,
+    "x": 17086.32,
+    "y": 1884.816,
     "orient": "R0"
    },
    "clock_entry": {
@@ -19751,8 +19861,8 @@
     "h": 520.0
    },
    "origin": {
-    "x": 12945.52,
-    "y": 1666.2,
+    "x": 16777.136,
+    "y": 668.088,
     "orient": "R0"
    },
    "pins": [],
@@ -19776,8 +19886,8 @@
     "h": 520.0
    },
    "origin": {
-    "x": 12729.52,
-    "y": 25570.6,
+    "x": 17155.136,
+    "y": 26212.48,
     "orient": "MX"
    },
    "pins": [],
@@ -19917,8 +20027,8 @@
     "h": 129.6
    },
    "origin": {
-    "x": 12795.12,
-    "y": 1645.4,
+    "x": 12522.368,
+    "y": 1874.448,
     "orient": "R0"
    },
    "pins": [],
@@ -19937,8 +20047,8 @@
     "h": 129.6
    },
    "origin": {
-    "x": 13140.72,
-    "y": 26543.4,
+    "x": 13646.0,
+    "y": 25938.376,
     "orient": "R0"
    },
    "pins": [],
@@ -20161,8 +20271,8 @@
     "h": 21.6
    },
    "origin": {
-    "x": 8647.52,
-    "y": 1656.2,
+    "x": 8667.416,
+    "y": 1877.04,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -20545,8 +20655,8 @@
     "h": 21.6
    },
    "origin": {
-    "x": 8647.52,
-    "y": 26554.2,
+    "x": 8667.416,
+    "y": 26064.952,
     "orient": "R0"
    },
    "clock_domain": "stream",
@@ -30059,12 +30169,20 @@
   "plan_block": 176,
   "contained": 80,
   "name": 3,
-  "legalized": 96
+  "legalized": 88
  },
  "hnx_legalized": {
   "idx_s0": "gen2_corner",
   "idx_s1": "gen2_corner",
   "hc_eng": "gen2_corner",
+  "hc_eng_tgt": "gen2_corner",
+  "hc_tbl_tgt": "gen2_corner",
+  "wbk_SW": "gen2_corner",
+  "wbk_NW": "gen2_corner",
+  "refcfg_SW": "gen2_corner",
+  "refcfg_NW": "gen2_corner",
+  "fs_SW": "gen2_corner",
+  "fs_NW": "gen2_corner",
   "vmh_SW": "near vmh_SW (130 um)",
   "vmh_NW": "near vmh_NW (130 um)",
   "hb_dbk_SW": "near dbk_SW (0 um)",
@@ -30093,8 +30211,6 @@
   "pgp_NE": "near sucore_NE (1901 um)",
   "pgp_NW": "near sucore_NW (1901 um)",
   "host_N": "near host_cp (821 um)",
-  "wbk_SW": "near pc_SW4 (389 um)",
-  "wbk_NW": "near pc_NW4 (821 um)",
   "host_cp_rxs": "near own (432 um)",
   "quant_NW_xp": "near quant_NW0 (562 um)",
   "host_ep": "near host_cp (518 um)",
@@ -30120,16 +30236,12 @@
   "calendar_SE": "near vmh_SE (0 um)",
   "calendar_NW": "near vmh_NW (864 um)",
   "calendar_NE": "near vmh_NE (0 um)",
-  "refcfg_SW": "near pc_SW4 (518 um)",
-  "refcfg_NW": "near pc_NW4 (173 um)",
   "collb_SW": "near coll_SW (734 um)",
   "collb_SE": "near coll_SE (475 um)",
   "collb_NW": "near coll_NW (691 um)",
   "collb_NE": "near coll_NE (648 um)",
   "hb_argmax": "near host_cp (734 um)",
   "su_pgr": "near host_cp (734 um)",
-  "hc_eng_tgt": "near hc_eng (1037 um)",
-  "hc_tbl_tgt": "near hc_eng (1166 um)",
   "vmm_NW0": "near vmb_NW0 (0 um)",
   "vmm_NW1": "near vmb_NW1 (130 um)",
   "vmm_NW2": "near vmb_NW2 (0 um)",
@@ -30142,7 +30254,6 @@
   "fl_SW1": "near vmb_SW3 (0 um)",
   "fl_SW2": "near vmb_SW5 (0 um)",
   "fl_SW3": "near vmb_SW7 (0 um)",
-  "fs_SW": "near pc_SW0 (130 um)",
   "fr_SW": "near coll_SW (475 um)",
   "fl_SE0": "near vmb_SE1 (0 um)",
   "fl_SE1": "near vmb_SE3 (0 um)",
@@ -30158,7 +30269,6 @@
   "fl_NW1": "near vmb_NW3 (86 um)",
   "fl_NW2": "near vmb_NW5 (86 um)",
   "fl_NW3": "near vmb_NW7 (86 um)",
-  "fs_NW": "near pc_NW0 (130 um)",
   "fr_NW": "near coll_NW (475 um)",
   "vm_status4": "near vmh_SE (86 um)"
  }
