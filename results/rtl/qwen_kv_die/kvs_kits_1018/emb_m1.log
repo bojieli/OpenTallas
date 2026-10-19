@@ -1,2 +1,6 @@
-KVS_TILE FAIL tile=emb no verdict line mut=1 
-kvs_tile_bench: mutant 1 found no site
+MISMATCH t=4 out rowtx__emb_tx_v
+MISMATCH t=5 out rowtx__emb_tx_v
+MISMATCH t=6 out rowtx__emb_tx_v
+MISMATCH t=7 out rowtx__emb_tx_v
+MISMATCH t=9 out rowtx__emb_tx_v
+KVS_TILE FAIL tile=emb edges=4000 checks=103922 errors=2009 mut=1 (dropped w_rowtx__emb_tx_v in assign rowtx__emb_tx_v)

@@ -210,7 +210,8 @@ def build(tiles_sel, tag, write_rtl=True):
                               f'mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).'),
                      benches=benches,
                      extra_paths=['rtl', 'tools', 'results/arch/qwen_kv_static_programme_1017', 'results/arch/qwen_kv_die',
-                                  'results/arch/qwen_kv_pvfin_1017', res] + [c['view'] for c in children],
+                                  'results/arch/qwen_kv_pvfin_1017', res] + [c['view'] for c in children] +
+                                 bench_dirs(t),
                      views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}'))
         if STD_AREA[t] is not None:
             spec['std_area_um2'] = STD_AREA[t]
@@ -223,6 +224,14 @@ def build(tiles_sel, tag, write_rtl=True):
 
 def OrderedSpec(**kw):
     return dict(kw)
+
+
+def bench_dirs(t):
+    """KV-KITS/GRP 10-18: every non-rtl/tools directory the lockstep bench reads (its sim closure, e.g. the emb row_tx
+    SRAM model physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2): the daemon job must ship them."""
+    import kv_static_die as S_
+    import kvs_tile_kits_rep as R_
+    return sorted({str(Path(f).parent) for f in R_.tile_sources(S_, t, 'sim')[0] if not f.startswith(('rtl/', 'tools/'))})
 
 
 def main():
