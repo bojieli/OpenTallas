@@ -275,6 +275,40 @@ RULE_COMMITS = {
         kind="tightening", rule="balanced-reset-proof", requires="balanced_reset_profile", paths=("tools/textbook_lint.py",),
         what="BALANCED-RESET: opt-in mapped two-edge reset proof for kits with reset_landing.first_copies (proof replaces "
              "the rst_land_max sink limit, refusal is a FAIL); kits without first_copies unchanged"),
+    # ROOT-RULETAG 10-19: the six remaining helper-chain commits without a (valid) trailer.
+    # 03c544ca1 (DAEMON-FIX2): abstract_pin_stub.move_stubs pin index = same hits in the same order (randomised
+    # equivalence test vs the all-pairs scan); the closure_loop.py part is daemon restart-drain / checkpoint plumbing.
+    "03c544ca1ab6f68f0d2a94bb2e7fb43751eedce7": dict(
+        kind="neutral", rule="pin-stub-index",
+        what="DAEMON-FIX2: abstract_pin_stub binned pin index (identical output, faster); daemon SIGTERM drain + "
+             "write-ahead checkpoint + staged helper ship; no gate check or limit changes"),
+    # b7918e979 (KV-ECTL5): child_lint (i) pin access is a new FAIL on hard-child views (the pre-route gate lints spec
+    # "children" only) and ref_tile gen refuses such a view; abstract_pin_stub's wider pin keep-out only shrinks the
+    # pocket set child_lint (h) can see.  -> tightening, judged per kit by requires=child_pin_access (no children, or no
+    # child view LEF with a violation: gate kept).
+    "b7918e97926daf87d0edfee3e62f07322d62e96b": dict(
+        kind="tightening", rule="child-pin-access", requires="child_pin_access",
+        what="KV-ECTL5: child_lint (i) FAILs a hard-child pin with a same-layer OBS closer than the wide-metal spacing; "
+             "ref_tile gen refuses such a child view; pin keep-out >= wide spacing (pockets can only shrink)"),
+    # view_export.py (PUBLISH_ONLY): runs only in collect / re-export after the route verdict; no pre-route gate reads it.
+    # bb5e443cd's trailer "Gate-Rule: export-session reproduces verdict" is not in the vocabulary, so it read unclassified.
+    "bb5e443cdb8423c7b3ad4fab6961c201bfeb9e1b": dict(
+        kind="neutral", rule="export-replays-verdict",
+        what="PF-HARDCHILD-EXPORT: the export session replays the verdict's OT_PF_MACRO_LIBS line, so export slack = "
+             "verdict slack; no rule or limit changes"),
+    "b8fa05678b7e74d2549d37a0d6c8a7608abc6731": dict(
+        kind="relaxing", rule="exact-abstract-fallback",
+        what="RLYH0-NE: export publishes the exact-shape abstract only when the default abstract has child_lint (i) "
+             "pin-access violations and the exact one has fewer (a collect FAIL can only disappear); PUBLISH_ONLY "
+             "drift sanction; identical export-lint FAIL stops at the first repeat (retry count, not a verdict)"),
+    "cdd8d92a84daa2bf1d60a08d9d8ba97be64c1488": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="view_export judges pin access on the finalized LEF too, so the exact-shape fallback also runs when the "
+             "published LEF would fail child_lint (i); a collect FAIL can only disappear"),
+    "ff7aa2deb861035c309af48249284018f40718b0": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
+             "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
