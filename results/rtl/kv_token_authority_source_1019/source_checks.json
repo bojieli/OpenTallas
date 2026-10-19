@@ -1,0 +1,50 @@
+[
+  {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv",
+    "expected": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+    "actual": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv",
+    "expected": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+    "actual": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+    "expected": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+    "actual": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+    "expected": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+    "actual": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+    "expected": "53891da3cd0c05419fe2af48052a09bd978094971e2065196c99a56cfde0e072",
+    "actual": "53891da3cd0c05419fe2af48052a09bd978094971e2065196c99a56cfde0e072",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+    "expected": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "actual": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+    "expected": "619bca27a2d97c78d6f955e3f2a963bad19f1f00d8c12b15680ba21669fb5c62",
+    "actual": "619bca27a2d97c78d6f955e3f2a963bad19f1f00d8c12b15680ba21669fb5c62",
+    "match": true
+  },
+  {
+    "path": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv",
+    "expected": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+    "actual": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+    "match": true
+  }
+]

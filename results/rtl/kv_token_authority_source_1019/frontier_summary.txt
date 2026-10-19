@@ -1,0 +1,31 @@
+n_ks_kvs_attn__attn__tx_valid__r6__beq3 9 ('n_ks_kvs_attn__attn__tx_valid', 0) ['n_clk_core_c[0]']
+n_ks_prg__r3__pinfix1 5 ('n_ks_prg', 0) ['n_clk_core_c[0]']
+n_krq_WS_0__r2__beq66 69 ('n_krq_WS_0', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_0_0__pinfix1__beq5 6 ('n_pvvq_WS_0_0', 0) ['n_clk_core_WS[0]']
+n_krq_WS_1__r2__pinfix1__beq66 69 ('n_krq_WS_1', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_0_1__pinfix4 4 ('n_pvvq_WS_0_1', 0) ['n_clk_core_WS[0]']
+n_krq_WS_2__r3__pinfix3__beq61 67 ('n_krq_WS_2', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_1_0__pinfix1__beq5 6 ('n_pvvq_WS_1_0', 0) ['n_clk_core_WS[0]']
+n_krq_WS_3__r6__pinfix3__beq54 63 ('n_krq_WS_3', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_1_1__pinfix4 4 ('n_pvvq_WS_1_1', 0) ['n_clk_core_WS[0]']
+n_krq_WS_4__r14__pinfix3__beq39 56 ('n_krq_WS_4', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_2_0__pinfix1__beq5 6 ('n_pvvq_WS_2_0', 0) ['n_clk_core_WS[0]']
+n_krq_WS_5__r23__beq24 47 ('n_krq_WS_5', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_2_1__pinfix4 4 ('n_pvvq_WS_2_1', 0) ['n_clk_core_WS[0]']
+n_krq_WS_6__r29__pinfix3__beq1 34 ('n_krq_WS_6', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_3_0__pinfix1__beq5 6 ('n_pvvq_WS_3_0', 0) ['n_clk_core_WS[0]']
+n_krq_WS_7__r17__pinfix3__beq30 51 ('n_krq_WS_7', 0) ['n_clk_core_WS[0]']
+n_pvvq_WS_3_1__pinfix4 4 ('n_pvvq_WS_3_1', 0) ['n_clk_core_WS[0]']
+ectl_WS_0 qkd_ectl3_kiss_st n_rrs_n_rst_die_t0__m_0__g0_s14[0] 4 ('n_rst_die_t0__m', 0)
+ectl_WS_1 qkd_ectl3_kiss_st n_rrs_n_rst_die_t1__m_0__g0_s31[0] 18 ('n_rst_die_t1__m', 0)
+ectl_WS_2 qkd_ectl3_kiss_st n_rrs_n_rst_die_t1__m_0__g0_s11[0] 5 ('n_rst_die_t1__m', 0)
+ectl_WS_3 qkd_ectl3_kiss_st n_rrs_n_rst_die_t2__m_0__g2_s5[0] 6 ('n_rst_die_t2__m', 0)
+ectl_WS_4 qkd_ectl3_kiss_st n_rrs_n_rst_die_t0__m_0__g0_s35[0] 9 ('n_rst_die_t0__m', 0)
+ectl_WS_5 qkd_ectl3_kiss_st n_rrs_n_rst_die_t1__m_0__g0_s55[0] 23 ('n_rst_die_t1__m', 0)
+ectl_WS_6 qkd_ectl3_kiss_st n_rrs_n_rst_die_t1__m_0__g0_s40[0] 10 ('n_rst_die_t1__m', 0)
+ectl_WS_7 qkd_ectl3_kiss_st n_rrs_n_rst_die_t2__m_0__g2_s19[0] 11 ('n_rst_die_t2__m', 0)
+vport_WS_0 qkd_pv16_vport_b n_rrs_n_rst_die_t1__m_0__g0_s43[0] 18 ('n_rst_die_t1__m', 0)
+vport_WS_1 qkd_pv16_vport_b n_rrs_n_rst_die_t1__m_0__g0_s1[0] 2 ('n_rst_die_t1__m', 0)
+vport_WS_2 qkd_pv16_vport_b n_rrs_n_rst_die_t0__m_0__g0_s21[0] 12 ('n_rst_die_t0__m', 0)
+vport_WS_3 qkd_pv16_vport_b n_rrs_n_rst_die_t2__m_0__g2_s22[0] 9 ('n_rst_die_t2__m', 0)
+kvs_attn qkd_kvs_attn n_rrs_n_rst_die_t0_0__g4_s15[0] 11 ('i_n_rst_die_t0', 0)
