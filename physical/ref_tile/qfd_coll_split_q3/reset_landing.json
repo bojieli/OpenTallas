@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_coll_split_q",
+ "enable": false,
+ "reason": "the RTL lands it: same-structure ot_coll_rst_leaf copies (two stages, async assert, sync release): Q u_rs/u_rs_t0/u_rs_t1, each fold u_rs + one leaf per fold stage; every leaf <= 32 sinks; rst_n drives only leaf inputs"
+}

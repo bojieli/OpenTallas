@@ -177,13 +177,21 @@ module ot_coll_split_q #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    wire rs;
+    // safe3 (QW-CLUSTER3 2026-10-19): three same-structure reset leaves (each a 2-flop async-assert/sync-release copy of
+    // rst_n, released on the same edge): rs (rings, counters, error outs), rs_t0/rs_t1 (the two halves of the token
+    // landing register), so no leaf drives more than ~32 flops. Folds: skew lines in SRAM rings, constant-zero package
+    // sources tied, adder data reset off, own leaf per fold stage (ot_coll_fold_slice DLRING/NLIVE/ADRST/RSTSPLIT).
+    wire rs, rs_t0, rs_t1;
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs (.clk(clk), .arst_n(rst_n), .q(rs));
+    (* keep_hierarchy *) ot_coll_rst_leaf u_rs_t0 (.clk(clk), .arst_n(rst_n), .q(rs_t0));
+    (* keep_hierarchy *) ot_coll_rst_leaf u_rs_t1 (.clk(clk), .arst_n(rst_n), .q(rs_t1));
     genvar k, j, gq;
     initial if (CQW != 42) $error("ot_coll_split_q: CQW 42");
     // ---- input pin registers: every token pin lands in exactly one flop (each copy <= 32 loads) ----
     wire [CQW-1:0] tok_r;
-    ot_csp_rep_reg #(.W(CQW), .ID(QI*256 + 1), .RST(1)) u_tok (.clk(clk), .rst_n(rs), .d(c_tok), .q(tok_r));
+    ot_csp_rep_reg #(.W(21), .ID(QI*256 + 1), .RST(1)) u_tok (.clk(clk), .rst_n(rs_t0), .d(c_tok[20:0]), .q(tok_r[20:0]));
+    ot_csp_rep_reg #(.W(CQW - 21), .ID(QI*256 + 2), .RST(1)) u_tok1 (.clk(clk), .rst_n(rs_t1), .d(c_tok[CQW-1:21]),
+        .q(tok_r[CQW-1:21]));
     wire [7:0]  tbv_r = tok_r[41:34];
     wire        red_r = tok_r[33];
     wire [3:0]  tcv_r = tok_r[32:29], gd_r = tok_r[28:25];
@@ -226,7 +234,8 @@ module ot_coll_split_q #(
         end
     end endgenerate
     wire ps_v, ps_e; wire [127:0] ps_sum;
-    (* keep_hierarchy *) ot_coll_fold_slice u_pf (.clk(clk), .rst_n(rs), .red_in(red_r),
+    (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1)) u_pf (.clk(clk),
+        .rst_n(rs), .red_in(red_r),
         .src({256'd0, hi_q, lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e));
 
     // ---- C / W: package word, S ring data write, SerDes data send ----
@@ -267,7 +276,8 @@ module ot_coll_split_q #(
     wire [4*128-1:0] xs = xsrc;
 `endif
     wire xs_v, xs_e; wire [127:0] xs_sum;
-    (* keep_hierarchy *) ot_coll_fold_slice u_xf (.clk(clk), .rst_n(rs), .red_in(red2_r), .src(xs),
+    (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .ADRST(0), .RSTSPLIT(1)) u_xf (.clk(clk), .rst_n(rs),
+        .red_in(red2_r), .src(xs),
         .sum(xs_sum), .v_out(xs_v), .e_out(xs_e));
     wire [127:0] g_out;
     generate for (k = 0; k < 4; k = k + 1) begin : g_go

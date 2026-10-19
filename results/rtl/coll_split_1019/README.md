@@ -69,3 +69,27 @@ no bank-select mux. Every SRAM face is <= 3.81 contacts/um (old 512x128 S macro 
   EX 1024, RANK 704, RLAT 512, GATHER 2112, SBANK all-die faults/0 outputs, RERR out_err 4 of 8 dies. Witnesses in
   `witness/` (fail regex `COLL_TP8S FAIL mutant=<define>`).
 - Kits: `physical/ref_tile/qfd_coll_split_q`, `physical/ref_tile/qfd_coll_split_c` (specs in tools/ref_tile/specs).
+
+## Q slice safe3 (QW-CLUSTER3, 2026-10-19 16:50 PT) -- kit physical/ref_tile/qfd_coll_split_q3
+
+Why: q2 --cts gate (ot-epyc7 ref_gate/qfd_coll_split_q2-20261019-122644) ended CTS with OT_HOLD_STALL NEEDS_RTL:
+FF hold -30.6 ps/1,091 endpoints -> -7.8 ps/46 R2R after 3 h repair; top classes fold skew delay-line `dl` flop->flop
+chains (u_xf and u_pf) and adder pipeline data-reset flops; textbook: one fold reset leaf drove 5,138 flops; 23,402
+flops on one root (SS boundary spread 59 ps, placement RC). One failed gate = structural redesign:
+
+1. Pins: unchanged (every pin lands in one flop / leaves a flop). PASS.
+2. Reach: tile 302.4x259.2, local; no single-cycle wire beyond ~300 um. PASS.
+3. Fanout: reset split into same-structure 2-flop leaves (Q u_rs/u_rs_t0/u_rs_t1; per fold seam leaf + one leaf per
+   fold stage), each <= 32 sinks (adder data reset off, so each stage leaf drives 4 adders' valid bits + 7-bit error
+   line + ring counter). Fixed.
+4. Depth: unchanged datapath (q2 setup SS +103 ps after CTS). PASS.
+5. Storage: the u_xf skew delay lines (D = 7 and 14 edges x 128 b = 2,688 flops) are SRAM rings (ot_coll_nring,
+   4 x ot_sram_1r1w2c_128x64_m1, rd valid exactly D edges after wd, same as the shift line); u_pf's constant-zero
+   sources g >= 2 are tied to 0 (their lines only ever held 0; adders kept, so fold latency and rounding unchanged).
+   Fixed.
+6. Floorplan: 12 natives in three N-S stacks at x = 43.2 / 129.6 / 216 (43.2 lattice), 51.8 um channels, one
+   full-width std band above y ~ 209 and between stacks; outline from q2 synthesis (25.7k um2 std minus removed
+   flops ~ 23.5k) at ~0.5 util, aspect 1.17. PASS (gate checks).
+7. Clock: one local root over a 0.3 mm tile; judged by pin-flop spread <= 80 TT+FF at the gate; io_hold 0.03. Gate.
+8. Schedule: zero added cycles (ring age = shift age; tie-offs and reset split change no data edge). PASS.
+Negative control for the new mechanism: OT_COLL_FOLD_MUT_DR (ring one edge short) must FAIL reduce_8w_x16.
