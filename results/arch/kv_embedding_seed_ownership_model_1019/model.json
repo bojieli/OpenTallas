@@ -1,0 +1,72 @@
+{
+  "status": "MODEL_ONLY_ROOT_REVIEW",
+  "selected": "5f2ce19bc",
+  "native_model": "ea19ed290",
+  "prior": [
+    "9450178d6",
+    "af18be728"
+  ],
+  "authority": {
+    "first": "actual prompt SRAM selected in I_WAIT, real HC, then accepted native allocation",
+    "allocation": "request_valid && request_ready; pre-NBA epoch paired with same tuple",
+    "later": "same rule after scheduler prompt-versus-feedback selection",
+    "terminal": "old input TAG epoch/token/position/gen plus separate next_token",
+    "selected_prep_transport_present": false
+  },
+  "proposal": {
+    "name": "distinct private allocation-owned PREP_ROW",
+    "key_bits": 61,
+    "record_bits": 62,
+    "first_and_later_same_rule": true,
+    "result_starts_fill": false,
+    "new_credit": 0,
+    "new_runtime_wait": false,
+    "default_off": true,
+    "paired_header_extra_nonconstant_bits": 27,
+    "header_payload_bits": 548,
+    "row_records": 65,
+    "metadata_dedicated_base_bits": 337,
+    "intermediate_bits": "62*(Nprep+Nexpect)",
+    "Nprep": null,
+    "Nexpect": null,
+    "incremental_total_state": null,
+    "static_prologue_edges": null
+  },
+  "dependencies": [
+    {
+      "id": "D1",
+      "owner": "native_owner_join_component",
+      "need": "accepted tuple export and legal no-stale/reset/drain/epoch-wrap lifetime",
+      "status": "PRIVATE_FAIL_DEBUG_NOT_ADOPTED"
+    },
+    {
+      "id": "D2",
+      "owner": "embedding_controller_contract",
+      "need": "selected RETIME1 worst-case er deadline and actual source/PHY/boot capture ledger",
+      "status": "DATES_NULL"
+    },
+    {
+      "id": "D3",
+      "owner": "Qwen CALR installed asset model",
+      "need": "installed PROG/BTAB/CROM, expected-E, private header/provider owner and65-read placement",
+      "status": "CONSTRUCTOR_ASSETS_OPEN"
+    },
+    {
+      "id": "D4",
+      "owner": "future joint source owner after ROOT protocol selection",
+      "need": "PREP/expected-owner route all branches, ABI layout, captures/clocks/reset/copies/area/static schedule",
+      "status": "NO_SOURCE_GRANT"
+    }
+  ],
+  "qualification": {
+    "bootstrap_proven": false,
+    "reachable_existing_bug_proven": false,
+    "simulations": 0,
+    "builds": 0,
+    "physical_runs": 0,
+    "production_dates": null,
+    "SU_latency": null,
+    "MU_rate": null,
+    "RTL_inventory": null
+  }
+}

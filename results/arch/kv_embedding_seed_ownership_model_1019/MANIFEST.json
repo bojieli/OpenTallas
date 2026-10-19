@@ -1,0 +1,65 @@
+{
+  "scope": "MODEL source extraction and report",
+  "files": [
+    {
+      "path": "NEXT.md",
+      "sha256": "6b5c4f6761a1462d40ecc7ff2f4b8d11a3d90e12dd2175f3ae24d7d8a91e8f4f",
+      "bytes": 340
+    },
+    {
+      "path": "README.md",
+      "sha256": "8f9759ffee8462799fb631a9f5eb31979d8b7891683d132663a50f9a4ffa428c",
+      "bytes": 11732
+    },
+    {
+      "path": "model.json",
+      "sha256": "235a1f1af3f370fa5e5db04ea74bec47c6c039574ecc0e0216bdfbd1455b940b",
+      "bytes": 2333
+    },
+    {
+      "path": "source/5f2/rtl/physical/ot_qwen_host_ctl.sv",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436",
+      "bytes": 3549
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+      "sha256": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+      "bytes": 14239
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+      "bytes": 39228
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+      "bytes": 6704
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412",
+      "bytes": 6582
+    },
+    {
+      "path": "source/selected_qkd_kvs_emb.sv",
+      "sha256": "ac6ec1ea5d5ce8cc1b08829e6f06310160ed84ffb696919aa6c59626156f728f",
+      "bytes": 2350
+    },
+    {
+      "path": "source_manifest.json",
+      "sha256": "a4f71855cf7292700ae8c974a82dc23ab6b9561e88afc624bf743cef93166372",
+      "bytes": 1347
+    },
+    {
+      "path": "validate.py",
+      "sha256": "4eac060258da0e7baecf243250ab918dfd879814335120f6b75c30dd58bf8bdb",
+      "bytes": 2241
+    },
+    {
+      "path": "validation.json",
+      "sha256": "bb85475baf5e512616798d8cbffa9fce8c75873738024daaa12eb930f70b21f2",
+      "bytes": 605
+    }
+  ]
+}
