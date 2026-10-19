@@ -92,6 +92,8 @@
 // register per RX lane (head row from flops), a land bit pre-decoded per FIFO row, rid = one AO222 per bit with the
 // selects duplicated per column group.  Same cycles and bits; MU_EN 0 logic untouched.  Mutant
 // OT_S81SL_LEP_MUT_STALEHD (head register loads the old pointer's row: stale head after a pop / write).
+// MU-S81-2/HOSTEP (10-19): parameter-free host-plane MU top ot_s81sl_lep_mu_h (s_7N); mutant OT_S81SL_LEP_MUT_HSTAMP
+// (a THOST / TKD frame sent while a TX tag window is open gets the window's tag stamped).
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -236,6 +238,9 @@ module ot_s81sl_lep_core #(
         end
         else if (hp_go) begin fr[3:1] = 3'd3; fr[4 +: 77] = ph_d; end
         else if (kp_go) begin fr[3:1] = 3'd4; fr[4 +: 54] = pk_d; end
+`ifdef OT_S81SL_LEP_MUT_HSTAMP
+        if (!rov && wopen) fr[TG +: 33] = wtag;        // MUTANT: host-plane frames inside a TX window are stamped
+`endif
     end
     wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
@@ -756,6 +761,56 @@ module ot_s81sl_lep_mu_a #(
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
         .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+        .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+        .l2_f(3'd0), .l3_f(3'd0), .fault(fault));
+endmodule
+
+// MU-S81-2/HOSTEP (2026-10-19): hardened master of the HOST-PLANE multi-user endpoint (kit s81sl_lepmuh) for the one
+// end slice that carries the host plane on a non-duplicated die (s_7N): MU_EN 1, AB_EN 0, HOST_EN 1.  Same core and
+// cycles as ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)); the pair-B ports (lo2 / lo3, li2 / li3, rxvb, l2_f / l3_f) are not
+// ports (the core reads none of them at AB_EN 0, generate), so the hard block carries no tied pad and no constant
+// output.  User 0 is cycle- and bit-identical to the single-user ot_s81sl_lep (bench tb_s81sl_lep_mu, LEP_MU_H).
+// Faces (kit): W lanes A + l*_st, N landing (dsdv_mu_land) + host plane on the NW corner, E ring + mu_c / mu_rt.
+module ot_s81sl_lep_mu_h #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [1:0]      l0_st,
+    input  wire [1:0]      l1_st,
+    input  wire [76:0]     t_host,
+    input  wire [53:0]     t_kd,
+    output wire [514:0]    f_host,
+    output wire [3:0]      f_lf,
+    output wire [52:0]     f_ks,
+    input  wire [33:0]     mu_c,
+    output wire [31:0]     mu_rt,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            fault
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .AB_EN(0), .NB(NB)) u (
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(l0_st), .l1_st(l1_st),
+        .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks),
         .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
