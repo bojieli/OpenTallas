@@ -164,12 +164,11 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
-    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
-    reg rst_l0, rst_l1;
-    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
-    wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
+    // reset landing (SAFE-DESIGN item 1): the port lands in one plain face flop rst_l0; g6: the core reset forest
+    // (ot_vms_rst_forest) replicates the second landing stage per leaf group and keeps every reset net <= 26 loads:
+    // assertion +2 edges, release +5 edges after the port (unchanged)
+    reg rst_l0;
+    always @(posedge clk) rst_l0 <= rst_n;
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -334,7 +333,7 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     assign ring_fault = ring_fault_g_s2;
     hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
         .clk(clk),
-        .rst_n(rr),
+        .rst_l0(rst_l0),
         .sid(2'd0),
         .cq(cq_c),
         .cr(cr_c),
@@ -486,12 +485,11 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
-    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
-    reg rst_l0, rst_l1;
-    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
-    wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
+    // reset landing (SAFE-DESIGN item 1): the port lands in one plain face flop rst_l0; g6: the core reset forest
+    // (ot_vms_rst_forest) replicates the second landing stage per leaf group and keeps every reset net <= 26 loads:
+    // assertion +2 edges, release +5 edges after the port (unchanged)
+    reg rst_l0;
+    always @(posedge clk) rst_l0 <= rst_n;
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -651,7 +649,7 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     assign ring_fault = ring_fault_g_s2;
     hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
         .clk(clk),
-        .rst_n(rr),
+        .rst_l0(rst_l0),
         .sid(sid_c),
         .client_seq(client_seq_c),
         .response_enable(response_enable_c),
@@ -810,12 +808,11 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
-    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
-    reg rst_l0, rst_l1;
-    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
-    wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
+    // reset landing (SAFE-DESIGN item 1): the port lands in one plain face flop rst_l0; g6: the core reset forest
+    // (ot_vms_rst_forest) replicates the second landing stage per leaf group and keeps every reset net <= 26 loads:
+    // assertion +2 edges, release +5 edges after the port (unchanged)
+    reg rst_l0;
+    always @(posedge clk) rst_l0 <= rst_n;
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -987,7 +984,7 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     assign bank_status_m[143:126] = {bank_status_c[143] | bk_flt_c[7], bank_status_c[142:126]};
     hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b11000011),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
         .clk(clk),
-        .rst_n(rr),
+        .rst_l0(rst_l0),
         .sid(2'd2),
         .client_seq(client_seq_c),
         .response_enable(response_enable_c),

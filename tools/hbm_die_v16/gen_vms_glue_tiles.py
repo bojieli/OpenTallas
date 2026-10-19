@@ -162,12 +162,11 @@ def client_outs(c):
 def tile(k, c):
     p = ports(k, c); nc = c['nc']
     L = [f'module hfd_hgi_vms_glue_{k}_t #(parameter integer MUT=0) (', decl(p), ');']
-    L.append('    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),')
-    L.append('    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port')
-    L.append('    reg rst_l0, rst_l1;')
-    L.append('    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end')
-    L.append('    wire [10:0] rr;')
-    L.append('    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));')
+    L.append('    // reset landing (SAFE-DESIGN item 1): the port lands in one plain face flop rst_l0; g6: the core reset forest')
+    L.append('    // (ot_vms_rst_forest) replicates the second landing stage per leaf group and keeps every reset net <= 26 loads:')
+    L.append('    // assertion +2 edges, release +5 edges after the port (unchanged)')
+    L.append('    reg rst_l0;')
+    L.append('    always @(posedge clk) rst_l0 <= rst_n;')
     L.append('    // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]')
     for n, d in RINGB:
         L.append(f'    wire [2223:0] {n};')
@@ -206,7 +205,7 @@ def tile(k, c):
               f'bank_status_c[{b * 18 + 16}:{b * 18}]}};' for b in range(8)]
         st = 'bank_status_m'
     sid = 'sid_c' if c['sid'] == 'strap' else c['sid']
-    conn = ['.clk(clk)', '.rst_n(rr)', f'.sid({sid})']
+    conn = ['.clk(clk)', '.rst_l0(rst_l0)', f'.sid({sid})']
     conn += [f'.{nm}({nm}_c)' for nm, _, _ in common(c)]
     if not nc:
         conn += ['.cq(338\'d0)', '.cr()']
