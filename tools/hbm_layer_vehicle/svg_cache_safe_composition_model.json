@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.svg-cache-safe-composition.v1",
+  "status": "MODEL BEFORE COMPOSITION RTL; native-safe cache functional and mapped qualification pending",
+  "opt_in_default": false,
+  "baseline": {
+    "whole_source": "2f13a5b1d",
+    "whole_receipt": "670c40b92",
+    "go_to_first_command_stream_edges": 7,
+    "native_prefetch_padding_stream_edges": 15,
+    "whole_L00_cycles": 12899
+  },
+  "cache_candidate_contract": {
+    "child_source": "2933f4642",
+    "all_input_capture_edges_added": 2,
+    "signals": ["OPEN", "sector", "READ", "retire"],
+    "output_edges_added": 2,
+    "outputs": ["packet", "block_ready", "bank_owned", "busy", "fault"],
+    "qualification": "candidate currently has 23 mapped loads above32; not admissible for physical gate"
+  },
+  "composition": {
+    "read_issue_change_edges": 0,
+    "retire_issue_change_edges": 0,
+    "external_SM_command_and_format_delay_edges": 2,
+    "XC_full_command_mirror_delay_edges": 2,
+    "go_to_first_command_stream_edges": 9,
+    "read_admission_calibration_edges": 7,
+    "compiler_rule": "Separate command observation latency9 from read-admission calibration7. Keep X-install and earliest-GO lower bounds conservative at calibration7 so changing the recorded command latency cannot advance READ. Cur_abs and packet/command witnesses record latency9.",
+    "native_prefetch_padding_stream_edges": 19,
+    "padding_derivation": "Baseline15 plus2 for later row-copy/ready plus2 conservative reserve. This deliberately exceeds the minimum17 when GO admission remains calibrated at7; no throughput credit is taken.",
+    "retire_alignment": "Existing C-stage retire enters the two-edge cache input collar while the same C-stage command traverses its two extra output registers; issue edge is unchanged.",
+    "format_alignment": "Delay the whole83bit command including format-launch bits28:26. Do not delay only dense-issue or request bits.",
+    "XC_alignment": "Delay the complete173bit mirror including command, KV payload and format launch. Keep READ programme fields and descriptor/GO issue unchanged.",
+    "completion": "Audit final command/retire versus done; retain exactly one final completion and price any extra drain edges explicitly. Do not reuse existing native programme gate binding after changing source."
+  },
+  "required_proof": [
+    "Native-safe cache exact old-master miter shifted2 including write/retire/read conflicts, readiness, faults, occupied reset and mutants",
+    "Mapped post-ABC complete census with no unknowns and all nonclock loads<=32; every output registered",
+    "Whole L00 fixed GO/packet/command exactness and wrong-delay mutant",
+    "Full attention packet/command identity with identical +2 XC mirror; no pread or req_lead changes",
+    "Fresh physical source binding and root geometry/PNG review before submit"
+  ],
+  "physical_claim": "NONE"
+}
