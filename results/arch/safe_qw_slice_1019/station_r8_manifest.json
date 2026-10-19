@@ -1,0 +1,15 @@
+{
+  "revision": "R8 real kept prefix copies",
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+    "rtl/qwen_dv/qfd_dv_ring_delay.sv": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+    "rtl/qwen_dv/qfd_dv_station_math_g.sv": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+    "tools/qwen_dv/gen_station_csafe.py": "a418e6e59f215a78d3cc9893335c6dc08eff8c51599706feb16d137c33e9121d"
+  },
+  "base": "7bf0df545",
+  "arithmetic_source_unchanged": true,
+  "source_delta": "Replace residual ring prefix register declaration with kept ID-qualified real capture module, propagate per-lane ID through valid wrappers",
+  "added_edges": 0,
+  "expected_added_prefix_ff": 30,
+  "actual_qualification": "PENDING native census; exact math10000edges/tworesets PASS ep5unit1819481-1792432562"
+}
