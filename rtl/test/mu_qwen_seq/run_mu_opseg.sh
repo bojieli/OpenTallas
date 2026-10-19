@@ -5,6 +5,9 @@
 #   pass  mu_opseg_bench.py mut 0, cases red (F16 x 2 layers, 3 frames) neg_drift neg_coll full (F16 x 36 layers, 1 frame
 #         + 30k edges of frame 1): MU_OPSEG_PASS
 #   mut   21 22 23 24 25 26 each MU_OPSEG_FAIL (21 / 23 / 24 / 25 on red, 22 on neg_coll, 26 on neg_drift)
+#   emb   MU-OPCAL-EMB (10-19) C7 witnesses on red, mut 0 RTL: --emb-t 16 (pre-fix image) and --res-skew 1 (result one
+#         edge late) each MU_OPSEG_FAIL on C7
+#   full2 the steady-state rate run: full, frames 0-1 + 30k edges of frame 2 (measured frame-1 rate): MU_OPSEG_PASS
 #   old   the OPSEG 0 benches stay PASS: run_mu_ctlm.sh (mu ctlm prog eq seq lp) + mu_tok smoke
 #   dhuser  the existing R3 leaf bench (results/rtl/mu_qwen_1018/adopt_slice/tb_dhuser.sv, OPSEG 0, leaf file ALONE as
 #           before): MUT 0 seeds 7 / 11 / +slip PASS, MUT 1 / 3 / 2+slip FAIL
@@ -27,6 +30,17 @@ if want mut; then
         python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut $1 --cases $2 --verilator "$VL" --jobs 8 > "$W/opseg_m$1.out" 2>&1
         chk opseg_m$1 MU_OPSEG_FAIL "$(grep -m1 '^MU_OPSEG_' "$W/opseg_m$1.out")"
     done
+fi
+if want emb; then
+    for wc in "emb16 --emb-t 16" "skew1 --res-skew 1"; do
+        set -- $wc; t=$1; shift
+        python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut 0 --cases red --tag _$t "$@" --verilator "$VL" --jobs 8 > "$W/opseg_$t.out" 2>&1
+        L=$(grep -m1 '^MU_OPSEG_' "$W/opseg_$t.out"); case "$L" in *C7*) chk opseg_$t MU_OPSEG_FAIL "$L";; *) chk opseg_$t "MU_OPSEG_FAIL (C7)" "${L:-NO_RESULT}";; esac
+    done
+fi
+if want full2; then
+    python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut 0 --cases full --full-frames 2 --tag _full2 --verilator "$VL" --jobs 8 > "$W/opseg_full2.out" 2>&1
+    chk opseg_full2 MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_full2.out")"
 fi
 if want old; then
     bash "$D/run_mu_ctlm.sh" "$W/old_ctlm" > "$W/old_ctlm.out" 2>&1

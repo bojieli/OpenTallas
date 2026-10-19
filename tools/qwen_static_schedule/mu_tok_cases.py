@@ -26,7 +26,8 @@ Variants:
                   (2 users get placed: users 2, 3 never fit -- the 9,291 row of the record)
   rtl_layer_nocmd the same without the command-plane edges (negative control)
   record_op       MU-QW-B1 (2026-10-19): the op-granular PERIODIC calendar of mu_opcal (F = 16 latency tokens a frame,
-                  13,711.4 tok/s, command plane + am.root scheduled) as the RTL plays it: the latency user's stage starts
+                  13,708.2 tok/s since MU-OPCAL-EMB (EMB at T = 60, after the result; was 13,711.4), command plane
+                  + am.root scheduled) as the RTL plays it: the latency user's stage starts
                   from the face, the fillers' op starts from the leaf ROM (qfd_sys_face_mu_dhuser OPSEG inside
                   qfd_tt_ctlm_dv OPSEG 1) with explicit entry ranges; every start {cycle, user, stage, first, cnt, src}
                   and the DV strides (UVM 4096 / PIDX 128, mu_calendar.DV_*).  RTL-playable (bench
@@ -103,7 +104,9 @@ def layer_segment(p=None):
 
 def segments(p=None):
     return {1: layer_segment(p),
-            0: [(8, amax_cmd(0, 1)), (12, amax_cmd(1, 0)), (16, loc_emb())],    # stage 0: emit prev argmax, open next
+            # stage 0: emit prev argmax, open next, embedding.  SMOKE convention: the EMB at 16 precedes the result (stale
+            # token); the op calendar of record (mu_opcal.segments) moves it to mu_opcal.EMB_T = 60 (MU-OPCAL-EMB)
+            0: [(8, amax_cmd(0, 1)), (12, amax_cmd(1, 0)), (16, loc_emb())],
             2: [(8, stn(0x180, amax=1))],                                         # stage 37: one LM-head row chunk
             3: [(4, setid()), (8, su(30))]}                                       # boot
 

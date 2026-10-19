@@ -2,32 +2,32 @@
  "schema": "opentallas.qwen.mu_opcal.v1",
  "frame_tokens": 16,
  "layers": 36,
- "H": 4025840,
- "T": 251615,
- "aggregate_tok_s": 13711.424199670133,
+ "H": 4026800,
+ "T": 251675,
+ "aggregate_tok_s": 13708.155359094071,
  "users": [
   {
    "user": 0,
    "tokens_per_frame": 16,
-   "tok_s": 4769.19102597222,
+   "tok_s": 4768.054037945763,
    "first_start": 0
   },
   {
    "user": 1,
    "tokens_per_frame": 15,
-   "tok_s": 4471.116586848956,
+   "tok_s": 4470.050660574153,
    "first_start": 1722
   },
   {
    "user": 2,
    "tokens_per_frame": 8,
-   "tok_s": 2384.59551298611,
+   "tok_s": 2384.0270189728817,
    "first_start": 3443
   },
   {
    "user": 3,
    "tokens_per_frame": 7,
-   "tok_s": 2086.521073862846,
+   "tok_s": 2086.0236416012713,
    "first_start": 5369
   }
  ],
@@ -216,6 +216,16 @@
  "am_root": {
   "span": 48,
   "emits_per_frame": 46
+ },
+ "emb": {
+  "EMB_T": 60,
+  "AM_EMIT_T": 8,
+  "RES_SSQ": 51,
+  "RES_BANK": 52,
+  "tok_slice0_edge": 48,
+  "head_tok_ofs": 60,
+  "token_starts_checked": 46,
+  "path": "AMAX issue I -> W5 cmd_q +1 -> root merge + TOK to W5 tok_v +48 -> st +1 -> ctlm ss_q +1 -> tok_b +1 = I + 52; EMB issue >= S + 8 + 52 (emb_token sampled on issue + 1)"
  },
  "rules": {
   "T0_MIN": 7,

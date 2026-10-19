@@ -100,7 +100,8 @@ Every new mode is opt-in. The defaults are unchanged in behaviour: the existing 
    - Candidates are a host-side first result (an ss5 `tok_v` from the root before the user's first token) or a
      filler-context word in the leaf ROM.
    - This needs a coordinator decision.
-2. **EMB before the result (image convention).** The token-start segment's LOCAL EMB is at T = 16, and the argmax
+2. **EMB before the result (image convention).** FIXED for the fillers by MU-OPCAL-EMB (section 6): EMB at T = 60.
+   User 0 still sends the face's token (section 6, open RTL item). Original note: The token-start segment's LOCAL EMB is at T = 16, and the argmax
    emit is at T = 8.
    - The root result lands at most `AM_ROOT_SPAN` = 48 edges later, so the EMB sends the bank's PREVIOUS token. This
      applies to every user; the face's user-0 path has the same order.
@@ -250,3 +251,84 @@ is a self-contained leaf. Its ROM (`u_rom`, `ot_rom_4096x72_m8`, macro 38.016 x 
   - `receipt_F16.json` and `receipt_F16_L2.json`;
   - `rom/qfd_tt_ctlm_opseg.viamap.hex` (the F16 leaf image);
   - `runs/` (logs and summaries).
+
+## 6. MU-OPCAL-EMB (10-19): the token-start EMB issues after the user's result
+
+Branch `claude/mu-opcal-emb-1019`. **Compiler image only. No RTL changed.** The leaf ROM content changed, so the kit takes
+the new via-map `rom/qfd_tt_ctlm_opseg.viamap.hex`; the macro does not depend on the content.
+
+**Derived edge** (`mu_opcal.tok_slice0_edge`, `RES_SSQ`, `RES_BANK`, `EMB_T`). Edges count from the AMAX emit's u_cal
+issue edge I = S + 8:
+
+| step | RTL | edges |
+|---|---|---|
+| u_cal `cmd` register -> W5 `cmd_q` | `qfd_dv_slice2` pin register; die bind tt_ctlm.cmd -> dvs_W5.cmd_wi is direct (`dv_case.W5_PEERS`) | +1 = e |
+| root merge + TOK to W5 | `qfd_dv_scalar2`: last candidate merges on X(r) = max(2r + 2, 2k + 2\|k - r\| + 3); TOK leaves dn_o on X + 1, 2 edges a hop; W5 tok_v on X + 2r + 1. Worst over the root r = e + 48 | +48 |
+| W5 `st` (ss_wo) | `st[24]` <= tok_v | +1 |
+| ctlm `ss_q` | pin register (die bind dvs_W5.ss_wo -> tt_ctlm.ss5 direct) | +1 = I + 51 |
+| `tok_b[u]` | r_fill write | +1 = I + 52 |
+| EMB | `emb_token <= tok_b[b_rd]` on the edge after the issue edge: issue >= I + 52 | **EMB_T = 8 + 52 = 60** |
+
+A relay stage that the die GEN inserts on cmd or ss5 adds one edge to `AM_CMD_PIN` or `SS_PIN`.
+
+**Compiler.**
+- `mu_opcal.segments` places the LOCAL EMB of segment 0 at `EMB_T`. The `mu_tok_cases` smoke image keeps 16 and is
+  labelled as stale.
+- `check_emb_after_result` runs in every `compile_frame`. For every token start of every user, it reads the image's
+  real emit and EMB entries and raises `ScheduleError` when the EMB is earlier than the emit + `RES_BANK`. The tests
+  cover EMB_T 16 and 59 (both raise) and 60 (passes).
+- The embedding request, host return and row fetch need the new token, so the token-start block's priced windows
+  (d2d_o, host and the 272-edge fetch) start at the EMB (`mu_calendar.head_blocks` `head_tok_ofs`, default 0, and
+  `mu_opcal` sets it to EMB_T). **The token is 60 edges longer.**
+- LOCAL entries now also reserve `cp.cmd`, because they use the one u_cal issue register (`i_col`). The frame did not
+  change because of this.
+
+**Rate (F16).**
+
+| | before | now |
+|---|---|---|
+| T (edges) | 251,615 | 251,675 |
+| H (edges) | 4,025,840 | 4,026,800 |
+| user 0 (latency) | 4,769.2 | **4,768.1** |
+| user 1 | 4,471.1 | 4,470.1 |
+| user 2 | 2,384.6 | 2,384.0 |
+| user 3 | 2,086.5 | 2,086.0 |
+| aggregate | 13,711.4 | **13,708.2** |
+
+- Tokens a frame are unchanged (16 / 15 / 8 / 7), and so are the leaf entries (4,036).
+- **User 0 is still cycle-identical to the single user** (`compile_frame` checks this, and so does bench C2). The single
+  user's token is also 60 edges longer: the solo image has the same segment 0, and its embedding cannot start before
+  its own argmax result either. So 4,769.2 was optimistic by 60 edges a token, and the new latency figure is 4,768.1.
+- Red (2 layers): 145,789.3 -> 145,290.9.
+
+**Open RTL item: user 0.** `tok_b[0]` is written only from the face's dh start (`s_tok`), and r_fill excludes ss_tu 0.
+- User 0's EMB therefore sends the token the face presented at its stage-0 start. The face takes the result only at its
+  RESULT capture, which comes after that start.
+- Moving the EMB in the image cannot fix this. It needs a `qfd_tt_ctlm_dv` change (for example, r_fill also writes
+  tok_b[0] in OPSEG), or the face's own E-calendar embedding for user 0.
+- This is not the leaf. It is left to the coordinator, and bench C7 reports user 0 for information only.
+
+**Bench** (`run_mu_opseg.sh` parts `pass mut emb full2`, fleet, Verilator 5.050, sources = this branch).
+- RES events now come at the RTL-derived edge (start + 8 + C 1 + 51; it was start + 40).
+- The bank model is exact (RES_APPLY = BANK_WR 1, with no ambiguity margin), and the calibration K = 0, C = 1 is checked.
+- New check **C7**: every filler EMB equals the result of its own segment's emit.
+- New witnesses (mut 0 RTL; each must FAIL C7):
+  - `--emb-t 16`: the pre-fix image;
+  - `--res-skew 1`: the result one edge late. The EMB sits exactly on the first edge that sees the result.
+
+**Results** (ot-epyc4, sources 99dd2515f; logs and summaries are in `runs/emb/`):
+
+| run | verdict |
+|---|---|
+| pass: red, neg_drift, neg_coll, full | **MU_OPSEG_PASS**, C1-C7 |
+| C7, red | 54 of 54 filler EMBs carry their just-computed token, 0 wrong |
+| C7, full | 30 of 30 filler EMBs carry their just-computed token, 0 wrong |
+| calibration | K 0, C 1 |
+| red frame-1 measured rate | 68,372.2 / 42,732.6 / 21,366.3 / 12,819.8, identical to the compiled rate |
+| neg_drift | op_fcode[1] at 18,652 |
+| neg_coll | op_fault at 6,470 |
+| mut 21-26 | each MU_OPSEG_FAIL, on the same checks as in section 4 |
+| emb16 witness | **FAIL C7**: 54 of 54 stale |
+| skew1 witness | **FAIL C7**: 54 of 54 stale |
+| user 0 (information only) | 48 (red) and 16 (full) EMBs send the face token, 0 the just-computed one: the open RTL item above |
+| full2, the steady-state 36-layer rate | still running at hand-off: `ot-epyc4:/home/ubuntu/ot-bench/mu-opcal-emb-1019/w_full2`, listed in pending_results |

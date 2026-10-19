@@ -41,7 +41,7 @@ def test_record_op_playable():
     """MU-QW-B1: the op-granular periodic frame (mu_opcal) is the RTL-playable case table of record"""
     cs = T.cases("record_op")
     assert cs["playability"]["rtl_playable"] and cs["granularity"] == "op_leaf"
-    assert abs(cs["aggregate_tok_s_modelled"] - 13711.4) < 0.1
+    assert abs(cs["aggregate_tok_s_modelled"] - 13708.2) < 0.1          # MU-OPCAL-EMB: EMB after the result (was 13,711.4)
     assert [u["tokens_per_frame"] for u in cs["users"]] == [16, 15, 8, 7]
     assert all(s["src"] == "face" for s in cs["users"][0]["starts"])
     assert all(s["src"] == "leaf" for u in cs["users"][1:] for s in u["starts"])
