@@ -35,6 +35,10 @@ for s in $SEEDS; do
   "$O/base/tb" +seed=$s > "$O/run_s$s.log" 2>&1
   grep '^SEQHOST seed' "$O/run_s$s.log"; grep -q '^SEQHOST PASS' "$O/run_s$s.log" || { echo "golden seed $s FAIL"; bad=1; }
 done
+for s in $SEEDS; do   # S81-SAFE-FIX/SH: two calendar rows on one edge (word-aligned and straddling pairs) through the walker
+  "$O/base/tb" +seed=$s +pair=1 > "$O/run_pair_s$s.log" 2>&1
+  echo "PAIR $(grep '^SEQHOST seed' "$O/run_pair_s$s.log")"; grep -q '^SEQHOST PASS' "$O/run_pair_s$s.log" || { echo "golden pair seed $s FAIL"; bad=1; }
+done
 "$O/base/tb" +seed=7 +collide=1 > "$O/run_collide.log" 2>&1
 grep '^SEQHOST COLLIDE' "$O/run_collide.log"; grep -q 'PASS (fault raised)' "$O/run_collide.log" || { echo "collision not faulted"; bad=1; }
 "$O/base/tb" +seed=3 +stdrop=1 > "$O/run_stdrop.log" 2>&1

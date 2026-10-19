@@ -1,16 +1,20 @@
 ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
 ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
 ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
-ot-run: ot-epyc7       admits   917 GB (avail 731, growth 89, headroom 0, waiters 0/0 GB) load 96/96 running 25 disk 6479 GB 
+ot-run: ot-epyc7       admits   901 GB (avail 730, growth 100, headroom 0, waiters 0/0 GB) load 100/96 running 27 disk 6492 GB 
 ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81sf-sh/src
 ot-run: -> ot-epyc7
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2264103-1792417258 after 0 s
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2317659-1792417692 after 1 s
 SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1617 frag N/S=167/184 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
 SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1507 frag N/S=173/160 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
 SEQHOST seed=3 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1553 frag N/S=182/175 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
 SEQHOST seed=4 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1531 frag N/S=198/178 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1606 frag N/S=167/178 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1519 frag N/S=173/167 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=3 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1555 frag N/S=180/165 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=4 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1540 frag N/S=194/189 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
 SEQHOST COLLIDE at 2205 -> PASS (fault raised)
 SEQHOST STDROP -> PASS (fault raised)
 mutant 1 detected: mism n/s/j/k/hw/tc/cw=60/48/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
@@ -25,4 +29,4 @@ mutant 9 detected: mism n/s/j/k/hw/tc/cw=1732/1891/0/0/0/0/0 unit_st=10001000000
 mutant 10 detected: 
 lint clean: verilator -Wall, 0 errors, 0 unwaived warnings in dsdv_seq_host.sv (reused modules unchanged)
 SEQHOST_GATE PASS
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2264103-1792417258): exit 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2317659-1792417692): exit 0

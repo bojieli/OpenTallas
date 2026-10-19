@@ -39,7 +39,7 @@ module tb_dsdv_seq_host;
 `endif
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
-    integer seed, seed0, collide, cyc, errs, i, k, e;
+    integer pair, seed, seed0, collide, cyc, errs, i, k, e;
     // ------------------------------------------------------------------ DUT
     reg [V-1:0] vi_s = 0, vi_n = 0; wire [V-1:0] vo_s, vo_n;
     reg [514:0] f_host = 0; wire [76:0] t_host; reg [52:0] f_ks = 0; wire [53:0] t_kd;
@@ -90,6 +90,7 @@ module tb_dsdv_seq_host;
         if (!$value$plusargs("seed=%d", seed)) seed = 1; seed0 = seed;
         if (!$value$plusargs("collide=%d", collide)) collide = 0;
         if (!$value$plusargs("stdrop=%d", stdrop)) stdrop = 0;
+        if (!$value$plusargs("pair=%d", pair)) pair = 0;
         errs = 0; nhs = 0;
         for (i = 0; i < NT; i = i + 1) T[i] = rnd186(0);
         // calendar rows: engine e at ages = res(e) mod 8, unique; END after every done
@@ -98,6 +99,9 @@ module tb_dsdv_seq_host;
         for (i = 0; i < NR; i = i + 1) begin
             e = (i % 4 == 3) ? 4 : (i % 4);
             k = (i / 4) * 8 + ((e == 4) ? 2 : (e == 2) ? 3 : e);
+            // +pair=1 (S81-SAFE-FIX/SH walker): two calendar rows on one edge, as the compiled full layers have (VN + VS):
+            // V south on V north's edge in even groups (row pair word-aligned), on the svc edge in odd groups (straddling)
+            if (pair && e == 1) k = (i / 4) * 8 + (((i / 4) % 2 == 0) ? 0 : 2);
             r_eng[nrow] = e; r_iss[nrow] = k;
             r_done[nrow] = k + ((e == 4) ? DV_S : DV_V);
             if (e == 4) r_arg[nrow] = $random(seed) & 24'hffffff;

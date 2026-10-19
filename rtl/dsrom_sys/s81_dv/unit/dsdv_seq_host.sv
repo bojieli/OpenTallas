@@ -227,13 +227,14 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     localparam integer NE = 5;
     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
     reg [NE-1:0] dv; reg [NE*8-1:0] dt;
-    // ---- the calendar: two identical SRAM copies (one read port per job context; S81-SAFE-FIX/SH ordered walker)
-    wire cal_wce; wire [6:0] cal_wa, cal_ra0, cal_ra1; wire [75:0] cal_wd, cal_wm; wire [255:0] cal_rd0, cal_rd1;
+    // ---- the calendar: two identical SRAM copies (one read port per job context; S81-SAFE-FIX/SH ordered walker), row pairs
+    //      {row 2w+1, row 2w} in word w
+    wire cal_wce; wire [6:0] cal_wa, cal_ra0, cal_ra1; wire [151:0] cal_wd, cal_wm; wire [255:0] cal_rd0, cal_rd1;
     ot_sram_1r1w_128x256_m1_r2c2 u_cal0 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(cal_ra0), .rd_out(cal_rd0),
-        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({180'd0, cal_wd}), .w_mask_in({180'd0, cal_wm}),
+        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({104'd0, cal_wd}), .w_mask_in({104'd0, cal_wm}),
         .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
     ot_sram_1r1w_128x256_m1_r2c2 u_cal1 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(cal_ra1), .rd_out(cal_rd1),
-        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({180'd0, cal_wd}), .w_mask_in({180'd0, cal_wm}),
+        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({104'd0, cal_wd}), .w_mask_in({104'd0, cal_wm}),
         .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
     ot_dsdv_walk_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
         .pw_v(pw_q[35]), .pw_a(pw_q[34:28]), .pw_d(pw_q[27:0]), .prog_len(plen),
@@ -242,7 +243,7 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
         .cmd_v(cv), .cmd_d(cd), .engine_available({NE{1'b1}}), .dn_v(dv), .dn_tag(dt),
         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
         .cal_w_ce(cal_wce), .cal_w_addr(cal_wa), .cal_wd(cal_wd), .cal_wm(cal_wm), .cal_r_addr0(cal_ra0), .cal_r_addr1(cal_ra1),
-        .cal_rd0(cal_rd0[75:0]), .cal_rd1(cal_rd1[75:0]));
+        .cal_rd0(cal_rd0[151:0]), .cal_rd1(cal_rd1[151:0]));
     // command faces: straight from the issuer's command registers (flop-last)
     assign cn_o = {cv[0], cd[0 +: 84]};
     assign cs_o = {cv[1], cd[84 +: 84]};

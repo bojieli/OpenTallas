@@ -1,138 +1,178 @@
 {
-  "name": "dsdv_sh_sq",
-  "top": "dsdv_sh_sq",
-  "kind": "tile",
-  "sources": [
-    "rtl/lib/ot_rst_relay.sv",
-    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
-  ],
-  "params": {},
-  "clock_port": "ck",
-  "reset_ports": [
-    "rst_n"
-  ],
-  "macros": [],
-  "pins": {
-    "S": [
-      "rn_i",
-      "rs_o",
-      "pw_i",
-      "pl_i",
-      "tw_i",
-      "cf_i",
-      "ks_i",
-      "kd_o",
-      "j_o",
-      "jd_i",
-      "sq_o",
-      "vf_o"
-    ],
-    "N": [
-      "rn_o",
-      "rs_i",
-      "tw_o",
-      "cf_o",
-      "cn_o",
-      "cs_o",
-      "cg_o",
-      "dn_i",
-      "vf_i"
-    ],
-    "E": [
-      "ck",
-      "rst_n"
-    ]
+ "name": "dsdv_sh_sq",
+ "top": "dsdv_sh_sq",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_cal0",
+   "at": [
+    129.6,
+    23.76
+   ]
   },
-  "recipe": 4,
-  "hold_budget": "die",
-  "inhold": false,
-  "outhold": false,
-  "clock": "cts",
-  "layer_cap": "M5",
-  "route": {
-    "pd": 0.5,
-    "threads": 8,
-    "peak_ram_gb": 24,
-    "hold_margin_ns": 0.03
-  },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L1 sequencer leaf of dsdv_seq_host: ot_dsdv_fixed_issue (= ot_s81_fixed_issue compiled calendar, edge-identical issue / completion checks) + svc completion tag queue + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 10607befb: 37-level scan_index -> fault_code, 2,048-b runtime part-select dt_q[8*eng+:8], 1,871 reset loads): seal scan in three registered stages (row read / accumulate / closing check, seal +2 boot edges), completion tag select decoded (one-hot AND-OR), calendar rows / loaded bits / context fields / age / pending / command payloads off the reset net, pin-flop payloads ungated. S81U-SEQ4 (gate4 df8031f2c: the SEQ3 row read still synthesised as a 128 x 79-b $shiftx barrel, scan_index[1] 10,119 loads; age -> fault_code 41 levels, TT -879 ps): one-hot row pointer for the seal-scan row read; completion compare registered one edge ahead (dm_q); run-time fault flags registered (run_fault / fault_code +1 edge, status only); duplicate-issue check by a two-hot tree. gate5 7b7028b78 PASS 0 warn (scan fanout / depth gone, 573 ps; TT ins 291.8 / sp 28.4) but reg->reg -77.2 ps at cmd_d (age compare -> 128-row AND-OR): the issue compare registered one edge ahead too (im_q from the next age and the next row value).",
-  "job": {
-    "owner": "Claude:S81U-SEQ",
-    "branch": "claude/s81u-seq-1017",
-    "tag": "dsdv_sh_sq",
-    "purpose": "S81-DV seq_host leaf dsdv_sh_sq to closure (TT setup / FF hold / DRC 0 + native audit).",
-    "extra_paths": [
-      "rtl/dsrom_sys/s81_dv/unit",
-      "results/rtl/s81_dv_unit_1017/seqhost",
-      "physical/dsdv_seq_host_pins"
-    ],
-    "benches": [
-      {
-        "name": "seqhost_exact",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
-        "expect": "pass",
-        "pass_regex": "^SEQHOST_GATE PASS$",
-        "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutctx",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut1.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutsvctag",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut2.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutrunghop",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut3.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutdonelate",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut4.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      }
-    ],
-    "views_to": "physical/ref_tile/dsdv_sh_sq/views",
-    "record_to": "results/rtl/ref_tile/dsdv_sh_sq"
-  },
-  "pin_regs": {
-    "enable": false,
-    "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
-  },
-  "outline": {
-    "w": 254.88,
-    "h": 120.96
-  },
-  "io_flop_at_pins": {
-    "cols": 4,
-    "allow_none": true
-  },
-  "keep_pin_regs": true,
-  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
-  "std_area_um2": 14796,
-  "fill_reason": {
-    "pin_bound": "S81U-SEQ3: common leaf width 254.88 (seam pins aligned with lk / vc); N face 1,296 pin bits = 5.1/um, S 1,207 = 4.7/um. Std 14,796 um2 (gate 10607befb) -> H 120.96, util 51%."
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_cal1",
+   "at": [
+    129.6,
+    86.4
+   ]
   }
+ ],
+ "pins": {
+  "S": [
+   "rn_i",
+   "rs_o",
+   "pw_i",
+   "pl_i",
+   "tw_i",
+   "cf_i",
+   "ks_i",
+   "kd_o",
+   "j_o",
+   "jd_i",
+   "sq_o",
+   "vf_o"
+  ],
+  "N": [
+   "rn_o",
+   "rs_i",
+   "tw_o",
+   "cf_o",
+   "cn_o",
+   "cs_o",
+   "cg_o",
+   "dn_i",
+   "vf_i"
+  ],
+  "E": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "S81-SAFE-FIX/SH 10-19 (SAFE-DESIGN item 5): ot_dsdv_fixed_issue kept the 128 x 76-b calendar in flops and compared every row against both contexts every edge (wire-bound: trial GRT overflow 285,158, M2 106 % at util 48 %). Replaced by ot_dsdv_walk_issue: calendar in 2 SRAM copies as row pairs (one read port per context), per context the current pair word + the next word read ahead (two rows an edge at any alignment, two 24-b compares), per context/engine 8-deep completion FIFOs. Contract: issue non-decreasing, <= 2 rows an edge on different engines, per-engine done increasing, <= 8 outstanding (compiler dv_layer_compile finish(), seal scan code 3). Edges identical to ot_s81_fixed_issue (bench lock-step 4 seeds + 4 pair seeds; compiled L14 113 rows / 28 two-row edges PASS). Reset landing 2 stages, io_hold 0.03. History: S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L1 sequencer leaf of dsdv_seq_host: ot_dsdv_fixed_issue (= ot_s81_fixed_issue compiled calendar, edge-identical issue / completion checks) + svc completion tag queue + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 10607befb: 37-level scan_index -> fault_code, 2,048-b runtime part-select dt_q[8*eng+:8], 1,871 reset loads): seal scan in three registered stages (row read / accumulate / closing check, seal +2 boot edges), completion tag select decoded (one-hot AND-OR), calendar rows / loaded bits / context fields / age / pending / command payloads off the reset net, pin-flop payloads ungated. S81U-SEQ4 (gate4 df8031f2c: the SEQ3 row read still synthesised as a 128 x 79-b $shiftx barrel, scan_index[1] 10,119 loads; age -> fault_code 41 levels, TT -879 ps): one-hot row pointer for the seal-scan row read; completion compare registered one edge ahead (dm_q); run-time fault flags registered (run_fault / fault_code +1 edge, status only); duplicate-issue check by a two-hot tree. gate5 7b7028b78 PASS 0 warn (scan fanout / depth gone, 573 ps; TT ins 291.8 / sp 28.4) but reg->reg -77.2 ps at cmd_d (age compare -> 128-row AND-OR): the issue compare registered one edge ahead too (im_q from the next age and the next row value).",
+ "job": {
+  "owner": "Claude:S81-SAFE-FIX/SH",
+  "branch": "claude/s81sf-sh-1019",
+  "tag": "dsdv_sh_sq",
+  "purpose": "S81-DV seq_host leaf dsdv_sh_sq to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "results/rtl/s81sf_sh_1019/seqhost",
+   "physical/dsdv_seq_host_pins",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/lib",
+   "rtl/link/ot_link_afifo.sv",
+   "rtl/hdc/ingest",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+   "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+   "physical/rom_host_ingest/rtl"
+  ],
+  "benches": [
+   {
+    "name": "seqhost_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutctx",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutsvctag",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut2.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrunghop",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut3.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutdonelate",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut4.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutorder",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut10 1 10",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL timeout .*sealed=0/1",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut10.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_sh_sq/views",
+  "record_to": "results/rtl/ref_tile/dsdv_sh_sq"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
+ },
+ "outline": {
+  "w": 254.88,
+  "h": 151.2
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
+ "std_area_um2": 14796,
+ "fill_reason": {
+  "pin_bound": "S81-SAFE-FIX/SH 10-19: the calendar moved from 9.7 kb of flops (+512 x 24-b row compares, 10 x 128-row AND-OR trees; trial GRT ovf 285,158 at util 48 %) into two ot_sram_1r1w_128x256 copies (ordered walker ot_dsdv_walk_issue, row pairs). Width = common seq_host leaf width 254.88 (N/S pins aligned with lk / vc, x unchanged); macros stacked on the E side at x 129.6 (pins face W toward the logic; >= 20 um from the N/S/E pin faces, 21.6 um channel) need H >= 146 -> H 151.2 = dsdv_sh_lk height (aspect 1.69). Util = (std + 7,788 um2 SRAM) / core, measured at the gate."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

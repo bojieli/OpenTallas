@@ -6,8 +6,8 @@
 // 128-row AND-OR trees; the leaf was wire-bound: trial GRT overflow 285,158 at 48 % util, M2 106 %).
 //
 // Calendar contract (compiler: tools/s81_dv/dv_layer_compile.py finish(); checked by the boot seal scan, code 3):
-//   * rows i < length are in STRICTLY increasing issue order (KIT and END included; END is therefore the last row):
-//     at most one calendar row per issue edge per context;
+//   * rows i < length are in non-decreasing issue order with AT MOST TWO rows on one edge (KIT and END included; END
+//     is the last row, alone on its edge); one row per engine per edge (as before, code 9);
 //   * per engine, the done cycle is strictly increasing in row order (fixed per-engine done latency satisfies it);
 //   * at most 8 commands of one engine outstanding (issued, done not yet checked) per context (= the svc tag queue's
 //     depth in dsdv_sh_sq); a ninth is a run-time fault (code 10).
@@ -16,11 +16,12 @@
 //
 // Structure (no runtime-indexed flop array, no row-parallel compare):
 //   * the calendar is written by the PW words into TWO identical 1R1W SRAM copies (one read port per context; the caller
-//     instantiates ot_sram_1r1w_128x256 x 2, rows on wd/rd [75:0] = the macro's W-face pins); the boot seal scan reads
-//     copy 0, one row an edge, as before (S0 read / S1 accumulate / F closing check);
-//   * per context: the current row C (76 b) and its index p; the SRAM read port always holds row p + 1, so a row that
-//     issues is replaced by the next one on the same edge (C <= rd, address p + 2).  An idle context reads row 0, so
-//     an accept loads C = row 0 at once.  Issue = (age == C.issue): one 24-b compare per context;
+//     instantiates ot_sram_1r1w_128x256 x 2) as ROW PAIRS: word w = {row 2w + 1 [151:76], row 2w [75:0]}, written with
+//     a field mask; the boot seal scan reads copy 0, one row an edge, as before (S0 read / S1 accumulate / F check);
+//   * per context: the current pair word CW (index k) and a half pointer h; the SRAM read port always holds word k + 1
+//     (N).  The next row A = CW[h] and the one after it B = (h ? N.lo : CW.hi): A issues when age == A.issue, B with it
+//     when B.issue == age too (two rows an edge, any alignment); CW <= N (address k + 2) once both halves are used, so
+//     one pair read an edge always keeps up.  An idle context reads word 0, so an accept loads CW at once;
 //   * per context and present engine: an 8-deep FIFO of {done 24, op 7} pushed at issue, checked (one edge after
 //     age == done, as dm_q was) against the registered completion {dv_q, dt_q} and popped.
 // MUT is not used here (dsdv_sh_sq instantiates the issuer with MUT 0).
@@ -42,9 +43,9 @@ module ot_dsdv_walk_issue #(
  output reg[31:0]st_jobs,st_cmds,
  output wire[1:0]phase,
  // calendar SRAM copies (caller-instantiated 1R1W, read latency 1)
- output wire cal_w_ce,output wire[6:0]cal_w_addr,output wire[75:0]cal_wd,cal_wm,
+ output wire cal_w_ce,output wire[6:0]cal_w_addr,output wire[151:0]cal_wd,cal_wm,
  output wire[6:0]cal_r_addr0,cal_r_addr1,
- input wire[75:0]cal_rd0,cal_rd1
+ input wire[151:0]cal_rd0,cal_rd1
 );
  localparam integer QA=$clog2(QD);
  reg[2:0]loaded[0:NOPS-1];
@@ -52,38 +53,50 @@ module ot_dsdv_walk_issue #(
  reg begun,sealed,cfg_fault,run_fault,has_kit,validating;
  reg[7:0]scan_index,scan_native;reg scan_bad;reg[1:0]scan_ends,scan_kits;
  reg[23:0]scan_max_done,scan_end_cycle,scan_kit_cycle;
- reg scan_first;reg[23:0]scan_pi;reg[NENG-1:0]scan_seen;reg[23:0]scan_ld[0:NENG-1];
+ reg scan_first,scan_eq;reg[3:0]scan_pe;reg[23:0]scan_pi;reg[NENG-1:0]scan_seen;reg[23:0]scan_ld[0:NENG-1];
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
  reg[23:0]age[0:1],agp[0:1];reg[1:0]actp;
- reg[75:0]crow[0:1];reg[6:0]cp[0:1],cp1[0:1],cp2[0:1];
+ reg[151:0]cw[0:1];reg[5:0]ck[0:1],ck1[0:1],ck2[0:1];reg[1:0]hh;
  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
  assign busy=|active;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
- integer i,s,e,end_count,kit_count,n,max_done;
+ integer i,s,e,r,end_count,kit_count,n,max_done;
  reg bad;reg[23:0]end_cycle,kit_cycle;
  reg[3:0]eng;
  reg sc_v,sc_last,sc_in,sc_fin;reg[2:0]sc_ld;
  reg[NOPS-1:0]sc_oh;reg[2:0]rd_ld;
  reg[4:0]rf_q;reg f6,f7,f9,f10;
- wire[75:0]sc_row=cal_rd0;                    // S1 row = the copy-0 read latched at the S0 edge
+ reg sc_half;
+ wire[75:0]sc_row=sc_half?cal_rd0[151:76]:cal_rd0[75:0];   // S1 row = the copy-0 pair read latched at the S0 edge
  // seal scan: per-engine done order against the earlier rows (scan_seen / scan_ld)
  wire ord_bad=sc_row[27:24]<NENG&&scan_seen[sc_row[27:24]]&&sc_row[75:52]<=scan_ld[sc_row[27:24]];
- // ---- the walker: hit = the current row issues on this edge
- wire[1:0]hit;wire[3:0]heng[0:1];
+ // ---- the walker: A = the next row, B = the row after it; hitA / hitB = they issue on this edge
+ wire[151:0]nw[0:1];assign nw[0]=cal_rd0;assign nw[1]=cal_rd1;
+ wire[75:0]ra[0:1],rb[0:1];wire[1:0]hit,hitb;wire[3:0]heng[0:1],beng[0:1];wire[6:0]opa[0:1],opb[0:1];wire[1:0]adv;
  genvar gs;
  generate for(gs=0;gs<2;gs=gs+1)begin:g_hit
-  assign hit[gs]=active[gs]&&age[gs]==crow[gs][51:28];
-  assign heng[gs]=crow[gs][27:24];
+  assign ra[gs]=hh[gs]?cw[gs][151:76]:cw[gs][75:0];
+  assign rb[gs]=hh[gs]?nw[gs][75:0]:cw[gs][151:76];
+  assign heng[gs]=ra[gs][27:24];assign beng[gs]=rb[gs][27:24];
+  assign hit[gs]=active[gs]&&age[gs]==ra[gs][51:28];
+  assign hitb[gs]=hit[gs]&&heng[gs]!=4'd15&&rb[gs][51:28]==ra[gs][51:28];
+  assign opa[gs]={ck[gs],hh[gs]};assign opb[gs]={ck[gs],hh[gs]}+7'd1;
+  assign adv[gs]=hh[gs]?hit[gs]:hitb[gs];            // both halves of CW used -> CW <= N
+ end endgenerate
+ wire[15:0]ue[0:1];wire[1:0]dup_in;
+ generate for(gs=0;gs<2;gs=gs+1)begin:g_ue
+  assign ue[gs]=(hit[gs]?(16'd1<<heng[gs]):16'd0)|(hitb[gs]?(16'd1<<beng[gs]):16'd0);
+  assign dup_in[gs]=hitb[gs]&&heng[gs]==beng[gs]&&heng[gs]<14;
  end endgenerate
  wire do_accept=job_v&&!(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q));
  wire[1:0]acc={do_accept&&next_slot,do_accept&&!next_slot};
  wire[1:0]ends={hit[1]&&heng[1]==4'd15,hit[0]&&heng[0]==4'd15};
- // next read address: active next edge -> p_next + 1, idle -> 0 (row 0 ready for an accept); scan owns copy 0
- wire[6:0]ra0=acc[0]?7'd1:(active[0]&&!ends[0])?(hit[0]?cp2[0]:cp1[0]):7'd0;
- wire[6:0]ra1=acc[1]?7'd1:(active[1]&&!ends[1])?(hit[1]?cp2[1]:cp1[1]):7'd0;
- assign cal_r_addr0=validating?scan_index[6:0]:ra0;
- assign cal_r_addr1=ra1;
+ // next read address (pair word): active next edge -> k_next + 1, idle -> 0 (word 0 ready for an accept); scan owns copy 0
+ wire[5:0]rw0=acc[0]?6'd1:(active[0]&&!ends[0])?(adv[0]?ck2[0]:ck1[0]):6'd0;
+ wire[5:0]rw1=acc[1]?6'd1:(active[1]&&!ends[1])?(adv[1]?ck2[1]:ck1[1]):6'd0;
+ assign cal_r_addr0=validating?{1'b0,scan_index[6:1]}:{1'b0,rw0};
+ assign cal_r_addr1={1'b0,rw1};
  // ---- completion FIFOs {done 24, op 7}, one per context and present engine (QD deep, flat ring buffers)
  wire[NENG-1:0]chk0,chk1,good0,good1,bad0,bad1,full0,full1;
  wire[NENG-1:0]legit_done=good0|good1;
@@ -95,12 +108,13 @@ module ot_dsdv_walk_issue #(
    wire[30:0]h=q[r*31+:31];
    wire c=actp[fs]&&agp[fs]!=24'hffffff&&n!=0&&h[30:7]==agp[fs];
    wire ok=dv_q[fe]&&dt_q[8*fe+:8]=={1'(fs),h[6:0]};
-   wire ps=hit[fs]&&heng[fs]==4'(fe);
+   wire pa=hit[fs]&&heng[fs]==4'(fe),pb=hitb[fs]&&beng[fs]==4'(fe);
+   wire ps=pa|pb;
    wire fl=n==QD[QA:0];
    always @(posedge clk)begin
     if(acc[fs])begin w<=0;r<=0;n<=0;end
     else begin
-     if(ps&&!fl)begin q[w*31+:31]<={crow[fs][75:52],7'(cp[fs]+7'(OP_BASE))};w<=w+1'b1;end
+     if(ps&&!fl)begin q[w*31+:31]<=pa?{ra[fs][75:52],7'(opa[fs]+7'(OP_BASE))}:{rb[fs][75:52],7'(opb[fs]+7'(OP_BASE))};w<=w+1'b1;end
      if(c)r<=r+1'b1;
      n<=n+((ps&&!fl)?1'b1:1'b0)-(c?1'b1:1'b0);
     end
@@ -151,13 +165,14 @@ module ot_dsdv_walk_issue #(
     sc_in<=scan_index<length_q;sc_last<=scan_index==NOPS-1;
     if(scan_index==NOPS-1)validating<=0;else scan_index<=scan_index+1'b1;
    end
-   // S1: the row's checks (original + walker order: issue strictly increasing, per-engine done strictly increasing)
+   // S1: the row's checks (original + walker order: issue non-decreasing, <= 2 rows an edge on different engines,
+   // per-engine done strictly increasing)
    if(sc_v)begin
     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
     if(sc_in)begin
      if(sc_ld!=3'b111)bad=1;
-     if(!scan_first&&sc_row[51:28]<=scan_pi)bad=1;
+     if(!scan_first&&(sc_row[51:28]<scan_pi||(sc_row[51:28]==scan_pi&&(scan_eq||sc_row[27:24]==scan_pe))))bad=1;
      if(ord_bad)bad=1;
      eng=sc_row[27:24];
      if(eng==15)begin end_count=end_count+1;end_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
@@ -186,8 +201,8 @@ module ot_dsdv_walk_issue #(
    if(|rf_q)begin run_fault<=1;if(fault_code==0)fault_code<=rf_q[0]?4'd6:rf_q[4]?4'd10:rf_q[3]?4'd9:rf_q[2]?4'd8:4'd7;end
    for(s=0;s<2;s=s+1)if(active[s])begin
     if(age[s]==24'hffffff)f7=1;
-    if(hit[s])begin
-     eng=heng[s];
+    for(r=0;r<2;r=r+1)if(r==0?hit[s]:hitb[s])begin
+     eng=r==0?heng[s]:beng[s];
      if(eng==15)begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
      else if(eng==14)begin job_kdone<=1;kit_tok<=tokens[s];end
      else if(eng<NENG&&ENG_PRESENT[eng])begin
@@ -197,7 +212,8 @@ module ot_dsdv_walk_issue #(
      else f10=1;
     end
    end
-   if(hit[0]&&hit[1]&&heng[0]==heng[1]&&heng[0]<14)f9=1;
+   // duplicate issue: one engine twice on one edge (A / B of a context, or both contexts)
+   if(|(ue[0]&ue[1]&16'(ENG_PRESENT))||dup_in[0]||dup_in[1])f9=1;
    f6=|(dv_q&~legit_done);
    rf_q<={f10,f9,f8w,f7,f6};
    n=0;for(e=0;e<NENG;e=e+1)if(cmd_v[e])n=n+1;
@@ -210,9 +226,10 @@ module ot_dsdv_walk_issue #(
  wire do_begin=pw_v&&!pw_busy&&pw_d[27:26]==3&&!pw_hdr_bad&&!pw_d[25];
  wire do_write=pw_v&&!pw_busy&&pw_d[27:26]!=3&&begun&&pw_a<NOPS;
  wire do_seal=pw_v&&!pw_busy&&pw_d[27:26]==3&&!pw_hdr_bad&&pw_d[25];
- assign cal_w_ce=do_write;assign cal_w_addr=pw_a;
- assign cal_wd=pw_d[27:26]==2'd0 ? {50'd0,pw_d[25:0]}:pw_d[27:26]==2'd1 ? {24'd0,pw_d[25:0],26'd0}:{pw_d[23:0],52'd0};
- assign cal_wm=pw_d[27:26]==2'd0 ? {50'd0,{26{1'b1}}}:pw_d[27:26]==2'd1 ? {24'd0,{26{1'b1}},26'd0}:{{24{1'b1}},52'd0};
+ wire[75:0]wd76=pw_d[27:26]==2'd0 ? {50'd0,pw_d[25:0]}:pw_d[27:26]==2'd1 ? {24'd0,pw_d[25:0],26'd0}:{pw_d[23:0],52'd0};
+ wire[75:0]wm76=pw_d[27:26]==2'd0 ? {50'd0,{26{1'b1}}}:pw_d[27:26]==2'd1 ? {24'd0,{26{1'b1}},26'd0}:{{24{1'b1}},52'd0};
+ assign cal_w_ce=do_write;assign cal_w_addr={1'b0,pw_a[6:1]};
+ assign cal_wd=pw_a[0]?{wd76,76'd0}:{76'd0,wd76};assign cal_wm=pw_a[0]?{wm76,76'd0}:{76'd0,wm76};
  integer i3;
  always @*begin rd_ld=0;for(i3=0;i3<NOPS;i3=i3+1)rd_ld=rd_ld|({3{sc_oh[i3]}}&loaded[i3]);end
  integer i2,s2;
@@ -220,36 +237,39 @@ module ot_dsdv_walk_issue #(
   if(do_begin)for(i2=0;i2<NOPS;i2=i2+1)loaded[i2]<=0;
   if(do_write)loaded[pw_a][pw_d[27:26]]<=1'b1;
   if(do_seal)sc_oh<={{(NOPS-1){1'b0}},1'b1};else if(validating)sc_oh<=sc_oh<<1;
-  if(validating)sc_ld<=rd_ld;
+  if(validating)begin sc_ld<=rd_ld;sc_half<=scan_index[0];end
   if(do_seal)scan_first<=1'b1;
   if(sc_v&&sc_in)begin
-   scan_first<=1'b0;scan_pi<=sc_row[51:28];
+   scan_first<=1'b0;scan_pi<=sc_row[51:28];scan_pe<=sc_row[27:24];scan_eq<=!scan_first&&sc_row[51:28]==scan_pi;
    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
   end
   if(do_seal)scan_seen<=0;
   for(s2=0;s2<2;s2=s2+1)begin
    agp[s2]<=age[s2];
    if(acc[s2])begin
-    age[s2]<=0;crow[s2]<=s2==0?cal_rd0:cal_rd1;cp[s2]<=7'd0;cp1[s2]<=7'd1;cp2[s2]<=7'd2;
+    age[s2]<=0;cw[s2]<=nw[s2];ck[s2]<=6'd0;ck1[s2]<=6'd1;ck2[s2]<=6'd2;hh[s2]<=1'b0;
     users[s2]<=job_user;positions[s2]<=job_pos;tokens[s2]<=job_tok;
    end else if(active[s2])begin
     age[s2]<=age[s2]+1'b1;
-    if(hit[s2])begin crow[s2]<=s2==0?cal_rd0:cal_rd1;cp[s2]<=cp1[s2];cp1[s2]<=cp2[s2];cp2[s2]<=cp2[s2]+7'd1;end
+    if(adv[s2])begin cw[s2]<=nw[s2];ck[s2]<=ck1[s2];ck1[s2]<=ck2[s2];ck2[s2]<=ck2[s2]+6'd1;end
+    if(hit[s2]&&!hitb[s2])hh[s2]<=~hh[s2];
    end
   end
  end
  // commands: straight from the walker's current rows
  genvar ge;
  generate for(ge=0;ge<NENG;ge=ge+1)begin:g_command
-  wire h0=ENG_PRESENT[ge]&&hit[0]&&heng[0]==4'(ge);
-  wire h1=ENG_PRESENT[ge]&&hit[1]&&heng[1]==4'(ge);
+  wire a0=ENG_PRESENT[ge]&&hit[0]&&heng[0]==4'(ge),b0=ENG_PRESENT[ge]&&hitb[0]&&beng[0]==4'(ge);
+  wire a1=ENG_PRESENT[ge]&&hit[1]&&heng[1]==4'(ge),b1=ENG_PRESENT[ge]&&hitb[1]&&beng[1]==4'(ge);
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)cmd_v[ge]<=0;
-   else cmd_v[ge]<=h0|h1;
+   else cmd_v[ge]<=a0|b0|a1|b1;
   end
   always @(posedge clk)
-   cmd_d[84*ge+:84]<=({84{h0}}&{1'b0,users[0],positions[0],tokens[0],crow[0][23:0],7'(cp[0]+7'(OP_BASE))})|
-                      ({84{h1}}&{1'b1,users[1],positions[1],tokens[1],crow[1][23:0],7'(cp[1]+7'(OP_BASE))});
+   cmd_d[84*ge+:84]<=({84{a0}}&{1'b0,users[0],positions[0],tokens[0],ra[0][23:0],7'(opa[0]+7'(OP_BASE))})|
+                      ({84{b0}}&{1'b0,users[0],positions[0],tokens[0],rb[0][23:0],7'(opb[0]+7'(OP_BASE))})|
+                      ({84{a1}}&{1'b1,users[1],positions[1],tokens[1],ra[1][23:0],7'(opa[1]+7'(OP_BASE))})|
+                      ({84{b1}}&{1'b1,users[1],positions[1],tokens[1],rb[1][23:0],7'(opb[1]+7'(OP_BASE))});
  end endgenerate
 endmodule
 `default_nettype wire
