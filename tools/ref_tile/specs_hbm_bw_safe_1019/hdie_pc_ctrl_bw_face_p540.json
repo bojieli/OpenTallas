@@ -1,0 +1,395 @@
+{
+ "name": "hdie_pc_ctrl_bw_face_p540",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault_split"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    23.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_response_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    23.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_response_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    77.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_response_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    77.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_response_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    131.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_head*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    131.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_head*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    185.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_head*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    185.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_head*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    239.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    239.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    293.76,
+    133.92
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    293.76,
+    161.46
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    23.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_write_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    23.76,
+    51.3
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_write_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    77.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_write_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    77.76,
+    51.3
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_write_payload*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    131.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    131.76,
+    51.3
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    185.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    185.76,
+    51.3
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_post*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    239.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_queue*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    239.76,
+    51.3
+   ],
+   "at_exact": true,
+   "orient": "MX",
+   "inst": "*u_pending_identity*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "count": 1,
+   "at": [
+    293.76,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_response_identity*"
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 1024,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 32
+  }
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-BW",
+  "branch": "claude/l2h-bw-safe-1019",
+  "tag": "face_p540",
+  "purpose": "L2H-BW SAFE face successor of hdie_pc_ctrl_bw_n64 (gate FAIL band/fill, TT-189.64 macro->reg; c1f1c2c0c audit: 281 non-FF boundary contacts, 10.5 contacts/um 2c macro faces). Top ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face: every port a flop (KR on native RL1 ABI, consumer lands it in the 3-slot RL1 ring as vm_kshare; pure k_v/kr_rdy captures; registered pc_fault); 23 x ot_sram_1r1w_128x64_m1_p192 (5.2 contacts/um per W/E face, same TT/FF/SS timing as the 2c family); 12 abutted R0/MX PAIR stacks (55.08 um) in 6 columns x 2 rows at 54.0 um pitch (20.3 um pin channels), full-width central band y78.84..133.92. 0 added edges end to end (the 831-flop collar moves to the consumer).",
+  "extra_paths": [
+   "physical/hbm_bw_face_1019",
+   "physical/dsrom_window_source",
+   "physical/qwen_die_masters",
+   "physical/common_flow"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_face_p540",
+  "no_bench_reason": "Gate first; submit after the HBM_SAFE_FACE production full96 PASS and the committed mutant witnesses."
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "RESET_LANDING": 2,
+  "SRAM_P192": 1,
+  "PURE_FACE": 1
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every port is a flop D/Q in RTL (L2H-BW SAFE face): K pure capture (k_v 22 pure region D pins, kp_* captures), k_rdy=k_rdy_q, KR skid head flops on the native RL1 ABI, kr_rdy 18 pure region D pins, OREG PHY output flops, RREG PHY return capture, registered pc_fault; tool wrappers would add a second stage and break the RL1 contract."
+ },
+ "structural_change": "L2H-BW SAFE face successor of hdie_pc_ctrl_bw_n64 (gate FAIL band/fill, TT-189.64 macro->reg; c1f1c2c0c audit: 281 non-FF boundary contacts, 10.5 contacts/um 2c macro faces). Top ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face: every port a flop (KR on native RL1 ABI, consumer lands it in the 3-slot RL1 ring as vm_kshare; pure k_v/kr_rdy captures; registered pc_fault); 23 x ot_sram_1r1w_128x64_m1_p192 (5.2 contacts/um per W/E face, same TT/FF/SS timing as the 2c family); 12 abutted R0/MX PAIR stacks (55.08 um) in 6 columns x 2 rows at 54.0 um pitch (20.3 um pin channels), full-width central band y78.84..133.92. 0 added edges end to end (the 831-flop collar moves to the consumer).",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "outline": {
+  "w": 349.92,
+  "h": 213.84
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48,
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_dpl.tcl",
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_bw_face_1019/post_iop_p540.tcl",
+  "OT_OFLOP_HOPS": 8,
+  "OT_OFLOP_ALLOW_NONE": 1,
+  "OT_OFLOP_COLS": 4,
+  "OT_IOHOLD_IN": 1,
+  "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
+  "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Structural SAFE redesign after the failed n64 gate (band/fill FAIL, TT-189.64): registered every boundary port (281 offenders), spread-pin p192 SRAM family, compact stacked-bank floorplan with one central band; new master name."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages (as the legacy top); native relay adds 3; release 5 edges (production bench native_reset_release_edges=5). Tool landing would add a duplicate pair."
+ }
+}
