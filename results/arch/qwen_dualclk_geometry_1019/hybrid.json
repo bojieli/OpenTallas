@@ -1,0 +1,347 @@
+{
+  "actual_source_phase_reset_lifetime": null,
+  "corner_cost": {
+    "ff": {
+      "boundary_clock_driver_energy_fj": 376.69008141284513,
+      "clock_cap_ff": 635.334932388,
+      "simultaneous_all_banks_energy_fj": 13831.710703996145
+    },
+    "ss": {
+      "boundary_clock_driver_energy_fj": 217.2964203927972,
+      "clock_cap_ff": 547.4840523879999,
+      "simultaneous_all_banks_energy_fj": 9297.230897880394
+    },
+    "tt": {
+      "boundary_clock_driver_energy_fj": 285.13596487011995,
+      "clock_cap_ff": 581.910132388,
+      "simultaneous_all_banks_energy_fj": 11452.269505689375
+    }
+  },
+  "declared_soft_ff": 4672,
+  "macro_array_reserved_area_um2": 100776.95999999999,
+  "macro_array_reserved_um": [
+    259.2,
+    388.8
+  ],
+  "macro_clocks": 52,
+  "new_macro_area_um2": 28828.57536,
+  "old_macro_area_um2": 14393.328768,
+  "placements": [
+    {
+      "actual_instance": null,
+      "candidate_bank": 0,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 0.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 1,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 0.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 2,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 0.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 3,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 43.2
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 4,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 43.2
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 5,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 43.2
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 6,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 86.4
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 7,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 86.4
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 8,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 86.4
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 9,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 129.60000000000002
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 10,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 129.60000000000002
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 11,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 129.60000000000002
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 12,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 172.8
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 13,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 172.8
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 14,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 172.8
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 15,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 216.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 16,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 216.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 17,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 216.0
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 18,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 259.20000000000005
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 19,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 259.20000000000005
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 20,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 259.20000000000005
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 21,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 302.40000000000003
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 22,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 302.40000000000003
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 23,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 172.8,
+      "y_um": 302.40000000000003
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 24,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 0.0,
+      "y_um": 345.6
+    },
+    {
+      "actual_instance": null,
+      "candidate_bank": 25,
+      "outline_um": [
+        52.44,
+        21.144
+      ],
+      "parent_escape": null,
+      "pg_connection": null,
+      "x_um": 86.4,
+      "y_um": 345.6
+    }
+  ],
+  "standard_cell_band": null,
+  "total_pg_contacts": 52,
+  "total_signal_access_vias": 10608,
+  "total_signal_contacts": 5356
+}

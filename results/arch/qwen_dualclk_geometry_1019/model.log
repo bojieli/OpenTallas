@@ -1,0 +1,112 @@
+{
+  "proof": {
+    "pin_count": 206,
+    "path_count": 206,
+    "via_count": 408,
+    "source_to_terminal_connected_paths": 206,
+    "geometry_error_count": 0,
+    "errors": [],
+    "minimum_cross_net_axis_gaps_nm": {
+      "M4": 50,
+      "M5": 72,
+      "V4": 72
+    },
+    "same_layer_spacing_scalar_checked_nm": 48,
+    "wide_pg_spacing_checked_nm": 72,
+    "native_signal_width_nm": 24,
+    "native_PRL_thin_spacing_nm": 24,
+    "native_PRL_wide_spacing_nm": 72,
+    "minimum_parallel_run_gaps_nm": {
+      "M4": 72,
+      "M5": 72
+    },
+    "minimum_connected_same_layer_patch_area_nm2": {
+      "M4": 6600,
+      "M5": 3408
+    },
+    "native_minimum_area_nm2": 2000,
+    "contained_native_via_enclosures": 408,
+    "technology_rule_deck_qualification": null,
+    "parent_external_escape_qualification": null,
+    "per_pin_clock_phase_qualification": null
+  },
+  "outline_nm": [
+    52440,
+    21144
+  ],
+  "macro_area_um2": 1108.79136,
+  "timing": {
+    "ff": {
+      "clock_lead_delay_upper_ps": 3.7736356345667286,
+      "input_lead_delay_upper_ps": 3.8298369343148027,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.13213079822724,
+        "2.88": 3.86566923470724,
+        "11.52": 6.79982298062724,
+        "23.04": 10.71202797518724,
+        "46.08": 18.53643796430724
+      },
+      "clock_pin_cap_ff_by_pin": {
+        "wclk": 12.2022118,
+        "rclk": 12.233747138
+      },
+      "read_energy_fj": 392.6680333181483,
+      "write_energy_fj": 458.47078941414827,
+      "clock_access_energy_fj": 2.1875394943402,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "leakage_nw": 5543.9568,
+      "read_plus_clock_access_energy_fj": 394.85557281248845,
+      "write_plus_clock_access_energy_fj": 460.65832890848844,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 531.9888732306209,
+      "complete_boundary_clock_driver_energy_fj": 14.488080054340198
+    },
+    "ss": {
+      "clock_lead_delay_upper_ps": 4.870855970711306,
+      "input_lead_delay_upper_ps": 6.489400437966038,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 5.450888920309196,
+        "2.88": 6.184427356789196,
+        "11.52": 9.118581102709197,
+        "23.04": 13.030786097269196,
+        "46.08": 20.8551960863892
+      },
+      "clock_pin_cap_ff_by_pin": {
+        "wclk": 10.5127718,
+        "rclk": 10.544307137999999
+      },
+      "read_energy_fj": 264.3214398562811,
+      "write_energy_fj": 306.91019787228106,
+      "clock_access_energy_fj": 1.4643859424922,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "leakage_nw": 5543.9568,
+      "read_plus_clock_access_energy_fj": 265.7858257987733,
+      "write_plus_clock_access_energy_fj": 308.3745838147733,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 357.58580376463055,
+      "complete_boundary_clock_driver_energy_fj": 8.3575546304922
+    },
+    "tt": {
+      "clock_lead_delay_upper_ps": 4.073128754468129,
+      "input_lead_delay_upper_ps": 4.764635080982336,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.9562879660022046,
+        "2.88": 4.689826402482204,
+        "11.52": 7.623980148402204,
+        "23.04": 11.536185142962205,
+        "46.08": 19.360595132082207
+      },
+      "clock_pin_cap_ff_by_pin": {
+        "wclk": 11.1748118,
+        "rclk": 11.206347138
+      },
+      "read_energy_fj": 325.33071405466796,
+      "write_energy_fj": 378.90147885466797,
+      "clock_access_energy_fj": 1.8078838796199996,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "leakage_nw": 5543.9568,
+      "read_plus_clock_access_energy_fj": 327.138597934288,
+      "write_plus_clock_access_energy_fj": 380.709362734288,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 440.47190406497594,
+      "complete_boundary_clock_driver_energy_fj": 10.966767879619997
+    }
+  }
+}

@@ -1,0 +1,281 @@
+[
+  {
+    "capacity_bits": 66048,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1",
+    "face_counts": {
+      "E": 783,
+      "W": 783
+    },
+    "files": {
+      "ot_sram_1r1w2c_128x516_m1.json": "21d1a4664c8909d31f39aa3326ef5155f52a7a7bad963154a38264b949103e25",
+      "ot_sram_1r1w2c_128x516_m1.lef": "2404731b0bb882759285cec948e034fb27c645175e079277c944f76a24fffec0",
+      "ot_sram_1r1w2c_128x516_m1.v": "4348b12a00efb29da4b3762cb7ef0572052515337105cbebb6a556713ea0ed14",
+      "ot_sram_1r1w2c_128x516_m1_bb.v": "96ec1b17b83ead19327ff1eb454418235fa80032d3b64915d83a9383854149da",
+      "ot_sram_1r1w2c_128x516_m1_ff.lib": "61631b4fcd76fbd060b93df12fe64e35d5677fb68be19813c2e61ced00ec966a",
+      "ot_sram_1r1w2c_128x516_m1_ss.lib": "b230620aad699c64512529343480e19f47468f017b68970e60179ba9c9567a61",
+      "ot_sram_1r1w2c_128x516_m1_tt.lib": "1ab28fa38cad9dfec568404111cc15d7f9256aa07a7304175f777fc847c58ca2"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_128x516_m1",
+    "outline_um": [
+      170.424,
+      76.95
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "4348b12a00efb29da4b3762cb7ef0572052515337105cbebb6a556713ea0ed14"
+  },
+  {
+    "capacity_bits": 8736,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+    "face_counts": {
+      "E": 825,
+      "W": 825
+    },
+    "files": {
+      "ot_sram_1r1w2c_16x546_m1.json": "11dfede431747e2f86612c69bed52663f938be7e47d75e099476a95a08c62f78",
+      "ot_sram_1r1w2c_16x546_m1.lef": "2bca21d7a888b07c18e9bec1fc53d8021eb00ace2acc5499359248521275c02e",
+      "ot_sram_1r1w2c_16x546_m1.v": "f1b736ff2a12823300b4b079c8e8eaf21a2d4a2d2a0c5dbcecb47169d39a4d73",
+      "ot_sram_1r1w2c_16x546_m1_bb.v": "edddf4e6db43681bfc28c118817e9ef9d565d279848b3475d15f99c4407f6a57",
+      "ot_sram_1r1w2c_16x546_m1_ff.lib": "2547e9763031a5d58ed3f7001b9c5fbb927e12123b910c4b69f451e051a866a4",
+      "ot_sram_1r1w2c_16x546_m1_ss.lib": "dc5aeb055c562d487906c039ae8a1b2649ceda6e80900f5a51410e79c2fd0d96",
+      "ot_sram_1r1w2c_16x546_m1_tt.lib": "af25cfc64d41d47eccb96cb81babb49c17310f4113f87ceff10a973b10df4a0c"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_16x546_m1",
+    "outline_um": [
+      176.904,
+      81.0
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "f1b736ff2a12823300b4b079c8e8eaf21a2d4a2d2a0c5dbcecb47169d39a4d73"
+  },
+  {
+    "capacity_bits": 132352,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1",
+    "face_counts": {
+      "E": 785,
+      "W": 786
+    },
+    "files": {
+      "ot_sram_1r1w2c_256x517_m1.json": "1f6dc0c7fb75e1f5e57f4a690912477874f89e6884890839c65306e58559d611",
+      "ot_sram_1r1w2c_256x517_m1.lef": "f6653095ed1228efd8cc79a43db651ecb8a1734c5ab155e4442d02aac803f5d7",
+      "ot_sram_1r1w2c_256x517_m1.v": "319529641eec6c48c61b13987e5f30d62de641c4aa5e753282e3d9064d152499",
+      "ot_sram_1r1w2c_256x517_m1_bb.v": "47e29ef29f976fcf9953a4846bf88e6b235da80b819500c69e2a0fb19f75b43c",
+      "ot_sram_1r1w2c_256x517_m1_ff.lib": "390bf52aa8c0d84a7e65b268359875cb2dfe8dd3570eaf91b4da68003b0e19d1",
+      "ot_sram_1r1w2c_256x517_m1_ss.lib": "f07c8fda68ac0fb034549ba41ea36df1119c80ae24139c01b88e9a98b0ce5784",
+      "ot_sram_1r1w2c_256x517_m1_tt.lib": "eb19740eb7fb82d8de29cc56c531fcdc17cbb8d6e09d0d814313ac818e6f72e5"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_256x517_m1",
+    "outline_um": [
+      171.72,
+      77.22
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "319529641eec6c48c61b13987e5f30d62de641c4aa5e753282e3d9064d152499"
+  },
+  {
+    "capacity_bits": 17472,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1",
+    "face_counts": {
+      "E": 826,
+      "W": 826
+    },
+    "files": {
+      "ot_sram_1r1w2c_32x546_m1.json": "110786f8e2d26ed8f4729dff39239067053fdc19bb3fb372f26bb8e257f1644f",
+      "ot_sram_1r1w2c_32x546_m1.lef": "0c16cdc0856c5f650f4d9f232fe561b52d06dd4d27899a9f0fae668547cf977c",
+      "ot_sram_1r1w2c_32x546_m1.v": "3065101e47f1f38c362b142312222df9b6f93f28df96f2e4d69b0d70ccb09701",
+      "ot_sram_1r1w2c_32x546_m1_bb.v": "e7ebbc8046e195f20ed98e8fe58868847e96aada1261bf33df0663b3e7990b77",
+      "ot_sram_1r1w2c_32x546_m1_ff.lib": "3940f61015d239cf026281bf2e6e80bfd98dd48076cefb0363b1444dc6f938bc",
+      "ot_sram_1r1w2c_32x546_m1_ss.lib": "4c99fda7703992bce072b80d3b9698d3f64760b33c9103791f44da6b9890ee43",
+      "ot_sram_1r1w2c_32x546_m1_tt.lib": "63e2a5ce5dea5fcb9f956629cfac7f7da558aff11c89abd7b8f7d0a9cfbc85c9"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_32x546_m1",
+    "outline_um": [
+      177.768,
+      81.0
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "3065101e47f1f38c362b142312222df9b6f93f28df96f2e4d69b0d70ccb09701"
+  },
+  {
+    "capacity_bits": 33024,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
+    "face_counts": {
+      "E": 782,
+      "W": 782
+    },
+    "files": {
+      "ot_sram_1r1w2c_64x516_m1.json": "50c2b3e8853e887bcd2ae12534e8e1be8cbe2b0ad219932b38cfcad0394f06a9",
+      "ot_sram_1r1w2c_64x516_m1.lef": "be0d1be8807e8a96b8a5927f1e6586d1619927ad740abf4633d0f88501ede2a6",
+      "ot_sram_1r1w2c_64x516_m1.v": "4da548e328dd58beeb8433fa252c2f05cf653bdada8dd604022a06aba8284968",
+      "ot_sram_1r1w2c_64x516_m1_bb.v": "049f75e1e4c4c0258565241df9ea572f31dd2caf641899277b15e162924abb50",
+      "ot_sram_1r1w2c_64x516_m1_ff.lib": "a93030eb40c98022c2890768bebbbfbd1f756f45bca0fc0881c56b25055811e0",
+      "ot_sram_1r1w2c_64x516_m1_ss.lib": "f2394b8b805a3944c19c361c9cb05aafbb259a35704886fd9828ded4ab16fe83",
+      "ot_sram_1r1w2c_64x516_m1_tt.lib": "925d0e53e4ea7f1bb3810cd0c4654373a957859af03eb91eaeb33b047ecb6079"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_64x516_m1",
+    "outline_um": [
+      169.56,
+      76.68
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "4da548e328dd58beeb8433fa252c2f05cf653bdada8dd604022a06aba8284968"
+  },
+  {
+    "capacity_bits": 34944,
+    "directory": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+    "face_counts": {
+      "E": 827,
+      "W": 827
+    },
+    "files": {
+      "ot_sram_1r1w2c_64x546_m1.json": "cb5b4b5c6773f97c6ab5f5ba6170e3af7fb23234b81468e231ffcc2adfe23a5d",
+      "ot_sram_1r1w2c_64x546_m1.lef": "ee8c6e5560e5b0741370cdca2a15dca10df25fe0b45cb3e2b2d18fc175f305a4",
+      "ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+      "ot_sram_1r1w2c_64x546_m1_bb.v": "a660b2c14069a3e7742da73d3238874e7f8eab541de9ba9e0eae783160d44117",
+      "ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "ot_sram_1r1w2c_64x546_m1_ss.lib": "646dfaee59f8e9efe65b92fce30ec4892cf590670418db67fecdeab4da01491e",
+      "ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_64x546_m1",
+    "outline_um": [
+      178.632,
+      81.0
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236"
+  },
+  {
+    "capacity_bits": 8192,
+    "directory": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+    "face_counts": {
+      "E": 105,
+      "W": 105
+    },
+    "files": {
+      "ot_sram_1r1w2c_128x64_m1.json": "6af7def5e0c929cc4c049eab14310a8dbc8519216418e2a5cdef6bff02184b84",
+      "ot_sram_1r1w2c_128x64_m1.lef": "737a650260dfd52a14003b0e0aad97378b81ebc1adb0b6b9383c256c67ea92d6",
+      "ot_sram_1r1w2c_128x64_m1.v": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083",
+      "ot_sram_1r1w2c_128x64_m1_bb.v": "fa0158fc9b3bd261501646c89b8732603e9818a15251506f28a32daf2bade93b",
+      "ot_sram_1r1w2c_128x64_m1_ff.lib": "4d5bcb7447f037190288977e0b8297d93b6e11724a90ff93f25fe3f4402458a4",
+      "ot_sram_1r1w2c_128x64_m1_ss.lib": "7f0a45ece83b5b24d6f13525464bbd2cfca0ed247194ecbedc66f996597a0680",
+      "ot_sram_1r1w2c_128x64_m1_tt.lib": "419f4a06c07b54061a91db7b2faad842f4d05cf738c2ac60b4d384ca63bc736e"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_128x64_m1",
+    "outline_um": [
+      33.72,
+      27.576
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083"
+  },
+  {
+    "capacity_bits": 16384,
+    "directory": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+    "face_counts": {
+      "E": 106,
+      "W": 106
+    },
+    "files": {
+      "ot_sram_1r1w2c_256x64_m1.json": "311e29ad1dcd62133a8f72a1be49948d7b73aa6a19ed56dc76ce3f8c87de9ac3",
+      "ot_sram_1r1w2c_256x64_m1.lef": "6aedd879283b864ef29c6ec1d5c71395c0c4bd5b720580887a01aff4d4d37e78",
+      "ot_sram_1r1w2c_256x64_m1.v": "bb2980d8fcc7e0dd69829bcb0292dbf9b938b8326f996364ac282677aeca8b11",
+      "ot_sram_1r1w2c_256x64_m1_bb.v": "843151ca2f77684abee31d793c0f17d9067e98e63030cef7d4727e82f79f1bc3",
+      "ot_sram_1r1w2c_256x64_m1_ff.lib": "8c99c107d228cf14046215feb2443e35d3327a296c2254722b7f05725f76fc6f",
+      "ot_sram_1r1w2c_256x64_m1_ss.lib": "2f38e8630c2dc20fae6b72b58510a6c931dc0c4f2a060685420d90914cdd22ba",
+      "ot_sram_1r1w2c_256x64_m1_tt.lib": "fb26470c4a3e6353bd4f17203ce4ecec3b37b994bf1101697ec96ff139e077d3"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_256x64_m1",
+    "outline_um": [
+      34.584,
+      41.352
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "bb2980d8fcc7e0dd69829bcb0292dbf9b938b8326f996364ac282677aeca8b11"
+  },
+  {
+    "capacity_bits": 2048,
+    "directory": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+    "face_counts": {
+      "E": 103,
+      "W": 103
+    },
+    "files": {
+      "ot_sram_1r1w2c_32x64_m1.json": "b29a2cbba8646cf6b05367e317af4162a25a0ddf101309507459966522c7c8f5",
+      "ot_sram_1r1w2c_32x64_m1.lef": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b",
+      "ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+      "ot_sram_1r1w2c_32x64_m1_bb.v": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e",
+      "ot_sram_1r1w2c_32x64_m1_ff.lib": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989",
+      "ot_sram_1r1w2c_32x64_m1_ss.lib": "0c7692196d7fc8e8b123455828956499e24ac24d5781de273a0253b63a4b1880",
+      "ot_sram_1r1w2c_32x64_m1_tt.lib": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_32x64_m1",
+    "outline_um": [
+      31.992,
+      17.304
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+  },
+  {
+    "capacity_bits": 34944,
+    "directory": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1",
+    "face_counts": {
+      "E": 827,
+      "W": 827
+    },
+    "files": {
+      "ot_sram_1r1w2c_64x546_m1.json": "cb5b4b5c6773f97c6ab5f5ba6170e3af7fb23234b81468e231ffcc2adfe23a5d",
+      "ot_sram_1r1w2c_64x546_m1.lef": "ee8c6e5560e5b0741370cdca2a15dca10df25fe0b45cb3e2b2d18fc175f305a4",
+      "ot_sram_1r1w2c_64x546_m1_bb.v": "a660b2c14069a3e7742da73d3238874e7f8eab541de9ba9e0eae783160d44117",
+      "ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "ot_sram_1r1w2c_64x546_m1_ss.lib": "646dfaee59f8e9efe65b92fce30ec4892cf590670418db67fecdeab4da01491e",
+      "ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058"
+    },
+    "minimum_pitch_um": {
+      "E": 0.096,
+      "W": 0.096
+    },
+    "name": "ot_sram_1r1w2c_64x546_m1",
+    "outline_um": [
+      178.632,
+      81.0
+    ],
+    "physical_layout_views_present": [],
+    "semantics_source_sha256": null
+  }
+]
