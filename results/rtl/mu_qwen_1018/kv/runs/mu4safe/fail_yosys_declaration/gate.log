@@ -1,0 +1,14 @@
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['boot__boot_image_ready', 'boot__boot_image_fault', 'por_n', 'st', 'oobs__host_launch_quiet', 'boot__link_cfg_tx_we']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO oflop: E face 7.0 pins/um (o_hroot_ES, i_hroot_ES, o_hroot_EN): recipe-2 hold stages take 2.35 um behind the face, the pin flops need gap 3.0 um and 4 columns (derived in the flow)
+GATE INFO oflop: N face 7.0 pins/um (boot__boot_pr, boot__boot_image_target, boot__boot_image_ready): recipe-2 hold stages take 2.35 um behind the face, the pin flops need gap 3.0 um and 14 columns (derived in the flow)
+GATE INFO oflop: S face 7.0 pins/um (rst_n, lp, o_attn): recipe-2 hold stages take 2.35 um behind the face, the pin flops need gap 3.0 um and 14 columns (derived in the flow)
+GATE INFO oflop: W face 7.0 pins/um (o_hroot_WS, i_hroot_WS, o_hroot_WN): recipe-2 hold stages take 2.35 um behind the face, the pin flops need gap 3.0 um and 4 columns (derived in the flow)
+GATE WARN rtl: runtime_partselect: 7 runtime-indexed part-select(s), 540 bits (2 >= 64 b; e.g. qkd_kv_es_fan_root2_b: es_p[288*hi + 1 +: 256] (256 b), qkd_kv_es_fan_root2_b: es_p[288*lo + 1 +: 256] (256 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)
+GATE INFO remote: ot-run selected ot-epyc7 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_kvs_ctl_mu4_safe_20261019-075937.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_kvs_ctl_mu4_safe_20261019-075937.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu4_safe-20261019-075937
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)

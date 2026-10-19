@@ -67,6 +67,7 @@ end else begin : g_mu
     reg [31:0] enter_guard, leave_guard;
     wire guard_enter = SAFE ? (ac && !rearm && !nm && cy == enter_guard) : enter_tr;
     wire guard_leave = SAFE ? (ac && !rearm && cy == leave_guard) : leave_now;
+    reg [7:0] bad;
     (* keep = 1 *) reg [7:0] bad_q;
     (* keep = 1, dont_touch = 1 *) reg [3:0] halt_q;
     wire [7:0] bad_use = SAFE ? bad_q : bad;
@@ -82,7 +83,6 @@ end else begin : g_mu
             halt_q[3] <= ft || (|bad);
         end
     end
-    reg [7:0] bad;
     always @* begin
         bad = 0;
         if (we_q && (cf || ac || go_q)) bad[0] = 1;
