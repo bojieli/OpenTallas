@@ -1,0 +1,131 @@
+{
+ "verdict": "STRUCTURAL_ALIAS_BUG_SOURCE_CONFIRMED",
+ "manifest_adopted": false,
+ "instance": "col_idx",
+ "port": "pw_addr",
+ "unread_bits": [
+  8,
+  11
+ ],
+ "collar_aw": 12,
+ "consumer_aw": 8,
+ "exact_edges": [
+  {
+   "name": "cp2_123__soft0",
+   "bits": 8,
+   "source": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "program_addr",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header) | soft hb_idx flatten",
+   "region": "cp2"
+  },
+  {
+   "name": "l4_00003",
+   "bits": 8,
+   "source": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "sink": [
+    "hb_idx__qctl_SW",
+    "program_addr",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_hbm_idx_client_static_quad (rtl/hbm_accel/index/quad_1017) soft composition, die-level children: programme/start broadcast to the 5 calendars (equal fixed latency: relay layer)",
+   "region": "d4g_gen1_l4"
+  },
+  {
+   "name": "l4_00221",
+   "bits": 8,
+   "source": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "sink": [
+    "hb_idx__qctl_SE",
+    "program_addr",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_hbm_idx_client_static_quad (rtl/hbm_accel/index/quad_1017) soft composition, die-level children: programme/start broadcast to the 5 calendars (equal fixed latency: relay layer)",
+   "region": "d4g_gen1_l4"
+  },
+  {
+   "name": "l4_00453",
+   "bits": 8,
+   "source": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "sink": [
+    "hb_idx__qctl_NW",
+    "program_addr",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_hbm_idx_client_static_quad (rtl/hbm_accel/index/quad_1017) soft composition, die-level children: programme/start broadcast to the 5 calendars (equal fixed latency: relay layer)",
+   "region": "d4g_gen1_l4"
+  },
+  {
+   "name": "l4_00688",
+   "bits": 8,
+   "source": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "sink": [
+    "hb_idx__qctl_NE",
+    "program_addr",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_hbm_idx_client_static_quad (rtl/hbm_accel/index/quad_1017) soft composition, die-level children: programme/start broadcast to the 5 calendars (equal fixed latency: relay layer)",
+   "region": "d4g_gen1_l4"
+  }
+ ],
+ "witness": {
+  "initial_state": "page0, sel0, hwm0",
+  "legal_prefix": "write programme rows0..255 sequentially, hwm becomes256; collar fault remains0",
+  "alias_write": "write row0x100 with legal sequential lin256==hwm256, hwm[12]==0; emits pw_we1,pw_addr0x100, no collar fault",
+  "effect": "all five actual programme stores see only addr[7:0]==0 and overwrite row0",
+  "need_validator": "need permits AW+1=13bit count257; hwm257 passes, so intended image<256 alone is insufficient",
+  "page_alias": "page1 adds2048, same low8 alias if reached with sequential installation"
+ },
+ "required_repair": "Source-bound actual-depth limit256 on programme writes and declared installation need; reject high-page/high-row aliases before pw_we. Preserve legal256row complete native-index command image installation/golden. New physical/source binding required; no tie or waiver.",
+ "proof_scope": "Exact source+contract counterexample, no RTL witness simulation yet; no claim full native index golden passed for repair",
+ "source_commit": "d517a76ad",
+ "source_sha256": "e24af398774ed829314db25d68960b67832f0802437df19f46df24f62cd62e9e"
+}
