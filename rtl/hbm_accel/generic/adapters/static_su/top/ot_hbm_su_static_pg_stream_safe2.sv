@@ -396,9 +396,21 @@ module ot_hbm_su_static_pg_stream_s_safe2 #(
  output wire [1:0] far_w_done,
  output wire lg_fault
 );
- wire [1:0] q_id=(STRAP!=0)?pos[3:2]:2'(QID);
- wire [1:0] g_id=(STRAP!=0&&MUT!=11)?pos[1:0]:2'(G);
- wire b39_on=(STRAP!=0)?(q_id==2'd0):(B39_NOOP!=0);
+ // pos is a die strap (static): kept registered copies, one per consumer group (5 inject regions, the 2 bank leaves),
+ // so the strap pins see 6 loads per bit; registered from the first pg_clk edge, long before reset release.
+ wire [3:0] pos_c [0:5];
+ for(genvar c=0;c<6;c=c+1)begin:g_pos
+  for(genvar b=0;b<4;b=b+1)begin:g_b
+   ot_pgs_rst_cell #(.ID(9200+c*4+b)) u(.clk(pg_clk),.d(pos[b]),.q(pos_c[c][b]));
+  end
+ end
+ wire [1:0] q_id=(STRAP!=0)?pos_c[5][3:2]:2'(QID);
+ wire [1:0] g_id=(STRAP!=0&&MUT!=11)?pos_c[5][1:0]:2'(G);
+ wire [1:0] gi [0:4]; wire bi [0:4];
+ for(genvar r=0;r<5;r=r+1)begin:g_posr
+  assign gi[r]=(STRAP!=0&&MUT!=11)?pos_c[r][1:0]:2'(G);
+  assign bi[r]=(STRAP!=0)?(pos_c[r][3:2]==2'd0):(B39_NOOP!=0);
+ end
  // reset synchronisers: first stage as before, second stage replicated (same two pg_clk ages)
  reg rq_s0, rs_s0;
  always @(posedge pg_clk) begin rq_s0 <= rc_leaf; rs_s0 <= rc_tap; end
@@ -445,8 +457,8 @@ module ot_hbm_su_static_pg_stream_s_safe2 #(
  wire [40:0] s0 [0:4], s1 [0:4], s2 [0:4];
  for(genvar r=0;r<5;r=r+1)begin:g_ij
   localparam [40:0] M = (r==0)?IM0:(r==1)?IM1:(r==2)?IM2:(r==3)?IM3:IM4;
-  ot_pgs_inj_s_region #(.M(M),.MUT(MUT==9?9:0)) u_r(.clk(pg_clk),.rst_n(brt_i[r]),.ij(ij),.g_id(g_id),
-   .b39_on(b39_on),.b0(s0[r]),.b1(s1[r]),.b2(s2[r]));
+  ot_pgs_inj_s_region #(.M(M),.MUT(MUT==9?9:0)) u_r(.clk(pg_clk),.rst_n(brt_i[r]),.ij(ij),.g_id(gi[r]),
+   .b39_on(bi[r]),.b0(s0[r]),.b1(s1[r]),.b2(s2[r]));
  end
  assign ijb0 = s0[0] | s0[1] | s0[2] | s0[3] | s0[4];
  assign ijb1 = s1[0] | s1[1] | s1[2] | s1[3] | s1[4];
@@ -484,20 +496,26 @@ module ot_hbm_su_static_pg_stream_split_safe2 #(
  localparam integer NTS=(17+281+14)/15+(257+14)/15+2;  // 40 (monitor has two reset groups)
  localparam integer NQT=2*NTQ+5;                         // 129 serial-domain bridge reset terminals
  localparam integer NST=2*NTS+5+1;                       // 86 stream-domain terminals (bridge_s regions, inject_s, MUT14)
- localparam integer NBS=(NST+31)/32;                     // 3 serial feeders of the stream terminals
+ localparam integer NBS=(NST+31)/32;                     // 3 stream feeder chains
  // rst_n: two source stages after the face flop (old kit: 3 face stages)
  wire rst_a, rst_core;
  ot_pgs_rst_cell #(.ID(9900)) u_rst_a(.clk(clk_ctl),.d(rst_n),.q(rst_a));
  ot_pgs_rst_cell #(.ID(9901)) u_rst_t(.clk(clk_ctl),.d(rst_a),.q(rst_core));
- // bridge_rst_n: face flop (C) -> stage A (C+4q) -> serial terminals (C+8q; serial loads count from C+12q)
- //                                              -> serial feeders (C+8q) -> pg_clk terminals (C+9q; stream loads count
- //                                                 from C+12q).  Both domains leave reset on the SAME coincident edge,
- //                                                 as the seam calendar assumes (a clk_ctl-released stream reset would
- //                                                 let the stream side start one stream edge early: windows break).
- wire [NQT+NBS-1:0] bq; wire [NST-1:0] bs;
- ot_pgs_rst_tree #(.N(NQT+NBS),.BR(32),.BASE(10000)) u_brt(.clk(clk_ctl),.rin(bridge_rst_n),.t(bq));
+ // bridge_rst_n, face flop released at coincident edge C:
+ //   serial: -> stage A (clk_ctl, C+4q) -> serial terminals (clk_ctl, C+8q) -> serial loads count from C+12q
+ //   stream: -> feeder F (clk_ctl, C+4q) -> P (pg_clk, C+6q: a 2q / 1q setup / hold related-clock window, declared in
+ //              the kit) -> stream terminals (pg_clk, C+9q) -> stream loads count from C+12q
+ // Both domains leave reset on the SAME coincident edge, the release the seam calendar and its windows assume.  (The
+ // current kit -- 3 clk_ctl landing stages straight onto stream flops -- starts the stream side one stream edge early:
+ // tb_hbm_su_pg_stream_kitland FAILS the lockstep.)
+ wire [NQT-1:0] bq; wire [NBS-1:0] bf, bp; wire [NST-1:0] bs;
+ ot_pgs_rst_tree #(.N(NQT),.BR(32),.BASE(10000)) u_brt(.clk(clk_ctl),.rin(bridge_rst_n),.t(bq));
+ for(genvar i=0;i<NBS;i=i+1)begin:g_bsf
+  ot_pgs_rst_cell #(.ID(19000+i)) u_f(.clk(clk_ctl),.d(bridge_rst_n),.q(bf[i]));
+  ot_pgs_rst_cell #(.ID(19100+i)) u_p(.clk(pg_clk),.d(bf[i]),.q(bp[i]));
+ end
  for(genvar i=0;i<NST;i=i+1)begin:g_bst
-  ot_pgs_rst_cell #(.ID(20000+i)) u(.clk(pg_clk),.d(bq[NQT+(i%NBS)]),.q(bs[i]));
+  ot_pgs_rst_cell #(.ID(20000+i)) u(.clk(pg_clk),.d(bp[i%NBS]),.q(bs[i]));
  end
  wire [33:0] rq_b0, rq_b1; wire [561:0] wq_b0, wq_b1; wire [513:0] rr_b0, rr_b1;
  wire [40:0] ijb0, ijb1, ijb2; wire pgf_s, rc_leaf, rc_tap;
