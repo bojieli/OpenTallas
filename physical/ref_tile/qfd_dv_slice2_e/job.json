@@ -24,6 +24,88 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "eq_m0",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m0 eq 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "EQ MUT=0: LPF_EQ PASS"
+   },
+   {
+    "name": "eq_m1",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m1 eq 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "EQ MUT=1: LPF_EQ FAIL",
+    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/eq1h.log"
+   },
+   {
+    "name": "eq_m3",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/eq_m3 eq 3",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "EQ MUT=3: LPF_EQ FAIL",
+    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/eq3.log"
+   },
+   {
+    "name": "lp_m0",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m0 lp 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "LP MUT=0: LP_LOCKSTEP PASS"
+   },
+   {
+    "name": "lp_m1",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m1 lp 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP MUT=1: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp1_395025d51.log"
+   },
+   {
+    "name": "lp_m2",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m2 lp 2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP MUT=2: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp2_395025d51.log"
+   },
+   {
+    "name": "lp_m3",
+    "cmd": "bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {RUN}/bench/lp_m3 lp 3",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP MUT=3: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench/lp3_395025d51.log"
    }
   ],
   "calibrate": {

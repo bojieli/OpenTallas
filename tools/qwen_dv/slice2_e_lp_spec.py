@@ -104,13 +104,37 @@ def main():
         "job": {"owner": "Claude:OWN-QWEN/SLICE-E", "branch": "claude/ownq-slicee-1018", "tag": "lp1", "submit": False,
                 "purpose": "qfd_dv_slice2_e landed parent pathfinding (critical: gate only, COORD-REVIEW-QUEUE)",
                 "hold_merge": "OWN-QWEN/SLICE-E diagnostic: lane_h + xs_leaf stand-ins",
-                "extra_paths": ["results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"], "benches": []},
+                "extra_paths": ["results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"], "benches": BENCHES},
     }
     out = ROOT / KD / "spec.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(s, indent=1) + "\n")
     print(out, len(s["children"]), "children", len(s["macros"]), "macros", len(s["clock_ports"]), "region roots")
 
+
+WIT = "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf/bench"
+
+
+def _b(name, kind, m, expect, rx, wit=None):
+    b = {"name": name, "cmd": f"bash rtl/test/qwen_dv/run_slice2_e_lpf.sh {{RUN}}/bench/{name} {kind} {m}", "expect": expect,
+         "threads": 16, "peak_ram_gb": 64, "needs": ["verilator"]}
+    if expect == "pass":
+        b["pass_regex"] = rx
+    else:
+        b["fail_regex"], b["fail_witness"] = rx, wit
+    return b
+
+
+# eq: qfd_dv_slice2_e == the wires-only re-cut (3 stimulus modes); lp: the re-cut == the generated landed parent.
+# Unobservable mutants (recorded, not benched): eq MUT 2 (cw_n1/cw_n2 swap: equal words under random stimulus) and lp MUT 4
+# (u_c / u_hd reset run one stage long: both re-synchronise their reset and the random stimulus flushes the state).
+BENCHES = [_b("eq_m0", "eq", 0, "pass", "EQ MUT=0: LPF_EQ PASS"),
+           _b("eq_m1", "eq", 1, "fail", "EQ MUT=1: LPF_EQ FAIL", f"{WIT}/eq1h.log"),
+           _b("eq_m3", "eq", 3, "fail", "EQ MUT=3: LPF_EQ FAIL", f"{WIT}/eq3.log"),
+           _b("lp_m0", "lp", 0, "pass", "LP MUT=0: LP_LOCKSTEP PASS"),
+           _b("lp_m1", "lp", 1, "fail", "LP MUT=1: LP_LOCKSTEP FAIL", f"{WIT}/lp1_395025d51.log"),
+           _b("lp_m2", "lp", 2, "fail", "LP MUT=2: LP_LOCKSTEP FAIL", f"{WIT}/lp2_395025d51.log"),
+           _b("lp_m3", "lp", 3, "fail", "LP MUT=3: LP_LOCKSTEP FAIL", f"{WIT}/lp3_395025d51.log")]
 
 OUTREG = {
     "ef": ["st_eo", "sc_eo", "arv_eo", "art_eo", "arm_eo", "arl_eo", "ard_eo", "dd_eo", "ccv_eo", "ccm_eo", "ccw_eo", "cct_eo",

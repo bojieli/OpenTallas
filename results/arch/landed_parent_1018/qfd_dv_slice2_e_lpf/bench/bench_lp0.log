@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1121 GB (avail 849, growth 64, headroom 0, waiters 0/0 GB) load 45/128 running 15 disk 515 GB 
+ot-run: ot-epyc5       admits  1182 GB (avail 896, growth 68, headroom 0, waiters 0/0 GB) load 96/128 running 15 disk 1758 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_6e88bca26
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_6e88bca26
+ot-run: -> ot-epyc4
+ot-heavy: request 64G is charged 24G (class 'run_slice#_e_lpf.sh:lp' measured peak 15.1G, n=5+0 proved); the cap stays 64G
+ot-heavy: admitted on regular-crane as oth-ubuntu-172155-1792387937 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LP MUT=0: LP_LOCKSTEP PASS
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 6.503 MB sources in 100 modules, into 571.536 MB in 516 C++ files needing 0.151 MB
+- Verilator: Walltime 305.658 s (elab=0.997, cvt=131.180, bld=167.888); cpu 146.499 s on 16 threads; allocated 11163.410 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-172155-1792387937): exit 0

@@ -1,0 +1,10 @@
+LP_MISMATCH port=cmd_wo cycle=49 flat=4576ab7bd38eea640447d5e1efa56 landed=f6c94c176f68d4ca2fc674882a960
+LP_MISMATCH port=cmd_wo cycle=50 flat=b9a0700786d86d8bc9174388425de landed=8dbb5879efa212b3b3acca27706d4
+LP_MISMATCH port=cmd_wo cycle=51 flat=65ee767c36be946e1df4a36862401 landed=401bf678b4c9da77ea779b253ce45
+LP_MISMATCH port=cmd_wo cycle=52 flat=f6c94c176f68d4ca2fc674882a960 landed=402f782e4721cd00bbad23c96db79
+LP_MISMATCH port=cmd_wo cycle=53 flat=8dbb5879efa212b3b3acca27706d4 landed=3b704ffad6abec894d895f28d5cce
+LP_LOCKSTEP FAIL MUT=1 mismatches=2214 of 47883
+- rtl/qwen_dv/lp/tb_qfd_dv_slice2_e_lpf_lp.sv:242: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 7.527 s; speed 199.275 ns/s
+- Verilator: cpu 7.527 s on 1 threads; allocated 54 MB
