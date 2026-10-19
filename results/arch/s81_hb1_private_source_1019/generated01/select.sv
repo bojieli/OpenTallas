@@ -1,0 +1,55 @@
+module ot_s81sl_xr3_hb1_retained_1019 #(parameter RETAINED=0) (clk, rst_n, sid, dl_ev, dl_e, dl_wv, dl_w, dl_vv, dl_vb, ci_dir, ci_b, bi, bo, c_v, c_d, sw_v, sw_a, sw_m, sw_d, lo_v, lo_d, p_v, p_d, rb_v, rb_d, e_v, e_c, e_d, eg_v, eg_c, eg_d, g_v, g_c, g_d, x_go, x_mode, x_eps, x_scale, x_sv, x_si, x_s, x_rbv, x_rbd, is_v, is_d, cfg_v, cfg_d, fault);
+  input wire clk;
+  input wire rst_n;
+  input wire [3:0] sid;
+  input wire dl_ev;
+  input wire [1103:0] dl_e;
+  input wire dl_wv;
+  input wire [1103:0] dl_w;
+  input wire dl_vv;
+  input wire [275:0] dl_vb;
+  output wire [2:0] ci_dir;
+  output wire [1103:0] ci_b;
+  input wire [1103:0] bi;
+  output wire [1103:0] bo;
+  output wire [4:0] c_v;
+  output wire [159:0] c_d;
+  output wire [4:0] sw_v;
+  output wire [49:0] sw_a;
+  output wire [39:0] sw_m;
+  output wire [1279:0] sw_d;
+  input wire [4:0] lo_v;
+  input wire [1279:0] lo_d;
+  input wire [4:0] p_v;
+  input wire [159:0] p_d;
+  output wire rb_v;
+  output wire [31:0] rb_d;
+  input wire [4:0] e_v;
+  input wire [9:0] e_c;
+  input wire [479:0] e_d;
+  input wire eg_v;
+  input wire [1:0] eg_c;
+  input wire [31:0] eg_d;
+  output wire g_v;
+  output wire [1:0] g_c;
+  output wire [31:0] g_d;
+  output wire x_go;
+  output wire x_mode;
+  output wire [31:0] x_eps;
+  output wire [31:0] x_scale;
+  output wire x_sv;
+  output wire [7:0] x_si;
+  output wire [31:0] x_s;
+  input wire x_rbv;
+  input wire [31:0] x_rbd;
+  output wire is_v;
+  output wire [159:0] is_d;
+  output wire cfg_v;
+  output wire [159:0] cfg_d;
+  output wire fault;
+generate if (RETAINED) begin : retained
+ot_s81sl_xr3_hb1_graph_1019 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v), .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
+end else begin : identity
+ot_s81sl_xr3_hb1_anchor_1019 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v), .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
+end endgenerate
+endmodule
