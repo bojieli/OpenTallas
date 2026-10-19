@@ -284,7 +284,7 @@ module tb;
             for (i = 0; i < 12; i = i + 1) begin te = te + e[i]; tc = tc + c[i]; tf = tf + (f[i] === 1'b1 ? 1 : 0);
                 if (f[i] !== 1'b0) $display("FWD_LANE FAULT lane %0d", i); end
 `ifdef OT_QFD_LAND_PHASE_SWEEP
-            for(i=0;i<256;i=i+1)begin te=te+ep[i];tc=tc+cp[i];tf=tf+(fp[i]===1'b1?1:0);end
+            for(i=0;i<256;i=i+1)begin te=te+ep[i];tc=tc+cp[i];tf=tf+((fp[i] === 1'b1) ? 1 : 0);end
 `endif
             if (l3.L != l2.L) te = te + 1;
             $display("FWD_BENCH %s %0d errors in %0d checks (faults %0d)", (te || tf || tc < 4000) ? "FAIL" : "PASS", te + tf, tc, tf);
