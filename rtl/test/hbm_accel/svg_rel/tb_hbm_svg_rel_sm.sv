@@ -35,7 +35,12 @@ module tb_hbm_svg_rel_sm;
   .configured(cp_cfgd),.fault(cp_fault),.active(cp_active));
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
- ot_hbm_svc_sm_group_rel_id #(.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
+ `ifdef SMB_SRAMFIFO
+ ot_hbm_svc_sm_group_rel_sram_id #(.FIFOMUT(`ifdef SMB_FIFOMUT `SMB_FIFOMUT `else 0 `endif),
+ `else
+ ot_hbm_svc_sm_group_rel_id #(
+ `endif
+.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
   .id_stack(2'd0),.id_sm(3'd0),
   .stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_bank_clk({2{stream}}),.hbm_fifo_clk({2{hbm}}),.hbm_pc_clk({4{hbm}}),
   .program_cfg_we(a_we),.program_cfg_addr(a_addr),.program_cfg_data(a_data),

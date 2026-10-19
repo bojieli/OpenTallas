@@ -19,6 +19,7 @@ git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tool
   rtl/hbm_accel/loader/service_native rtl/hbm_accel/sm/static rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
   rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14 \
   physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
+  physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 results/rtl/hbm_ds_layer_tput_1018/fixtures/L02 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L14 results/rtl/hbm_ds_layer_tput_1018/fixtures/head | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
@@ -27,6 +28,9 @@ VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 FIX=$OUT/src/results/rtl/hbm_ds_layer_tput_1018/fixtures
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_unit.py run --fix $FIX --smw $SMW --bundle $BUNDLE --work $OUT/work"
 case "$JOB" in
+  sram_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO --name sram_smoke --out $OUT/out/sram_smoke.json" ;;
+  sram_mut1) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_FIFOMUT=1 --name sram_mut1 --out $OUT/out/sram_mut1.json" ;;
+  sram_mut2) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_FIFOMUT=2 --name sram_mut2 --out $OUT/out/sram_mut2.json" ;;
   smoke) J="$T --layers L00:0 --name smoke --out $OUT/out/smoke.json" ;;
   trace) J="$T --layers L00:0 --define TRACE --name trace --out $OUT/out/trace.json" ;;
   pos)   J="export SMB_PACE_NUM=${PNUM:-200}; $T --layers L00:0,L02:2,L14:14,head:0 --name pos --out $OUT/out/pos.json" ;;

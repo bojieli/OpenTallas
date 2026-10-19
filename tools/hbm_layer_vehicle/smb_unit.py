@@ -441,6 +441,14 @@ def build(work: Path, bundle: Path, defines):
     sm = [bundle / p for p in mf["ot_hbm_accel_smh_attn"]]
     svc = [ROOT / p for p in (HERE / "smb_svc_files.txt").read_text().split()]
     own = [ROOT / p for p in SVG_SRC]
+    if "SMB_SRAMFIFO" in defines:
+        own += [ROOT / p for p in (
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_sram_id.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_sram_id.sv",
+            "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1.v")]
     names = {Path(p).name for p in sm}
     files = sm + [p for p in svc + own if p.name not in names] + [ROOT / TB]
     vl = os.environ.get("VERILATOR") or os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
