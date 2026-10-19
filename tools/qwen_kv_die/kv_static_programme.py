@@ -160,13 +160,13 @@ def _sfi():
     return m
 
 
-def link_calendar(workdir):
+def link_calendar(workdir, status_delay=0):
     import gzip
     out = Path(workdir) / 'cal'
     tp = Path(workdir) / 'token_path_compiled.json'
     tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
     p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
-                       + ['--token-path', str(tp)],
+                       + ['--token-path', str(tp), '--status-delay', str(status_delay)],
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
         raise SystemExit('link calendar compile failed: ' + p.stderr[-2000:])
@@ -686,7 +686,7 @@ def pacing_of(put):
 
 
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=0):
     # die_cfg_words: the pre-boot target-10 image (kv_static_kvjf_join.die_cfg_image from a die plan's ECTL cfg + reset
     # delays); without it the bundle carries targets 0..9, 11..13 and the die plan supplies target 10
     sfi = _sfi()
@@ -695,7 +695,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
         raise ValueError('HOST programme image must be PW1024 + DW8 words')
     digest = sfi.image_digest(prog)
     with tempfile.TemporaryDirectory(dir=workdir) as td:
-        cal = link_calendar(td)
+        cal = link_calendar(td, status_delay)
         link_words = link_cfg_words(Path(td) / 'cal')
     link_check = link_image_check(link_words, cal)        # KV-LINKCFG-MU: target 11 == the bound image (fail closed)
     es_pc, es_beat = es_cfg_words()
@@ -716,10 +716,19 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     run_ev = cmd_ev - LR.RX_CMD
     start_qk = run_ev + LR.RX_CMD + LR.Q_TO_START
     tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev              # att_tx_slot of RESULT beat 0 at the programme
-    tx_end = tx_first + 34
+    tx_end = tx_first + 34 + status_delay
     service_end = tx_first - LR.RX_CMD - 2 + 31
-    if res[-1]['cyc'] - res[0]['cyc'] != 31 or st[0]['cyc'] != res[0]['cyc'] + 33:   # static_ctl: STATUS at tx_first + 33
+    if res[-1]['cyc'] - res[0]['cyc'] != 31 or st[0]['cyc'] != res[0]['cyc'] + 33 + status_delay:   # static_ctl: STATUS at tx_first + 33
         raise ValueError('RESULT burst / STATUS not on consecutive link slots')
+
+    retirement = None
+    if status_delay:
+        if retirement_contract is None:
+            raise ValueError('delayed STATUS requires a complete retirement contract')
+        from kv_retirement import prove
+        retirement = prove(retirement_contract, tx_first, tx_end - 1)
+        if not retirement['qualified']:
+            raise ValueError('delayed production STATUS requires qualified deadline/path/reset evidence')
 
     # ---- K / V leads and the layer roots ----
     plans, P, lead_k, lead_v = pc_plans(pr)
@@ -878,7 +887,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     att = dict(compiled_rx_cmd=LR.RX_CMD, compiled_tx_first=tx_first, compiled_end=tx_end, service_end=service_end,
                start_qk_run_age=start_qk - run_ev, law='calendar(T) = attention_calendar(T, profile, service_end): R stretched so '
                'PV_START + max(P0, P1, R) + 49 = service_end for every T in 1..8192',
-               samples={}, control=att_ctl)
+               samples={}, control=att_ctl, retirement=retirement)
     for T in (1, 128, 1000, 2048, 4096, 6144, 8192):
         c = attention_calendar(T, pr, service_end)
         att['samples'][str(T)] = dict(cal=AC.hexcal(c), fields=c)

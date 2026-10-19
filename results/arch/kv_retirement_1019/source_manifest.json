@@ -1,0 +1,26 @@
+{
+  "base": "b43db8464",
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv": "a0db1639e4fb5448e3bcbe91761933a5c2b990733058ee5eaa1fd6877debf983",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv": "f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e",
+    "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv": "fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv": "6bd41c4aea6b90fc02faf31878ce8f4cd609ab6679e789474ea2e244e17fa2d8",
+    "rtl/test/qwen_split/tb_kv_retirement.sv": "3e8b9a9b95fac29851b92a89729d7766feb5284330c1d8932991b77a1f197bf8",
+    "rtl/test/qwen_split/kv_retirement_collector.sv": "edc721b912a208d16746a226a31dddc401511e322fd81e96d6d27d32f2bbc366",
+    "rtl/test/qwen_split/tb_kv_retirement_reset.sv": "211a66b394750f41eb4e7820189d71a5a3235aa4ce8b7c1146776a433b9e9ce5",
+    "rtl/test/qwen_split/tb_kv_retirement_cal.sv": "cc9cb167f48c35478bb8ca884a91107acb98dccd7ca5ee216762cd9b6f7c3535",
+    "rtl/test/qwen_split/tb_native_attention_static_ctl.sv": "3323d33f5023ae593323af1616c1be066e8264b5803f57c2d0b68531a862b489",
+    "tools/qwen_kv_die/kv_retirement.py": "eca0314d0e86ea744e05ddaaaa3c000864df855274f1e90d5ff362dcf72c6449",
+    "tools/qwen_kv_die/test_kv_retirement.py": "aab392da8a13a4f6a3ee39806fb3686d44488c3e3db5d6ca0e6d04ce486cbed1",
+    "tools/qwen_kv_die/kv_static_programme.py": "455acc076af7eb04a221bcfc2c4750761e8942530cbe546d0efb539ddb3302e4",
+    "tools/qwen_split/d2d_link_calendar.py": "8ac8d05ae0404d777705afd7e8988ca6490f22b628bcb3531bd9dbb0c33e7746"
+  },
+  "fleet_run": "/srv/opentallas-scratch/claude/codex-kv-retirement-1019",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1701725-1792428416",
+  "qualification": "LOGICAL_ONLY"
+}
