@@ -59,7 +59,10 @@ HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
-GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach")
+# reset_landing (ROOT-RST 2026-10-19, Gate-Rule: tightening requires=reset_landing): a reset input reaching more than
+# rst_land_max (2) sinks without a pin landing register FAILS the gate (textbook_lint reset_landing; kit fix: ref_tile
+# "reset_landing": {"enable": true} inserts the 2-stage landing at synthesis)
+GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach", "reset_landing")
 RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
@@ -1212,9 +1215,10 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
-    if textbook_reset_args(spec):
+    tbx = textbook_reset_args(spec) + reset_landing_args(spec)
+    if tbx:
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
-        sh = sh.replace(tb, tb.replace(" | sed", textbook_reset_args(spec) + " | sed", 1), 1)
+        sh = sh.replace(tb, tb.replace(" | sed", tbx + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1531,6 +1535,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
     check_keep_modules(g, kd, spec, out)
+    g.reset_landing = reset_landing_record(out)      # a gate without this record predates the reset_landing rule
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -2137,6 +2142,38 @@ def textbook_reset_args(spec):
     return f" --set reset_ports={shlex.quote(','.join(names))}" if names else ""
 
 
+def reset_landing_args(spec):
+    """ROOT-RST 2026-10-19: the kit's reset_landing record -> textbook_lint args.  {"waive": "<reason>"} -> --waive
+    reset_landing (the finding stays a WARN); {"max_sinks": N, "reason": "..."} -> --set rst_land_max=N.  '' otherwise
+    (enable true / false: the netlist itself is judged).  SpecError-free: a malformed record is judged at the default."""
+    rl = spec.get("reset_landing")
+    if not isinstance(rl, dict):
+        return ""
+    out = ""
+    if str(rl.get("waive") or "").strip():
+        out += " --waive reset_landing"
+    n = rl.get("max_sinks")
+    if isinstance(n, int) and not isinstance(n, bool) and n > 0 and str(rl.get("reason") or "").strip():
+        out += f" --set rst_land_max={n}"
+    return out
+
+
+def reset_landing_record(out: str) -> dict | None:
+    """the gate netlist's reset_landing metrics (textbook_lint INFO line), None when the gate's lint predates the check"""
+    m = re.search(r"^GATE_TB textbook_lint: INFO reset_landing (\{.*\})\s*$", out, re.M)
+    if not m:
+        return None
+    try:
+        d = json.loads(m.group(1))
+    except ValueError:
+        return None
+    ports = [p for p in d.get("ports") or [] if isinstance(p, dict)]
+    mx = d.get("max")
+    waived = bool(re.search(r"^GATE_TB textbook_lint: WAIVED reset_landing:", out, re.M))
+    over = [p["port"] for p in ports if isinstance(mx, (int, float)) and p.get("sinks", 0) > mx]
+    return {"max_sinks": mx, "ports": ports, "over": over, "waived": waived, "ok": not over or waived}
+
+
 def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
@@ -2267,6 +2304,9 @@ TEXTBOOK_FIX = {
     "logic_depth": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
     "wire_reach": "relay flops every <= 500 um, or move the logic next to its pins/macros",
     "util_channel": "size the outline to util 0.50-0.55 with >= 20 um macro channels",
+    "reset_landing": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "
+                     "\"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own "
+                     "rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant",
 }
 
 
@@ -2334,6 +2374,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
+    if getattr(g, "reset_landing", None):
+        out["reset_landing"] = g.reset_landing  # absent: the gate predates the reset_landing rule (ROOT-RST 10-19)
     previous = kd / CLOCK_RESULT
     if previous.exists():
         import hashlib
