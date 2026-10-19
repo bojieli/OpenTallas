@@ -1,0 +1,236 @@
+{
+  "pass_": false,
+  "mutation": "",
+  "source": {
+    "att_kv_json": "/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/att/L02/att_kv.json",
+    "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+    "layer": 2,
+    "rank": 0,
+    "qk_priced": [
+      {
+        "i": 63,
+        "start": 10427.06,
+        "end": 11032.36,
+        "base_cost": 547
+      }
+    ],
+    "pv_priced": [
+      {
+        "i": 67,
+        "start": 11577.74,
+        "end": 12547.17,
+        "base_cost": 808
+      }
+    ],
+    "ring": {
+      "n": 128,
+      "m": 128,
+      "on": true,
+      "first": 0
+    },
+    "c_rows": 512
+  },
+  "budget": {
+    "model": {
+      "rows_per_sm": 64,
+      "subrun_rows": 8,
+      "encoded_bytes_per_subrun": 4224,
+      "lines_per_block": 32,
+      "descriptors_per_run": 16,
+      "hbm_bytes_per_run": 69632,
+      "packet_bits_per_edge": 1099,
+      "command_bits_per_edge": 192,
+      "cache_line_bits": 1088,
+      "svg_word_bits": 135,
+      "xc_word_bits": 173,
+      "programme_words_capacity": 2048,
+      "descriptor_capacity": 256,
+      "programme_replicas": 2,
+      "programme_mux": "existing paired 1024x256 SRAMs",
+      "cache_replicas": 1,
+      "added_hardware_area_um2": 0,
+      "new_boundary_registers": 0,
+      "new_routing_tracks": 0,
+      "cache_read_to_command_edges": 1,
+      "go_to_first_command_edges": 7,
+      "native_landing_padding_edges": 8,
+      "regional_return_edges_unadopted": 7,
+      "provider_gap_edges": 0,
+      "retire": "last word after full result tail",
+      "context": {
+        "row_off": 0,
+        "tag_base": 0,
+        "lstep": 0,
+        "fl": 0,
+        "mrel": 0,
+        "loops": 1
+      },
+      "golden": "QK rows exact; each PV node is csum8, merge in original tree order",
+      "latency": "actual compiler calendar length + fixed fetch/x-load/go gaps; measured in receipt",
+      "adoption": "OPEN: residency, descriptor composition, exact RTL, physical parent"
+    },
+    "descriptors": 16,
+    "distinct_programmes": 2,
+    "resident_words": 635,
+    "available_words": 2048,
+    "attention_reserved_legacy": 1019,
+    "fits_legacy_attention_reservation": true,
+    "ingress_install_edges": 1302,
+    "run_edges": 9432,
+    "rows_per_sm": 64,
+    "hbm_lines": 512,
+    "provider_gap_edges": 0
+  },
+  "executable": "/srv/opentallas-scratch/claude/codex-svg-sram-1019/work/obj_SMB_SRAMFIFO_88b5a9f29/Vtb_hbm_svg_rel_sm",
+  "executable_sha256": "75a56ac5df60dd5d703d391a5a1ed1264fee03983a8484d752e2b9cb84623779",
+  "rc": 1,
+  "fault": "FAULT svg cycle 1917 issuer 0 feed 1 (desc 0 cdc 0 cache 0 prog 0 s1 1 fl 0)",
+  "done": null,
+  "fixed_go_count": 1,
+  "results": [
+    {
+      "name": "qk_sm_SW0_k0",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k1",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k2",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k3",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k4",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k5",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k6",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "qk_sm_SW0_k7",
+      "results": 0,
+      "expected": 8,
+      "mismatches": 1,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k0",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k1",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k2",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k3",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k4",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k5",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k6",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    },
+    {
+      "name": "pv_sm_SW0_k7",
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "result_rows": 0,
+      "first_result": null,
+      "last_result": null
+    }
+  ]
+}
