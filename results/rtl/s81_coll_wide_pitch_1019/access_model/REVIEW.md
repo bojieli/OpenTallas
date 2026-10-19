@@ -47,7 +47,14 @@ Actual parent DEF track access remains unqualified.
 
 Preserve the entire original PG mesh inside its translated box. No passive
 upper or side channel needs an invented supply stripe, and no source PG
-stripe is removed, narrowed or relocated relative to its core. M4/M5 signal
+stripe is removed, narrowed or relocated relative to its core.
+The77 are39VDD/38VSS actual source rectangles, checked independently
+against the exact hashed source LEF in `pg_source_mapping.json`. The earlier
+9c18 endpoint-only model allocated113 hypothetical stripes (57VDD/56VSS)
+across a regenerated43.752um-height mesh; those were never generated views.
+This construction preserves the actual77 original rectangles; it does not
+remove36 existing stripes. Passive side/top access areas add no new powered
+devices. Their absence of extra PG is explicit, not an erased source contact. M4/M5 signal
 leads stay outside original M1-M4 body OBS and at least 72 nm from wide PG
 metal. Proposed parent-visible OBS only adds reserved area: full M1-M3,
 full M4 body except outer pin strips, plus M5 side channels. Parent signal
