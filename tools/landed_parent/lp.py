@@ -41,6 +41,7 @@ SPEC (JSON; paths relative to the repo root):
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
   bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  compiler_note  free-form (str / dict) copied into the record's "compiler" block: how the schedule absorbs the offsets
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 """
@@ -620,7 +621,8 @@ class Parent:
                 child_offset_edges={i["inst"]: t.get(i["inst"], 0) for i in self.insts},
                 input_port_offset_edges=port_in, output_port_offset_edges=port_out,
                 reset_release_added_edges=rt["RB"],
-                max_added_edges=max([0] + list(port_out.values()))),
+                max_added_edges=max([0] + list(port_out.values())),
+                parent_note=S.get("compiler_note")),     # spec "compiler_note": the parent owner's schedule reading
             skipped_mutants=(S.get("bench") or {}).get("skip_muts") or {},
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
