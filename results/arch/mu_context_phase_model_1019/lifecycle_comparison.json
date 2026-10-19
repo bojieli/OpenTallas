@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.qwen.phase-representation-comparison.v2",
+  "model_only": true,
+  "input_sha256": {
+    "scratch/lifecycle_F8_P2.json": "e725ef17c9da7190f020bf3d78b8ddd4c9834c548f4ef6cb557c23b6f125a94a",
+    "scratch/lifecycle_F16_P2.json": "0f0ff677d7173f0e98e8818e5dcf2b9b14c1988a2dcdddcdb9ccac95a32fe401"
+  },
+  "options": [
+    {
+      "frame_tokens": 8,
+      "encoding": "expanded leaf + expanded legacy OVL",
+      "H": 2013408,
+      "superframe": 4026816,
+      "leaf_words": 3300,
+      "leaf_rom_banks": 1,
+      "list_words_per_direction": 1484,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 11957.932799999999,
+      "leaf_counter_bits": 22,
+      "phase_state": "none",
+      "uses_existing_leaf_22bit_period": true,
+      "output_tok_s": 11920.087731845706,
+      "production_bound": false
+    },
+    {
+      "frame_tokens": 8,
+      "encoding": "masked leaf + expanded legacy OVL",
+      "H": 2013408,
+      "superframe": 4026816,
+      "leaf_words": 2063,
+      "leaf_rom_banks": 1,
+      "list_words_per_direction": 1484,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 11957.932799999999,
+      "leaf_counter_bits": 21,
+      "phase_state": "leaf only",
+      "uses_existing_leaf_22bit_period": true,
+      "output_tok_s": 11920.087731845706,
+      "production_bound": false
+    },
+    {
+      "frame_tokens": 8,
+      "encoding": "masked leaf + masked OVL",
+      "H": 2013408,
+      "superframe": 4026816,
+      "leaf_words": 2063,
+      "leaf_rom_banks": 1,
+      "list_words_per_direction": 815,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 11957.932799999999,
+      "leaf_counter_bits": 21,
+      "phase_state": "leaf and OVL",
+      "uses_existing_leaf_22bit_period": true,
+      "output_tok_s": 11920.087731845706,
+      "production_bound": false
+    },
+    {
+      "frame_tokens": 16,
+      "encoding": "expanded leaf + expanded legacy OVL",
+      "H": 4026816,
+      "superframe": 8053632,
+      "leaf_words": 8216,
+      "leaf_rom_banks": 3,
+      "list_words_per_direction": 3260,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 16741.105919999998,
+      "leaf_counter_bits": 23,
+      "phase_state": "none",
+      "uses_existing_leaf_22bit_period": false,
+      "output_tok_s": 13112.096505030277,
+      "production_bound": false
+    },
+    {
+      "frame_tokens": 16,
+      "encoding": "masked leaf + expanded legacy OVL",
+      "H": 4026816,
+      "superframe": 8053632,
+      "leaf_words": 4521,
+      "leaf_rom_banks": 2,
+      "list_words_per_direction": 3260,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 14349.519359999998,
+      "leaf_counter_bits": 22,
+      "phase_state": "leaf only",
+      "uses_existing_leaf_22bit_period": true,
+      "output_tok_s": 13112.096505030277,
+      "production_bound": false
+    },
+    {
+      "frame_tokens": 16,
+      "encoding": "masked leaf + masked OVL",
+      "H": 4026816,
+      "superframe": 8053632,
+      "leaf_words": 4521,
+      "leaf_rom_banks": 2,
+      "list_words_per_direction": 1703,
+      "list_rom_banks_total": 4,
+      "total_control_rom_area_um2": 14349.519359999998,
+      "leaf_counter_bits": 22,
+      "phase_state": "leaf and OVL",
+      "uses_existing_leaf_22bit_period": true,
+      "output_tok_s": 13112.096505030277,
+      "production_bound": false
+    }
+  ],
+  "startup_blockers": [
+    "expanded origin247497 is a steady cyclic rotation; initial epoch needs an explicit cold prefix/origin0 plan",
+    "align actual listplayer/pin launch edges with positive leaf L0 anchor before any first-token claim",
+    "user0 initial context and embedding prelude must precede its first L0/attention exchange",
+    "OVL raw context loads require full face identity validation, measured candidateRXslot+3",
+    "root must select exact word/schema before wrappers change; no phase count frozen"
+  ]
+}
