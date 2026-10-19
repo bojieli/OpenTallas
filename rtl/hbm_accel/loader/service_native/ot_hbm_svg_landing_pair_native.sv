@@ -7,7 +7,7 @@ module ot_hbm_svg_group_read_meta #(parameter integer MUT=0)(
  reg [3:0] slots[0:3];reg [2:0] ord_out;
  reg [1:0] wp,rp,warm;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin wp<=0;rp<=MUT!=0?2:1;warm<=0;valid_out<=0;end
+  if(!rst_n)begin wp<=0;rp<=MUT==1?2:MUT==2?0:1;warm<=0;valid_out<=0;end
   else begin
    wp<=wp+1'b1;rp<=rp+1'b1;if(warm!=3)warm<=warm+1'b1;
    valid_out<=(warm>=3)&&slots[rp][0];
@@ -54,7 +54,7 @@ module ot_hbm_svg_landing_pair_native #(parameter integer J=0,MUT=0,FIFOMUT=0)(
    .read_v(read_v[b]),.read_bank(read_bank[b*2+:2]),.read_row(read_row[b*6+:6]),.read_data(native_data[b*256+:256]));
  end endgenerate
  wire [2:0] meta_ord;wire meta_valid;
- ot_hbm_svg_group_read_meta #(.MUT(MUT==2?1:0)) u_read_meta(
+ ot_hbm_svg_group_read_meta #(.MUT(MUT==2?1:MUT==4?2:0)) u_read_meta(
   .clk(pair_clk),.rst_n(prst),.ordinal(ordinal),.group_valid(group_valid),.ordinal_out(meta_ord),.valid_out(meta_valid));
  wire [255:0] selected;wire [2:0] selected_ord;wire selected_valid;
  ot_hbm_svg_return_safe_pair #(.J(J),.MUT(MUT==1?1:0)) u_pair(
