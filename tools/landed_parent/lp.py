@@ -40,7 +40,12 @@ SPEC (JSON; paths relative to the repo root):
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
-  bench          {cycles, reset_cycles, sim: iverilog|verilator}
+  bench          {cycles, reset_cycles, sim: iverilog|verilator, child_lockstep: [fnmatch patterns]}
+                 child_lockstep (schedule "reference" only; default none): also compare every non-clock pin of the
+                 matching children, landed vs flat, at the child (hierarchical u_lp.<inst>.<pin> vs u_flat.<inst>.<pin>):
+                 reset pins from reset_cycles on, the rest after warm-up.  Use it when the parent's own outputs do not
+                 expose a landed bundle under random stimulus (a centre that ignores ill-formed commands): the
+                 landing / reset mutants are then seen where they act, at the child's pins.
   schedule       "offsets" (default: the time-offset method above) | "reference" (cross-region LOOPS, e.g. a centre that
                  commands leaves and collects their results): no offsets / pads; every child's reset run is held
                  reset_extra (default E + 1 + D) more stages so all landings are warm before any child leaves reset, and
@@ -739,6 +744,24 @@ class Parent:
             L.append(f"                nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
                      f"if (bad <= 5) $display(\"LP_MISMATCH port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
         L.append("            end")
+        cls = B.get("child_lockstep") or []
+        if cls:
+            if not self.reference:
+                raise SystemExit("bench.child_lockstep needs schedule 'reference' (children are not time-shifted there)")
+            ckp = set(S.get("clock_pins") or [])
+            rsp = set(S.get("reset_pins") or [])
+            hit = [i for i in self.insts if any(fnmatch.fnmatchcase(i["inst"], q) for q in cls)]
+            if not hit:
+                raise SystemExit(f"bench.child_lockstep {cls} matches no child")
+            for i in hit:
+                for pin in sorted(i["conns"]):
+                    if pin in ckp:
+                        continue
+                    f_, l_ = f"u_flat.{i['inst']}.{pin}", f"u_lp.{i['inst']}.{pin}"
+                    gate = f"cyc > {rcy}" if pin in rsp else f"cyc > {warm}"
+                    L.append(f"            if ({gate}) begin nc = nc + 1; if ({l_} !== {f_}) begin bad = bad + 1; "
+                             f"if (bad <= 5) $display(\"LP_MISMATCH child={i['inst']}.{pin} cycle=%0d flat=%h landed=%h\", "
+                             f"cyc, {f_}, {l_}); end end")
         L.append("        end")
         L.append(f"        if (bad == 0 && nc > 0) $display(\"LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles={cyc} warm={warm}\", MUT, nc);")
         L.append("        else $display(\"LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d\", MUT, bad, nc);")

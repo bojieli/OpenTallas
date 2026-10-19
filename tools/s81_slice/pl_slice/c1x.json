@@ -192,6 +192,9 @@
  "bench": {
   "cycles": 3000,
   "reset_cycles": 16,
-  "sim": "verilator"
+  "sim": "verilator",
+  "child_lockstep": [
+   "u_lf*"
+  ]
  }
 }
