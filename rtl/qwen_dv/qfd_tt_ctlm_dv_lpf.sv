@@ -19,6 +19,9 @@
 //   context record in image DW5 / DW6).  OPSEG 1: the leaf qfd_sys_face_mu_dhuser #(OPSEG 1) sits inside u_gi (core
 //   region, g_op.u_leaf; ROM ot_rom_4096x72_m8 inside; its own hard tile per MU-LEAF-KIT), observing u_gi's dh pin
 //   register and driving u_gi's calendar op start.  OPSEG 0 (default): no leaf, the previous cluster on every edge.
+// MU-DQ-CTLMCLK 10-19 (COORD 0ke / 0kg): tl[1087:0] leaves u_gi DIRECTLY (core region: no 1088-b core -> hr landing, its
+//   pins on the S face under the core region); every input port is landed from the hr region (spec port_regions: the
+//   pin-register band lies in hr's footprint), so ck_core keeps no boundary pin but rst_n (ck_core spread 162/144 fix).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_lpf #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -54,7 +57,7 @@ module qfd_tt_ctlm_dv_lpf #(
     input  wire [94:0]   native_ret,
     output wire [452:0]  hr,
     output wire [115:0]  cmd,
-    output wire [1087:0] tl,                     // QLB-C4b slice table words (W5 st_wi), via u_thru like cmd
+    output wire [1087:0] tl,                     // QLB-C4b slice table words (W5 st_wi), straight from u_gi (core)
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     output wire          emb_start,
@@ -62,7 +65,6 @@ module qfd_tt_ctlm_dv_lpf #(
     output wire          cf
 );
     wire [115:0] g_cmd;
-    wire [1087:0] g_tl;
     wire [75:0]  g_cal_program_obs;
     wire [68:0]  g_cal_descriptor_obs;
     wire         g_cal_image_ready, g_emb_start;
@@ -84,7 +86,7 @@ module qfd_tt_ctlm_dv_lpf #(
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
         .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
         u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
-        .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(g_tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
+        .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
         .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
         .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));
@@ -106,7 +108,7 @@ module qfd_tt_ctlm_dv_lpf #(
         .dcs(dcs), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));
     qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
         .cal_descriptor_obs_i(g_cal_descriptor_obs), .cal_image_ready_i(g_cal_image_ready), .emb_start_i(g_emb_start),
-        .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .tl_i(g_tl), .tl(tl), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
+        .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
         .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));
     // QW-DIEFIX 10-19: hr[452:73] in the slice layout: u_thru's qfd_dv_hr_pack (zero-logic permutation of the registered
     // ib_q; hr_contract.py follows the child port)

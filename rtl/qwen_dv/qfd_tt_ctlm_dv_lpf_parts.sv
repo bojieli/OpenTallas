@@ -285,8 +285,6 @@ module qfd_tt_ctlm_dv_thru (
     input  wire [17:0]   emb_token_i,
     input  wire [379:0]  ib_i,                   // QW-DIEFIX 10-19: the head's registered ROM command (cmd380 order)
     output wire [379:0]  ib_hr,                  //   -> hr[452:73] in the slice layout (qfd_dv_hr_pack, zero logic)
-    input  wire [1087:0] tl_i,                   // QLB-C4b slice table word (core) -> tl (hr region, like cmd)
-    output wire [1087:0] tl,
     output wire [115:0]  cmd,
     output wire [75:0]   cal_program_obs,
     output wire [68:0]   cal_descriptor_obs,
@@ -295,7 +293,6 @@ module qfd_tt_ctlm_dv_thru (
     output wire [17:0]   emb_token
 );
     assign cmd = cmd_i;
-    assign tl = tl_i;
     assign cal_program_obs = cal_program_obs_i;
     assign cal_descriptor_obs = cal_descriptor_obs_i;
     assign cal_image_ready = cal_image_ready_i;

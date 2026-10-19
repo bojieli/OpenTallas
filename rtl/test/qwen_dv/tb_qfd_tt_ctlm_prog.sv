@@ -82,19 +82,28 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
     end
 `ifdef TB_LANDED
     // HF-4 10-18: the landed cluster qfd_tt_ctlm_dv_lpf_lp (lp.py) in lockstep with dut on the same compiled stimulus.
-    // lp record: landed(rst) == flat(rst delayed RB = 3) with every output 3 edges later, every input on time.  So the
-    // landed copy is released 3 edges BEFORE dut and its outputs are compared with dut's 3 edges later.  LMUT = lp MUT.
+    // lp record: landed(rst) == flat(rst delayed RB = 3).  MU-DQ-CTLMCLK 10-19 (inputs land from the hr region): every
+    // output 6 edges later (tl 3, not compared here), pw / kok / kwd / native_ret presented 6 edges later, the other
+    // inputs on time.  So the landed copy is released 3 edges BEFORE dut, gets pw / kok / kwd / nret through a 6-stage
+    // delay, and its outputs are compared with dut's 6 edges later.  LMUT = lp MUT.
     parameter integer LMUT = 0;
-    localparam integer LOFF = 3;
+    localparam integer LOFF = 6, LIN = 6;
+    reg [74:0] pw_dl [0:LIN-1]; reg [94:0] nret_dl [0:LIN-1]; reg [1:0] kk_dl [0:LIN-1];
+    integer pj;
+    initial for (pj = 0; pj < LIN; pj = pj + 1) begin pw_dl[pj] = 75'd0; nret_dl[pj] = 95'd1; kk_dl[pj] = 2'd0; end
+    always @(posedge ck) begin
+        for (pj = LIN - 1; pj > 0; pj = pj - 1) begin pw_dl[pj] <= pw_dl[pj-1]; nret_dl[pj] <= nret_dl[pj-1]; kk_dl[pj] <= kk_dl[pj-1]; end
+        pw_dl[0] <= pw; nret_dl[0] <= nret; kk_dl[0] <= {kok, kwd};
+    end
     reg rst_early = 1'b0;
     wire [452:0] l_hr; wire [115:0] l_cmd; wire l_emb_start; wire [17:0] l_emb_token; wire [55:0] l_dc; wire l_cf;
     wire [75:0] l_pobs, l_cobs; wire [68:0] l_dobs; wire l_csr, l_cir, l_lcv; wire [17:0] l_ntk, l_nps; wire [5:0] l_cst;
     wire [379:0] l_ncmd;
     qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .STAGE_ME(STAGE_ME), .MUT(LMUT)) u_lp (.ck_core(ck), .ck_hr(ck),
-        .rst_n(rst_early), .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(1'b0), .program_obs(l_pobs),
+        .rst_n(rst_early), .pw(pw_dl[LIN-1]), .dh(dh), .kok(kk_dl[LIN-1][1]), .kwd(kk_dl[LIN-1][0]), .fab(1'b0), .program_obs(l_pobs),
         .control_stores_ready(l_csr), .layer_context_v(l_lcv), .native_tok(l_ntk), .native_pos(l_nps), .command_stage(l_cst),
         .cal_program_obs(l_cobs), .cal_descriptor_obs(l_dobs), .cal_image_ready(l_cir), .dc(l_dc), .native_cmd(l_ncmd),
-        .native_ret(nret), .hr(l_hr), .cmd(l_cmd), .ss5(ss5), .ag5(ag5), .emb_start(l_emb_start), .emb_token(l_emb_token), .cf(l_cf));
+        .native_ret(nret_dl[LIN-1]), .hr(l_hr), .cmd(l_cmd), .ss5(ss5), .ag5(ag5), .emb_start(l_emb_start), .emb_token(l_emb_token), .cf(l_cf));
     wire [1290:0] v_d = {pobs, csr, lcv, ntk, nps, cst, cobs, dobs, cir, dc, ncmd, hr, cmd, emb_start, emb_token, cf};
     wire [1290:0] v_l = {l_pobs, l_csr, l_lcv, l_ntk, l_nps, l_cst, l_cobs, l_dobs, l_cir, l_dc, l_ncmd, l_hr, l_cmd,
                          l_emb_start, l_emb_token, l_cf};

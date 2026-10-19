@@ -425,7 +425,13 @@ def landed_raw_tcl(spec, root):
     if not targets:
         return []
     rows = ' '.join(f'{{{k}}} {{ref {v["ref"]} tt {v["tt"]:g} ff {v["ff"]:g} ss {v["ss"]:g}}}' for k, v in sorted(targets.items()))
-    return [f'set ::ot_lrt_targets [dict create {rows}]', 'source /src/physical/common_flow/landed_raw_tap.tcl']
+    out = [f'set ::ot_lrt_targets [dict create {rows}]']
+    # MU-DQ-CTLMCLK 10-19 (COORD 0ke option a): spec landed_raw_detach -> the tapped pins are OUT of TritonCTS (detached
+    # during clock_tree_synthesis, re-driven from their co-timed ref pin's net after it), so the region root balances its
+    # registers against the ref pin's insertion only (h16c ck_head R 303), not against the raw SRAM pins (R 15)
+    if spec.get('landed_raw_detach'):
+        out.append('set ::ot_lrt_detach 1')
+    return out + ['source /src/physical/common_flow/landed_raw_tap.tcl']
 
 
 def landed_sdc(spec, root):

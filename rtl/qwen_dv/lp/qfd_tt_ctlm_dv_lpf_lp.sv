@@ -50,7 +50,6 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     input wire ck_hr
 );
     wire [115:0] g_cmd;
-    wire [1087:0] g_tl;
     wire [75:0]  g_cal_program_obs;
     wire [68:0]  g_cal_descriptor_obs;
     wire         g_cal_image_ready, g_emb_start;
@@ -74,119 +73,125 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_core), .d(rst_n), .q(lpr_root));
     wire lpr_core;  ot_pl_pad #(.W(1), .N(2)) u_lpr_core (.ck(ck_core), .d(lpr_root), .q(lpr_core));   // 0 hop(s) from core
     wire lpr_hr;  ot_pl_pad #(.W(1), .N(2)) u_lpr_hr (.ck(ck_hr), .d(lpr_root), .q(lpr_hr));   // 2 hop(s) from core
-    // ---- LANDING 0: s_start core -> hr, 1 b (u_hr.stage_start)
-    wire [4*1-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire  s_start__l_hr, lpl_0_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_0_w (.ck(ck_core), .rsi(lpr_core), .i(s_start), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_r #(.W(1), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
-    assign s_start__l_hr = (MUT == 1) ? s_start : lpl_0_o;
-    // ---- LANDING 1: s_stage core -> hr, 6 b (u_hr.stage)
-    wire [4*((5) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [3:0] lpl_1_vld;  wire [5:0] s_stage__l_hr, lpl_1_o;
-    ot_pl_land_w #(.W(((5) - (0) + 1)), .D(4)) u_lpl_1_w (.ck(ck_core), .rsi(lpr_core), .i(s_stage), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
-    ot_pl_land_r #(.W(((5) - (0) + 1)), .D(4), .K(2)) u_lpl_1_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
-    assign s_stage__l_hr = lpl_1_o;
-    // ---- LANDING 2: rom_ret_v core -> hr, 2 b (u_hr.rom_ret_i)
-    wire [4*((1) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [3:0] lpl_2_vld;  wire [1:0] rom_ret_v__l_hr, lpl_2_o;
-    ot_pl_land_w #(.W(((1) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_core), .rsi(lpr_core), .i(rom_ret_v), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
-    ot_pl_land_r #(.W(((1) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
-    assign rom_ret_v__l_hr = lpl_2_o;
-    // ---- LANDING 3: native_ret core -> hr, 95 b (u_hr.native_ret)
-    wire [4*((94) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [3:0] lpl_3_vld;  wire [94:0] native_ret__l_hr, lpl_3_o;
-    ot_pl_land_w #(.W(((94) - (0) + 1)), .D(4)) u_lpl_3_w (.ck(ck_core), .rsi(lpr_core), .i(native_ret), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
-    ot_pl_land_r #(.W(((94) - (0) + 1)), .D(4), .K(2)) u_lpl_3_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
-    assign native_ret__l_hr = lpl_3_o;
-    // ---- LANDING 4: st core -> hr, 49 b (u_hr.h_start, u_hr.token, u_hr.pos, u_hr.prog_base, u_go.st)
-    wire [4*((48) - (0) + 1)-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [3:0] lpl_4_vld;  wire [48:0] st__l_hr, lpl_4_o;
-    ot_pl_land_w #(.W(((48) - (0) + 1)), .D(4)) u_lpl_4_w (.ck(ck_core), .rsi(lpr_core), .i(st), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
-    ot_pl_land_r #(.W(((48) - (0) + 1)), .D(4), .K(2)) u_lpl_4_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
-    assign st__l_hr = lpl_4_o;
-    // ---- LANDING 5: pw core -> hr, 75 b (u_hr.pw_v, u_hr.pw_addr, u_hr.pw_data, u_go.pw)
-    wire [4*((74) - (0) + 1)-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [3:0] lpl_5_vld;  wire [74:0] pw__l_hr, lpl_5_o;
-    ot_pl_land_w #(.W(((74) - (0) + 1)), .D(4)) u_lpl_5_w (.ck(ck_core), .rsi(lpr_core), .i(pw), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
-    ot_pl_land_r #(.W(((74) - (0) + 1)), .D(4), .K(2)) u_lpl_5_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
-    assign pw__l_hr = lpl_5_o;
-    // ---- LANDING 6: su_acc core -> hr, 24 b (u_hr.x_oacc)
-    wire [4*((23) - (0) + 1)-1:0] lpl_6_bank;  wire [11:0] lpl_6_epo;  wire [3:0] lpl_6_vld;  wire [23:0] su_acc__l_hr, lpl_6_o;
-    ot_pl_land_w #(.W(((23) - (0) + 1)), .D(4)) u_lpl_6_w (.ck(ck_core), .rsi(lpr_core), .i(su_acc), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
-    ot_pl_land_r #(.W(((23) - (0) + 1)), .D(4), .K(2)) u_lpl_6_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld), .o(lpl_6_o));
-    assign su_acc__l_hr = lpl_6_o;
-    // ---- LANDING 7: x_oidle core -> hr, 1 b (u_hr.x_oidle)
-    wire [4*1-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [3:0] lpl_7_vld;  wire  x_oidle__l_hr, lpl_7_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_7_w (.ck(ck_core), .rsi(lpr_core), .i(x_oidle), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
-    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_7_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
-    assign x_oidle__l_hr = lpl_7_o;
-    // ---- LANDING 8: x_oprog core -> hr, 16 b (u_hr.x_oprog)
-    wire [4*((15) - (0) + 1)-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [3:0] lpl_8_vld;  wire [15:0] x_oprog__l_hr, lpl_8_o;
-    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_8_w (.ck(ck_core), .rsi(lpr_core), .i(x_oprog), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
-    ot_pl_land_r #(.W(((15) - (0) + 1)), .D(4), .K(2)) u_lpl_8_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
-    assign x_oprog__l_hr = lpl_8_o;
-    // ---- LANDING 9: x_orows core -> hr, 16 b (u_hr.x_orows)
-    wire [4*((15) - (0) + 1)-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [3:0] lpl_9_vld;  wire [15:0] x_orows__l_hr, lpl_9_o;
-    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_9_w (.ck(ck_core), .rsi(lpr_core), .i(x_orows), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
-    ot_pl_land_r #(.W(((15) - (0) + 1)), .D(4), .K(2)) u_lpl_9_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
-    assign x_orows__l_hr = lpl_9_o;
-    // ---- LANDING 10: kok core -> hr, 1 b (u_hr.kv_ok)
-    wire [4*1-1:0] lpl_10_bank;  wire [11:0] lpl_10_epo;  wire [3:0] lpl_10_vld;  wire  kok__l_hr, lpl_10_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_10_w (.ck(ck_core), .rsi(lpr_core), .i(kok), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
+    // ---- LANDING 0: dh hr -> core, 187 b (u_gi.dh)
+    wire [4*((186) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire [186:0] dh__l_core, lpl_0_o;
+    ot_pl_land_w #(.W(((186) - (0) + 1)), .D(4)) u_lpl_0_w (.ck(ck_hr), .rsi(lpr_hr), .i(dh), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_r #(.W(((186) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_r (.ck(ck_core), .rsi(lpr_core), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    assign dh__l_core = (MUT == 1) ? dh : lpl_0_o;
+    // ---- LANDING 1: dh_user hr -> core, 2 b (u_gi.dh_user)
+    wire [4*((1) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [3:0] lpl_1_vld;  wire [1:0] dh_user__l_core, lpl_1_o;
+    ot_pl_land_w #(.W(((1) - (0) + 1)), .D(4)) u_lpl_1_w (.ck(ck_hr), .rsi(lpr_hr), .i(dh_user), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_r #(.W(((1) - (0) + 1)), .D(4), .K(2)) u_lpl_1_r (.ck(ck_core), .rsi(lpr_core), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+    assign dh_user__l_core = lpl_1_o;
+    // ---- LANDING 2: ss5 hr -> core, 107 b (u_gi.ss5)
+    wire [4*((106) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [3:0] lpl_2_vld;  wire [106:0] ss5__l_core, lpl_2_o;
+    ot_pl_land_w #(.W(((106) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_hr), .rsi(lpr_hr), .i(ss5), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_r #(.W(((106) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_core), .rsi(lpr_core), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+    assign ss5__l_core = lpl_2_o;
+    // ---- LANDING 3: ag5 hr -> core, 10 b (u_gi.ag5)
+    wire [4*((9) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [3:0] lpl_3_vld;  wire [9:0] ag5__l_core, lpl_3_o;
+    ot_pl_land_w #(.W(((9) - (0) + 1)), .D(4)) u_lpl_3_w (.ck(ck_hr), .rsi(lpr_hr), .i(ag5), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
+    ot_pl_land_r #(.W(((9) - (0) + 1)), .D(4), .K(2)) u_lpl_3_r (.ck(ck_core), .rsi(lpr_core), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
+    assign ag5__l_core = lpl_3_o;
+    // ---- LANDING 4: fab hr -> core, 1 b (u_gi.fab)
+    wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [3:0] lpl_4_vld;  wire  fab__l_core, lpl_4_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_4_w (.ck(ck_hr), .rsi(lpr_hr), .i(fab), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
+    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_4_r (.ck(ck_core), .rsi(lpr_core), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
+    assign fab__l_core = lpl_4_o;
+    // ---- LANDING 5: s_start core -> hr, 1 b (u_hr.stage_start)
+    wire [4*1-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [3:0] lpl_5_vld;  wire  s_start__l_hr, lpl_5_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_5_w (.ck(ck_core), .rsi(lpr_core), .i(s_start), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
+    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_5_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
+    assign s_start__l_hr = lpl_5_o;
+    // ---- LANDING 6: s_stage core -> hr, 6 b (u_hr.stage)
+    wire [4*((5) - (0) + 1)-1:0] lpl_6_bank;  wire [11:0] lpl_6_epo;  wire [3:0] lpl_6_vld;  wire [5:0] s_stage__l_hr, lpl_6_o;
+    ot_pl_land_w #(.W(((5) - (0) + 1)), .D(4)) u_lpl_6_w (.ck(ck_core), .rsi(lpr_core), .i(s_stage), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
+    ot_pl_land_r #(.W(((5) - (0) + 1)), .D(4), .K(2)) u_lpl_6_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld), .o(lpl_6_o));
+    assign s_stage__l_hr = lpl_6_o;
+    // ---- LANDING 7: rom_ret_v core -> hr, 2 b (u_hr.rom_ret_i)
+    wire [4*((1) - (0) + 1)-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [3:0] lpl_7_vld;  wire [1:0] rom_ret_v__l_hr, lpl_7_o;
+    ot_pl_land_w #(.W(((1) - (0) + 1)), .D(4)) u_lpl_7_w (.ck(ck_core), .rsi(lpr_core), .i(rom_ret_v), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
+    ot_pl_land_r #(.W(((1) - (0) + 1)), .D(4), .K(2)) u_lpl_7_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
+    assign rom_ret_v__l_hr = lpl_7_o;
+    // ---- LANDING 8: st core -> hr, 49 b (u_hr.h_start, u_hr.token, u_hr.pos, u_hr.prog_base, u_go.st)
+    wire [4*((48) - (0) + 1)-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [3:0] lpl_8_vld;  wire [48:0] st__l_hr, lpl_8_o;
+    ot_pl_land_w #(.W(((48) - (0) + 1)), .D(4)) u_lpl_8_w (.ck(ck_core), .rsi(lpr_core), .i(st), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
+    ot_pl_land_r #(.W(((48) - (0) + 1)), .D(4), .K(2)) u_lpl_8_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
+    assign st__l_hr = lpl_8_o;
+    // ---- LANDING 9: su_acc core -> hr, 24 b (u_hr.x_oacc)
+    wire [4*((23) - (0) + 1)-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [3:0] lpl_9_vld;  wire [23:0] su_acc__l_hr, lpl_9_o;
+    ot_pl_land_w #(.W(((23) - (0) + 1)), .D(4)) u_lpl_9_w (.ck(ck_core), .rsi(lpr_core), .i(su_acc), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
+    ot_pl_land_r #(.W(((23) - (0) + 1)), .D(4), .K(2)) u_lpl_9_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
+    assign su_acc__l_hr = lpl_9_o;
+    // ---- LANDING 10: x_oidle core -> hr, 1 b (u_hr.x_oidle)
+    wire [4*1-1:0] lpl_10_bank;  wire [11:0] lpl_10_epo;  wire [3:0] lpl_10_vld;  wire  x_oidle__l_hr, lpl_10_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_10_w (.ck(ck_core), .rsi(lpr_core), .i(x_oidle), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_10_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld), .o(lpl_10_o));
-    assign kok__l_hr = lpl_10_o;
-    // ---- LANDING 11: kwd core -> hr, 1 b (u_hr.kv_write_drained)
-    wire [4*1-1:0] lpl_11_bank;  wire [11:0] lpl_11_epo;  wire [3:0] lpl_11_vld;  wire  kwd__l_hr, lpl_11_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_11_w (.ck(ck_core), .rsi(lpr_core), .i(kwd), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld));
-    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_11_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld), .o(lpl_11_o));
-    assign kwd__l_hr = lpl_11_o;
-    // ---- LANDING 12: su_obs core -> hr, 16 b (u_go.su_obs)
-    wire [4*((15) - (0) + 1)-1:0] lpl_12_bank;  wire [11:0] lpl_12_epo;  wire [3:0] lpl_12_vld;  wire [15:0] su_obs__l_hr, lpl_12_o;
-    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_12_w (.ck(ck_core), .rsi(lpr_core), .i(su_obs), .bank(lpl_12_bank), .epo(lpl_12_epo), .vld(lpl_12_vld));
+    assign x_oidle__l_hr = lpl_10_o;
+    // ---- LANDING 11: x_oprog core -> hr, 16 b (u_hr.x_oprog)
+    wire [4*((15) - (0) + 1)-1:0] lpl_11_bank;  wire [11:0] lpl_11_epo;  wire [3:0] lpl_11_vld;  wire [15:0] x_oprog__l_hr, lpl_11_o;
+    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_11_w (.ck(ck_core), .rsi(lpr_core), .i(x_oprog), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld));
+    ot_pl_land_r #(.W(((15) - (0) + 1)), .D(4), .K(2)) u_lpl_11_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld), .o(lpl_11_o));
+    assign x_oprog__l_hr = lpl_11_o;
+    // ---- LANDING 12: x_orows core -> hr, 16 b (u_hr.x_orows)
+    wire [4*((15) - (0) + 1)-1:0] lpl_12_bank;  wire [11:0] lpl_12_epo;  wire [3:0] lpl_12_vld;  wire [15:0] x_orows__l_hr, lpl_12_o;
+    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_12_w (.ck(ck_core), .rsi(lpr_core), .i(x_orows), .bank(lpl_12_bank), .epo(lpl_12_epo), .vld(lpl_12_vld));
     ot_pl_land_r #(.W(((15) - (0) + 1)), .D(4), .K(2)) u_lpl_12_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_12_bank), .epo(lpl_12_epo), .vld(lpl_12_vld), .o(lpl_12_o));
-    assign su_obs__l_hr = lpl_12_o;
-    // ---- LANDING 13: dcs core -> hr, 62 b (u_go.dcs)
-    wire [4*((61) - (0) + 1)-1:0] lpl_13_bank;  wire [11:0] lpl_13_epo;  wire [3:0] lpl_13_vld;  wire [61:0] dcs__l_hr, lpl_13_o;
-    ot_pl_land_w #(.W(((61) - (0) + 1)), .D(4)) u_lpl_13_w (.ck(ck_core), .rsi(lpr_core), .i(dcs), .bank(lpl_13_bank), .epo(lpl_13_epo), .vld(lpl_13_vld));
-    ot_pl_land_r #(.W(((61) - (0) + 1)), .D(4), .K(2)) u_lpl_13_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_13_bank), .epo(lpl_13_epo), .vld(lpl_13_vld), .o(lpl_13_o));
-    assign dcs__l_hr = lpl_13_o;
-    // ---- LANDING 14: g_cmd core -> hr, 116 b (u_thru.cmd_i)
-    wire [4*((115) - (0) + 1)-1:0] lpl_14_bank;  wire [11:0] lpl_14_epo;  wire [3:0] lpl_14_vld;  wire [115:0] g_cmd__l_hr, lpl_14_o;
-    ot_pl_land_w #(.W(((115) - (0) + 1)), .D(4)) u_lpl_14_w (.ck(ck_core), .rsi(lpr_core), .i(g_cmd), .bank(lpl_14_bank), .epo(lpl_14_epo), .vld(lpl_14_vld));
-    ot_pl_land_r #(.W(((115) - (0) + 1)), .D(4), .K(2)) u_lpl_14_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_14_bank), .epo(lpl_14_epo), .vld(lpl_14_vld), .o(lpl_14_o));
-    assign g_cmd__l_hr = lpl_14_o;
-    // ---- LANDING 15: g_cal_program_obs core -> hr, 76 b (u_thru.cal_program_obs_i)
-    wire [4*((75) - (0) + 1)-1:0] lpl_15_bank;  wire [11:0] lpl_15_epo;  wire [3:0] lpl_15_vld;  wire [75:0] g_cal_program_obs__l_hr, lpl_15_o;
-    ot_pl_land_w #(.W(((75) - (0) + 1)), .D(4)) u_lpl_15_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_program_obs), .bank(lpl_15_bank), .epo(lpl_15_epo), .vld(lpl_15_vld));
-    ot_pl_land_r #(.W(((75) - (0) + 1)), .D(4), .K(2)) u_lpl_15_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_15_bank), .epo(lpl_15_epo), .vld(lpl_15_vld), .o(lpl_15_o));
-    assign g_cal_program_obs__l_hr = lpl_15_o;
-    // ---- LANDING 16: g_cal_descriptor_obs core -> hr, 69 b (u_thru.cal_descriptor_obs_i)
-    wire [4*((68) - (0) + 1)-1:0] lpl_16_bank;  wire [11:0] lpl_16_epo;  wire [3:0] lpl_16_vld;  wire [68:0] g_cal_descriptor_obs__l_hr, lpl_16_o;
-    ot_pl_land_w #(.W(((68) - (0) + 1)), .D(4)) u_lpl_16_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_descriptor_obs), .bank(lpl_16_bank), .epo(lpl_16_epo), .vld(lpl_16_vld));
-    ot_pl_land_r #(.W(((68) - (0) + 1)), .D(4), .K(2)) u_lpl_16_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_16_bank), .epo(lpl_16_epo), .vld(lpl_16_vld), .o(lpl_16_o));
-    assign g_cal_descriptor_obs__l_hr = lpl_16_o;
-    // ---- LANDING 17: g_cal_image_ready core -> hr, 1 b (u_thru.cal_image_ready_i)
-    wire [4*1-1:0] lpl_17_bank;  wire [11:0] lpl_17_epo;  wire [3:0] lpl_17_vld;  wire  g_cal_image_ready__l_hr, lpl_17_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_17_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_image_ready), .bank(lpl_17_bank), .epo(lpl_17_epo), .vld(lpl_17_vld));
-    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_17_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_17_bank), .epo(lpl_17_epo), .vld(lpl_17_vld), .o(lpl_17_o));
-    assign g_cal_image_ready__l_hr = lpl_17_o;
-    // ---- LANDING 18: g_emb_start core -> hr, 1 b (u_thru.emb_start_i)
-    wire [4*1-1:0] lpl_18_bank;  wire [11:0] lpl_18_epo;  wire [3:0] lpl_18_vld;  wire  g_emb_start__l_hr, lpl_18_o;
-    ot_pl_land_w #(.W(1), .D(4)) u_lpl_18_w (.ck(ck_core), .rsi(lpr_core), .i(g_emb_start), .bank(lpl_18_bank), .epo(lpl_18_epo), .vld(lpl_18_vld));
+    assign x_orows__l_hr = lpl_12_o;
+    // ---- LANDING 13: su_obs core -> hr, 16 b (u_go.su_obs)
+    wire [4*((15) - (0) + 1)-1:0] lpl_13_bank;  wire [11:0] lpl_13_epo;  wire [3:0] lpl_13_vld;  wire [15:0] su_obs__l_hr, lpl_13_o;
+    ot_pl_land_w #(.W(((15) - (0) + 1)), .D(4)) u_lpl_13_w (.ck(ck_core), .rsi(lpr_core), .i(su_obs), .bank(lpl_13_bank), .epo(lpl_13_epo), .vld(lpl_13_vld));
+    ot_pl_land_r #(.W(((15) - (0) + 1)), .D(4), .K(2)) u_lpl_13_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_13_bank), .epo(lpl_13_epo), .vld(lpl_13_vld), .o(lpl_13_o));
+    assign su_obs__l_hr = lpl_13_o;
+    // ---- LANDING 14: dcs core -> hr, 62 b (u_go.dcs)
+    wire [4*((61) - (0) + 1)-1:0] lpl_14_bank;  wire [11:0] lpl_14_epo;  wire [3:0] lpl_14_vld;  wire [61:0] dcs__l_hr, lpl_14_o;
+    ot_pl_land_w #(.W(((61) - (0) + 1)), .D(4)) u_lpl_14_w (.ck(ck_core), .rsi(lpr_core), .i(dcs), .bank(lpl_14_bank), .epo(lpl_14_epo), .vld(lpl_14_vld));
+    ot_pl_land_r #(.W(((61) - (0) + 1)), .D(4), .K(2)) u_lpl_14_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_14_bank), .epo(lpl_14_epo), .vld(lpl_14_vld), .o(lpl_14_o));
+    assign dcs__l_hr = lpl_14_o;
+    // ---- LANDING 15: g_cmd core -> hr, 116 b (u_thru.cmd_i)
+    wire [4*((115) - (0) + 1)-1:0] lpl_15_bank;  wire [11:0] lpl_15_epo;  wire [3:0] lpl_15_vld;  wire [115:0] g_cmd__l_hr, lpl_15_o;
+    ot_pl_land_w #(.W(((115) - (0) + 1)), .D(4)) u_lpl_15_w (.ck(ck_core), .rsi(lpr_core), .i(g_cmd), .bank(lpl_15_bank), .epo(lpl_15_epo), .vld(lpl_15_vld));
+    ot_pl_land_r #(.W(((115) - (0) + 1)), .D(4), .K(2)) u_lpl_15_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_15_bank), .epo(lpl_15_epo), .vld(lpl_15_vld), .o(lpl_15_o));
+    assign g_cmd__l_hr = lpl_15_o;
+    // ---- LANDING 16: g_cal_program_obs core -> hr, 76 b (u_thru.cal_program_obs_i)
+    wire [4*((75) - (0) + 1)-1:0] lpl_16_bank;  wire [11:0] lpl_16_epo;  wire [3:0] lpl_16_vld;  wire [75:0] g_cal_program_obs__l_hr, lpl_16_o;
+    ot_pl_land_w #(.W(((75) - (0) + 1)), .D(4)) u_lpl_16_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_program_obs), .bank(lpl_16_bank), .epo(lpl_16_epo), .vld(lpl_16_vld));
+    ot_pl_land_r #(.W(((75) - (0) + 1)), .D(4), .K(2)) u_lpl_16_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_16_bank), .epo(lpl_16_epo), .vld(lpl_16_vld), .o(lpl_16_o));
+    assign g_cal_program_obs__l_hr = lpl_16_o;
+    // ---- LANDING 17: g_cal_descriptor_obs core -> hr, 69 b (u_thru.cal_descriptor_obs_i)
+    wire [4*((68) - (0) + 1)-1:0] lpl_17_bank;  wire [11:0] lpl_17_epo;  wire [3:0] lpl_17_vld;  wire [68:0] g_cal_descriptor_obs__l_hr, lpl_17_o;
+    ot_pl_land_w #(.W(((68) - (0) + 1)), .D(4)) u_lpl_17_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_descriptor_obs), .bank(lpl_17_bank), .epo(lpl_17_epo), .vld(lpl_17_vld));
+    ot_pl_land_r #(.W(((68) - (0) + 1)), .D(4), .K(2)) u_lpl_17_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_17_bank), .epo(lpl_17_epo), .vld(lpl_17_vld), .o(lpl_17_o));
+    assign g_cal_descriptor_obs__l_hr = lpl_17_o;
+    // ---- LANDING 18: g_cal_image_ready core -> hr, 1 b (u_thru.cal_image_ready_i)
+    wire [4*1-1:0] lpl_18_bank;  wire [11:0] lpl_18_epo;  wire [3:0] lpl_18_vld;  wire  g_cal_image_ready__l_hr, lpl_18_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_18_w (.ck(ck_core), .rsi(lpr_core), .i(g_cal_image_ready), .bank(lpl_18_bank), .epo(lpl_18_epo), .vld(lpl_18_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_18_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_18_bank), .epo(lpl_18_epo), .vld(lpl_18_vld), .o(lpl_18_o));
-    assign g_emb_start__l_hr = lpl_18_o;
-    // ---- LANDING 19: g_emb_token core -> hr, 18 b (u_thru.emb_token_i)
-    wire [4*((17) - (0) + 1)-1:0] lpl_19_bank;  wire [11:0] lpl_19_epo;  wire [3:0] lpl_19_vld;  wire [17:0] g_emb_token__l_hr, lpl_19_o;
-    ot_pl_land_w #(.W(((17) - (0) + 1)), .D(4)) u_lpl_19_w (.ck(ck_core), .rsi(lpr_core), .i(g_emb_token), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld));
-    ot_pl_land_r #(.W(((17) - (0) + 1)), .D(4), .K(2)) u_lpl_19_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld), .o(lpl_19_o));
-    assign g_emb_token__l_hr = lpl_19_o;
-    // ---- LANDING 20: g_tl core -> hr, 1088 b (u_thru.tl_i)
-    wire [4*((1087) - (0) + 1)-1:0] lpl_20_bank;  wire [11:0] lpl_20_epo;  wire [3:0] lpl_20_vld;  wire [1087:0] g_tl__l_hr, lpl_20_o;
-    ot_pl_land_w #(.W(((1087) - (0) + 1)), .D(4)) u_lpl_20_w (.ck(ck_core), .rsi(lpr_core), .i(g_tl), .bank(lpl_20_bank), .epo(lpl_20_epo), .vld(lpl_20_vld));
-    ot_pl_land_r #(.W(((1087) - (0) + 1)), .D(4), .K(2)) u_lpl_20_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_20_bank), .epo(lpl_20_epo), .vld(lpl_20_vld), .o(lpl_20_o));
-    assign g_tl__l_hr = lpl_20_o;
-    wire lpr_c_u_gi;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_gi (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_gi));   // t(u_gi) = 0
-    wire lpr_c_u_hr;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 4 : 3)) u_lprc_u_hr (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_hr));   // t(u_hr) = 3
-    wire lpr_c_u_go;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_go (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_go));   // t(u_go) = 3
-    wire lpr_c_u_thru;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_thru (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_thru));   // t(u_thru) = 3
+    assign g_cal_image_ready__l_hr = lpl_18_o;
+    // ---- LANDING 19: g_emb_start core -> hr, 1 b (u_thru.emb_start_i)
+    wire [4*1-1:0] lpl_19_bank;  wire [11:0] lpl_19_epo;  wire [3:0] lpl_19_vld;  wire  g_emb_start__l_hr, lpl_19_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_19_w (.ck(ck_core), .rsi(lpr_core), .i(g_emb_start), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld));
+    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_19_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld), .o(lpl_19_o));
+    assign g_emb_start__l_hr = lpl_19_o;
+    // ---- LANDING 20: g_emb_token core -> hr, 18 b (u_thru.emb_token_i)
+    wire [4*((17) - (0) + 1)-1:0] lpl_20_bank;  wire [11:0] lpl_20_epo;  wire [3:0] lpl_20_vld;  wire [17:0] g_emb_token__l_hr, lpl_20_o;
+    ot_pl_land_w #(.W(((17) - (0) + 1)), .D(4)) u_lpl_20_w (.ck(ck_core), .rsi(lpr_core), .i(g_emb_token), .bank(lpl_20_bank), .epo(lpl_20_epo), .vld(lpl_20_vld));
+    ot_pl_land_r #(.W(((17) - (0) + 1)), .D(4), .K(2)) u_lpl_20_r (.ck(ck_hr), .rsi(lpr_hr), .bank(lpl_20_bank), .epo(lpl_20_epo), .vld(lpl_20_vld), .o(lpl_20_o));
+    assign g_emb_token__l_hr = lpl_20_o;
+    wire lpr_c_u_gi;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_gi (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_gi));   // t(u_gi) = 3
+    wire lpr_c_u_hr;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 7 : 6)) u_lprc_u_hr (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_hr));   // t(u_hr) = 6
+    wire lpr_c_u_go;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_go (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_go));   // t(u_go) = 6
+    wire lpr_c_u_thru;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_thru (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_thru));   // t(u_thru) = 6
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh), .dh_user(dh_user), .ss5(ss5), .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(g_tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 0
-    ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret__l_hr), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw__l_hr[74]), .pw_addr(pw__l_hr[73:64]), .pw_data(pw__l_hr[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok__l_hr), .kv_write_drained(kwd__l_hr), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 3
-    qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck_hr), .rst_n(lpr_c_u_go), .pw(pw__l_hr), .st(st__l_hr), .su_obs(su_obs__l_hr), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault), .dcs(dcs__l_hr), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));   // region hr, t = 3
-    qfd_tt_ctlm_dv_thru u_thru (.ck(ck_hr), .rst_n(lpr_c_u_thru), .cmd_i(g_cmd__l_hr), .cal_program_obs_i(g_cal_program_obs__l_hr), .cal_descriptor_obs_i(g_cal_descriptor_obs__l_hr), .cal_image_ready_i(g_cal_image_ready__l_hr), .emb_start_i(g_emb_start__l_hr), .emb_token_i(g_emb_token__l_hr), .ib_i(ib_q), .ib_hr(ib_hr), .tl_i(g_tl__l_hr), .tl(tl), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs), .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));   // region hr, t = 3
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh__l_core), .dh_user(dh_user__l_core), .ss5(ss5__l_core), .ag5(ag5__l_core), .fab(fab__l_core), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 3
+    // HF-4c 10-18: the hard view (h16c/h17, hardened STAGE_ME 1) has no parameters -> no #() under SYNTHESIS (spec hard_define);
+    // simulation keeps the RTL leaf at the cluster's STAGE_ME.  Hand edit after lp.py (lp.py resolves `ifdefs): keep it on regen.
+`ifndef SYNTHESIS
+    ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 6
+`else
+    ot_qfd_tt_ctlm_static_hr u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 6
+`endif
+    qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck_hr), .rst_n(lpr_c_u_go), .pw(pw), .st(st__l_hr), .su_obs(su_obs__l_hr), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault), .dcs(dcs__l_hr), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));   // region hr, t = 6
+    qfd_tt_ctlm_dv_thru u_thru (.ck(ck_hr), .rst_n(lpr_c_u_thru), .cmd_i(g_cmd__l_hr), .cal_program_obs_i(g_cal_program_obs__l_hr), .cal_descriptor_obs_i(g_cal_descriptor_obs__l_hr), .cal_image_ready_i(g_cal_image_ready__l_hr), .emb_start_i(g_emb_start__l_hr), .emb_token_i(g_emb_token__l_hr), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs), .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));   // region hr, t = 6
 endmodule

@@ -8,6 +8,7 @@
 #   emb   MU-OPCAL-EMB (10-19) C7 witnesses on red, mut 0 RTL: --emb-t 16 (pre-fix image) and --res-skew 1 (result one
 #         edge late) each MU_OPSEG_FAIL on C7
 #   full2 the steady-state rate run: full, frames 0-1 + 30k edges of frame 2 (measured frame-1 rate): MU_OPSEG_PASS
+#   landed (MU-DQ-CTLMKIT) the landed cluster in lockstep (TB_LANDED): LMUT 0 PASS (red, full), LMUT 1 / 2 FAIL
 #   old   the OPSEG 0 benches stay PASS: run_mu_ctlm.sh (mu ctlm prog eq seq lp) + mu_tok smoke
 #   dhuser  the existing R3 leaf bench (results/rtl/mu_qwen_1018/adopt_slice/tb_dhuser.sv, OPSEG 0, leaf file ALONE as
 #           before): MUT 0 seeds 7 / 11 / +slip PASS, MUT 1 / 3 / 2+slip FAIL
@@ -41,6 +42,17 @@ fi
 if want full2; then
     python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut 0 --cases full --full-frames 2 --tag _full2 --verilator "$VL" --jobs 8 > "$W/opseg_full2.out" 2>&1
     chk opseg_full2 MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_full2.out")"
+fi
+if want landed; then
+    # MU-DQ-CTLMKIT 10-19: the landed cluster qfd_tt_ctlm_dv_lpf_lp (NU 4 / OPSEG 1 re-cut) in lockstep with the NU 4
+    # OPSEG 1 dut on the compiled op-segment frames (TB_LANDED): LMUT 0 PASS on red + full; LMUT 1 / 2 FAIL on red
+    for lc in "0 red full" "1 red" "2 red"; do
+        set -- $lc; lm=$1; shift
+        python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg_l" --mut 0 --cases "$@" --landed $lm --tag _l$lm --verilator "$VL" --jobs 8 > "$W/opseg_l$lm.out" 2>&1
+        L=$(grep -m1 '^LANDED_LOCKSTEP' "$W/opseg_l$lm.out" | cut -c1-200)
+        [ $lm = 0 ] && chk landed_l$lm "LANDED_LOCKSTEP PASS" "${L:-NO_RESULT}" || chk landed_l$lm "LANDED_LOCKSTEP FAIL" "${L:-NO_RESULT}"
+        [ $lm = 0 ] && chk landed_l${lm}_mu MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_l$lm.out")"
+    done
 fi
 if want old; then
     bash "$D/run_mu_ctlm.sh" "$W/old_ctlm" > "$W/old_ctlm.out" 2>&1

@@ -22,6 +22,12 @@ foreach ot_ln $ot_lp_lands {
   set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
 }
 puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {pw[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {dh[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {dh_user[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {kok}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {kwd}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {fab}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {program_obs[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {control_stores_ready}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {layer_context_v}]
@@ -33,9 +39,11 @@ set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {cal_descript
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {cal_image_ready}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {dc[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {native_cmd[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {native_ret[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {hr[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {cmd[*]}]
-set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {tl[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {ss5[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {ag5[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {emb_start}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {emb_token[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hr [get_ports {cf}]

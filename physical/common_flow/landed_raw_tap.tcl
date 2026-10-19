@@ -135,10 +135,49 @@ proc ot_lrt_tap {} {
   if {[llength $ideal]} { unset_propagated_clock $ideal }
   puts "OT_LRT tapped $done raw child clock pins"
 }
+# MU-DQ-CTLMCLK 10-19 (COORD 0ke option a, opt-in ::ot_lrt_detach 1 from spec landed_raw_detach): TritonCTS puts every
+# clock pin of a hard child into the root's macro tree and balances the root's registers against that tree; with the raw
+# SRAM pins (ETM insertion ~15 ps) in it beside ck_head (~303 ps) the registers were NOT lifted to ck_head (qfd_tt_ctlm_dv
+# gate f: soft-vs-h16c pair 416/356).  Detach every tapped raw pin before CTS (the tree sees ck_head only), reconnect it
+# to the CTS-built net of its co-timed ref pin after CTS; ot_lrt_tap then delays it to the record offset from that net.
+proc ot_lrt_detach {} {
+  set out {}
+  if {![info exists ::ot_lrt_detach] || !$::ot_lrt_detach || ![info exists ::ot_lrt_targets]} { return $out }
+  foreach inst [[ord::get_db_block] getInsts] {
+    set master [[$inst getMaster] getName]
+    foreach it [$inst getITerms] {
+      set key "$master/[[$it getMTerm] getName]"
+      if {![dict exists $::ot_lrt_targets $key]} continue
+      set refit [$inst findITerm [dict get $::ot_lrt_targets $key ref]]
+      if {$refit eq "NULL" || [$it getNet] eq "NULL" || [$refit getNet] eq "NULL"} {
+        error "OT_LRT: detach [$inst getName]/[[$it getMTerm] getName]: raw or ref pin unconnected"
+      }
+      if {[[$it getNet] getName] ne [[$refit getNet] getName]} {
+        error "OT_LRT: detach [$inst getName]/[[$it getMTerm] getName]: not on the ref pin's net (nothing to re-drive from)"
+      }
+      lappend out [list $it $refit [[$it getNet] getName]]
+      $it disconnect
+      puts "OT_LRT DETACH [$inst getName]/[[$it getMTerm] getName] from [lindex $out end 2] for CTS (ref [dict get $::ot_lrt_targets $key ref])"
+    }
+  }
+  if {![llength $out]} { error "OT_LRT: ::ot_lrt_detach set but no raw child clock pin found" }
+  return $out
+}
+proc ot_lrt_reattach {det} {
+  foreach d $det {
+    lassign $d it refit oldname
+    set rn [$refit getNet]
+    if {$rn eq "NULL"} { error "OT_LRT: reattach: ref pin lost its net after CTS" }
+    $it connect $rn
+    puts "OT_LRT REATTACH [[$it getInst] getName]/[[$it getMTerm] getName] -> [$rn getName] (ref net after CTS; was $oldname)"
+  }
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_lrt_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_lrt_cts_orig
   proc clock_tree_synthesis {args} {
+    set det [ot_lrt_detach]
     ot_lrt_cts_orig {*}$args
+    ot_lrt_reattach $det
     ot_lrt_tap
   }
 }
