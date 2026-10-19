@@ -1,0 +1,33 @@
+FRONT_MODE_PASS mode=0 h128=0 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=1 h128=0 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=2 h128=0 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=3 h128=0 configure=0 sticky_fault=1
+FRONT_MODE_PASS mode=4 h128=0 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=5 h128=0 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=6 h128=0 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=7 h128=0 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=0 h128=1 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=1 h128=1 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=2 h128=1 configure=0 sticky_fault=0
+FRONT_MODE_PASS mode=3 h128=1 configure=0 sticky_fault=1
+FRONT_MODE_PASS mode=4 h128=1 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=5 h128=1 configure=1 sticky_fault=1
+FRONT_MODE_PASS mode=6 h128=1 configure=1 sticky_fault=0
+FRONT_MODE_PASS mode=7 h128=1 configure=1 sticky_fault=1
+FRONT_LITERAL phase=0 index=0 command=a20000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=0 index=1 command=a28000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=0 index=2 command=a20000000000000000000000000000000000000000000000
+FRONT_MIXED_PASS gap=0 programmes=1 added_idle=0 frontend_fault=0 class_fault=1
+FRONT_LITERAL phase=8 index=0 command=a20000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=8 index=1 command=a28000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=8 index=2 command=a20000000000000000000000000000000000000000000000
+FRONT_MIXED_PASS gap=8 programmes=3 added_idle=16 frontend_fault=0 class_fault=0
+FRONT_LITERAL phase=10 index=0 command=a20000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=10 index=1 command=a28000000000000000000000000000000000000000000000
+FRONT_LITERAL phase=10 index=2 command=a20000000000000000000000000000000000000000000000
+FRONT_MIXED_PASS gap=10 programmes=3 added_idle=20 frontend_fault=0 class_fault=0
+ACTUAL_FRONT_MODES_PASS valid=12 invalid=4 sticky_checks=48
+- /srv/opentallas-scratch/claude/codex-attention-prel-1019/frontend_modes/src/rtl/test/hbm_accel/svg_rel/tb_actual_front_modes.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.001 s; speed 12.428 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
