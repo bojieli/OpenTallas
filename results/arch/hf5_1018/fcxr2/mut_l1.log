@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   788 GB (avail 677, growth 126, headroom 0, waiters 0/0 GB) load 69/128 running 18 disk 558 GB 
+ot-run: ot-epyc5       admits   756 GB (avail 673, growth 144, headroom 0, waiters 0/0 GB) load 130/128 running 25 disk 1759 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hf5a_fcxr2_bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hf5a_fcxr2_bench
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3983033-1792383732 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc 9 xo 0 lo 1 fo 0
+MISMATCH cyc 10 xo 0 lo 1 fo 0
+MISMATCH cyc 11 xo 0 lo 1 fo 0
+FCXR2 FAIL mismatches=3992 reset_bad=0 checked=3992
+- rtl/hbm_accel/sm/test/tb_fc_xr2.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.003 s; speed 3.031 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3983033-1792383732): exit 1
+rc=1

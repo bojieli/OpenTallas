@@ -58,6 +58,10 @@ RS_NQ, RS_DQ = 2, 256
 # at its pin (qkd_rlyi_258s, s driven one T-chain edge earlier) and the header's T0 V / T selects replicated by the last
 # strip relays' spare bits (qkd_pv_rs_hd_r, RS_KV V copies per half + 1 T copy); same schedule, 0 cycles
 RS_KV = 32
+# HKV-PVRS2 10-19: header register stages pin to pin per --rs-hd.  f = qkd_pv_rs_hd_f rev f2: every input REGISTERED AT ITS
+# PIN (f1 native capture FAIL a1v[19] 253.1 > 190 on 38 data pins: one stage, select copies far from the a?v pins), then
+# the half-local select stage -> 2 edges; r / legacy = one stage.  rs_d = 1 + RS_HD_D + J0 (beat 0 at out_age + rs_d).
+RS_HD_D = dict(r=1, f=2)
 RS_EW = 86.4                     # E side lane (column-1 result trunk), two 43.2-um lattice steps: frame 1468.8 -> 1555.2
 LEAF_LEF = dict(
     ot_qwen_tp8_pv_slice_t=RT / 'qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef',
@@ -685,7 +689,8 @@ class Gen:
         T0: node j outputs packet 0 in cycle v0 + 1 + j; column s injects at node j_s in cycle v0 + j_s + s.  T1: its head
         (column 8) samples y_valid DL8 cycles late, so node j outputs packet 8 in v8 + DL8 + 1 + j; column s injects in
         v8 + DL8 + j_s + s - 8.  DL8 = 8 + J0 - J1 puts packet 8 at the header 8 cycles behind packet 0.  The header
-        registers packet s -> rs_* in cycle v0 + 2 + J0 + s (RS_D = 2 + J0)."""
+        registers packet s -> rs_* in cycle v0 + 1 + HD + J0 + s (RS_D = 1 + HD + J0; HD = header stages, RS_HD_D: 1, or 2
+        for qkd_pv_rs_hd_f rev f2 whose input pin registers sample T / out_epoch at v0 + 1 + J0 exactly as before)."""
         J0, J1 = len(self.rs_tr[0]) - 1, len(self.rs_tr[1]) - 1
         if Dcol[8] != Dcol[0]:
             raise ValueError('result trunk: the two head columns 0 / 8 must share their static age')
@@ -705,12 +710,17 @@ class Gen:
                     if (s - (0 if c == 0 else 8)) > 35:
                         raise ValueError(f'result trunk: column {s} pad beyond one qkd_rlys_36')
         assert sorted(node) == list(range(32))
-        rs_d = 2 + J0
+        hd_d = self.rs_hd_d()
+        rs_d = 1 + hd_d + J0
         t_hd = 1 + J0
         if t_hd + 1 > flag_d:
             raise ValueError(f'result trunk: T reaches the header at v0 + {t_hd} >= busy drop (FLAG_D {flag_d})')
         return dict(J0=J0, J1=J1, d8=d8, node_of_col=node, inject_cycle_vs_out_age=inj, y_ready_vs_out_age=ready,
-                    rs_d=rs_d, t_header=t_hd, hold_after_out_age=max(inj.values()))
+                    rs_d=rs_d, header_stages=hd_d, t_header=t_hd, hold_after_out_age=max(inj.values()))
+
+    def rs_hd_d(self):
+        """register stages of the header leaf pin to pin (RS_HD_D; the legacy qkd_pv_rs_hd is one stage)"""
+        return RS_HD_D[getattr(self.a, 'rs_hd', 'r')] if getattr(self.a, 'rs_native', True) else 1
 
     def rs_cells(self):
         for name, d in self.st.items():
@@ -1022,9 +1032,10 @@ def main(argv=None):
     ap.add_argument('--no-rtrunk', dest='rtrunk', action='store_false', help='KV-RTRUNK: omit the 512-b result trunk (rs_*)')
     ap.add_argument('--rs-legacy', dest='rs_native', action='store_false',
                     help='KV-KITS/NATIVE: the r1 result-trunk leaves (qkd_rlyi_258 / qkd_pv_rs_hd, native capture FAIL on their selects)')
-    ap.add_argument('--rs-hd', choices=('r', 'f'), default='r',
+    ap.add_argument('--rs-hd', choices=('r', 'f'), default='f',
                     help='AD3-KV-RSHD 10-18: native header leaf: r = qkd_pv_rs_hd_r (cross-half V AND selects, native capture '
-                         'FAIL 259.9), f = qkd_pv_rs_hd_f (half-local selects, same ports / schedule)')
+                         'FAIL 259.9), f = qkd_pv_rs_hd_f (half-local selects; rev f2 HKV-PVRS2 10-19: input pin registers, '
+                         'header 2 edges -> RS_D + 1)')
     ap.add_argument('--rs-inj-y', type=float, default=320.0, help='inject stations: centre y in the block row (block-relative)')
     ap.add_argument('--rs-r1-y', type=float, default=500.0, help='first relay of a row pitch: centre y (block-relative)')
     ap.add_argument('--rs-r2-y', type=float, default=92.0, help='second relay: centre y relative to the next block row')
@@ -1081,7 +1092,7 @@ def main(argv=None):
             lane='KV-RTRUNK 2026-10-17', ports=dict(rs_valid=1, rs_beat=5, rs_epoch=16, rs_data=512),
             bundle_lsb_first=['rs_valid', 'rs_beat', 'rs_epoch', 'rs_data'], width=534,
             beat_age='beat b (= column b) leaves rs_* at pair age out_age + RS_D + b (b = 0..31, consecutive edges)',
-            rs_d=rs['rs_d'], nodes=dict(t0=rs['J0'] + 1, t1=rs['J1'] + 1), head_pad_dl8=rs['d8'],
+            rs_d=rs['rs_d'], header_stages=rs['header_stages'], nodes=dict(t0=rs['J0'] + 1, t1=rs['J1'] + 1), head_pad_dl8=rs['d8'],
             lanes=dict(t0=list(RS_T0), t1=list(RS_T1)), e_side_lane_um=g.EW, half_word_bits=RS_W,
             node_of_col=rs['node_of_col'], inject_cycle_vs_out_age=rs['inject_cycle_vs_out_age'],
             y_ready_vs_out_age=rs['y_ready_vs_out_age'], header_t_cycle_vs_out_age=rs['t_header'],

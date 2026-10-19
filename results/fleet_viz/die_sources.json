@@ -112,6 +112,34 @@
  ],
  "aliases": {},
  "supersede": {
+  "dsfd_bf_col_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_col_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_fp_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_seg_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_red_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_lane4_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_lane4r_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
   "ot_s81_kp4_dec": {
    "by": "ot_pdie_serdes",
    "reason": "kp4 decoder is a child of the SerDes PHY-digital parent (S81 p4l)"

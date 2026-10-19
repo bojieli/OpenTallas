@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.hbm_att_window_staging.v1",
+ "lane": "HBM-ATTGAP",
+ "source": {
+  "att_kv_json": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/kv/L02/att_kv.json",
+  "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+  "layer": 2,
+  "rank": 0,
+  "qk_priced": [
+   {
+    "i": 63,
+    "start": 10427.06,
+    "end": 11032.36,
+    "base_cost": 547
+   }
+  ],
+  "pv_priced": [
+   {
+    "i": 67,
+    "start": 11577.74,
+    "end": 12547.17,
+    "base_cost": 808
+   }
+  ],
+  "ring": {
+   "n": 128,
+   "m": 128,
+   "on": true,
+   "first": 0
+  },
+  "c_rows": 512
+ },
+ "tokens": 260,
+ "subrun_rows": 32,
+ "subruns": 4,
+ "lines_per_subrun": 125,
+ "blocks_per_subrun": 2,
+ "checks": 1040,
+ "verdict": "PASS",
+ "refresh_bytes_per_layer_token": 67056,
+ "append_bytes_per_layer_token": 528,
+ "descriptor_rewrites_per_token": 0,
+ "programme_rewrites_per_token": 0,
+ "rule": "staging sub-run j = canonical line stream of positions [32j, 32j+32) in golden (oldest-first) order; refresh = position i+1 -> i through the VM (row granular, 132 VM words a row), append = the newest row at sub-run 3 row 31 (fixed line offset 31*528 B)",
+ "not_chosen": {
+  "descriptor_rewrite": "a head h run starts 120*h mod 136 B into a line: not expressible by a line-run descriptor / 64-line block feed; issuer table write-locked while running",
+  "base_register_relative": "same mid-line start: needs a KV realigner start-skip (ot_hbm_sm_kv_line) + sector-offset feed besides the issuer offset (SM tiles)"
+ }
+}
