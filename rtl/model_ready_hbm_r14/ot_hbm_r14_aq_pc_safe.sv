@@ -130,6 +130,27 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n[0:31];
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n_word_local[0:1][0:31];
   reg [RW_ROW-1:0] look_row[0:31];
+  // Real head-bank and occupancy state at the existing queue edge. Each
+  // decode now serves one <=8-bit word in four banks, including partial
+  // low-bit decodes that ABC otherwise shares across all32 banks.
+  (* keep="true",dont_touch="true" *) reg[4:0]look_bank_regions[1:7][0:2];
+  (* keep="true",dont_touch="true" *) reg[2:0]look_valid_regions[0:7];
+  wire[4:0]look_bank_words[0:7][0:2];
+  for(genvar g=0;g<8;g=g+1)begin:LOOK_WORD_REGION
+    always @(posedge clk or negedge reset_regions[4*g])
+      if(!reset_regions[4*g])look_valid_regions[g]<=0;
+      else look_valid_regions[g]<={3{q_n_next!=0}};
+    for(genvar k=0;k<3;k=k+1)begin:WORD
+      if(g==0)begin
+        if(k==0)assign look_bank_words[g][k]=head_bank_local;
+        else assign look_bank_words[g][k]=look_head_bank_local[k-1];
+      end else begin
+        always @(posedge clk)look_bank_regions[g][k]<=head_d[29:25];
+        assign look_bank_words[g][k]=look_bank_regions[g][k];
+      end
+    end
+  end
+
   // Same-edge reset copies from the parent relay: each bank resets its own
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
@@ -150,8 +171,8 @@ module ot_hbm_r14_aq_pc_safe #(
     for(integer b=0;b<32;b=b+1)begin
       for(integer k=0;k<3;k=k+1)begin
         for(integer bit_=0;bit_<8;bit_=bit_+1)if(k*8+bit_<RW_ROW)begin
-          if((q_n_local[b/8]!=0)&&
-             (k==0?head_bank_local:look_head_bank_local[k-1])==5'(b))
+          if(look_valid_regions[b/4][k]&&
+             look_bank_words[b/4][k]==5'(b))
             look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
           else if(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&wr_bank==b&&
               (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
