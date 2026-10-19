@@ -5,5 +5,16 @@
   "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
   "route_commit": "adb53b6fe4c72c83aaad830b707a708c9e712997",
   "adoption": false,
-  "scope": "Bench-only source recovery; no physical or RTL change, source branch preserved without broad main import"
+  "scope": "Bench-only source recovery; no physical or RTL change, source branch preserved without broad main import",
+  "full_root": {
+    "baseline": "155failed/1493passed/21skipped/327subtests",
+    "candidate": "155failed/1501passed/21skipped/327subtests",
+    "unique_failure_ids": 136,
+    "new_failure_ids": [],
+    "runtime_s": 295.35,
+    "log": "ot-epyc8:/srv/opentallas-scratch/codex/root-family-baseline-1019/hslot-candidate.log"
+  },
+  "launch_integration": "Actual job launch_stage with SSH mocked: fixed sourceCOMMIT/SRC, sourceSHA refusal precedes fallback, exact original command retained PASS",
+  "grant_metadata": "c64c62b33: only18 cell/source/notes fields across6 calendar/fault rows; all geometry/all other grants unchanged;12testsPASS",
+  "raw_log_whitespace": "Preserved exact source log bytes and SHA; raw log trailing spaces retained"
 }
