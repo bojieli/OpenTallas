@@ -106,6 +106,8 @@ def main():
     ap.add_argument("--slice", type=int, default=5)
     ap.add_argument("--order", choices=["near", "far", "rand"], default="near")
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--xs-out", type=int, default=XS_OUT,
+                    help="xs output edges after the read stage (1 = ot_s81sl_xs RD2 0; 2 = RD2 1, the ot_s81sl_xg successor)")
     ap.add_argument("--s0-stride", type=int, default=1,
                     help="min edges between two source-0 (own / V partner) beats; 2 = the ot_s81sl_xg ring stop bench "
                          "(own beats by 4-fragment own path and V partner beats by 4-fragment V path, alternating)")
@@ -324,7 +326,7 @@ def main():
                 phases=[dict(ph=pl["p"]["ph"], tag=pl["tag"], np=pl["np"], fam=pl["fam"], K=pl["p"]["K"],
                              nb=pl["p"]["nb"], rows=pl["p"]["rows"], accept=pl["accept"], s0=pl["s0"], s1=pl["s1"])
                         for pl in plan],
-                gathers=info, expected_xs_minus_ref=off + XS_LAG - 8 + XS_OUT)
+                gathers=info, expected_xs_minus_ref=off + XS_LAG - 8 + a.xs_out)
     (out / "meta.json").write_text(json.dumps(meta, indent=1) + "\n")
     print(f"XS_PROGRAM stage={a.stage_dir.name} phases={[pl['p']['ph'] for pl in plan]} cal_rows={cal_len} "
           f"arrivals={len(arrivals)} off={off} off_load={off_load} order={a.order} slice={a.slice} end={end_it} "

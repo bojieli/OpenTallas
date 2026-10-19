@@ -29,17 +29,23 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_rstop #(
     parameter integer W = 1104,
-    parameter integer V = 276
+    parameter integer V = 276,
+    // RELAY = 1 (S81-XG structural successor 10-19, ot_s81sl_xg): every external output (line E / W, V, control-plane
+    // deliveries, xfin NX ports) leaves through one more register, so no single-cycle wire crosses the 648-um tile
+    // (W pin -> E pin, E pin -> W pin, N pin -> S pin were one cycle: reach > 405 um).  +1 edge on every such output,
+    // uniformly (collision / fault logic unchanged).  Only valid bits carry reset; payload registers are reset-free (a
+    // payload is never used without its valid; RELAY = 0 keeps the old reset-on-payload behaviour bit-for-bit).
+    parameter integer RELAY = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
     input  wire [3:0]      sid,          // 2 * col + tier
     input  wire [W-1:0]    ri_w,         // E-bound beats from the W neighbour
     input  wire [W-1:0]    ri_e,         // W-bound beats from the E neighbour
-    output reg  [W-1:0]    ro_e,
-    output reg  [W-1:0]    ro_w,
+    output wire [W-1:0]    ro_e,
+    output wire [W-1:0]    ro_w,
     input  wire [V-1:0]    vi,
-    output reg  [V-1:0]    vo,
+    output wire [V-1:0]    vo,
     input  wire [4:0]      xf_v,         // own x-beat fragments of the 5 beat leaves (fragment valid / fragment 0)
     input  wire [4:0]      xf_s,
     input  wire [5*V-1:0]  xf,
@@ -51,13 +57,14 @@ module ot_s81sl_rstop #(
     output reg  [2:0]      g_fam,
     output reg  [20:0]     g_idx,
     output reg  [3071:0]   g_d,
-    output reg             dl_ev, output reg [W-1:0] dl_e,   // control plane deliveries (line E-bound / W-bound)
-    output reg             dl_wv, output reg [W-1:0] dl_w,
-    output reg             dl_vv, output reg [V-1:0] dl_vb,  // control plane delivery (V: CTL / SC)
+    output wire            dl_ev, output wire [W-1:0] dl_e,   // control plane deliveries (line E-bound / W-bound)
+    output wire            dl_wv, output wire [W-1:0] dl_w,
+    output wire            dl_vv, output wire [V-1:0] dl_vb,  // control plane delivery (V: CTL / SC)
     input  wire [2:0]      ci_dir,       // control plane inject {V, W, E}
     input  wire [W-1:0]    ci_b,
     output reg             fault
 );
+    reg [W-1:0] ro_e_p, ro_w_p, dl_e_p, dl_w_p; reg [V-1:0] vo_p, dl_vb_p; reg dl_ev_p, dl_wv_p, dl_vv_p;
     localparam [2:0] K_CTL = 3'd0, K_XQ = 3'd1, K_XB = 3'd2, K_NX = 3'd3;
     // ---------------------------------------------------------------- input flops
     reg [W-1:0] iw, ie, ci_q; reg [V-1:0] iv; reg [4:0] xfv_q, xfs_q; reg [5*V-1:0] xf_q; reg [172:0] neo_q, nwo_q; reg [2:0] cid_q; reg [3:0] sid_c;
@@ -142,9 +149,7 @@ module ot_s81sl_rstop #(
     wire [W-1:0] nxv_b = nxb(nxv_f, sid_c);
     wire [2:0] sv = ofv + nxv_out + (ci_q[0] && cid_q[2]);
     // the leaves' fragment 0 already carries hops 1 and src (vq): the V partner delivers it and re-injects as its own
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) vo <= {V{1'b0}};
-        else vo <= ofv ? of : nxv_out ? nxv_b[V-1:0] : (ci_q[0] && cid_q[2]) ? ci_q[V-1:0] : {V{1'b0}};
+    wire [V-1:0] vo_n = ofv ? of : nxv_out ? nxv_b[V-1:0] : (ci_q[0] && cid_q[2]) ? ci_q[V-1:0] : {V{1'b0}};
     // ---------------------------------------------------------------- line output selection
     wire fe = iw_v && iw_k != K_NX && iw_h > 5'd1;
     wire fw = ie_v && ie_k != K_NX && ie_h > 5'd1;
@@ -156,30 +161,40 @@ module ot_s81sl_rstop #(
     wire ae = asm_v && h_e != 5'd0, aw = asm_v && h_w != 5'd0;
     wire ce = ci_q[0] && cid_q[0], cw = ci_q[0] && cid_q[1];
     wire [2:0] se = fe + ne + oe + ae + ce, sw_ = fw + nw + ow + aw + cw;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ro_e <= {W{1'b0}}; ro_w <= {W{1'b0}}; fault <= 1'b0; end
-        else begin
-            ro_e <= fe ? hdr(iw, iw_h - 5'd1, iw[12:9]) : ne ? nxb(nx_pe, sid_c) : oe ? hdr(own, h_e, sid_c) :
+    wire [W-1:0] ro_e_n = fe ? hdr(iw, iw_h - 5'd1, iw[12:9]) : ne ? nxb(nx_pe, sid_c) : oe ? hdr(own, h_e, sid_c) :
                     ae ? hdr(asm_b, h_e, sid_c) : ce ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_e, sid_c) : ci_q) : {W{1'b0}};
-            ro_w <= fw ? hdr(ie, ie_h - 5'd1, ie[12:9]) : nw ? nxb(nx_pw, sid_c) : ow ? hdr(own, h_w, sid_c) :
+    wire [W-1:0] ro_w_n = fw ? hdr(ie, ie_h - 5'd1, ie[12:9]) : nw ? nxb(nx_pw, sid_c) : ow ? hdr(own, h_w, sid_c) :
                     aw ? hdr(asm_b, h_w, sid_c) : cw ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_w, sid_c) : ci_q) : {W{1'b0}};
-            if (se > 3'd1 || sw_ > 3'd1 || nown > 3'd1 || sv > 3'd1 || (own_v && asm_v)) fault <= 1'b1;
-        end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) fault <= 1'b0;
+        else if (se > 3'd1 || sw_ > 3'd1 || nown > 3'd1 || sv > 3'd1 || (own_v && asm_v)) fault <= 1'b1;
+    generate if (RELAY == 0) begin : g_orst
+        // original: whole output words reset
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ro_e_p <= {W{1'b0}}; ro_w_p <= {W{1'b0}}; vo_p <= {V{1'b0}}; end
+            else begin ro_e_p <= ro_e_n; ro_w_p <= ro_w_n; vo_p <= vo_n; end
+    end else begin : g_ovld
+        // valid bits only carry reset (3 loads); payload is reset-free
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ro_e_p[0] <= 1'b0; ro_w_p[0] <= 1'b0; vo_p[0] <= 1'b0; end
+            else begin ro_e_p[0] <= ro_e_n[0]; ro_w_p[0] <= ro_w_n[0]; vo_p[0] <= vo_n[0]; end
+        always @(posedge clk) begin ro_e_p[W-1:1] <= ro_e_n[W-1:1]; ro_w_p[W-1:1] <= ro_w_n[W-1:1]; vo_p[V-1:1] <= vo_n[V-1:1]; end
+    end endgenerate
     // ---------------------------------------------------------------- deliveries (registered)
     reg nxw_v, nxe_v; reg [171:0] nxw_d, nxe_d;
-    assign nx_wi = {nxw_v, nxw_d}; assign nx_ei = {nxe_v, nxe_d};
+    wire [172:0] nx_wi_p = {nxw_v, nxw_d}, nx_ei_p = {nxe_v, nxe_d};
     // xfin wi = snake-forward arrivals (from physical W on S, from physical E on N); ei the other way
     wire xw_nx = tier ? (ie_v && ie_k == K_NX) : (iw_v && iw_k == K_NX);
     wire xe_nx = tier ? (iw_v && iw_k == K_NX) : (ie_v && ie_k == K_NX);
     wire [W-1:0] xwb = tier ? ie : iw, xeb = tier ? iw : ie;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin g_v <= 3'b000; dl_ev <= 1'b0; dl_wv <= 1'b0; dl_vv <= 1'b0; nxw_v <= 1'b0; nxe_v <= 1'b0; end
+        if (!rst_n) begin g_v <= 3'b000; dl_ev_p <= 1'b0; dl_wv_p <= 1'b0; dl_vv_p <= 1'b0; nxw_v <= 1'b0; nxe_v <= 1'b0; end
         else begin
             g_v <= {ie_v && (ie_k == K_XQ || ie_k == K_XB), iw_v && (iw_k == K_XQ || iw_k == K_XB),
                     (own_v && (own[3:1] == K_XQ || own[3:1] == K_XB)) || asm_v};
-            dl_ev <= iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX;
-            dl_wv <= ie_v && ie_k != K_XQ && ie_k != K_XB && ie_k != K_NX;
-            dl_vv <= v_cs;
+            dl_ev_p <= iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX;
+            dl_wv_p <= ie_v && ie_k != K_XQ && ie_k != K_XB && ie_k != K_NX;
+            dl_vv_p <= v_cs;
             nxw_v <= map_w ? v_nx : xw_nx;
             nxe_v <= map_e ? v_nx : xe_nx;
         end
@@ -193,8 +208,34 @@ module ot_s81sl_rstop #(
 `else
         g_d <= {ie[21 +: 1024], iw[21 +: 1024], g0[21 +: 1024]};
 `endif
-        dl_e <= iw; dl_w <= ie; dl_vb <= iv;
+        dl_e_p <= iw; dl_w_p <= ie; dl_vb_p <= iv;
         nxw_d <= map_w ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xwb[7:4], xwb[20:13], xwb[21 +: 160]};
         nxe_d <= map_e ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xeb[7:4], xeb[20:13], xeb[21 +: 160]};
     end
+    // ---------------------------------------------------------------- output relay (RELAY = 1)
+    generate if (RELAY == 0) begin : g_norelay
+        assign ro_e = ro_e_p; assign ro_w = ro_w_p; assign vo = vo_p;
+        assign dl_ev = dl_ev_p; assign dl_e = dl_e_p; assign dl_wv = dl_wv_p; assign dl_w = dl_w_p;
+        assign dl_vv = dl_vv_p; assign dl_vb = dl_vb_p; assign nx_wi = nx_wi_p; assign nx_ei = nx_ei_p;
+    end else begin : g_relay
+        reg [W-1:0] ro_e_q, ro_w_q, dl_e_q, dl_w_q; reg [V-1:0] vo_q, dl_vb_q; reg [172:0] nx_wi_q, nx_ei_q;
+        reg dl_ev_q, dl_wv_q, dl_vv_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin
+                ro_e_q[0] <= 1'b0; ro_w_q[0] <= 1'b0; vo_q[0] <= 1'b0; dl_ev_q <= 1'b0; dl_wv_q <= 1'b0; dl_vv_q <= 1'b0;
+                nx_wi_q[172] <= 1'b0; nx_ei_q[172] <= 1'b0;
+            end else begin
+                ro_e_q[0] <= ro_e_p[0]; ro_w_q[0] <= ro_w_p[0]; vo_q[0] <= vo_p[0];
+                dl_ev_q <= dl_ev_p; dl_wv_q <= dl_wv_p; dl_vv_q <= dl_vv_p;
+                nx_wi_q[172] <= nx_wi_p[172]; nx_ei_q[172] <= nx_ei_p[172];
+            end
+        always @(posedge clk) begin
+            ro_e_q[W-1:1] <= ro_e_p[W-1:1]; ro_w_q[W-1:1] <= ro_w_p[W-1:1]; vo_q[V-1:1] <= vo_p[V-1:1];
+            dl_e_q <= dl_e_p; dl_w_q <= dl_w_p; dl_vb_q <= dl_vb_p;
+            nx_wi_q[171:0] <= nx_wi_p[171:0]; nx_ei_q[171:0] <= nx_ei_p[171:0];
+        end
+        assign ro_e = ro_e_q; assign ro_w = ro_w_q; assign vo = vo_q;
+        assign dl_ev = dl_ev_q; assign dl_e = dl_e_q; assign dl_wv = dl_wv_q; assign dl_w = dl_w_q;
+        assign dl_vv = dl_vv_q; assign dl_vb = dl_vb_q; assign nx_wi = nx_wi_q; assign nx_ei = nx_ei_q;
+    end endgenerate
 endmodule

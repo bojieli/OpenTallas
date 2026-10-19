@@ -60,7 +60,13 @@
 `else
 `define OT_S81SL_XS_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(n))
 `endif
-module ot_s81sl_xs (
+module ot_s81sl_xs #(
+    // RD2 = 1 (S81-XG structural successor 10-19): the 24-macro read crossbar becomes two registered stages -- a bank-local
+    // 8:1 macro select registered beside each source bank column (kept per-bank select copies), then a 3:1 bank select.
+    // Long read wires drop from 24 x 1,536 b to 3 x 1,536 b (gate2 GRT stalled 4 h in congestion).  The frame word leaves
+    // one edge later (bench --xs-out 2); RD2 = 0 is the original.
+    parameter integer RD2 = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [2:0]    g_v,
@@ -333,18 +339,63 @@ module ot_s81sl_xs (
     end
     // stage 3: output registers (zero unless consumed and gated, as the production QB / IX outputs)
     reg [255:0] hq0, hq1; reg [9:0] he0, he1; reg [1023:0] bt_d;
+    reg [609:0] bc_hr_x;                      // bc_hr aligned with the x fields (RD2: one more edge)
     integer j;
-    always @(posedge clk) begin
-        for (j = 0; j < 8; j = j + 1) begin
-            hq0[32*j +: 32] <= qsel0[j][5] ? mrd[qsel0[j][4:3]][qsel0[j][2:0]][32*j +: 32] : 32'd0;
-            hq1[32*j +: 32] <= qsel1[j][5] ? mrd[qsel1[j][4:3]][qsel1[j][2:0]][32*j +: 32] : 32'd0;
+    generate if (RD2 == 0) begin : g_rd1
+        always @(posedge clk) begin
+            for (j = 0; j < 8; j = j + 1) begin
+                hq0[32*j +: 32] <= qsel0[j][5] ? mrd[qsel0[j][4:3]][qsel0[j][2:0]][32*j +: 32] : 32'd0;
+                hq1[32*j +: 32] <= qsel1[j][5] ? mrd[qsel1[j][4:3]][qsel1[j][2:0]][32*j +: 32] : 32'd0;
+            end
+            he0 <= r2_qg[0] ? r2_e0 : 10'd0;
+            he1 <= r2_qg[1] ? r2_e1 : 10'd0;
+            for (k = 0; k < 4; k = k + 1)
+                for (j = 0; j < 4; j = j + 1)
+                    bt_d[256*k + 64*j +: 64] <= bsel[k][j][5] ? mrd[bsel[k][j][4:3]][bsel[k][j][2:0]][64*j +: 64] : 64'd0;
         end
-        he0 <= r2_qg[0] ? r2_e0 : 10'd0;
-        he1 <= r2_qg[1] ? r2_e1 : 10'd0;
-        for (k = 0; k < 4; k = k + 1)
-            for (j = 0; j < 4; j = j + 1)
-                bt_d[256*k + 64*j +: 64] <= bsel[k][j][5] ? mrd[bsel[k][j][4:3]][bsel[k][j][2:0]][64*j +: 64] : 64'd0;
-    end
+        always @(*) bc_hr_x = bc_hr;
+    end else begin : g_rd2
+        // stage 3a, per source bank column: 8:1 macro select from kept per-bank copies of the macro fields (each copy
+        // drives one bank's 32-b / 64-b slice muxes); stage 3b: gate + 3:1 bank select from kept copies of {gate, bank}.
+        reg [255:0] qa0 [0:2], qa1 [0:2]; reg [1023:0] ba [0:2];
+        wire [2:0] gq0 [0:7], gq1 [0:7]; wire [2:0] gb [0:3][0:3];
+        for (gs = 0; gs < 3; gs = gs + 1) begin : g_bk
+            wire [2:0] mq0 [0:7], mq1 [0:7]; wire [2:0] mb [0:3][0:3];
+            for (gm = 0; gm < 8; gm = gm + 1) begin : g_q
+                ot_v41_kreg #(.W(3)) u_m0 (.clk(clk), .arst_n(1'b1), .d(r1_qm0), .q(mq0[gm]));
+                ot_v41_kreg #(.W(3)) u_m1 (.clk(clk), .arst_n(1'b1), .d(r1_qm1), .q(mq1[gm]));
+                always @(posedge clk) begin
+                    qa0[gs][32*gm +: 32] <= mrd[gs][mq0[gm]][32*gm +: 32];
+                    qa1[gs][32*gm +: 32] <= mrd[gs][mq1[gm]][32*gm +: 32];
+                end
+            end
+            for (gm = 0; gm < 16; gm = gm + 1) begin : g_b
+                ot_v41_kreg #(.W(3)) u_m (.clk(clk), .arst_n(1'b1), .d(r1_bm[gm / 4]), .q(mb[gm / 4][gm % 4]));
+                always @(posedge clk) ba[gs][256*(gm / 4) + 64*(gm % 4) +: 64] <= mrd[gs][mb[gm / 4][gm % 4]][64*(gm % 4) +: 64];
+            end
+        end
+        // {gate, bank} copies, one edge after qsel / bsel (whose macro fields the per-bank copies replace)
+        for (gm = 0; gm < 8; gm = gm + 1) begin : g_gq
+            ot_v41_kreg #(.W(3), .AR(1)) u_g0 (.clk(clk), .arst_n(rs_g), .d(qsel0[gm][5:3]), .q(gq0[gm]));
+            ot_v41_kreg #(.W(3), .AR(1)) u_g1 (.clk(clk), .arst_n(rs_g), .d(qsel1[gm][5:3]), .q(gq1[gm]));
+        end
+        for (gm = 0; gm < 16; gm = gm + 1) begin : g_gb
+            ot_v41_kreg #(.W(3), .AR(1)) u_g (.clk(clk), .arst_n(rs_g), .d(bsel[gm / 4][gm % 4][5:3]), .q(gb[gm / 4][gm % 4]));
+        end
+        reg [9:0] he0a, he1a; reg [609:0] bc_hr_d;
+        always @(posedge clk) begin
+            for (j = 0; j < 8; j = j + 1) begin
+                hq0[32*j +: 32] <= gq0[j][2] ? qa0[gq0[j][1:0]][32*j +: 32] : 32'd0;
+                hq1[32*j +: 32] <= gq1[j][2] ? qa1[gq1[j][1:0]][32*j +: 32] : 32'd0;
+            end
+            he0a <= r2_qg[0] ? r2_e0 : 10'd0; he0 <= he0a;
+            he1a <= r2_qg[1] ? r2_e1 : 10'd0; he1 <= he1a;
+            for (k = 0; k < 16; k = k + 1)
+                bt_d[256*(k / 4) + 64*(k % 4) +: 64] <= gb[k / 4][k % 4][2] ? ba[gb[k / 4][k % 4][1:0]][256*(k / 4) + 64*(k % 4) +: 64] : 64'd0;
+            bc_hr_d <= bc_hr;
+        end
+        always @(*) bc_hr_x = bc_hr_d;
+    end endgenerate
 
     // ---- write-side state: arrival tables, exponents, parity windows, write faults ----
     integer s, b;
@@ -395,9 +446,9 @@ module ot_s81sl_xs (
     // ================================================================== frame word: the production f_bus -> dsfd_pq_lx
     wire [1633:0] f_bus;
 `ifdef OT_S81SL_XS_MUT_QSWAP
-    assign f_bus = {bc_hr[609:578], hq1, he0, hq0, he1, bc_hr[45:0], bt_d};   // mutant: q0 / q1 swapped
+    assign f_bus = {bc_hr_x[609:578], hq1, he0, hq0, he1, bc_hr_x[45:0], bt_d};   // mutant: q0 / q1 swapped
 `else
-    assign f_bus = {bc_hr[609:578], hq0, he0, hq1, he1, bc_hr[45:0], bt_d};
+    assign f_bus = {bc_hr_x[609:578], hq0, he0, hq1, he1, bc_hr_x[45:0], bt_d};
 `endif
     wire lx_fault;
     wire [1100:0] xe_unused;

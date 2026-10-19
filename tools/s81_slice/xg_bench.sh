@@ -45,7 +45,7 @@ case_run() {  # name variant expect(PASS|FAIL) program args...
   case $v in base) link base "";; mutfrag) link mutfrag "+define+OT_S81SL_RSTOP_MUT_FRAG";;
     mutvasm) link mutvasm "+define+OT_S81SL_RSTOP_MUT_VASM";; mutgswap) link mutgswap "+define+OT_S81SL_RSTOP_MUT_GSWAP";;
     mutbank) link mutbank "+define+OT_S81SL_XS_MUT_BANK";; mutoff) link mutoff "+define+OT_S81SL_XS_MUT_OFF";; esac
-  python3 tools/s81_slice/xs_program.py --out $w --s0-stride 2 "$@" > $w.prog.log 2>&1 || { echo "XG_CASE $n SETUP_FAILED"; tail -3 $w.prog.log; ALL=0; return; }
+  python3 tools/s81_slice/xs_program.py --out $w --s0-stride 2 --xs-out 2 "$@" > $w.prog.log 2>&1 || { echo "XG_CASE $n SETUP_FAILED"; tail -3 $w.prog.log; ALL=0; return; }
   (cd $w && $O/tb_$v +work=$w +OT_ROM_DIR=$w > $w/run.log 2>&1)
   local got=FAIL; grep -q '^PASS xg_lockstep' $w/run.log && got=PASS
   grep -q '^SETUP_FAIL' $w/run.log && { got=SETUP_FAIL; }
