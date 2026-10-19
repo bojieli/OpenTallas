@@ -10,7 +10,7 @@
 // SVG R/C inventory: rd52 + cmd2x83 + retire2 + retirefields2x17 =254
 // nonreset datapath bits; programme_v and sticky injection fault =2 reset bits.
 module ot_smh_banked_svg_central #(
- parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0,XW=46,CLASS_ENABLE=0
+ parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0,XW=46,CLASS_ENABLE=0,CLASS_MUT=0
 )(
  input wire clk,rst_n,
  input wire cfg_we,input wire[10:0]cfg_addr,input wire[255:0]cfg_data,
@@ -105,11 +105,11 @@ module ot_smh_banked_svg_central #(
  end
  generate if(CLASS_ENABLE!=0)begin:g_class
   reg class_r,class_c,valid_r,valid_c;
-  wire descriptor_class=wctx[XW-1];
+  wire descriptor_class=wctx[XW-1]^1'(CLASS_MUT==1);
   always @(posedge clk)begin
    class_r<=local_valid[15]?descriptor_class:1'b0;
    class_c<=class_r;
-   if(PREL!=0&&local_valid[12]&&ordinal==0&&c_fl)class_c<=descriptor_class;
+   if(PREL!=0&&local_valid[12]&&ordinal==0&&c_fl&&CLASS_MUT!=2)class_c<=descriptor_class;
   end
   always @(posedge clk or negedge app_reset_n)
    if(!app_reset_n)begin valid_r<=0;valid_c<=0;end
