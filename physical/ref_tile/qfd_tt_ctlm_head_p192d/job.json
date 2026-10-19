@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_ctlm_head_p192d-p192d-COMMIT",
+ "name": "qfd_tt_ctlm_head_p192d-p192d-22b6dbc83",
  "block": "qfd_tt_ctlm_head",
  "ref_tile": true,
  "owner": "Claude:QW-SRAM3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "claude/qw-sram3-1019",
-  "commit": "COMMIT",
+  "commit": "22b6dbc83",
   "extra_paths": [
    "physical/qfd_tt_ctlm_split",
    "rtl/test/tb_qfd_tt_ctlm_i_psram.sv",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_ctlm_head_p192d/qfd_tt_ctlm_head_p192d-p192d-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_ctlm_head_p192d/qfd_tt_ctlm_head_p192d-p192d-22b6dbc83"
   }
  ],
  "cycles_added": 0,
