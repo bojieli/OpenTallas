@@ -195,6 +195,14 @@ SEQ_S = AHUB_STATIC and os.environ.get('OT_KV_SEQ_STATIC', '0') == '1' and os.en
 SEQ_S_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv'
 PRG = ['request_valid', 'request_position', 'q_valid', 'q_beat', 'q_data']        # kvs_attn prg = seq prg_* (537 b)
 PRG_W, ARH_W = 537, 8
+# KV-ATTNKIT 10-18 (OT_KV_ATTN_LAND=1, default off until the die lane prices it): the attention control tile kvs_attn
+# with a registered boundary (kit qkd_kvs_attn-g1-7834bbc26 EARLY_FAIL_SETUP TT -480.8 ps: logic between the d2d rx pins
+# and the first flops, fault-gated outputs, a pin-to-pin arh feed-through).  attention_programme LAND=1 (landed RX
+# codec, no added RX edge; TX launch flops), attn_root / attn_face CAL_PIPE=1 (exact), prg <- the programme's launched
+# prg_l, arh <- the face's registered hdr_l.  ADDED EDGES (compiler, like one more relay stage on the bundle):
+# K.tx_record +1 (attn__tx_valid / attn__tx_payload), ks_prg +1, ks_arh +1; RX bundles K.rx_record / K.tx_slot +0.
+ATTN_LAND = os.environ.get('OT_KV_ATTN_LAND', '0') == '1'
+ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0, 'K.tx_slot': 0}
 # KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
 # static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
 # slicing + af | er_fault), the ECTL frames on qkd_ectl3_kiss_st (C = qkd_ectl_c_st: so 413 b, si 633 b, no nb_cr), heads
@@ -204,6 +212,13 @@ PRG_W, ARH_W = 537, 8
 # stack's PV pair in_e lanes: W stacks pvw_<p>.ie = in_e[255:0], E stacks .iee = in_e[511:256]).  ASTK_W re-cut: not done
 # (the frame keeps 220.32 um; the P.V tree columns are gone, so the strip has slack -- follow-up with its kit).
 ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
+# Owner-selected physical strip successor: parameters and read ages must move together.
+# Legacy/default sources keep their existing one-edge internal links and centralized e-read.
+ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '0') == '1'
+ASTK_RL = int(os.environ.get('OT_KV_ASTK_RL', '3' if ASTK_EXPAND else '1'))
+ASTK_Z_STRIDE = 4     # actual CLOSED qkd_astk_ctl_s parameter; stride-16 benches are separate evidence
+if ASTK_RL < 1 or (not ASTK_EXPAND and ASTK_RL != 1):
+    raise ValueError('kv_static_die: ASTK RL changes require OT_KV_ASTK_EXPAND=1 and positive RTL link latency')
 ASTK_FILE = 'rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv'
 ACAL = ['cal[31:16]', 'cal[47:32]', 'cal[15:0]']            # astk cal = {EXP base, Z start, LMAX start} (LSB first: LMAX)
 ECTL_ST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv'
@@ -238,10 +253,23 @@ def graph():
             _boot_join(g)
         if AFAULT:
             _afault_join(g)
+        if ATTN_LAND:
+            _attn_land_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
     return _G['g']
+
+
+def _attn_land_join(g):
+    """KV-ATTNKIT (OT_KV_ATTN_LAND): registered kvs_attn boundary parameters (see ATTN_LAND)"""
+    by = {i['name']: i for i in g['instances']}
+    for name, k in (('attention_programme', 'LAND'), ('attn_root', 'CAL_PIPE'), ('attn_face', 'CAL_PIPE')):
+        if name not in by:
+            raise ValueError(f'kv_static_die ATTN_LAND: no instance {name}')
+        by[name]['parameters'][k] = 1
+    g.setdefault('joins_added', []).append(dict(producer='attention_programme LAND / attn_root, attn_face CAL_PIPE',
+        bound_inputs=0, owner_note='KV-ATTNKIT 10-18: registered kvs_attn boundary; added edges ' + json.dumps(ATTN_LAND_EDGES)))
 
 
 def _hroot_join(g):
@@ -434,7 +462,7 @@ def _d2d_bundles():
     if 'd2db' in _G:
         return _G['d2db']
     s = K.source('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'qkd_d2d_static')
-    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, PR=1).items() if k in s['parameters']})
+    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, NTX=K.d2d_ntx_k(), PR=1, TXDP=K.compiled_txdp()).items() if k in s['parameters']})
     if D2D_LISTS is None:                # standalone (--rtl): kv_die defines the bundles (it does not import us back ON)
         import kv_die as _kd
         D2DS_SVC, SEQST_RX, SEQST_KW = _kd.D2DS_SVC, _kd.SEQST_RX, _kd.SEQST_KW
@@ -631,7 +659,7 @@ def tile(die_inst):
     if kind == 'attn' and SEQ_S and 'fin' in ports:
         # KV-WIRE2 SEQ: the sequencer's result header ar_h {valid, g, beat[5:0]} = the final join's stream header (pure
         # wires from the fin input; g = 0 and beat[5] = 0: the static die has ONE 32-beat result stream)
-        outs['arh'] = ("{fin[0], 2'b00, fin[5:1]}", ARH_W, [])
+        outs['arh'] = (('w_attn_face__hdr_l' if ATTN_LAND else "{fin[0], 2'b00, fin[5:1]}"), ARH_W, [])
         die_x.add('arh')
     if kind == 'emb':                      # the D2D RESULT proxy for the PCs (via their groups)
         for key in PASSES:
@@ -712,7 +740,7 @@ if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1
 if AHUB_STATIC:   # KV-INTEG/AHUB: the attention command word of the static hub
     DIE_EXPORTS['attn'][('attn_root', tuple(AHS))] = ('ahs', AHS_W)
 if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat face -> the static sequencer
-    DIE_EXPORTS['attn'][('attn', tuple(PRG))] = ('prg', PRG_W)
+    DIE_EXPORTS['attn'][('attn', 'prg_l' if ATTN_LAND else tuple(PRG))] = ('prg', PRG_W)   # ATTN_LAND: launched copy
 if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
     DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
@@ -1190,6 +1218,7 @@ def bindings():
     if ASTK_ST:
         for mn in ('qkd_astk', 'qkd_astk_n'):
             out[mn] = dict(module='qkd_astk_strip_er_die', file=ASTK_FILE,
+                parameters=dict(RL=ASTK_RL, Z_STRIDE=ASTK_Z_STRIDE),
                 ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
                            **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
                            **{f'vh{k}': [f'vh{k}'] for k in range(4)},
@@ -1464,7 +1493,7 @@ def _die_joins(m, K, B, add, fk, rec):
                 fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
             bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
         rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
-                            'e quad -> pvw in_e at ASTK_ERL (7: ERL 3 + 4 tap pin-register edges, KV-ERTAP) after the fork; record astk_eread: fork + 7 + pve stages vs the '
+                            f'e quad -> pvw in_e at ASTK_ERL {ASTK_ERL} after the fork; record astk_eread: fork + ASTK_ERL + pve stages vs the '
                             'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
     # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
     if SEQ_S and 'seq' in by:
@@ -2004,13 +2033,22 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
-                **({'astk_eread': astk_eread(m)} if ASTK_ST else {}),
+                attn_landing=dict(enabled=ATTN_LAND, added_edges=ATTN_LAND_EDGES if ATTN_LAND else {},
+                                  codec_edges=2 if ATTN_LAND else 1,
+                                  schedule_binding='compiler must compose launch edges with actual die relay/land ages'),
+                **({'astk_eread': astk_eread(m), 'astk_internal': dict(
+                    expanded=ASTK_EXPAND, relay_edges=ASTK_RL, z_stride=ASTK_Z_STRIDE,
+                    eread_edges=ASTK_ERL, fault_join_edges=1 if ASTK_EXPAND else 0,
+                    owner_issue_edges=[2 + e * (2 + ASTK_RL) for e in range(8)] if ASTK_EXPAND else None,
+                    calendar_status='PRODUCTION_CALENDAR_MEASUREMENT_REQUIRED' if ASTK_EXPAND else 'LEGACY',
+                    eread_law='7 + 7*(2+RL): 8 owner leaves with input/output flops and resettable inter-owner relays'
+                              if ASTK_EXPAND else 'EP3 + request2 + response2')} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})
 
 
 # KV-ERTAP 2026-10-18: qkd_astk_er_tap_st registers every pin (route b18fa696b NEEDS_RTL, I2O hold): read pin -> response
 # pin = the EP's ERL 3 + 2 request-side + 2 response-side pin-register edges.
-ASTK_ERL = 7
+ASTK_ERL = 7 + 7 * (2 + ASTK_RL) if ASTK_EXPAND else 7
 
 
 def astk_eread(m):
