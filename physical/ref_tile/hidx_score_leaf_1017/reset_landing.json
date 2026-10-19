@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_idx_score_leaf",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n comes from the W glue relay (qw rst_c0/rst_c1) and lands in the leaf's per-chunk ot_hbm_idx_chunk_rt region relays (ot_rst_relay, 9 copies/region); extra physical stages would shift the scheduled reset release vs the quarter lockstep bench"
+}

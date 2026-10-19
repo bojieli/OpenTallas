@@ -59,7 +59,12 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "io_hold_margin_ns": 0.025,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -105,7 +110,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "IDX-SCORE leaf (H-NETLIST/IDX-SCORE 2026-10-17): one chunk of ot_hbm_idx_score_static as an identical leaf of the 4x4 scorer cluster. Retimed core ot_hbm_idx_chunk_rt (cycle-exact vs the 32-hslice systolic chunk; 590k -> 215k flops measured, 0.166 mm2 std) + registered W->E forward (W pin reg, E pin reg) + 4-slot sum bus. 17 clock roots: clk (pin/glue regs) + clk_pair[0..15] (head-pair regions, ~13.4k sinks each); roots meet only at register-to-register seams (results/arch/hbm_idx_score_rt_1017/README.md).",
+ "structural_change": "IDX-SCORE leaf (H-NETLIST/IDX-SCORE 2026-10-17): one chunk of ot_hbm_idx_score_static as an identical leaf of the 4x4 scorer cluster. Retimed core ot_hbm_idx_chunk_rt (cycle-exact vs the 32-hslice systolic chunk; 590k -> 215k flops measured, 0.166 mm2 std) + registered W->E forward (W pin reg, E pin reg) + 4-slot sum bus. 17 clock roots: clk (pin/glue regs) + clk_pair[0..15] (head-pair regions, ~13.4k sinks each); roots meet only at register-to-register seams (results/arch/hbm_idx_score_rt_1017/README.md). TW4-IDXSCORE 10-19: (1) rst9 gate synth 14,798 s > 14,400 cap (SHARE 6,590 s + ABC 3,250 s over ~288 flattened q4dot/faddl/bmul copies): keep_hierarchy on those instances in ot_hbm_idx_chunk_rt (synthesised once per definition; attribute only). (2) W/E pins re-kitted to the shared leaf face table (pin_ranges, qw E / qe W use the same ranges) with route.pin_balance so abutted buses meet bit for bit.",
  "job": {
   "owner": "Claude OWN-IDXSCORE 1018",
   "purpose": "IDX-SCORE leaf master (16 instances in the scorer cluster x 2 scorers)",
@@ -379,5 +384,67 @@
    "inputs": [],
    "outputs": []
   }
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n comes from the W glue relay (qw rst_c0/rst_c1) and lands in the leaf's per-chunk ot_hbm_idx_chunk_rt region relays (ot_rst_relay, 9 copies/region); extra physical stages would shift the scheduled reset release vs the quarter lockstep bench"
+ },
+ "pin_ranges": {
+  "w_qv": [
+   2.16,
+   3.24
+  ],
+  "e_qv": [
+   2.16,
+   3.24
+  ],
+  "w_q": [
+   3.24,
+   97.857
+  ],
+  "e_q": [
+   3.24,
+   97.857
+  ],
+  "w_kv": [
+   97.857,
+   98.937
+  ],
+  "e_kv": [
+   97.857,
+   98.937
+  ],
+  "w_kkv": [
+   98.937,
+   100.017
+  ],
+  "e_kkv": [
+   98.937,
+   100.017
+  ],
+  "w_key": [
+   100.017,
+   462.491
+  ],
+  "e_key": [
+   100.017,
+   462.491
+  ],
+  "w_aux": [
+   462.491,
+   467.489
+  ],
+  "e_aux": [
+   462.491,
+   467.489
+  ],
+  "w_bus": [
+   467.489,
+   559.44
+  ],
+  "e_bus": [
+   467.489,
+   559.44
+  ]
  }
 }

@@ -110,7 +110,11 @@ module ot_hbm_idx_chunk_rt #(
                 for (bb = 0; bb < NB; bb = bb + 1) begin : g_blk
                     localparam integer DS = (bb == 0) ? 0 : FPL * (bb - 1);
                     wire [31:0] bv0; wire bo0; wire [31:0] bv; wire bo;
-                    ot_hdc_v41x_q4dot_l #(.QL(QL)) u_d (.clk(ck), .a(qc[bb*128 +: 128]), .b(key_p[128*bb +: 128]),
+                    // keep_hierarchy (TW4-IDXSCORE 10-19): the ~288 arithmetic units of a leaf (q4dot / faddl / bmul) are
+                    // synthesised once per definition instead of flattened: flat, yosys SHARE ran SAT over every copy's
+                    // shifters (6,590 s) and ABC mapped them all (3,250 s) -> leaf synth 14,798 s > the 14,400 s cap.
+                    // Attribute only: no logic, register or cycle change.
+                    (* keep_hierarchy *) ot_hdc_v41x_q4dot_l #(.QL(QL)) u_d (.clk(ck), .a(qc[bb*128 +: 128]), .b(key_p[128*bb +: 128]),
                         .ua(qs[bb*8 +: 8]), .ub(key_p[NB*128 + 8*bb +: 8]), .y(bv0), .ovf(bo0));
                     ot_hdc_delay #(.W(33), .D(DS)) u_bd (.clk(ck), .rst_n(1'b1), .d({bo0, bv0}), .q({bo, bv}));
                     if (bb == 0) begin : g_first
@@ -118,7 +122,7 @@ module ot_hbm_idx_chunk_rt #(
                     end else begin : g_add
                         wire [1:0] err; wire vo_unused; wire pf, bo_d;
                         ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(afault[bb-1]), .q(pf));
-                        ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB + bb]), .valid_in(1'b1),
+                        (* keep_hierarchy *) ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB + bb]), .valid_in(1'b1),
                             .a(acc[32*(bb-1) +: 32]), .b(bv), .y(acc[32*bb +: 32]), .err(err), .valid_out(vo_unused));
                         ot_hdc_delay #(.W(1), .D(FPL)) u_bf (.clk(ck), .rst_n(1'b1), .d(bo), .q(bo_d));
                         assign afault[bb] = pf || bo_d || (err != 2'd0);
@@ -129,7 +133,7 @@ module ot_hbm_idx_chunk_rt #(
                 reg [15:0] rsc; reg rscf;
                 always @(posedge ck) begin rsc <= sc16; rscf <= afault[NB-1] || sco; end
                 wire [15:0] tm0; wire tmo, rscf_d;
-                ot_hdc_v41x_bmul_l #(.ML(FML)) u_m (.clk(ck), .a(rsc), .w(qw), .y(tm0), .ovf(tmo));
+                (* keep_hierarchy *) ot_hdc_v41x_bmul_l #(.ML(FML)) u_m (.clk(ck), .a(rsc), .w(qw), .y(tm0), .ovf(tmo));
                 ot_hdc_delay #(.W(1), .D(FML)) u_tf (.clk(ck), .rst_n(1'b1), .d(rscf), .q(rscf_d));
                 // ---- (b) the head term waits 9h edges (the old key/sum hop FPL+2 per head)
                 wire [15:0] tm; wire tf;
@@ -154,7 +158,7 @@ module ot_hbm_idx_chunk_rt #(
                     always @(posedge ck) begin cs_o <= seed_d[31:0]; cf_o <= seed_d[32]; end
                 end else begin : g_sum
                     wire [1:0] err; wire vo_unused; wire [31:0] sum; wire pf;
-                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB]), .valid_in(1'b1),
+                    (* keep_hierarchy *) ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[1 + hh * NB]), .valid_in(1'b1),
                         .a(csi_p), .b({tm, 16'd0}), .y(sum), .err(err), .valid_out(vo_unused));
                     ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(cfi_p || tf), .q(pf));
                     always @(posedge ck) begin cs_o <= sum; cf_o <= pf || (err != 2'd0); end
