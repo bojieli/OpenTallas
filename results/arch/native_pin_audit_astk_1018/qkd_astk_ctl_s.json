@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_astk_ctl_s",
+ "view": "physical/ref_tile/qkd_astk_ctl_s/views/qkd_astk_ctl_s",
+ "lib_cell": "qkd_astk_ctl_s",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 154.6,
+ "spread_ps": 33.7,
+ "outputs": 636,
+ "inputs": 1009,
+ "launch_ps": 102.6,
+ "launch_pin": "qo[536]",
+ "capture_ps": 77.1,
+ "capture_pin": "aq[131]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 32.3,
+ "ff_launch_min_ps": 42.7,
+ "ff_hold_need_ps": -7.0,
+ "pass": true,
+ "fail_why": ""
+}
