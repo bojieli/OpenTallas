@@ -21,6 +21,14 @@ class CompletenessTest(unittest.TestCase):
             p = Path(d); self.fixture(p)
             self.assertTrue(check_run(p, p / "run.log")["passed"])
 
+    def test_component_pass_cannot_qualify_native_chain(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d); self.fixture(p)
+            result = check_run(p, p / "run.log", scope="native_chain")
+            self.assertFalse(result["passed"])
+            self.assertFalse(result["qualifies_native_layer"])
+            self.assertFalse(result["qualifies_native_chain"])
+
     def test_old_tb_false_pass_before_serial_check(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d); self.fixture(p, checks=0, serial=90)

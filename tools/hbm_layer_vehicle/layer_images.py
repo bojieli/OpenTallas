@@ -757,6 +757,8 @@ def main():
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
+               scope="component_probe", qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=["released_checkpoint_fixture" if a.fixtures else "seeded_placeholder"],
                layer=a.layer, t0_serial=t0, priced_layer_cycles=pr["cycles"],
                assumptions=["serial = ceil(3*stream/4)", "SU quarter VM placement quarter-packed (compiler's own)",
                             "VM operands as M preload events (no slice VM input port)",
@@ -764,6 +766,8 @@ def main():
                events=events)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
+               scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=rep["state_seed_provenance"],
                priced=str(a.priced), programme=str(prog_src), programme_sha256=sha(Path(prog_src).read_bytes()),
                fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
