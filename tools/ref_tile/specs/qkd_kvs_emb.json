@@ -68,7 +68,8 @@
   "pin_min_tracks": 3,
   "m5_pg_pitch": 2.7,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
  },
  "recipe": 3,
  "pin_reg_split": true,
@@ -80,10 +81,10 @@
   "h": 302.40000000000003,
   "exact": true
  },
- "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_emb of the KV die (2 children: qkd_embedding_row_tx, qkd_embedding_static_join4_cal; hard: qkd_embedding_row_tx), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 36f274261cab) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 673, 'E': 758, 'W': 598} pins on 388.8 x 302.4 um (die frame record (388.8, 302.4) ASSUMED -> this outline for KV-PLAN3).",
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_emb of the KV die (2 children: qkd_embedding_row_tx, qkd_embedding_static_join4_cal; hard: qkd_embedding_row_tx), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 4db849c89d25) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 673, 'E': 758, 'W': 598} pins on 388.8 x 302.4 um (die frame record (388.8, 302.4) ASSUMED -> this outline for KV-PLAN3).",
  "job": {
   "owner": "Claude:KV-INTEG2",
-  "branch": "claude/kv-integ2-kits-1018",
+  "branch": "claude/kv-kits-grp-1018",
   "tag": "i2",
   "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_emb.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
   "benches": [
