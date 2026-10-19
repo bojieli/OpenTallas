@@ -1,0 +1,8147 @@
+{
+  "top": "ot_hbm_idx_topk_link_static_p",
+  "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+  "physical_claim": false,
+  "std_area_um2": 12259.40346,
+  "source_sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv": "283afdf20b72c6621ccd827a0f7404caa774c69f8026cf34562d9ffb096d1bb0",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6"
+  },
+  "macro_counts": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 8
+  },
+  "unmapped_or_unknown": {},
+  "cell_counts": {
+    "INVx1_ASAP7_75t_R": 14638,
+    "NOR2xp33_ASAP7_75t_R": 10035,
+    "OAI21xp33_ASAP7_75t_R": 18260,
+    "O2A1O1Ixp33_ASAP7_75t_R": 6433,
+    "XOR2xp5_ASAP7_75t_R": 34,
+    "OR2x2_ASAP7_75t_R": 1272,
+    "MAJIxp5_ASAP7_75t_R": 22,
+    "XNOR2xp5_ASAP7_75t_R": 114,
+    "MAJx2_ASAP7_75t_R": 10,
+    "NAND2xp33_ASAP7_75t_R": 7606,
+    "AO21x1_ASAP7_75t_R": 1758,
+    "NAND3xp33_ASAP7_75t_R": 1294,
+    "NOR3xp33_ASAP7_75t_R": 811,
+    "OR3x1_ASAP7_75t_R": 571,
+    "AND2x2_ASAP7_75t_R": 144,
+    "NAND4xp25_ASAP7_75t_R": 158,
+    "OAI31xp33_ASAP7_75t_R": 513,
+    "AOI21xp33_ASAP7_75t_R": 14481,
+    "OA21x2_ASAP7_75t_R": 449,
+    "A2O1A1Ixp33_ASAP7_75t_R": 8375,
+    "NOR4xp25_ASAP7_75t_R": 261,
+    "AOI211xp5_ASAP7_75t_R": 1171,
+    "AO32x1_ASAP7_75t_R": 14,
+    "NAND5xp2_ASAP7_75t_R": 16,
+    "OR4x1_ASAP7_75t_R": 20,
+    "AND4x1_ASAP7_75t_R": 17,
+    "NOR5xp2_ASAP7_75t_R": 10,
+    "AND3x1_ASAP7_75t_R": 243,
+    "AOI31xp33_ASAP7_75t_R": 623,
+    "OAI311xp33_ASAP7_75t_R": 92,
+    "OAI211xp5_ASAP7_75t_R": 2698,
+    "OA211x2_ASAP7_75t_R": 396,
+    "AOI311xp33_ASAP7_75t_R": 101,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 88,
+    "AO31x2_ASAP7_75t_R": 1,
+    "OAI222xp33_ASAP7_75t_R": 683,
+    "OAI22xp33_ASAP7_75t_R": 2356,
+    "OAI221xp5_ASAP7_75t_R": 2872,
+    "OA222x2_ASAP7_75t_R": 474,
+    "AOI221xp5_ASAP7_75t_R": 143,
+    "AOI22xp33_ASAP7_75t_R": 630,
+    "OAI32xp33_ASAP7_75t_R": 675,
+    "AO22x1_ASAP7_75t_R": 72,
+    "AOI32xp33_ASAP7_75t_R": 86,
+    "AOI321xp33_ASAP7_75t_R": 3,
+    "OAI321xp33_ASAP7_75t_R": 30,
+    "OAI33xp33_ASAP7_75t_R": 3,
+    "AOI33xp33_ASAP7_75t_R": 1,
+    "AND5x1_ASAP7_75t_R": 3,
+    "AO221x1_ASAP7_75t_R": 4,
+    "AO222x2_ASAP7_75t_R": 2,
+    "OR5x1_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 16806,
+    "DFFASRHQNx1_ASAP7_75t_R": 84,
+    "ot_sram_1r1w_64x512_m1_r2c2": 8
+  },
+  "scope": "generic mapped source census; FAIL safe fanout, no gate",
+  "raw_census_sha256": "6b1e040ce8857609d4043bdcc6da56f74f05f36fb1bb505e5ea2a58564744a94",
+  "mapped_sha256": "829456dc3df45d0052a960d7a257b7474254f4dcdb60c42270bb72dd26b55a2d",
+  "over32_count": 535,
+  "over32": [
+    {
+      "fanout": 7010,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$971818"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877828",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 7009,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$971816"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877818",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 7004,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$971822"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877848",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 6991,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$971820"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877838",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 6941,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$971814"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877808",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 4671,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$979912"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$877798",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2512,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975930"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98121",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2331,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975936"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98118",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2323,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975932"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98120",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2309,
+      "names": [
+        "core.read_v"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014235",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2305,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$977770"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$96979",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2192,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975934"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98119",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 2125,
+      "names": [
+        "$abc$1002246$new_n128943"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091816",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1866,
+      "names": [
+        "$abc$1002246$new_n128944"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091817",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1190,
+      "names": [
+        "$abc$1002246$new_n42583"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005456",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1155,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976108"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98011",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1145,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976188"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97971",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1121,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975926"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98123",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 1098,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$975928"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98122",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 988,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976112"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98009",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 978,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976192"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97969",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 902,
+      "names": [
+        "$abc$1002246$new_n42585"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005458",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 851,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976110"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98010",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 831,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976190"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97970",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 733,
+      "names": [
+        "$abc$1002246$new_n62980"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025853",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 710,
+      "names": [
+        "$abc$1002246$new_n42584"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005457",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 659,
+      "names": [
+        "$abc$1002246$new_n42587"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005460",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 643,
+      "names": [
+        "$abc$1002246$new_n128959"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091832",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 640,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976368"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97872",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 636,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976304"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97904",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 631,
+      "names": [
+        "$abc$1002246$new_n128958"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091831",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 629,
+      "names": [
+        "$abc$1002246$new_n128946"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091819",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 609,
+      "names": [
+        "$abc$1002246$new_n42586"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005459",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 577,
+      "names": [
+        "$abc$1002246$new_n63074"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025947",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 572,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976274"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97919",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 570,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976306"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97903",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 569,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976370"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97871",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 568,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976338"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97887",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 540,
+      "names": [
+        "$abc$1002246$new_n128945"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091818",
+          "AND2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 522,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005588",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 508,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005548",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 500,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005587",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 492,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976186"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97972",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 492,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976270"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97921",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 487,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005547",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 486,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976334"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97889",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 484,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976106"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98012",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 460,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976272"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97920",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 457,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976336"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97888",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 448,
+      "names": [
+        "$abc$1002246$new_n109804"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072677",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 445,
+      "names": [
+        "$abc$1002246$new_n102718"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065591",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 439,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976302"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97905",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 419,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976366"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97873",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 402,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005631",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 383,
+      "names": [
+        "$abc$1002246$new_n132308"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095181",
+          "AOI31xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 379,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005659",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 379,
+      "names": [
+        "$abc$1002246$new_n132309"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095182",
+          "OAI31xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 346,
+      "names": [
+        "$abc$1002246$new_n124241"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087114",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 343,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005589",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 343,
+      "names": [
+        "$abc$1002246$new_n124207"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087080",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 334,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005549",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 330,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976332"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97890",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 329,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976114"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$98008",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 329,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976184"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97973",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 318,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005661",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 317,
+      "names": [
+        "$abc$1002246$new_n132306"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095179",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 315,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976300"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97906",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 315,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005629",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 312,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976276"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97918",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 306,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$976364"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97874",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 306,
+      "names": [
+        "$abc$1002246$new_n132307"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095180",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 282,
+      "names": [
+        "$abc$1002246$new_n128941"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091814",
+          "XOR2xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 280,
+      "names": [
+        "$abc$1002246$new_n102795"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065668",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 277,
+      "names": [
+        "$abc$1002246$new_n109881"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072754",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 275,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005675",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 266,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005643",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 263,
+      "names": [
+        "$abc$1002246$new_n109882"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072755",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 260,
+      "names": [
+        "$abc$1002246$new_n102796"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065669",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 256,
+      "names": [
+        "$abc$1002246$new_n62981"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025854",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 256,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005585",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 256,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005550",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 252,
+      "names": [
+        "$abc$1002246$new_n102794"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065667",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 252,
+      "names": [
+        "$abc$1002246$new_n109880"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072753",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 226,
+      "names": [
+        "$abc$1002246$new_n128966"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091839",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 211,
+      "names": [
+        "$abc$1002246$new_n128967"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091840",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 203,
+      "names": [
+        "$abc$1002246$new_n42588"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005461",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 201,
+      "names": [
+        "core.s4_fillc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1007562",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 196,
+      "names": [
+        "$abc$1002246$new_n124240"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087113",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 195,
+      "names": [
+        "$abc$1002246$new_n124206"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087079",
+          "AND2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 193,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005677",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 190,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005645",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 187,
+      "names": [
+        "$abc$1002246$new_n128942"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091815",
+          "XNOR2xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 185,
+      "names": [
+        "$abc$1002246$new_n53072"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015945",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 171,
+      "names": [
+        "$abc$1002246$new_n109856"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072729",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 167,
+      "names": [
+        "$abc$1002246$new_n102771"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065644",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 158,
+      "names": [
+        "$abc$1002246$new_n128971"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091844",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 154,
+      "names": [
+        "$abc$1002246$new_n128994"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091867",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 152,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005662",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 152,
+      "names": [
+        "$abc$1002246$new_n128950"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091823",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 149,
+      "names": [
+        "$abc$1002246$new_n128995"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091868",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 147,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005630",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 144,
+      "names": [
+        "$abc$1002246$new_n102719"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065592",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 144,
+      "names": [
+        "$abc$1002246$new_n109807"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072680",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 144,
+      "names": [
+        "$abc$1002246$new_n128970"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091843",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 139,
+      "names": [
+        "$abc$1002246$new_n129117"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091990",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 137,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005546",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 135,
+      "names": [
+        "$abc$1002246$new_n128955"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091828",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 133,
+      "names": [
+        "$abc$1002246$new_n128948"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091821",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 129,
+      "names": [
+        "core.s1_nqc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005586",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 129,
+      "names": [
+        "$abc$1002246$new_n129116"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091989",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 125,
+      "names": [
+        "$abc$1002246$new_n130783"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1093656",
+          "OAI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 124,
+      "names": [
+        "$abc$1002246$new_n121596"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1084469",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 123,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005676",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 122,
+      "names": [
+        "$abc$1002246$new_n128968"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091841",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 120,
+      "names": [
+        "$abc$1002246$new_n135302"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1098175",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 118,
+      "names": [
+        "$abc$1002246$new_n53074"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015947",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 117,
+      "names": [
+        "$abc$1002246$new_n118803"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1081676",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 116,
+      "names": [
+        "$abc$1002246$new_n128960"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091833",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 115,
+      "names": [
+        "$abc$1002246$new_n117629"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1080502",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 114,
+      "names": [
+        "$abc$1002246$new_n130782"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1093655",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 113,
+      "names": [
+        "$abc$1002246$new_n135301"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1098174",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 106,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005644",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 105,
+      "names": [
+        "$abc$1002246$new_n55652"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018525",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 102,
+      "names": [
+        "$abc$1002246$new_n120432"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1083305",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 99,
+      "names": [
+        "$abc$1002246$new_n59773"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022646",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 95,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005660",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 95,
+      "names": [
+        "$abc$1002246$new_n102717"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065590",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 94,
+      "names": [
+        "$abc$1002246$new_n128969"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091842",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 92,
+      "names": [
+        "$abc$1002246$new_n61473"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024346",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 92,
+      "names": [
+        "$abc$1002246$new_n109803"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072676",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 91,
+      "names": [
+        "$abc$1002246$new_n128953"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091826",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 90,
+      "names": [
+        "$abc$1002246$new_n63073"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025946",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 90,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005628",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 90,
+      "names": [
+        "$abc$1002246$new_n128977"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091850",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 87,
+      "names": [
+        "$abc$1002246$new_n124238"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087111",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 87,
+      "names": [
+        "$abc$1002246$new_n128999"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091872",
+          "OAI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 85,
+      "names": [
+        "$abc$1002246$new_n128961"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091834",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 84,
+      "names": [
+        "$abc$1002246$new_n124239"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1087112",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 84,
+      "names": [
+        "$abc$1002246$new_n128998"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091871",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 82,
+      "names": [
+        "$abc$1002246$new_n60969"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023842",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 80,
+      "names": [
+        "$abc$1002246$new_n129028"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091901",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 80,
+      "names": [
+        "$abc$1002246$new_n128978"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091851",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 78,
+      "names": [
+        "$abc$1002246$new_n58821"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021694",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 76,
+      "names": [
+        "$abc$1002246$new_n60428"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023301",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 76,
+      "names": [
+        "$abc$1002246$new_n121597"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1084470",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 76,
+      "names": [
+        "$abc$1002246$new_n130779"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1093652",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 74,
+      "names": [
+        "$abc$1002246$new_n59181"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022054",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 72,
+      "names": [
+        "$abc$1002246$new_n52093"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014966",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 72,
+      "names": [
+        "$abc$1002246$new_n130767"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1093640",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 72,
+      "names": [
+        "$abc$1002246$new_n132305"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095178",
+          "OAI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 72,
+      "names": [
+        "$abc$1002246$new_n135300"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1098173",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 70,
+      "names": [
+        "$abc$1002246$new_n54632"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017505",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 70,
+      "names": [
+        "$abc$1002246$new_n128987"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091860",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 68,
+      "names": [
+        "$abc$1002246$new_n55655"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018528",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 68,
+      "names": [
+        "$abc$1002246$new_n128954"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091827",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 67,
+      "names": [
+        "$abc$1002246$new_n62048"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024921",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 67,
+      "names": [
+        "$abc$1002246$new_n62552"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025425",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 66,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005678",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 65,
+      "names": [
+        "$abc$1002246$new_n130780"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1093653",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 63,
+      "names": [
+        "$abc$1002246$new_n62191"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025064",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 63,
+      "names": [
+        "$abc$1002246$new_n62695"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025568",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 63,
+      "names": [
+        "$abc$1002246$new_n118804"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1081677",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 62,
+      "names": [
+        "core.s4_fillc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1007561",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 62,
+      "names": [
+        "$abc$1002246$new_n60608"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023481",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 62,
+      "names": [
+        "$abc$1002246$new_n61329"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024202",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 62,
+      "names": [
+        "$abc$1002246$new_n129029"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091902",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 61,
+      "names": [
+        "$abc$1002246$new_n128949"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091822",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 61,
+      "names": [
+        "$abc$1002246$new_n134364"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1097237",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 60,
+      "names": [
+        "$abc$1002246$new_n128947"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091820",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 60,
+      "names": [
+        "$abc$1002246$new_n132204"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095077",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 59,
+      "names": [
+        "$abc$1002246$new_n128986"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091859",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 57,
+      "names": [
+        "$abc$1002246$new_n128992"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091865",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 56,
+      "names": [
+        "core.f0",
+        "core.trep"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1007432",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 55,
+      "names": [
+        "core.s1_nac"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1005646",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 54,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980170"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$100826",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 54,
+      "names": [
+        "$abc$1002246$new_n61112"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023985",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 54,
+      "names": [
+        "$abc$1002246$new_n132203"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1095076",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 53,
+      "names": [
+        "$abc$1002246$new_n51911"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014784",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 53,
+      "names": [
+        "$abc$1002246$new_n128952"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091825",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 53,
+      "names": [
+        "$abc$1002246$new_n128993"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091866",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 52,
+      "names": [
+        "core.f0",
+        "core.trep"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1003643",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 52,
+      "names": [
+        "$abc$1002246$new_n59109"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021982",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 52,
+      "names": [
+        "$abc$1002246$new_n61113"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023986",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 52,
+      "names": [
+        "$abc$1002246$new_n128989"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091862",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 51,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$968856"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$103509",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 50,
+      "names": [
+        "$abc$1002246$new_n59540"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022413",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 49,
+      "names": [
+        "$abc$1002246$new_n128990"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091863",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 48,
+      "names": [
+        "core.f0",
+        "core.trep"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1003644",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 48,
+      "names": [
+        "$abc$1002246$new_n62624"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025497",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 46,
+      "names": [
+        "$abc$1002246$new_n59469"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022342",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 46,
+      "names": [
+        "$abc$1002246$new_n60174"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023047",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 46,
+      "names": [
+        "$abc$1002246$new_n61904"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024777",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 45,
+      "names": [
+        "core.trep"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1003642",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 45,
+      "names": [
+        "$abc$1002246$new_n55487"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018360",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 45,
+      "names": [
+        "$abc$1002246$new_n60609"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023482",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 45,
+      "names": [
+        "$abc$1002246$new_n61689"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024562",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 44,
+      "names": [
+        "$abc$1002246$new_n60246"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023119",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 44,
+      "names": [
+        "$abc$1002246$new_n61474"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024347",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 44,
+      "names": [
+        "$abc$1002246$new_n62408"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025281",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 44,
+      "names": [
+        "$abc$1002246$new_n128988"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091861",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 43,
+      "names": [
+        "$abc$1002246$new_n58965"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021838",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 43,
+      "names": [
+        "$abc$1002246$new_n62120"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024993",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 43,
+      "names": [
+        "$abc$1002246$new_n62696"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025569",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 42,
+      "names": [
+        "$abc$1002246$new_n52218"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015091",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 42,
+      "names": [
+        "core.trep"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1003641",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980868"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33999",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "core.s4_fillc"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1007563",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n53071"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015944",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n53962"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016835",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n57005"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019878",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n60357"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023230",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n60825"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023698",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n60898"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023771",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n61330"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024203",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n61977"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024850",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n62192"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025065",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n128984"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091857",
+          "OAI31xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n128991"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091864",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 41,
+      "names": [
+        "$abc$1002246$new_n129115"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091988",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n51920"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014793",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n51963"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014836",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n51973"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014846",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n52014"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014887",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n52015"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014888",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n52122"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014995",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n53952"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016825",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n61041"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023914",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n61763"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024636",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 40,
+      "names": [
+        "$abc$1002246$new_n128962"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091835",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980852"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$34007",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980900"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33983",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$997536"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$97736",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n51902"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014775",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n51916"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014789",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n51957"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014830",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52037"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014910",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52048"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014921",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52052"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014925",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52114"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014987",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52127"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015000",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52133"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015006",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52150"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015023",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52163"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015036",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52183"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015056",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52197"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015070",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52167"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015040",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52234"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015107",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52201"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015074",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52245"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015118",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n52306"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015179",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n53946"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016819",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n53951"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016824",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n54633"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017506",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n60537"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023410",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n128997"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091870",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 39,
+      "names": [
+        "$abc$1002246$new_n128980"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091853",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980932"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33967",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980948"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33959",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51900"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014773",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51917"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014790",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51936"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014809",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51939"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014812",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51922"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014795",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51945"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014818",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51947"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014820",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51971"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014844",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51993"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014866",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n51995"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014868",
+          "AO21x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52008"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014881",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52011"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014884",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52029"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014902",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52049"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014922",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52112"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014985",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52128"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015001",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52142"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015015",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52146"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015019",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52148"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015021",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52164"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015037",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52181"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015054",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52198"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015071",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52238"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015111",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n52304"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015177",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n53947"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016820",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n54526"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017399",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n55656"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018529",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n56443"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019316",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n58299"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021172",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n58894"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021767",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n59989"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022862",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n60065"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022938",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n60754"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023627",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n62337"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025210",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 38,
+      "names": [
+        "$abc$1002246$new_n128963"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1091836",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n51941"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014814",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n51958"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014831",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n51960"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014833",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n51966"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014839",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52009"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014882",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52031"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014904",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52035"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014908",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52062"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014935",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52054"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014927",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52077"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014950",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52138"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015011",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52217"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015090",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n53961"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016834",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52233"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015106",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52094"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014967",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n58823"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021696",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52244"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015117",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n61258"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024131",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n62049"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024922",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n62839"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025712",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n102772"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065645",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 37,
+      "names": [
+        "$abc$1002246$new_n52250"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015123",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52144"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015017",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53075"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015948",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53156"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016029",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53154"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016027",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53155"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016028",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53149"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016022",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53151"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016024",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53311"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016184",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53316"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016189",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53533"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016406",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53531"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016404",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53528"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016401",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53529"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016402",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53763"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016636",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53765"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016638",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53761"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016634",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53764"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016637",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53871"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016744",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53872"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016745",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53873"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016746",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53909"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016782",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53910"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016783",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53975"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016848",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53972"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016845",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53974"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016847",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53970"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016843",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53973"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016846",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53968"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016841",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n53953"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016826",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54160"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017033",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54157"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017030",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54309"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017182",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54311"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017184",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54306"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017179",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54307"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017180",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54444"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017317",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54524"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017397",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54525"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017398",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54522"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017395",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54704"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017577",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54705"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017578",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54706"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017579",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54742"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017615",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54743"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017616",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54783"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017656",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54787"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017660",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54785"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017658",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54786"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017659",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54780"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017653",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54782"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017655",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54944"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017817",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54940"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017813",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n54942"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017815",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n51935"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014808",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55091"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017964",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55092"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017965",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55087"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017960",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55088"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017961",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55300"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018173",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55302"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018175",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55298"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018171",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55301"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018174",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55408"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018281",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55409"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018282",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55410"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018283",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55446"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018319",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55447"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018320",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55488"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018361",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55490"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018363",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55491"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018364",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55484"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018357",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55486"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018359",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55732"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018605",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55729"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018602",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55730"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018603",
+          "OR4x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55878"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018751",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55879"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018752",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55875"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018748",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n55876"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018749",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n51986"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014859",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56091"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018964",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56093"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018966",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56090"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018963",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56092"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018965",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56199"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019072",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56200"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019073",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56201"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019074",
+          "OR4x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56237"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019110",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56238"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019111",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52003"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014876",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56281"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019154",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56280"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019153",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56283"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019156",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56275"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019148",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56277"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019150",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56452"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019325",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56454"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019327",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56449"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019322",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56451"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019324",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56596"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019469",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56599"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019472",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56598"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019471",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56595"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019468",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56818"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019691",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56820"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019693",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56816"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019689",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56819"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019692",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56926"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019799",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56927"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019800",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56928"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019801",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56964"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019837",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n56965"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019838",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57010"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019883",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57008"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019881",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57009"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019882",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57002"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019875",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57004"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019877",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57181"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020054",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57177"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020050",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52058"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014931",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57332"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020205",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57334"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020207",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57329"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020202",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57330"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020203",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57554"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020427",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57556"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020429",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57552"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020425",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57555"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020428",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57662"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020535",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57663"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020536",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57664"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020537",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57700"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020573",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57701"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020574",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57743"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020616",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57745"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020618",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57744"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020617",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57740"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020613",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57742"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020615",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57738"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020611",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52168"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015041",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n57921"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020794",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58076"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020949",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58078"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020951",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58073"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020946",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58074"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020947",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52171"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015044",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52240"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015113",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58297"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021170",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58298"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021171",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58295"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021168",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58405"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021278",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58406"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021279",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58407"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021280",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58443"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021316",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58444"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021317",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58485"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021358",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58488"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021361",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58487"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021360",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58490"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021363",
+          "NAND5xp2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58481"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021354",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58483"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021356",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52202"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015075",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n58673"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021546",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n59256"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022129",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n59258"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022131",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n59253"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022126",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n59254"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022127",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52205"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015078",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n52249"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015122",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60064"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022937",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60066"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022939",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60062"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022935",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60318"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023191",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60319"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023192",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60320"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023193",
+          "OR2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60500"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023373",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n60501"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023374",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n62480"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025353",
+          "AOI21xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n62481"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025354",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n102793"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1065666",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n109857"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072730",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n109879"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1072752",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n135374"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1098247",
+          "OR3x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 36,
+      "names": [
+        "$abc$1002246$new_n135373"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1098246",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980884"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33991",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$auto$dfflibmap.cc:546:dfflibmap$980964"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$33951",
+          "DFFHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n52059"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014932",
+          "NAND4xp25_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n52175"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1015048",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n55492"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018365",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n55654"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018527",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n55734"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018607",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n58671"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021544",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n58669"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021542",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 35,
+      "names": [
+        "$abc$1002246$new_n61257"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024130",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n53315"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016188",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n53958"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1016831",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n55657"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1018530",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n57179"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020052",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n57920"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1020793",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n59038"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1021911",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n59396"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022269",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n59990"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022863",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n60753"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023626",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 34,
+      "names": [
+        "$abc$1002246$new_n62336"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1025209",
+          "NOR2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n54159"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1017032",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n57006"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1019879",
+          "NOR3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n59613"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1022486",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n60681"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023554",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n60826"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1023699",
+          "NAND3xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$abc$1002246$new_n61618"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1024491",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.base_id.$abc$1002048$auto$dfflibmap.cc:546:dfflibmap$968074"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.base_id.$auto$ff.cc:337:slice$876224",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.base_id.$abc$1002048$auto$dfflibmap.cc:546:dfflibmap$968122"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.base_id.$auto$ff.cc:337:slice$876223",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.base_id.$abc$1002048$auto$dfflibmap.cc:546:dfflibmap$968152"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.base_id.$auto$ff.cc:337:slice$876222",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.base_id.$abc$1002048$auto$dfflibmap.cc:546:dfflibmap$968154"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.base_id.$auto$ff.cc:337:slice$876221",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.base_id.$abc$1002048$auto$dfflibmap.cc:546:dfflibmap$968156"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.base_id.$auto$ff.cc:337:slice$876220",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.rank_id.$abc$1001850$auto$dfflibmap.cc:546:dfflibmap$967984"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.rank_id.$auto$ff.cc:337:slice$876485",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.rank_id.$abc$1001850$auto$dfflibmap.cc:546:dfflibmap$968032"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.rank_id.$auto$ff.cc:337:slice$876484",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.rank_id.$abc$1001850$auto$dfflibmap.cc:546:dfflibmap$968062"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.rank_id.$auto$ff.cc:337:slice$876483",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.rank_id.$abc$1001850$auto$dfflibmap.cc:546:dfflibmap$968064"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.rank_id.$auto$ff.cc:337:slice$876482",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "fanout": 33,
+      "names": [
+        "$flatten\\core.g_control_ring.rank_id.$abc$1001850$auto$dfflibmap.cc:546:dfflibmap$968066"
+      ],
+      "drivers": [
+        [
+          "$flatten\\core.g_control_ring.rank_id.$auto$ff.cc:337:slice$876481",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    }
+  ],
+  "reset_networks": [
+    {
+      "fanout": 82,
+      "names": [
+        "core.g_control_ring.base_id.rst_n",
+        "rst_sync"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014755",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "fanout": 2,
+      "names": [
+        "rst_n"
+      ],
+      "drivers": [],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "fanout": 1,
+      "names": [
+        "rst_sync"
+      ],
+      "drivers": [
+        [
+          "$abc$1002246$auto$blifparse.cc:397:parse_blif$1014153",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    }
+  ]
+}

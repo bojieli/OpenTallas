@@ -1,0 +1,13 @@
+# HIDX cyclic control and compact carry source experiment
+
+Candidate RTL source6c32959d2, based failed r3 e11cba3a3. Defaults off; no main merge, physical gate, layout approval, die binding or token pass requested. TT setup/FF hold policy unchanged.
+
+`SAFE_RING=1` replaces five-edge control/group/rank/base shifts with real five-slot cyclic storage. `SAFE_CARRY=1` replaces the2304-bit W runtime array with the one288-bit partial flit that survives between beats. All20-bit IDs, actual record order, arithmetic, bank addresses, fixed II1 interface and historical+5 edges remain unchanged. Raw source model and corrections are in MODEL.md.
+
+The source unit passes7760fixed-age/reset checks over60reset edges. Existing historical production stimulus holds group stable during7idle edges; its wrong-group-age mutant escaped. That coverage failure is preserved in ring_only/m5.log. The successor stimulus EMIT_GAP0 sends all16emit groups on consecutive cycles, retaining every golden and fixed-latency miter check. Final6c32959d2 matrix PASS from the exact v4 frozen remote source, all five bench/RTL hashes match current files; full burst suite passes3072exact records/1282miter checks and kills all six mutants(3168/480/662/103/3330/662 errors).
+
+Final mapped census:16900FF, std12317.59224um2, eightactual64x512_r2c2 SRAMs, no unknown cells. Ring identity fields split to4bits after an actual8bit branch measured33loads; final census has no ring-family net over32. Actual compact carry252FF (unused highest slot optimized), down from2016actual W FF:1764removed. Source288bits and mapped252bits are distinct. Additional feedback muxes consume most area saving; no rate or closure gain claimed.
+
+**Source safety still fails:**519inherited data/control nets over32, worst~7010; old copied rotate/count controls merge, and old copies would still have insufficient granularity even if preserved. Reset82 and read_v~2300 also require structural distribution. Actual SRAM171.288x77.784 faces have795W/792Econtacts(~10.22/10.18perum),8macroarea106587.728um2; existing origins are off43.2 lattice. Saved r3 FF paths include grp shift-47.62,SRAMwrite-41.53, S4/write-41.09ps. Narrow banking/repair contract, local matched native clock, full faces/legal band/reach/parent budgets and root PNG checklist remain open. See NEXT.md for exact actionable source and job pickup.
+
+`ring_only_census.json`, `compact_census.json`, `final_census.json` are compact summaries of full immutable fleet netlists/censuses, with SHA256 of original raw census and mapped netlist. `failed_r3/` retains the preceding terminal routed failure unchanged. The census runner is copied verbatim from HBM-XCAL-PARTITION worker c41b4f95d-era shared runner; it proves mapped structure, not physical timing.

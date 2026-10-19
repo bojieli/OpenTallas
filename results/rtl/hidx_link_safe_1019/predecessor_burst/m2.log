@@ -1,0 +1,11 @@
+Verilator 5.050 2026-07-01 rev v5.050
+PIPE_MITER cycle192 dut vf f0 c512 | ref@-5 vf f0 c512
+IDX_LINK_PIPE frame0 MUT2 records512 flits64 errors80 fault0/0
+IDX_LINK_PIPE frame1 MUT2 records512 flits64 errors160 fault0/0
+IDX_LINK_PIPE frame2 MUT2 records512 flits64 errors240 fault0/0
+IDX_LINK_PIPE frame3 MUT2 records512 flits64 errors320 fault0/0
+IDX_LINK_PIPE frame4 MUT2 records512 flits64 errors400 fault0/0
+IDX_LINK_PIPE frame5 MUT2 records512 flits64 errors480 fault0/0
+IDX_LINK_PIPE frame6 MUT2 records0 flits0 errors480 fault1/1
+IDX_LINK_PIPE_TOTAL MUT2 records3072 miter1282 errors480 fillsff maxpack71 first_tx ref187 dut192 fault ref1282 dut1287
+[12950000] %Fatal: tb_idx_link_pipe.sv:84: Assertion failed in tb_idx_link_pipe: pipelined link exact/miter/latency mismatch

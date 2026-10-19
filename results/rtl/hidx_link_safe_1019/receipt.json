@@ -1,0 +1,24 @@
+{
+  "source_commit": "6c32959d2",
+  "source_sha256": "36fb9de4d6b2e2ade470f9de3bc25e7d38e9adffae355aac61f4d085499f8411",
+  "fleet": "ot-agidock128",
+  "verilator": "5.050",
+  "production_records": 3072,
+  "miter_edges": 1282,
+  "link_extra_edges": 5,
+  "mutant_errors": [
+    3168,
+    480,
+    662,
+    103,
+    3330,
+    662
+  ],
+  "ring_checks": 7760,
+  "reset_edges": 60,
+  "source_proof": "PASS",
+  "source_safety": "FAIL:519 inherited nets over32; native macro clock/reset/access still unqualified",
+  "physical_gate_launched": false,
+  "live_jobs": [],
+  "remote": "/srv/opentallas-scratch/claude/codex-hidx-link-safe-v4-1019"
+}
