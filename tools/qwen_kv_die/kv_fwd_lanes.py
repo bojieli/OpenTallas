@@ -39,6 +39,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_rly_std as RS        # noqa: E402
+import kv_lane_orientation as LO  # noqa: E402
 
 RTL = 'rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv'
 CORE_RTL = ['rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
@@ -330,6 +331,18 @@ def main(argv=None):
         (a.run / 'fwd_lanes.json').write_text(json.dumps(rep, indent=1) + '\n')
         raise SystemExit(f"kv_fwd_lanes: {ls_['unslotted_wide']} wide landings have no reserved landing frame (plan the die "
                          f"with OT_KV_LANDSLOT=1; e.g. {ls_['unslotted_examples'][:3]})")
+    # Qualify the actual replacement abstracts before a costly real-case placement.
+    # Keep Y orientation; remove an X mirror only when the closed view cannot support it.
+    if not a.netlist_only:
+        macros = {m['name']: m for mst, vd in views.items()
+                  for m in LO.C.parse_lef((ROOT / vd / f'{mst}.lef').read_text())}
+        pf = case / 'place.tcl'
+        placed, orientation = LO.adapt(pf.read_text(), new, macros)
+        if not (case / 'place.tcl.prefwd').exists():
+            shutil.copy(pf, case / 'place.tcl.prefwd')
+        pf.write_text(placed)
+        (case / 'lane_orientations.json').write_text(json.dumps(orientation, indent=1) + '\n')
+        rep['orientation_changes'] = len(orientation['changes'])
     add_lef = []
     for mst, vd in views.items():
         blk, sz = RS.lef_macro(ROOT / vd / f'{mst}.lef')
