@@ -2,7 +2,7 @@
 """Extract the actual MUT0 CB16 data graph, with A0 pin coordinates and aliases.
 No synthesis. The graph feeds fleet floorplan/schedule exploration; never a view.
 """
-import json,re,argparse
+import json,re,argparse,math
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 PIN_Y0={'n_a':61.644,'n_b':162.252,'t_out':262.764,'n_y':363.276}
@@ -11,6 +11,7 @@ def extract(root=ROOT):
  a=root/'results/arch/qwen_cluster_1017';c=json.loads((a/'cluster_contract_dv.json').read_text())
  sites={s['inst'].split('.',1)[1]:s for s in json.loads((a/'relay_sites_dv.json').read_text())['sites']}
  fab=(root/'rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv').read_text();nodes={};ports={};alias={}
+ widths={name:int(msb)+1 for msb,name in re.findall(r'\bwire\s+\[(\d+):0\]\s+(\w+)',fab)}
  for m in re.finditer(r'(?:assign|wire) (\w+) = (\w+);',fab):alias[m[1]]=m[2]
  for m in re.finditer(r'assign (\w+) = \(MUT == \d+ \? \w+ : (\w+)\);',fab):alias[m[1]]=m[2]
  for m in re.finditer(r'wire \[\d+:0\] (\w+) = \(MUT == \d\) \? \{[^}]*\} : (\w+);',fab):alias[m[1]]=m[2]
@@ -57,7 +58,7 @@ def extract(root=ROOT):
   if net not in prod:unresolved.append(dict(net=net,dst=dst));return
   src=prod[net];kind='bank'if nodes.get(src,{}).get('kind')=='qfd_c_land_w'else'data'
   sn=nodes.get(src,ports.get(src));dn=nodes.get(dst,ports.get(dst));assert sn and dn,(src,dst)
-  edges.append(dict(net=net,src=src,dst=dst,kind=kind,bits=bits or min(sn['bits'],dn['bits']),src_at=sn['at'],dst_at=dn['at'],src_region=sn.get('region'),dst_region=dn.get('region'),base_capture_edges=2 if kind=='bank'else 1))
+  edges.append(dict(net=net,src=src,dst=dst,kind=kind,bits=bits or widths.get(net,min(sn['bits'],dn['bits'])),safe_flag_bits=(8*math.ceil(int(sn['ports']['W'])/2/24) if kind=='bank' else 0),src_at=sn['at'],dst_at=dn['at'],src_region=sn.get('region'),dst_region=dn.get('region'),base_capture_edges=2 if kind=='bank'else 1))
  for n,v in nodes.items():
   if v['bits']>1:
    for d in v['inputs']:edge(d,n)
