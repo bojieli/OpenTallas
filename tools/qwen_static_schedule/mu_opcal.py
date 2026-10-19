@@ -82,9 +82,11 @@ ROM_WORDS = 4096
 LEAF_MAGIC = 0x4F50                     # "OP"
 TB, UB_, SB, FB, CB = 22, 2, 6, 10, 10  # entry fields: t, user, stage, first, cnt  (+ flag FIRST)
 # leaf spacing rule (qfd_sys_face_mu_dhuser OPSEG): the leaf consumes an entry on edge e and issues the ROM read of the
-# next entry on that same edge (1-edge read, captured into the prefetch register on e + 1), so the next entry can be
-# consumed on e + 2 at the earliest: consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP
-LEAF_MIN_GAP = 2
+# next entry on that same edge (1-edge read).  The hardened leaf (PINREG 1, MU-LEAF-KIT2 2026-10-19) lands rd_out in a
+# capture register on e + 1 and loads the prefetch register on e + 2, so the next entry can be consumed on e + 3 at the
+# earliest (PINREG 0: e + 2): consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP.  The op start
+# edges do not move (the fire edge is t_rom either way).  F16 image: minimum gap 7, wrap 24,246.
+LEAF_MIN_GAP = 3
 
 
 # ---------------------------------------------------------------------------------------------------- image
@@ -287,12 +289,17 @@ def token_units(p, segs, grp, filler, layers=36):
     lay_cp = _cp(segs[1], 0, start=0)
     names = [g for g, _ in op_groups(p)]
     out = []
+    kvr = p.get("kv_lp_rows")      # MU-KV-BOOT 10-19 (opt-in): the KV layer programme's own edges as resource kv.lp
     for i in range(layers):
         blk = M.layer_block(p, l0=(i == 0))
         extra = blk["length"] - p["layer_period"]
+        kv0 = blk["windows"]["kvs"][0][0] if kvr else 0                # the KV stage begins kv0 before its kvs window
         if not filler:
-            out.append((f"L{i}", dict(windows=_merge(blk["windows"], lay_cp), length=blk["length"], kind="layer",
-                                      stage=i + 1)))
+            w = _merge(blk["windows"], lay_cp)
+            if kvr:
+                w = _merge(w, kv_lp_windows(kvr[i], 0))
+            out.append((f"L{i}", dict(windows=w, length=blk["length"], kind="layer", stage=i + 1,
+                                      **({"kv_begin": 0} if kvr else {}))))
             continue
         ops = blk["ops"]
         for gi, g in enumerate(names):
@@ -303,8 +310,13 @@ def token_units(p, segs, grp, filler, layers=36):
             # slack is after its commands, the next group opens later = a wait the leaf plays)
             gent = [e for e in segs[1][gg["first"]:gg["first"] + gg["cnt"]]]
             cp = _cp(gent, gg["a"], start=gg["T_prev"] - gg["a"])
-            out.append((f"L{i}.{g}", dict(windows=_merge(_cut(blk["windows"], a, b), cp), length=b - a, kind="group",
-                                          stage=i + 1, group=g, l0_extra=extra)))
+            gw = _merge(_cut(blk["windows"], a, b), cp)
+            kb = {}
+            if kvr and "kvs" in gw:                                     # rigid with this group's kvs window
+                kb = dict(kv_begin=gw["kvs"][0][0] - kv0)                 # the KV stage begin, from the group start
+                gw = _merge(gw, kv_lp_windows(kvr[i], kb["kv_begin"]))
+            out.append((f"L{i}.{g}", dict(windows=gw, length=b - a, kind="group",
+                                          stage=i + 1, group=g, l0_extra=extra, **kb)))
     for n, b in M.head_blocks(p):
         if n == "head":
             out.append((n, dict(windows=_merge(b["windows"], tok_cp), length=b["length"], kind="token", stage=0)))
@@ -312,6 +324,16 @@ def token_units(p, segs, grp, filler, layers=36):
             out.append((n, dict(windows=_merge(b["windows"], head_cp), length=b["length"], kind="chunk",
                                 stage=LAST_STAGE)))
     return out
+
+
+def kv_lp_windows(row, b):
+    """MU-KV-BOOT 10-19: unit windows of one KV layer-programme stage that begins at b (stage_start, the 8 roots,
+    stage_done = b + stage_end): qkd_static_kv_layer_programme_mu faults when two users' events share an edge"""
+    offs = sorted({0, row["stage_end"]} | {row[k] for k in M.KV_LP_ROOTS[:8]})
+    go = {row[k] for k in M.KV_GO_ROOTS}                 # launches: + META_HOLD_CORE (another user's go faults inside)
+    return {"kv.lp": [(b + o, b + o + (M.KV_META_HOLD + 1 if o in go else 1)) for o in offs],
+            # the attention programme's exclusive busy span [issue, run + 1784] on the KV programme's own frame
+            "kv.att": [(b + row["attention_issue"], b + row["attention_run"] + M.KV_ATT_END + 1)]}
 
 
 # ---------------------------------------------------------------------------------------------------- frame compile
@@ -330,6 +352,38 @@ class CyclicRes(M.Reservations):
                 lst = self.r[res]
                 for a, b in iv:
                     lst.remove((a + t0 + k * self.H, b + t0 + k * self.H, owner))
+
+
+# ------------------------------------------------------------------------------------- filler initial context (0ka)
+CTX_TAG = 0x4D43            # qfd_tt_ctlm_dv OPSEG: CTX[127:112]
+CTX_DW = (5, 6)             # the calendar image words that carry CTX = {DW6, DW5} (reserved 0 at CTX_DW 0)
+
+
+def ctx_words(ctx, mask=None, tag=CTX_TAG):
+    """the boot context record of the OPSEG fillers (MU-QW-DIE 10-19, coordinator 0ka: loaded at boot through the image /
+    host config plane into the ctlm per-user token / position bank, no bench-only preload).  ctx = {u: (tok, pos)} for
+    fillers u = 1..NU-1; mask = the users the record loads (default: every user in ctx).  Returns (DW5, DW6):
+    CTX[36(u-1) +: 36] = {tok 18, pos 18}, CTX[108 +: 3] = mask (bit u-1), CTX[111] = 0, CTX[127:112] = tag."""
+    mask = set(ctx) if mask is None else set(mask)
+    v = 0
+    for u, (tok, pos) in ctx.items():
+        if not 1 <= u < NU or not 0 <= tok < (1 << 18) or not 0 <= pos < (1 << 18):
+            raise ScheduleError(f"context of user {u} out of range (filler 1..{NU - 1}, tok / pos 18 b)")
+        v |= ((tok << 18) | pos) << (36 * (u - 1))
+    if not mask <= set(ctx):
+        raise ScheduleError(f"context mask {sorted(mask)} names a user without a record")
+    v |= sum(1 << (u - 1) for u in mask) << 108
+    v |= (tag & 0xFFFF) << 112
+    return v & ((1 << 64) - 1), v >> 64
+
+
+def with_ctx(dw, ctx, mask=None, tag=CTX_TAG):
+    """the DW image with the context record in DW5 / DW6 (both must be 0 in the plain image)"""
+    if any(dw[i] for i in CTX_DW):
+        raise ScheduleError("DW5 / DW6 already used: the context record needs them")
+    out = list(dw)
+    out[CTX_DW[0]], out[CTX_DW[1]] = ctx_words(ctx, mask, tag)
+    return out
 
 
 def compile_frame(F=16, p=None, layers=36, starts=None):
@@ -354,16 +408,23 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
             R.add(b["windows"], t, 0)
             sched[0].append((n, t, b))
             t += b["length"]
+    Q = p.get("kv_phase_quantum", 0)                       # MU-KV-BOOT opt-in (mu_calendar.kv_frame_params)
+    if Q and T % Q:
+        raise ScheduleError(f"token period {T} not a multiple of the KV HBM-beat cycle {Q} (token_pad)")
+    kvr = p.get("kv_lp_rows")
     ntok = {0: F}
     for k in range(1, NU):
         t = starts[k - 1] if starts else round(k * P / NU)
-        t = R.earliest(uf[0][1]["windows"], t)
+        t = R.earliest(uf[0][1]["windows"], t, k)
         s_k = t
         sched[k], ntok[k] = [], 0
         while True:
             placed, tt = [], t
             for n, b in uf:
-                tt = R.earliest(b["windows"], tt)
+                tt = R.earliest(b["windows"], tt, k)
+                while Q and "kv_begin" in b and not M.kv_launch_legal(kvr[b["stage"] - 1], tt + b["kv_begin"]):
+                    tt += 1                                             # MU-KV-BOOT: every launch of the KV stage on a
+                    tt = R.earliest(b["windows"], tt, k)                # legal HBM-beat phase (phase launch window)
                 if tt + b["length"] > s_k + H:
                     break
                 R.add(b["windows"], tt, k)
@@ -390,8 +451,11 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
     clashes = []
     for res, lst in per.items():
         lst.sort()
+        if res in M.SELF_OK:                                           # kv.lp: one user's own events may share
+            lst = sorted({(a, b, u) for a, b, u, _ in lst})              # an edge (done + next start); others not
+            lst = [(a, b, u, None) for a, b, u in lst]
         for x, y in zip(lst, lst[1:]):
-            if y[0] < x[1]:
+            if y[0] < x[1] and not (res in M.SELF_OK and x[2] == y[2]):
                 clashes.append((res, x, y))
     if clashes:
         raise ScheduleError(f"frame collision: {clashes[:3]}")

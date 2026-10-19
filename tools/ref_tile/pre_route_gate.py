@@ -2014,10 +2014,22 @@ def cross_region_links(graph: dict) -> tuple:
         lh = [LANDING_HALF_RE.fullmatch(i) for i in mm]
         if len(mm) == 2 and all(lh) and lh[0][1] == lh[1][1] and {x[2] for x in lh} == {"w", "r"}:
             continue
+        # TW2-PSLICE2 10-19 (lp.py share_rings): ONE ring half read by several read halves (one per reader) -- every member
+        # a landing half (no child, no glue), exactly one ring
+        if len(mm) > 2 and all(lh) and sum(x[2] == "w" for x in lh) == 1 and not any(insts[i]["kid"] for i in mm):
+            continue
         if any(RESET_RUN_RE.fullmatch(i) for i in mm) and \
                 len({insts[i]["root"] for i in mm if not RESET_RUN_RE.fullmatch(i)}) <= 1:
             continue                                    # reset run hop: crosses only between reset-run stages
         issues.append(f"unlanded cross-region link {net}: " + ", ".join(f"{i} ({insts[i]['root']})" for i in mm))
+    ring_of = {}                            # share_rings: read-half base -> its ring's base (net with one w + r halves)
+    for net, members in nets.items():
+        lh = [LANDING_HALF_RE.fullmatch(i) for i in members]
+        if all(lh) and sum(x[2] == "w" for x in lh) == 1:
+            wb = next(x[1] for x in lh if x[2] == "w")
+            for x in lh:
+                if x[2] == "r" and x[1] != wb:
+                    ring_of[x[1]] = wb
     for net, members in nets.items():
         for i in members:
             m = LANDING_HALF_RE.fullmatch(i)
@@ -2026,7 +2038,9 @@ def cross_region_links(graph: dict) -> tuple:
                     if insts[j]["kid"]:
                         halves.setdefault((m[1], m[2]), set()).add(insts[j]["kid"])
     landed = sorted({(a, b, base) for (base, side), ks in halves.items() if side == "w"
-                     for a in ks for b in halves.get((base, "r"), ()) if a != b})
+                     for a in ks for b in halves.get((base, "r"), ()) if a != b} |
+                    {(a, b, rb) for rb, wb in ring_of.items() for a in halves.get((wb, "w"), ())
+                     for b in halves.get((rb, "r"), ()) if a != b})
     return issues, landed
 
 
@@ -2480,6 +2494,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
+         # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
+         # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
+         + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

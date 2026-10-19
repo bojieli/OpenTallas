@@ -46,4 +46,12 @@ if [ "${OT_PARAM_AUDIT:-1}" = 1 ]; then
   tail -1 $O/die_param_audit.txt
   [ $pa -ne 0 ] && [ $rc -eq 0 ] && rc=6
 fi
+# QW-DIEFIX 10-19: hr bus field contract (tt_ctlm ROM command -> slice gi decode, QW-XHEAD XT1: as built go sat on
+# hr[73] and no matvec started on the die).  Source layout of producer / pack / consumers + the die's hr chain (one whole
+# 453-b net per hop, relays a -> b, slices hr_wi -> hr_eo).  tools/qwen_split/hr_contract.py.  OT_HR_CONTRACT=0 skips.
+if [ "${OT_HR_CONTRACT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/hr_contract.py check --root $R --die-v $D --json $O/hr_contract.json > $O/hr_contract.txt 2>&1; hc=$?
+  head -1 $O/hr_contract.txt
+  [ $hc -ne 0 ] && [ $rc -eq 0 ] && rc=7
+fi
 exit $rc

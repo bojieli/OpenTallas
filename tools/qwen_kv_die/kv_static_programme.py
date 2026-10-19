@@ -697,7 +697,13 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
               dict(target=ES_CFG_TARGETS[1], program=es_beat, descriptors=[])] + \
              ([dict(target=10, program=list(die_cfg_words), descriptors=[])] if die_cfg_words else []) + \
              [dict(target=0, program=prog[:sfi_pw], descriptors=prog[sfi_pw:])]
-    bundle = PTF.encode_boot_bundle(epoch, images)
+    mu = None
+    if MU:              # MU-KV-BOOT 10-19 (OT_KV_MU=1): target 1 MU form + target 3 MU ownership roots (mu_calendar)
+        mu = mu_images(layer_words, own)
+        layer_words, own = mu['layer'], mu['ownership']
+        images[0] = dict(target=1, program=layer_words, descriptors=[])
+        images[2] = dict(target=3, program=own, descriptors=[])
+    bundle = PTF.encode_boot_bundle(epoch, images, mu=MU)
     if int(bundle['images'][-1]['digest'], 16) != digest:
         raise ValueError('HOST ISA image digest differs from the layer programme LP_DIGEST')
     return dict(profile=pr, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
@@ -715,6 +721,65 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note
                 es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=[0, 0, 0, 0]))
+
+
+# ---- MU-KV-BOOT 10-19: the multi-user boot images (OT_KV_MU=1) ---------------------------------------------------------
+MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
+
+
+def mu_images(layer_words, own_words, receipt=False):
+    """the 4-user forms of targets 1 and 3 from the single-user ones: target 1 = rows + digest + epoch + the GAP[4][36]
+    block compiled by mu_calendar (kv_frame_of_record on these rows) + seal at 470 (qkd_static_kv_layer_programme_mu,
+    loaded through qkd_static_kv_boot_dispatch_mu); target 3 = enter 3, leave / deadline = the max over users
+    (qkd_static_kv_ownership_calendar_mu re-arms on every user's go).  The single-user roots must be the ones the
+    rows imply (enter 3, leave = stage-36 quiet + 1, deadline = token cycles)."""
+    from tools.qwen_static_schedule import mu_calendar as MC
+    rows = MC.kv_rows_from_image(list(layer_words))
+    cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
+    own, per = MC.kv_ownership_roots_mu(rows, gaps)
+    if list(own_words) != [3, per['leave_per_user'][0], per['deadline_per_user'][0], MC.KV_OWN_SEAL]:
+        raise ValueError(f'single-user ownership roots {own_words} differ from the layer rows')
+    out = dict(layer=MC.kv_layer_image_mu(list(layer_words), gaps), ownership=own, gaps=gaps, starts=starts, checks=chk)
+    if receipt:
+        out['receipt'] = MC.kv_gap_receipt(list(layer_words))
+    return out
+
+
+def write_mu(layer_words, own_words, out, root=ROOT):
+    """--mu-from: the MU boot images + receipt + the bench's start / event lists from a compiled die image directory"""
+    from tools.qwen_static_schedule import mu_calendar as MC
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    m = mu_images(layer_words, own_words, receipt=True)
+    rows = MC.kv_rows_from_image(list(layer_words))
+    (out / 'target1.hex').write_text(''.join(f'{w:016x}\n' for w in m['layer']))
+    (out / 'target3.hex').write_text(''.join(f'{w:016x}\n' for w in m['ownership']))
+    H = m['receipt']['frame']['H']
+    st2 = {u: [s + k * H for k in range(2) for s in ss] for u, ss in m['starts'].items()}     # two frames
+    starts = sorted((s, u, i) for u, ss in st2.items() for i, s in enumerate(ss))
+    (out / 'bench_starts.txt').write_text(''.join(f'{s} {u} {i}\n' for s, u, i in starts))
+    ev = MC.kv_event_list(rows, m['gaps'], st2)
+    (out / 'bench_events.txt').write_text(''.join(f'{c} {u} {s} {mask}\n' for c, u, s, mask in ev))
+    # bench negative controls (NOT compiler output: hand-made violations of the compiler's assertions)
+    g0 = [list(g) for g in m['gaps']]
+    g0[0][5] = 7                                                      # user 0 gap non-zero
+    (out / 'mut_u0gap.hex').write_text(''.join(f'{w:016x}\n' for w in MC.kv_layer_image_mu(list(layer_words), g0)))
+    gc = [list(g) for g in m['gaps']]
+    b1 = st2[1][0] + gc[1][0]                                         # user 1 stage 1 begin onto user 0's kgo edge
+    cyc0 = [c for c, u, s, mk in ev if u == 0 and c > b1][0]          # first user-0 event after user 1's begin
+    gc[1][0] = m['gaps'][1][0] + (cyc0 - b1)
+    (out / 'mut_collide.hex').write_text(''.join(f'{w:016x}\n' for w in MC.kv_layer_image_mu(list(layer_words), gc)))
+    (out / 'mut_sealwrong.hex').write_text(''.join(f'{w:016x}\n' for w in layer_words))   # single-user form (seal at 326)
+    rec = dict(m['receipt'], sources=dict(layer_image_sha256=hashlib.sha256(bytes(json.dumps(list(layer_words)), 'ascii')).hexdigest(),
+                                          compiler=[dict(path=p, sha256=sha(root / p)) for p in (
+                                              'tools/qwen_static_schedule/mu_calendar.py', 'tools/qwen_static_schedule/mu_opcal.py',
+                                              'tools/qwen_kv_die/kv_static_programme.py')]),
+               bench=dict(frames=2, starts=len(starts), event_cycles=len(ev),
+                          mutants=dict(mut_u0gap='GAP[0][5] = 7', mut_collide=f'GAP[1][0] + {cyc0 - b1}: user 1 stage 1 '
+                                       f'begins on user 0 event cycle {cyc0}', mut_sealwrong='the 327-word single-user image')),
+               ownership_target3=m['ownership'])
+    (out / 'kv_gap_receipt.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+    return rec
 
 
 # ---- operations on actual template ports (opentallas.qwen_kv_static.programme.v1) -------------------------------------
@@ -846,7 +911,14 @@ def main():
     ap.add_argument('--profile', choices=('die', 'component'), default='die')
     ap.add_argument('--epoch', type=lambda s: int(s, 0), default=0x0b0b)
     ap.add_argument('--program', type=Path, help='installed HOST programme image (PW1024 + DW8 64-b hex words)')
+    ap.add_argument('--mu-from', type=Path, help='MU-KV-BOOT: write the 4-user target 1 / 3 images, receipt and bench '
+                                                 'lists to --out from a compiled die directory (its target1.hex / target3.hex)')
     a = ap.parse_args()
+    if a.mu_from:
+        rd = lambda n: [int(x, 16) for x in (a.mu_from / n).read_text().split()]
+        rec = write_mu(rd('target1.hex'), rd('target3.hex'), a.out)
+        print(json.dumps(dict(frame=rec['frame'], checks=rec['checks'], ownership=rec['ownership_target3'], bench=rec['bench'])))
+        return
     ages = json.loads(a.ages.read_text()) if a.profile == 'die' else None
     words = [int(x, 16) for x in a.program.read_text().split()] if a.program else None
     r = compile_all(profile(a.profile, ages), a.epoch, words)
