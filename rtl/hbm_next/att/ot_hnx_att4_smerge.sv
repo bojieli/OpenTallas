@@ -320,7 +320,8 @@ module ot_hnx_att4_smerge #(
         (* keep *) reg [NW-1:0] ka_hw, kb_hw, kw_ev, kw_rt;
         (* keep *) reg          ka_my, kb_my;
         (* keep *) reg [NL-1:0] ka_ev, kb_ev;
-        (* keep *) reg          rst_m;
+        (* keep = "true", ot_rst_split = 1 *) reg [RST_COPIES-1:0] rst_mv;
+        wire rst_m = rst_mv[0];
         always @(posedge clk) begin
             ka_hw <= da_hw; kb_hw <= db_hw; kw_ev <= dw_ev; kw_rt <= dw_rt;
             ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_mv <= {RST_COPIES{rst_n}};
