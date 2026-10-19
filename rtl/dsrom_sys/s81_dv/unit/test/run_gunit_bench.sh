@@ -23,7 +23,7 @@ SRC="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_del
 python3 -I "$U/test/gunit_vectors.py" "$T/gv.hex" "$N" 1017 || { echo "GUNIT_GATE FAIL vectors"; exit 1; }
 MUTS=${3:-"0 1 4 5 6 7 8 9 10"}; ONLY=${3:+1}
 for m in $MUTS; do
-  ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m \
+  ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m -DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-0} \
       --top-module tb_dsdv_gunit -Mdir "obj$m" $(for f in $SRC; do echo "$R/$f"; done) "$U/test/tb_dsdv_gunit.cpp" \
       -CFLAGS -O1 > "build$m.log" 2>&1; echo $? > "build$m.rc" ) &
 done

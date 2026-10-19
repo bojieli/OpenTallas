@@ -1,0 +1,25 @@
+{
+  "kind": "analytical_prebuild_boundary_isolation",
+  "parent": "safe2/7819cbc5e",
+  "change": "Dedicated same-edge exp and divide operand capture, distinct from internal mul/add capture",
+  "payload_bits_per_edge": 64,
+  "new_boundary_register_bits": 64,
+  "estimated_net_extra_flops_vs_shared_safe2": 63,
+  "pipeline_edge_delta": 0,
+  "HC_LAT_N": 975,
+  "HC_LAT_S": 973,
+  "common_origin": "last HP north input pin edge",
+  "physical_outline_um": [
+    259.2,
+    259.2
+  ],
+  "macro_count": 0,
+  "replicas_per_gunit": 2,
+  "replica_width": 32,
+  "critical_cone_fanout_target": "each isolated output register drives its own boundary buffer only; require mapped audit",
+  "area": "must measure synthesis before gate; 64 FF upper increment, existing 49.90% std utilization leaves 10.1 percentage points to60%",
+  "boundary_capacity": "2x32bit/edge unchanged; existing E face pin count unchanged",
+  "routing": "same E pin geometry, independent flop-to-pin nets; actual RC/native audit required",
+  "token_delta_cycles": 0,
+  "admission": "blocked pending exactness, synthesis area, SAFE and physical/native checks"
+}

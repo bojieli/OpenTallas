@@ -20,8 +20,12 @@
 // clock (ot_hdc_sinkhorn_p; the ICG + 9-cycle multicycle SDC are gone; HC result +55 edges), the table select is
 // replicated (kept, 108 copies), reset lands in 2 + 1 registered stages (ot_rst_relay) as before.
 // ---------------------------------------------------------------------------------------------------------------------
+`ifndef OT_S81_GUNIT_PIN_COPY
+`define OT_S81_GUNIT_PIN_COPY 0
+`endif
 module dsdv_gunit_l5 #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PIN_COPY = `OT_S81_GUNIT_PIN_COPY
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -90,7 +94,7 @@ module dsdv_gunit_l5 #(
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
     always @(posedge clk) begin qe_y <= ye_y; qe_f <= ye_f; qd_y <= yd_y; qd_f <= yd_f; end
-    dsdv_gunit_tail #(.MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));

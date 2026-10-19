@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc6       admits   275 GB (avail 306, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 17 disk 6048 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-108213-1792427798 after 0 s
+MUT=8: GUNIT FAIL 52 (MUT=8)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-108213-1792427798): exit 1

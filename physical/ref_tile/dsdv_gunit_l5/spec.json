@@ -22,7 +22,9 @@
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv"
  ],
- "params": {},
+ "params": {
+  "PIN_COPY": 1
+ },
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
@@ -83,14 +85,17 @@
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "pin_min_tracks": 4
+  "pin_min_tracks": 4,
+  "synth_keep_modules": [
+   "dsdv_gunit_operand_pin32"
+  ]
  },
  "structural_change": "S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
  "job": {
   "owner": "Codex:S81-SAFE-FIX/GUNIT",
-  "branch": "codex/s81-gunit-safe2-1019",
-  "tag": "sf2",
-  "purpose": "Structural safe2: split every positiveadd alignment/sticky from sum/round, no MCP; LAT602, HC+161 vs safe1; latestresetlanding hooks; measured-area squareoutline.",
+  "branch": "codex/s81-gunit-safe3-boundary-1019",
+  "tag": "sf3",
+  "purpose": "Same-edge dedicated kept exp/div operand boundary copies; no extra HC edges, native-safe isolation from arithmetic consumers. Pending measured admission.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
    "rtl/hdc",
@@ -102,30 +107,30 @@
   "benches": [
    {
     "name": "gunit_exact",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/exact.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/exact.log"
    },
    {
     "name": "gunit_mut8",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut8.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut8.log"
    },
    {
     "name": "gunit_mut10",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut10.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut10.log"
    },
    {
     "name": "sinkhorn_p_eq",

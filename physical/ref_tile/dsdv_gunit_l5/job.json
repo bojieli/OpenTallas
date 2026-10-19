@@ -1,13 +1,13 @@
 {
- "name": "dsdv_gunit_l5-sf2-COMMIT",
+ "name": "dsdv_gunit_l5-sf3-COMMIT",
  "block": "dsdv_gunit_l5",
  "ref_tile": true,
  "owner": "Codex:S81-SAFE-FIX/GUNIT",
- "purpose": "Structural safe2: split every positiveadd alignment/sticky from sum/round, no MCP; LAT602, HC+161 vs safe1; latestresetlanding hooks; measured-area squareoutline.",
+ "purpose": "Same-edge dedicated kept exp/div operand boundary copies; no extra HC edges, native-safe isolation from arithmetic consumers. Pending measured admission.",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-gunit-safe2-1019",
+  "branch": "codex/s81-gunit-safe3-boundary-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_gunit_l5 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_gunit_l5 #(.PIN_COPY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -32,30 +32,30 @@
    },
    {
     "name": "gunit_exact",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/exact.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/exact.log"
    },
    {
     "name": "gunit_mut8",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut8.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut8.log"
    },
    {
     "name": "gunit_mut10",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
+    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut10.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut10.log"
    },
    {
     "name": "sinkhorn_p_eq",
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-sf2-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-sf3-COMMIT"
   }
  ],
  "cycles_added": 0,

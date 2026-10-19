@@ -39,7 +39,8 @@ module dsdv_gunit_tail #(
     parameter integer ITERS = 20,
     parameter [31:0] HC_EPS = 32'h358637bd,
     parameter integer MUT_PRE = 0,
-    parameter integer MUT_SK = 0
+    parameter integer MUT_SK = 0,
+    parameter integer PIN_COPY = 0
 ) (
     input  wire          clk, rst_n,
     input  wire          launch,
@@ -77,7 +78,8 @@ module dsdv_gunit_tail #(
                    p4 ? 5'(age - P4) : p5 ? 5'(age - P5) : p6 ? 5'(age - P6) : 5'(age - P7);
     wire mv = p1 || (p7 && i >= 4), av = p2 || p3 || p5 || (p7 && i < 4);
     // operand registers (one stage in front of every unit)
-    reg mv_q, av_q, ev_q, dv_q; reg [31:0] ma_q, mb_q, aa_q, ab_q, ex_q, db_q;
+    reg mv_q, av_q, ev_q, dv_q; reg [31:0] ma_q, mb_q, aa_q, ab_q;
+    wire [31:0] ex_q, db_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin mv_q <= 1'b0; av_q <= 1'b0; ev_q <= 1'b0; dv_q <= 1'b0; end
         else begin mv_q <= mv; av_q <= av; ev_q <= p4; dv_q <= p6; end
@@ -85,9 +87,23 @@ module dsdv_gunit_tail #(
         ma_q <= t[i]; mb_q <= p1 ? s[(i < 4) ? 0 : (i < 8) ? 1 : 2] : 32'h40000000;
         aa_q <= t[i];
         ab_q <= p2 ? b[i] : p3 ? (mx[(i - 5'd8) >> 2] ^ 32'h80000000) : p5 ? 32'h3f800000 : (MUT_PRE ? 32'd0 : HC_EPS);
-        ex_q <= (i < 8) ? (t[i] ^ 32'h80000000) : t[i];
-        db_q <= t[i];
+
     end
+    // Independent SAME-edge operand copies: no extra calendar stage. The kept,
+    // unparameterized module prevents synthesis sharing these boundary flops
+    // with ma_q/aa_q or with the other external operand bank.
+    generate if (PIN_COPY) begin : g_pin_copy
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_exp (
+            .clk(clk), .d((i < 8) ? (t[i] ^ 32'h80000000) : t[i]), .q(ex_q));
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_div (.clk(clk), .d(t[i]), .q(db_q));
+    end else begin : g_legacy_operand
+        reg [31:0] ex, db;
+        always @(posedge clk) begin
+            ex <= (i < 8) ? (t[i] ^ 32'h80000000) : t[i];
+            db <= t[i];
+        end
+        assign ex_q = ex; assign db_q = db;
+    end endgenerate
     wire [31:0] my, ay, ey, dy; wire mo, ao, eo, do_, mf, af, ef, df;
     wire [LM:0] vm; wire [LA:0] va;
     ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rst_n, mv_q, ma_q, mb_q, my, mf);
@@ -170,5 +186,12 @@ module dsdv_gunit_tail #(
             final_result[256 +: 512] <= sy;
         end
     end
+endmodule
+// Width is fixed deliberately: SYNTH_KEEP_MODULES must match the exact name,
+// without Yosys paramod rewriting. Data remain unreset, as in the legacy path.
+(* keep_hierarchy = 1 *) module dsdv_gunit_operand_pin32 (
+    input wire clk, input wire [31:0] d, output reg [31:0] q
+);
+    always @(posedge clk) q <= d;
 endmodule
 `default_nettype wire

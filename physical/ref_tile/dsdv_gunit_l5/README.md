@@ -15,3 +15,27 @@ Safe-design review facts:
 8. Schedule: static, router56 unchanged, reset+2 unchanged; safe2 unit HC964stop/976unit; actual HOP GU boundary uses common lastHP_N to CTL_N975/CTL_S973. All216extraedges versus oldMCP must be reflected in compiler reservations/dependencies/token model after source qualification. No rate/overlap claim.
 
 Trial GRT overflow0, worstM2 utilization49.90%. This is a trial gate, not a routed native qualification. Gate/source binding, exact benches, native library/receipt and SS/FF diagnostics are preserved under results/rtl/s81_safe_fix_1019/gunit_l5/safe2. Critical/repeated-failure tile: no REVIEW or submit before ROOT PNG/checklist/native review and structural repair of the five launch violations.
+
+
+Safe3 same-edge operand boundary isolation (candidate, not admitted)
+
+The five safe2 native-launch violations share ma_q FFs with arithmetic and
+external exp/div outputs. Safe3 PIN_COPY=1 uses two kept fixed-width32-bit
+modules capturing the original t[i]/sign operand on the SAME edge. Defaults0
+preserve legacy behavior. No added data/reset/calendar edges; HC physical-pin
+contract remains north975/south973 from common lastHP_N origin, pending exact
+source HOP replay. Compiler759/757 remains unchanged and forbidden for release.
+Prebuild sizing and source/cap/fanout census are in safe3/prebuild_model.json
+and safe2_path_census.json. 5.050 golden8PASS, mutants8FAIL52/10FAIL37.
+
+SAFE before gate: (1) registered pins/reset2landing retained, independent
+output copies added; (2) full259.2square bounds reach below405um; (3) kept
+2x32 boundary banks each one dedicated consumer; exact mapped survival audit
+required before admission; (4) no new arithmetic/decode depth, existing safe2
+textbook675.1ps warning remains disclosed, no threshold relaxation; (5) no new
+runtime storage/delay chains; existing static3456bit configuration table waiver
+unchanged; (6) no macros, full-width standard rows, same paid259.2square,
+prior exact synthesis49.90% plus <=64FF, actual area remeasured by gate;
+(7) same centre CTS and 0.03ns hold budgets, native launch/spread must be
+remeasured; (8) static calendar unchanged, +0cycles priced. Root review,
+native PASS, actual area/copies and final PNG required. No REVIEW or submit.

@@ -1,0 +1,58 @@
+{
+  "source_view": "epyc8/ref_gate/dsdv_gunit_l5-20261019-080725/4_1_cts.odb",
+  "boundary_mean_tt_ps": 316.2,
+  "same_cone_outputs": [
+    [
+      "xd_b[9]",
+      "xe_x[9]"
+    ],
+    [
+      "xd_b[27]",
+      "xe_x[27]"
+    ],
+    [
+      "xd_b[17]"
+    ]
+  ],
+  "ff_bits": {
+    "9": {
+      "master": "DFFHQNx2",
+      "clock_ps": 305.77,
+      "Q_fanout": 3,
+      "Q_cap": 6.02,
+      "Q_slew_ps": 43.1,
+      "shared_buffer_fanout": 9,
+      "shared_buffer_cap": 11.97,
+      "pre_output_buffer_fanout": 4,
+      "pre_output_buffer_cap": 20.85,
+      "pre_output_buffer_slew_ps": 72.69
+    },
+    "27": {
+      "master": "DFFHQNx1",
+      "clock_ps": 308.53,
+      "Q_fanout": 6,
+      "Q_cap": 7.19,
+      "Q_slew_ps": 65.77,
+      "shared_buffer_fanout": 4,
+      "shared_buffer_cap": 3.24,
+      "pre_output_buffer_fanout": 5,
+      "pre_output_buffer_cap": 22.19,
+      "pre_output_buffer_slew_ps": 76.1
+    },
+    "17": {
+      "master": "DFFHQNx1",
+      "clock_ps": 309.05,
+      "Q_fanout": 2,
+      "Q_cap": 1.32,
+      "Q_slew_ps": 23.41,
+      "shared_buffer_fanout": 11,
+      "shared_buffer_cap": 16.13,
+      "pre_output_buffer_fanout": 3,
+      "pre_output_buffer_cap": 14.42,
+      "pre_output_buffer_slew_ps": 41.0
+    }
+  },
+  "final_output_drivers": "BUFx2 cap0.39..0.54, finalwire~0.03ps",
+  "cap_units": "OpenSTA report cap units, as printed; no invented extraction",
+  "classification": "shared ma_q internal arithmetic operands and two boundary ports; source FF clock early7..10ps, not late. Same-edge copies isolate paths without new cycle."
+}

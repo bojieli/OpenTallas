@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc6       admits   283 GB (avail 308, growth 110, headroom 0, waiters 0/0 GB) load 31/128 running 16 disk 6048 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-103489-1792427715 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUT=0: GUNIT PASS cases=8 router_lat=56 (last SC -> ids row at the stop pins; 68 at the unit pins) hc_lat=964 (last HP -> first coef row at the stop pins; 976 at the unit pins)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-103489-1792427715): exit 0
