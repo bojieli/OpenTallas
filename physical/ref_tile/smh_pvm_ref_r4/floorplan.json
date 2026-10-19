@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  352.08,
-  138.24
+  373.68,
+  146.88
  ],
  "core": [
   2.16,
   2.16,
-  349.91999999999996,
-  136.08
+  371.52,
+  144.72
  ],
- "why": "util 0.52 of std 8000 + macros 16126 um2",
- "std_area_um2": 8000,
+ "why": "util 0.52 of std 11060 + macros 16126 um2",
+ "std_area_um2": 11060,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -61,10 +61,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_stack",
+   "inst": null,
    "idx": 0,
-   "x": 90.288,
-   "y": 30.24,
+   "x": 101.088,
+   "y": 34.56,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",

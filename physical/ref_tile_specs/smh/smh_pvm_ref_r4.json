@@ -24,14 +24,13 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 8000,
+ "std_area_um2": 11060,
  "aspect": 2.6,
  "pg_layer": "M5",
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-   "count": 1,
-   "inst": "u_stack"
+   "count": 1
   }
  ],
  "pins": {
