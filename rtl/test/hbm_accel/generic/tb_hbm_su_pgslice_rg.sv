@@ -10,6 +10,12 @@
 //  Every output equals the flat slice's at a FIXED offset:
 //    serial: slice_x, inj_q, tree_o +RT; fault +RT+1          stream: s_rq (VM read request), lg_rq, far_rr, far_w_done,
 //    lg_fault +0; s_wq (VM write, the tap's local side) +SWQ stream edges (= RT + alignment serial edges at 3:4).
+//  10-19 HH-14 fix: the local VM write reaches the LG tap SWQ stream edges later, so the compiler re-times the WHOLE
+//  write half of the tap calendar with it: the DUT gets lg_write (local write grant), far_wq and lg_w_done SWQ stream
+//  edges later (neighbour slices are region-form too). Read half {lg_rq, s_rq, far_rr} stays +0; write half {s_wq,
+//  lg_wq, far_w_done} is compared at +SWQ. lg_fault (OR of both halves, sticky) has no fixed offset against the flat
+//  slice: it is compared at +0 against a SHADOW pg_lg_tap fed with the DUT's checked s_rq / s_wq and the re-timed
+//  inputs. (r1 compared far_w_done/lg_fault at +0 with un-retimed write inputs -> 1086 stream mismatches, bench bug.)
 //  Class check: a wrong-class strap latches the DUT fault (ref clean).
 // MUT (DUT only, must FAIL): 1 fill early; 2 drain group flip; 4 RF select early; 10 delivery order; 11 strap g ignored;
 //  20 outer chain relay missing; 21 drain delay line short; 22 R2 inbound unlanded.
@@ -49,6 +55,14 @@ module tb_hbm_su_pgslice_rg;
   dl_rsel[0]=rsel; dl_tcmd[0]=tcmd; dl_rfd[0]=rfd;
  end
  wire [11:0] rsel_d=dl_rsel[RT-1], tcmd_d=dl_tcmd[RT-1]; wire [255:0] rfd_d=dl_rfd[RT-1];
+ // compiler re-timing of the tap write half: lg_write / far_wq / lg_w_done SWQ stream edges later
+ reg [1:0] dl_lgw [0:SWQ-1]; reg [561:0] dl_fwq [0:SWQ-1]; reg [1:0] dl_lgwd [0:SWQ-1]; integer dj;
+ initial for(dj=0;dj<SWQ;dj=dj+1) begin dl_lgw[dj]=0; dl_fwq[dj]=0; dl_lgwd[dj]=0; end
+ always @(posedge pclk) begin
+  #2; for(dj=SWQ-1;dj>0;dj=dj-1) begin dl_lgw[dj]=dl_lgw[dj-1]; dl_fwq[dj]=dl_fwq[dj-1]; dl_lgwd[dj]=dl_lgwd[dj-1]; end
+  dl_lgw[0]=lgw; dl_fwq[0]=farwq; dl_lgwd[0]=lgwd;
+ end
+ wire [1:0] lgw_d=dl_lgw[SWQ-1], lgwd_d=dl_lgwd[SWQ-1]; wire [561:0] farwq_d=dl_fwq[SWQ-1];
  `define PGF(NAME,PS,PT) \
  wire [31:0] NAME``_sx; wire [66:0] NAME``_to; wire [1023:0] NAME``_iq; wire NAME``_f, NAME``_lf; wire [33:0] NAME``_rq; \
  wire [561:0] NAME``_wq; wire [513:0] NAME``_frr; wire [1:0] NAME``_fwd; \
@@ -70,32 +84,42 @@ module tb_hbm_su_pgslice_rg;
   .rst_n(por),.pos(PS),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
   .rf_dsec(rfd_d),.red_sel(rsel_d),.slice_x(NAME``_sx),.tree_cmd(tcmd_d),.tree_o(NAME``_to),.inj_rd(injrd),.inj_addr(inja), \
   .inj_q(NAME``_iq),.dw_v(dwv),.dw_row(dwr),.dw_d(dwd),.fault(NAME``_f),.lg_rq(NAME``_rq),.lg_wq(NAME``_wq),.lg_rr(lgrr), \
-  .lg_w_done(lgwd),.lg_read(lgr),.lg_write(lgw),.far_rq(farrq),.far_wq(farwq),.far_rr(NAME``_frr),.far_w_done(NAME``_fwd), \
+  .lg_w_done(lgwd_d),.lg_read(lgr),.lg_write(lgw_d),.far_rq(farrq),.far_wq(farwq_d),.far_rr(NAME``_frr),.far_w_done(NAME``_fwd), \
   .lg_fault(NAME``_lf));
+ `define SHD(NAME,D) \
+ wire [33:0] NAME``_rq; wire [561:0] NAME``_wq; wire [513:0] NAME``_frr, NAME``_lrr; wire [1:0] NAME``_fwd, NAME``_lwd; wire NAME``_lf; \
+ ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(10),.WRITE_RETURN(7)) NAME(.clk_ctl(sclk),.pg_clk(pclk),.rst_n(por), \
+  .local_rq(D.u_stream.s_rq),.far_rq(farrq),.local_wq(D.u_stream.s_wq),.far_wq(farwq_d),.local_read(lgr),.local_write(lgw_d), \
+  .near_rq(NAME``_rq),.near_wq(NAME``_wq),.near_rr(lgrr),.near_w_done(lgwd_d),.local_rr(NAME``_lrr),.far_rr(NAME``_frr), \
+  .local_w_done(NAME``_lwd),.far_w_done(NAME``_fwd),.fault(NAME``_lf));
  `PGF(ref0,pos0,1)
  `PGR(dut0,pos0,1,MUT)
  wire [33:0] ref0_srq=ref0.s_rq, dut0_srq=dut0.u_stream.s_rq; wire [561:0] ref0_swq=ref0.s_wq, dut0_swq=dut0.u_stream.s_wq;
+ `SHD(shd0,dut0)
  `ifdef PG_RG_P1
  `PGF(ref1,pos1,0)
  `PGR(dut1,pos1,0,MUT)
  wire [33:0] ref1_srq=ref1.s_rq, dut1_srq=dut1.u_stream.s_rq; wire [561:0] ref1_swq=ref1.s_wq, dut1_swq=dut1.u_stream.s_wq;
+ `SHD(shd1,dut1)
  `else
  // one position by default (Verilator memory: 2 instances x 64 hard-child models); +define+PG_RG_P1 adds (Q3 G3, PRETREE 0)
  wire [31:0] ref1_sx=ref0_sx, dut1_sx=dut0_sx; wire [66:0] ref1_to=ref0_to, dut1_to=dut0_to;
  wire [1023:0] ref1_iq=ref0_iq, dut1_iq=dut0_iq; wire ref1_f=ref0_f, dut1_f=dut0_f, ref1_lf=ref0_lf, dut1_lf=dut0_lf;
  wire [33:0] ref1_rq=ref0_rq, dut1_rq=dut0_rq; wire [513:0] ref1_frr=ref0_frr, dut1_frr=dut0_frr;
- wire [1:0] ref1_fwd=ref0_fwd, dut1_fwd=dut0_fwd;
+ wire [1:0] ref1_fwd=ref0_fwd, dut1_fwd=dut0_fwd; wire [561:0] ref1_wq=ref0_wq, dut1_wq=dut0_wq; wire shd1_lf=shd0_lf;
  wire [33:0] ref1_srq=ref0_srq, dut1_srq=dut0_srq; wire [561:0] ref1_swq=ref0_swq, dut1_swq=dut0_swq;
  `endif
  // ---------------------------------------------------------------- history of the reference + fixed-offset compare
  localparam integer HN=64;
  wire [1123:0] sr_ref0={ref0_sx,ref0_iq,ref0_to}, sr_dut0={dut0_sx,dut0_iq,dut0_to};
  wire [1123:0] sr_ref1={ref1_sx,ref1_iq,ref1_to}, sr_dut1={dut1_sx,dut1_iq,dut1_to};
- wire [584:0] p0_ref0={ref0_rq,ref0_srq,ref0_frr,ref0_fwd,ref0_lf}, p0_dut0={dut0_rq,dut0_srq,dut0_frr,dut0_fwd,dut0_lf};
- wire [584:0] p0_ref1={ref1_rq,ref1_srq,ref1_frr,ref1_fwd,ref1_lf}, p0_dut1={dut1_rq,dut1_srq,dut1_frr,dut1_fwd,dut1_lf};
+ wire [581:0] p0_ref0={ref0_rq,ref0_srq,ref0_frr}, p0_dut0={dut0_rq,dut0_srq,dut0_frr};
+ wire [581:0] p0_ref1={ref1_rq,ref1_srq,ref1_frr}, p0_dut1={dut1_rq,dut1_srq,dut1_frr};
+ wire [1125:0] w_ref0={ref0_swq,ref0_wq,ref0_fwd}, w_dut0={dut0_swq,dut0_wq,dut0_fwd};
+ wire [1125:0] w_ref1={ref1_swq,ref1_wq,ref1_fwd}, w_dut1={dut1_swq,dut1_wq,dut1_fwd};
  reg [1123:0] hs0 [0:HN-1], hs1 [0:HN-1]; reg hf0 [0:HN-1], hf1 [0:HN-1]; reg hsv [0:HN-1];
- reg [584:0] hp0 [0:HN-1], hp1 [0:HN-1]; reg [561:0] hw0 [0:HN-1], hw1 [0:HN-1]; reg hpv [0:HN-1];
- integer ks=0, kp=0, checks=0, errors=0, data_seen=0, wq_seen=0, ref_faults=0, e_ser=0, e_flt=0, e_str=0, e_wq=0;
+ reg [581:0] hp0 [0:HN-1], hp1 [0:HN-1]; reg [1125:0] hw0 [0:HN-1], hw1 [0:HN-1]; reg hpv [0:HN-1];
+ integer ks=0, kp=0, checks=0, errors=0, data_seen=0, wq_seen=0, ref_faults=0, e_ser=0, e_flt=0, e_str=0, e_wq=0, e_lf=0;
  reg cmp=0;                     // reference samples inside the compare window
  reg cmpd=0;                    // DUT side may be compared (cleared at the reset assertion)
  task automatic mism(input [8*24-1:0] what, input integer p); begin
@@ -121,18 +145,21 @@ module tb_hbm_su_pgslice_rg;
  end
  always @(posedge pclk) begin
   #1;
-  hp0[kp%HN]=p0_ref0; hp1[kp%HN]=p0_ref1; hw0[kp%HN]=ref0_swq; hw1[kp%HN]=ref1_swq; hpv[kp%HN]=cmp;
+  hp0[kp%HN]=p0_ref0; hp1[kp%HN]=p0_ref1; hw0[kp%HN]=w_ref0; hw1[kp%HN]=w_ref1; hpv[kp%HN]=cmp;
   if(cmp && (ref0_swq[280] || ref0_swq[561])) wq_seen=wq_seen+1;
   if(cmpd && kp>=SWQ) begin
    if(hpv[kp%HN]) begin
     checks=checks+2;
-    if(p0_dut0!==p0_ref0) begin e_str=e_str+1; mism("stream(rq/far/lg_fault)",0); end
-    if(p0_dut1!==p0_ref1) begin e_str=e_str+1; mism("stream(rq/far/lg_fault)",1); end
+    if(p0_dut0!==p0_ref0) begin e_str=e_str+1; mism("stream(rq/far_rr)",0); end
+    if(p0_dut1!==p0_ref1) begin e_str=e_str+1; mism("stream(rq/far_rr)",1); end
+    checks=checks+2;
+    if(dut0_lf!==shd0_lf) begin e_lf=e_lf+1; mism("lg_fault (shadow tap)",0); end
+    if(dut1_lf!==shd1_lf) begin e_lf=e_lf+1; mism("lg_fault (shadow tap)",1); end
    end
    if(hpv[(kp-SWQ)%HN]) begin
     checks=checks+2;
-    if(dut0_swq!==hw0[(kp-SWQ)%HN]) begin e_wq=e_wq+1; mism("s_wq (VM write)",0); end
-    if(dut1_swq!==hw1[(kp-SWQ)%HN]) begin e_wq=e_wq+1; mism("s_wq (VM write)",1); end
+    if(w_dut0!==hw0[(kp-SWQ)%HN]) begin e_wq=e_wq+1; mism("write(s_wq/lg_wq/far_w_done)",0); end
+    if(w_dut1!==hw1[(kp-SWQ)%HN]) begin e_wq=e_wq+1; mism("write(s_wq/lg_wq/far_w_done)",1); end
    end
   end
   kp=kp+1;
@@ -161,7 +188,7 @@ module tb_hbm_su_pgslice_rg;
    if(dut0_f===1'b1) class_ok=1;
    else $display("CLASS CHECK FAIL: wrong-class strap fault dut0 %b", dut0_f);
   end
-  $display("PGSLICE_RG errors serial=%0d fault=%0d stream=%0d vm_write=%0d", e_ser, e_flt, e_str, e_wq);
+  $display("PGSLICE_RG errors serial=%0d fault=%0d stream=%0d vm_write=%0d lg_fault=%0d", e_ser, e_flt, e_str, e_wq, e_lf);
   if(errors==0 && class_ok && checks>8*r*EDGES && data_seen>r*EDGES/4 && wq_seen>0)
    $display("PGSLICE_RG PASS checks=%0d resets=%0d data_edges=%0d vm_writes=%0d ref_fault_edges=%0d", checks, r, data_seen, wq_seen, ref_faults);
   else $display("PGSLICE_RG FAIL errors=%0d class_ok=%0d checks=%0d data_edges=%0d vm_writes=%0d", errors, class_ok, checks, data_seen, wq_seen);
