@@ -542,5 +542,56 @@
     "All72 actual native pins map directly to eight distinct top source ports, nine each",
     "Constant masks prove30 P and62 R padding bits; ninth R bank remains observable",
     "Merged liberty hash was not recorded by this first run; image ID and source library filenames/merge recipe retained"
-  ]
+  ],
+  "R513_observability": [
+    {
+      "native_bank": "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[8].u_m",
+      "R513_read_net": 41099,
+      "mapped_gate_connections": [
+        {
+          "cell": "$abc$76146$auto$blifparse.cc:397:parse_blif$98537",
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "port": "B",
+          "direction_from_json": null
+        }
+      ]
+    },
+    {
+      "native_bank": "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[8].u_m",
+      "R513_read_net": 41101,
+      "mapped_gate_connections": [
+        {
+          "cell": "$abc$76146$auto$blifparse.cc:397:parse_blif$98538",
+          "type": "AO21x1_ASAP7_75t_R",
+          "port": "A2",
+          "direction_from_json": null
+        }
+      ]
+    },
+    {
+      "native_bank": "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[8].u_m",
+      "R513_read_net": 41103,
+      "mapped_gate_connections": [
+        {
+          "cell": "$abc$76146$auto$blifparse.cc:397:parse_blif$98539",
+          "type": "AOI221xp5_ASAP7_75t_R",
+          "port": "A2",
+          "direction_from_json": null
+        }
+      ]
+    },
+    {
+      "native_bank": "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[8].u_m",
+      "R513_read_net": 41104,
+      "mapped_gate_connections": [
+        {
+          "cell": "$abc$76146$auto$blifparse.cc:397:parse_blif$98539",
+          "type": "AOI221xp5_ASAP7_75t_R",
+          "port": "B1",
+          "direction_from_json": null
+        }
+      ]
+    }
+  ],
+  "R513_observability_note": "Mapped library port directions are omitted in JSON; R513 native output nets connect to mapped gate A/B input pins, shown explicitly. Golden R513-loss mutant separately fails."
 }
