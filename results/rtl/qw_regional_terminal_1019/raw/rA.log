@@ -1,0 +1,7 @@
+QWEN LANDED PAIRS {"pairs": {"INTRA": 45799, "NEIGHBOUR": 186347, "FWD": 84534, "LANDED": 1734, "NO_ROOT": 8, "RESET_ROOT": 2474}, "gap": 0, "no_root": 8, "landed_lanes": 153, "measured_lanes": 0, "lanes_no_root": 0, "max_abs_drift_ps": null, "drift_over_T": 0, "drift_over_half_T": 0, "gap_buses": 446}
+QCLK_REGIONAL_SPEC forwarded spine clk_rx/pll_d2d[0] balance=false trees 766 stream 764 land_owed links 446 bits 186347 bus classes 446
+2026-10-19 11:29:55 PDT QCLK rA build start
+2026-10-19 13:05:38 PDT QCLK rA CHECK TT+FF: NEIGHBOUR CHECK budget 80.0 ps (TT + FF): FAIL  judged 8269 pairs, over 116
+2026-10-19 13:05:39 PDT QCLK rA QWEN LANDED PAIRS {"pairs": {"INTRA": 45799, "NEIGHBOUR": 186347, "FWD": 84534, "LANDED": 1734, "NO_ROOT": 8, "RESET_ROOT": 2474}, "gap": 0, "no_root": 8, "landed_lanes": 153, "measured_lanes": 153, "lanes_no_root": 0, "max_abs_drift_ps": 424.6, "drift_over_T": 0, "drift_over_half_T": 3, "gap_buses": 446}
+2026-10-19 13:05:40 PDT QCLK rA QCLK_REGIONAL FAIL intra=FAIL landed=FAIL drift=FAIL spine=ok | intra over 38/655 worst r35 TT 428.7 FF 531.6 r34 TT 460.8 FF 527.9 r32 TT 442.0 FF 527.6 r33 TT 451.4 FF 510.9 | land owed links 446 bits N186347+G0 noroot 8 | lane drift max 424.6 >T/2 3/153 | spine cells 9272 levels 350 pads 0 model 18934.0
+2026-10-19 13:05:45 PDT QCLK rA done: /srv/opentallas-scratch/claude/qw-dieclk-1019/d/rA/die_clock_check.txt /srv/opentallas-scratch/claude/qw-dieclk-1019/d/rA/landed_pairs.json /srv/opentallas-scratch/claude/qw-dieclk-1019/d/rA/png
