@@ -1,0 +1,86 @@
+{
+  "top": "ot_hbm_owner_metadata_native",
+  "mapped_sha256": "d44a3d763104fb3aed423c6cc6ff306e7d365ff67ceb9352ea777fde7cc54620",
+  "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+  "input_ports": {
+    "clk": {
+      "width": 1,
+      "bits": {
+        "all_FF_clock": 1
+      },
+      "max_collapsed_load": 2205
+    },
+    "rst_n": {
+      "width": 1,
+      "bits": {
+        "functional_or_mixed": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "write_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 9
+    },
+    "write_addr": {
+      "width": 5,
+      "bits": {
+        "all_FF_D": 5
+      },
+      "max_collapsed_load": 8
+    },
+    "write_data": {
+      "width": 47,
+      "bits": {
+        "all_FF_D": 47
+      },
+      "max_collapsed_load": 2
+    },
+    "read_v": {
+      "width": 1,
+      "bits": {
+        "all_FF_D": 1
+      },
+      "max_collapsed_load": 1
+    },
+    "read_addr": {
+      "width": 5,
+      "bits": {
+        "all_FF_D": 5
+      },
+      "max_collapsed_load": 8
+    }
+  },
+  "output_ports": {
+    "read_data": {
+      "width": 47,
+      "origins": {
+        "FF_Q": 47
+      }
+    },
+    "read_valid": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    },
+    "write_done": {
+      "width": 1,
+      "origins": {
+        "FF_Q": 1
+      }
+    }
+  },
+  "clock_roots": [
+    {
+      "net": "clk bit=2",
+      "sinks": 2205,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 164,
+        "DFFHQNx1_ASAP7_75t_R": 2041
+      }
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "top": "ot_hbm_svc_four_owner_links",
+  "mapped_sha256": "2bbcde7d97825bc3c19dd0a36487592319db3e8788aabdea97f2b41d85b1f6f1",
+  "rule": "Output origins cross BUF/INV only; combinational paths not registered. Input capture counts physical terminal cells. Clock ports exempt only on sequential or SRAM cells.",
+  "input_ports": {
+    "clk": {
+      "width": 4,
+      "bits": {
+        "all_FF_clock": 4
+      },
+      "max_collapsed_load": 1980
+    },
+    "rst_n": {
+      "width": 1,
+      "bits": {
+        "functional_or_mixed": 1
+      },
+      "max_collapsed_load": 8
+    },
+    "in_v": {
+      "width": 4,
+      "bits": {
+        "all_FF_D": 4
+      },
+      "max_collapsed_load": 1
+    },
+    "in_packet": {
+      "width": 1140,
+      "bits": {
+        "all_FF_D": 1140
+      },
+      "max_collapsed_load": 1
+    },
+    "in_target": {
+      "width": 4,
+      "bits": {
+        "all_FF_D": 4
+      },
+      "max_collapsed_load": 1
+    },
+    "target_reserved": {
+      "width": 8,
+      "bits": {
+        "all_FF_D": 8
+      },
+      "max_collapsed_load": 1
+    }
+  },
+  "output_ports": {
+    "out_v": {
+      "width": 4,
+      "origins": {
+        "FF_Q": 4
+      }
+    },
+    "out_target": {
+      "width": 4,
+      "origins": {
+        "FF_Q": 4
+      }
+    },
+    "fault": {
+      "width": 4,
+      "origins": {
+        "FF_Q": 4
+      }
+    },
+    "out_packet": {
+      "width": 1140,
+      "origins": {
+        "FF_Q": 1140
+      }
+    }
+  },
+  "clock_roots": [
+    {
+      "net": "clk bit=2",
+      "sinks": 1980,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 254,
+        "DFFHQNx1_ASAP7_75t_R": 1726
+      }
+    },
+    {
+      "net": "clk bit=3",
+      "sinks": 1980,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 254,
+        "DFFHQNx1_ASAP7_75t_R": 1726
+      }
+    },
+    {
+      "net": "clk bit=4",
+      "sinks": 1980,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 254,
+        "DFFHQNx1_ASAP7_75t_R": 1726
+      }
+    },
+    {
+      "net": "clk bit=5",
+      "sinks": 1980,
+      "cell_types": {
+        "DFFASRHQNx1_ASAP7_75t_R": 254,
+        "DFFHQNx1_ASAP7_75t_R": 1726
+      }
+    }
+  ]
+}

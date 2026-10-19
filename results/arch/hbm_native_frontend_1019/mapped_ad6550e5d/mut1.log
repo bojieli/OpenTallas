@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL tags accepted generation/beat identity phase=8 kind=0
+[9515000] %Fatal: tb_owner_tags.sv:12: Assertion failed in tb_owner_tags.fail
+%Error: rtl/test/hbm_accel/native_frontend/tb_owner_tags.sv:12: Verilog $stop
+Aborting...

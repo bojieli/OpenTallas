@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: ot-epyc7       admits  1097 GB (avail 823, growth 56, headroom 0, waiters 0/0 GB) load 38/96 running 18 disk 6428 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-native-frontend-6bfaf4b9d/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3278308-1792432594 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PASS owner_metadata checks=32488 entries=32 width=47 read_edges=4 write_edges=3 reset_offsets=8 collision=read_first
+- rtl/test/hbm_accel/native_frontend/tb_owner_metadata.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 34us; walltime 0.049 s; speed 691.061 us/s
+- Verilator: cpu 0.049 s on 1 threads; allocated 7 MB
+FAIL metadata generation/epoch/bank/ordinal/length identity phase=0 cycle=35
+FAIL metadata generation/epoch/bank/ordinal/length identity phase=0 cycle=36
+FAIL metadata read valid age/reset phase=0 cycle=34
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3278308-1792432594): exit 0
