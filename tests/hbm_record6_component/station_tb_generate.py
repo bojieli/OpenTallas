@@ -56,7 +56,7 @@ integer cs=0,ct=0;time last_s=0,last_t=0;
 always @(posedge clk)begin cs++;if(cs>1&&($rtoi($realtime*1000+0.5)-last_s)!=1112)$fatal(1,"CLOCK_SERIAL_PERIOD");last_s=$rtoi($realtime*1000+0.5);end
 always @(posedge stream)begin ct++;if(ct>1&&($rtoi($realtime*1000+0.5)-last_t)!=834)$fatal(1,"CLOCK_STREAM_PERIOD");last_t=$rtoi($realtime*1000+0.5);end
 initial begin #200;if(cs<2||ct<2||!cg.locked||!rq||!rs)$fatal(1,"CLOCK_CAUSAL_GUARD");$display("CLOCK_CAUSAL_PASS stream_half_ps=417 serial_half_ps=556");end
-reg start=0;integer episode=0,abort_mode=0,startqt=0,roots=0;
+reg start=0;integer episode=0,abort_mode=0,startqt=0,roots=0;realtime start_event_ns=0.0,clock_event_ns=0.0;integer elapsed_root_ps=0,elapsed_root_edges=0;
 reg[16383:0] lanes_x=0;reg[511:0] lanes_v=0;
 wire[31:0] root_x;wire root_v,fault;wire[9:0] cycle;wire[10:0] capture_count,add_count;
 wire[3:0] capmask=(cycle==64||cycle==176||cycle==288||cycle==400)?4'hf:4'h0;
@@ -65,13 +65,17 @@ ot_hbm_r6_station41 #(.ENABLE(1),.MUT(STATION_MUT)) station(.clk(clk),.rst_n(run
 reg[31:0] square[0:2559],gold[0:1];reg root_seen=0;
 initial begin $readmemh("square0.mem",square,0,1279);$readmemh("square1.mem",square,1280,2559);$readmemh("gold.mem",gold);end
 always @(posedge clk)begin
- if(start)begin startqt=qt;root_seen=0;$display("SUPPORT_START episode=%0d qt=%0d",episode,qt);end
+ clock_event_ns=$realtime;
+ if(start)begin start_event_ns=clock_event_ns;startqt=qt;root_seen=0;$display("SUPPORT_START episode=%0d qt=%0d",episode,qt);end
  #0.001;
  if(runrq&&root_v&&!root_seen)begin
   root_seen=1;
+  elapsed_root_ps=$rtoi((clock_event_ns-start_event_ns)*1000.0+0.5);
+  elapsed_root_edges=$rtoi(elapsed_root_ps/1112.0+0.5);
+  $display("SUPPORT_ROOT_PHYSICAL_TIME start_ns=%0.3f event_ns=%0.3f elapsed_ps=%0d expected_ps=%0d edges=%0d phase_delta_ps=%0d",start_event_ns,clock_event_ns,elapsed_root_ps,591*1112,elapsed_root_edges,elapsed_root_ps%1112);
   $display("SUPPORT_ROOT_DIAGNOSTIC qt=%0d startqt=%0d age=%0d cycle=%0d root=%h gold=%h captures=%0d adds=%0d fault=%b ctl_fault=%b gbad=%b sf=%h",qt,startqt,qt-startqt,cycle,root_x,gold[episode],capture_count,add_count,fault,station.g_on.ctl_fault,station.g_on.gbad,station.g_on.sf);
-  if(qt-startqt!=591||root_x!==gold[episode]||capture_count!=1280||add_count!=1281||fault)$fatal(1,"SUPPORT_ROOT_ID_COUNT_AGE");
-  roots++;$display("SUPPORT_ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,qt-startqt,root_x,capture_count,add_count);
+  if(elapsed_root_ps!=591*1112||root_x!==gold[episode]||capture_count!=1280||add_count!=1281||fault)$fatal(1,"SUPPORT_ROOT_ID_COUNT_AGE");
+  roots++;$display("SUPPORT_ROOT episode=%0d age=%0d counter_age=%0d elapsed_ps=%0d data=%h captures=%0d adds=%0d",episode,elapsed_root_edges,qt-startqt,elapsed_root_ps,root_x,capture_count,add_count);
  end
 end
 '''+assertions+'''
