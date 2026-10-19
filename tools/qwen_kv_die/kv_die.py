@@ -452,6 +452,22 @@ def pvt_exact(bid, stages):
 
 
 PV_T_PLAN = 'results/arch/qwen_kv_die/pv_trunk_t/plan.json'
+# KVR-VIEWS 10-19 (OT_KV_RS_HD = auto | r | f, tools/qwen_kv_die/rs_hd_select.py): the pair's result-trunk header.  auto binds
+# qkd_pv_rs_hd_f rev f2 (qkd_pvw_die_t_f.sv, RS_D 50: rs_* consumers +1 edge = PV_RS_D_DELTA) only once its CLOSED view
+# carries a committed native PASS receipt; until then qkd_pv_rs_hd_r (RS_D 49, CLOSED native FAIL) stays the stand-in.
+PV_RS_HD = None
+if PV_T:
+    import importlib.util as _ilu
+    _rsh_spec = _ilu.spec_from_file_location('rs_hd_select', Path(__file__).resolve().parent / 'rs_hd_select.py')
+    _RSH = _ilu.module_from_spec(_rsh_spec)
+    _rsh_spec.loader.exec_module(_RSH)
+    PV_RS_HD = _RSH.select()
+    if PV_RS_HD['rs_hd'] == 'f':
+        PV_T_PLAN = 'results/arch/qwen_kv_die/pv_trunk_t/plan_f.json'
+        print(f"kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f ({PV_RS_HD['why']}): RS_D {PV_RS_HD['rs_d']}, every rs_* consumer "
+              f"(pvfin p0/p1 ages, token-pass schedule) must take +{PV_RS_HD['rs_d_delta']} edge (kv_die.PV_RS_D_DELTA)", file=sys.stderr)
+PV_T_FILE = PV_RS_HD['file'] if PV_RS_HD else 'rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv'
+PV_RS_D_DELTA = PV_RS_HD['rs_d_delta'] if PV_RS_HD else 0
 _PVT = {}
 
 
@@ -772,7 +788,7 @@ for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
     if V144_R6:
         SPLIT_BINDINGS[_mn].update(module='qkd_pvw_die_e', file='rtl/qwen_sys/split_20261014/qkd_pvw_die_e.sv')
     if PV_T:
-        SPLIT_BINDINGS[_mn] = dict(module='qkd_pvw_die_t', file='rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv',
+        SPLIT_BINDINGS[_mn] = dict(module='qkd_pvw_die_t', file=PV_T_FILE,
             parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=1, FIRST_INPUT_AGE=PV_AGE, MUT=0, TRUNK_MUT=0, FLAG_D_ADJ=0),
             ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'],
                        **{f'vh{k}': [f'vh{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
