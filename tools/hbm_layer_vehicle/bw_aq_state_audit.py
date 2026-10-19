@@ -24,6 +24,12 @@ for m in re.finditer(r'\b(\w+)\s+(\\?[^\s()]+)\s*\((.*?)\);',t,re.S):
  found[base].append(record)
  if pins.get('CLK','').strip()!='clk':errors.append('unexpected clock: '+name)
  if not pins.get('D','').strip():errors.append('missing D: '+name)
+ unreset={'head_local','fresh_addr_local','head_bank_local','head_read_global'}
+ has_async=bool({'RESETN','SETN'} & pins.keys())
+ if base=='row_local':
+  bit=int(re.findall(r'\[(\d+)\]',suffix)[-1]); expect_async=bit>=19
+ else:expect_async=base not in unreset
+ if has_async!=expect_async:errors.append('unexpected reset class: '+name)
 for family,n in families.items():
  if len(found[family])!=n:errors.append(f'{family}: expected {n} actual {len(found[family])}')
 if forbidden:errors.append('obsolete one-hot state remains')
