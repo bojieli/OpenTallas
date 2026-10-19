@@ -63,3 +63,20 @@ srows=[dict(bid='a',n=1,E=3),dict(bid='b',n=3,E=3,class_master='qfd_landh_300_EN
 LG.equalize(srows,4,{})
 assert [(r['K'],r['cal']) for r in srows]==[(4,1),(3,0)],srows
 print('SAFE300_CALENDAR PASS: bound-master reset2, Kminus1, legacy unchanged, idempotence')
+
+# Physically gated180 E includes the output capture edge; ring K must subtract it.
+mg=model(); mg['insts'].append(SimpleNamespace(name='last',master='qfd_landh_180_EN_44x44'))
+mg['fwd_lanes']['lanes'][0]['E']=3
+finalize_model(mg,{'external.s':16,'external.r':20})
+rg=mg['fwd_lanes']['lanes'][0]
+assert (rg['G_reset_tree'],rg['R0_reset_tree'],rg['K'],rg['cal'],rg['safe_land_read_cycles'])==(20,32,6,-12,1),rg
+finalize_model(mg,{'external.s':16,'external.r':20})
+assert rg['K']==6
+assert (rg['K'] - LG.hop0_en_reg(dict(rg,n=1)) + LG.safe_land_reset_cycles(rg) + LG.safe_land_read_cycles(rg)) % 8 == rg['E']
+grows=[dict(bid='a',n=1,E=3),dict(bid='b',n=1,E=3,class_master='qfd_landh0_180_NS_44x44')]
+LG.equalize(grows,4,{})
+assert [(r['K'],r['cal']) for r in grows]==[(4,1),(2,7)],grows
+try: LG.safe_land_read_cycles({'safe_land_read_cycles':0},'qfd_landh_180_EN_44x44')
+except ValueError: pass
+else: raise AssertionError('gated output capture was not priced')
+print('GATED180_CALENDAR PASS: total age preserved, ring K minus capture1, legacy unchanged, idempotent')

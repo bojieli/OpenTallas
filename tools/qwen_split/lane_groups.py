@@ -115,19 +115,35 @@ def hop0_en_reg(row):
     return (HOP0_EN_REG + int(safe_land_reset_cycles(row) != 0)) if int(row.get('n') or 0) >= 1 else 0
 
 
+def safe_land_read_cycles(row, master=None):
+    """Extra output capture edges of a bound physically gated180 landing.
+
+    E always remains total output age. K controls the earlier bank read, so the
+    compiler subtracts this priced edge only while deriving the ring strap.
+    """
+    masters = [master] if master is not None else [row.get(k, '') for k in ('landing_master', 'class_master', 'cls', 'master')]
+    detected = any(re.match(r'^qfd_landh0?_180_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
+    value = row.get('safe_land_read_cycles', 1 if detected else 0)
+    if type(value) is not int or value not in (0, 1):
+        raise ValueError('safe landing output capture must be exactly 0 or 1 cycles')
+    if detected and value != 1:
+        raise ValueError('bound gated180 master requires one priced output capture edge')
+    return value
+
+
 def safe_land_reset_cycles(row, master=None):
-    """Receiver release edges owned by a bound safe300 landing; legacy ages stay unchanged.
+    """Receiver release edges owned by a bound safe300 or gated180 landing; legacy ages stay unchanged.
 
     Binding owns this fact. An unbound candidate spec must never silently change
     an existing lane calendar. reset_calendar_audit passes the actual emitted master.
     """
     masters = [master] if master is not None else [row.get(k, '') for k in ('landing_master', 'class_master', 'cls', 'master')]
-    detected = any(re.match(r'^qfd_landh0?_300_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
+    detected = any(re.match(r'^qfd_landh0?_(?:300|180)_[NSEW]{2}_[0-9]+x[0-9]+$', str(m or '')) for m in masters)
     value = row.get('safe_land_reset_cycles', 2 if detected else 0)
     if type(value) is not int or value not in (0, 2):
-        raise ValueError('safe landing reset release must be exactly0(legacy)or2(safe300)cycles')
+        raise ValueError('safe landing reset release must be exactly 0 (legacy) or 2 (safe landing) cycles')
     if detected and value != 2:
-        raise ValueError('bound safe300 master requires two receiver reset release edges')
+        raise ValueError('bound safe landing master requires two receiver reset release edges')
     return value
 
 
@@ -167,11 +183,12 @@ def equalize(rows, D=4, cal=None, h0=None):
             r['group'] = g
         rec[g] = dict(E=E, members={r['bid']: r.get('E_own', E) for r in mem})
     for r in data:
-        r['cal'] = (int(cal.get(r['bid'], 0)) + hop0_en_reg(r) - safe_land_reset_cycles(r)) % 8
+        r['cal'] = (int(cal.get(r['bid'], 0)) + hop0_en_reg(r) - safe_land_reset_cycles(r) - safe_land_read_cycles(r)) % 8
         r['K'] = (int(r['E']) + r['cal']) % 8
         r['K_basis'] = ('Q-COLLCAL: K = (total E + G - R0) mod 8' + (' (land plan calendar)' if r['bid'] in cal else ' (G = R0)')
                         + (' + 1 (hop-0 en registered on the source root: QK-LANDEN landh0 / RLYH0-EN rlyh0)' if hop0_en_reg(r) else '')
-                        + (' + 1 write epoch - 2 receiver reset (safe300 landing)' if safe_land_reset_cycles(r) else ''))
+                        + (' + 1 write epoch - 2 receiver reset (safe landing)' if safe_land_reset_cycles(r) else '')
+                        + (' - 1 output capture (gated180)' if safe_land_read_cycles(r) else ''))
     if bad:
         raise ValueError('bus groups: ' + '; '.join(bad))
     return rec
