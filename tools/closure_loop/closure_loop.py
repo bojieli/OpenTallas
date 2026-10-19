@@ -5780,7 +5780,9 @@ IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
 # FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
 # T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
 # instead of returning a re-STA cached under the old one.
-IOREF_VERSION = "ae0410-cecorner-1015"
+# PF-HARDCHILD-VERDICT (ROOT-CORNER 2026-10-19): meas_resta names the hard-child ETM libs (OT_PF_MACRO_LIBS) in replayed
+# pre-fix w18 Tcl, so a re-STA cached under the raw-child-clock-pin reference is not returned as the re-judge.
+IOREF_VERSION = "ae0410-cecorner-1015-pfhc1019"
 
 
 def routed_ioref(j, m):
@@ -5811,7 +5813,16 @@ def routed_ioref(j, m):
             rp = f"{j['run']}/cl/{rbj['rb']}.sdc"
             ssh(j["host"], f"cat > {rp}", input=Path(rbj["sdc"]).read_text(), timeout=60)
             app += f" --append {rp}"
-        r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+        # IOREF-VERDICT-TOOL (ROOT-CORNER 2026-10-19): the routed re-STA is the VERDICT of a finished route, never part of
+        # its execution, so it runs the loop's CURRENT meas_resta.py (= origin/main, as io_ref_routed.sdc above) from
+        # cl_ioref/, not the job's frozen cl/ copy: a frozen-overlay job (freeze_helper_overlay) otherwise re-judged with
+        # the bug it was re-judged for (s81sl_capc d8836674d: frozen pre-fix meas_resta, no OT_PF_MACRO_LIBS -> STILL
+        # FF -158).  cl/ stays byte-identical to the frozen plan; the shipped bytes are recorded in the result.
+        mr_body = (HERE / "meas_resta.py").read_bytes()
+        ssh(j["host"], f"mkdir -p {j['run']}/cl_ioref && cat > {j['run']}/cl_ioref/meas_resta.py",
+            input=mr_body.decode(), timeout=60, check=True)
+        rr["meas_resta_sha256"] = hashlib.sha256(mr_body).hexdigest()
+        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                            f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])

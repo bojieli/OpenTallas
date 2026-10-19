@@ -9,8 +9,16 @@
 // COMPILER: every ISA ring-A command (lp / state reads / adds / inject / forward / rx / rr_local) and its rc_d take
 // effect 2 edges later than on v5: every ring-A-relative constant (rr_v / rr_d to the SU, carry / result timing) +2.
 // Children, clocks, every other port and edge: unchanged (wires only).
+// XDIE-HBM4 (10-19), both default 0/64 = the closed v8g (no new flop, every port and edge unchanged):
+//  AR_ITER=1: iterated reduce tags. The reserved uop field ring[87:84] (word[717:714]) becomes iter_ar_tag_step: the
+//    reduce load/read/publication tags advance by (iteration x step) mod 16 and the publication index by iteration x step
+//    (16 b), so a loop body streams frames through the reduce engine like the AG LOOPS stream link sequences / VM sectors
+//    / delivery offsets (static schedule; no credits / backpressure). The products are formed from the d2 stream and the
+//    issuer's iteration delayed 2 edges and registered at the d3 edge (the edge every AR field already uses); the ctl
+//    leaf sees the step bits as 0 (its reserved-field fault is unchanged).
+//  ROWS=128: static_issuer_v6 / programme target with 128 rows (7-bit pc; see ot_hgi_coll_static_issuer_v6).
 module ot_hfd_coll_q_hard_v8g_body #(
- parameter integer NPT=3,SOLO=1,TP=96,
+ parameter integer NPT=3,SOLO=1,TP=96,AR_ITER=0,ROWS=64,PW=(ROWS>64)?7:6,
  parameter integer NS=(SOLO!=0)?NPT+8:NPT+7,ND=NPT+13,NSL=18,NCK=NS+NSL,
  // HBM-BANKLAT-COLL 10-19: VM_RT = VM read edges beyond the fixed n+8 capture (d4g VM faces bank pin + die lanes + COLL
  // read share hcollrs_<q>, padded by the die to this scalar budget). 0 = the v8 parent, identical hierarchy and edges
@@ -68,10 +76,10 @@ module ot_hfd_coll_q_hard_v8g_body #(
 );
  localparam integer PWT=545,SELW=4;
  // ---- issuer + programme target + fault join
- wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
- wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [5:0] uop_pc;wire busy_d2,start_d3;
+ wire [36:0] program_cfg;wire hgi_start;wire [PW-1:0] hgi_start_pc;
+ wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [PW-1:0] uop_pc;wire busy_d2,start_d3;
  wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
- ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
+ ot_hgi_coll_issuer_m #(.ROWS(ROWS)) u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
   .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
@@ -100,10 +108,31 @@ module ot_hfd_coll_q_hard_v8g_body #(
  wire p_tkm_cfg_has_r=inst[873];
  wire [30:0] p_ar_low=inst[1505+:31];
  wire [54:0] ar={p_ring[81:58],p_ar_low};
- wire a_load_v=ar[0];wire [3:0] a_load_tag=ar[1+:4];wire a_add_read=ar[5];wire [3:0] a_read_tag=ar[6+:4];
- wire a_add_issue=ar[10];wire a_pub_read=ar[11];wire [3:0] a_pub_tag_a=ar[12+:4],a_pub_tag_b=ar[16+:4];
+ wire a_load_v=ar[0];wire a_add_read=ar[5];wire [3:0] a_load_tag,a_read_tag,a_pub_tag_a,a_pub_tag_b;wire [15:0] a_pub_index;
+ wire a_add_issue=ar[10];wire a_pub_read=ar[11];
+ // ---- XDIE-HBM4 AR_ITER: iterated reduce tags (d2 fields + iteration_d2 x step, registered at d3)
+ wire [1535:0] inst_ctl;
+ generate if(AR_ITER!=0)begin:g_ariter
+  reg [15:0] it_d1,it_d2;reg [3:0] t_load,t_read,t_pa,t_pb;reg [15:0] t_idx;
+  wire [54:0] ar2={inst_d2[688+:24],inst_d2[1505+:31]};wire [3:0] st2=inst_d2[714+:4];
+  wire [19:0] prod=it_d2*st2;
+  always @(posedge clk_issue)begin it_d1<=tap_iteration[15:0];it_d2<=it_d1;end
+  always @(posedge clk_reduce[0])begin
+`ifdef OT_COLL_ARITER_MUT_NOSTEP
+   t_load<=ar2[1+:4];t_read<=ar2[6+:4];t_pa<=ar2[12+:4];t_pb<=ar2[16+:4];t_idx<=ar2[31+:16];
+`else
+   t_load<=ar2[1+:4]+prod[3:0];t_read<=ar2[6+:4]+prod[3:0];t_pa<=ar2[12+:4]+prod[3:0];t_pb<=ar2[16+:4]+prod[3:0];
+   t_idx<=ar2[31+:16]+prod[15:0];
+`endif
+  end
+  assign a_load_tag=t_load;assign a_read_tag=t_read;assign a_pub_tag_a=t_pa;assign a_pub_tag_b=t_pb;assign a_pub_index=t_idx;
+  assign inst_ctl={inst_d2[1535:718],4'b0,inst_d2[713:0]};
+ end else begin:g_arfix
+  assign a_load_tag=ar[1+:4];assign a_read_tag=ar[6+:4];assign a_pub_tag_a=ar[12+:4];assign a_pub_tag_b=ar[16+:4];
+  assign a_pub_index=ar[31+:16];assign inst_ctl=inst_d2;
+ end endgenerate
  wire a_pub_bf16=ar[20],a_pub_release=ar[21],a_pub_issue=ar[22];wire [7:0] a_pub_src=ar[23+:8];
- wire [15:0] a_pub_index=ar[31+:16];wire a_arg_mode=ar[47],a_arg_start=ar[48],a_arg_flush=ar[49],a_arg_publish=ar[50];
+ wire a_arg_mode=ar[47],a_arg_start=ar[48],a_arg_flush=ar[49],a_arg_publish=ar[50];
  wire [3:0] a_arg_in_slot=ar[51+:4];
  // ---- protocol leaf
  wire [135:0] vm_req_pin;wire [1:0] inj_req_pin,inj_source_v;wire [31:0] inj_idx_pin;
@@ -160,7 +189,7 @@ module ot_hfd_coll_q_hard_v8g_body #(
   assign source_v[NPT+7]=arg_out_v;assign source_d[(NPT+7)*PWT+:PWT]=arg_out_data;
   assign capture_calendar[NPT+7]=p_ring[82];
   if(NPT==3 && VM_RT==0)begin:n_u_control 
-  ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -170,7 +199,7 @@ module ot_hfd_coll_q_hard_v8g_body #(
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end else if(NPT==3)begin:n_u_control_r
-  ot_hgi_coll_ctl_v5r_q3 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5r_q3 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -180,7 +209,7 @@ module ot_hfd_coll_q_hard_v8g_body #(
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
   end else if(VM_RT==0)begin:a_u_control
-  ot_hgi_coll_ctl_v5_n2s1 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5_n2s1 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -190,7 +219,7 @@ module ot_hfd_coll_q_hard_v8g_body #(
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end else begin:a_u_control_r
-  ot_hgi_coll_ctl_v5r_n2s1 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5r_n2s1 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -224,7 +253,7 @@ if(TP==96)begin:t96
   assign tk_w_v=tkx_w_v;assign tk_w_addr=tkx_w_addr;assign tk_w_mask=tkx_w_mask;assign tk_w_data=tkx_w_data;
   assign tkm_busy=tkx_busy;assign tkm_done=tkx_done;assign tkm_fault=tkx_fault;assign tk_cycles=32'd0;
   if(NPT==3)begin:n_u_fj 
-  ot_hgi_coll_fj_q3 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+  ot_hgi_coll_fj_q3 #(.ROWS(ROWS)) u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
@@ -235,7 +264,7 @@ if(TP==96)begin:t96
    .writer_fault(writer_fault),.reduce_fault(reduce_fault),.arg_fault(arg_fault),.tkm_fault(tkm_fault),
    .fault(fault),.fault_cause(fault_cause));
   end else begin:a_u_fj
-  ot_hgi_coll_fj_n2s1 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+  ot_hgi_coll_fj_n2s1 #(.ROWS(ROWS)) u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
@@ -254,7 +283,7 @@ if(TP==96)begin:t96
   assign tkx_cfg_g=0;assign tkx_cfg_gbase=0;assign tkx_cfg_pf=0;assign tkx_cfg_obase=0;assign tkx_cfg_rbase=0;
   assign tkx_cfg_has_r=1'b0;assign tkx_del_slot=0;assign tkx_del_valid=0;assign tkx_del_flit=0;
   if(NPT==2 && VM_RT==0)begin:n_u_control 
-  ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -264,7 +293,7 @@ if(TP==96)begin:t96
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end else if(NPT==2)begin:n_u_control_r
-  ot_hgi_coll_ctl_v5r_q2 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5r_q2 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -274,7 +303,7 @@ if(TP==96)begin:t96
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
   end else if(VM_RT==0)begin:a_u_control
-  ot_hgi_coll_ctl_v5_n1s0 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5_n1s0 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -284,7 +313,7 @@ if(TP==96)begin:t96
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   end else begin:a_u_control_r
-  ot_hgi_coll_ctl_v5r_n1s0 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+  ot_hgi_coll_ctl_v5r_n1s0 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -295,7 +324,7 @@ if(TP==96)begin:t96
    .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
   end
   if(NPT==2)begin:n_u_fj 
-  ot_hgi_coll_fj_q2 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+  ot_hgi_coll_fj_q2 #(.ROWS(ROWS)) u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
@@ -307,7 +336,7 @@ if(TP==96)begin:t96
    .arg_capture_slot(p_capture_slot[NPT+7]),.tkm_start(p_tkm_start),.tkm_del_slot(p_tkm_del_slot),
    .tkm_dest_v(dest_v[NPT+8+:4]),.fault(fault),.fault_cause(fault_cause));
   end else begin:a_u_fj
-  ot_hgi_coll_fj_n1s0 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+  ot_hgi_coll_fj_n1s0 #(.ROWS(ROWS)) u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
    .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
@@ -422,7 +451,7 @@ endmodule
 
 // d4f (H-DIE 10-17): the q3 parent with TKM hoisted to a die-level sub-cluster (tkm_SW, ot_hgi_coll_tkm_m_tp192): same
 // body, the TKM interface on pins (zero-latency wires in the lockstep bench; die hop granted <= 450 um, no relay).
-module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96,parameter integer VM_RT=0)(
+module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96,AR_ITER=0,ROWS=64,parameter integer VM_RT=0)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+8+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,
@@ -460,10 +489,10 @@ module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=
  input wire tkx_busy,tkx_done,tkx_fault,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1),.VM_RT(VM_RT)) u_body(.*);
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1),.AR_ITER(AR_ITER),.ROWS(ROWS),.VM_RT(VM_RT)) u_body(.*);
 endmodule
 
-module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96,parameter integer VM_RT=0)(
+module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96,AR_ITER=0,ROWS=64,parameter integer VM_RT=0)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+7+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
@@ -495,7 +524,7 @@ module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0),.VM_RT(VM_RT)) u_body(.*,.clk_arg(1'b0),
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0),.AR_ITER(AR_ITER),.ROWS(ROWS),.VM_RT(VM_RT)) u_body(.*,.clk_arg(1'b0),
   .tkx_start(),.tkx_arg_mode(),.tkx_cfg_n(),.tkx_cfg_k(),.tkx_cfg_nout(),.tkx_cfg_g(),.tkx_cfg_gbase(),.tkx_cfg_pf(),
   .tkx_cfg_obase(),.tkx_cfg_rbase(),.tkx_cfg_has_r(),.tkx_del_slot(),.tkx_del_valid(),.tkx_del_flit(),
   .tkx_w_v(1'b0),.tkx_w_addr(40'd0),.tkx_w_mask(16'd0),.tkx_w_data(512'd0),.tkx_busy(1'b0),.tkx_done(1'b0),.tkx_fault(1'b0));

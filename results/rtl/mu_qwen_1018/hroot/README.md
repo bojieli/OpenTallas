@@ -85,7 +85,7 @@ gen_cluster.py --wrap-only <dir> --wrap qkd_host_native_token_endpoint_cancel=qk
 - `qkd_host_peer_coordinator_codec`: one allocated identity in the class-9 frames.
 
 Swapping the allocator alone would make the second user's begin a cohort fault. That is the remaining host-root MU work;
-see §6.
+see §6. **MU-KV-PEER 10-19:** done, the four neighbours have `_mu` drop-ins and the allocator is wired (`../peer/README.md`).
 
 ## 3. KV layer programme: `qkd_static_kv_layer_programme_mu` (in `qkd_kvs_ctl`, an RTL-only parent whose kit is not closed)
 
@@ -167,7 +167,10 @@ Mutants (each applied to a copy of one RTL file by `run_mu_hroot.sh`; all FAIL; 
 
 ## 6. Open (owners)
 
-1. **Host-root coordinator chain, multi-step** (HKV-HROOT / a new MU lane). Make these 4-deep under MU: the token service
+1. **DONE in RTL (MU-KV-PEER 10-19, `../peer/README.md`)**: chain 4-deep, allocator `_mu` wired, MU 1 peer core; 4 users x 3
+   rounds pipelined e2e PASS, MU 0 identity on the existing benches, 10 mutants FAIL. Open: the physical MU 1 peer kit on the
+   r4 `_rr`/`_pd` composition. Original item:
+   **Host-root coordinator chain, multi-step** (HKV-HROOT / a new MU lane). Make these 4-deep under MU: the token service
    (`[15:13]` check, 4 retained requests), `ot_qwen_tp8_token_cohort`, the lifecycle terminal / post queue, and the
    codec's allocated identity. Then wire `ot_qwen_tp8_token_epoch_allocator_mu` with `.MU(1)` through
    `qkd_host_tp8_coordinator` → services → lifecycle, and regen peer. An alternative to price first: under the static

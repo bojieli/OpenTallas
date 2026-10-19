@@ -131,8 +131,10 @@ def landed_record(spec, root):
     if spec.get("clock_data_paths") != "related_same_frequency":
         raise ValueError('landed cluster: landings and reset runs cross region roots; requires clock_data_paths '
                          '"related_same_frequency" (same_pll_fixed_phase ratio1/1 phase0)')
-    if spec.get("soft_root_macro_masters") or spec.get("soft_root_macro_bindings") or spec.get("cdc_synchronizers") is not None:
-        raise ValueError("landed cluster: raw-memory sinks / CDC synchronizers are leaf-tile features")
+    # TW2-QCTLM 10-19: raw-memory sinks of a region root are allowed (raw_macro_clocks.contract: exact instance / master /
+    # clock pin / region root); CDC synchronizers stay a leaf-tile feature (regions are related same-frequency roots)
+    if spec.get("cdc_synchronizers") is not None:
+        raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
@@ -434,8 +436,25 @@ def landed_sdc(spec, root):
         return ""
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
+    ring = {L["name"]: (str(L.get("ring") or "").split() or [""])[0] for L in rec.get("landings") or []}
+    ring = {n: (g[6:-2] if g.startswith("u_lpl_") and g.endswith("_w") else n) for n, g in ring.items()}
+    shared = any(g != n for n, g in ring.items())
     o = [f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, multicycle -setup {E} -hold {D - 1}"]
-    if names:
+    if names and shared:
+        o += ["set ot_lp_pairs {" + " ".join(f"{ring[n]} {n}" for n in names) + "}",
+              "set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }",
+              "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
+              "  set ot_lw $ot_lp_ring($ot_ln)",
+              "  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]",
+              "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+              "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }",
+              "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
+              "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+              f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
+              f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
+              'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
+    elif names:
         o += ["set ot_lp_lands {" + " ".join(names) + "}", "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
               "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
               "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
