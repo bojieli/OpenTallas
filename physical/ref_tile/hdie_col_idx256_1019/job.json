@@ -1,0 +1,144 @@
+{
+ "name": "hdie_col_idx256_1019-g1-COMMIT",
+ "block": "ot_hbm_static_cfg_collar_idx256",
+ "ref_tile": true,
+ "owner": "CODEX-HBM-IDX256",
+ "purpose": "ActualNF5 guardedIDX256 sourceboundphysicalsuccessor",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "codex/hbm-idx256-physical-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_collar_idx256",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "results/arch/hbm_idx_collar256_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_static_cfg_collar_idx256 #(.PAGE_W(1), .NS(1), .NPR(6), .NREC(8), .NGO(2), .NB(2), .NF(5), .XSER(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "idx256_0",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9"
+   },
+   {
+    "name": "idx256_9",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_9 9",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9",
+    "fail_regex": "IDX256_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/run9.log"
+   },
+   {
+    "name": "idx256_10",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_10 10",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9",
+    "fail_regex": "IDX256_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/run10.log"
+   },
+   {
+    "name": "idx256_11",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_11 11",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9",
+    "fail_regex": "IDX256_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/run11.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_col_idx256_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_col_idx256_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_col_idx256_1019 --out {RUN}/record/views/ot_hbm_static_cfg_collar_idx256  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_col_idx256_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_col_idx256_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_col_idx256_1019/hdie_col_idx256_1019-g1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "IDX-only opt-in256programme row/page0/full32bitneed guards suppress aliaswrites and simultaneousbadinstalllaunch; canonicalsourceunchanged,0state+0successcycles.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "vs": "hdie_col_idx_r1-r3-7d0e74d25",
+  "why": "ActualNF5+256row/page0/needguard preventsAW12alias, sourcebound newmaster"
+ }
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_static_cfg_collar_idx256",
+ "enable": false,
+ "reason": "RTL g_rst_same.rc[0:1] is two-stage face reset landing; rawpin only rc0, no addedresetedges"
+}
