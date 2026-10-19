@@ -40,5 +40,6 @@ facts={'EREADY':eready,'main_default_tail_L':eready+1+9+42*9+2,'candidate_all_fl
 paths=git('ls-tree','-r','--name-only',CAND,'--','results/rtl/s81_gunit_lifetime_1019').decode().splitlines()
 for p in paths:
  dest=W/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(blob(CAND,p))
+ mode=git('ls-tree',CAND,'--',p).decode().split()[0]; dest.chmod(0o755 if mode=='100755' else 0o644)
 (OUT/'artifact_extraction.json').write_text(json.dumps({'source_commit':git('rev-parse',CAND).decode().strip(),'files':[{'path':p,'sha256':sha(blob(CAND,p))} for p in paths],'RTL_files_imported':[],'warning':'Harness proves historical candidate; actual main does not contain that branch. Do not execute make_vehicle against main and assume same source.'},indent=2)+'\n')
 print(json.dumps({'audited_files':len(rows),'changed_or_absent_vs_main':sum(not r['base_equal_candidate'] for r in rows),'hop_receipt_mismatches':sum(r['candidate_matches_hop_receipt'] is False for r in rows),'artifacts_extracted':len(paths),'default_facts':facts},indent=2))
