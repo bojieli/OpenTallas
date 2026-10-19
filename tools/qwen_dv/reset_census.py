@@ -48,7 +48,7 @@ def main():
             for b in bits:
                 if not isinstance(b,int):continue
                 loads[b].append((name,pin))
-                if pin in ('R','ARST','SRST','CLR','RESET','RST','rst','rst_n'):
+                if pin in ('R','S','ARST','SRST','CLR','SET','RESET','RST','rst','rst_n'):
                     rloads[b].append((name,pin))
     rows=[]
     for b,rs in rloads.items():
@@ -67,7 +67,7 @@ def main():
                 note='No hard internals excluded. Bins preserve actual instance scope: only u_head/rcp/exp/rsq/u_leaf descendants are candidate hard interiors; upstream head controller and lane wrapper remain soft parent obligations. SFU naming alone does not prove native binding. A physical parent hard-bound load is one pin only after matching the actual native instance/view. New ML5 head and xs leaf remain unqualified. Expanded diagnostic bit IDs are not raw netlist IDs; use aliases/source hash.',
                 named_reset_total_load_excess=[dict(bit=b,names=sorted(aliases[b])[:12],loads=len(ls))
                     for b,ls in loads.items() if len(ls)>32 and
-                    any(re.search(r'rst|reset|rsafe',n,re.I) for n in aliases[b])])
+                    any(re.search(r'rst|reset|rsafe|\brsi\b|\blpr_',n,re.I) for n in aliases[b])])
     Path(a.out).write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(dict(cells=result['cells'],reset_nets=len(rows),
                          over32=sum(r['all_input_pin_loads']>32 for r in rows),
