@@ -1,0 +1,1349 @@
+{
+  "scope": "read-only minimum numerical proposal; no build grant",
+  "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/net/pre_relay.json",
+  "contract_sha256": "fd7492f2dafdd81d1f7d5e974fe30ca6056e39e23e62d694dbfc800dbebffbf7",
+  "frozen_source": "6f783d0a1",
+  "instances": {
+    "su_SW0": {
+      "master": "ot_hbm_su_static_pgslice_lg",
+      "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+      "params": {
+        "QID": 0,
+        "G": 0,
+        "READ_RETURN": 10,
+        "WRITE_RETURN": 7,
+        "FETCH_EXTRA_EDGES": 2,
+        "MLAT": 4,
+        "ALAT": 3,
+        "LEAF": 1,
+        "MUT": 0,
+        "MULTIRATE": 1,
+        "COLLPORT": 1,
+        "RF_LOCAL": 1
+      },
+      "ports": {
+        "pg_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_lane": {
+          "direction": "input",
+          "bits": 256
+        },
+        "clk_insert": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rst_lane_n": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bcast": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rst_bcast_n": {
+          "direction": "input",
+          "bits": 4
+        },
+        "clk_bank": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bank_macro": {
+          "direction": "input",
+          "bits": 192
+        },
+        "clk_ctl": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_side": {
+          "direction": "input",
+          "bits": 6
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "bridge_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "control": {
+          "direction": "input",
+          "bits": 1742
+        },
+        "vmr_cmd": {
+          "direction": "input",
+          "bits": 60
+        },
+        "vmw_cmd": {
+          "direction": "input",
+          "bits": 78
+        },
+        "rf_bword": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rf_bcmd": {
+          "direction": "input",
+          "bits": 36
+        },
+        "rf_dsec": {
+          "direction": "input",
+          "bits": 256
+        },
+        "red_sel": {
+          "direction": "input",
+          "bits": 12
+        },
+        "slice_x": {
+          "direction": "output",
+          "bits": 32
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_q": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "dw_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "dw_row": {
+          "direction": "input",
+          "bits": 18
+        },
+        "dw_d": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "lg_rq": {
+          "direction": "output",
+          "bits": 34
+        },
+        "lg_wq": {
+          "direction": "output",
+          "bits": 562
+        },
+        "lg_rr": {
+          "direction": "input",
+          "bits": 514
+        },
+        "lg_w_done": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_read": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_write": {
+          "direction": "input",
+          "bits": 2
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 34
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 562
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 514
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 2
+        },
+        "lg_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "sucore_SW": {
+      "master": "ot_hbm_su_static_qcore",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+      "params": {
+        "MUT": 0,
+        "COLLPORT": 1,
+        "RF_LOCAL": 1
+      },
+      "ports": {
+        "clk_rf": {
+          "direction": "input",
+          "bits": 64
+        },
+        "clk_ctl": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_red": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf_rd_cmd": {
+          "direction": "input",
+          "bits": 54
+        },
+        "red_cmd": {
+          "direction": "input",
+          "bits": 74
+        },
+        "rf_drain_cmd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "slice_x": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rf_wv": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rf_wa": {
+          "direction": "input",
+          "bits": 32
+        },
+        "rf_wd": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rf_bword": {
+          "direction": "output",
+          "bits": 128
+        },
+        "rf_bcmd": {
+          "direction": "output",
+          "bits": 36
+        },
+        "rf_dsec": {
+          "direction": "output",
+          "bits": 256
+        },
+        "red_sv": {
+          "direction": "output",
+          "bits": 1
+        },
+        "red_tag": {
+          "direction": "output",
+          "bits": 32
+        },
+        "red_x": {
+          "direction": "output",
+          "bits": 32
+        },
+        "red_rf_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rr_wv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rr_wa": {
+          "direction": "input",
+          "bits": 5
+        },
+        "rr_wd": {
+          "direction": "input",
+          "bits": 256
+        },
+        "sfu_x": {
+          "direction": "input",
+          "bits": 32
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "str_C": {
+      "master": "ot_hbm_su_stree_root",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "params": {
+        "MUT": 0
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "up0_i": {
+          "direction": "input",
+          "bits": 41
+        },
+        "up1_i": {
+          "direction": "input",
+          "bits": 41
+        },
+        "up2_i": {
+          "direction": "input",
+          "bits": 41
+        },
+        "up3_i": {
+          "direction": "input",
+          "bits": 41
+        },
+        "dn0_o": {
+          "direction": "output",
+          "bits": 164
+        },
+        "dn1_o": {
+          "direction": "output",
+          "bits": 164
+        },
+        "dn2_o": {
+          "direction": "output",
+          "bits": 164
+        },
+        "dn3_o": {
+          "direction": "output",
+          "bits": 164
+        }
+      }
+    },
+    "stl_SW": {
+      "master": "ot_hbm_su_stree_leaf",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "params": {
+        "MUT": 0
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "head_i": {
+          "direction": "input",
+          "bits": 41
+        },
+        "up_o": {
+          "direction": "output",
+          "bits": 41
+        },
+        "dn_i": {
+          "direction": "input",
+          "bits": 164
+        },
+        "rf_wv": {
+          "direction": "output",
+          "bits": 4
+        },
+        "rf_wa": {
+          "direction": "output",
+          "bits": 32
+        },
+        "rf_wd": {
+          "direction": "output",
+          "bits": 128
+        }
+      }
+    },
+    "stu_SW_00": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_01": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_02": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_03": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_04": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_05": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_06": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_07": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_08": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_09": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_10": {
+      "master": "hbfd_rly_48_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_11": {
+      "master": "hbfd_rly_48_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_12": {
+      "master": "hbfd_rly_48_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "stu_SW_13": {
+      "master": "hbfd_rly_48_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_00a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_00b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_01a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_01b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_02a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_02b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_03a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_03b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_04a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_04b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_05a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_05b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_06a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_06b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_07a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_07b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_08a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_08b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_09a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_09b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_10a": {
+      "master": "hbfd_rly_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_10b": {
+      "master": "hbfd_rly_48_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_11a": {
+      "master": "hbfd_rly_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_11b": {
+      "master": "hbfd_rly_48_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_12a": {
+      "master": "hbfd_rly_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_12b": {
+      "master": "hbfd_rly_48_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    },
+    "std_SW_13a": {
+      "master": "hbfd_rly_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "std_SW_13b": {
+      "master": "hbfd_rly_48_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 48
+        },
+        "o": {
+          "direction": "output",
+          "bits": 48
+        }
+      }
+    }
+  },
+  "source_hashes": {
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "856f03008f5278674383e43b68ebf64ae3f82fc3bfbdfc81b6d5728ed259f02d",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567"
+  }
+}
