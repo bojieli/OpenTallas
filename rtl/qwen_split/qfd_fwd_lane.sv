@@ -206,8 +206,8 @@ module ot_qfd_gated_region #(parameter integer W = 16) (
     always @(posedge rclk[3]) r3 <= ~b3;
     (* keep = "true", dont_touch = "true" *) reg [3:0] sel_q;
     reg reset_face;
-    always @(posedge ck or negedge rs)
-        if (!rs) reset_face <= 1'b0; else reset_face <= rs_landed;
+    always @(posedge ck or negedge rs_landed)
+        if (!rs_landed) reset_face <= 1'b0; else reset_face <= 1'b1;
     // These four local kept flops each drive <=16 data loads. warm/ready each
     // drive one local cone per kept region, rather than a single wide fanout.
     always @(posedge ck) sel_q <= readsel & {4{warm && ready}};
@@ -274,7 +274,7 @@ module ot_qfd_land_gated #(
             fill<=fill+1'b1;
             if (fill==3'd3) full_w<=1'b1;
         end
-    wire ready_reset_n=rs && full_w;
+    wire ready_reset_n=rs1 && full_w;
     reg ready0,ready1;
     always @(posedge ck or negedge ready_reset_n)
         if (!ready_reset_n) begin ready0<=1'b0;ready1<=1'b0;end

@@ -168,6 +168,7 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
         epoch_add=(ed-1 > 300)?320:0;
         full_time=(G+HREG+epoch_add)*T+(NF+1)*T/2.0+lag+3*T;
         first_ready=$rtoi($floor((full_time-DOFF)/T))+1;
+        if(first_ready<R0+epoch_add+RREG+1)first_ready=R0+epoch_add+RREG+1;
         ready_set=first_ready+1;
         warm_set=R0+epoch_add+RREG+((K==0)?8:K);
         first_output=((ready_set>warm_set)?ready_set:warm_set)+2;
