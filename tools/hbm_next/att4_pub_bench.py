@@ -41,6 +41,7 @@ SRC = ["physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_12
        "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hbm_next/att/ot_hnx_att4_smerge.sv", "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
        "rtl/hbm_next/att/tb_hnx_att4_pub.sv"]
+SAFE_RESET = os.environ.get("HNX_ATT_SAFE_RESET") == "1"
 VERILATOR = os.environ.get("VERILATOR") or next(
     (c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)),
     "verilator")
@@ -136,9 +137,12 @@ def write_stim(recs, path):
 def build(work, mut):
     obj = work / (f"obj_pub_m{mut}" + ("" if NL == 4 else f"_nl{NL}"))
     exe = obj / "Vtb_hnx_att4_pub"
+    if SAFE_RESET:
+        obj = Path(str(obj) + "_safe")
+        exe = obj / exe.name
     if exe.exists():
         return exe
-    cmd = [VERILATOR, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
+    cmd = [VERILATOR] + (["-DOT_HNX_ATT_SAFE_RESET", "-DOT_FP_DATA_NORST"] if SAFE_RESET else []) + ["--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module",
            "tb_hnx_att4_pub", f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     for _ in range(2):                                          # one retry on a precompiled-header race
@@ -205,7 +209,7 @@ def main(argv=None):
     nrun = {k: sum(1 for x in nodes if x["n"] == k) for k in range(1, 5)}
     res = dict(bench="att4_pub", nl=NL, mut=a.mut, seed=a.seed, rounds=a.rounds, nodes=len(exp), streams=len(streams),
                node_mismatches=mism, word_mismatches=word_mism, fault=fault, rc=r.returncode, runs_by_chunks=nrun,
-               verilator=VERILATOR, examples=bad, pass_=ok)
+               verilator=VERILATOR, safe_reset=SAFE_RESET, examples=bad, pass_=ok)
     Path(a.out).write_text(json.dumps(res, indent=1))
     print(("PASS" if ok else "FAIL") + " HNX_ATT4_PUB " + json.dumps({k: v for k, v in res.items() if k != "examples"}))
     if not ok and bad:

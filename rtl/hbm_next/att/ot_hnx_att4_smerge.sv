@@ -90,9 +90,12 @@ module ot_hnx_att4_smerge #(
     localparam [2:0] TOP = 3'(LV - 1);
 
     // ---------------- reset landing: kept control copies (the adders take their own copy in g_madd) ----------------
-    (* keep *) reg rst_c;
-    (* keep *) reg rst_e;
-    always @(posedge clk) begin rst_c <= rst_n; rst_e <= rst_n; end
+    localparam integer RST_COPIES = `ifdef OT_HNX_ATT_SAFE_RESET 16 `else 1 `endif;
+    // Identical kept vectors at the EXISTING reset edge; synthesis proves identity and distributes at most32loads.
+    (* keep = "true", ot_rst_split = 1 *) reg [RST_COPIES-1:0] rst_cv, rst_ev;
+    wire rst_c = rst_cv[0];
+    wire rst_e = rst_ev[0];
+    always @(posedge clk) begin rst_cv <= {RST_COPIES{rst_n}}; rst_ev <= {RST_COPIES{rst_n}}; end
 
     // ---------------- input registers (STEP 4: +2 edges, uniform) -------------------------------------------------------
     // Stage 1 = LANDING registers: the decode reads ev / tag only from ev_q / tag_q, which the placer puts beside the
@@ -320,7 +323,7 @@ module ot_hnx_att4_smerge #(
         (* keep *) reg          rst_m;
         always @(posedge clk) begin
             ka_hw <= da_hw; kb_hw <= db_hw; kw_ev <= dw_ev; kw_rt <= dw_rt;
-            ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_m <= rst_n;
+            ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_mv <= {RST_COPIES{rst_n}};
         end
         reg [31:0] a_w, b_w;
         integer j;

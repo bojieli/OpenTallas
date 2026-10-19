@@ -36,8 +36,10 @@ module ot_hnx_att4_spvm #(
     output reg               fault
 );
     initial if (NL < 3 || NL > 4) $fatal(1, "ot_hnx_att4_spvm: 3 <= NL <= 4 (2 lanes N face + NL - 2 S face)");
-    (* keep *) reg rq;
-    always @(posedge clk) rq <= rst_n;
+    localparam integer RST_COPIES = `ifdef OT_HNX_ATT_SAFE_RESET 32 `else 1 `endif;
+    (* keep = "true", ot_rst_split = 1 *) reg [RST_COPIES-1:0] rqv;
+    wire rq = rqv[0];
+    always @(posedge clk) rqv <= {RST_COPIES{rst_n}};
     reg [NL-1:0]     ev_q;
     reg              ps_q;
     reg [NL*512-1:0] sum_q;
