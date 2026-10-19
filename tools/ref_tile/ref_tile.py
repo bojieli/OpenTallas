@@ -1218,14 +1218,31 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason = str(fr.get("pin_bound", "")).strip()
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
-    if structural and not reason:
-        # Root-approved sparse geometry still has to state its measured sizing basis.
-        if (isinstance(structural, dict) and str(structural.get("why", "")).strip()
-                and float(structural.get("lattice_um", 0)) >= 43.2
-                and float(structural.get("min_channel_um", 0)) >= CHANNEL_UM
-                and 0.4 <= float(structural.get("std_band_util", 0)) <= 0.6):
+    if isinstance(structural, dict) and not reason:
+        # Gate-rule exception: root must approve it; verify the geometry rather
+        # than accepting claimed utilisation/channel numbers as a low-fill escape.
+        band = structural.get("std_band_y_um", [])
+        lattice = 43.2
+        valid = (str(structural.get("why", "")).strip()
+                 and str(structural.get("approved_by", "")).strip()
+                 and len(blocks) >= 4 and len(band) == 2)
+        if valid:
+            lo, hi = map(float, band)
+            density = float(std_area) / ((W - 2 * CORE_MARGIN) * (hi - lo)) if hi > lo else 0
+            valid = (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6)
+            for block in blocks:
+                valid = valid and block.get("kind") == "macro"
+                valid = valid and all(abs(block[axis] / lattice - round(block[axis] / lattice)) < 1e-6
+                                      for axis in ("x", "y"))
+                valid = valid and (block["y"] + block["h"] <= lo or block["y"] >= hi)
+            for i, block in enumerate(blocks):
+                for other in blocks[i + 1:]:
+                    gx = max(block["x"] - other["x"] - other["w"], other["x"] - block["x"] - block["w"])
+                    gy = max(block["y"] - other["y"] - other["h"], other["y"] - block["y"] - block["h"])
+                    valid = valid and max(gx, gy) >= CHANNEL_UM - 1e-6
+        if valid:
             reason = str(structural["why"]).strip()
-            reason_kind = "lattice/channel-bound"
+            reason_kind = "lattice/channel-bound gate-rule exception"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",

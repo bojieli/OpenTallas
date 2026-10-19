@@ -305,7 +305,12 @@
    "why": "ROOT approved safe lattice/channel geometry475.2x561.6: 43.2um lattice plus >=20um pin-face channels forces86.4um row pitch. One central full-width standard-cell band216..259.2 keeps register reach short. Overall fill23.3%; prior synthesis10495.7um2 / band20341.999um2 =51.6%. Final gate visual review still required.",
    "lattice_um": 43.2,
    "min_channel_um": 41.88,
-   "std_band_util": 0.516
+   "std_band_util": 0.516,
+   "approved_by": "ROOT coordinator 10-19 S81-COLL-GEOM (final visual approval pending)",
+   "std_band_y_um": [
+    216,
+    259.2
+   ]
   }
  },
  "slot_change_request": {
