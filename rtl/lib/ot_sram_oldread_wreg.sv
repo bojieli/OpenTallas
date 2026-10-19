@@ -2,7 +2,7 @@
 // Registered-write, registered OLD-read memory. q holds when re=0, exactly
 // ot_s81ph_mem1r1w WREG1. Reset-distinct16-bit forwarding slices prevent shared
 // enabled payload muxes and output selects. No additional write/read edges.
-module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, NS=(W+15)/16, NB=(W+127)/128)(
+module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, NS=(W+15)/16, NB=(W+127)/128, MUT=0)(
  input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire re, input wire [AW-1:0] ra, output wire [W-1:0] q);
@@ -22,7 +22,7 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, NS=(W+15)/16, NB=(W
    (* keep="true" *) reg valid_r,select_r;
    (* keep="true" *) reg [AW-1:0] addr_r;
    reg [SW-1:0] forwarded;
-   wire hit=valid_r && ra==addr_r;
+   wire hit=(MUT==1)?1'b0:(valid_r && ra==addr_r);
    always @(posedge clk or negedge rst_n[s])
      if(!rst_n[s]) begin valid_r<=0;addr_r<=0;select_r<=0;end
      else begin valid_r<=we;addr_r<=wa;if(re) select_r<=hit;end
