@@ -111,15 +111,28 @@ def run(a):
     log = r.stdout + r.stderr
     (d / 'run.log').write_text(log)
     _, gos, _, fault, done = S.parse(log)
-    results = []
+    results, pv_nodes, pv_rows = [], [], []
     for b in c['blocks']:
         lo, hi = b['first_abs'], b['end_abs'] + 80
         subset = '\n'.join(line for line in log.splitlines() if line.startswith('R ') and lo <= int(line.split()[1]) <= hi)
         chk = A.E.check(rec, b['op'][:5], b['exp'], subset)
         results.append(dict(name=b['op'][0], **chk))
-    ok = r.returncode == 0 and not fault and bool(done) and len(gos) == len(c['blocks']) and all(x['mismatches'] == 0 and x['results'] == x['expected'] for x in results)
+        if b['op'][1] == 'pv':
+            words = [(int(z[1]), int(z[2],16), int(z[3],16)) for z in (line.split() for line in subset.splitlines())]
+            pv_nodes.append(A.node_from_words(words).astype(A.np.uint32).view(A.F))
+            pv_rows.extend(b['op'][3])
+    nnode = 1 << (len(pv_nodes)-1).bit_length()
+    merged = A.pv_merge(pv_nodes, nnode)
+    golden_chunks = A.B.chunk_sums(rec['p'][pv_rows], rec['K'][pv_rows])
+    golden_node = A.B.A.pairwise([golden_chunks[i] for i in range(len(golden_chunks))] +
+                               [A.np.zeros(512, A.F)] * (nnode-len(golden_chunks)))
+    pv_merge_exact = bool(A.np.array_equal(A.zb(merged), A.zb(golden_node)))
+    fixed_go_exact = [(g[1],g[2]) for g in gos] == [(b['prog'][0],b['go_at']) for b in c['blocks']]
+    ok = pv_merge_exact and fixed_go_exact and r.returncode == 0 and not fault and bool(done) and len(gos) == len(c['blocks']) and all(x['mismatches'] == 0 and x['results'] == x['expected'] for x in results)
     doc = dict(pass_=ok, mutation=a.mut, source=src, budget=c['budget'], executable=str(exe),
-               executable_sha256=S.sha(exe), rc=r.returncode, fault=fault, done=done, fixed_go_count=len(gos), results=results)
+               executable_sha256=S.sha(exe), rc=r.returncode, fault=fault, done=done, fixed_go_count=len(gos), fixed_go_exact=fixed_go_exact,
+               pv_merge=dict(exact=pv_merge_exact, rows=len(pv_rows), nodes=len(pv_nodes), pad=nnode,
+                             scope='Python golden-tree composition of actual RTL subrun nodes, no on-die merge claim'), results=results)
     Path(a.out).write_text(json.dumps(doc, indent=2) + '\n')
     print(json.dumps(doc, indent=2))
     raise SystemExit(0 if ok else 1)
