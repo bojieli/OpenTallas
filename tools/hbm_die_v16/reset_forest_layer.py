@@ -29,14 +29,18 @@ def load(p):
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
+    if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
+        raise GeometryError('input already contains reset forest instances; use pre-forest contract')
     g = Geometry(manifest, views, relay_views, reach)
     W, H = manifest['die_um']
     tiles, edges, clocks, ports, drop = [], [], [], [], []
     report = dict(schema='opentallas.hbm.reset_forest.v2', reach_um=reach, fanout_cap=fanout,
-                  domains={}, geometry_gate='PASS', physical_signoff='OPEN', native_complete=False,
+                  domains={}, geometry_gate='PASS', reach_gate='PASS', physical_signoff='OPEN', native_complete=False,
+                  unplaced={}, problems=[],
                   home_basis='lower left, R0, exact consumed LEF outline',
                   clock_requirement='downstream regional clock binding and phase validation required',
-                  compiler_requirement='use emitted domain age constants; no runtime scheduling/backpressure',
+                  compiler_requirement='bind age constants after physical clock/phase proof; no runtime scheduling/backpressure',
+                  age_reference='ideal common-phase RTL edge model; physical recovery/removal and arrival phases OPEN',
                   homes={}, consumed_lef_sha256=g.hashes)
 
     def zone(xy):
@@ -174,7 +178,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
     if mut_skew:
-        report['geometry_gate'] = 'FAIL_MUTANT_RELEASE_AGE'
+        report['geometry_gate'] = report['reach_gate'] = 'FAIL_MUTANT_RELEASE_AGE'
     # Independent check of emitted actual pin distances, including all pad links.
     byname = {t['name']: t for t in g.reserved.values()}
     def endpoint(ref):
@@ -208,7 +212,7 @@ def main():
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
                           a.reach, a.fanout, a.zones, a.mut_skew)
     except GeometryError as e:
-        a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL',
+        a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
                                            physical_signoff='OPEN', problems=[str(e)]), indent=2) + '\n')
         print(f'reset forest FAIL: {e}')
         raise SystemExit(3)

@@ -182,3 +182,24 @@ def test_cli_diag_still_refuses_layer(case, tmp_path):
     assert result.returncode == 3
     assert not out.exists()
     assert json.loads(report.read_text())['geometry_gate'] == 'FAIL'
+
+
+def test_full_rectangles_fit_narrow_channel(case):
+    _, m, v = case
+    # A twelve-um gap contains a legal four-um relay. Full-cell obstacle
+    # rasterization plus a halo incorrectly erased this channel.
+    m['placement'] = {'left': dict(m='left', x=0, y=0, w=139, h=1000, o='R0'),
+                      'right': dict(m='right', x=151, y=0, w=1649, h=1000, o='R0')}
+    g = Geometry(m, v, v, 200)
+    a = g.reserve('hop', (145, 55), max_distance=0)
+    b = g.reserve('hop', (145, 65), max_distance=0)
+    assert a['home'] == (143, 53)
+    assert b['home'] == (143, 63)
+
+
+def test_real_kit_sized_relay_outlines(case):
+    _, _, v = case
+    for kind in ('sync', 'hop'):
+        lef(v, 'hbfd_rrl_' + kind, 32.4, 32.4, {'clk': (0, 8), 'rst_n_in': (0, 24), 'rst_n': (32.4, 16)})
+    spec, rep = run(case)
+    assert_geometry(case, spec, rep)

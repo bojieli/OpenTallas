@@ -1,7 +1,7 @@
 """Conservative reset relay placement. Geometry proof only; sign-off is downstream.
 
 All coordinates are um. A home is a LOWER LEFT, matching die_case_v16.
-The grid is conservative: entire cells plus relay radius must clear every
+The grid tests full relay rectangles at candidate centers against every
 placed outline. Wires may overfly outlines, but every registered stage must
 have a legal, distinct home and each routed span must fit the declared reach.
 """
@@ -40,7 +40,7 @@ class Geometry:
         self.radius = max(max(w / 2 + h / 2, *(md((w / 2, h / 2), xy) for xy in pins.values()))
                           for w, h, pins in self.relay.values())
         self.budget = reach - 2 * self.radius - 2 * GRID
-        if self.budget < 2 * GRID:
+        if self.budget < 6 * GRID:
             raise GeometryError('reach too small for relay outlines and conservative grid budget')
         obstacles = []
         for n, v in self.pl.items():
@@ -48,14 +48,30 @@ class Geometry:
             if o not in ('R0', 'MX', 'MY', 'R180'):
                 raise GeometryError(f'{n}: unsupported placement orientation {o}')
             obstacles.append((v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
-        self.grid = Grid(self.W, self.H, obstacles, margin=self.radius)
-        # Full grid cells must be inside the outline even after relay expansion.
+        self.half_w = max(w / 2 for w, _, _ in self.relay.values())
+        self.half_h = max(h / 2 for _, h, _ in self.relay.values())
+        self.grid = Grid(self.W, self.H, [])
+        for rect in obstacles:
+            self.block_rect(*rect)
         for j in range(self.grid.ny):
-            for i in (0, self.grid.nx - 1):
-                self.grid.blk[j * self.grid.nx + i] = 1
-        for i in range(self.grid.nx):
-            for j in (0, self.grid.ny - 1):
-                self.grid.blk[j * self.grid.nx + i] = 1
+            for i in range(self.grid.nx):
+                x, y = self.grid.xy((i, j))
+                if x < self.half_w or y < self.half_h or x + self.half_w > self.W or y + self.half_h > self.H:
+                    self.grid.blk[j * self.grid.nx + i] = 1
+
+    def block_rect(self, x0, y0, x1, y1):
+        # Mark centers whose complete largest-relay rectangle intersects the
+        # obstacle. Whole-cell rasterization would erase legal 20 um channels.
+        lo_x, hi_x = x0 - self.half_w, x1 + self.half_w
+        lo_y, hi_y = y0 - self.half_h, y1 + self.half_h
+        i0 = max(0, int(math.floor(lo_x / GRID - .5)) + 1)
+        i1 = min(self.grid.nx, int(math.ceil(hi_x / GRID - .5)))
+        j0 = max(0, int(math.floor(lo_y / GRID - .5)) + 1)
+        j1 = min(self.grid.ny, int(math.ceil(hi_y / GRID - .5)))
+        if i1 <= i0 or j1 <= j0:
+            return
+        for j in range(j0, j1):
+            self.grid.blk[j * self.grid.nx + i0:j * self.grid.nx + i1] = b'\x01' * (i1 - i0)
 
     def lef(self, master, directory):
         path = directory / (master + '.lef')
@@ -138,13 +154,9 @@ class Geometry:
                 continue
             if any(md(self.tile_pin(tile, p), q) > self.reach for p, q in targets):
                 continue
-            # A cell is dedicated to a single tile. Also block every cell whose
-            # expanded relay rectangle could overlap this tile.
-            for j in range(max(0, int((cy - h / 2 - self.radius) // GRID)),
-                           min(self.grid.ny, int(math.ceil((cy + h / 2 + self.radius) / GRID)))):
-                for i in range(max(0, int((cx - w / 2 - self.radius) // GRID)),
-                               min(self.grid.nx, int(math.ceil((cx + w / 2 + self.radius) / GRID)))):
-                    self.grid.blk[j * self.grid.nx + i] = 1
+            # Reserve the actual rectangle, including exclusion for the next
+            # tile's complete outline. No legalizer relocation is assumed.
+            self.block_rect(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
             self.reserved[len(self.reserved)] = tile
             return tile
         raise GeometryError(f'no legal {kind} home near {point} satisfying reset reach')
