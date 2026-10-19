@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.kv_ledger_helper_main_review.v1",
+  "main_base": "efae17de2128f3813aff8cf76226e8be8d60ea97",
+  "source_candidate": "716f993f9",
+  "with_existing_fixture_commits": "4434fa90e",
+  "scope": "source candidate only; no production adoption/runtime/continuation/native qualification",
+  "source_patch": "exact d19b6b77f parent-to-commit patch, no ancestors",
+  "changed_source": [
+    "tools/qwen_kv_die/kv_expand.py",
+    "tools/qwen_kv_die/kv_expand_parameters.py",
+    "tools/qwen_kv_die/test_kv_expand_parameters.py"
+  ],
+  "preserved_byte_identity": [
+    "kv_expand.py main CLI argument declarations/defaults",
+    "kv_expand_parameters.py artifact_identity/preserve/verify_bound suffix"
+  ],
+  "excluded": [
+    "OT_KV_PARAM_DIAG CLI-default enablement",
+    "diagnostic_autoprofile environment branch",
+    "licensed PHY binding ancestor",
+    "private group and DCAL source rollbacks"
+  ],
+  "prerequisite_audit": {
+    "tools/qwen_kv_die/kv_expand.py": {
+      "candidate_sha256": "8cf4e4bf33354de4e0801e97d7446d5c785937a4ab7b6631246d80a24cc41054",
+      "frozen_fixture_sha256": "25c252090b1feaace9037cf716cf9aad0d8f877833d7d76c1888017b72ff0bf8",
+      "matches": false
+    },
+    "tools/qwen_kv_die/kv_expand_parameters.py": {
+      "candidate_sha256": "b6e99a5a24e7d5001c58aba2e7acebbf213c3466c48d4bac8a877186cba276ed",
+      "frozen_fixture_sha256": "f4d5d480baf115b9734a7c1726b1310ec415b74dff5eee0b3758a027aa7b04f9",
+      "matches": false
+    },
+    "tools/qwen_kv_die/test_kv_expand_parameters.py": {
+      "candidate_sha256": "37b5544b534dc1027cdec9fb20c586d4e6a1fb8f4f378d9762a6faa2acd00492",
+      "frozen_fixture_sha256": "37b5544b534dc1027cdec9fb20c586d4e6a1fb8f4f378d9762a6faa2acd00492",
+      "matches": true
+    },
+    "tools/qwen_kv_die/test_kv_expand_alias.py": {
+      "candidate_sha256": "1f6b4b4588d70024672ec148fe7836d500c1696daad7ab904e155a07547f65e5",
+      "frozen_fixture_sha256": "1f6b4b4588d70024672ec148fe7836d500c1696daad7ab904e155a07547f65e5",
+      "matches": true
+    },
+    "tools/qwen_kv_die/kv_bound_netlist.py": {
+      "candidate_sha256": "0e04275b481f5e1ccbd181f194572337561cce4e2254270f78d6c9cbdca748c4",
+      "frozen_fixture_sha256": "d7fcc2bfdd36f0f07c27ce97c0b0ef65f41fd6f9765be1d05470341f0dd3a682",
+      "matches": false
+    },
+    "tools/qwen_kv_die/kv_die.py": {
+      "candidate_sha256": "2d1fbfff3646bc917b855b8bc0591d2b0fde14f585338a49400894afae1149f2",
+      "frozen_fixture_sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+      "matches": false
+    },
+    "tools/qwen_kv_die/kv_static_die.py": {
+      "candidate_sha256": "032f6c6e811b73bc09bc9ba69354a3dc831dbbe70011a3d1266da844ec98d07c",
+      "frozen_fixture_sha256": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a",
+      "matches": false
+    },
+    "tools/qwen_kv_die/kv_elastic_boundary.py": {
+      "candidate_sha256": "58c5800650ca59ab653dc1740c9ee75399eeb4203993993460dcd396f18b34b3",
+      "frozen_fixture_sha256": "58c5800650ca59ab653dc1740c9ee75399eeb4203993993460dcd396f18b34b3",
+      "matches": true
+    },
+    "tools/qwen_kv_die/kv_strips.py": {
+      "candidate_sha256": "22773025fb42e1a8167387e7a983b1a10e7c4c8031f255e4be713398547bcf33",
+      "frozen_fixture_sha256": "22773025fb42e1a8167387e7a983b1a10e7c4c8031f255e4be713398547bcf33",
+      "matches": true
+    },
+    "tools/qwen_rom_fulldie.py": {
+      "candidate_sha256": "ff944df25d6f0bdff173fdb279645302037029c84750bb0a6ec896855d01b898",
+      "frozen_fixture_sha256": "ff944df25d6f0bdff173fdb279645302037029c84750bb0a6ec896855d01b898",
+      "matches": true
+    },
+    "tools/qwen_kv_die/binding_order.py": {
+      "candidate_sha256": "3a96d61e3a814f1c7d17f2cde36b6e4bcd42e0a1f7aea77ecc832a7f922a3e72",
+      "frozen_fixture_sha256": "3a96d61e3a814f1c7d17f2cde36b6e4bcd42e0a1f7aea77ecc832a7f922a3e72",
+      "matches": true
+    }
+  },
+  "local_checks": {
+    "unsigned_policy_suite": "3 PASS incl diagnostic False/True x OT_KV_PARAM_DIAG 0/1 missing-profile refusal",
+    "declarations": "5 PASS; exact ParameterDeclarations AST isolated from fleet import dependency; class unchanged",
+    "full_module_import": "REFUSED sparse missing qwen_rom_fulldie; preserved, not semantic failure"
+  },
+  "existing_actual_proof": {
+    "commit": "fde994f06579f60162aca47989a73406b1b372ef",
+    "fleet_unit": "oth-ubuntu-3669545-1792446417",
+    "actual_alias": "13 PASS",
+    "parameters": "24 PASS",
+    "qualification": "predecessor frozen-helper proof only; source/input bytes differ from main candidate, not claimed rerun"
+  },
+  "test_convention": {
+    "ref_tile_closure_baseline": "efae fullflow112F1696P41skip/448subtests retained by parent; unrelated unchanged paths, not a candidate KV-family regression",
+    "required_before_production_adoption": "ROOT exact source review plus bounded current-main actual alias/parameter fixture baseline/candidate with exact dependency/source identities; compare actual failed node IDs, not aggregate PASS counts",
+    "already_reusable": "fixture files identical; original RTL/view input inventories and archived strict negatives retained; no need bulk elaboration/gates/route"
+  },
+  "holds": [
+    "native receipt absent; strict refuse",
+    "reset296 fanout/current whole-element PG/contact safety unqualified",
+    "live v4 untouched",
+    "offline912-row proposal not installed",
+    "no main push/runtime mutation"
+  ]
+}
