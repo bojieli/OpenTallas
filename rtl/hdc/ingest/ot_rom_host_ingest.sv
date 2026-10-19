@@ -239,11 +239,7 @@ module ot_rom_host_ingest #(
     always @(posedge clk_i) begin mk_p1 <= hx_head[129:64]; mk_p2 <= mk_p1; end
     always @(posedge clk_i or negedge rn_i)
         if (!rn_i) begin mk_d1 <= 1'b0; mk_d2 <= 1'b0; end
-`ifdef OT_ING_MUT_MKD
-        else begin mk_d1 <= mark_go; mk_d2 <= mark_go; end                     // mutant: marker only 1 edge late
-`else
         else begin mk_d1 <= mark_go; mk_d2 <= mk_d1; end
-`endif
     wire         mk_w = (APIPE >= 10) ? mk_d2 : mark_go;
     wire [65:0]  mk_pay = (APIPE >= 10) ? mk_p2 : hx_head[129:64];
 `ifndef SYNTHESIS

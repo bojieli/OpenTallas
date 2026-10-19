@@ -60,7 +60,7 @@ extra = {
 }
 extra["raw_fenced_stall"]["mstall"] = 90
 # Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
-if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10'):
+if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','spdone10','spbusy10'):
     extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
 for name, c in extra.items():
     c["nb"] = [(d >> 240) & 0xFFFF for d in c["descs"]]
@@ -97,7 +97,8 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "pos10": ["-DOT_HOSTNATIVE_PIPE10"], "apbskip10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APBSKIP"],
         "apstale10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APSTALE"], "apxskip10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_APXSKIP"],
         "sprh10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPRH"], "spkind10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPKIND"],
-        "rac10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_RAC"],
+        "rac10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_RAC"], "spdone10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPDONE"],
+        "spbusy10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPBUSY"],
         "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
         "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
@@ -162,6 +163,20 @@ for name, c in cases.items():
           f"vis_err={vis} ck_cycles={cyc.group(1) if cyc else '?'}")
     ok_all &= good
     vis_only |= bool(B.hing_ok(out)) and rc == 0 and vis > 0
+# S81-SHLK s10: APIPE 10 delays the stream sectors through a pipe and the boot-end marker by 2 edges; the marker must
+# still follow every sector (tb BOOTEND: marker word checked against the sectors written).  Stalled fabric (MSTALL 90).
+if mode.endswith("10"):
+    c = cases["raw_fenced_stall"]
+    ex = [f"-Ptb_rom_host_ingest.{k}={v}" for k, v in dict(MEMW=c["memw"], ND=16, NP=1 << max(4, (len(c["beats"]) - 1).bit_length()),
+                                                         HDMAX=16, KVHMAX=1, QKV_EN=0, RMW_EN=0).items()]
+    rc, out = B.sim(w / "raw_fenced_stall", srcs, "tb_rom_host_ingest", defs + ex,
+                    [f"+ND={len(c['descs'])}", f"+NP={len(c['beats'])}", "+MSTALL=90", "+SEED=5", "+BOOTEND=1",
+                     f"+BCOUNT={sum(c['sizes'])}"])
+    (w / "raw_fenced_stall_boot.log").write_text(out)
+    mm = re.search(r"marks=(\d+) mark_bad=(\d+)", out)
+    good = rc == 0 and bool(B.hing_ok(out)) and bool(mm) and mm.group(1) == "1" and mm.group(2) == "0"
+    print(f"case raw_fenced_stall_boot {'PASS' if good else 'FAIL'} marks={mm.group(1) if mm else '?'} mark_bad={mm.group(2) if mm else '?'}")
+    ok_all &= good
 if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)

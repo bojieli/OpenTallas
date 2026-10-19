@@ -99,9 +99,11 @@ module ot_hdc_kv_ingest #(
     //           an 8:1 byte select (8 kept fine-offset copies), masks / substitutes the IKEY scales, writes sc_acc and
     //           enters a 4-entry output FIFO that drives the write port (registered head).  Pops are credit-issued
     //           against the FIFO (no w_rdy in the pop cone).  Every stream sector reaches the write port 2 edges later;
-    //           rate 1 sector/edge unchanged; a fenced segment's done pulse is delayed by the same 2 edges (it still
-    //           leaves after its last sector's count); busy covers the pipe.  The next stream segment dispatches as
-    //           before (the pipe keeps order).  Same sectors, same order, same addresses, uniformly +2 edges.  (b) ap1_lp = local *
+    //           rate 1 sector/edge unchanged.  A fenced segment's done enters a completion queue 2 edges after its
+    //           APIPE 2 done edge, with the cumulative count of stream writes issued up to it, and leaves when that
+    //           many sectors have been accepted at the write port (so without write-port stalls done is uniformly +2
+    //           edges, and its count is the segment's exact cumulative count even when the fabric stalls).  busy
+    //           covers the pipe; the next segment dispatches as before (the pipe keeps order).  (b) ap1_lp = local *
     //           pitch[2:0] and ap1_lph = local * pitch[4:3] (two short products), summed with rbase in stage X
     //           (three-operand add): no edge change.  Requires QKV = 0 (stream-only engine).
     parameter integer QKV    = 1,
@@ -469,20 +471,22 @@ module ot_hdc_kv_ingest #(
 `ifdef OT_ING_MUT_NSECLAG
     assign done_v = done_r; assign done_tag = dtag_r;                       // mutant: done leaves before its last count
 `else
-    // APIPE 10: done delayed 2 more edges, as the stream pipe delays the sectors
-    reg         done_s1, done_s2;
-    reg  [7:0]  dtag_s1, dtag_s2;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin done_s1 <= 1'b0; done_s2 <= 1'b0; dtag_s1 <= 0; dtag_s2 <= 0; end
-        else begin done_s1 <= done_q; dtag_s1 <= dtag_q; done_s2 <= done_s1; dtag_s2 <= dtag_s1; end
-    assign done_v = (SP != 0) ? done_s2 : (APIPE >= 2) ? done_q : done_r;
-    assign done_tag = (SP != 0) ? dtag_s2 : (APIPE >= 2) ? dtag_q : dtag_r;
+    // APIPE 10: done (with its sector count) from the stream pipe's completion queue (g_sp)
+    wire        sp_done_v;
+    wire [7:0]  sp_done_tag;
+    wire [31:0] sp_done_cnt;
+    assign done_v = (SP != 0) ? sp_done_v : (APIPE >= 2) ? done_q : done_r;
+    assign done_tag = (SP != 0) ? sp_done_tag : (APIPE >= 2) ? dtag_q : dtag_r;
 `endif
-    assign n_sectors = nsec_r;
+    assign n_sectors = (SP != 0) ? sp_done_cnt : nsec_r;   // read with done_v (the completion word's count)
     wire ra_push = st_act && !st_pad && in_v && (ra_n <= 9'd192) && (st_beats != 0);
     wire pad_take = st_act && st_pad && in_v && (st_beats != 0);
     assign in_rdy = qi_act || (st_act && (st_pad ? (st_beats != 0) : ((ra_n <= 9'd192) && (st_beats != 0))));
-    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy || sp_busy;
+    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy
+`ifndef OT_ING_MUT_SPBUSY
+                  || sp_busy                                   // (mutant SPBUSY: the boot marker may overtake the pipe)
+`endif
+                  ;
 
     // dispatch: a QKV descriptor takes the other slot once it is drained (and an
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
@@ -892,7 +896,40 @@ module ot_hdc_kv_ingest #(
         assign sp_wd = fq_h[255:0];
         assign sp_room = (fq_n + (p_wv ? 3'd1 : 3'd0)) <= 3'd3;
         assign sp_busy = p_wv || p_sc || (fq_n != 0);
+        // completion queue: entries {tag, issued count}; head leaves when the accepted count reaches it
+        reg  [31:0] sp_iss, sp_acc;
+        reg         dq_e1, dq_e2;
+        reg  [7:0]  dq_t1, dq_t2;
+        reg  [31:0] dq_c1, dq_c2;
+        reg  [39:0] cq [0:7];
+        reg  [2:0]  cq_wr, cq_rd;
+        reg  [3:0]  cq_n;
+        wire [39:0] cq_h = cq[cq_rd];
+`ifdef OT_ING_MUT_SPDONE
+        wire        cq_go = (cq_n != 0);                                   // mutant: done does not wait for its sectors
+`else
+        wire        cq_go = (cq_n != 0) && (sp_acc >= cq_h[31:0]);
+`endif
+        always @(posedge clk) begin
+            dq_t1 <= dtag_r; dq_c1 <= sp_iss; dq_t2 <= dq_t1; dq_c2 <= dq_c1;
+            if (dq_e2) cq[cq_wr] <= {dq_t2, dq_c2};
+        end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin sp_iss <= 0; sp_acc <= 0; dq_e1 <= 1'b0; dq_e2 <= 1'b0; cq_wr <= 0; cq_rd <= 0; cq_n <= 0; end
+            else begin
+                if (st_go && st_wv) sp_iss <= sp_iss + 1;
+                if (fq_pop) sp_acc <= sp_acc + 1;
+                dq_e1 <= done_r; dq_e2 <= dq_e1;
+                if (dq_e2) cq_wr <= cq_wr + 3'd1;
+                if (cq_go) cq_rd <= cq_rd + 3'd1;
+                cq_n <= cq_n + (dq_e2 ? 4'd1 : 4'd0) - (cq_go ? 4'd1 : 4'd0);
+            end
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && dq_e2 && cq_n == 4'd8 && !cq_go) $fatal(1, "ot_hdc_kv_ingest: APIPE 10 completion queue overflow");
+`endif
+        assign sp_done_v = cq_go; assign sp_done_tag = cq_h[39:32]; assign sp_done_cnt = cq_h[31:0];
     end else begin : g_sp0
+        assign sp_done_v = 1'b0; assign sp_done_tag = 8'd0; assign sp_done_cnt = 32'd0;
         assign sp_wv = 1'b0; assign sp_wa = {AW{1'b0}}; assign sp_wd = 256'd0; assign sp_room = 1'b1; assign sp_busy = 1'b0;
         assign sc_we = st_go && st_mode == M_IKEY && st_ph == 3'd2; assign sc_row = st_row[3:0]; assign sc_wd = ra_head[31:0];
     end endgenerate

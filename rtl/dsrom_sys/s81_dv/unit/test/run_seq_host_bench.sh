@@ -28,11 +28,12 @@ bad=0
 # mutant OT_ING_MUT_HREG needs a full-rate host stream: physical/sys_takeover/host_native_pipe_bench.py hreg7)
 # 9 = the unit MUT 9: the L0 rung landing dropped (S81-SHLK2 10-18; rung one edge short)
 # S81-SHLK s10 (APIPE 10, VL_EXTRA has -DOT_S81_SH_APIPE10): 11 = stream-pipe FIFO address read copy stalls
-# (OT_ING_MUT_SPRH), 12 = ROWS tail not masked (OT_ING_MUT_SPKIND), 13 = boot marker 1 edge late (OT_ING_MUT_MKD),
-# 14 = svc decode emits on the pop edge from the previous head (OT_S81_SH_MUT_HQSTALE)
+# (OT_ING_MUT_SPRH), 14 = svc decode emits on the pop edge from the previous head (OT_S81_SH_MUT_HQSTALE).
+# (12 SPKIND / 13 MKD are not exercised by this bench: no partial ROWS tail, no boot marker -- SPKIND is caught by
+# physical/sys_takeover/host_native_pipe_bench.py spkind10; the marker delay has no bench here, see the lane log)
 mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; 11) echo +define+OT_ING_MUT_SPRH;;
   12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;; *) echo +define+MUT=$1;; esac; }
-MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 12 13 14";; esac
+MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 14";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do
