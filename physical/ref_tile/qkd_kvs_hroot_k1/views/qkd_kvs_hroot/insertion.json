@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/routes/qkd_kvs_hroot_k1_k1_6355d06bd/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_asap7_ref_qkd_kvs_hroot_k1_k1_6355d06bd/base",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/routes/qkd_kvs_hroot_k1_k1_da14c0bdf/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_asap7_ref_qkd_kvs_hroot_k1_k1_da14c0bdf/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
@@ -8,16 +8,16 @@
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 2331,
-   "mean": 303.5,
-   "min": 267.4,
-   "max": 362.8
+   "n": 3121,
+   "mean": 438.9,
+   "min": 426.8,
+   "max": 470.5
   },
   "all": {
-   "n": 2331,
-   "mean": 303.5,
-   "min": 267.4,
-   "max": 362.8
+   "n": 3894,
+   "mean": 438.2,
+   "min": 425.1,
+   "max": 470.5
   },
   "errors": [],
   "macros": null,
@@ -25,16 +25,16 @@
  },
  "tt": {
   "boundary": {
-   "n": 2331,
-   "mean": 236.2,
-   "min": 201.9,
-   "max": 291.0
+   "n": 3121,
+   "mean": 339.8,
+   "min": 328.1,
+   "max": 370.6
   },
   "all": {
-   "n": 2331,
-   "mean": 236.2,
-   "min": 201.9,
-   "max": 291.0
+   "n": 3894,
+   "mean": 339.1,
+   "min": 326.0,
+   "max": 370.6
   },
   "errors": [],
   "macros": null,
@@ -42,16 +42,16 @@
  },
  "ff": {
   "boundary": {
-   "n": 2331,
-   "mean": 196.3,
-   "min": 163.1,
-   "max": 246.3
+   "n": 3121,
+   "mean": 279.3,
+   "min": 267.5,
+   "max": 309.5
   },
   "all": {
-   "n": 2331,
-   "mean": 196.3,
-   "min": 163.1,
-   "max": 246.3
+   "n": 3894,
+   "mean": 278.6,
+   "min": 265.1,
+   "max": 309.5
   },
   "errors": [],
   "macros": null,
@@ -66,24 +66,24 @@
   "outliers": []
  },
  "env": {
-  "CK_SS_MEAN": 304,
-  "CK_SS_ALL_MEAN": 304,
-  "CK_SS_MIN": 267,
-  "CK_SS_ALL_MIN": 267,
-  "CK_SS_MAX": 363,
-  "CK_SS_ALL_MAX": 363,
-  "CK_TT_MEAN": 236,
-  "CK_TT_ALL_MEAN": 236,
-  "CK_TT_MIN": 202,
-  "CK_TT_ALL_MIN": 202,
-  "CK_TT_MAX": 291,
-  "CK_TT_ALL_MAX": 291,
-  "CK_FF_MEAN": 196,
-  "CK_FF_ALL_MEAN": 196,
-  "CK_FF_MIN": 163,
-  "CK_FF_ALL_MIN": 163,
-  "CK_FF_MAX": 246,
-  "CK_FF_ALL_MAX": 246,
+  "CK_SS_MEAN": 439,
+  "CK_SS_ALL_MEAN": 438,
+  "CK_SS_MIN": 427,
+  "CK_SS_ALL_MIN": 425,
+  "CK_SS_MAX": 470,
+  "CK_SS_ALL_MAX": 470,
+  "CK_TT_MEAN": 340,
+  "CK_TT_ALL_MEAN": 339,
+  "CK_TT_MIN": 328,
+  "CK_TT_ALL_MIN": 326,
+  "CK_TT_MAX": 371,
+  "CK_TT_ALL_MAX": 371,
+  "CK_FF_MEAN": 279,
+  "CK_FF_ALL_MEAN": 279,
+  "CK_FF_MIN": 268,
+  "CK_FF_ALL_MIN": 265,
+  "CK_FF_MAX": 310,
+  "CK_FF_ALL_MAX": 310,
   "CK_ROUTE_REF": "SS"
  },
  "lib_clock_pin": "ck",
@@ -91,7 +91,7 @@
  "clock_measurements": {
   "ck": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/routes/qkd_kvs_hroot_k1_k1_6355d06bd/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_asap7_ref_qkd_kvs_hroot_k1_k1_6355d06bd/base",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/routes/qkd_kvs_hroot_k1_k1_da14c0bdf/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_asap7_ref_qkd_kvs_hroot_k1_k1_da14c0bdf/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
@@ -99,16 +99,16 @@
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 2331,
-     "mean": 303.5,
-     "min": 267.4,
-     "max": 362.8
+     "n": 3121,
+     "mean": 438.9,
+     "min": 426.8,
+     "max": 470.5
     },
     "all": {
-     "n": 2331,
-     "mean": 303.5,
-     "min": 267.4,
-     "max": 362.8
+     "n": 3894,
+     "mean": 438.2,
+     "min": 425.1,
+     "max": 470.5
     },
     "errors": [],
     "macros": null,
@@ -116,16 +116,16 @@
    },
    "tt": {
     "boundary": {
-     "n": 2331,
-     "mean": 236.2,
-     "min": 201.9,
-     "max": 291.0
+     "n": 3121,
+     "mean": 339.8,
+     "min": 328.1,
+     "max": 370.6
     },
     "all": {
-     "n": 2331,
-     "mean": 236.2,
-     "min": 201.9,
-     "max": 291.0
+     "n": 3894,
+     "mean": 339.1,
+     "min": 326.0,
+     "max": 370.6
     },
     "errors": [],
     "macros": null,
@@ -133,16 +133,16 @@
    },
    "ff": {
     "boundary": {
-     "n": 2331,
-     "mean": 196.3,
-     "min": 163.1,
-     "max": 246.3
+     "n": 3121,
+     "mean": 279.3,
+     "min": 267.5,
+     "max": 309.5
     },
     "all": {
-     "n": 2331,
-     "mean": 196.3,
-     "min": 163.1,
-     "max": 246.3
+     "n": 3894,
+     "mean": 278.6,
+     "min": 265.1,
+     "max": 309.5
     },
     "errors": [],
     "macros": null,
@@ -157,24 +157,24 @@
     "outliers": []
    },
    "env": {
-    "CK_SS_MEAN": 304,
-    "CK_SS_ALL_MEAN": 304,
-    "CK_SS_MIN": 267,
-    "CK_SS_ALL_MIN": 267,
-    "CK_SS_MAX": 363,
-    "CK_SS_ALL_MAX": 363,
-    "CK_TT_MEAN": 236,
-    "CK_TT_ALL_MEAN": 236,
-    "CK_TT_MIN": 202,
-    "CK_TT_ALL_MIN": 202,
-    "CK_TT_MAX": 291,
-    "CK_TT_ALL_MAX": 291,
-    "CK_FF_MEAN": 196,
-    "CK_FF_ALL_MEAN": 196,
-    "CK_FF_MIN": 163,
-    "CK_FF_ALL_MIN": 163,
-    "CK_FF_MAX": 246,
-    "CK_FF_ALL_MAX": 246,
+    "CK_SS_MEAN": 439,
+    "CK_SS_ALL_MEAN": 438,
+    "CK_SS_MIN": 427,
+    "CK_SS_ALL_MIN": 425,
+    "CK_SS_MAX": 470,
+    "CK_SS_ALL_MAX": 470,
+    "CK_TT_MEAN": 340,
+    "CK_TT_ALL_MEAN": 339,
+    "CK_TT_MIN": 328,
+    "CK_TT_ALL_MIN": 326,
+    "CK_TT_MAX": 371,
+    "CK_TT_ALL_MAX": 371,
+    "CK_FF_MEAN": 279,
+    "CK_FF_ALL_MEAN": 279,
+    "CK_FF_MIN": 268,
+    "CK_FF_ALL_MIN": 265,
+    "CK_FF_MAX": 310,
+    "CK_FF_ALL_MAX": 310,
     "CK_ROUTE_REF": "SS"
    },
    "lib_clock_pin": "ck",

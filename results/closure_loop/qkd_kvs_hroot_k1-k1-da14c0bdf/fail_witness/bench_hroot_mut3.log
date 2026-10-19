@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_hroot_k1-k1-da14c0bdf bench bench_hroot_mut3 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf log cl/bench_hroot_mut3.a1b1.log captured 2026-10-19T02:32:08-07:00
+# fail_regex '^KVS_TILE FAIL tile=hroot .* mut=3 '
+MISMATCH t=3 out o_pc
+MISMATCH t=4 out o_pc
+MISMATCH t=5 out o_pc
+MISMATCH t=6 out o_pc
+MISMATCH t=7 out o_pc
+KVS_TILE FAIL tile=hroot edges=4000 checks=51961 errors=3997 mut=3 (removed child u_esh)
