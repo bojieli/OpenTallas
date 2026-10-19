@@ -134,7 +134,7 @@ def run(a):
     pv_merge_exact = bool(A.np.array_equal(A.zb(merged), A.zb(golden_node)))
     fixed_go_exact = [(g[1],g[2]) for g in gos] == [(b['prog'][0],b['go_at']) for b in c['blocks']]
     ok = pv_merge_exact and fixed_go_exact and r.returncode == 0 and not fault and bool(done) and len(gos) == len(c['blocks']) and all(x['mismatches'] == 0 and x['results'] == x['expected'] for x in results)
-    doc = dict(pass_=ok, mutation=a.mut, source=src, compiler_sha256=S.sha(Path(__file__)),
+    doc = dict(pass_=ok, mutation=a.mut, source=src, service_build_revision=(S.ROOT / 'REV').read_text().strip() if (S.ROOT / 'REV').exists() else None, compiler_sha256=S.sha(Path(__file__)),
                event_sha256={p.name:S.sha(p) for p in sorted(d.glob('*.hex'))},
                budget=c['budget'], executable=str(exe),
                executable_sha256=S.sha(exe), rc=r.returncode, fault=fault, done=done, fixed_go_count=len(gos), fixed_go_exact=fixed_go_exact,
