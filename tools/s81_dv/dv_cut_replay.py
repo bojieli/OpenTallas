@@ -408,8 +408,8 @@ def gen(a):
         return 2
     words, unenc, offdie, internal_ev = landed_words(S, T, die)
     host = None
-    if a.host_boot is not None:
-        words, host = host_boot_words(a, die, prog, S, words)
+    if a.host_boot is not None or a.idle_run:
+        words, host = host_boot_words(a, die, prog, S, words, cut)
     traces = {}
     for spec in a.trace:
         pdir, run = spec.split('=', 1)
@@ -624,7 +624,31 @@ def word_at(die, inst, port, val, cycle_land, kind, tag, hold=None):
     return w
 
 
-def host_boot_words(a, die, prog, S, words):
+def seqhost_live(die, cut, idle_run):
+    """TOK-S81-GAPS/CTL: the bench cycle from which u_seqhost captures host words.  dsdv_sh_lk gates the host valid with
+    its relayed reset (fi[0] <= rn & f_host[0]) and t_host <= rn ? {alive 1, ...} : 0, so the first edge t_host's alive bit
+    (bit 76) leaves the unit = rn release + 1.  Read from an idle run of THIS build (trace.txt of the cut's landed
+    t_host lane): live = alive landed cycle - lane age - 1.  A boot word landing before that is silently dropped
+    (10-18 G8 cut_3S_ctl L0: header words at 64/69 dropped, rn up at ~80 -> issuer fault code 4, no job)."""
+    pb = die.port_bits('u_seqhost', 't_host')
+    nb = pb[76] if len(pb) > 76 else None
+    lk = next((k for k, L in die.links.items() if nb and nb in L['src_bits']), None)
+    if lk is None:
+        raise SystemExit('--idle-run: u_seqhost.t_host alive bit has no lane in this build')
+    L = die.links[lk]
+    port = cut.out_by_net.get(L['out_net'])
+    if port is None:
+        raise SystemExit(f'--idle-run: the cut does not observe {L["out_net"]} (t_host lane {lk})')
+    bit = L['src_bits'].index(nb) - port.get('lo', 0)
+    tr = Path(idle_run) / 'trace.txt'
+    for line in tr.read_text().split('\n'):
+        f = line.split()
+        if len(f) == 3 and int(f[1]) == port['index'] and (int(f[2], 16) >> bit) & 1:
+            return dict(lane=lk, age=L['age'], alive_landed=int(f[0]), live=int(f[0]) - L['age'] - 1, trace=str(tr))
+    raise SystemExit(f'--idle-run: t_host alive never seen on {port["port"]} in {tr}')
+
+
+def host_boot_words(a, die, prog, S, words, cut=None):
     """--host-boot B: the compiled host boot stream (prog/host_boot.memh, 515-b host words, the dsdv_seq_host L0
     format) delivered on u_seqhost.f_host one word every 5th edge from bench cycle B (tb_dv_prog_seqhost's host slots),
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
@@ -633,6 +657,13 @@ def host_boot_words(a, die, prog, S, words):
     build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 4 (the compiled V command leaves
     vo at KS + issue + 11 = issue + 7 in layer cycles: dsdv_seq_host header, check_seqhost.py), so --t0 is set to KS + 4."""
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
+    live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
+    if live is not None:
+        if a.host_boot is None:
+            a.host_boot = live['live'] + 8
+        if a.host_boot < live['live'] + 2:
+            raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
+                             f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
     a.t0 = ks + 4
     ksw = int(a.ks_word, 16)
@@ -645,7 +676,7 @@ def host_boot_words(a, die, prog, S, words):
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
-    return out, dict(boot_start=a.host_boot, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
+    return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
                      ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
@@ -831,6 +862,8 @@ def main(argv=None):
     g.add_argument('--lane-age', action='store_true')
     g.add_argument('--allow-stale', action='store_true')
     g.add_argument('--host-boot', type=int, default=None, help='bench cycle of the first host boot word (cuts with u_seqhost)')
+    g.add_argument('--idle-run', default=None, help='idle run dir of this cut build (trace.txt): derives u_seqhost reset '
+                   'release; --host-boot defaults to it + 8 and is refused below it + 2')
     g.add_argument('--ks', type=int, default=None)
     g.add_argument('--ks-word', default=f'{(1 << 52) | (37 << 42) | (1000 << 21) | 5000:x}')
     g = sp.add_parser('check')
