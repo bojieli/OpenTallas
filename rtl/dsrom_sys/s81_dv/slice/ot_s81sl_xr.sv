@@ -104,6 +104,12 @@ module ot_s81sl_xr #(
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev <= 1'b0; wv <= 1'b0; vv <= 1'b0; lov <= 5'd0; pv <= 5'd0; rbv <= 1'b0; end
         else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v; pv <= p_v; rbv <= x_rbv; end
+    // XR5 (S81-SAFE-FIX 10-19, checklist item 3): kept copies of the lo_v input flop, one per 32-bit word of each leaf's
+    // lo_d gate (lov[k] drove 256 AND gates); same D, same edge -> function and cycles unchanged.
+    (* keep *) reg [5*8-1:0] lov_c;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) lov_c <= {40{1'b0}};
+        else for (k = 0; k < 40; k = k + 1) lov_c[k] <= lo_v[k / 8];
     always @(posedge clk) begin
         eb <= dl_e; wb <= dl_w; vb <= dl_vb; bb <= (HB != 0) ? bi : {W{1'b0}}; lod <= lo_d; pd <= p_d; rbd <= x_rbd;
         sid_c <= sid;
@@ -132,15 +138,21 @@ module ot_s81sl_xr #(
     reg [2:0] nlo0; reg [255:0] lo_sel0;
     always @(*) begin
         nlo0 = 3'd0; lo_sel0 = 256'd0;
-        for (k = 0; k < 5; k = k + 1) begin nlo0 = nlo0 + lov[k]; if (lov[k]) lo_sel0 = lo_sel0 | lod[256 * k +: 256]; end
+        for (k = 0; k < 5; k = k + 1) nlo0 = nlo0 + lov[k];
+        for (k = 0; k < 40; k = k + 1) if (lov_c[k]) lo_sel0[32 * (k % 8) +: 32] = lo_sel0[32 * (k % 8) +: 32] | lod[32 * k +: 32];
     end
     wire [V-1:0] sc_b0 = e_sc ? eb[V-1:0] : wb[V-1:0];
     // stage-1 registers
     reg cvld, vct, esc, wsc, rdv, f1; reg [5:0] tg; reg [4:0] lmask, rwe, rwr, lov1; reg [159:0] body;
     reg [1:0] rnp; reg [9:0] rrow; reg [1023:0] rdat; reg [255:0] lo_sel; reg [V-2:0] cix;
+    // XR5 (S81-SAFE-FIX 10-19, checklist item 3): registered selects replicated as KEPT copies so no flop drives more than
+    // ~32 data loads: rwe_c = rwe per 32-bit word of a leaf's 1024-b unpacker, rwr_c = rwr per 32-bit word of a leaf's
+    // 256-b sw_d, tg1_c = tg[1] for x_eps / x_scale.  Same D as the master bits -> function and cycles unchanged.
+    (* keep *) reg [5*32-1:0] rwe_c; (* keep *) reg [5*8-1:0] rwr_c; (* keep *) reg [1:0] tg1_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin cvld <= 1'b0; vct <= 1'b0; esc <= 1'b0; wsc <= 1'b0; rdv <= 1'b0; f1 <= 1'b0; tg <= 6'd0;
-                         rwe <= 5'd0; rwr <= 5'd0; lov1 <= 5'd0; end
+                         rwe <= 5'd0; rwr <= 5'd0; lov1 <= 5'd0; rwe_c <= {160{1'b0}}; rwr_c <= {40{1'b0}};
+                         tg1_c <= 2'd0; end
         else begin
             cvld <= ce || cw || cv; vct <= v_ctl; esc <= e_sc; wsc <= w_sc; rdv <= rdv0; lov1 <= lov;
             for (k = 0; k < 6; k = k + 1) tg[k] <= (ce || cw || cv) && tgt0 == k;
@@ -148,6 +160,9 @@ module ot_s81sl_xr #(
                 rwe[k] <= rdv0 && rl0 == k;
                 rwr[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k];
             end
+            for (k = 0; k < 160; k = k + 1) rwe_c[k] <= rdv0 && rl0 == k / 32;
+            for (k = 0; k < 40; k = k + 1) rwr_c[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k / 8];
+            for (k = 0; k < 2; k = k + 1) tg1_c[k] <= (ce || cw || cv) && tgt0 == 5'd1;
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
             f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
                   ((ce || cw || cv) && tgt0 > 5'd5);
@@ -170,6 +185,18 @@ module ot_s81sl_xr #(
     reg s_scv;
     reg [1023:0] pk; reg [1:0] pn; reg pk_go;
     reg [W-1:0] snd;
+    // XR5: pkw_c[8 p + g] = (|lov1) && pn == p for 32-bit word g of pair p, and cis_c[g] = pk_go && !vct for the 32-bit
+    // word g of ci_r, both registered from the next-state of their masters (KEPT copies; equal to the old decode every
+    // cycle, the relay regions rs_c / rs_s release on the same edge).
+    (* keep *) reg [4*8-1:0] pkw_c; (* keep *) reg [(W + 30) / 32 - 1:0] cis_c;
+    wire [1:0] pn_nx = tg[4] ? 2'd0 : (|lov1) ? ((pn == s_np) ? 2'd0 : pn + 2'd1) : pn;
+    wire pk_go_nx = !tg[4] && (|lov1) && pn == s_np;
+    always @(posedge clk or negedge rs_s)
+        if (!rs_s) begin pkw_c <= {32{1'b0}}; cis_c <= {((W + 30) / 32){1'b0}}; end
+        else begin
+            for (k = 0; k < 32; k = k + 1) pkw_c[k] <= (|lov) && pn_nx == k / 8;
+            for (k = 0; k < (W + 30) / 32; k = k + 1) cis_c[k] <= pk_go_nx && !v_ctl;
+        end
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin s_dir <= 4'd0; pn <= 2'd0; pk_go <= 1'b0; s_scv <= 1'b0; end
         else begin
@@ -182,8 +209,8 @@ module ot_s81sl_xr #(
                 pk_go <= pn == s_np;
             end
         end
-    always @(posedge clk)                                        // fixed-index pair writes (decoded pn)
-        for (k = 0; k < 4; k = k + 1) if ((|lov1) && pn == k) pk[256 * k +: 256] <= lo_sel;
+    always @(posedge clk)                                        // fixed-index pair writes (decoded pn, kept copies)
+        for (k = 0; k < 32; k = k + 1) if (pkw_c[k]) pk[32 * k +: 32] <= lo_sel[32 * (k % 8) +: 32];
     always @(*) begin
         snd = {W{1'b0}};
         snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_c; snd[20:13] = 8'd0;
@@ -199,7 +226,8 @@ module ot_s81sl_xr #(
             ci_v <= vct || (pk_go && |s_dir[2:0]) || sc_rel;
         end
     assign ci_b = {ci_r, ci_v};
-    always @(posedge clk) ci_r <= (pk_go && !vct) ? snd[W-1:1] : {{(W - V){1'b0}}, cix};
+    wire [W-2:0] cixw = {{(W - V){1'b0}}, cix};
+    always @(posedge clk) for (i = 0; i < W - 1; i = i + 1) ci_r[i] <= cis_c[i / 32] ? snd[i + 1] : cixw[i];
     generate if (HB != 0) begin : g_bo
         reg [W-1:0] bo_r;
         always @(posedge clk or negedge rs_s) if (!rs_s) bo_r <= {W{1'b0}}; else bo_r <= (pk_go && s_dir[3]) ? snd : {W{1'b0}};
@@ -211,21 +239,34 @@ module ot_s81sl_xr #(
     // ---------------------------------------------------------------- RD receive: per-leaf unpackers
     reg [4:0] ub; reg [1:0] un [0:4]; reg [1:0] ul [0:4]; reg [9:0] ur [0:4]; reg [1023:0] ud [0:4];
     reg ucol;
+    // XR5: un_c[32 k + 2 g +: 2] = un[k] per 16-bit half-word g of leaf k's sw_d read (the 4:1 row-pair select drove ~512
+    // mux loads per bit; now <= 32); KEPT copies registered from un's next state.
+    (* keep *) reg [5*16*2-1:0] un_c; reg [1:0] un_nx [0:4];
+    always @(*)
+        for (k = 0; k < 5; k = k + 1) begin
+            un_nx[k] = un[k];
+            if (ub[k]) un_nx[k] = un[k] + 2'd1;
+            if (rwe[k]) un_nx[k] = 2'd0;
+        end
+    always @(posedge clk or negedge rs_r)
+        if (!rs_r) un_c <= {160{1'b0}};
+        else for (k = 0; k < 80; k = k + 1) un_c[2 * k +: 2] <= un_nx[k / 16];
     always @(posedge clk or negedge rs_r)
         if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
         else begin
             ucol <= 1'b0;
             for (k = 0; k < 5; k = k + 1) begin
                 sw_v[k] <= 1'b0;
+                un[k] <= un_nx[k];
                 if (ub[k]) begin
-                    sw_v[k] <= 1'b1; un[k] <= un[k] + 2'd1;
+                    sw_v[k] <= 1'b1;
                     if (un[k] == ul[k]) ub[k] <= 1'b0;
                 end
                 if (rwe[k]) begin
 `ifndef OT_S81SL_XR_MUT_NOCOL
                     if (ub[k] && un[k] != ul[k]) ucol <= 1'b1;
 `endif
-                    ub[k] <= 1'b1; un[k] <= 2'd0;
+                    ub[k] <= 1'b1;
                 end
                 if (rwr[k]) begin
                     sw_v[k] <= 1'b1;
@@ -233,12 +274,16 @@ module ot_s81sl_xr #(
                 end
             end
         end
+    wire [255:0] rwb = {128'd0, body[141:14]};
     always @(posedge clk)
         for (k = 0; k < 5; k = k + 1) begin
-            if (rwe[k]) begin ul[k] <= rnp; ur[k] <= rrow; ud[k] <= rdat; end
+            if (rwe[k]) begin ul[k] <= rnp; ur[k] <= rrow; end
+            for (i = 0; i < 32; i = i + 1) if (rwe_c[32 * k + i]) ud[k][32 * i +: 32] <= rdat[32 * i +: 32];
+            for (i = 0; i < 16; i = i + 1)
+                sw_d[256 * k + 16 * i +: 16] <= rwr_c[8 * k + i / 2] ? rwb[16 * i +: 16]
+                                                                    : ud[k][256 * un_c[32 * k + 2 * i +: 2] + 16 * i +: 16];
             if (rwr[k]) begin
                 sw_a[10 * k +: 10] <= body[9:0]; sw_m[8 * k +: 8] <= {4'd0, body[13:10]};
-                sw_d[256 * k +: 256] <= {128'd0, body[141:14]};
             end else begin
 `ifdef OT_S81SL_XR_MUT_ROW
                 sw_a[10 * k +: 10] <= ur[k] + {8'd0, un[k]};          // mutant: row-pair stride 1 instead of 2
@@ -246,7 +291,6 @@ module ot_s81sl_xr #(
                 sw_a[10 * k +: 10] <= ur[k] + {7'd0, un[k], 1'b0};
 `endif
                 sw_m[8 * k +: 8] <= 8'hff;
-                sw_d[256 * k +: 256] <= ud[k][256 * un[k] +: 256];
             end
         end
 
@@ -265,27 +309,40 @@ module ot_s81sl_xr #(
         end
     always @(posedge clk) begin
         c_d <= body;
-        if (tg[1]) begin x_eps <= body[31:0]; x_scale <= body[95:64]; end
+        if (tg1_c[0]) x_eps <= body[31:0];
+        if (tg1_c[1]) x_scale <= body[95:64];
         is_d <= body; cfg_d <= body;
     end
     // partial collector: the 5 partials arrive on one edge; xfin takes them in leaf order 0..4 (input timing unchanged)
     reg [31:0] pq [0:4]; reg [2:0] pi; reg prun;
     // ENG collector: 5 triples of one copy -> 15 words (t = 5 kind + leaf)
     reg [95:0] eqd [0:4]; reg [1:0] ecp; reg [3:0] et; reg [2:0] el; reg [1:0] ekd; reg erun; reg ebad;
+    // XR5: registered one-hot word selects for x_s (el / ekd / pi drove 480 / 160 / 160 mux loads): eoh[t] = erun &&
+    // et == t (word t = kind * 5 + leaf -> eqd[t % 5][32 (t / 5) +: 32]), poh[i] = (pi == i).  Same values every cycle.
+    reg [14:0] eoh; reg [4:0] poh; reg [31:0] xs_e, xs_p;
+    always @(*) begin
+        xs_e = 32'd0; xs_p = 32'd0;
+        for (k = 0; k < 15; k = k + 1) if (eoh[k]) xs_e = xs_e | eqd[k % 5][32 * (k / 5) +: 32];
+`ifdef OT_S81SL_XR_MUT_PORDER
+        for (k = 0; k < 5; k = k + 1) if (poh[k]) xs_p = xs_p | pq[4 - k];       // mutant: partials in reverse order
+`else
+        for (k = 0; k < 5; k = k + 1) if (poh[k]) xs_p = xs_p | pq[k];
+`endif
+    end
     always @(*) begin
         ebad = (|ev_c) && (ev_c != 5'b11111);
         for (k = 1; k < 5; k = k + 1) if (ev_c[k] && ec_c[2 * k +: 2] != ec_c[1:0]) ebad = 1'b1;
     end
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 1'b0; erun <= 1'b0; et <= 4'd0; el <= 3'd0;
-                         ekd <= 2'd0; g_v <= 1'b0; end
+                         ekd <= 2'd0; g_v <= 1'b0; eoh <= 15'd0; poh <= 5'd1; end
         else begin
             x_sv <= prun || erun;
-            if (|pv) begin prun <= 1'b1; pi <= 3'd0; end
-            else if (prun) begin pi <= pi + 3'd1; if (pi == 3'd4) prun <= 1'b0; end
-            if (|ev_c) begin erun <= 1'b1; et <= 4'd0; el <= 3'd0; ekd <= 2'd0; end
+            if (|pv) begin prun <= 1'b1; pi <= 3'd0; poh <= 5'd1; end
+            else if (prun) begin pi <= pi + 3'd1; poh <= {poh[3:0], 1'b0}; if (pi == 3'd4) prun <= 1'b0; end
+            if (|ev_c) begin erun <= 1'b1; et <= 4'd0; el <= 3'd0; ekd <= 2'd0; eoh <= 15'd1; end
             else if (erun) begin
-                et <= et + 4'd1;
+                et <= et + 4'd1; eoh <= {eoh[13:0], 1'b0};
                 if (el == 3'd4) begin el <= 3'd0; ekd <= ekd + 2'd1; end else el <= el + 3'd1;
                 if (et == 4'd14) erun <= 1'b0;
             end
@@ -296,12 +353,8 @@ module ot_s81sl_xr #(
         for (k = 0; k < 5; k = k + 1) if (pv[k]) pq[k] <= pd[32 * k +: 32];
         for (k = 0; k < 5; k = k + 1) if (ev_c[k]) eqd[k] <= ed_c[96 * k +: 96];
         if (|ev_c) ecp <= ec_c[1:0];
-        if (erun) begin x_si <= ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el}; x_s <= eqd[el][32 * ekd +: 32]; end
-`ifdef OT_S81SL_XR_MUT_PORDER
-        else begin x_si <= {5'd0, pi}; x_s <= pq[3'd4 - pi]; end      // mutant: partials handed to xfin in reverse order
-`else
-        else begin x_si <= {5'd0, pi}; x_s <= pq[pi]; end
-`endif
+        if (erun) begin x_si <= ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el}; x_s <= xs_e; end
+        else begin x_si <= {5'd0, pi}; x_s <= xs_p; end
         rb_d <= rbd;
         g_c <= egc_c; g_d <= egd_c;
     end
