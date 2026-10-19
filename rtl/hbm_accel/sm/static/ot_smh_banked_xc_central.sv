@@ -64,7 +64,7 @@ module ot_smh_banked_xc_central #(
         (CLASS_MUT!=3&&word[108:101]==MAGIC&&(!command_context_valid_observe||word[100:98]==3'd3||word[100]!=command_class_observe));
       end
      assign command_class_observe=PREL!=0?class_c:class_r;
-     assign command_context_valid_observe=PREL!=0?valid_c:valid_r;
+     assign command_context_valid_observe=CLASS_MUT==4?1'b0:(PREL!=0?valid_c:valid_r);
      assign fault=fault_q;
     end else begin:g_legacy_class
      assign command_class_observe=0;assign command_context_valid_observe=0;assign fault=calendar_fault;

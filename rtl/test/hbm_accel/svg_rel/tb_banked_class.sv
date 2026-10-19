@@ -22,7 +22,7 @@ module banked_class_case #(parameter SVG=1,PREL=1,MUT=0,W=SVG?135:173,XW=SVG?47:
  wire rc=SVG?refctx[XW-1]:refctx[4];wire fl=SVG?refctx[2]:refctx[0];
  always @(posedge clk)begin class_r<=refv?rc:0;class_c<=class_r;if(PREL&&refv&&reford==0&&fl)class_c<=rc;end
  always @(posedge clk or negedge rst_n)if(!rst_n)begin valid_r<=0;valid_c<=0;end else begin valid_r<=refv;valid_c<=valid_r;if(PREL&&refv&&reford==0&&fl)valid_c<=1;end
- wire ec=PREL?class_c:class_r,ev=PREL?valid_c:valid_r;
+ wire ec=PREL?class_c:class_r,ev=MUT==4?1'b0:(PREL?valid_c:valid_r);
  reg[W-1:0]aq[0:1];reg cq[0:1],vq[0:1],dq[0:1],fq[0:1];reg semantic_fault=0;reg[W-1:0]consume_word=0;reg consume_valid=0,consume_class=0;
  integer warm=0,cycle=0,checked=0,completed=0,magic_seen=0,inject_seen=0;
  // Consume the previously launched expected pins at this edge, exactly like
