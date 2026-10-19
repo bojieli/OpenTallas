@@ -42,6 +42,7 @@ import lane_groups as LG  # noqa: E402
 TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
 TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
+COLL_MASTER = 'qfd_collective_static_io_production'
 D2D_MASTER = 'qfd_d2d_static'
 DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
 DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
@@ -99,6 +100,10 @@ def gen_params(insts, hr_rows, image=IMAGE):
     """the GEN's assignments: insts = [(name, master)] of the die model -> {master: {param: value, _source}}."""
     masters = {mst for _, mst in insts}
     out, rec = {}, {}
+    if COLL_MASTER in masters:
+        # SAFE-QW-COLL: physical faces use core pin registers. Their calendar
+        # compensates KC/L by one edge, so the published transport age is unchanged.
+        out[COLL_MASTER] = dict(TOK_REG=1, _source='SAFE-QW-COLL: registered face pins; KC/L compensated, no added cycle')
     if TT_MASTER in masters:
         T, r = xpf_transport_edges(hr_rows)
         out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, STAGE_ME=TT_STAGE_ME,
@@ -198,6 +203,8 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
+        if mst == COLL_MASTER and prm.get(mst, {}).get('TOK_REG') != 1:
+            fails.append(f'{COLL_MASTER}.TOK_REG must be 1 (registered physical face pins)')
         if mst == DHOBS_MASTER:
             fails += dhobs_check(mods[mst])
             if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):
