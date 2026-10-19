@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  302.4,
-  302.4
+  280.8,
+  280.8
  ],
  "core": [
   2.16,
   2.16,
-  300.23999999999995,
-  300.23999999999995
+  278.64,
+  278.64
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -34,8 +34,7 @@
    "u_rank__u_control__cmd_hc",
    "participant_token",
    "participant_pos",
-   "slice_boot_done",
-   "slice_boot_ok",
+   "ck_core",
    "u_rank__peer_service_epoch",
    "u_rank__u_control__kst8",
    "certificate",
@@ -44,7 +43,6 @@
    "engine_result_tag",
    "native_request_tag",
    "hc",
-   "ck_core",
    "engine_result_value",
    "engine_result_cycles",
    "certificate_prefix",
@@ -57,20 +55,16 @@
    "step_retire_token",
    "program_epoch",
    "token_epoch",
-   "cq_client_tag",
-   "seen"
+   "cq_client_tag"
   ],
   "S": [
    "u_rank__raw_rx_d",
    "u_rank__physical_tx_d",
-   "step_client_tag",
-   "step_retire_client_tag",
+   "u_rank__u_control__u_packet__cd",
    "u_rank__u_control__begin_epoch",
    "u_rank__u_control__boot8",
    "step_retire_slot",
    "step_slot",
-   "u_rank__peer_pending_ack",
-   "u_rank__peer_service_ready",
    "host_rst_n",
    "service_faults",
    "allocated_valid",
@@ -97,7 +91,6 @@
   "E": [
    "u_rank__tx_d",
    "u_rank__u_control__u_packet__ctd",
-   "u_rank__guarded_tk",
    "cancel_release_tag",
    "native_result_tag",
    "native_request_trace",
@@ -161,16 +154,23 @@
    "u_rank__u_control__u_packet__ctc",
    "u_rank__u_control__u_packet__ct",
    "u_rank__tx_cr",
-   "u_rank__tx_v"
+   "u_rank__tx_v",
+   "slice_boot_ok",
+   "seen",
+   "u_rank__peer_pending_ack",
+   "u_rank__peer_service_ready"
   ],
   "W": [
    "u_rank__u_control__tk8",
    "u_rank__program_rx_d",
-   "u_rank__u_control__u_packet__cd",
    "cq_pos",
    "cq_slot",
    "die_id",
-   "package_abort"
+   "package_abort",
+   "slice_boot_done",
+   "u_rank__guarded_tk",
+   "step_client_tag",
+   "step_retire_client_tag"
   ]
  },
  "clock_port": "ck_core",
@@ -261,6 +261,13 @@
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_tp8_coordinator_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_rank_codec_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv",
   "physical/ref_tile/qkd_hr_core_peer/kit.env",
   "physical/ref_tile/qkd_hr_core_peer/clock.sdc",
   "physical/ref_tile/qkd_hr_core_peer/signoff.sdc",
