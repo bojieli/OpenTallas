@@ -64,6 +64,12 @@ qkd_kvs_attn kvs_attn(.ck(ckc),.rst_n(rst),.ufh(hf));
             r=Path(d);self.fixture(r,extra='some_consumer real(.a(n_spare ^ n_s0));')
             self.assertEqual(F.inventory(r)['spare_capacity_by_region']['WS'],0)
 
+    def test_unsized_or_unknown_literal_cannot_authorize_spare_capacity(self):
+        for literal in ("'1","36'bx"):
+            with self.subTest(literal=literal), tempfile.TemporaryDirectory() as d:
+                r=Path(d);self.fixture(r,first_a=literal)
+                with self.assertRaisesRegex(ValueError,'unknown or unsized'):F.inventory(r)
+
     def test_dynamic_source_is_not_spare(self):
         with tempfile.TemporaryDirectory() as d:
             r=Path(d);self.fixture(r,first_a='{35\'b0,fault}')

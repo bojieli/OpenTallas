@@ -135,6 +135,8 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
             m,p,c=cells[i];match=family.fullmatch(m)
             if not match or p or int(match.group(2))!=width:
                 raise ValueError('unexpected forwarded station '+i)
+            if re.search(r"(?<![A-Za-z0-9_])'[01xXzZ]|\d+'[sS]?[bBhHdDoO][0-9a-fA-F_]*[xXzZ?]",c['a']):
+                raise ValueError('unknown or unsized payload literal '+i)
             a=P.expr_bits(c['a'],nets);b=P.expr_bits(c['b'],nets)
             if a is None or b is None or len(a)!=width or len(b)!=width:
                 raise ValueError('station width '+i)
