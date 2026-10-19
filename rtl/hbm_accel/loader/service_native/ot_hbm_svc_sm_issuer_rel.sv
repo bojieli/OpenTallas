@@ -32,11 +32,12 @@
 // MUT (bench negative controls): 1 layer stride ignored; 2 expert id ignored (id 0); 3 context row_off dropped.
 module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer LB=(LBANKS>2)?2:1, parameter integer QD=4,
  parameter integer NID=6, parameter integer IDW=9, parameter integer PAW=11, parameter integer DD=256, parameter integer MUT=0,
- parameter integer DAW=(DD>128)?8:7)(
+ parameter integer DAW=(DD>128)?8:7, parameter integer ID_COHORT=0)(
  input wire clk,rst_n,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
  input wire run_v,input wire[DAW-1:0]run_base,input wire[DAW:0]run_count,input wire[7:0]run_layer,
  input wire ids_v,input wire[7:0]ids_layer,input wire[IDW*NID-1:0]ids,
+ input wire[15:0]ids_cohort,
  output reg running,run_done,fault,
  output wire reserve_v,input wire reserve_ready,output wire[31:0]reserve_base,output wire[14:0]reserve_row_base,
  output wire[11:0]reserve_total,output wire[LB-1:0]reserve_bank,output wire[15:0]reserve_epoch,output wire[6:0]reserve_rows,
@@ -71,6 +72,7 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  end endgenerate
  // run / ids registers
  reg[7:0]layer_q,ids_layer_q;reg ids_ok_q;reg[IDW*NID-1:0]ids_q;
+ reg[15:0]run_cohort_q;
  // reserve pipeline A -> P -> S
  reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[199:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;
  wire[3:0]a_sel=a[176:173];
@@ -104,14 +106,20 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    running<=0;run_done<=0;fault<=0;rd_q<=0;rp<=0;rp_q<=0;n_rd<=0;n_go<=0;a_v<=0;p_v<=0;st_v<=0;st<=0;rc<=0;
-   sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;layer_q<=0;ids_layer_q<=0;ids_ok_q<=0;
+   sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;layer_q<=0;ids_layer_q<=0;ids_ok_q<=0;run_cohort_q<=0;
   end else begin
    run_done<=0;
    if(run_v)begin
     if(running||run_count==0||{1'b0,run_base}+run_count>(DD))fault<=1;
-    else begin running<=1;rp<=run_base;n_rd<=run_count;n_go<=run_count;rc<=0;layer_q<=run_layer;end
+    else begin
+     running<=1;rp<=run_base;n_rd<=run_count;n_go<=run_count;rc<=0;layer_q<=run_layer;
+     if(ID_COHORT!=0)begin ids_ok_q<=0;run_cohort_q<=run_cohort_q+16'd1;end
+    end
    end
-   if(ids_v)begin ids_ok_q<=1;ids_layer_q<=ids_layer;ids_q<=ids;end
+   if(ids_v)begin
+    if(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q))fault<=1;
+    else begin ids_ok_q<=1;ids_layer_q<=ids_layer;ids_q<=ids;end
+   end
    rd_q<=rd_go;rp_q<=rp;
    if(running&&!run_v)rc<=rc+24'd1;
    if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
@@ -124,6 +132,8 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
     p_lay<=(MUT==1)?24'd0:24'(layer_q)*24'(a[157:143]);
     p_id<=24'(a_id)*24'(a[172:158]);
    end
+   // In native mode a missing/stale result cannot silently hold an expert past its fixed slot.
+   if(ID_COHORT!=0&&a_v&&a_sel!=0&&!a_ids&&rc>=a[142:119])fault<=1;
    if(s_go)begin
     p_v<=0;st_v<=1;
     st<={p[142:47],s_blk[17:3],p[31:10],s_blk[2:0],p[6:0]};
