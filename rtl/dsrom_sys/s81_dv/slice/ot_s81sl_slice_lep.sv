@@ -175,7 +175,7 @@ module ot_s81sl_lep_core #(
     localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
     localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
     localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
-    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+7:0;
+    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8:0;
     localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     wire [3+NRX_RST:0] rr;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
@@ -244,11 +244,12 @@ module ot_s81sl_lep_core #(
         wire command_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+mb/24]:rn;
         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mu_c[mb];
     end
+    wire tag_state_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+7]:rn;
     wire mcv = mcq[0];
     wire [9:0] mcu = mcq[12:3];
     wire ab_ok = (AB_EN != 0) && mcu != 10'd0;           // the latency user (0) is always on copy A
-    always @(posedge clk or negedge rn)
-        if (!rn) begin wn <= '0; w_ab <= 1'b0; te <= 1'b0; end
+    always @(posedge clk or negedge tag_state_reset)
+        if (!tag_state_reset) begin wn <= '0; w_ab <= 1'b0; te <= 1'b0; end
         else begin
             if (mcv) begin
                 if (wn != '0 && !(rov && wn == NBW'(1))) te <= 1'b1;     // a window while one is open
@@ -757,11 +758,16 @@ module ot_s81sl_lep_core #(
             fk_s <= rel && hacc && h0[3:1] == 3'd2 && ksp[52];
         end
     if(MU_EN!=0 && RX_SRAM!=0) begin:g_host_local
+      wire [4:0] host_enable;wire key_enable;
+      for(genvar hg=0;hg<5;hg=hg+1) begin:g_enable
+        (* keep=1 *) ot_s81sl_lep_host_enable u_host(.ne0(rnex[0]),.ne1(rnex[1]),.hit(rhostx[0]),.en(host_enable[hg]));
+      end
+      (* keep=1 *) ot_s81sl_lep_host_enable u_key(.ne0(rnex[0]),.ne1(rnex[1]),.hit(rksx[0]),.en(key_enable));
       for(c=0;c<37;c=c+1) begin:g_slice
         (* keep="true" *) reg enable_r;
         wire hit=(c<33)?rhostx[0]:rksx[0];
         always @(posedge clk or negedge rr[HOST_RSTBASE+c])
-          if(!rr[HOST_RSTBASE+c]) enable_r<=0;else enable_r<=rnex[0] && rnex[1] && hit;
+          if(!rr[HOST_RSTBASE+c]) enable_r<=0;else enable_r<=(c<33)?host_enable[c/8]:key_enable;
         if(c<33) begin:g_host
           localparam integer LO=16*c,HSW=(514-LO<16)?514-LO:16;
           always @(posedge clk) if(enable_r) fh_d[LO+:HSW]<=h0[4+LO+:HSW];
@@ -1263,4 +1269,8 @@ endmodule
  wire push=ring || host_go || key_go;
  wire bsel=ring && open && pair_b;
  assign pp={push && bsel,push && !bsel};
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_lep_host_enable(input wire ne0,ne1,hit,output wire en);
+ assign en=ne0 && ne1 && hit;
 endmodule
