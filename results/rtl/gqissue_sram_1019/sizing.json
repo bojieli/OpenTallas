@@ -4,7 +4,7 @@
   "quantisers": 2,
   "width": 1024,
   "ring_slots": 16,
-  "read_offset_slots": 8,
+  "read_offset_slots": 7,
   "macros_per_quantiser": 4,
   "total_macros": 8,
   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
@@ -29,6 +29,7 @@
   "data_cycle_delta": 0,
   "AQ_latency_edges": 13,
   "II": 1,
-  "delay": "data at posedge n -> negedge launch -> macro write n+1 -> read slot-8 n+9; q[n]=d[n-9]; writes and reads always different addresses",
-  "schedule": "static counter; no backpressure/credits; same golden reduction/rounding. +2face-reset edges already required by r4; main ot_keep_regs enables OT_RST_LAND when pin_regs disabled."
+  "delay": "d[n] -> negedge launch -> macro write n+1 -> read slot-7 n+8 -> macro-local capture n+9; q[n]=d[n-9]",
+  "schedule": "static counter; no backpressure/credits; same golden reduction/rounding. +2face-reset edges already required by r4; main ot_keep_regs enables OT_RST_LAND when pin_regs disabled.",
+  "timing": "SS macro clk-to-Q455.32ps: full-cycle macro-local capture before S9 arithmetic; next arithmetic gets standard flop launch, preserving its original stage budget"
 }

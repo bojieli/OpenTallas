@@ -292,12 +292,14 @@ endmodule
 
 `ifdef OT_COLLQ_SRAM
 // Nine-edge, II1 delay on a16-slot SRAM ring. Data sampled at negedge
-// after source edge; write next posedge. Read slot8 behind, written8
-// edges earlier: q after edge n equals d after edge n-9. Distinct read
+// after source edge; write next posedge. Read slot7 behind, then capture
+// macro output on the next edge: q[n]=d[n-9]. Distinct read
 // and write addresses avoid macro collision assumptions. No new reset on data.
 module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
-    input wire clk, input wire rst_n, input wire [1023:0] d, output wire [1023:0] q
+    input wire clk, input wire rst_n, input wire [1023:0] d, output reg [1023:0] q
 );
+    wire [1023:0] rd;
+    always @(posedge clk) q <= rd; // macro-local full-cycle read capture before S9 arithmetic
     reg [3:0] slot;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) slot <= 4'd0;
@@ -308,11 +310,11 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
         reg [255:0] wd_n;
         always @(negedge clk) begin
             wa_n <= slot;
-            ra_n <= slot - ((MUT != 0) ? 4'd7 : 4'd8);
+            ra_n <= slot - ((MUT != 0) ? 4'd6 : 4'd7);
             wd_n <= d[256*k +: 256];
         end
         ot_sram_1r1w_128x256_m1_r2c2 u_mem (
-            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(q[256*k +: 256]),
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(rd[256*k +: 256]),
             .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n),
             .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
