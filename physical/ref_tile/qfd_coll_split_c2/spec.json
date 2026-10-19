@@ -1,0 +1,254 @@
+{
+ "name": "qfd_coll_split_c2",
+ "top": "ot_coll_split_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/rom/ot_coll_tp8_split.sv",
+  "rtl/rom/ot_coll_rst_leaf.sv",
+  "rtl/rom/ot_coll_fold_slice.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_bb.v"
+ ],
+ "params": {
+  "LU": 66,
+  "LS": 391
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 181.44
+ },
+ "std_area_um2": 1880,
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "pkg_s",
+   "die_ps",
+   "cmd_v",
+   "cmd_mode",
+   "cmd_words",
+   "cmd_tag",
+   "cmd_free",
+   "in_valid",
+   "in_last",
+   "in_mode",
+   "in_tag",
+   "out_valid",
+   "out_last",
+   "out_rank",
+   "out_err",
+   "fault",
+   "fault_code"
+  ],
+  "W": [
+   "sx1_valid",
+   "sx1_meta",
+   "sx2_valid",
+   "sx2_meta",
+   "sr1_valid",
+   "sr1_meta",
+   "sr2_valid",
+   "sr2_meta",
+   "sx1_peer_slot",
+   "sx2_peer_slot"
+  ],
+  "E": [
+   "sx0_valid",
+   "sx0_meta",
+   "sr0_valid",
+   "sr0_meta",
+   "sx0_peer_slot",
+   "up_valid",
+   "up_meta",
+   "up_slot",
+   "dp_valid",
+   "dp_meta",
+   "ur_valid",
+   "ur_meta",
+   "ur_peer_slot",
+   "dr_valid",
+   "dr_meta"
+  ],
+  "S": [
+   "q0_tok",
+   "q1_tok",
+   "q2_tok",
+   "q3_tok",
+   "q_pe",
+   "q_xe"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sm*g_d?0?*g_c?0?*u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sm*g_d?1?*g_c?0?*u_m",
+   "at": [
+    43.2,
+    84.576
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_pmeta*g_b?0?*u_m",
+   "at": [
+    43.2,
+    125.952
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at the face (cmd/in/meta/valid/q_pe/q_xe inputs land in one flop; every output leaves its own flop incl. 168 per-Q token copies and the registered {fault,fault_code} bundle) except cmd_free, the documented combinational diagnostic predictor; flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: ot_coll_rst_leaf u_rsl (two stages, async assert, sync release), then same-depth domain copies; rst_n has 2 sinks"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "macro_halo_um": 10.8,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "QW-COLL SAFE regional split: control/metadata/checks of the B4 collective core as a hardened LEAF (x1). Stationary token rings (no flop->flop delay lines), early taps feed per-Q kept output registers so Q data selects land at their original cycle; S/P metadata in dual-clock natives on the 43.2 lattice, R err/last in a 256-bit flop ring. Checklist: results/rtl/coll_split_1019/README.md (SAFE-DESIGN checklist, all 8 items)",
+ "job": {
+  "owner": "Claude:QW-COLL",
+  "branch": "claude/qw-coll-split-1019",
+  "tag": "c2",
+  "purpose": "QW-COLL split control C fallback c2: one abutted SRAM stack, outline from c1 synthesis (parallel to c1)",
+  "extra_paths": [
+   "results/rtl/coll_split_1019",
+   "rtl/test/tb_coll_tp8_static.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "rtl/test/tb_coll_tp8_static.sv",
+   "tools/qwen_coll_tp8_static_bench.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/hdc_golden.py",
+   "rtl/rom/ot_coll_tp8_static.sv",
+   "rtl/rom/ot_coll_sram_bank64.sv",
+   "rtl/physical/ot_qfd_io_collective_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v"
+  ],
+  "benches": [
+   {
+    "name": "split_production",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/prod --production",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_unit",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/unit",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mut_lead",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_lead --only 'reduce_8w_x16|gather_4w_x4' --mutant-define OT_COLL_SPLIT_MUT_LEAD",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_LEAD",
+    "fail_witness": "results/rtl/coll_split_1019/witness/mut_lead.log"
+   },
+   {
+    "name": "split_mut_ex",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_ex --only reduce_8w_x16 --mutant-define OT_COLL_SPLIT_MUT_EX",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_EX",
+    "fail_witness": "results/rtl/coll_split_1019/witness/mut_ex.log"
+   },
+   {
+    "name": "split_mut_sbank",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_sbank --only reduce_8w_x16 --mutant-define OT_COLL_SPLIT_MUT_SBANK",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK",
+    "fail_witness": "results/rtl/coll_split_1019/witness/mut_sbank.log"
+   },
+   {
+    "name": "split_mut_rerr",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_rerr --only fault_nan --mutant-define OT_COLL_SPLIT_MUT_RERR",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR",
+    "fail_witness": "results/rtl/coll_split_1019/witness/mut_rerr.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_coll_split_c2/views",
+  "record_to": "results/rtl/ref_tile/qfd_coll_split_c2"
+ },
+ "hold_budget_reason": "cmd_free is a combinational diagnostic availability predictor (6 levels from flops; never gates issue). Registering it needs the issuer-side +1 diagnostic age (ROOT model 70461c678); until then the tile keeps the tile-level boundary hold budget",
+ "fill_reason": {
+  "pin_bound": "576 registered pins (168 per-Q token outputs on S) and three native SRAMs in one abutted stack set the outline; std area 1.9k um2"
+ }
+}

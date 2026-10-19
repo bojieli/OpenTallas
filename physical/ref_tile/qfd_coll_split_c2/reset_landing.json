@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_coll_split_c",
+ "enable": false,
+ "reason": "the RTL lands it: ot_coll_rst_leaf u_rsl (two stages, async assert, sync release), then same-depth domain copies; rst_n has 2 sinks"
+}
