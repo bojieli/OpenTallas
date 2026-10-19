@@ -79,7 +79,7 @@ def spec(m, pins, a):
                     needs=['verilator'])]
     for mu in MUTANTS[fam]:
         benches.append(dict(name=f'{mu}_mutant', cmd=f'bash tools/qwen_split/bench_fwd_lane.sh {mu} {{RUN}}/bench_{mu} {W}',
-                            expect='fail', fail_regex='FWD_BENCH FAIL', fail_witness=f'{WIT}/w{W}_{mu}.log',
+                            expect='fail', fail_regex='FWD_BENCH FAIL', fail_witness=f'{a.wit}/w{W}_{mu}.log',
                             threads=2, peak_ram_gb=4, needs=['verilator']))
     kind = {'qfd_rlyh0_': 'hop-0 station (ICG on the source root, rising capture, inverted ck_o)', 'qfd_rlyh_': 'half-cycle station',
             'qfd_landh_': 'landing (ring D 4, read on the block root)', 'qfd_landh0_': 'landing with the hop-0 gate'}[fam]
@@ -98,17 +98,18 @@ def spec(m, pins, a):
                       'flow pin register would add a stage the die calendar does not price'),
         sdc_extra=[CLK_TCL], boundary_tcl=[CLK_TCL],
         route=dict(pd=0.45, threads=2, peak_ram_gb=6, pin_h='M4', pin_v='M3 M5', m5_pg_pitch=2.7, hold_margin_ns=0.03,
-                   io_hold_margin_ns=0.0, macro_halo_um=5.4),
+                   # QK-FWD 10-18 (KITS rule): boundary hold margin >= 0.025 (~22 ps lost between route repair and sign-off)
+                   io_hold_margin_ns=0.03, macro_halo_um=5.4),
         assigned_pin_source=dict(file=f"{a.pins_ref}/{m}.json", note='die-assigned faces of the Qwen compute die GEN '
                                  '(OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins',
                                  owner='Q-DIE11-RLY'),
         structural_change=(f'Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): {W}-b forwarded-clock lane '
                            f'frame {m}: {kind} (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_{W} relay of '
-                           'the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap.'),
+                           'the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap.' + a.class_note),
         job=dict(owner=a.owner, branch=a.branch, tag=a.tag,
                  purpose=f'Qwen compute die forwarded half-cycle lane frame {m} ({kind}, {W} b)',
                  benches=benches, views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}',
-                 extra_paths=['physical/qwen_fwd_lane', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc', 'tools/qwen_split', WIT]))
+                 extra_paths=['physical/qwen_fwd_lane', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc', 'tools/qwen_split', a.wit]))
 
 
 def main():
@@ -120,6 +121,8 @@ def main():
     ap.add_argument('--owner', default='Claude:Q-DIE11-RLY')
     ap.add_argument('--branch', default='claude/q-die11-rly-1018')
     ap.add_argument('--tag', default='f1')
+    ap.add_argument('--wit', default=WIT, help='repo dir of the committed bench fail witnesses w<W>_<mutant>.log')
+    ap.add_argument('--class-note', default='', help='appended to structural_change (QK-FWD class masters)')
     ap.add_argument('--out', type=Path, default=ROOT / 'tools/ref_tile/specs_qfwd')
     a = ap.parse_args()
     pins = {m: json.loads((a.pins / f'{m}.json').read_text()) for m in a.masters}
