@@ -1,5 +1,0 @@
-# case NEG_i_mut11_nu4 env DV2_FACE=1 DV2_MU_NU=4 args i --mut 11 --work /srv/opentallas-scratch/claude/mu-adopt-slice/work2/NEG_s11 host ot-epyc5 2026-10-19T01:54:19-07:00 commit a540f1f9f481ce632e987da1d733d9a941216717
-bench2 (i) MUT=11: FAIL 1/3
-    slice 0: cc ['0x21234deadbeef', '0x3ffff80000001'] want ['0x31234deadbeef', '0x2ffff80000001']
-    slice 1: cc ['0x3000700000005', '0x2010000000007'] want ['0x2000700000005', '0x3010000000007']
-# exit 1

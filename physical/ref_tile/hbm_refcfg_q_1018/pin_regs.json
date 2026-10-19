@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_pc_refresh_cfg",
- "enable": false,
- "reason": "RTL registers every pin: every input lands in a pin flop (tg/ct/ca/cd unconditional, cv reset), every output is a flop Q (refresh_reload, ready/active/fault on clk; pc_rst_n = prst on clk_hbm); a kit flop stage would add an edge and put a raw flop in front of the CDC source"
-}

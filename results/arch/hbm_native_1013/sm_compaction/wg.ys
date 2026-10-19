@@ -1,8 +1,0 @@
-read_verilog -sv -DSYNTHESIS -DOT_SMH_CG_ENREG -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_RSTPIN -DOT_SMH_HIER -DOT_SMH_PTW_OHDLY -DOT_SMH_PRODUCTION_SHAPE boundary.sv
-hierarchy -check -top ot_hbm_accel_smh_tile_wg
-proc
-setattr -mod -unset keep_hierarchy
-flatten
-opt_clean
-check
-write_json wg.json

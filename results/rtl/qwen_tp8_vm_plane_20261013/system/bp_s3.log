@@ -1,7 +1,0 @@
-WQ SQD=4 max_waiting mx=2 rd=2 seq=2 waits=134 model_overflow=0 dut_overflow=0 WDIR=0
-PASS qfd_vm_bv_ports NRB=16 SW=8 VL=15 su_reads=59467 row_reads=8937 tuples=3002 bursts=1546 land_steps=1536 cycles=40000
-- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:495: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 41us; walltime 3.626 s; speed 11.400 us/s
-- Verilator: cpu 3.186 s on 1 threads; allocated 11 MB
-maxrss_kb=6228 wall=3.63

@@ -1,8 +1,0 @@
-Portable successor for unchanged dd45 full-selector physical G0 model
-
-python3 tools/uarch_topk_physical_g0_archive_replay.py --source-mode archive-only --repo . --out FRESH_OUTPUT
-
-Default git-preferred uses git when commit exists and matches exact authoritative bytes; only unavailable commit permits verified archive fallback. Available path/read/hash failure refuses. Explicit archive-only needs no historical git objects or even git database.
-12 exact commit/path/SHA/length input blobs, including compressed geometry unchanged. Actual current repository inventory T and original dd45 generator bytehash remain mandatory; Python inventory imports actual repository source.
-Fresh self-contained clone CLI and13 static controls PASS. Model output exactly preserves SHA d2add26b19ab9161b22a559eb27bfa29760e950b0eb9df3db24098b0e6244c2a. Original model/generator/history unchanged.
-No hardware/job launched. Physical G0 remains OPEN;4210/4242 tight analytical trackscreen is not closure.

@@ -1,5 +1,0 @@
-rtl/test/qwen_host/tb_qkd_host_program_loader.sv
-rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv
-physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v
-rtl/physical/ot_qwen_host_ctl.sv
-rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv

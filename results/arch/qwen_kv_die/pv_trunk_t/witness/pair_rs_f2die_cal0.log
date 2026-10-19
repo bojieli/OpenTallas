@@ -1,9 +1,0 @@
-ot-run: ot-epyc4       admits    13 GB (avail 245, growth 236, headroom 0, waiters 2/588 GB) load 180/128 running 40 disk 609 GB 
-ot-run: ot-epyc5       admits   -18 GB (avail 265, growth 277, headroom 0, waiters 4/190 GB) load 144/128 running 28 disk 1575 GB 
-ot-run: SPILL: copying /srv/opentallas-scratch/claude/hkv-pvrs3 (0.0 GB) ot-epyc5 -> ot-epyc6 (no host with --dir admits 20 GB now)
-ot-run: SPILL: copied in 4 s; running on ot-epyc6; written files go back to ot-epyc5 after the run
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-53782-1792402434 after 1 s
-PV_PAIR_RS FAIL T=1000 beats=32 rserr=32 first_beat_age=321 out_age=271 rs_d=49 rs_mut=0
-rc=1
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-53782-1792402434): exit 0
-ot-run: SPILL: outputs copied back ot-epyc6 -> ot-epyc5; RAN on ot-epyc6: exit 0

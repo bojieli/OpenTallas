@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_kvs_attn-fl1-8e7ae12fb bench bench_attn_land_pair_f5 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn-fl1-8e7ae12fb log cl/bench_attn_land_pair_f5.a1b1.log captured 2026-10-19T00:58:03-07:00
-# fail_regex '^KVS_LANDPAIR_ALL FAIL bmut=0 fmut=5 '
-Verilator 5.050 2026-07-01 rev v5.050
-MISMATCH cyc=116 fault
-MISMATCH cyc=116 face flags
-MISMATCH cyc=117 fault
-KVS_LANDPAIR FAIL mode=0 bmut=0 fmut=5 checks=2139 errors=456 fault=0 req=1 Q=32 TX=33
-KVS_LANDPAIR_ALL FAIL bmut=0 fmut=5 pass=0 fail=1 checks=0

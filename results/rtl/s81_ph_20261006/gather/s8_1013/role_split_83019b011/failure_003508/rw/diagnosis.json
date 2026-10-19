@@ -1,5 +1,0 @@
-{
-  "route_eligible": false,
-  "source_commit": "452b243f4",
-  "diagnosis": "ORFS synth_odb calls eliminate_dead_logic after linking. Original unused input-role FFs are in mappedVerilog but absent in actual3_1 ODB. Preserving unused state to manufacture registration/sink evidence is rejected. Restore genuine single forwarding state and test midpoint anchor."
-}

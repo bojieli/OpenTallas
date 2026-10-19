@@ -1,7 +1,0 @@
-IDENTITY die=0 msg=0 got=600000000000000 expected=600080000000000
-IDENTITY die=2 msg=0 got=600000000000000 expected=600080000000000
-IDENTITY die=4 msg=0 got=600000000000000 expected=600080000000000
-IDENTITY die=6 msg=0 got=600000000000000 expected=600080000000000
-TP8COLL dies=8 latu=14 lats=40 msgs=1 words=512 gap=0 skew=0 inject=-1 mismatches=2048 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 first=21 last=864
-FAIL
-- rtl/test/tb_coll_tp8_native59.sv:208: Verilog $finish

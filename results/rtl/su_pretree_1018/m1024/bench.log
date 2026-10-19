@@ -1,7 +1,0 @@
-MISMATCH 0: edge 221 (exp 221) tag 00000200 (exp 00000200) x 47293cd1 (exp 47293cd0)
-MISMATCH 9: edge 771 (exp 771) tag 00000209 (exp 00000209) x 45f4e921 (exp 45f4e91e)
-FAIL tb_hbm_su_red_pretree MUT=1024: 2 errors
-- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.460 s; speed 3.480 us/s
-- Verilator: cpu 0.229 s on 1 threads; allocated 16 MB

@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_pv_rs_hd_f-f2-0473e5d89 bench bench_pair_rs_hdf_mut host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_pv_rs_hd_f-f2-0473e5d89 log cl/bench_pair_rs_hdf_mut.a1b1.log captured 2026-10-19T01:31:32-07:00
-# fail_regex 'PV_PAIR_RS FAIL T=1000'
-PV_PAIR_RS FAIL T=1000 beats=31 rserr=494 first_beat_age=321 out_age=271 rs_d=50 rs_mut=1

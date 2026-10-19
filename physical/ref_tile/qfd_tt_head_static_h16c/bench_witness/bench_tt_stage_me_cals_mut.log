@@ -1,8 +1,0 @@
-Verilator 5.050 2026-07-01 rev v5.050
-# Q-H16C 10-18 src c1ac462ee, ot-epyc4 /srv/opentallas-scratch/claude/qh16c/out2/sm_mut9.log
-CTLM_PROG MUT=9 BMUT=0 HARD_HR=1 DECODE=3: FAIL 119/123  rom_go-issue [2] nat_go-issue [1] csr@1042
-    missing STAGE at 1187 0x1
-    missing STAGE at 7768 0x2
-    missing STAGE at 14609 0x3
-    missing STAGE at 24719 0x25
-    unexpected STAGE at 1027 0x1

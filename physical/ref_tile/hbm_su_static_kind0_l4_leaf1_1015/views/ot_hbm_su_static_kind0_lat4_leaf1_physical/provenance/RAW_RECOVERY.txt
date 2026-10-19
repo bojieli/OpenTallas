@@ -1,6 +1,0 @@
-TW-HBM-PGLG 2026-10-19: this view predated export provenance (no saved raw LEF). provenance/raw/<top>.lef was re-written
-from the CLOSED route's 6_final.odb (ot-epyc4 hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835, read tech+stdcell LEF, read_db,
-write_abstract_lef -- the same call as export_*.tcl) and is BIT-IDENTICAL to the exporter manifest's raw LEF hash
-sha256 3dd539973e9bce3405a4094d707d2233370194851954c89bf61562b0e1ab08f0 (abstract.json files[]). view_export.abstract.json =
-the committed exporter manifest. Then tools/ref_tile/refinalize_view.py --apply (main pin-access-safe abstract_pin_stub):
-pins/size/PG identical, only the pocket-fill OBS changed; libs, insertion.json, port_latency.json untouched. No re-route.
