@@ -1,3 +1,10 @@
+if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
+  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+  source $ot_pg_helper
+  ot_pg_install_final_write_guard
+  ot_pg_install_rc_observers
+}
 # landed_raw_tap.tcl (HF-4d 2026-10-19, coordinator option A for qfd_tt_ctlm_dv / h16c): post-CTS delay tap for the RAW
 # SRAM clock pins of a hard child in a LANDED cluster (tools/ref_tile clock_entry_constraints.landed_raw_pins).
 #
@@ -47,6 +54,7 @@ proc ot_lrt_corner {cell} {
 }
 proc ot_lrt_tap {} {
   if {![info exists ::ot_lrt_targets] || ![dict size $::ot_lrt_targets]} return
+  if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_require_cts_placement_or_empty_context}
   set block [ord::get_db_block]
   set bufname [expr {[info exists ::env(OT_LRT_BUF)] ? $::env(OT_LRT_BUF) : "BUFx4_ASAP7_75t_R"}]
   set lim [expr {[info exists ::env(OT_LRT_MAX)] ? $::env(OT_LRT_MAX) : 64}]
@@ -106,6 +114,8 @@ proc ot_lrt_tap {} {
         [$b findITerm $ain] connect $old
         [$b findITerm $aout] connect $nn
         $it connect $nn
+        # Bind before the next placement estimate and raw/ref arrival measurement.
+        if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
         set last [list $b $nn $old]
         lappend made $b $nn
         incr n
@@ -124,6 +134,12 @@ proc ot_lrt_tap {} {
         set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}]
       }
       # the chain is final: keep it out of later resizing / buffering / net repair
+      if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]} {
+        set pg_instances {}
+        foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
+        set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
+        foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      }
       foreach o $made { $o setDoNotTouch 1 }
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname [[$it getMTerm] getName] $n $d $want [expr {$d - $want}]]
       incr done

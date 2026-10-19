@@ -16,7 +16,8 @@
 //   command pin: beat k = code word k (k 0..63), then beat 0 = {496'd0, scale}; provider and DUT fault-free.
 // BAD_Q=1: one Q dd word is never sent -> NEW must fault and never complete (schedule violation, no stall).
 // Pass line: N59DV_PASS ...; any failure prints N59DV_FAIL and $fatal.
-module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0)(input wire clk);
+module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0,EMBR=0)(input wire clk);
+ // EMBR (QW-N59-3 safe4): DUT EMB_RELAY; the embedding words land one edge later (cmd+7..+71), group 0 unchanged
  localparam integer HEADS=1;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  localparam[58:0]TAG={16'd9,6'd1,18'd50994,13'd255,6'd0};
@@ -139,7 +140,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
 `ifdef N59_R1
- qfd_native59_dv_service_r1 #(.MUT(MUT),.SAFE(SAFE))dut(
+ qfd_native59_dv_service_r1 #(.MUT(MUT),.SAFE(SAFE),.EMB_RELAY(EMBR))dut(
  .ck(clk),.rst_n(rst_n),
 `else
  qfd_native59_dv_service #(.MUT(MUT),.SAFE(SAFE))dut(
@@ -192,7 +193,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
    nnar<=nnar+1;
   end
   if(dr[519]&&dr[518])begin
-   if(cyc!=EMB+6+nemb)err("embedding word not on its static edge");
+   if(cyc!=EMB+6+EMBR+nemb)err("embedding word not on its static edge");
    if(nemb<64)begin if(dr[517:512]!=6'(nemb)||dr[511:0]!==erow(nemb))err("embedding code word");end
    else if(dr[517:512]!=0||dr[511:0]!=={496'd0,ESCALE})err("embedding scale word");
    nemb<=nemb+1;
@@ -215,8 +216,8 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
     $display("N59DV_FAIL errors=%0d x3 %0d/%0d tx %0d/%0d ar %0d/%0d emb %0d done %0d/%0d fault %0d",errs,nox3,nnx3,notx,nntx,noar,nnar,nemb,o_done_c,n_done_c,n_fault);
     $fatal(1);
    end
-   $display("N59DV_PASS x3=%0d tx=%0d(1 CMD+32 Q) ar=%0d bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done %0d->%0d, emb group-1 words=%0d at cmd+6..+70",
-            nnx3,nntx,nnar,o_done_c,n_done_c,nemb);
+   $display("N59DV_PASS x3=%0d tx=%0d(1 CMD+32 Q) ar=%0d bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done %0d->%0d, emb group-1 words=%0d at cmd+%0d..+%0d",
+            nnx3,nntx,nnar,o_done_c,n_done_c,nemb,6+EMBR,70+EMBR);
    $finish;
   end
  end

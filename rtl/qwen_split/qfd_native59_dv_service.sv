@@ -66,7 +66,13 @@ module qfd_native59_dv_service #(
  // on a single-root tile; ck_fmt / ck_qbuf are then unloaded and the r1 wrapper below removes them).  RST_FOREST 1 =
  // each regional reset copy is a KEPT family of identical flops (same D / clock / async clear as rst_q) that
  // ot_rst_copies.tcl spreads over <= 32 loads each; release latency unchanged (one edge after the landed port).
- parameter integer ROOTS=3, RST_FOREST=0
+ parameter integer ROOTS=3, RST_FOREST=0,
+ // QW-N59-3 10-19 (safe4, structural): EMB_RELAY 1 = the group-1 (embedding) dr_o words pass one registered relay
+ // between the W-face p_ecq / p_esq pin registers and the S-face dr_o pin flops (the safe3c placement measured
+ // e3 -> dr_o at 1,614 ps for a 770 ps cycle: ~1 mm W->S wire plus a 520-load select).  The select is 16 KEPT
+ // copies (one per 32-bit dr_o segment, <= 33 loads).  +1 edge on the embedding words ONLY (cmd + 7 .. + 71 instead
+ // of + 6 .. + 70); group 0 (attention result) edges unchanged.  The compiler / die schedule takes the +1 edge.
+ parameter integer EMB_RELAY=0
 )(
  input wire ck,rst_n,
  // SAFE regional roots, fixed-phase siblings of ck; unused in the legacy path.
@@ -442,15 +448,40 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    e1<=emb_act;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
- wire g0=vm_write_v,g1=e3;
+ wire g0=vm_write_v;
  reg[58:0]dr_tag;
- always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
-  else begin
-   dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
-   dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
-         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
-  end
+ wire g1;
+ generate if(EMB_RELAY==0)begin:g_emb_direct
+  assign g1=e3;
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
+   else begin
+    dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
+    dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
+          g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
+   end
+ end else begin:g_emb_relay
+  // relay stage (no reset on the data: every use is qualified by the reset e4 copies)
+  reg[511:0]ecq_r;reg[15:0]esq_r;
+  always @(posedge ck)begin ecq_r<=p_ecq;esq_r<=p_esq;end
+  reg e4;reg[5:0]k4b;reg k4s;
+  (* keep = "true" *) reg[15:0]e4c;   // one select copy per 32-bit dr_o segment
+  (* keep = "true" *) reg[15:0]k4c;   // scale-word select copies (k3 == 64)
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)begin e4<=0;k4b<=0;k4s<=0;e4c<=0;k4c<=0;end
+   else begin e4<=e3;k4b<=k3[5:0];k4s<=(k3==7'd64);e4c<={16{e3}};k4c<={16{k3==7'd64}};end
+  assign g1=e4;
+  integer sg;
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
+   else begin
+    dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
+    dr_o[519:512]<=g0?{1'b1,1'b0,1'b0,vm_write_beat}:e4?{1'b1,1'b1,k4s?6'd0:k4b}:8'd0;
+    for(sg=0;sg<16;sg=sg+1)
+     dr_o[32*sg+:32]<=g0?vm_write_data[32*sg+:32]:
+                      e4c[sg]?(k4c[sg]?((sg==0)?{16'd0,esq_r}:32'd0):ecq_r[32*sg+:32]):32'd0;
+   end
+ end endgenerate
  // ---------------------------------------------------------------- sticky DV boundary faults and the fault pin
  always @(posedge ck or negedge rst_top)
   if(!rst_top)dv_fault<=0;
@@ -570,7 +601,7 @@ endmodule
 // reset copy forest (RST_FOREST 1).  Same ports minus the two regional clocks; same function and edges on every port.
 module qfd_native59_dv_service_r1 #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,SAFE=2,RST_FOREST=1
+ parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,SAFE=2,RST_FOREST=1,EMB_RELAY=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -592,7 +623,7 @@ module qfd_native59_dv_service_r1 #(
  output wire fault
 );
  qfd_native59_dv_service #(.MUT(MUT),.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE),.LAND_QUALIFIED(LAND_QUALIFIED),
-  .LAND_EDGES(LAND_EDGES),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.SAFE(SAFE),.ROOTS(1),.RST_FOREST(RST_FOREST))u_core(
+  .LAND_EDGES(LAND_EDGES),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.SAFE(SAFE),.ROOTS(1),.RST_FOREST(RST_FOREST),.EMB_RELAY(EMB_RELAY))u_core(
   .ck(ck),.rst_n(rst_n),.ck_fmt(ck),.ck_qbuf(ck),
   .host_epoch_valid(host_epoch_valid),.host_fused_capability(host_fused_capability),.host_epoch(host_epoch),
   .host_tag(host_tag),.host_generation(host_generation),.layer_context_v(layer_context_v),.command_stage(command_stage),
