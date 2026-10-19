@@ -37,3 +37,22 @@ Benches (Verilator 5.050, ot-epyc6, `results/rtl/s81_slice_1019/xr5`):
 - `xr_bench` base: PASS for hb 0/1 x seeds 1-4.
 - Mutants hops / row / porder / nocol: all FAIL, as expected. Their witnesses are committed.
 - `slice_eng` / `slice_lep` compositions (bench source lists fixed for the cap_tr/cap_rt split and ot_hdc_delay_rf): receipts in `results/rtl/s81_slice_1019/xr5_slice` (outside the gate-consumed paths).
+
+## XR6 (S81-SAFE-FIX/XR1, 10-19): re-review after the 297c9bfab --cts gate
+
+The XR5 `--cts` gate (agidock128 s81sl_xr1-20261019-065923) was WARN with 0 fails: pin-flop spread TT 52.9 / FF 52.6 ps, trial GRT overflow 0, hold +6.8 ps. But TT reg->reg was **-110.6 ps**: `erun -> 20-term sticky-fault OR -> ot_prs_00000_ff/D` (the pin_reg_split launch copy of `fault` at the S face), 877 ps arrival, ~470 ps of it buffered wire across the outline. `fault` itself had +18.8 ps. SAFE item 4 fails, so the gate was not submitted. Path log: codex b6b163e28 `results/.../gate_recovery/xr1_paths.log`.
+
+Fix (structural, not a squeeze): the fault terms are registered per source region (`fa` input/RD, `fb` partial/ENG collector, `fc` send/inject; KEPT), and the sticky flag ORs three flops. Fault becomes visible 1 cycle later. Fault is a sticky check and never a schedule input, so there are 0 data cycles and 0 token-rate change. A parallel fallback kit, `s81sl_xr1f` (`FOREG=1`), adds a dedicated fault output flop (+2 cycles) and drops pin_reg_split.
+
+| # | item | XR6 |
+|---|------|-----|
+| 1 | pins + reset landing | PASS. Unchanged; pin_reg_split still clones `fault` (its D is now a 4-input OR of local flops). |
+| 2 | reach | PASS. The `fault` D cone is one OR of 3 flops plus `fault`, so the wire to the S-face pin flop is the only long segment. |
+| 3 | fanout | Unchanged from XR5 (kept copies). |
+| 4 | depth | **fixed**. The 20-term fault OR is split into 3 registered region terms. Remaining gate paths are rwr_c +50 ps. |
+| 5 | storage | waived as XR5. |
+| 6 | floorplan | waived as XR5 (pin-bound util). |
+| 7 | clock | PASS: spread TT 52.9 / FF 52.6 ps. |
+| 8 | schedule | PASS: +1 fault-visibility cycle (fallback +2). This is a diagnostic flag; it is not in the token schedule. Handed to MU-DIE-S81 INBOX. |
+
+Benches: `results/rtl/s81_slice_1019/xr6` (base hb0/1 x 4 seeds, mutants; `fb_*` / `fm_*` = FOREG 1).
