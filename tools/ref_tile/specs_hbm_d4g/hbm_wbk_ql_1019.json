@@ -1,0 +1,641 @@
+{
+ "name": "hbm_wbk_ql_1019",
+ "top": "ot_hbm_svc_wb_kport_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "WOPEN": 0,
+  "MUT": 0
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "stream_fifo_clk[0]",
+  "stream_fifo_clk[1]",
+  "stream_fifo_clk[2]",
+  "stream_fifo_clk[3]",
+  "hbm_clk"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "reviewed_gray_fifos",
+ "clock_relationship": {
+  "kind": "independent_clock_families",
+  "periods_ps": {
+   "core": 833.333,
+   "hbm": 1024.0
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk",
+    "stream_fifo_clk[0]",
+    "stream_fifo_clk[1]",
+    "stream_fifo_clk[2]",
+    "stream_fifo_clk[3]"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "stk",
+    "quad",
+    "wb_reserve_v",
+    "wb_reserve_bank",
+    "wb_fill_bank",
+    "wb_reserve_epoch",
+    "wb_fill_epoch",
+    "wb_reserve_sectors",
+    "wb_reserve_base",
+    "wb_fill_start",
+    "wd"
+   ],
+   "outputs": [
+    "wb_ready",
+    "wa",
+    "wbw_v",
+    "wbw_base",
+    "wbw_total",
+    "fault"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    1024000,
+    833333
+   ],
+   "ports": [
+    "hbm_clk"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "w_k_rdy",
+    "w_k_wr_done"
+   ],
+   "outputs": [
+    "w_k_v",
+    "w_k_addr",
+    "w_k_wdata"
+   ]
+  }
+ },
+ "reviewed_gray_fifo_extensions": {
+  "level_synchronizers": [
+   {
+    "name": "hbm_fault_to_stream",
+    "source": "u_wb.hbm_sticky",
+    "chain": [
+     "u_wb.hf1",
+     "u_wb.hf2"
+    ]
+   },
+   {
+    "name": "stream_fault_to_hbm",
+    "source": "u_wb.stream_sticky",
+    "chain": [
+     "u_wb.sf1",
+     "u_wb.sf2"
+    ]
+   }
+  ],
+  "die_constant_inputs": [
+   "quad"
+  ],
+  "why": "quad is the quadrant identity strap (die constant); it is registered on both families (q_s stream, q_h hbm)"
+ },
+ "outline": {
+  "w": 777.6,
+  "h": 518.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "hbm_clk",
+   "hbm_rst_n",
+   "w_k_v",
+   "w_k_rdy",
+   "w_k_addr",
+   "w_k_wdata",
+   "w_k_wr_done"
+  ],
+  "S": [
+   "stream_clk",
+   "stream_fifo_clk",
+   "stream_rst_n",
+   "stk",
+   "quad",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wd",
+   "wb_ready",
+   "wa",
+   "wbw_v",
+   "wbw_base",
+   "wbw_total",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?0?.u_payload",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?1?.u_payload",
+   "at": [
+    86.4,
+    127.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?2?.u_payload",
+   "at": [
+    86.4,
+    168.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?3?.u_payload",
+   "at": [
+    86.4,
+    209.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?4?.u_payload",
+   "at": [
+    86.4,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?5?.u_payload",
+   "at": [
+    86.4,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?6?.u_payload",
+   "at": [
+    86.4,
+    332.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?0?.g_lane?7?.u_payload",
+   "at": [
+    86.4,
+    373.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?0?.u_payload",
+   "at": [
+    259.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?1?.u_payload",
+   "at": [
+    259.2,
+    127.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?2?.u_payload",
+   "at": [
+    259.2,
+    168.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?3?.u_payload",
+   "at": [
+    259.2,
+    209.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?4?.u_payload",
+   "at": [
+    259.2,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?5?.u_payload",
+   "at": [
+    259.2,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?6?.u_payload",
+   "at": [
+    259.2,
+    332.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?1?.g_lane?7?.u_payload",
+   "at": [
+    259.2,
+    373.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?0?.u_payload",
+   "at": [
+    432.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?1?.u_payload",
+   "at": [
+    432.0,
+    127.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?2?.u_payload",
+   "at": [
+    432.0,
+    168.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?3?.u_payload",
+   "at": [
+    432.0,
+    209.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?4?.u_payload",
+   "at": [
+    432.0,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?5?.u_payload",
+   "at": [
+    432.0,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?6?.u_payload",
+   "at": [
+    432.0,
+    332.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?2?.g_lane?7?.u_payload",
+   "at": [
+    432.0,
+    373.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?0?.u_payload",
+   "at": [
+    604.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?1?.u_payload",
+   "at": [
+    604.8,
+    127.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?2?.u_payload",
+   "at": [
+    604.8,
+    168.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?3?.u_payload",
+   "at": [
+    604.8,
+    209.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?4?.u_payload",
+   "at": [
+    604.8,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?5?.u_payload",
+   "at": [
+    604.8,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?6?.u_payload",
+   "at": [
+    604.8,
+    332.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_wb.g_root?3?.g_lane?7?.u_payload",
+   "at": [
+    604.8,
+    373.68
+   ],
+   "orient": "R0"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "clock": "stream_clk",
+  "reason": "RTL registers every pin: stream inputs land in the wbk_q pin flops (rb_q/fb_q/re_q/fe_q/rt_q/rbase_q/wd_q/stk_q/q_s), stream outputs are flops (wb_ready/wa/wbw_*/fault), every K port has its own hbm_clk pin skid; a kit flop stage would add an unpriced edge and put a raw flop in front of the CDC FIFOs"
+ },
+ "route": {
+  "pd": 0.4,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.025,
+  "pin_min_tracks": 3,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "structural_change": "L2H-WBK 10-19 successor of hbm_wbk_q_1018 (gate FAIL OT_MULTI_ROOT: kit reset landing put hbm_rst_n on stream_clk): RTL lands each reset in its own clock domain (2 plain stages per domain at the face), landed resets drive the core; cross-domain reset combination unchanged inside u_wb (per-domain ot_reset_sync). Same floorplan/macros/pins. | prior: NEW hard top for d4g wbk_<q> x4 (ot_hbm_svc_wb_kport_q over ot_hbm_svc_wb_cutthrough_cdc #(NPC 16, QFOLD 1)); GEN0 bound the per-stack ot_hbm_svc_wb_kport as a SYNTH ETM. CDC gate fix (HBM-WBK 10-18): K-port skid loads the FIFO head only when that FIFO is non-empty (k_v && !fifo_empty[selected_lane]); unreachable difference in the static schedule (req_valid[pc] -> !fifo_empty[req_lane[pc]] holds: the latched lane was non-empty and only its own PC pops it), 20 bench logs old==new",
+ "slot_change_request": "d4g wbk_<q> x4: new slot 777.6 x 518.4 (pin-bound: N = 16 K ports 4,626 pins at 5.95/um toward the quadrant's 4 vmks leaves; S = DMA wd 2,312 + stream control at 3.2/um toward hb_dbk_<q>); 32 payload SRAMs as 4 abutted 8-high columns (one per stream_fifo_clk root) on the 43.2 lattice",
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-WBK",
+  "branch": "claude/l2h-wbk-ql-1019",
+  "tag": "ql1",
+  "views_to": "physical/ref_tile/hbm_wbk_ql_1019/views",
+  "record_to": "results/rtl/ref_tile/hbm_wbk_ql_1019",
+  "purpose": "HBM die d4g wbk_<q> x4 = ot_hbm_svc_wb_kport_q (per-quadrant DMA write-back -> 16 HBM K ports, quad strap); first hardening through the reviewed_gray_fifos CDC policy (main 7536ee4bb) with the K-skid non-empty gate; 10-19 per-domain RTL reset landing",
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/rtl/rbh_stk_1018/wbk_ql_1019/"
+  ],
+  "benches": [
+   {
+    "name": "wbq_e",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_e wbq_e",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_e",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e.log",
+    "note": "E quadrant lockstep vs GEN0 wb_kport"
+   },
+   {
+    "name": "wbq_w",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_w wbq_w",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_w",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_w.log",
+    "note": "W quadrant lockstep"
+   },
+   {
+    "name": "wbq_e_wopen",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_e_wopen wbq_e_wopen",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_e_wopen",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e_wopen.log",
+    "note": "E quadrant WOPEN=1 lockstep"
+   },
+   {
+    "name": "wbq_mut_quad",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_quad wbq_mut_quad",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_quad.log",
+    "note": "fold ignores the quad strap"
+   },
+   {
+    "name": "wbq_mut_span",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_span wbq_mut_span",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_span.log",
+    "note": "window total = ordinal total"
+   },
+   {
+    "name": "wbq_mut_premature",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_premature wbq_mut_premature",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_premature.log",
+    "note": "premature wa"
+   },
+   {
+    "name": "wbq_mut_ksaddr",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_ksaddr wbq_mut_ksaddr",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_ksaddr.log",
+    "note": "kshare address mutant"
+   }
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands each reset at its face in 2 plain registered stages ON ITS OWN CLOCK (ot_hbm_svc_wb_kport_q srst_l0->srst_l1 on stream_clk, hrst_l0->hrst_l1 on hbm_clk); the kit landing supports one clock only and put hbm_rst_n on stream_clk (OT_MULTI_ROOT, gate 10-19 16:41)"
+ }
+}
