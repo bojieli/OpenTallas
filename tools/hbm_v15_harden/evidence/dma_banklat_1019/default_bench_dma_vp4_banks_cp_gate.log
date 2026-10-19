@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc6       admits  1010 GB (avail 849, growth 142, headroom 0, waiters 0/0 GB) load 11/128 running 10 disk 6722 GB 
+ot-run: ot-epyc7       admits  1040 GB (avail 891, growth 164, headroom 0, waiters 0/0 GB) load 107/96 running 30 disk 6799 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-46089-1792402111 after 1 s
+CP_FOLD PASS commands=7 beats=2769 checks=2178 (folded parent == die composition, every output every edge)
+slice mutant REJECTED: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cp.sv:65: CP_FOLD control mismatch tick1020
+strap mutant REJECTED: FATAL: ../out4/cp/tb_strap.sv:65: CP_FOLD control mismatch tick971
+reset-latency mutant REJECTED: FATAL: rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv:162: DMA absolute cycle did not advance by one
+DMA_CP_FOLD_GATE PASS (folded parent == die composition through host ingress; slice, strap and reset-latency mutants rejected)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-46089-1792402111): exit 0
+EXIT 0

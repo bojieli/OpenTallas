@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc6       admits  1010 GB (avail 849, growth 142, headroom 0, waiters 0/0 GB) load 11/128 running 10 disk 6722 GB 
+ot-run: ot-epyc7       admits  1040 GB (avail 891, growth 164, headroom 0, waiters 0/0 GB) load 107/96 running 30 disk 6799 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-46084-1792402111 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+BANKLAT die bank0: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank1: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank2: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank3: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank4: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank5: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank6: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank7: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT PASS RR_RT_die=7 faces_D=7 lanes=0 moves=8 beats=2889 checks=635 lag=10 (every landing slot through the real landing SRAMs, wd on drain_at+3+chunk)
+- rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.006 s; speed 1.097 ms/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-46084-1792402111): exit 0
+EXIT 0

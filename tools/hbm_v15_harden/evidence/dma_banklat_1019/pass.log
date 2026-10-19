@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-epyc6       admits  1010 GB (avail 848, growth 142, headroom 0, waiters 0/0 GB) load 11/128 running 10 disk 6722 GB 
+ot-run: ot-epyc7       admits  1040 GB (avail 891, growth 164, headroom 0, waiters 0/0 GB) load 107/96 running 30 disk 6799 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/banklat-dma-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-46114-1792402111 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.376 MB sources in 14 modules, into 0.020 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.103 s (elab=0.011, cvt=0.077, bld=0.000); cpu 0.103 s on 1 threads; allocated 45.391 MB
+LINT_CP_RR_RT80_OK
+BANKLAT die bank0: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT die bank1: rq lane 21 + pad 30, bank 8, rr lane 21 -> round trip 80
+BANKLAT die bank2: rq lane 17 + pad 39, bank 8, rr lane 16 -> round trip 80
+BANKLAT die bank3: rq lane 17 + pad 38, bank 8, rr lane 17 -> round trip 80
+BANKLAT die bank4: rq lane 25 + pad 23, bank 8, rr lane 24 -> round trip 80
+BANKLAT die bank5: rq lane 25 + pad 22, bank 8, rr lane 25 -> round trip 80
+BANKLAT die bank6: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT die bank7: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT PASS RR_RT_die=80 faces_D=8 lanes=1 moves=8 beats=2889 checks=1219 lag=83 (every landing slot through the real landing SRAMs, wd on drain_at+3+chunk)
+- rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.008 s; speed 1.499 ms/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-46114-1792402111): exit 0
+EXIT 0
