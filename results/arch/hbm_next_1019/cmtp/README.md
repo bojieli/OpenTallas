@@ -233,10 +233,57 @@ Untried, and cheaper than both: group only the Engram sub-block, not the whole l
 - CTL.USERS banks for the 4-user image;
 - whole-token assembly.
 
-## 10. Pending / next
+## 15. Step 4 (10-19 03:05): re-time with the MEASURED unit row IIs, and binary images for VEH
 
-1. **Goldens:** collect `mu4` (CONTROL PASS) and `mtp_all5` (5 accepted, layer-major equal), package them, commit.
-2. **Emitter:** the IDX.UNION + `rsel` loop form for the expert union, CTL.USERS banks (4 users), whole-token images, then hand off to VEH. The MU (N = 4) allocator run is still to do.
-3. **Engram:** price sub-block row groups (§13), which needs serialising dependencies.
-4. **M1 is priced, not measured.** Replace it with SM4's x-store / publish bench.
-5. The remainder split is an opt-in lever. If SM4 builds it, re-time with its measured combine latency.
+### 15.1 Measured re-time, per unit (owner input for redesign ranking)
+
+Source: `retime/meas_retime.json` + `retime/meas_retime.log` (`plane_compiler.py meas`, ot-epyc7, on the step-2/3 tree of record: the priced rows reproduce 3,500.1 / 4,423.1 and P3a 3,389.9 / 4,220.2 exactly). Each row flips ONE measured II into the P = 4 headline (all other knobs as §1); `ALL` flips every one. Keys and sources: `plane_compiler.MEAS`.
+
+| unit (measured vs priced) | P=4 (a) MTP Δ | P=4 4-user agg Δ | P3a MTP Δ | P3a 4-user Δ |
+|---|---:|---:|---:|---:|
+| **IDX.INDEX** 953 a row (vs 152 of 658.9; scaled to each record's c1) | **−3.10%** (+45.7k cyc/step) | −0.92% | −3.01% | −0.88% |
+| IDX.INDEX, 953 absolute (sensitivity) | −2.02% | −0.24% | −1.96% | −0.23% |
+| **SU.VOP** (2k+1)·⌈e/512⌉+2 (vs nv) | **−2.07%** (+30.1k) | −1.44% | −1.92% | −1.24% |
+| **SM4 publish skew** +8 a further lane a pass | **−2.01%** (+29.2k) | −0.95% | −1.51% | −1.17% |
+| IDX.TOPK 49.2 (vs 47) | −0.03% | −0.02% | −0.03% | −0.02% |
+| DMA.KVWB_DS 8 (+28 a wrap) | 0.00% | 0.00% | 0.00% | 0.00% |
+| ARGMAX.LOCAL 169 (vs 6) | 0.00% (head segment, off the critical path) | 0.00% | 0.00% | 0.00% |
+| COLL.ARGMAX_MERGE 32 | 0.00% | 0.00% | 0.00% | 0.00% |
+| IDX.UNION measured cycles(N) (vs a TOPK c1) | +0.43% | +0.67% | +0.42% | +0.64% |
+| ATT4 shared-merge PV span −40 a pass | +0.23% | +0.15% | +0.22% | +0.28% |
+| **COLL.ROW_GATHER** 623 a row (vs 1,449) | **+2.34%** (−32.6k) | +1.83% | +2.26% | +1.75% |
+| **ALL measured** | **3,354.3 (−4.17%)** | **4,393.9 / 1,098.5 per user (−0.66%)** | **3,267.6 (−3.61%)** | 4,190.4 / 1,047.6 (−0.71%); 3 users 3,810.1 / 1,270.0 |
+| ALL, IDX.INDEX 953 absolute | 3,391.3 (−3.11%) | 4,424.0 (+0.02%) | 3,302.6 (−2.58%) | 4,217.8 (−0.06%) |
+
+Reading:
+- AR is 1,949.7 in every row (all changes are further-row IIs).
+- **With every measured II, P = 4 (a) MTP is 3,354, 0.3% under the ~3,364 target; P3a is 3,268, 2.9% under it.** The 4-user rates keep the floor (1,098 / 1,048 per user).
+- **Redesign ranking (MTP gain if the unit reached its price):** IDX.INDEX +3.1% (UNITS-IDXN: N selectors / one key pass) > SU.VOP +2.1% (UNITS-SUDMA2: second store write port / fill bypass) ≈ SM4 publish skew +2.0% (SM4: parallel lane publish) >> everything else (≤ 0.03%). KVWB, ARGMAX.LOCAL, TOPK, ARGMAX_MERGE need NO redesign. Fixing the top three would give ~3,600 (P = 4) / ~3,500 (P3a).
+- The measured gains (ROW_GATHER, IDX.UNION, ATT4 shared merge) are banked in `ALL`.
+
+### 15.2 Emitter v2: union loops, ATT plan mode, users image (VEH input)
+
+`tools/hbm_next/emitter.py` → `emitter/{ar,mtp,mu}/` (`{mode}_L{0,1,2,3,14}.hgi1r`, `mu_prologue.hgi1r`, `emitter.json` with per-image sha256 and the aux VM map). HGI-1R **1.1** (`isa_rows.md` R6 "as emitted", R10, R11, 1.1 changes).
+
+| image | records emitted / failed (L0, 1, 2, 3, 14) | VM need, words (incl. aux) | fits |
+|---|---|---|---|
+| AR (N = 1) | 91 / 154 / 130 / 91 / 193, 0 failed; byte-identical to `records.Rec.encode` | 58.4k – 95.6k | as built |
+| MTP N = 6 (P = 4) | 85 / 148 / 124 / 85 / 187, 0 failed | 373.0k / 479.4k / 373.4k / 373.0k / 484.6k | 2^19 VM (PROG) |
+| 4 users N = 4 | 82 / 145 / 121 / 82 / 184, 0 failed (+ CTL.USERS prologue) | 245.2k – 327.1k | 2^19; L0/2/3 as built |
+
+What is new in the images:
+- **Expert union** (no more skipped records): `IDX.UNION` → `CTL.LOOP` (count from VM) {w1, w3 `rsel`} → SwiGLU → 6 N-row intermediate gathers → `CTL.LOOP` {w2 `rsel`}. The allocator lays the expert cells of all 7 slots (6 routed + shared) of a position as one row (K = 7 = `imm_b`), so e = 7ρ + κ addresses cell (ρ, κ) with rs = the slot pitch. The priced model's union slot-group copies are folded away (76 MTP / 64 MU records), which also lowers the Engram-layer VM need: L14 462.0k (was 481.7k in step 3) + 22.6k aux.
+- Every loop record is checked on a synthetic union (seed 1019): every iteration's row ρ writes exactly position ρ's slot κ of expert u, and the loop covers all 6N cells once (E2 order by construction).
+- **ATT plan mode** (ATT4's request): one `IDX.KVUNION` per lane pass (2 for MTP N = 6, 1 for users) and the ATT.QK / ATT.PV records with `rsel` = 1, `rtab` = the plan; plan blocks 32 × 320 words + lane map, budget 128 lines a SM.
+- **Users:** `CTL.USERS` prologue; per-user HBM operands (ring, compressed rows, list stores, IDX key store via `rs_I`) step by 1 GiB (`hsh` 12, rs 2^18); the 1 GiB stride collides with no HBM interval of the 5 segments.
+
+**Limits (for VEH):** per-layer images, not yet a whole-token assembly (the head / TOKX / ACCEPT segment and cross-segment aux relocation are next). The images' VM map is per segment (aux above each segment's high-water mark). The union loop and KV-union plan spans are data-dependent: the calendar reserves the bounds (U ≤ 6N iterations; 128 lines a SM).
+
+## 10. Pending / next (updated step 4, 10-19 03:05)
+
+1. **Goldens:** `mu4` / `mtp_all5` still running on ot-epyc5 (ETA ~05:00): collect, package, commit (lane file pending item 1).
+2. **Whole-token images:** assemble the per-layer images + the head segment (ARGMAX, TOKX / ACCEPT) with one VM map; then VEH runs them.
+3. **Re-time the redesigns as they land:** IDXN (IDX.INDEX, −3.1% MTP), SUDMA2 (SU.VOP, −2.1%), SM4 publish (skew, −2.0%) — `plane_compiler.py meas` with the new IIs.
+4. Static calendar for the data-dependent spans (union loop U ≤ 6N, KV plan 128 lines a SM): extend `static_check` to the image form.
+5. Engram sub-block groups (optional; the 2^19 VM fits every layer).
+6. M1 priced → SM4 measured x-store / publish; remainder split re-time if SM4 builds it.

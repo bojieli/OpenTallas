@@ -66,13 +66,15 @@ class Knobs:
     P: int = 4                   # accumulator lanes a MAC column (= MTP / users lanes); P3a: 3
     bf16_lanes: int = 0          # lanes on the BF16 column (0 = P; option (b): 1 -> BF16 SM.MATVEC records (fmt 0) and
     #                              the SM attention (option B, on the BF16 column per ATT4 geometry) get 1 lane)
+    meas: tuple = ()             # step 4: MEASURED unit row IIs flipped in (MEAS keys; () = the priced headline)
     att_single: str = "record"   # with 1 attention lane: "record" = each position / user its own single-query
     #                              record (the as-built d4g engine: N x the full measured span); "rows" = one row
     #                              record with the fixed spans once (optimistic sensitivity)
 
     def tag(self):
         return (f"rpl{int(self.rpl)}_uh{int(self.union_hist)}_m1{int(self.m1)}_L{self.coll_lanes}_hc{int(self.hc_ii)}"
-                f"_vm{'G' if self.vm_grown else 'S'}_P{self.P}_bf{self.bf16_lanes or self.P}")
+                f"_vm{'G' if self.vm_grown else 'S'}_P{self.P}_bf{self.bf16_lanes or self.P}"
+                + (f"_meas-{'-'.join(self.meas)}" if self.meas else ""))
 
     @property
     def att_lanes(self):
@@ -182,6 +184,166 @@ def att_single(out, bmodel, kn: Knobs):
     return n
 
 
+# ---- step 4: MEASURED unit row IIs (HBM-NEXT-UNITS / ATT4 / SM4 benches, Verilator 5.050, all bit-exact) -------------
+# Each key replaces one PRICED row II of the d4g row_ii (ds_mtp_verify.row_ii) by the measured one; the single-row
+# cost c1 is kept (AR unchanged) unless the key says otherwise.  Sources (claude/hbm-next-1019 sub-lanes):
+MEAS = {
+    "idx_index": "IDX.INDEX further row = c1 x 953 / 658.9 (UNITS-IDX units/idx/README.md: measured 953 a row of the "
+                 "1,397-cycle d4g frame vs the priced 152 of 658.9; the key stream is re-read a row, selector top-512 "
+                 "binds); users: the same (no shared stream either way)",
+    "idx_index_abs": "IDX.INDEX further row = 953 absolute (sensitivity: the measured row at the bench shape, not "
+                     "scaled to the record's c1)",
+    "idx_topk": "IDX.TOPK further row 49.2 (UNITS-IDX topk, priced 47.0)",
+    "idx_union": "IDX.UNION record (the expert_union record, priced as a TOPK c1) = measured cycles(N) 48 / 67 / 90 / "
+                 "101 / 142 at N = 1 / 2 / 3 / 4 / 6 (UNITS-IDX union; N = 5 interpolated)",
+    "su_vop": "SU.VOP N-row (the un-indexed 'shared' SU records: norms, gates, residual ops) further row = (2k + 1) "
+              "ceil(e / 512) + 2, k = per-row VM read operands (operands some record writes; constants broadcast), "
+              "e = A elements a row (UNITS-SUDMA su_vop: AB 44 / ABC 72 at n 7,168, single store write port); the "
+              "indexed route gather stays at its measured II 1 (= price)",
+    "kvwb": "DMA.KVWB_DS further row 8 (+28 a ring wrap, amortised (N - 1) / 256 a record) (UNITS-SUDMA kvwb; priced 2)",
+    "argmax": "ARGMAX.LOCAL further row 169 (UNITS-SUDMA argmax; priced 6)",
+    "coll_rg": "COLL.ROW_GATHER further row = priced II x 623 / 1,449 (UNITS-COLL rows: measured II = R = 623 flits a "
+               "rail at the DS verify shape where the model priced 1,449; payload-proportional for the other shapes)",
+    "coll_am": "COLL.ARGMAX_MERGE further row 32 (UNITS-COLL rows; model 12.7)",
+    "att4": "ATT PV row records: shared 4-lane merge PV span -40 cycles a pass (ATT4 a1: shared 385 / 529 / 745 / 1,089 "
+            "vs base 401 / 569 / 785 / 1,129 at sigma 0 / 0.3 / 1 / disjoint; -40 at every overlap but full)",
+    "sm4skew": "SM4 lane-major publish skew: +8 cycles a further lane a pass on every N-row SM.MATVEC record (hnx_rp4lp4 "
+               "LSKEW 8; +24 a 4-lane pass); union experts by the measured lane histogram (1-lane experts: 0)",
+}
+MEAS_ALL = ("idx_index", "idx_topk", "idx_union", "su_vop", "kvwb", "argmax", "coll_rg", "coll_am", "att4", "sm4skew")
+IDX_II_MEAS, IDX_FRAME_PRICE = 953.0, 658.9
+UNION_MEAS = {1: 48.0, 2: 67.0, 3: 90.0, 4: 101.0, 6: 142.0}
+ROW_GATHER_MEAS, ROW_GATHER_PRICE = 623.0, 1449.0
+LSKEW = 8.0
+
+
+def union_cycles(n):
+    if n in UNION_MEAS:
+        return UNION_MEAS[n]
+    ks = sorted(UNION_MEAS)
+    lo = max(k for k in ks if k < n) if n > ks[0] else ks[0]
+    hi = min((k for k in ks if k > n), default=ks[-1])
+    if hi == lo:
+        return UNION_MEAS[lo] + 18.6 * (n - lo)
+    return UNION_MEAS[lo] + (UNION_MEAS[hi] - UNION_MEAS[lo]) * (n - lo) / (hi - lo)
+
+
+def _written_vm(out):
+    """copy-0 VM write intervals of a compiled programme (what some record produces; the rest are constants)"""
+    from hgi_sim import ds_mtp_verify as V
+    w = []
+    for c in out:
+        for iv in getattr(c, "fp", ([], []))[1]:
+            if iv[0] == "VM" and iv[1] < V.VM_OFF:
+                w.append((iv[1], iv[2]))
+    w.sort()
+    merged = []
+    for a, b in w:
+        if merged and a <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], b)
+        else:
+            merged.append([a, b])
+    return merged
+
+
+def _overlaps(merged, a, b):
+    import bisect
+    i = bisect.bisect_right([m[0] for m in merged], b - 1) - 1
+    return i >= 0 and merged[i][1] > a
+
+
+def su_meas_ii(r, written, dyn):
+    from hgi_sim import timing as T
+    L = r.layer if isinstance(r.layer, int) else 0
+    k = 0
+    for opk in ("A", "B", "C", "D"):
+        d = r.desc.get(opk)
+        if d is None or d.space != "VM":
+            continue
+        if any(_overlaps(written, lo, hi) for sp, lo, hi in T.intervals(d, dyn, L) if sp == "VM"):
+            k += 1
+    _, n, m, _, _ = T.eff(r.desc["A"], dyn, L)
+    e = n * max(1, m)
+    return (2 * k + 1) * math.ceil(e / 512) + 2, k, e
+
+
+def apply_meas(out, N, kn: Knobs, hist, lanes, pe=1.0):
+    """re-cost the compiled records with the measured row IIs selected in kn.meas (compile_verify wrapper: every
+    programme -- verify, users, draft bodies, seed).  ATT and IDX.INDEX are re-applied after post_pass (meas_post)."""
+    from hgi_sim import ds_mtp_verify as V
+    from hgi_sim import ds_native_timing as DT
+    from hgi_sim import timing as T
+    ms = set(kn.meas)
+    notes = {}
+    if not ms or N <= 1:
+        return notes
+    dyn = T.Dyn(DT.POS)
+    written = _written_vm(out) if "su_vop" in ms else None
+
+    def add(key, d):
+        notes[key] = round(notes.get(key, 0.0) + d, 1)
+    for c in out:
+        op, kind, npos = getattr(c, "orig_op", ""), getattr(c, "mtp_kind", ""), getattr(c, "npos", 1)
+        if npos <= 1:
+            continue
+        old = c.base_cost
+        if kind == "rows" and getattr(c, "ii", None) is not None:
+            if op == "IDX.TOPK" and "idx_topk" in ms:
+                c.base_cost = c.c1 + (npos - 1) * 49.2
+            elif op == "DMA.KVWB_DS" and "kvwb" in ms:
+                c.base_cost = c.c1 + (npos - 1) * 8.0 + 28.0 * (npos - 1) / 256.0
+            elif op == "ARGMAX.LOCAL" and "argmax" in ms:
+                c.base_cost = c.c1 + (npos - 1) * 169.0
+            elif op == "COLL.ROW_GATHER" and "coll_rg" in ms:
+                c.base_cost = c.c1 + (npos - 1) * c.ii * ROW_GATHER_MEAS / ROW_GATHER_PRICE
+            elif op == "COLL.ARGMAX_MERGE" and "coll_am" in ms:
+                c.base_cost = c.c1 + (npos - 1) * 32.0
+        elif kind == "expert_union" and "idx_union" in ms:
+            c.base_cost = union_cycles(npos)
+        elif kind == "shared" and op == "SU.VOP" and "su_vop" in ms and "I" not in c.desc:
+            L = c.layer if isinstance(c.layer, int) else 0
+            r2 = copy.copy(c)
+            r2.desc = {k: copy.copy(v) for k, v in c.desc.items()}
+            for v in r2.desc.values():
+                v.m = v.m * npos
+            c1 = c.base_cost * T.su_cost(c, dyn, L)[0] / T.su_cost(r2, dyn, L)[0]
+            ii, k, e = su_meas_ii(c, written, dyn)
+            c.base_cost = c1 + (npos - 1) * ii
+            c.cmtp_su = dict(c1=round(c1, 1), ii=ii, k=k, e=e)
+        elif op == "SM.MATVEC" and kind in ("shared", "expert") and "sm4skew" in ms:
+            def skew(h):
+                return LSKEW * (min(h, lanes) - 1) * math.ceil(h / lanes)
+            if kind == "shared":
+                c.base_cost += skew(npos)
+            elif hist:
+                c.base_cost += sum(fr * skew(h) for h, fr in hist.items())
+            else:
+                c.base_cost += skew(max(1, math.ceil(pe)))
+        if c.base_cost != old:
+            add(op + ("" if kind == "rows" else f" {kind}"), c.base_cost - old)
+    return notes
+
+
+def meas_post(prog, N, kn: Knobs, lanes):
+    """after M.post_pass (it re-costs ATT rows and the users' IDX.INDEX): ATT4 shared merge, measured IDX.INDEX"""
+    ms = set(kn.meas)
+    notes = {}
+    if not ms or N <= 1:
+        return notes
+    for r in prog:
+        k = getattr(r, "mtp_kind", "")
+        old = r.base_cost
+        if "att4" in ms and k.startswith("att_B") and k.endswith("_rows") and r.orig_op == "ATT.PV":
+            r.base_cost = max(1.0, r.base_cost - 40.0 * math.ceil(N / lanes))
+        elif getattr(r, "ii", None) is not None and r.orig_op == "IDX.INDEX" and (
+                "idx_index" in ms or "idx_index_abs" in ms):
+            ii = IDX_II_MEAS if "idx_index_abs" in ms else r.c1 * IDX_II_MEAS / IDX_FRAME_PRICE
+            r.base_cost = max(r.base_cost, r.c1 + (N - 1) * ii)
+        if r.base_cost != old:
+            notes[r.orig_op] = round(notes.get(r.orig_op, 0.0) + r.base_cost - old, 1)
+    return notes
+
+
 def install():
     """wrap V.compile_verify (verify, draft bodies, seed) and M.ds_compile (to know verify / users)"""
     from hgi_sim import ds_mtp_verify as V
@@ -202,6 +364,9 @@ def install():
                 hist = CUR["hist"]["users"].get(P)
             nt = post_sm(out, P, kw.get("sm_k"), kw.get("union"), kw.get("topk", 6), kn, hist)
             nt["att_single_records"] = att_single(out, kw.get("bmodel"), kn)
+            tk = kw.get("topk", 6)
+            U_ = max(tk, int(round(kw["union"]))) if kw.get("union") else tk * P
+            nt["meas"] = apply_meas(out, P, kn, hist, kw.get("sm_k") or kn.P, pe=kw.get("topk", 6) * P / U_)
             st = dict(st, cmtp=nt)
         return out, st
     compile_verify._cmtp = True
@@ -224,6 +389,7 @@ def install():
                     n += 1
             nt["att_single_record_rows"] = n
         nt["att_lanes"] = kn.att_lanes
+        nt["meas_post"] = meas_post(prog, N, kn, kn.att_lanes)
         return nt
     post_pass._cmtp = True
     M.post_pass = post_pass
@@ -402,9 +568,71 @@ def options(a):
     return 0
 
 
+# step 4: measured re-time per option (P = 4 (a) and P3+(a)); per-unit deltas so PROG can rank redesigns
+MEAS_OPTIONS = [("P4a", "(a) P=4 + shared 4-lane x store (cycle-identical to base)", Knobs(**HEAD), 4),
+                ("P3a_u4", "(P3a) P=3 + shared 3-lane x store, 4 users on 3 lanes", Knobs(**HEAD, P=3), 4),
+                ("P3a_u3", "(P3a) P=3 + shared 3-lane x store, 3 users", Knobs(**HEAD, P=3), 3)]
+
+
+def meas_cases(key):
+    full = [("priced", ())] + [(m, (m,)) for m in MEAS_ALL + ("idx_index_abs",)] + [
+        ("ALL measured", MEAS_ALL), ("ALL measured, IDX.INDEX 953 absolute",
+                                     tuple(x for x in MEAS_ALL if x != "idx_index") + ("idx_index_abs",))]
+    return full if key != "P3a_u3" else [full[0], full[-2]]
+
+
+def meas(a):
+    from hgi_sim import hbm_plane_model as M
+    st = M.load_stats(STATS)
+    CUR["hist"] = lane_hists()
+    out = dict(schema="opentallas.hbm_next_1019.cmtp.meas_retime.v1", generated_utc=datetime.datetime.now(
+        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, meas_keys=MEAS, options={})
+    for key, label, kn0, mu_n in MEAS_OPTIONS:
+        if a.only and key not in a.only.split(","):
+            continue
+        rows = {}
+        for name, ms in meas_cases(key):
+            if a.cases and name not in a.cases.split("|"):
+                continue
+            kn = dataclasses.replace(kn0, meas=tuple(ms))
+            r = run_case(kn, st, a.jobs, kn.P, mu_n)
+            rows[name] = r
+            print(f"{key:7s} {name:40s} AR {r['ar_tok_s']:7.1f}  MTP {r['mtp']['tok_s']:7.1f} (verify "
+                  f"{r['mtp']['verify_cycles']:.0f}, draft {r['mtp']['draft_cycles']:.0f})  MU{mu_n} agg "
+                  f"{r['mu']['agg_tok_s']:7.1f} / user {r['mu']['per_user_tok_s']:7.1f}", flush=True)
+            out["options"][key] = dict(label=label, users=mu_n, cases=rows)
+            a.out.parent.mkdir(parents=True, exist_ok=True)
+            a.out.write_text(json.dumps(out, indent=1, default=str) + "\n")
+        base = rows.get("priced")
+        if base:
+            d = {}
+            for name, r in rows.items():
+                d[name] = dict(
+                    mtp_tok_s=r["mtp"]["tok_s"], d_mtp_tok_s=round(r["mtp"]["tok_s"] - base["mtp"]["tok_s"], 1),
+                    d_mtp_pct=round(100 * (r["mtp"]["tok_s"] / base["mtp"]["tok_s"] - 1), 2),
+                    d_step_cycles=round(r["mtp"]["step_cycles"] - base["mtp"]["step_cycles"], 1),
+                    mu_agg=r["mu"]["agg_tok_s"], mu_per_user=r["mu"]["per_user_tok_s"],
+                    d_mu_agg=round(r["mu"]["agg_tok_s"] - base["mu"]["agg_tok_s"], 1),
+                    d_mu_pct=round(100 * (r["mu"]["agg_tok_s"] / base["mu"]["agg_tok_s"] - 1), 2),
+                    d_mu_step_cycles=round(r["mu"]["step_cycles"] - base["mu"]["step_cycles"], 1),
+                    ar_tok_s=r["ar_tok_s"])
+            out["options"][key]["delta_vs_priced"] = d
+    srcs = ["tools/hbm_next/plane_compiler.py", "tools/hbm_next/isa_rows.py", "tools/hgi_sim/hbm_plane_model.py",
+            "tools/hgi_sim/ds_mtp_verify.py", "tools/hgi_sim/ds_mtp_draft.py", "tools/hgi_sim/timing.py",
+            "results/arch/hbm_mtp_next_1018/stats/summary.json"]
+    out["sources_sha256"] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in srcs}
+    a.out.write_text(json.dumps(out, indent=1, default=str) + "\n")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    q = sub.add_parser("meas")
+    q.add_argument("--out", type=Path, required=True)
+    q.add_argument("--jobs", type=int, default=4)
+    q.add_argument("--only", default="")
+    q.add_argument("--cases", default="", help="'|'-separated case names")
     o = sub.add_parser("options")
     o.add_argument("--out", type=Path, required=True)
     o.add_argument("--jobs", type=int, default=4)
@@ -414,7 +642,7 @@ def main():
     r.add_argument("--jobs", type=int, default=4)
     r.add_argument("--only", default="")
     a = ap.parse_args()
-    return options(a) if a.cmd == "options" else retime(a)
+    return dict(options=options, retime=retime, meas=meas)[a.cmd](a)
 
 
 if __name__ == "__main__":

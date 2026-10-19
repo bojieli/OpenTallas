@@ -86,7 +86,7 @@ def desc_ivs(rec, dyn, L):
     return out
 
 
-def values(seg, s, fps, dyn):
+def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
     """VALUE-LEVEL liveness.  Every write of an operand interval in a copy creates a value [a, b) with lifetime
     [writer start, last reader end]; every operand read joins (union-find) the values it reads, so a component is a
     set of values some descriptor reads TOGETHER (their AR-relative layout is kept: one base shift relocates it).
@@ -95,7 +95,7 @@ def values(seg, s, fps, dyn):
     CONSTANTS (one shared value); other words = data live from cycle 0.
     -> (vals, uf, opmap {(i, opk, cp): value id}, seg_end)"""
     ex, start, end = s["ex"], s["start"], s["end"]
-    order = sorted(range(len(ex)), key=lambda i: start[i])
+    order = [i for i in sorted(range(len(ex)), key=lambda i: start[i]) if i not in skip]
     SPC = SLOT_OFF // VO
     # per record: (opk, is_write, [(cp, a, b)]) -- descriptor operands per copy, then implicit intervals as anonymous
     acc = {}
@@ -263,6 +263,15 @@ def values(seg, s, fps, dyn):
                     opmap[(i, opk, cp)] = outv[0]
                     for x in outv[1:]:
                         uf.u(outv[0], x)
+    ncp = {cp for (_, _, cp) in opmap}
+    fam_pitch = []
+    for fam, S_ in joins:                   # step 4: the union's e-indexed cells of all slots kappa form ONE component
+        for cp in ncp:
+            ids = [opmap[(i, opk, cp)] for i, opk in fam if (i, opk, cp) in opmap]
+            for x in ids[1:]:
+                uf.u(ids[0], x)
+            if ids:
+                fam_pitch.append((ids[0], S_))
     for v in list(pitch):
         pitch[uf.f(v)] |= pitch.pop(v) if uf.f(v) != v else set()
     for n, v in enumerate(vals):
@@ -270,6 +279,8 @@ def values(seg, s, fps, dyn):
     pr = defaultdict(set)
     for v, sset in pitch.items():
         pr[uf.f(v)] |= sset
+    for v, S_ in fam_pitch:                 # a joined union family is laid out at its AR slot pitch
+        pr[uf.f(v)] = {S_}
     uf.pitch = dict(pr)
     uf.selfw_words = dict(selfw_words)
     return vals, uf, opmap, float(max(end) if end else 0.0)
@@ -462,8 +473,367 @@ def place(objs):
                 peak_objects=peak_objects(objs, tb), method=meth, tries={k: v[0] for k, v in tries.items()})
 
 
-def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows):
-    """relocate + ROWX-encode every record; -> (bytes, stats, errors)"""
+# ======================================================================================================================
+# step 4: the expert-union loops (IDX.UNION + rsel CTL.LOOPs), the ATT plan mode (IDX.KVUNION), the users image
+# ======================================================================================================================
+UNIT_BIT = {u: 1 << i for i, u in enumerate(("CTL", "SM", "SU", "SFU", "FUSED", "ATT", "COLL", "ARGMAX", "DMA", "IDX",
+                                              "HC", "SIMT"))}
+EXPERTS = 384
+TOPK = 6
+W_WIN = 128
+STORE_ROWS = 512
+USER_HSH = 12                       # users: HBM row strides in 4 KiB units (ROWX hsh)
+ATT_BUDGET = 128                    # lines a SM the calendar reserves (model upper bound at T 640 x 4 lanes: 109; ATT4
+#                                     disjoint balanced 72, aligned 128)
+
+
+def slot_group(fp):
+    """union slot group of a compiled record (compile_verify shifts union slot j's footprints by (j // 6) SLOT_OFF)"""
+    g = {lo // SLOT_OFF for side in fp for sp, lo, hi in side if sp == "VM"}
+    return max(g) if g else 0
+
+
+def union_skip(seg, s, fps):
+    """records of union slot groups >= 1 (they exist only as the priced model's bookkeeping; the image runs the union
+    as rsel loops over the slot-group-0 cells)"""
+    out = set()
+    for i, (k, L, _) in enumerate(s["ex"]):
+        r = seg[k]
+        if getattr(r, "mtp_kind", "") in ("expert", "egather") and slot_group(fps[i]) >= 1:
+            out.add(i)
+    return out
+
+
+def union_join_families(seg, s, skip):
+    """[(i, opk) of slot kappa = 0 .. 6] per e-indexed family (w1 O, w3 O, w2 O, the intermediate gather A / O): the
+    rsel loop addresses cell (rho, kappa) as base + (rho K + kappa) S, so the slots of a family must share one object"""
+    ex = s["ex"]
+    by_tag = {}
+    for i, (k, L, _) in enumerate(ex):
+        if i in skip:
+            continue
+        by_tag.setdefault(seg[k].tag or "", i)
+    fams = []
+    for pat, ops in (("expert slot {} w1", ("O",)), ("expert slot {} w3", ("O",)), ("expert slot {} w2", ("O",)),
+                     ("expert_intermediate_gather.s{}", ("A", "O"))):
+        for opk in ops:
+            fam = [(by_tag[pat.format(k)], opk) for k in range(TOPK + 1) if pat.format(k) in by_tag]
+            if len(fam) > 1:
+                b0 = seg[ex[fam[0][0]][0]].desc[opk].base
+                b1 = seg[ex[fam[1][0]][0]].desc[opk].base
+                fams.append((fam, b1 - b0))
+    return fams
+
+
+class Aux:
+    """VM words the step-4 records add (union list / count / row tables, KVUNION plans, the users table), placed
+    above the allocator's high-water mark, 32-word aligned"""
+    def __init__(self, base):
+        self.base = self.top = -(-base // 32) * 32
+        self.items = {}
+
+    def take(self, name, words):
+        a = self.top
+        self.items[name] = (a, int(words))
+        self.top = -(-(a + words) // 32) * 32
+        return a
+
+
+def _md(d, **kw):
+    d2 = copy.copy(d)
+    for k, v in kw.items():
+        setattr(d2, k, v)
+    return d2
+
+
+def _u32(base, n, m=1, stride=0):
+    from hgi_sim import records as RC
+    return RC.MDesc(space="VM", fmt="U32", base=int(base), n=int(n), m=int(m), stride=int(stride))
+
+
+class SegEmit:
+    """per-segment emission context: object lookup per (record, operand, copy), the aux region, the users HBM rule"""
+    def __init__(self, seg, s, dyn, objs, comp2obj, uf, opmap, n_rows, mode, P, aux, fps, skip):
+        self.seg, self.s, self.dyn, self.objs, self.c2o, self.uf, self.opmap = seg, s, dyn, objs, comp2obj, uf, opmap
+        self.N, self.mode, self.P, self.aux, self.fps, self.skip = n_rows, mode, P, aux, fps, skip
+        self.cps_of = defaultdict(set)
+        for (i, opk, cp) in opmap:
+            self.cps_of[(i, opk)].add(cp)
+        self.idx = {}
+        for i, (k, L, _) in enumerate(s["ex"]):
+            self.idx.setdefault(k, i)
+        self.user_hbm = self._user_hbm() if mode == "mu" else []
+        self.notes = defaultdict(int)
+
+    def obj(self, i, opk, cp=0):
+        root = self.uf.f(self.opmap[(i, opk, cp)])
+        return self.c2o[root]
+
+    def rows(self, i, opk):
+        return [self.obj(i, opk, cp) for cp in sorted(self.cps_of.get((i, opk), ()))]
+
+    def cell(self, i, r0, opk, row=0):
+        """VM base of operand opk of record i in object row `row` (+ the operand's offset inside its row)"""
+        oi, row0 = self.obj(i, opk, 0)
+        o = self.objs[oi]
+        return o, o["base"] + (row0 + row) * o["stride"] + amap(o, r0.desc[opk].base)
+
+    def _user_hbm(self):
+        """users mode: per-user HBM state = every HBM interval some record of the segment writes (window ring, compressed
+        rows, list stores) and every HBM read overlapping one; weights / tables stay shared (rs 0)"""
+        from hgi_sim import timing as T
+        w = []
+        for i, (rd, wr) in enumerate(self.fps):
+            w += [(lo, hi) for sp, lo, hi in wr if sp == "HBM"]
+            r = self.seg[self.s["ex"][i][0]]
+            op = getattr(r, "orig_op", f"{r.unit}.{r.op}")
+            if op in ("COLL.ROW_GATHER", "DMA.KVWB_DS") or op.startswith("ATT.") or op.startswith("IDX."):
+                L = r.layer if isinstance(r.layer, int) else 0
+                for k, d in r.desc.items():      # KV state a user owns even where this layer only reads it
+                    if d.space == "HBM" and not (op == "COLL.ROW_GATHER" and k == "I"):
+                        w += [(lo, hi) for sp, lo, hi in T.intervals(d, self.dyn, L) if sp == "HBM"]
+        return sorted(set(w))
+
+    def per_user(self, iv):
+        return any(a < iv[2] and iv[1] < b for a, b in self.user_hbm)
+
+
+def user_stride(segemit_list):
+    """smallest power-of-two per-user HBM stride (>= 1 GiB) whose user regions s = 1 .. N-1 collide with no HBM interval
+    of the segments (per the footprint model) -> (stride bytes, collisions per candidate)"""
+    tried = {}
+    for sh in range(30, 37):
+        st = 1 << sh
+        bad = 0
+        for se in segemit_list:
+            allh = sorted({(lo, hi) for rd, wr in se.fps for sp, lo, hi in rd + wr if sp == "HBM"})
+            usr = [iv for iv in allh if any(a < iv[1] and iv[0] < b for a, b in se.user_hbm)]
+            oth = [iv for iv in allh if iv not in set(usr)]
+            for u in range(1, se.N):
+                for a, b in usr:
+                    a2, b2 = a + u * st, b + u * st
+                    bad += sum(1 for c, d in oth + usr if c < b2 and a2 < d)
+        tried[st] = bad
+        if bad == 0:
+            return st, tried
+    return None, tried
+
+
+def att_plan_lanes(N, P, users):
+    """lane passes of an N-row attention record: [(slot0, lanes)]"""
+    return [(p0, min(P, N - p0)) for p0 in range(0, N, P)]
+
+
+def emit_rec(blob, st, errs, rec, rx, tag, check_rows=None):
+    """encode + decode round trip + legality; check_rows(r2, rx2) for row bounds"""
+    try:
+        b = IR.encode(rec, rx)
+        r2, rx2, nxt = IR.decode_one(b, 0)
+        assert nxt == len(b) and IR.encode(r2, rx2) == b, "round trip"
+        if check_rows:
+            check_rows(r2, rx2)
+        blob += b
+        st["ok"] += 1
+        st["rowx_records" if rx is not None else "plain_records"] += 1
+        return True
+    except Exception as e:                                       # noqa: BLE001
+        import traceback
+        tb = traceback.extract_tb(e.__traceback__)[-1]
+        errs.append(dict(rec=tag, op=f"{rec.unit}.{rec.op}", err=f"{type(e).__name__}: {e}"[:300],
+                         at=f"{Path(tb.filename).name}:{tb.lineno}"))
+        st["fail"] += 1
+        return False
+
+
+def union_records(se, st, errs, blob, which, ctx):
+    """which = 'union' (IDX.UNION) | 'loop1' (w1 / w3 rsel loop) | 'loop2' (w2 rsel loop).  The e-indexed operands
+    (expert outputs g / u / d and the gathered intermediate ea) are ROW ARRAYS whose row (position rho) holds the K
+    slots kappa at pitch S: cell (rho, kappa) = base + (rho K + kappa) S = base + e S, so the rsel entry's e = rho K +
+    kappa (IDX.UNION imm_b = K) addresses it with rs = S under emask; A (x) steps by rho."""
+    from hgi_sim import records as RC
+    seg, N = se.seg, se.N
+    U = ctx["U"]
+    if which == "union":
+        i = ctx["i_union"]
+        r0 = seg[se.s["ex"][i][0]]
+        o, a_base = se.cell(i, r0, "O")          # rid row array (the TOPK rows' output), row 0
+        rid_stride = o["stride"]
+        rec = RC.Rec("IDX", "UNION", wait=r0.wait | UNIT_BIT["IDX"], imm_a=EXPERTS, imm_b=ctx["K"],
+                     desc=dict(A=RC.MDesc(space="VM", fmt="U32", base=a_base, n=TOPK, m=N, stride=rid_stride),
+                               O=_u32(U["list"], TOPK * N), D=_u32(U["count"], 1),
+                               R=_u32(U["tab"], IR.TABLE_ROW_WORDS, TOPK * N, IR.TABLE_ROW_WORDS)))
+        ok = emit_rec(blob, st, errs, rec, None, "IDX.UNION")
+        ctx["union_rec"] = rec
+        return ok
+    tmpl = ctx["w13"] if which == "loop1" else ctx["w2"]
+    loop = RC.Rec("CTL", "LOOP", param=(1 << 17), imm_a=U["count"], wait=UNIT_BIT["IDX"])
+    ok = emit_rec(blob, st, errs, loop, None, f"CTL.LOOP {which}")
+    for i in tmpl:
+        r0 = seg[se.s["ex"][i][0]]
+        rec = copy.copy(r0)
+        rec.unit, rec.op = r0.orig_op.split(".")
+        rec.desc = {k: copy.copy(d) for k, d in r0.desc.items()}
+        rec.param = r0.param & 3
+        rec.slot = 0
+        rec.wait = (r0.wait | (UNIT_BIT["COLL"] if which == "loop2" else 0)) if i == tmpl[0] else 0
+        rs, emask = {}, 0
+        eind = ("O",) if which == "loop1" else ("A", "O")
+        for opk in rec.desc:
+            d = rec.desc[opk]
+            if opk == "I":
+                rec.desc["I"] = _md(d, base=U["list"], n=1, m=1)
+                continue
+            if d.space != "VM":
+                continue
+            o, b = se.cell(i, r0, opk)
+            d.base = b
+            if opk in eind:
+                S = ctx["S"][(i, opk)]
+                rs[opk] = S
+                emask |= 1 << IR.OPND.index(opk)
+            elif o["rows"] > 1:
+                rs[opk] = o["stride"]
+        rx = IR.RowX(n=N, rsel=1, rtab=U["tab"], emask=emask, rs=rs)
+        ok &= emit_rec(blob, st, errs, rec, rx, f"{r0.orig_op} {r0.tag} ({which})", ctx["rsel_check"])
+        ctx.setdefault("loop_recs", []).append((rec, rx))
+    ok &= emit_rec(blob, st, errs, RC.Rec("CTL", "ENDLOOP"), None, f"CTL.ENDLOOP {which}")
+    return ok
+
+
+def union_setup(se, seg_ex_kind):
+    """locate the union templates (slot-group-0, kappa = 0 records), check the e-indexed objects share ONE row pitch
+    K (rows of K slots), allocate the aux words, build the rsel row-bound check.  -> ctx or None (no union)"""
+    seg, s = se.seg, se.s
+    ex = s["ex"]
+    iu = [i for i in range(len(ex)) if getattr(seg[ex[i][0]], "mtp_kind", "") == "expert_union"]
+    if not iu:
+        return None
+    N = se.N
+    ctx = dict(i_union=iu[0], w13=[], w2=[], S={}, K=None, errs=[])
+
+    def find(tag):
+        for i in range(len(ex)):
+            r = seg[ex[i][0]]
+            if i not in se.skip and getattr(r, "mtp_kind", "") == "expert" and (r.tag or "") == tag:
+                return i
+        return None
+    for tg in ("expert slot 0 w1", "expert slot 0 w3"):
+        ctx["w13"].append(find(tg))
+    ctx["w2"].append(find("expert slot 0 w2"))
+    if None in ctx["w13"] + ctx["w2"]:
+        return dict(error="union templates not found")
+    Ks = {}
+    for which, lst, ops in (("loop1", ctx["w13"], ("O",)), ("loop2", ctx["w2"], ("A", "O"))):
+        for i in lst:
+            r0 = seg[ex[i][0]]
+            i1 = find(r0.tag.replace("slot 0", "slot 1"))
+            r1 = seg[ex[i1][0]]
+            for opk in ops:
+                (oi, row0), (oi1, _) = se.obj(i, opk, 0), se.obj(i1, opk, 0)
+                o = se.objs[oi]
+                if oi1 != oi:
+                    return dict(error=f"{r0.tag} {opk}: slot 0 and slot 1 cells in different objects")
+                S = amap(o, r1.desc[opk].base) - amap(o, r0.desc[opk].base)
+                if S <= 0 or o["stride"] % S:
+                    return dict(error=f"{r0.tag} {opk}: object row {o['stride']} not a multiple of the slot pitch {S}")
+                ctx["S"][(i, opk)] = S
+                Ks[(r0.tag, opk)] = o["stride"] // S
+    if len(set(Ks.values())) != 1:
+        return dict(error=f"e-indexed objects disagree on K: {Ks}")
+    ctx["K"] = K = Ks.popitem()[1]
+    if TOPK * (N - 1) + TOPK > 256 or K * (N - 1) + TOPK - 1 > 255:
+        return dict(error=f"e = rho K + kappa exceeds 8 bits (K {K}, N {N})")
+    U = dict(list=se.aux.take("union.list", TOPK * N), count=se.aux.take("union.count", 1),
+             tab=se.aux.take("union.tables", IR.TABLE_ROW_WORDS * TOPK * N))
+    ctx["U"] = U
+
+    def rsel_check(r2, rx2):
+        """every row of every loop iteration of a SYNTHETIC union (random ascending top-6 a position, seed 1019)
+        writes exactly cell e = rho K + kappa of its position's slot kappa, reads x row rho, and covers every
+        (rho, kappa) once over the loop (gate E2: each position's slot kappa holds ITS kappa-th expert)"""
+        rng = np.random.default_rng(1019)
+        ids = [sorted(rng.choice(EXPERTS, TOPK, replace=False).tolist()) for _ in range(N)]
+        uni, tabs = IR.idx_union(ids, EXPERTS, K)
+        vm = np.zeros(1 << 19, np.uint32)
+        for L, (c, ent) in enumerate(tabs):
+            vm[U["tab"] + 32 * L] = c
+            for j, (rho, e) in enumerate(ent):
+                vm[U["tab"] + 32 * L + 1 + j] = IR.entry_word(rho, e)
+        seen = {}
+        for L, u in enumerate(uni):
+            for bank, rr in IR.expand(r2, rx2, vm, L):
+                rho = bank - rx2.slot0
+                for opk in IR.OPND:
+                    if not (rx2.emask >> IR.OPND.index(opk) & 1):
+                        continue
+                    S = rx2.rs[opk]
+                    e = (rr.desc[opk].base - r2.desc[opk].base) // S
+                    assert (rr.desc[opk].base - r2.desc[opk].base) % S == 0
+                    kap = e - rho * K
+                    assert 0 <= kap < TOPK and ids[rho][kap] == u, f"iteration {L}: row {rho} cell e {e} is not " \
+                                                                   f"position {rho}'s slot for expert {u}"
+                    seen[(opk, rho, kap)] = seen.get((opk, rho, kap), 0) + 1
+                assert IR.check_rows_independent(r2, rx2, vm, L) is None
+        for opk in IR.OPND:
+            if rx2.emask >> IR.OPND.index(opk) & 1:
+                cells = {(rho, kap) for (o_, rho, kap) in seen if o_ == opk}
+                assert len(cells) == TOPK * N and all(v == 1 for (o_, _, _), v in seen.items() if o_ == opk), \
+                    f"operand {opk}: {len(cells)} of {TOPK * N} cells, multiplicity {set(seen.values())}"
+    ctx["rsel_check"] = rsel_check
+    last_eg = [i for i in range(len(ex)) if getattr(seg[ex[i][0]], "mtp_kind", "") == "egather" and i not in se.skip]
+    ctx["after_last_egather"] = max(last_eg, key=lambda i: s["start"][i]) if last_eg else None
+    return ctx
+
+
+def kvunion_and_att(se, i, r0, blob, st, errs, ctx_att, users):
+    """emit the attention record i (orig ATT.QK / PV, N rows) as plan-mode ATT records, one a lane pass, each after
+    its IDX.KVUNION (emitted once a layer before the QK record)"""
+    from hgi_sim import records as RC
+    from hgi_sim import timing as T
+    seg, N, P = se.seg, se.N, se.P
+    passes = att_plan_lanes(N, P, users)
+    if not ctx_att.get("plans"):
+        sel_i = ctx_att.get("sel_i")
+        ctx_att["plans"] = []
+        for p0, nl in passes:
+            R = se.aux.take(f"kvunion.plan.p{p0}", IR.NSM_ATT * IR.PLAN_WORDS)
+            D = se.aux.take(f"kvunion.map.p{p0}", IR.DMAP + IR.RUN_MAX * nl)
+            desc = dict(R=_u32(R, IR.PLAN_WORDS, IR.NSM_ATT, IR.PLAN_WORDS), D=_u32(D, IR.DMAP + IR.RUN_MAX * nl))
+            if sel_i is not None:
+                rs_ = seg[se.s["ex"][sel_i][0]]
+                o, b = se.cell(sel_i, rs_, "O", row=p0)
+                desc["A"] = RC.MDesc(space="VM", fmt="U32", base=b, n=rs_.desc["O"].n, m=nl, stride=o["stride"])
+            param = (nl - 1) | (p0 << 4) | (int(users) << 8) | (ATT_BUDGET << 16)
+            rec = RC.Rec("IDX", "KVUNION", param=param, imm_a=W_WIN, imm_b=STORE_ROWS,
+                         wait=UNIT_BIT["COLL"] if sel_i is not None else 0, desc=desc)
+            emit_rec(blob, st, errs, rec, None, f"IDX.KVUNION pass {p0}")
+            ctx_att["plans"].append((p0, nl, R))
+    for p0, nl, R in ctx_att["plans"]:
+        rec = copy.copy(r0)
+        rec.unit, rec.op = r0.orig_op.split(".")
+        rec.desc = {k: copy.copy(d) for k, d in r0.desc.items()}
+        rec.slot = p0 & 7
+        rs = {}
+        hsh = 0
+        for opk, d in rec.desc.items():
+            if d.space == "VM" and se.cps_of.get((i, opk)):
+                o, b = se.cell(i, r0, opk, row=p0)
+                d.base = b
+                if o["rows"] > 1:
+                    rs[opk] = o["stride"]
+            elif d.space == "HBM" and users and any(se.per_user(iv) for iv in
+                                                    T.intervals(d, se.dyn, r0.layer if isinstance(r0.layer, int) else 0)):
+                rs[opk] = se.ustride >> USER_HSH
+                d.base = d.base + p0 * se.ustride
+                hsh = USER_HSH
+        rx = IR.RowX(n=nl, slot0=p0, rsel=1, rtab=R, rs=rs, hsh=hsh)
+        emit_rec(blob, st, errs, rec, rx, f"{r0.orig_op} plan pass {p0}")
+        se.notes["att_plan_records"] += 1
+
+
+def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows, se=None):
+    """relocate + ROWX-encode every record; with se (step 4): the union loops, the ATT plan mode, users HBM strides.
+    -> (bytes, stats, errors)"""
     ex, start = s["ex"], s["start"]
     st = defaultdict(int)
     errs = []
@@ -472,14 +842,41 @@ def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows):
     cps_of = defaultdict(set)
     for (i, opk, cp) in opmap:
         cps_of[(i, opk)].add(cp)
+    uctx = union_setup(se, None) if se is not None and n_rows > 1 else None
+    if uctx and uctx.get("error"):
+        errs.append(dict(rec="union", err=uctx["error"]))
+        st["fail"] += 1
+        uctx = None
+    users = se is not None and se.mode == "mu"
+    actx = {}
+    if se is not None and n_rows > 1:
+        sel = [i for i in range(len(ex)) if getattr(seg[ex[i][0]], "orig_op", "") == "COLL.TOPK_MERGE"
+               and "index merge" in (seg[ex[i][0]].tag or "") and getattr(seg[ex[i][0]], "npos", 1) > 1]
+        actx["sel_i"] = sel[0] if sel else None
+    loop1 = False
     for i in sorted(range(len(ex)), key=lambda i: start[i]):
         k, L, _ = ex[i]
         r0 = seg[k]
         if r0.unit == "CTL" and r0.op == "END":
             continue
         kind = getattr(r0, "mtp_kind", "")
-        if kind in ("expert", "egather", "expert_union"):
-            st["skipped_union_" + kind] += 1        # IDX.UNION + rsel loop form: next step
+        if se is not None and i in se.skip:
+            st["union_slot_group_copies_folded"] += 1
+            continue
+        if kind in ("expert", "egather", "expert_union") and uctx is None and n_rows > 1:
+            st["skipped_union_" + kind] += 1        # no union context (AR: not reached; error: reported)
+            continue
+        if kind == "expert_union" and uctx is not None:
+            union_records(se, st, errs, blob, "union", uctx)
+            continue
+        if kind == "expert" and uctx is not None:
+            if (r0.tag or "").endswith(("w1", "w3")) and not loop1:
+                union_records(se, st, errs, blob, "loop1", uctx)
+                loop1 = True
+            st["union_expert_in_loop"] += 1
+            continue
+        if se is not None and n_rows > 1 and kind.startswith("att_B") and kind.endswith("_rows"):
+            kvunion_and_att(se, i, r0, blob, st, errs, actx, users)
             continue
         npos = getattr(r0, "npos", 1)
         rec = copy.copy(r0)
@@ -525,7 +922,19 @@ def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows):
                 K, fmt, nc, rows_sm, esz = PC._sm_shape(r0)
                 rpl = IR.best_rpl(npos, IR.P_LANES, nc, rows_sm)[0]
                 rec.param = (r0.param & 3) | ((npos - 1) << 2)
-            rx = IR.RowX(n=npos, slot0=0, rpl=rpl, rs=rs)
+            hsh = 0
+            if users:
+                from hgi_sim import timing as T
+                for opk, d in rec.desc.items():
+                    if d.space == "HBM" and any(se.per_user(iv) for iv in T.intervals(d, dyn, L)):
+                        rs[opk] = se.ustride >> USER_HSH
+                        hsh = USER_HSH
+                        st["users_hbm_strided_operands"] += 1
+                if rec.unit == "IDX" and rec.op == "INDEX":      # R11: the implicit key store steps by rs_I << hsh
+                    rs["I"] = se.ustride >> USER_HSH
+                    hsh = USER_HSH
+                    st["users_idx_key_store_strides"] += 1
+            rx = IR.RowX(n=npos, slot0=0, rpl=rpl, rs=rs, hsh=hsh)
         try:
             b = IR.encode(rec, rx)
             r2, rx2, nxt = IR.decode_one(b, 0)
@@ -561,13 +970,31 @@ def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows):
                              at=f"{Path(tb.filename).name}:{tb.lineno} {tb.line}"[:200],
                              pred=getattr(r0, "pred", None), descs=sorted(r0.desc)))
         st["ok" if ok else "fail"] += 1
+        if uctx is not None and i == uctx.get("after_last_egather"):
+            union_records(se, st, errs, blob, "loop2", uctx)
+    if se is not None:
+        st.update({f"note_{k}": v for k, v in se.notes.items()})
+        if uctx is not None:
+            st["union_K"] = uctx["K"]
     return bytes(blob), dict(st), errs[:20]
+
+
+def users_prologue(N, aux_base):
+    """the users image prologue: CTL.USERS (ROWX n = N, slot0 0) reading the host-written {token_s, pos_s} table"""
+    from hgi_sim import records as RC
+    rec = RC.Rec("CTL", "USERS", desc=dict(A=_u32(aux_base, 2 * N)))
+    rx = IR.RowX(n=N, slot0=0)
+    st, errs, blob = defaultdict(int), [], bytearray()
+    emit_rec(blob, st, errs, rec, rx, "CTL.USERS")
+    return bytes(blob), dict(st), errs
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--mode", default="mtp", choices=("mtp", "ar"))
+    ap.add_argument("--mode", default="mtp", choices=("mtp", "ar", "mu"))
     ap.add_argument("--layers", default="0,1")
+    ap.add_argument("--P", type=int, default=4)
+    ap.add_argument("--legacy", action="store_true", help="step-3 behaviour (union records skipped, no ATT plan)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     from hgi_sim import hbm_plane_model as M
@@ -575,22 +1002,47 @@ def main():
     from hgi_sim import timing as T
     st = M.load_stats(PC.STATS)
     PC.CUR["hist"] = PC.lane_hists()
-    PC.apply_knobs(PC.Knobs(**PC.HEAD))
-    N = 6 if a.mode == "mtp" else 1
-    cfg = M.plane_cfg(4 if N > 1 else 1)
-    PC.CUR["mode"] = "verify"
-    prog, _ = M.ds_compile(N, cfg, st["verify_union"][6]["mean"], "upper", False)
+    PC.apply_knobs(PC.Knobs(**dict(PC.HEAD, P=a.P)))
+    IR.P_LANES = a.P
+    N = {"mtp": 6, "ar": 1, "mu": 4}[a.mode]
+    cfg = M.plane_cfg(a.P if N > 1 else 1)
+    users = a.mode == "mu"
+    PC.CUR["mode"] = "users" if users else "verify"
+    union = PC.users_union(st["users_union"], N) if users else st["verify_union"][6]["mean"]
+    prog, _ = M.ds_compile(N, cfg, union, "upper", users)
     M.P5._count_slots(prog)
     M.P5._consumers(prog)
     dyn = T.Dyn(DT.POS)
     import engram_groups as EG
-    res = dict(schema="opentallas.hbm_next_1019.cmtp.emitter.v1", generated_utc=datetime.datetime.now(
-        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, mode=a.mode, N=N, segments={})
+    res = dict(schema="opentallas.hbm_next_1019.cmtp.emitter.v2", generated_utc=datetime.datetime.now(
+        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, mode=a.mode, N=N, P=a.P,
+        isa_version=IR.VERSION, segments={})
     a.out.mkdir(parents=True, exist_ok=True)
+    work = []
     for key, seg, s in SC.schedule_segments(prog, set(a.layers.split(","))):
         fps = EG.footprints(seg, s)
-        vals, uf, opmap, seg_end = values(seg, s, fps, dyn)
+        skip = frozenset() if (a.legacy or N == 1) else frozenset(union_skip(seg, s, fps))
+        joins = () if (a.legacy or N == 1) else union_join_families(seg, s, skip)
+        vals, uf, opmap, seg_end = values(seg, s, fps, dyn, skip, joins)
         objs, comp2obj = build_objects(vals, uf, N)
+        pl = place(objs)
+        se = None
+        if not a.legacy:
+            se = SegEmit(seg, s, dyn, objs, comp2obj, uf, opmap, N, a.mode, a.P, Aux(pl["high_water"]), fps, skip)
+        work.append((key, seg, s, fps, vals, uf, opmap, objs, comp2obj, pl, se))
+    if users and not a.legacy:
+        ustride, tried = user_stride([w[-1] for w in work])
+        res["users_hbm"] = dict(hsh=USER_HSH, stride_bytes=ustride, collisions_by_stride={str(k): v for k, v in
+                                                                                         tried.items()})
+        for w in work:
+            w[-1].ustride = ustride or (1 << 36)
+        pb, pst, perr = users_prologue(N, 0)
+        (a.out / "mu_prologue.hgi1r").write_bytes(pb)
+        res["users_prologue"] = dict(stats=pst, errors=perr, sha256=hashlib.sha256(pb).hexdigest(),
+                                     note="A = the host-written {token_s, pos_s} table at the image's users.table aux "
+                                          "address (the per-segment aux map below); relocated by the whole-token "
+                                          "assembler")
+    for key, seg, s, fps, vals, uf, opmap, objs, comp2obj, pl, se in work:
         li = defaultdict(lambda: [0, 0.0, 0])
         for v in vals:
             if v["kind"] == "livein":
@@ -599,24 +1051,28 @@ def main():
                 x[1] = max(x[1], v["t1"])
                 x[2] += 1
         livein = sorted(([k[0], k[1], w, round(t, 1), n] for k, (w, t, n) in li.items()), key=lambda z: -z[2])
-        pl = place(objs)
         c4 = SC.c4_vm_live(seg, s, fps, N)
-        blob, est, errs = emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, N)
+        if se is not None and users:
+            se.aux.take("users.table", 2 * N)
+        blob, est, errs = emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, N, se)
         (a.out / f"{a.mode}_L{key}.hgi1r").write_bytes(blob)
         kinds = defaultdict(int)
         for o in objs:
             kinds[o["kind"]] += 1
+        need = se.aux.top if se is not None else pl["high_water"]
         r = dict(values=len(vals), objects=dict(kinds), alloc=pl, c4_peak=c4["peak_words"],
                  frag_over_c4=round(pl["high_water"] / max(1, c4["peak_words"]), 3),
                  objects_over_c4=round(pl["object_bound"] / max(1, c4["peak_words"]), 3),
-                 fits=dict(as_built=pl["high_water"] <= VW, grown_412k=pl["high_water"] <= VM_GROWN),
+                 aux=dict(se.aux.items) if se is not None else {}, vm_need_words=need,
+                 fits=dict(as_built=need <= VW, grown_412k=need <= VM_GROWN, vm_2p19=need <= 1 << 19),
                  emit=est, errors=errs, image_bytes=len(blob),
                  livein_words=sum(z[2] for z in livein), livein_top=livein[:16],
                  self_overwritten_read_words=getattr(uf, "selfw_words", {}),
                  c4_self_overwritten=c4.get("self_overwritten_read_words", {}),
                  image_sha256=hashlib.sha256(blob).hexdigest())
         res["segments"][str(key)] = r
-        print(a.mode, key, json.dumps(r)[:900], flush=True)
+        print(a.mode, key, json.dumps(dict(emit=est, errors=errs[:3], need=need, hw=pl["high_water"]))[:1500],
+              flush=True)
         (a.out / "emitter.json").write_text(json.dumps(res, indent=1, default=str) + "\n")
     srcs = ["tools/hbm_next/emitter.py", "tools/hbm_next/isa_rows.py", "tools/hbm_next/plane_compiler.py",
             "tools/hbm_next/static_check.py"]
