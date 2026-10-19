@@ -53,14 +53,14 @@ module ot_hbm_owner_return_native #(parameter integer J=0,MUT=0)(
   if(!ctrl_rst)begin wp<=0;ep<=2;eligible_ring<=0;packet_v<=0;packet_target<=0;fault<=0;end
   else begin
    wp<=wp+1'b1;ep<=ep+1'b1;eligible_ring[wp]<=tag_ok;
-   packet_v<=metadata_v&&eligible_ring[ep]&&identity&&!fault;
+   packet_v<=metadata_v&&eligible_ring[(MUT==6)?wp:ep]&&identity&&!fault;
    packet_target<=ordinal[2];
    if(tag_fault||link_fault||(av_q&&metadata_input_q[43:32]!=at_q[16:5])||
-     (metadata_v&&eligible_ring[ep]&&!identity))fault<=1;
+     (metadata_v&&eligible_ring[(MUT==6)?wp:ep]&&!identity))fault<=1;
   end
- always @(posedge clk)packet<={ordinal,metadata[18:17],metadata[34:19],selected[255:0]};
+ always @(posedge clk)packet<={ordinal,metadata[18:17],(metadata[34:19]^((MUT==5)?16'd1:16'd0)),selected[255:0]};
  ot_hbm_owner_pair_link #(.J(J),.MUT(MUT)) point_link(.clk(clk),.rst_n(rst_n),
-  .in_v(packet_v),.stop(fault),.in_packet(packet),.in_target(packet_target),.target_reserved(target_reserved),
+  .in_v(packet_v),.stop((MUT==7)?1'b0:fault),.in_packet(packet),.in_target(packet_target),.target_reserved(target_reserved),
   .out_v(pair_v),.out_packet(pair_packet),.out_target(pair_target),.fault(link_fault));
 endmodule
 `default_nettype wire
