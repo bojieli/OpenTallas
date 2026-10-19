@@ -6,7 +6,8 @@
 // Timing: run edge is age 0. RX CMD at age RX_CMD; Q at RX_CMD+1..+32.
 // Codec CMD appears one edge later. Q has one additional register so service
 // samples Q beat0 two edges after request, as its start_qk/q_window require.
-// RESULT age TX_FIRST..+31 and idle +32, STATUS +33 are TX codec input events.
+// RESULT age TX_FIRST..+31 and idle +32, STATUS +33 are TX codec input events; STATUS carries the namespace
+// word {q_ready 0, done, fault, busy 0, ready} (qkd_native_status_word).
 module qkd_native_attention_static_ctl #(
  parameter integer MUT=0
 )(
@@ -77,7 +78,18 @@ module qkd_native_attention_static_ctl #(
  wire status_slot=busy&&age==tx_first+33;
  assign result_reserved=busy&&age>=tx_first&&age<tx_first+32;
  wire rx_valid;wire [3:0] rx_kind;wire [4:0] rx_beat;wire [511:0] rx_data;wire record_fault;wire codec_tx_valid;
- wire [511:0] tx_data=status_slot?512'd0:result_data;
+ // STATUS (age TX_FIRST+33): the namespace word {q_ready, done, fault, busy, ready} (QXF-LINK F2; was 512'd0, which the
+ // compute consumer rejects: it completes only on done).  done = result_done seen on its compiled age TX_FIRST+32;
+ // the operation holds no Q / work after its last RESULT (q_ready 0, busy 0); ready = it can take the next load.
+ // MUT 3 (bench): the legacy all-zero STATUS word.
+ reg done_seen;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)done_seen<=0;
+  else if(run)done_seen<=0;
+  else if(busy&&age==tx_first+32&&result_done)done_seen<=1;
+ wire [511:0] status_data;
+ qkd_native_status_word u_status(.q_ready(1'b0),.done(done_seen),.fault(fault),.busy(1'b0),.ready(done_seen&&!fault),.word(status_data));
+ wire [511:0] tx_data=status_slot?((MUT==3)?512'd0:status_data):result_data;
  qkd_native_attention_record codec(.ck(ck),.rst_n(rst_n),
   .tx_event(result_valid||status_slot),.tx_expected(tx_expected),.tx_kind(status_slot?4'd4:4'd3),
   .tx_expected_kind(status_slot?4'd4:4'd3),.tx_epoch(ep),.tx_expected_epoch(ep),

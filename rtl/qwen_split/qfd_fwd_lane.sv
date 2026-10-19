@@ -4,9 +4,9 @@
 // Q-DIE11-RLY (2026-10-18, coordinator decision HANDOFF 0ea item 1): FORWARDED-CLOCK HALF-CYCLE LANES + LANDINGS for the
 // Qwen split compute die (contract /home/ubuntu/claude-takeover-20261007/lanes/LANDING-CONTRACT.md sections 2, 3, 6, 7).
 // The die generator (tools/qwen_rom_fulldie_b3r2.py, OT_SPLIT_FWD_LANES=1) turns every relay chain of n >= 1 frames into
-//   frame 0          hop-0 station (ot_qfd_lane_st FIRST=1): the hop-0 forward cell is an INVERTING clock gate on the
-//                    SOURCE block's root (cko = ~ck, opened by the source's released reset en), so station 0 captures half
-//                    a period after the source launches (t_data,min - t_cko,max >= 0 by construction: the gate inverts)
+//   frame 0          hop-0 station (ot_qfd_lane_st FIRST=1): the hop-0 forward cell is a clock gate on the SOURCE
+//                    block's root (cko = ck, opened by the source's released reset en): station 0 captures one period
+//                    after the source launches (an ordinary root -> root hop); its ck_o = ~cko starts the half-cycle hops
 //   frames 1..n-2    half-cycle stations (ot_qfd_lane_st FIRST=0): capture on ckf (previous ck_o), ck_o = ~ckf through
 //                    ONE kept inverter (S81-LAND2 hold fix (a), dsfd_dvrlyh_* form)
 //   frame n-1        the LANDING (ot_qfd_land): its ring slots ARE the last capture (flop-first, written on the lane's
@@ -38,16 +38,19 @@ module ot_qfd_ckinv (input wire a, output wire y);
     assign y = ~a;
 endmodule
 
-// hop-0 forward cell: INVERTING integrated clock gate on the source root.  cko = ~ck while en (latched while ~ck is low,
-// i.e. while ck is high) is 1.  en is the source's released reset (synchronous to ck): it rises after source edge G, the
-// latch takes it while ck is high, and the first cko rising edge is ck's falling edge G + T/2.
+// hop-0 forward cell: integrated clock gate on the source root, cko = ck while en is 1.  en is the source's released reset
+// (synchronous to ck): it rises after source edge G, and the first cko rising edge is source edge G + 1.
+// Q-DIE11 10-18 (kit fix, coordinator): hop 0 captures on the RISING source-root edge (a full-cycle root -> root hop, one
+// ordinary tile IO budget, as the S81 dsfd_dvrlyh kits); the station's ck_o = ~cko (one kept inverter) makes every later
+// hop half-cycle.  The first form captured hop 0 on the FALLING edge (~ck gate): its tile could not be budgeted (no
+// rise -> rise clock latency: link_budget 'no measured clock' crash; half-period input window).  Cost: + T/2 per lane.
 module ot_qfd_fwd0 (input wire ck, input wire en, output wire cko);
-    wire ckn;
+`ifdef OT_QFD_LANE_MUT_HOP0INV
+    wire ckn;                                                  // bench mutant: the first form (inverting hop-0 gate)
     ot_qfd_ckinv u_inv (.a(ck), .y(ckn));
-`ifdef OT_QFD_LANE_MUT_NOINV
-    ot_hdc_cg u_cg (.clk(ck), .en(en), .gclk(cko));            // bench mutant: non-inverting hop-0 (full-cycle hop 0)
-`else
     ot_hdc_cg u_cg (.clk(ckn), .en(en), .gclk(cko));
+`else
+    ot_hdc_cg u_cg (.clk(ck), .en(en), .gclk(cko));
 `endif
 endmodule
 
@@ -151,3 +154,38 @@ module ot_qfd_land #(
 `endif
 endmodule
 `default_nettype wire
+
+// LANDFIX-SQ (2026-10-18, coordinator 0gh: no plain relays left on the Qwen compute die): FORWARDED RESET LANES.
+// A reset lane (OT_SPLIT_FWD_LANES_RST=1) carries a reset LEVEL from its source (reset synchroniser / block reset output
+// / reset bump) to one block reset pin.  It cannot use the data landing: the ring's read epoch is the receiver's released
+// reset, which is the very level the lane carries, and the hop-0 gate (opened by the source's released reset) would hold
+// an asserting reset back.  Form: hop 0 = one register on the SOURCE root (no gate), ck_o = ~ck; stations = one register
+// on the lane clock, ck_o = ~ckf (half-cycle hops, as ot_qfd_lane_st); landing = the level re-registered on the
+// RECEIVING block's root (one STA-timed edge, the mesochronous lane -> root hop the data landings time too).  The level is
+// carried like the plain reset relay chains before it (registers without reset, ot_qwen_rst_rep class): the reset tree's
+// equal-depth release (fixed edges per lane, n/2 + 1 cycles) keeps the release on a fixed block-root edge.
+module ot_qfd_rlane_st #(parameter integer W = 1) (
+    input  wire         cap,         // hop 0: source block root;  station: the lane's forwarded clock (previous ck_o)
+    input  wire [W-1:0] a,
+    output reg  [W-1:0] b,
+    output wire         ck_o
+);
+    always @(posedge cap) b <= a;
+`ifdef OT_QFD_LANE_MUT_FULL
+    wire ckn, ckp;
+    ot_qfd_ckinv u_ck0 (.a(cap), .y(ckn));
+    ot_qfd_ckinv u_ck1 (.a(ckn), .y(ckp));
+    assign ck_o = ckp;
+`else
+    ot_qfd_ckinv u_ck0 (.a(cap), .y(ck_o));
+`endif
+endmodule
+
+// reset-release landing: the lane's reset level re-registered on the receiving block's root
+module ot_qfd_rlane_land #(parameter integer W = 1) (
+    input  wire         ck,          // receiving block root
+    input  wire [W-1:0] a,
+    output reg  [W-1:0] b
+);
+    always @(posedge ck) b <= a;
+endmodule

@@ -1,15 +1,15 @@
 #!/bin/bash
 # Q-DIE11-RLY 10-18: behavioural bench of the Qwen forwarded-clock HALF-CYCLE lane + landing (rtl/qwen_split/qfd_fwd_lane.sv,
 # LANDING-CONTRACT L1-L7) through the GENERATED die wrappers (tools/qwen_split/gen_relay_rtl.py) -- Verilator 5.050.
-# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|noinv> <work dir> [W]
+# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|hop0inv> <work dir> [W]
 #   pass : 8 lanes in parallel (n = 1, 2, 5, 5+2T lag, 8, 27 frames; source released before / after the receiver), each
 #          hop with its own clock-leg and data-leg delay (clock leg longer: the hold-critical case), receiver root offset
 #          from the source root.  Per lane the bench derives the latency L from the geometry (read 0.25..1.25 T after
 #          the ring write; lane "lag2" reuses the K of "lag0" with 2 T more clock lag: same L, inside the D = 4 window),
 #          K = (L - 1 - (R0 - G)) mod 8, and checks on every receiver edge: o = w(t - L) once written (0 bubbles before),
 #          fault stays 0.  PASS line: FWD_BENCH PASS 0 errors in <checks> checks.
-#   sel / naive / vld / full / noinv: the same bench on the RTL built with one mutant define (read slot one late; no
-#          ring; every slot valid at once; full-cycle forwards; non-inverting hop-0 gate) -- each must FAIL.
+#   sel / naive / vld / full / hop0inv: the same bench on the RTL built with one mutant define (read slot one late; no
+#          ring; every slot valid at once; full-cycle forwards; the first-form inverting hop-0 gate) -- each must FAIL.
 set -u
 mode=$1; O=$2; W=${3:-16}
 cd "$(dirname "$0")/../.."; mkdir -p "$O"
@@ -17,7 +17,7 @@ export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 DEF=
 case $mode in
   pass) ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
-  vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; noinv) DEF=+define+OT_QFD_LANE_MUT_NOINV ;;
+  vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
   *) echo "bad mode $mode"; exit 2 ;;
 esac
 # the die wrappers exactly as the die generator names / ports them (gen_relay_rtl.py on a mini die.v)
@@ -87,9 +87,10 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
     integer td = 0;
     initial begin
         err = 0; chk = 0;
-        // ring write of w(e): source edge e + NF/2 periods + the clock legs of the NF-1 forwarded hops (+ XL)
+        // ring write of w(e): source edge e + 1 (hop 0, full cycle) + (NF-1)/2 periods + the clock legs of the NF-1
+        // forwarded hops (+ XL)
         lag = (NF - 1) * CD + XL;
-        L = $rtoi($ceil((NF * T / 2.0 + lag - DOFF) / T + 0.25)) + LADD;
+        L = $rtoi($ceil(((NF + 1) * T / 2.0 + lag - DOFF) / T + 0.25)) + LADD;
         K = ((L - 1 - (R0 - G)) % 8 + 8) % 8;
         if (KFROM >= 0) K = KFROM;
         $display("FWD_LANE NF=%0d CD=%0.2f XL=%0.2f DOFF=%0.2f G=%0d R0=%0d L=%0d K=%0d", NF, CD, XL, DOFF, G, R0, L, K);
