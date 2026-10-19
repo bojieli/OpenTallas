@@ -290,6 +290,25 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     row, sched = L.lower(raw)
     if safe_calendar and len(sched) != 1:
         raise ValueError("safe calendar supported profile requires exactly one issue group")
+    if safe_calendar:
+        # The native numerical witness is record23's A -> BF16 -> O path.
+        # A single issue alone proves neither reducer/R commits nor another
+        # backend control lifetime. Keep these unproved modes fail-closed.
+        tested_sut = dict.fromkeys((
+            "a_src", "a_ind", "b_src", "b_half", "c_src", "c_pair", "d_src",
+            "a_rnd", "a_relu", "a_min", "c_clip", "m1", "m2", "qm", "ad", "sfu",
+            "e1", "e2", "rnd", "dst", "red", "red_sq", "red_whole", "red_rnd",
+            "su_vec", "red_tree", "imm1", "imm2", "imm3"), 0)
+        tested_sut.update(rnd=1, dst=1)
+        if unit != 2 or sut != tested_sut or set(desc) != {"A", "O"}:
+            raise ValueError("safe calendar requires the tested A-to-O BF16 non-reducer control profile")
+        for md in desc.values():
+            if (md.space != "VM" or md.fmt != "FP32" or md.n != 128 or md.m != 1
+                    or md.stride != 0 or md.istride not in (0, 1)
+                    or any(getattr(md, name) for name in
+                           ("lstride", "dyn_sel", "dyn_mul", "n_sel", "l1stride", "ibcast", "indexed"))
+                    or md.base % 8):
+                raise ValueError("safe calendar requires the tested aligned 128-word VM descriptor profile")
     res = dict(lowering={k: v for k, v in row.items() if k != "sut"}, sut=sut, reasons=[])
     if timing is not None:
         res["native_timing"] = timing.as_dict()
