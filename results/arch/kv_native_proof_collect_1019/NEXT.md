@@ -1,0 +1,3 @@
+# Next pickup
+
+Preserve original PVjoin positive/MUT1 and seq_xs positive/MUT1/M8 jobs. Collect only newly terminal audit JSON plus exact log hashes; causal-M8 controller remains remote PID1713334/unit oth-ubuntu-1713334-1792438797. No duplicate proof or helper/receipt authorization. lane8/ktree need source-pinned diagnosis of 16 err comparisons and changed multiplier dependency; PVslice needs an actual justified SRAM formal model before a new proof plan. These are follow-up model/source tasks, not permission to patch this collector. Full selected GEN8 profile inventory and physical reset contract remain unqualified.

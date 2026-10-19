@@ -1,0 +1,120 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qwen_tp8_pv_slice_t/qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+ "closed": {
+  "commit": "fa546b7f3cc079bd89bb1b01d882cfb2ca45d844",
+  "final_v_sha256": "41b0c57ce8220eab244d1eb6f16594724f879abe5194860b3965f8002febd733",
+  "job": "qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+  "lef_sha256": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+  "physical_json_sha256": "6d28ce5d63484bbdcd4bc17377e10bf96d0a9ac12551325026dbe72b05b16e42",
+  "spec_params": {
+   "RESET_PIN": 1
+  },
+  "synth_sources": {
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+   "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "top": "ot_qwen_tp8_pv_slice_t",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {},
+ "equiv": {
+  "cells": null,
+  "log_sha256": "a186fbc898b07446fa0741bcdeb87eff94bf3767faa023b961c0e45c561b0508",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "proven_cells": null,
+  "rc": 1,
+  "seconds": [
+   4.5,
+   3361.9
+  ],
+  "unproven_cells": null,
+  "unproven_sample": []
+ },
+ "expect": "pass",
+ "gate": {
+  "flops": 14858,
+  "macros": {
+   "u_slice.g_mem[0].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[1].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[2].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[3].u_mem": "ot_sram_1r1w_32x128_m1"
+  },
+  "replicas": 1
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "2b57effb1dce2e024148c9ab701873b1e83dd76b0ef203ccbb020ea605ccbbdb",
+   "child_lint.json": "b7c61beeb4601c5dae7864c036ba268e3414092111076b638617cf8100168300",
+   "export_ff.log": "4386e8e64774e7953f0cc03b3c2202369a92b0f48811ccb46c6544374eed15f2",
+   "export_ff.tcl": "04a3556fa1285717018f3bc2fbe0d7dcd114494bfb087ec09e03d3b47c0f293e",
+   "export_ss.log": "1180da6d784a958e6ee372b69f5b7545e4e852725fe7e1ae81daf8f0a62aea06",
+   "export_ss.tcl": "698e354958076d54edb59f43ac17ab492be7589ff763a576752cfa60c64fb27a",
+   "export_tt.log": "bf0e17b84c158e7cecdb6f11a3721dce8053073b72ce3bdea68870883d0584e4",
+   "export_tt.tcl": "ec4cbaedec1767e401dbc58e0ee461c0883d882b1564ae64a935db3ebd690ddf",
+   "insertion.json": "0113ba46b0372b04cdd00c845ca87ea41103e73764bfd8d41d6142fd79bf0172",
+   "ot_qwen_tp8_pv_slice_t.lef": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+   "ot_qwen_tp8_pv_slice_t_ff.lib": "6af8a3819a252e48b4a3d9db0ca58c63732b6a0bf4159973a3636ac923792d73",
+   "ot_qwen_tp8_pv_slice_t_ss.lib": "205eaf81eda7318f5f0a3554bac8797956624a540a415b0ce75e514ff8c4d78f",
+   "ot_qwen_tp8_pv_slice_t_tt.lib": "661a28bd0a3c79311acbdbbd9fa1c1caf2705a6ebe4b703507be5f2847e0ed97"
+  },
+  "rtl": {
+   "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+  },
+  "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t"
+ },
+ "module": "ot_qwen_tp8_pv_slice_t",
+ "parameters": {
+  "RESET_PIN": 1
+ },
+ "proven": false,
+ "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 0,
+  "gate_only_sample": [],
+  "gold_only": 433,
+  "gold_only_sample": [
+   "cc[4]",
+   "cc[5]",
+   "cc[6]",
+   "cv",
+   "u_slice.av[10]",
+   "u_slice.av[11]",
+   "u_slice.av[12]",
+   "u_slice.av[13]",
+   "u_slice.av[14]",
+   "u_slice.av[15]",
+   "u_slice.av[1]",
+   "u_slice.av[3]",
+   "u_slice.av[4]",
+   "u_slice.av[5]",
+   "u_slice.av[6]",
+   "u_slice.av[7]",
+   "u_slice.av[8]",
+   "u_slice.av[9]",
+   "u_slice.cp[0][4]",
+   "u_slice.cp[0][5]"
+  ],
+  "gold_regs": 15290,
+  "paired": 14858
+ },
+ "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t"
+}

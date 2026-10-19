@@ -1,0 +1,46 @@
+{
+  "runs": [
+    {
+      "run": "ot_qwen_tp8_pv_join_t",
+      "audit_terminal": false,
+      "log_bytes": 7659565,
+      "log_mtime_utc": "2026-10-19T20:43:48.440833+00:00"
+    },
+    {
+      "run": "ot_qwen_tp8_pv_join_t.mut",
+      "audit_terminal": false,
+      "log_bytes": 7659565,
+      "log_mtime_utc": "2026-10-19T20:41:40.951576+00:00"
+    },
+    {
+      "run": "qkd_seq_xs_s",
+      "audit_terminal": false,
+      "log_bytes": 2464113,
+      "log_mtime_utc": "2026-10-19T20:40:03.115124+00:00"
+    },
+    {
+      "run": "qkd_seq_xs_s.mut",
+      "audit_terminal": false,
+      "log_bytes": 2464113,
+      "log_mtime_utc": "2026-10-19T20:39:34.124285+00:00"
+    },
+    {
+      "run": "qkd_seq_xs_s.causal_mut8",
+      "audit_terminal": false,
+      "log_bytes": 2451866,
+      "log_mtime_utc": "2026-10-19T20:39:39.911253+00:00"
+    }
+  ],
+  "processes": [
+    " 123380  122830    4775  0.3 1407480 python3 tools/qwen_kv_die/kv_param_native_audit.py audit --root . --module ot_qwen_tp8_pv_join_t --rtl rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv --view physical/ref_tile/qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t --params {\"MUT\": 0, \"J_LAT\": 7, \"RESET_PIN\": 1} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qwen_tp8_pv_join_t/qkd_pv_join_sfe_r6-r6-86876065a --work /srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qwen_tp8_pv_join_t --out /srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qwen_tp8_pv_join_t.audit.json --expect pass",
+    " 123383  122831    4775  0.3 1410120 python3 tools/qwen_kv_die/kv_param_native_audit.py audit --root . --module ot_qwen_tp8_pv_join_t --rtl rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv --view physical/ref_tile/qkd_pv_join_sfe_r6/views/ot_qwen_tp8_pv_join_t --params {\"MUT\": 1, \"J_LAT\": 7, \"RESET_PIN\": 1} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qwen_tp8_pv_join_t/qkd_pv_join_sfe_r6-r6-86876065a --work /srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qwen_tp8_pv_join_t.mut --out /srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qwen_tp8_pv_join_t.mut.audit.json --expect fail",
+    "2708782 2707224    4937  0.1 110940 python3 tools/qwen_kv_die/kv_param_native_audit.py audit --root . --module qkd_seq_xs_s --rtl rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv --view physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s --params {\"MUT\": 1} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/qkd_seq_xs_s/qkd_seq_xs_s-x1-9c9c3d7b5 --work /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s.mut --out /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s.mut.audit.json --expect fail",
+    "2708981 2708186    4937  0.1 112832 python3 tools/qwen_kv_die/kv_param_native_audit.py audit --root . --module qkd_seq_xs_s --rtl rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv --view physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s --params {\"MUT\": 0} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/qkd_seq_xs_s/qkd_seq_xs_s-x1-9c9c3d7b5 --work /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s --out /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s.audit.json --expect pass",
+    "3601383 1713334    3643  0.2 296640 python3 tools/qwen_kv_die/kv_param_native_audit.py audit --root . --module qkd_seq_xs_s --rtl rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv --view physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s --params {\"MUT\": 8} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/qkd_seq_xs_s/qkd_seq_xs_s-x1-9c9c3d7b5 --work /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s.causal_mut8 --out /srv/opentallas-scratch/claude/kv-params-1019/runs/qkd_seq_xs_s.causal_mut8.audit.json --expect fail",
+    " 334495  123380    4757  312 2769528 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys",
+    " 342323  123383    4757  312 4500472 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys",
+    "2789231 2708981    4925  132 3489232 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys",
+    "2795645 2708782    4925  132 3489172 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys",
+    "3674748 3601383    3635  146 1313328 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.kv_native_terminal_collection.v1",
+  "collected_at": "2026-10-19T13:43:42.266211-07:00",
+  "base_packet": "e27a57fbf",
+  "conditional_pv_reset_packet": "e01bf789a",
+  "original_job_root": "ot-epyc6:/srv/opentallas-scratch/claude/kv-params-1019",
+  "new_terminal": [
+    {
+      "file": "ot_qkh_lane8.audit.json",
+      "module": "ot_qkh_lane8",
+      "expect": "pass",
+      "proven": false,
+      "unproven_cells": 16,
+      "log_sha256": "d02c685be26c3c003be47ff65ea3d58b625bb78e863c33e439b1e6d1328921c8",
+      "audit_sha256": "b4d8c7a757d9102c655b54013d8dea584dfd4063c61956f15eb48b7d456086fb",
+      "sources_changed_since_closure": [
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "classification": "16 unproven err-state comparisons; changed FP32 mul source dependency",
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$451164: \\S__g_d_7__u_a_err_1__gold \\S__g_d_7__u_a_err_1__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$450531: \\S__g_d_7__u_b_err_1__gold \\S__g_d_7__u_b_err_1__gate",
+        "Found a total of 16 unproven $equiv cells.",
+        "ERROR: Found 16 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "file": "ot_qkh_ktree.audit.json",
+      "module": "ot_qkh_ktree",
+      "expect": "pass",
+      "proven": false,
+      "unproven_cells": 16,
+      "log_sha256": "482a093a0eb0e76162943e3284c85c84311f6e97dc0fca60208268113f0d2ed1",
+      "audit_sha256": "7d9efbdb2da274f1e282980da61d5f8cfe0ecdb57f080882549d0e082a4e21f8",
+      "sources_changed_since_closure": [
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "classification": "16 unproven err-state comparisons; changed FP32 mul source dependency",
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$378345: \\S__g_n_9__u_a_err_1__gold \\S__g_n_9__u_a_err_1__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$377131: \\S__u_scale_err_1__gold \\S__u_scale_err_1__gate",
+        "Found a total of 16 unproven $equiv cells.",
+        "ERROR: Found 16 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "file": "ot_qwen_tp8_pv_slice_t.audit.json",
+      "module": "ot_qwen_tp8_pv_slice_t",
+      "expect": "pass",
+      "proven": false,
+      "unproven_cells": null,
+      "log_sha256": "a186fbc898b07446fa0741bcdeb87eff94bf3767faa023b961c0e45c561b0508",
+      "audit_sha256": "6dcc3007545805fe69bbb4e58d5298c1868b4a6b1291847ea62acc0368ee0e76",
+      "sources_changed_since_closure": [],
+      "classification": "missing SRAM SAT model; not a causal mutant witness",
+      "terminal_log_tail": [
+        "",
+        "12. Executing EQUIV_INDUCT pass.",
+        "Found 14195 unproven $equiv cells in module equiv:",
+        "ERROR: No SAT model available for cell u_slice.g_mem[3].u_mem (ot_sram_1r1w_32x128_m1)."
+      ]
+    },
+    {
+      "file": "ot_qwen_tp8_pv_slice_t.mut.audit.json",
+      "module": "ot_qwen_tp8_pv_slice_t",
+      "expect": "fail",
+      "proven": false,
+      "unproven_cells": null,
+      "log_sha256": "ba6bd12be3eda9ee8146164f34991d003a94e18320904d0fbbbe45b69d984efe",
+      "audit_sha256": "b1e55bdb19232474e6b1a6ca76c4e6fa457b2aa6c912a37f83f470f55b3dcc1a",
+      "sources_changed_since_closure": [],
+      "classification": "missing SRAM SAT model; not a causal mutant witness",
+      "terminal_log_tail": [
+        "",
+        "12. Executing EQUIV_INDUCT pass.",
+        "Found 14199 unproven $equiv cells in module equiv:",
+        "ERROR: No SAT model available for cell u_slice.g_mem[3].u_mem (ot_sram_1r1w_32x128_m1)."
+      ]
+    }
+  ],
+  "total_terminal_audit_files": 32,
+  "positive_audit_files": 16,
+  "proven_positive_files": 12,
+  "unique_proven_modules": 11,
+  "native_qualified": false,
+  "receipt_issued": false,
+  "new_jobs_launched": 0,
+  "pending": [
+    "ot_qwen_tp8_pv_join_t",
+    "ot_qwen_tp8_pv_join_t.mut",
+    "qkd_seq_xs_s",
+    "qkd_seq_xs_s.mut",
+    "qkd_seq_xs_s.causal_mut8"
+  ]
+}
