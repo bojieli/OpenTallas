@@ -1,7 +1,7 @@
 #!/bin/bash
 # Q-DIE11-RLY 10-18: behavioural bench of the Qwen forwarded-clock HALF-CYCLE lane + landing (rtl/qwen_split/qfd_fwd_lane.sv,
 # LANDING-CONTRACT L1-L7) through the GENERATED die wrappers (tools/qwen_split/gen_relay_rtl.py) -- Verilator 5.050.
-# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|hop0inv> <work dir> [W]
+# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|hop0inv|passb|selb|naiveb|vldb|wselb> <work dir> [W]
 #   pass : 8 lanes in parallel (n = 1, 2, 5, 5+2T lag, 8, 27 frames; source released before / after the receiver), each
 #          hop with its own clock-leg and data-leg delay (clock leg longer: the hold-critical case), receiver root offset
 #          from the source root.  Per lane the bench derives the latency L from the geometry (read 0.25..1.25 T after
@@ -15,9 +15,14 @@ mode=$1; O=$2; W=${3:-16}
 cd "$(dirname "$0")/../.."; mkdir -p "$O"
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 DEF=
+# QK-LAND600B 10-18: mode suffix 'b' = the same bench on landing variant B (registered one-hot write select copies,
+# +define+OT_QFD_LAND_WSEL_REG); wselb = variant B with its own mutant (copies load the current count: slot one late)
+case $mode in passb|selb|naiveb|vldb) DEF=+define+OT_QFD_LAND_WSEL_REG; mode=${mode%b} ;;
+  wselb) DEF="+define+OT_QFD_LAND_WSEL_REG +define+OT_QFD_LAND_MUT_WSEL"; mode=wsel ;; esac
 case $mode in
-  pass) ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
-  vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
+  wsel) ;;
+  pass) ;; sel) DEF="$DEF +define+OT_QFD_LAND_MUT_SEL" ;; naive) DEF="$DEF +define+OT_QFD_LAND_MUT_NAIVE" ;;
+  vld) DEF="$DEF +define+OT_QFD_LAND_MUT_VLD" ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
   *) echo "bad mode $mode"; exit 2 ;;
 esac
 # the die wrappers exactly as the die generator names / ports them (gen_relay_rtl.py on a mini die.v)

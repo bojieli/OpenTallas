@@ -84,12 +84,40 @@ module ot_qfd_lane_st #(parameter integer W = 16, parameter integer FIRST = 0) (
 `endif
 endmodule
 
+// QK-LAND600B 10-18 (variant B, coordinator): REGISTERED ONE-HOT WRITE SELECT, one copy per ~WSELB data bits.
+// The original ring decodes wc[AW-1:0] == s for every slot and fans that decode out to all W enables of the slot (600 b:
+// wc -> ~500 ps buffer tree -> bank/D, -72.6 ps @770 placed).  Variant B holds onehot(wc[1:0]) in registers that load
+// onehot of wc's NEXT state (wc + 1) on the same wck edge as wc, and are cleared to onehot(0) with wc by the lane epoch:
+// so ws == onehot(wc[1:0]) on every cycle (same write slot on the same edge; landing latency unchanged).  One copy per
+// WSELB bits (600 b: 4 copies x 4 slots = 16 flops); each copy is its own NON-parameterised keep_hierarchy module
+// (ot_qfd_wsel4: synthesis cannot merge the copies back, and SYNTH_KEEP_MODULES matches its post-synthesis name).
+// Slot 0's bit is stored inverted (async CLEAR only, the same cell class as wc).
+(* keep_hierarchy *)
+module ot_qfd_wsel4 (
+    input  wire       wck,
+    input  wire       we,         // lane epoch, active low clear
+    input  wire [1:0] wn,         // wc[1:0] + 1 (the counter's next state while we = 1)
+    output wire [3:0] ws          // onehot(wc[1:0])
+);
+    (* keep *) reg [3:0] q;       // q[0] = ~ws[0]; q[3:1] = ws[3:1]
+    always @(posedge wck or negedge we)
+        if (!we) q <= 4'b0000;
+        else     q <= {wn == 2'd3, wn == 2'd2, wn == 2'd1, wn != 2'd0};
+    assign ws = {q[3:1], ~q[0]};
+endmodule
+
 // landing (contract L1-L7, in-band write epoch): ring of D slots written on the lane clock, read on the block root.
 module ot_qfd_land #(
     parameter integer W     = 16,
     parameter integer D     = 4,                       // ring depth, power of two >= 2 (window D x T)
     parameter integer FIRST = 0,                       // 1: n = 1 lane, the landing carries the hop-0 gate (ck_s, en)
-    parameter integer AW    = (D <= 2) ? 1 : $clog2(D)
+    parameter integer AW    = (D <= 2) ? 1 : $clog2(D),
+`ifdef OT_QFD_LAND_WSEL_REG
+    parameter integer WSEL  = 1,                       // QK-LAND600B: 1 = registered one-hot write select copies (D 4)
+`else
+    parameter integer WSEL  = 0,                       // 0 = combinational wc decode (the original landing)
+`endif
+    parameter integer WSELB = 150                      // data bits per write-select copy (WSEL 1)
 ) (
     input  wire         ckf,      // FIRST 0: lane forwarded clock (last station ck_o); FIRST 1: source block root
     input  wire         ea,       // FIRST 0: lane epoch (last station eb); FIRST 1: source released reset
@@ -108,7 +136,8 @@ module ot_qfd_land #(
         assign wck = ckf;
         assign we = ea;
     end endgenerate
-    reg [W-1:0] bank [0:D-1];
+    reg [W-1:0] bank [0:D-1];     // WSEL 0 ring data
+    wire [D*W-1:0] rd;            // WSEL 1 ring data, slot s at [s*W +: W] (per-slot registers, no array)
     reg [AW:0]  epo  [0:D-1];
     wire [D-1:0] vld;
     reg [AW:0]  wc, rc;
@@ -118,15 +147,48 @@ module ot_qfd_land #(
         if (!we) wc <= {(AW + 1){1'b0}};
         else     wc <= wc + 1'b1;
     genvar s;
+    localparam integer NC = (W + WSELB - 1) / WSELB;               // write-select copies (WSEL 1)
+    wire [D-1:0] wsl;                                              // slot select of the epoch / valid bookkeeping
+    generate if (WSEL != 0) begin : g_wsel
+        wire [D*NC-1:0] wsc;                                       // copy c, slot s at [c*D + s]
+        wire [AW:0] wnx = wc + 1'b1;
+        genvar c;
+        for (c = 0; c < NC; c = c + 1) begin : g_cp
+`ifdef OT_QFD_LAND_MUT_WSEL
+            // bench mutant: the copies load the CURRENT count (select one slot late), as a copy registered from wc
+            ot_qfd_wsel4 u_ws (.wck(wck), .we(we), .wn(wc[1:0]), .ws(wsc[c*D +: D]));
+`else
+            ot_qfd_wsel4 u_ws (.wck(wck), .we(we), .wn(wnx[1:0]), .ws(wsc[c*D +: D]));
+`endif
+        end
+        for (s = 0; s < D; s = s + 1) begin : g_slotb
+            for (c = 0; c < NC; c = c + 1) begin : g_ch
+                localparam integer LO = c * WSELB;
+                localparam integer N  = (W - LO < WSELB) ? (W - LO) : WSELB;
+                reg [N-1:0] bk;
+                always @(posedge wck) if (wsc[c*D + s]) bk <= i[LO +: N];
+                assign rd[s*W + LO +: N] = bk;
+            end
+            assign wsl[s] = wsc[s];                                // copy 0 also selects the epoch / valid flags
+        end
+`ifndef SYNTHESIS
+        initial if (D != 4) $fatal(1, "ot_qfd_land: WSEL 1 needs D = 4 (ot_qfd_wsel4)");
+`endif
+    end else begin : g_wdec
+        for (s = 0; s < D; s = s + 1) begin : g_slotd
+            assign wsl[s] = (wc[AW-1:0] == s);
+            always @(posedge wck) if (wsl[s]) bank[s] <= i;
+        end
+    end endgenerate
     generate for (s = 0; s < D; s = s + 1) begin : g_slot
-        always @(posedge wck) if (wc[AW-1:0] == s) begin bank[s] <= i; epo[s] <= wc; end
+        always @(posedge wck) if (wsl[s]) epo[s] <= wc;
         reg v;                                                     // slot written since the lane epoch began
         always @(posedge wck or negedge we)
             if (!we) v <= 1'b0;
 `ifdef OT_QFD_LAND_MUT_VLD
             else v <= 1'b1;                                        // bench mutant: every slot valid at once
 `else
-            else if (wc[AW-1:0] == s) v <= 1'b1;
+            else if (wsl[s]) v <= 1'b1;
 `endif
         assign vld[s] = v;
     end endgenerate
@@ -147,7 +209,7 @@ module ot_qfd_land #(
 `ifdef OT_QFD_LAND_MUT_NAIVE
     always @(posedge ck) o <= warm ? i : {W{1'b0}};                // bench mutant: retime register only, no ring
 `else
-    always @(posedge ck) o <= (warm && vld[rs_]) ? bank[rs_] : {W{1'b0}};
+    always @(posedge ck) o <= (warm && vld[rs_]) ? ((WSEL != 0) ? rd[rs_*W +: W] : bank[rs_]) : {W{1'b0}};
 `endif
 `ifndef SYNTHESIS
     initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_qfd_land: D must be a power of two >= 2");
