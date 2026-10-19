@@ -53,9 +53,12 @@ LEAVES = {
                              ext='32 ot_sram_1r1w_32x128_m1 qm table macros, each clocked by one family root',
                              synchronizers=[
         dict(name='qm_csr', src_domain='ingest', dst_domain='core', source=QM + 'csr_tgl',
-             chain=[QM + 'tg_s[0]', QM + 'tg_s[1]', QM + 'tg_s[2]'], payload=[QM + 'share_i'],
+             chain=[QM + 'tg_s[0]', QM + 'tg_s[1]', QM + 'tg_s[2]'], seen=QM + 'csr_ack', payload=[QM + 'share_i'],
              sync_max_delay_ps=773.333, payload_max_delay_ps=773.333,
-             why='toggle-qualified CSR: share_c <= share_i when tg_s[2] != tg_s[1]'),
+             why='toggle request (CSR_HOLD_ACK 1): share_c <= share_i when tg_s[2] != csr_ack; share_i held until acked'),
+        dict(name='qm_csr_ack', src_domain='core', dst_domain='ingest', source=QM + 'csr_ack',
+             chain=[QM + 'csr_ac1', QM + 'csr_ac2'], sync_max_delay_ps=773.333,
+             why='CSR0 toggle acknowledge; the next CSR0 head is held until csr_ac2 == csr_tgl'),
         dict(name='qm_hov', src_domain='host', dst_domain='ingest', source=QM + 'u_hx.ovf',
              chain=[QM + 'hov_s[0]', QM + 'hov_s[1]'], sync_max_delay_ps=940.0, why='sticky host FIFO overflow level'),
         # rov_s: u_rx write side is tied off (RMW_EN 0), its overflow is constant and the synchroniser folds away.

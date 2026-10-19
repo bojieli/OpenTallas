@@ -1433,7 +1433,7 @@ proc ot_gf_gated_fifos {cell} {
     foreach net [get_nets -quiet -of_objects $p] {lappend names [string map {\\ {}} [get_full_name $net]]}
   }
   set out {}
-  foreach n $names {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
   return [dict keys $out]
 }
 proc ot_gf_ext_crossing {start pin source target source_domain target_domain sk sf tk tf} {
@@ -1493,18 +1493,27 @@ TCL = r'''
 # synchroniser, a FIFO-valid-gated storage read or an ot_reset_sync input. Each actual mapped crossing must match a
 # tagged pair; no other path receives an exception and no false path or clock group exists.
 set ::ot_gf_seen {}
+proc ot_gf_names {names} {
+  # Recipe-3 pin registers (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1) wrap the elaborated top as instance
+  # u_ot_pr_core (a reserved name); the generator tagged the unwrapped names, so a wrapped name is also looked up without
+  # that prefix (a name matching two roles is still refused as ambiguous).
+  set out $names
+  foreach n $names {if {[regexp {^u_ot_pr_core[./](.+)$} $n -> inner]} {lappend out $inner}}
+  return $out
+}
 proc ot_gf_role {cell} {
   set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
   set names [list $full]
   if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
   set roles {}
-  foreach n $names {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
   if {![dict size $roles]} {
     foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
       if {[get_property $p direction] ne "output"} continue
       foreach net [get_nets -quiet -of_objects $p] {
-        set n [string map {\\ {}} [get_full_name $net]]
-        if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        foreach n [ot_gf_names [list [string map {\\ {}} [get_full_name $net]]]] {
+          if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        }
       }
     }
   }

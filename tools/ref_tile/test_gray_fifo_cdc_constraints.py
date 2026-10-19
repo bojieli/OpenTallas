@@ -818,5 +818,20 @@ class EventActualGraph(EvFixture):
                 self.assertIn('OT_GF:', log)
 
 
+class PinRegWrapperNames(unittest.TestCase):
+    """HKV-HROOT 10-18: recipe-3 pin registers wrap the top as u_ot_pr_core; tagged roles must still resolve."""
+
+    def test_wrapped_name_resolves_and_plain_name_unchanged(self):
+        proc = G.TCL[G.TCL.index('proc ot_gf_names'):G.TCL.index('proc ot_gf_role')]
+        script = proc + (
+            'puts [join [ot_gf_names {u_ot_pr_core.u_a.g_afw.u_af.mem[0][0]}] |]\n'
+            'puts [join [ot_gf_names {u_a.mem}] |]\n'
+            'puts [join [ot_gf_names {x_u_ot_pr_core.u_a}] |]\n')
+        out = subprocess.run(['tclsh'], input=script, text=True, capture_output=True, check=True).stdout.splitlines()
+        self.assertEqual(out[0], 'u_ot_pr_core.u_a.g_afw.u_af.mem[0][0]|u_a.g_afw.u_af.mem[0][0]')
+        self.assertEqual(out[1], 'u_a.mem')
+        self.assertEqual(out[2], 'x_u_ot_pr_core.u_a')
+
+
 if __name__ == '__main__':
     unittest.main()
