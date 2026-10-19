@@ -15,3 +15,16 @@ SAFE checklist (owner 10-19):
 - 6_floorplan: PASS: macros on 43.2 lattice (as reviewed r7v), full std-cell band, outline/util as r7v (fill 0.447)
 - 7_clock: PASS: one tile root (single 475 um tile, spread 71.2/64.7 in r7v), io_hold_margin 0.030
 - 8_schedule: PASS: static calendars + compiled start lists; collision/start-while-running = calendar fault, no backpressure
+
+## Codex recovery 10-19
+Both daemon attempts stopped in Yosys canonicalization before synthesis/placement.
+The reset-landing wrapper's default compatibility regexp matched
+`host_link_reset_req`, a registered protocol command, and the registered reset
+status outputs `fwd_link_rst_n` / `phy_rst_n`. These are not sequential-reset
+inputs and must retain their existing PR pin flops. The kit now explicitly sets
+`OT_PIN_REGS_RESET=^(por_n|rst_n)$`; its literal reset_ports remain por_n,rst_n.
+Only those two inputs get the existing two-stage landing. No RTL, schedule,
+pin assignment, outline, macro position or latency changes. Failed job records
+remain immutable; the source-pinned recovery is on this same kit. SAFE checklist
+above still applies; inherited closed geometry is preserved rather than
+misclassifying a tool refusal as a physical route failure.

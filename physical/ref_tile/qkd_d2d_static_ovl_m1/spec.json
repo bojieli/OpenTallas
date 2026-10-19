@@ -31,7 +31,8 @@
  "recipe": 4,
  "orfs_vars": {
   "OT_MEG_DEPTH_UM": "2.4",
-  "OT_MEG_OUT_UM": "1.2"
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_PIN_REGS_RESET": "^(por_n|rst_n)$"
  },
  "macros": [
   {
@@ -179,9 +180,9 @@
   "pd": 0.6
  },
  "job": {
-  "owner": "Claude:TW7-KVD2D 10-19",
-  "branch": "claude/tw7-kvd2d-1019",
-  "tag": "m1",
+  "owner": "Codex:D2D-OVL-TILES 10-19",
+  "branch": "codex/d2d-reset-decl-1019",
+  "tag": "m1reset",
   "purpose": "MU overlap KV D2D link end qkd_d2d_static_ovl (MU-D2D-OVL: separate RX calendar start/segment + per-user tag pins, each pin-registered) at the MU release seam TXDP_K 0x03030415, NTX 3; compiler calendars + start lists, no credits/backpressure (collision = calendar fault). PHY on face N.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -266,5 +267,6 @@
   "6_floorplan": "PASS: macros on 43.2 lattice (as reviewed r7v), full std-cell band, outline/util as r7v (fill 0.447)",
   "7_clock": "PASS: one tile root (single 475 um tile, spread 71.2/64.7 in r7v), io_hold_margin 0.030",
   "8_schedule": "PASS: static calendars + compiled start lists; collision/start-while-running = calendar fault, no backpressure"
- }
+ },
+ "reset_role_review": "Only por_n/rst_n reset sequential state. host_link_reset_req is a PR-registered protocol request; phy_rst_n/fwd_link_rst_n are PR-registered protocol outputs. Restrict the compatibility regex to literal reset roles, preserving their data pin flops and landing exactly the two real resets. This fixes pre-synthesis OT_PIN_REGS refusal, not a timing failure."
 }

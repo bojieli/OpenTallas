@@ -30,7 +30,8 @@
  "recipe": 4,
  "orfs_vars": {
   "OT_MEG_DEPTH_UM": "2.4",
-  "OT_MEG_OUT_UM": "1.2"
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_PIN_REGS_RESET": "^(por_n|rst_n)$"
  },
  "macros": [
   {
@@ -172,9 +173,9 @@
   "pd": 0.6
  },
  "job": {
-  "owner": "Claude:TW7-KVD2D 10-19",
-  "branch": "claude/tw7-kvd2d-1019",
-  "tag": "r7w",
+  "owner": "Codex:D2D-OVL-TILES 10-19",
+  "branch": "codex/d2d-reset-decl-1019",
+  "tag": "r7wreset",
   "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -267,5 +268,6 @@
  "reset_landing": {
   "enable": true,
   "stages": 2
- }
+ },
+ "reset_role_review": "Only por_n/rst_n reset sequential state. host_link_reset_req is a PR-registered protocol request; phy_rst_n/fwd_link_rst_n are PR-registered protocol outputs. Restrict the compatibility regex to literal reset roles, preserving their data pin flops and landing exactly the two real resets. This fixes pre-synthesis OT_PIN_REGS refusal, not a timing failure."
 }

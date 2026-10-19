@@ -1,13 +1,13 @@
 {
- "name": "qkd_d2d_static_r7w-r7w-COMMIT",
+ "name": "qkd_d2d_static_r7w-r7wreset-COMMIT",
  "block": "qkd_d2d_static",
  "ref_tile": true,
- "owner": "Claude:TW7-KVD2D 10-19",
+ "owner": "Codex:D2D-OVL-TILES 10-19",
  "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/tw7-kvd2d-1019",
+  "branch": "codex/d2d-reset-decl-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -125,7 +125,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_static_r7w/qkd_d2d_static_r7w-r7w-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_d2d_static_r7w/qkd_d2d_static_r7w-r7wreset-COMMIT"
   }
  ],
  "cycles_added": 0,
