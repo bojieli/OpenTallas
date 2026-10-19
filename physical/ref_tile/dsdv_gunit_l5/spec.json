@@ -71,8 +71,8 @@
   ]
  },
  "outline": {
-  "w": 345.6,
-  "h": 302.4
+  "w": 259.2,
+  "h": 259.2
  },
  "recipe": 4,
  "clock": "cts",
@@ -87,10 +87,10 @@
  },
  "structural_change": "S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
  "job": {
-  "owner": "Claude:S81-SAFE-FIX/GUNIT",
-  "branch": "claude/s81sf-gunit-1019",
-  "tag": "sf",
-  "purpose": "S81-DV G-unit leaf L5 safe redesign (pipelined Sinkhorn, no MCP) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "owner": "Codex:S81-SAFE-FIX/GUNIT",
+  "branch": "codex/s81-gunit-safe2-1019",
+  "tag": "sf2",
+  "purpose": "Structural safe2: split every positiveadd alignment/sticky from sum/round, no MCP; LAT602, HC+161 vs safe1; latestresetlanding hooks; measured-area squareoutline.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
    "rtl/hdc",
@@ -107,7 +107,7 @@
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/exact.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/exact.log"
    },
    {
     "name": "gunit_mut8",
@@ -116,7 +116,7 @@
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/mut8.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut8.log"
    },
    {
     "name": "gunit_mut10",
@@ -125,7 +125,7 @@
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/mut10.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut10.log"
    },
    {
     "name": "sinkhorn_p_eq",
@@ -134,7 +134,7 @@
     "pass_regex": "^MUT=0: SKP PASS cases=300 ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/skeq.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skeq.log"
    },
    {
     "name": "sinkhorn_p_mut1",
@@ -143,7 +143,7 @@
     "fail_regex": "^MUT=1: SKP FAIL ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/skmut1.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skmut1.log"
    }
   ],
   "views_to": "physical/ref_tile/dsdv_gunit_l5/views",
@@ -166,5 +166,6 @@
  "reset_landing": {
   "enable": true,
   "stages": 2
- }
+ },
+ "std_area_um2": 32844
 }

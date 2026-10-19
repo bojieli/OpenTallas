@@ -15,8 +15,8 @@
 //      shares a stage with a unit's first stage), so each unit costs its latency + 1 on the fixed calendar below.
 //   2. Sinkhorn: S81-SAFE-FIX/GUNIT (10-19) replaced the gated-clock ot_hdc_sinkhorn (one 5.3-ns normalisation per
 //      unit edge, a 9-cycle multicycle path behind an ICG -- masked depth, SAFE-DESIGN item 4) by ot_hdc_sinkhorn_p:
-//      the same function bit for bit, pipelined on the core clock (11 registered stages a normalisation, step 0 in
-//      12), no clock gate, no multicycle exception.  Result latency SLAT = 441 edges after the accepting edge.
+//      the same function bit for bit, pipelined on the core clock (15 registered stages a normalisation, step 0 in
+//      17), no clock gate, no multicycle exception.  Result latency SLAT = 602 edges after the accepting edge.
 // Calendar (ages from launch; Le = unit latency + 1 for the operand register):
 //   P1      24 mul   t[i] * scale                     P2 = P1 + 24 + LMe   24 add  t[i] + base[i]
 //   MAX     row max of t[8..23] (2 stages)            P3 = MAX + 2         16 add  t[i] - max[row]
@@ -58,7 +58,7 @@ module dsdv_gunit_tail #(
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
-    localparam integer SLAT = 12 + (2 * ITERS - 1) * 11;   // ot_hdc_sinkhorn_p LAT (D0 12, DS 11): 441 for ITERS 20
+    localparam integer SLAT = 17 + (2 * ITERS - 1) * 15;   // ot_hdc_sinkhorn_p LAT (D0 17, DS 15): 602 for ITERS 20
     localparam integer CAP = SLAT + 1;
     localparam integer L = EREADY + CAP + 3;
     // ---------------------------------------------------------------- calendar

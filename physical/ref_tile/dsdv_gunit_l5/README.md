@@ -43,3 +43,15 @@ structurally:
 | 6 | floorplan / util 40-60 % / aspect <= 2 | aspect 1.14 and no macros. Util comes from gate synthesis (see the gate packet); re-outline if it falls outside 40-60 %. |
 | 7 | clock: pin-flop spread <= 80 TT+FF, io_hold 0.03 | `io_hold_margin_ns` is 0.03 (fixed). One root with no ICG. The spread is judged at the gate (`--cts`); the previous trial measured TT 77.9 / FF 68.3. |
 | 8 | static schedule, cycles handed over | fixed: HC result +55 edges and reset release +2 are handed to MU-DIE-S81 (INBOX). |
+
+## Codex safe2 structural successor
+Previous safe1 gate is preserved at results/rtl/s81_safe_fix_1019/gunit_l5/gate1_failure.
+It failed reset landing (stale flow hook), and measured TT setup -54.7ps on the real positive-add path
+from u_tail.u_sinkh.g_row[2].e3_q exponent through eps alignment/sum/round into g_t[0].tm_q.
+Textbook also identified a ~785ps/18-level first-add stage. No false/multicycle paths are added.
+Every positive add now has an alignment/sticky register before sum/round, including the step-zero eps add.
+Step0 D0=17, steady DS=15, LAT602; HC latency +161 edges versus safe1, reset release unchanged.
+The normalisation bypass is delayed one register to match the eps add; control counter widened to5bits.
+Checklist1 reset: latestmain common_flow hook restored; checklist4: structural arithmetic cut (gate pending).
+Checklist6: outline259.2square from measured32844um2 synthesis, baseline50.6% cell density (remeasure after pipeline).
+Other checklist items remain as above; pending benches and CTS establish exactness and physical closure.

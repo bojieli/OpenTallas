@@ -8,10 +8,10 @@
 // (gunit_sinkh_mcp.sdc) -- a masked path (SAFE-DESIGN item 4).  Here every normalisation is cut into registered stages
 // of <= ~20 levels at the operation boundaries of tools/gen_hdc_sinkhorn_recip_rom.py's integer specification:
 //
-//   S1..S3  the row's three chained POSITIVE adds (ot_hdc_sk_add; the chained exponent eg + up is resolved into e and
+//   S1..S6  the row's three chained two-stage POSITIVE adds (ot_hdc_sk_add; the chained exponent eg + up is resolved into e and
 //           registered, which ot_hdc_sk_add's ua = 0 form reproduces exactly)
-//   S4      steady: + eps (the denominator T);  step 0: normalise the row sum (subnormal T)          -> T, kept copies
-//   S5..S7  seed R ~ 1/T: ROM read | carry-save tree | carry-propagate                              -> R, kept copies
+//   S7..S8 steady: + eps (the denominator T);  step 0: normalise the row sum (subnormal T)          -> T, kept copies
+//   S9..S11 seed R ~ 1/T: ROM read | carry-save tree | carry-propagate                              -> R, kept copies
 //   Q1..Q3  quotient: X*R carry-save | CPA, M' (+ step-0 grid shift) | exact-remainder carry-save
 //   final   remainder signs, M' + {0,1,2}, pack  -> state (steady), or -> register -> + eps -> state (step 0)
 //
@@ -24,9 +24,97 @@
 // ot_hdc_sinkhorn's raw significand only for a subnormal state word, which both units flag as a fault (y = 0).
 //
 // SCHEDULE (fixed, no handshake moves it): accept (in_valid & in_ready) at edge a0; step 0 lands in st at a0 + D0,
-// steady step k at a0 + D0 + k DS; out_valid pulses one edge at a0 + LAT, LAT = D0 + (2 ITERS - 1) DS (441 for
+// steady step k at a0 + D0 + k DS; out_valid pulses one edge at a0 + LAT, LAT = D0 + (2 ITERS - 1) DS (602 for
 // ITERS 20).  y and fault hold until the next accept (y = 0 on fault).
 // ---------------------------------------------------------------------------------------------------------------------
+
+module ot_hdc_skp_add (
+    input wire clk,
+    input  wire [7:0]  ea,
+    input  wire        ua,
+    input  wire [23:0] ma,
+    input  wire [7:0]  eb,
+    input  wire [23:0] mb,
+    output wire [7:0]  eg,
+    output wire        up,
+    output wire [7:0]  e,
+    output wire [23:0] m,
+    output wire        ovf
+);
+    wire [8:0] ea1 = {1'b0, ea} + 9'd1;
+    wire [7:0] ea_c [0:1];
+    assign ea_c[0] = ea;
+    assign ea_c[1] = ea1[7:0];
+    wire [1:0]  age_c;
+    wire [7:0]  dba_c [0:1];
+    wire [24:0] shb_c [0:1];
+    wire [1:0]  bany_c, bst_c;
+    genvar u, i;
+    generate
+        for (u = 0; u < 2; u = u + 1) begin : g_u
+            wire [8:0] ab0, ab1, ba0, ba1;
+            ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea_c[u]), .b(~eb), .s0(ab0), .s1(ab1));   // ea - eb
+            ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb), .b(~ea_c[u]), .s0(ba0), .s1(ba1));   // eb - ea
+            assign age_c[u] = ab1[8];
+            assign dba_c[u] = ba1[7:0];                  // valid when b > a
+            // b aligned under a, and its shifted-out bits (all early); dab valid when a >= b
+            assign shb_c[u] = (ab1[7:0] >= 8'd25) ? 25'd0 : ({mb, 1'b0} >> ab1[4:0]);
+            wire [23:0] mk_any, mk_st;
+            for (i = 0; i < 24; i = i + 1) begin : g_mk
+                assign mk_any[i] = (ab1[7:0] > i);
+                assign mk_st[i]  = (ab1[7:0] > i + 1);
+            end
+            assign bany_c[u] = |(mb & mk_any);
+            assign bst_c[u]  = |(mb & mk_st);
+        end
+    endgenerate
+    wire        a_ge  = ua ? age_c[1] : age_c[0];
+    wire        swap  = !a_ge;                   // b strictly larger exponent
+    wire [7:0]  dba   = ua ? dba_c[1] : dba_c[0];
+    wire [24:0] shb   = ua ? shb_c[1] : shb_c[0];
+    wire        b_any = ua ? bany_c[1] : bany_c[0];
+    wire        b_st  = ua ? bst_c[1] : bst_c[0];
+
+    // a aligned under b (a is the late operand)
+    wire [24:0] sha = (dba >= 8'd25) ? 25'd0 : ({ma, 1'b0} >> dba[4:0]);
+    wire [23:0] mk_a_any, mk_a_st;
+    generate
+        for (i = 0; i < 24; i = i + 1) begin : g_mka
+            assign mk_a_any[i] = (dba > i);
+            assign mk_a_st[i]  = (dba > i + 1);
+        end
+    endgenerate
+    wire a_any = |(ma & mk_a_any), a_st = |(ma & mk_a_st);
+
+    wire [7:0]  eA   = ua ? ea1[7:0] : ea;
+    wire [7:0] eg_a = swap ? eb : eA;
+    wire [23:0] mg_a   = swap ? mb : ma;
+    wire [23:0] ahi_a  = swap ? sha[24:1] : shb[24:1];
+    wire        g_a    = swap ? sha[0] : shb[0];
+    wire        any_a  = swap ? a_any : b_any;
+    wire        st_a   = swap ? a_st : b_st;
+
+    // Arithmetic boundary: align/exponent/sticky in one stage; sum/round/pack in the next.
+    reg [23:0] mg_q, ahi_q;
+    reg g_q, any_q, st_q;
+    reg [7:0] eg_q;
+    always @(posedge clk) begin
+        mg_q <= mg_a; ahi_q <= ahi_a; g_q <= g_a; any_q <= any_a; st_q <= st_a; eg_q <= eg_a;
+    end
+    assign eg = eg_q;
+    wire [24:0] s0, s1;
+    ot_hdc_sk_cadd #(.W(24)) u_sum (.a(mg_q), .b(ahi_q), .s0(s0), .s1(s1));
+    wire carry = s0[24];
+    wire rnc = g_q & (st_q | s0[0]);
+    wire rc  = s0[0] & (any_q | s0[1]);
+    wire [23:0] mp = carry ? (rc ? s1[24:1] : s0[24:1]) : (rnc ? s1[23:0] : s0[23:0]);
+    wire ovm = !carry & rnc & s1[24];          // S = 2^24 - 1 rounded up to 2^24
+    wire [8:0] eg1 = {1'b0, eg_q} + 9'd1;
+    assign up  = carry | ovm;
+    assign e   = up ? eg1[7:0] : eg_q;
+    assign m   = {mp[23] | ovm, mp[22:0]};
+    assign ovf = up & (eg1[7:0] == 8'hFF);
+endmodule
 
 // ---- reciprocal seed, 3 registered stages (ROM | carry-save tree | CPA); NC kept output copies ------------------------
 module ot_hdc_skp_seed #(
@@ -191,19 +279,19 @@ module ot_hdc_sinkhorn_p #(
     output wire         busy
 );
     localparam integer STEPS = 2 * ITERS - 1;
-    localparam integer D0 = 12, DS = 11;
+    localparam integer D0 = 17, DS = 15;
     localparam integer LAT = D0 + STEPS * DS;
     localparam [1:0] P_IDLE = 2'd0, P_Z = 2'd1, P_RUN = 2'd2;
     localparam [7:0]  EPS_E = (EPS[30:23] == 8'd0) ? 8'd1 : EPS[30:23];
     localparam [23:0] EPS_M = {EPS[30:23] != 8'd0, EPS[22:0]};
 
-    reg [1:0] ph; reg [3:0] c; reg [7:0] cnt; reg flt;
+    reg [1:0] ph; reg [4:0] c; reg [7:0] cnt; reg flt;
     reg [31:0] st [0:15];
     assign in_ready = (ph == P_IDLE);
     assign busy = (ph != P_IDLE);
     wire acc = in_ready && in_valid;
     // mode: 1 from the accept edge until step 0 lands (kept copy per element, <= ~40 loads each)
-    wire zset = acc, zclr = (ph == P_Z) && (c == 4'(D0 - 1));
+    wire zset = acc, zclr = (ph == P_Z) && (c == 5'(D0 - 1));
     wire [15:0] zm;
     genvar r, k;
     generate for (k = 0; k < 16; k = k + 1) begin : g_zm
@@ -226,7 +314,7 @@ module ot_hdc_sinkhorn_p #(
     end endgenerate
     always @(posedge clk) begin sub_any <= |w_sub; bin_any <= |w_bad; end
 
-    // ---- per row: S1..S3 adds, S4 T, seed, 4 quotients
+    // ---- per row: S1..S6 adds, S7..S8 T, seed, 4 quotients
     wire [30:0] q [0:15];
     wire [15:0] q_rng;
     wire [3:0]  bad4;
@@ -240,44 +328,46 @@ module ot_hdc_sinkhorn_p #(
         end
         // S1
         wire [7:0] g1, e1; wire u1, o1; wire [23:0] m1;
-        ot_hdc_sk_add u_s1 (.ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]),
+        ot_hdc_skp_add u_s1 (.clk(clk), .ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]),
                             .eg(g1), .up(u1), .e(e1), .m(m1), .ovf(o1));
         reg [7:0] e1_q; reg [23:0] m1_q; reg b1_q;
         always @(posedge clk) begin e1_q <= e1; m1_q <= m1; b1_q <= o1; end
         // S2
         wire [7:0] g2, e2; wire u2, o2; wire [23:0] m2;
-        ot_hdc_sk_add u_s2 (.ea(e1_q), .ua(1'b0), .ma(m1_q), .eb(ee[2]), .mb(mm[2]),
+        ot_hdc_skp_add u_s2 (.clk(clk), .ea(e1_q), .ua(1'b0), .ma(m1_q), .eb(ee[2]), .mb(mm[2]),
                             .eg(g2), .up(u2), .e(e2), .m(m2), .ovf(o2));
         reg [7:0] e2_q; reg [23:0] m2_q; reg b2_q;
         always @(posedge clk) begin e2_q <= e2; m2_q <= m2; b2_q <= b1_q | o2; end
         // S3
         wire [7:0] g3, e3; wire u3, o3; wire [23:0] m3;
-        ot_hdc_sk_add u_s3 (.ea(e2_q), .ua(1'b0), .ma(m2_q), .eb(ee[3]), .mb(mm[3]),
+        ot_hdc_skp_add u_s3 (.clk(clk), .ea(e2_q), .ua(1'b0), .ma(m2_q), .eb(ee[3]), .mb(mm[3]),
                             .eg(g3), .up(u3), .e(e3), .m(m3), .ovf(o3));
         reg [7:0] e3_q; reg [23:0] m3_q; reg b3_q;
         always @(posedge clk) begin e3_q <= e3; m3_q <= m3; b3_q <= b2_q | o3; end
         // S4: steady T = sum + eps (normal); step 0 T = normalised sum
         wire [7:0] gt, et; wire ut, ot_; wire [23:0] mt;
-        ot_hdc_sk_add u_ae (.ea(e3_q), .ua(1'b0), .ma(m3_q), .eb(EPS_E), .mb(EPS_M),
+        ot_hdc_skp_add u_ae (.clk(clk), .ea(e3_q), .ua(1'b0), .ma(m3_q), .eb(EPS_E), .mb(EPS_M),
                             .eg(gt), .up(ut), .e(et), .m(mt), .ovf(ot_));
         wire signed [9:0] te_s = $signed({2'b00, et}) - 10'sd127;
         wire [30:0] zsum = {m3_q[23] ? e3_q : 8'd0, m3_q[22:0]};
         wire [23:0] nt_m; wire signed [9:0] nt_e; wire tz;
+        reg [23:0] nt_m_q; reg signed [9:0] nt_e_q; reg tz_q;
+        always @(posedge clk) begin nt_m_q <= nt_m; nt_e_q <= nt_e; tz_q <= tz; end
         ot_hdc_sk_norm u_nt (.x(zsum), .m(nt_m), .e(nt_e), .z(tz));
         reg b4_q;
-        always @(posedge clk) b4_q <= b3_q | (zm[4*r] ? tz : (ot_ | !mt[23]));
+        always @(posedge clk) b4_q <= b3_q | (zm[4*r] ? tz_q : (ot_ | !mt[23]));
         assign bad4[r] = b4_q;
         wire [23:0] tmc [0:3]; wire signed [9:0] tec [0:3];
         for (k = 0; k < 4; k = k + 1) begin : g_t               // T copies: one per quotient (seed reads copy 0)
             (* keep = "true" *) reg [23:0] tm_q;
             (* keep = "true" *) reg [9:0]  te_q;
             always @(posedge clk) begin
-                tm_q <= zm[4*r + k] ? nt_m : mt;
-                te_q <= zm[4*r + k] ? nt_e : te_s;
+                tm_q <= zm[4*r + k] ? nt_m_q : mt;
+                te_q <= zm[4*r + k] ? nt_e_q : te_s;
             end
             assign tmc[k] = tm_q; assign tec[k] = te_q;
         end
-        // S5..S7 seed
+        // S9..S11 seed
         wire [29*4-1:0] rs;
         ot_hdc_skp_seed #(.NC(4)) u_seed (.clk(clk), .tm(tmc[0]), .r(rs));
         // Q1..Q3 + final; element (r, k) -> storage 4k + r (transposed)
@@ -296,35 +386,35 @@ module ot_hdc_sinkhorn_p #(
         wire [7:0]  qe = (zq[k][30:23] == 8'd0) ? 8'd1 : zq[k][30:23];
         wire [23:0] qm = {zq[k][30:23] != 8'd0, zq[k][22:0]};
         wire [7:0]  oe, og; wire [23:0] om; wire ou;
-        ot_hdc_sk_add u_eps (.ea(qe), .ua(1'b0), .ma(qm), .eb(EPS_E), .mb(EPS_M),
+        ot_hdc_skp_add u_eps (.clk(clk), .ea(qe), .ua(1'b0), .ma(qm), .eb(EPS_E), .mb(EPS_M),
                              .eg(og), .up(ou), .e(oe), .m(om), .ovf(z_ov[k]));
         assign z_out[k] = {1'b0, om[23] ? oe : 8'd0, om[22:0]};
     end endgenerate
     wire zbad = bin_any | (|bad4) | (|zr) | (|z_ov);
     wire sbad = sub_any | (|bad4) | (|q_rng);
-    wire zcap = (ph == P_Z) && (c == 4'(D0 - 1));
-    wire scap = (ph == P_RUN) && (c == 4'(DS - 1 - MUT));
+    wire zcap = (ph == P_Z) && (c == 5'(D0 - 1));
+    wire scap = (ph == P_RUN) && (c == 5'(DS - 1 - MUT));
 
     // ---- control (fixed schedule)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            ph <= P_IDLE; c <= 4'd0; cnt <= 8'd0; flt <= 1'b0; out_valid <= 1'b0; fault <= 1'b0;
+            ph <= P_IDLE; c <= 5'd0; cnt <= 8'd0; flt <= 1'b0; out_valid <= 1'b0; fault <= 1'b0;
         end else begin
             out_valid <= 1'b0;
             case (ph)
-                P_IDLE: if (in_valid) begin ph <= P_Z; c <= 4'd0; flt <= 1'b0; end
+                P_IDLE: if (in_valid) begin ph <= P_Z; c <= 5'd0; flt <= 1'b0; end
                 P_Z: begin
-                    c <= c + 4'd1;
+                    c <= c + 5'd1;
                     if (zcap) begin
-                        c <= 4'd0; cnt <= STEPS[7:0]; flt <= flt | zbad;
+                        c <= 5'd0; cnt <= STEPS[7:0]; flt <= flt | zbad;
                         if (STEPS == 0) begin ph <= P_IDLE; out_valid <= 1'b1; fault <= flt | zbad; end
                         else ph <= P_RUN;
                     end
                 end
                 default: begin
-                    c <= c + 4'd1;
+                    c <= c + 5'd1;
                     if (scap) begin
-                        c <= 4'd0; cnt <= cnt - 8'd1; flt <= flt | sbad;
+                        c <= 5'd0; cnt <= cnt - 8'd1; flt <= flt | sbad;
                         if (cnt == 8'd1) begin ph <= P_IDLE; out_valid <= 1'b1; fault <= flt | sbad; end
                     end
                 end
@@ -342,7 +432,7 @@ module ot_hdc_sinkhorn_p #(
         assign y[32*k +: 32] = fault ? 32'd0 : st[k];
     end endgenerate
 `ifndef SYNTHESIS
-    initial if (D0 > 15 || DS > 15) $error("ot_hdc_sinkhorn_p: stage counter is 4 bits");
+    initial if (D0 > 31 || DS > 31) $error("ot_hdc_sinkhorn_p: stage counter is 5 bits");
 `endif
 endmodule
 `default_nettype wire

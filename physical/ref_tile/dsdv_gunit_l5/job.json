@@ -1,13 +1,13 @@
 {
- "name": "dsdv_gunit_l5-sf-COMMIT",
+ "name": "dsdv_gunit_l5-sf2-COMMIT",
  "block": "dsdv_gunit_l5",
  "ref_tile": true,
- "owner": "Claude:S81-SAFE-FIX/GUNIT",
- "purpose": "S81-DV G-unit leaf L5 safe redesign (pipelined Sinkhorn, no MCP) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "owner": "Codex:S81-SAFE-FIX/GUNIT",
+ "purpose": "Structural safe2: split every positiveadd alignment/sticky from sum/round, no MCP; LAT602, HC+161 vs safe1; latestresetlanding hooks; measured-area squareoutline.",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81sf-gunit-1019",
+  "branch": "codex/s81-gunit-safe2-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
@@ -37,7 +37,7 @@
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/exact.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/exact.log"
    },
    {
     "name": "gunit_mut8",
@@ -46,7 +46,7 @@
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/mut8.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut8.log"
    },
    {
     "name": "gunit_mut10",
@@ -55,7 +55,7 @@
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/mut10.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/mut10.log"
    },
    {
     "name": "sinkhorn_p_eq",
@@ -64,7 +64,7 @@
     "pass_regex": "^MUT=0: SKP PASS cases=300 ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/skeq.log"
+    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skeq.log"
    },
    {
     "name": "sinkhorn_p_mut1",
@@ -73,7 +73,7 @@
     "fail_regex": "^MUT=1: SKP FAIL ",
     "threads": 4,
     "peak_ram_gb": 8,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/skmut1.log"
+    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skmut1.log"
    }
   ],
   "calibrate": {
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-sf-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-sf2-COMMIT"
   }
  ],
  "cycles_added": 0,

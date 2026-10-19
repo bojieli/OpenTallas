@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // S81-SAFE-FIX/GUNIT (10-19): ot_hdc_sinkhorn_p (pipelined, core clock) == ot_hdc_sinkhorn (one normalisation per edge)
-// bit for bit: y and fault of every case, and out_valid exactly LAT = 441 edges after the accepting edge.
+// bit for bit: y and fault of every case, and out_valid exactly LAT = 602 edges after the accepting edge.
 // Inputs (xorshift, +SEED / +N): exp-like rows (2^-30 .. 1), wide-range rows (tiny .. 1, step-0 subnormal quotients),
 // subnormal / zero rows (subnormal sums, 0/0), and fault words (negative, Inf, NaN, raw random).
 // Cycle-driven (Verilator, main tb_sinkhorn_p_eq.cpp).  -DMUT=1 builds the one-stage-early mutant (must FAIL).
@@ -9,7 +9,7 @@
 `define MUT 0
 `endif
 module tb_sinkhorn_p_eq (input wire clk);
-    localparam integer LAT = 441;
+    localparam integer LAT = 602;
     reg rst_n, iv; reg [511:0] e;
     wire rr, rv, rf, rb, pr, pv, pf, pb; wire [511:0] ry, py;
     ot_hdc_sinkhorn #(.ITERS(20)) u_r (.clk(clk), .rst_n(rst_n), .in_valid(iv), .in_ready(rr), .in_e(e),

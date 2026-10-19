@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/s81ctrl_rg2",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2-20261019-074028",
+  "gate_source_commit": "05689febde05edf2cf159334f19ac1edd91ff7c4",
+  "gate_result_sha256": "df0cc4b9b021d20629e08ff85c343314c3138e7f157d0fed96b2c981d0104c5d",
+  "library_sha256": "2246cecd9077672556a3251b725f273de512c59deab81eff7d669da915a97cb3",
+  "insertion_sha256": "c1fe52469aa1ac170085943b1fa845702572031493ba42566e13726fecc7870b",
+  "probe_tcl_sha256": "a90154d4e66d5178f9293f502c77ac36cd722e90a8d57dd0b55a9bfaed6d5108",
+  "launch": {
+    "ps": 182.94207,
+    "pin": "rd[561]"
+  },
+  "capture": {
+    "ps": 131.58861,
+    "pin": "k_rdy[1]"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ckh": {
+      "rise": 348.7,
+      "fall": 375.966905,
+      "min": 307.00134,
+      "max": 378.55243,
+      "src": "insertion.json boundary mean",
+      "bmin": 332.2,
+      "bmax": 378.6,
+      "n": 1264
+    },
+    "clk": {
+      "rise": 354.3,
+      "fall": 381.32504,
+      "min": 304.75256,
+      "max": 376.91296,
+      "src": "insertion.json boundary mean",
+      "bmin": 334.1,
+      "bmax": 376.9,
+      "n": 1244
+    }
+  },
+  "spread_ps": {
+    "ckh": 46.400000000000034,
+    "clk": 42.799999999999955
+  },
+  "measured_reference_coverage": true,
+  "ff_spread_ps": 43.8,
+  "diagnostic_pass": true
+}
