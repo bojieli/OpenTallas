@@ -27,8 +27,8 @@ Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to
        compiler is the indexer programme, not parameterised by the MoE-router shape -> flagged.
   HOST CP (transport of every non-SU programme): cp_frames() = F20 frame / F28+F2c descriptor / F30 launch events on
        the host_cp_ingress__* slice inputs (hleaf_SW relays, CFG_LAT 2); SW target table SW_TARGETS (die.v tgt straps).
-  SFU / COLL / HC / DMA / SM: cp_targets listed per record, row PAYLOAD not emitted (flag 'format_open', reason
-       'payload_open: <compiler>'); records
+  SFU / COLL / HC / DMA / SM: cp_targets listed per record (SM / DMA row payloads: sm_images.py), others flag
+       'format_open', reason 'payload_open: <compiler>'; records
        BLOCKED by an HBM-WIRE datapath gap carry 'blocked_by' (coverage.json grade).
 ASSUMPTIONS (flagged in the output): serial edge = ceil(3 x stream cycle / 4) (3:4 serial domain, AGENTS.md clock
 domains); the SU quarter-0 VM placement is the compiler's own (quarter-packed, sector s -> bank s mod 8 = store
@@ -493,17 +493,29 @@ UNIT_PORTS = dict(SU=["su_prog__r_we", "su_prog__r_bank", "su_prog__r_row", "su_
 # copy groups) -> the target's own local programme store.  Frame = {cfg_target 8, cfg_addr (row) 12, cfg_data 256}
 # (F20 select + 8 x F24 pieces at the ingress), descriptor {desc_base 12, desc_limit 13 (exclusive), desc_loops 16}
 # (F28 + F2c), launch_v (F30).  The replay drives the ingress OUTPUT pins (= slice inputs host_cp_ingress__*), stream
-# domain.  Ingress production rate: 8 AXI W beats per frame with W ready pulsed at most every other edge ->
-# >= CP_FRAME_EDGES edges per frame (ASSUMED from the ingress README; the guard edges below are the README's:
-# frame / descriptor guard 4, launch guard 7).
-CP_FRAME_EDGES, CP_DESC_GUARD, CP_LAUNCH_GUARD = 16, 4, 7
+# domain, at the rate the ingress can produce them.
+# INGRESS RATE (VEH-FMT-SM 10-18, CONFIRMED against ot_hbm_host_static_ingress.sv:34-80 by a cycle model of its AXI-lite
+# admission, tb_hbm_host_static_ingress write32 protocol): every F2x is ONE AXI write; s_awready / s_wready pulse at most
+# every other edge, land in pin flops, and stay low while the write's B response is pending, so even an ideal master
+# (AW+W together, bready 1) completes one write per AXI_WRITE_EDGES = 5 edges.  A 256-b row = 8 F24 writes = 40 edges
+# (the 16 edges assumed before were 2.5x optimistic); F20 select = 1 write and the row address auto-increments, so
+# consecutive rows of one target need no new F20; descriptor = F28 + F2c (2 writes); launch = F30, which the ingress
+# refuses while its guard (5 after F2c) is non-zero -> one idle write slot between F2c and F30 (launch_ok,
+# ingress.sv:62, :114-117).  Output pins are registered one edge after the write executes (ingress.sv:44-51).
+AXI_WRITE_EDGES = 5
+CP_FRAME_EDGES = 8 * AXI_WRITE_EDGES               # one 256-b row
+CP_DESC_GUARD = AXI_WRITE_EDGES                    # kept for callers: one write slot
+CP_LAUNCH_GUARD = 7                                # ingress launch guard (README): no frame in the 7 edges after F30
+CP_DESC_TO_LAUNCH = 2 * AXI_WRITE_EDGES            # F2c -> F30: guard 5 must be 0 at the F30 execute edge
 # SW-slice targets (die.v GEN2 e92f4d03 scan: instances whose cfg_v is hleaf_SW__a/b_cfg_v, tgt strap) per HGI unit.
-# The PAYLOAD (row words) of each target is the target's own ABI; the compilers named here produce it for a record
-# shape -- not yet called by this tool (status format_open, reason 'payload_open').
+# The PAYLOAD (row words) of each target is the target's own ABI (sm_images.py for SM / DMA; sibling lanes for the rest).
+# The SW slice holds 8 SMs, but only sm_SW0..3 are SW-leaf configured: cp_svg_SW4..7 / xc_SW4..7 hang on the SE leaf
+# (slice inputs hleaf_SE__b_* / hleaf_SE__a_*, SE_LEAF_TARGETS) and sm_SW4..7 results leave the slice (smw_SW lanes4
+# serves sm_SW0..3 only, slice.v smw_SW s0..s3) -- VEH-FMT-SM 10-18.
 SW_TARGETS = {
-    "SM": [("cp_svg_SW0", 64), ("cp_svg_SW1", 65), ("cp_svg_SW2", 66), ("cp_svg_SW3", 67),   # ot_static_cmd_target
-           ("xl_SW_ctl", 100), ("smw_SW", 160), ("xc_SW0", 192), ("xc_SW1", 193), ("xc_SW2", 194),
-           ("xc_SW3", 195), ("calendar_SW", 96)],
+    "SM": [(f"cp_svg_SW{k}", 64 + k) for k in range(4)] +                                # ot_static_cmd_target MODE 0
+          [("xl_SW_ctl", 100), ("smw_SW", 160)] + [(f"xc_SW{k}", 192 + k) for k in range(4)] +
+          [("calendar_SW", 96), ("refcfg_SW", 126)],
     "COLL": [("hb_coll_SW", None), ("vmfc_SW", 56), ("epcal_SW", 132)],   # hb_coll_SW: strap inside the hard master
     "DMA": [("hb_dbk_SW", 104), ("calendar_SW", 96)],
     "HC": [("hc_SW", 108)],
@@ -511,10 +523,16 @@ SW_TARGETS = {
     "SFU": [("col_sfu_SW", 116)],
     "ATT": [], "IDX": [("col_idx (outside SW, hleaf_SE)", 120)],
 }
+# targets inside the SW slice configured through OTHER boundary inputs: (instance, tgt, slice input prefix).  A replay
+# that drives hleaf_SE__* stands in for the SE leaf's output pins (its CFG_LAT 2 is then the replay's to model).
+SE_LEAF_TARGETS = [(f"cp_svg_SW{k}", 64 + k, "hleaf_SE__b_") for k in range(4, 8)] + \
+                  [(f"xc_SW{k}", 192 + k, "hleaf_SE__a_") for k in range(4, 8)]
+DIRECT_TARGETS = [("hcollgi_SW", 176, "host_cp_ingress__")]          # COLL gather issue: on the ingress bus itself
 PAYLOAD_COMPILER = {
-    "SM": "ot_static_cmd_target rows (cp_svg) + tools/hbm_vm_static_calendar.py (calendar_SW) -- MATVEC shape lowering open",
+    "SM": "sm_images.py (cp_svg feed programme + issuer descriptors, xc ext calendar, xl_SW_ctl x-load table, smw_SW "
+          "writer table, calendar_SW VM calendar, packed136 HBM image)",
     "COLL": "tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI",
-    "DMA": "hb_dbk_SW (ot_hgi_dma_back_static_vp4_banks_cp) row ABI + tools/hbm_vm_static_calendar.py",
+    "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
     "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
     "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
     "SFU": "col_sfu_SW collar (ot_hbm_static_cfg_collar NS 2) <- tools/hbm_static/su_arith_sfu_compile.py",
@@ -523,35 +541,70 @@ PAYLOAD_COMPILER = {
 }
 
 
+class CpBus:
+    """the ingress output stream of one replay: AXI-write slots at AXI_WRITE_EDGES, events on the ingress output pins
+    (stream domain).  install() / desc() / launch() append in programme order; .t is the next free write edge."""
+
+    def __init__(s, t=0, src="image:CP"):
+        s.t, s.ev, s.src, s.sel = t, [], src, None
+
+    def _d(s, c, port, v, **kw):
+        s.ev.append(dict(k="D", dom="stream", cyc=c, port=f"host_cp_ingress__{port}", val=f"{v:x}", src=s.src, **kw))
+
+    def _write(s):
+        s.t += AXI_WRITE_EDGES
+        return s.t                                  # output pins change right after this edge
+
+    def install(s, target, rows, base=0, **kw):
+        """rows (256-b ints) at rows base.. of target; returns the edge of the last cfg_v."""
+        if s.sel != (target, base):
+            s._write()                              # F20 select {row base, target}
+        c = None
+        for j, w in enumerate(rows):
+            assert 0 <= w < 1 << 256 and base + j < 1 << 12
+            c = s.t + 7 * AXI_WRITE_EDGES + AXI_WRITE_EDGES     # 8th F24 executes
+            s.t = c
+            s._d(c, "cfg_target", target, **kw)
+            s._d(c, "cfg_addr", base + j, **kw)
+            s._d(c, "cfg_data", w, **kw)
+            s._d(c, "cfg_v", 1, **kw)
+            s._d(c + 1, "cfg_v", 0, **kw)
+        s.sel = (target, base + len(rows))
+        return c
+
+    def desc(s, target, base, limit, loops=1, **kw):
+        if s.sel is None or s.sel[0] != target:
+            s._write()                              # F20 select of the target (row field unused by F28/F2c)
+            s.sel = (target, base)
+        s._write()                                  # F28
+        c = s._write()                              # F2c -> desc_v
+        s._d(c, "cfg_target", target, **kw)
+        s._d(c, "desc_base", base, **kw)
+        s._d(c, "desc_limit", limit, **kw)
+        s._d(c, "desc_loops", loops, **kw)
+        s._d(c, "desc_v", 1, **kw)
+        s._d(c + 1, "desc_v", 0, **kw)
+        s.last_desc = c
+        return c
+
+    def launch(s, **kw):
+        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH)
+        s.t = c
+        s._d(c, "launch_v", 1, **kw)
+        s._d(c + 1, "launch_v", 0, **kw)
+        s.t = c + CP_LAUNCH_GUARD
+        return c
+
+
 def cp_frames(target, rows, t, base=0, loops=1, launch=True):
     """replay D events (stream domain, ingress output pins) installing `rows` (256-b ints) at rows base.. of
-    `target`, then its descriptor and (optionally) the launch.  Returns (events, launch_edge, next_free_edge)."""
-    ev = []
-    d = lambda c, port, v: ev.append(dict(k="D", dom="stream", cyc=c, port=f"host_cp_ingress__{port}", val=f"{v:x}",
-                                          src="image:CP"))
-    for j, w in enumerate(rows):
-        c = t + j * CP_FRAME_EDGES
-        assert 0 <= w < 1 << 256 and base + j < 1 << 12
-        d(c, "cfg_target", target)
-        d(c, "cfg_addr", base + j)
-        d(c, "cfg_data", w)
-        d(c, "cfg_v", 1)
-        d(c + 1, "cfg_v", 0)
-    c = t + len(rows) * CP_FRAME_EDGES + CP_DESC_GUARD
-    d(c, "cfg_target", target)
-    d(c, "desc_base", base)
-    d(c, "desc_limit", base + len(rows))
-    d(c, "desc_loops", loops)
-    d(c, "desc_v", 1)
-    d(c + 1, "desc_v", 0)
-    c += CP_DESC_GUARD
-    lt = None
-    if launch:
-        lt = c
-        d(c, "launch_v", 1)
-        d(c + 1, "launch_v", 0)
-        c += CP_LAUNCH_GUARD
-    return ev, lt, c
+    `target`, then its descriptor and (optionally) the launch, at the ingress rate.  Returns (events, launch_edge,
+    next_free_edge)."""
+    b = CpBus(t)
+    b.install(target, rows, base)
+    b.desc(target, base, base + len(rows), loops)
+    lt = b.launch() if launch else None
+    return b.ev, lt, b.t
 
 
 def main():

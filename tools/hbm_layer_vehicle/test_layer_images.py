@@ -130,7 +130,10 @@ def t_cp(die, boundary):
     w = {e["name"]: e["width"] for e in bnd["inputs"]}
     ev, lt, end = LI.cp_frames(108, [(1 << 255) | 5, 7], 10)
     assert all(e["port"] in w and int(e["val"], 16) >> w[e["port"]] == 0 for e in ev)
-    assert lt == 10 + 2 * LI.CP_FRAME_EDGES + 2 * LI.CP_DESC_GUARD and end == lt + LI.CP_LAUNCH_GUARD
+    A = LI.AXI_WRITE_EDGES                        # F20, 2 rows x 8 F24, F28 + F2c, idle slot, F30
+    assert lt == 10 + A + 2 * LI.CP_FRAME_EDGES + 2 * A + LI.CP_DESC_TO_LAUNCH and end == lt + LI.CP_LAUNCH_GUARD
+    cv = sorted(e["cyc"] for e in ev if e["port"].endswith("cfg_v") and e["val"] == "1")
+    assert cv[1] - cv[0] == 8 * A, cv            # ingress rate: one 256-b row per 8 AXI writes
     with tempfile.TemporaryDirectory() as d:
         Path(d, "cp.json").write_text(json.dumps(dict(events=ev)))
         subprocess.run([sys.executable, str(HERE / "gen_slice_tb.py"), "--boundary", str(boundary), "--out", d,
@@ -147,6 +150,8 @@ def t_cp(die, boundary):
             got[m.group(2)] = int(t.group(1)) if t else None
     want = {i: t for v in LI.SW_TARGETS.values() for i, t in v if not i.startswith("col_idx")}
     assert all(got.get(i, "missing") == t for i, t in want.items()), {i: (t, got.get(i)) for i, t in want.items()}
+    extra = {i: t for i, t in got.items() if i not in want}
+    assert not extra, f"hleaf_SW targets missing from SW_TARGETS: {extra}"
     print(f"cp OK: {len(got)} hleaf_SW targets in die.v, SW_TARGETS ({len(want)}) match")
 
 
