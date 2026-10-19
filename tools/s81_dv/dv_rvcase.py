@@ -585,6 +585,16 @@ def main():
 
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
+    # synchronous reset tree, not payload. Declare the width as well as the port
+    # so a missing/disconnected payload bit fails the structural audit.
+    if a.die_repair:
+        contracts = []
+        for master in sorted({m for m, _, _, _ in insts}):
+            match = re.fullmatch(r'dsfd_dvrlyh?_(\d+)_[A-Z]+', master)
+            if match:
+                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {int(match[1])}}}')
+        repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
