@@ -63,6 +63,11 @@ module ot_s81ph_native_sel_slice #(
     // registers i0_{last,lv,val,idx,rp}, the CMP_RETIME compare nibbles and o0_d load EVERY edge (no enable).  Exact:
     // every consumer is qualified by i0_v / i1_v / o0_v, which keep their accept / push gating.  0 cycles.
     parameter integer ILD = 0,
+`ifdef OT_S81PH_FIFO_SRAM
+    parameter integer FIFO_SRAM = 1,
+`else
+    parameter integer FIFO_SRAM = 0,
+`endif
     parameter integer FRPW = 256
 ) (
     input  wire                  clk,
@@ -329,7 +334,7 @@ module ot_s81ph_native_sel_slice #(
         .o_v(ps_v), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
 
     // -- write-back queue and the write port -----------------------------------------------------
-    reg [W*EW-1:0] fq [0:DG-1];
+    wire [W*EW-1:0] fq_head;
     reg [FW-1:0]   fwp, frp;
     reg [FW:0]     fcnt;
     reg            wpend;
@@ -347,7 +352,14 @@ module ot_s81ph_native_sel_slice #(
             wpend <= f_pop;
         end
     end
-    generate if (FRPN == 0) begin : g_frp1
+    generate if (FIFO_SRAM != 0) begin : g_fq_sram
+        wire [FW-1:0] next_rp = f_pop ? ((frp == DG-1) ? {FW{1'b0}} : frp+1'b1) : frp;
+        ot_s81ph_queue_store #(.W(W*EW), .AW(FW)) u_q (
+            .clk(clk), .rst_n(rst_n), .push(f_push), .wa(fwp), .data(ps_line), .next_head(next_rp), .head(fq_head));
+        always @(posedge clk) mem_wdata <= ing_wr ? pi_line : fq_head;
+    end else begin : g_fq_legacy
+    reg [W*EW-1:0] fq [0:DG-1];
+    if (FRPN == 0) begin : g_frp1
         always @(posedge clk) mem_wdata <= ing_wr ? pi_line : fq[frp];
     end else begin : g_frpn
         localparam integer MW = W * EW;
@@ -372,9 +384,10 @@ module ot_s81ph_native_sel_slice #(
 `endif
 `endif
         end
+    end
+    always @(posedge clk) if (f_push) fq[fwp] <= ps_line;
     end endgenerate
     always @(posedge clk) begin
-        if (f_push) fq[fwp] <= ps_line;
         mem_waddr <= ing_wr ? head[AW-1:0] : w[AW-1:0];
     end
 
@@ -558,7 +571,8 @@ module ot_s81ph_native_sel_slice #(
     end
 
     // -- output FIFO (shift register; entry 0 drives the port) ------------------------------------
-    reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
+    wire [EW*W:0] o_head; // exact registered showahead for either storage implementation
+    // reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
     // direct delivery from pass 3
     wire           d_room     = (occ < OD);
     wire           d_mid      = (sw_k == K_P3) && (sw_st != SW_IDLE) && dmode && f_push && pend_v && d_room;
@@ -583,6 +597,22 @@ module ot_s81ph_native_sel_slice #(
         else if (seg_clr) ocnt <= 0;
         else ocnt <= ocnt + {{(OCW-1){1'b0}}, o_push} - {{(OCW-1){1'b0}}, o_pop};
     end
+    generate if (FIFO_SRAM != 0) begin : g_ofq_sram
+        localparam integer OPW = (OD > 1) ? $clog2(OD) : 1;
+        reg [OPW-1:0] rp, wp;
+        wire [OPW-1:0] nrp = o_pop ? ((rp == OD-1) ? {OPW{1'b0}} : rp+1'b1) : rp;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rp<=0; wp<=0; end
+            else if (seg_clr) begin rp<=0; wp<=0; end
+            else begin
+                if (o_pop) rp<=nrp;
+                if (o_push) wp<=(wp==OD-1) ? {OPW{1'b0}} : wp+1'b1;
+            end
+        end
+        ot_s81ph_queue_store #(.W(EW*W+1), .AW(OPW)) u_q (
+            .clk(clk), .rst_n(rst_n), .push(o_push), .wa(wp), .data(o_in), .next_head(nrp), .head(o_head));
+    end else begin : g_ofq_legacy
+        reg [EW*W:0] ofq [0:OD-1];
     always @(posedge clk) begin
         for (oi = 0; oi < OD; oi = oi + 1) begin
             if (o_pop) begin
@@ -591,11 +621,13 @@ module ot_s81ph_native_sel_slice #(
             end else if (o_push && oi == ocnt) ofq[oi] <= o_in;
         end
     end
+        assign o_head = ofq[0];
+    end endgenerate
     assign out_valid = (ocnt != 0);
-    assign out_last  = ofq[0][EW*W];
+    assign out_last  = o_head[EW*W];
     generate
         for (gl = 0; gl < W; gl = gl + 1) begin : g_out
-            wire [EW-1:0] ln = ofq[0][EW*gl +: EW];
+            wire [EW-1:0] ln = o_head[EW*gl +: EW];
             assign out_lv[gl]             = ln[EW-1];
             assign out_val[16*gl +: 16]   = ln[IW +: 16];
             assign out_idx[IW*gl +: IW]   = ln[IW-1:0];

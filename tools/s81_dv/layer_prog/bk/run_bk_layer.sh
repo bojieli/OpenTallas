@@ -6,7 +6,10 @@ set -u -o pipefail
 OUT=$1; shift
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$OUT"
-SRC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+SRC="rtl/lib/ot_sram_showahead_1r1w.sv
+rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv
+physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
 rtl/common/ot_fwd_link_stage.sv
 rtl/hdc/ot_hdc_prefix.sv
