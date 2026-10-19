@@ -13,7 +13,8 @@
 //   the latency user's beats (and the background) reach A's ri at the SAME cycles and bits as the single-user RA run;
 //   no fault in the main phase; then F1 two landed messages without a replay (write to a full slot) -> A fault,
 //   F2 replay of an empty slot -> B fault, F3 ab = 1 for user 0 -> P fault.
-// Mutants: +define+OT_S81SL_LEP_MUT_TAGDROP, +define+OT_S81SL_LEP_MUT_WRONGCOPY, +define+OT_DSDV_MU_LAND_MUT_OVR.
+// Mutants: +define+OT_S81SL_LEP_MUT_TAGDROP, +define+OT_S81SL_LEP_MUT_WRONGCOPY, +define+OT_DSDV_MU_LAND_MUT_OVR,
+//          +define+OT_S81SL_LEP_MUT_LANDCUT (RX side: dies A / B).
 // Verdict: "PASS lep_mu ..." or "FAIL lep_mu ...".
 module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, parameter integer R = 420,
                          parameter integer SEED = 1, parameter integer WAIT = 8000);
@@ -41,17 +42,15 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
             .li_v(piv[g]), .li_r(pir[g]), .li_d(pid[553*g +: 553]), .flt(pf[3*g +: 3]));
     end endgenerate
     // ------------------------------------------------------------------ dies A / B (copies, MU_EN 1, AB_EN 0) + landing
+    // MU-S81b: dies A / B = the hardened copy-A-only master ot_s81sl_lep_mu_a (kit s81sl_lepmua; = lep_mu HOST_EN 0 AB_EN 0)
     `define TB_RXDIE(X, LP) \
     wire [1:0] X``lv, X``lr, X``iv, X``ir, X``rxv; wire [2*553-1:0] X``ld, X``id; wire [5:0] X``fl; \
     wire [1023:0] X``tx, X``rx; wire [3:0] X``st; wire X``mwv, X``mrv, X``mf; wire [1103:0] X``mwd, X``mrd; \
-    ot_s81sl_lep_mu #(.SRAM(1), .HOST_EN(0), .AB_EN(0), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(1104'd0), .ri(X``_ri), \
+    ot_s81sl_lep_mu_a #(.SRAM(1), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(1104'd0), .ri(X``_ri), \
         .lo0_v(X``lv[0]), .lo0_r(X``lr[0]), .lo0_d(X``ld[0 +: 553]), .lo1_v(X``lv[1]), .lo1_r(X``lr[1]), .lo1_d(X``ld[553 +: 553]), \
         .li0_v(X``iv[0]), .li0_r(X``ir[0]), .li0_d(X``id[0 +: 553]), .li1_v(X``iv[1]), .li1_r(X``ir[1]), .li1_d(X``id[553 +: 553]), \
-        .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), .l0_st(2'b00), .l1_st(2'b00), \
-        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), \
+        .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), \
         .mu_c(34'd0), .mu_rt(X``_rt), .ml_wv(X``mwv), .ml_wd(X``mwd), .ml_rv(X``mrv), .ml_rd(X``mrd), .ml_f(X``mf), \
-        .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(), \
-        .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0), \
         .fault(X``_f)); \
     dsdv_mu_land #(.NB(NB), .NS(1), .SRAM(1)) m``X (.clk(clk), .rst_n(rst_n), .wv(X``mwv), .wd(X``mwd), .rc(X``_rc), \
         .rv(X``mrv), .rd(X``mrd), .fault(X``mf)); \

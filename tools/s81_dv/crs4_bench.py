@@ -8,10 +8,13 @@ the dsfd_cfifo_crs gap), the hop-0 ICG opened at source edge G, and one compile-
 of LANDING-CONTRACT L5: E = ceil((max dL + 80 + margin) / T)).  Every sweep point (common lag shift -80..+80 ps) must
 deliver the reference's xa / xb / cc / x2 stream EXACTLY at one constant offset (the compile-time latency difference,
 = E + a constant: it follows the compile-time E, never the dL inside the window), rd identical, fault 0.  A calendar slip on lane 0 or 3 must raise fault.
-Mutants: NBR (lanes 0 / 3 captured on the neighbour lane's clock = the old gap) and SEL (landing read slot one late)
-must FAIL.
+Mutants: NBR (lanes 0 / 3 captured on the neighbour lane's clock = the old gap), SEL (landing read slot one late) and
+NAIVE (S81-DIE7/CRS4: bounded-skew retime register instead of the ring) must FAIL.
 
   python3 tools/s81_dv/crs4_bench.py [--out results/arch/s81_dv_1016/landing/crs4_bench.json]
+  python3 tools/s81_dv/crs4_bench.py --variant base|mut_nbr|mut_sel|mut_naive --out RUN/x.json   (one variant; prints
+      'CRS4_BENCH PASS|FAIL <variant> ...' = that variant's OWN behavioural verdict, exit 0 PASS / 1 FAIL -- the
+      hardened-view kit benches, tools/s81_dv/crs4_gate.sh)
 """
 import argparse, json, math, re, subprocess, tempfile
 from pathlib import Path
@@ -27,6 +30,7 @@ GEOM = [dict(name='aligned_dL_80', dl=[80, 80, 80, 80], G=4), dict(name='halfT',
         dict(name='lanes03_far_900', dl=[900, 100, 100, 900], G=4),
         dict(name='spread_16hop', dl=[1400, 1900, 2300, 2600], G=2)]
 SWEEP = list(range(-SKEW, SKEW + 1, 40))
+VARIANTS = (('base', None), ('mut_nbr', 'OT_CRS4_MUT_NBR'), ('mut_sel', 'OT_S81_LAND_MUT_SEL'), ('mut_naive', 'OT_S81_LAND_MUT_NAIVE'))
 
 
 def run(b, args):
@@ -40,12 +44,15 @@ def run(b, args):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/s81_dv_1016/landing/crs4_bench.json')
+    ap.add_argument('--variant', choices=[v for v, _ in VARIANTS])
     a = ap.parse_args()
     tmp = Path(tempfile.mkdtemp(prefix='crs4_'))
     res = dict(schema='opentallas.s81_land.crs4_bench.v1', tb=TB, sources=SRC, T_ps=T, skew_sweep_ps=SWEEP, margin_ps=MARGIN,
                rule='E = ceil((max dL + 80 + margin)/T); K = E + G - R0; one K for the 4 lanes; predicted offset = E - REF_LAT', R0=R0, REF_LAT=REF_LAT, variants={})
     verdict = True
-    for var, dfn in (('base', None), ('mut_nbr', 'OT_CRS4_MUT_NBR'), ('mut_sel', 'OT_S81_LAND_MUT_SEL')):
+    for var, dfn in VARIANTS:
+        if a.variant and var != a.variant:
+            continue
         b = str(tmp / var)
         subprocess.run(['iverilog', '-g2012', '-o', b, str(ROOT / TB)] + [str(ROOT / s) for s in SRC] + ([f'-D{dfn}'] if dfn else []), check=True)
         vr = dict(expect='PASS' if var == 'base' else 'FAIL', runs=[])
@@ -78,6 +85,11 @@ def main():
     res['verdict'] = 'PASS' if verdict else 'FAIL'
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(res, indent=1) + '\n')
+    if a.variant:
+        vr = res['variants'][a.variant]
+        print('CRS4_BENCH', vr['verdict'], a.variant, f"sweep {vr['sweep_pass']}/{vr['sweep_runs']}",
+              f"slip-fault {vr['slip_fault_raised']}/{2 * len(GEOM)}", 'off-E', vr['offset_minus_E'], a.out)
+        raise SystemExit(0 if vr['verdict'] == 'PASS' else 1)
     print('BENCH', res['verdict'], a.out)
 
 

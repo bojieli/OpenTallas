@@ -17,7 +17,7 @@ set_max_transition 260 [current_design]
 set_input_transition 150 [all_inputs -no_clocks]
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
-set ::ot_ce_refs [dict create {qkd_static_ectla_kiss/ck} {tt {238.4 254.2 274.8} ff {195.0 206.3 223.0} ss {309.7 334.6 361.5}} {qkd_ectl_b_tp8_direct/ck} {tt {332.4 360.7 382.1} ff {269.4 286.4 300.3} ss {435.9 484.3 518.2}} {qkd_ectl_c_st/ck} {tt {160.8 171.0 190.3} ff {130.7 140.5 159.2} ss {211.6 222.7 242.9}}]
+set ::ot_ce_refs [dict create {qkd_static_ectla_kiss/ck} {tt {281.8 301.2 321.0} ff {224.4 240.2 256.8} ss {379.1 405.0 429.2}} {qkd_ectl_b_tp8_direct/ck} {tt {317.7 338.7 351.8} ff {255.6 270.2 280.0} ss {420.4 452.3 470.8}} {qkd_ectl_c_st/ck} {tt {161.5 169.2 183.7} ff {131.2 138.7 153.3} ss {212.7 221.2 235.5}}]
 set ::ot_ce_counts [dict create {qkd_static_ectla_kiss} 1 {qkd_ectl_b_tp8_direct} 1 {qkd_ectl_c_st} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
 set ::ot_ce_source_domains [dict create {ck[0]} {core} {ck[1]} {core} {ck[2]} {core}]
@@ -128,6 +128,27 @@ proc ot_ce_boundary_cells {} {
   }
   return $boundary
 }
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
 proc ot_ce_boundary_pins {pins boundary_cells} {
   set regs {}; set boundary {}
   foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
@@ -235,9 +256,6 @@ proc ot_ce_apply {} {
     if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
       error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
     }
-    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
-      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
-    }
     if {!$boundary_cells_ready} {
       set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
     }
@@ -252,8 +270,12 @@ proc ot_ce_apply {} {
     set arrivals [lsort -real $arrivals]
     set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
     set mean [expr {$total / [llength $arrivals]}]
-    if {[llength $pins] > 15000 && $mean > 300} {
-      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner ($scope, [llength $boundary] of [llength $pins] sinks)"
     }
     set domain [dict get $::ot_ce_source_domains $name]
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]

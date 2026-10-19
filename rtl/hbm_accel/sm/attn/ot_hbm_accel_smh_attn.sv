@@ -19,8 +19,19 @@
 module ot_hbm_accel_smh_attn #(
     parameter integer KVMUT = 0,        // bench negative control only (converter mutant, ot_hbm_sm_kv_line MUT)
     parameter integer BE_DELAY = 8,
-    parameter integer HOPD = 4          // row-bundle registers per column hop (pt_w/pt_e incl. PT4): a column's control is
+    parameter integer HOPD = 4,         // row-bundle registers per column hop (pt_w/pt_e incl. PT4): a column's control is
                                         // delayed with its rows, so the front's result deskew ((5 + PT4) a hop) aligns it
+    parameter integer ENABLE_INT8 = 0   // SMB-INT8 (10-19) opt-in, default off (0 = the netlist / behaviour as before):
+                                        // Qwen fmt-3 INT8 weights.  command[116] marks the cycle's packet as ONE packed
+                                        // line of 128 INT8 codes; ot_smh_static_int8 (the real ot_hbm_accel_int8_line
+                                        // converter, PIPE 1) turns it into two BF16 lines (low 64 codes first) that
+                                        // reach the front 2 and 3 cycles later with the packet's tag, where the compiler
+                                        // issues them as ordinary fmt-0 (BF16) lines (codes are exact in BF16, products
+                                        // exact in FP32: the fmt-3 golden sm_int8 == the fmt-0 path on the widened image);
+                                        // the row scale is applied after the reduction by the SU consumer (qwen_compiler
+                                        // row_scale_*).  One packed line per two edges (the converter's fixed rate);
+                                        // an overlap, a raw packet colliding with a converted beat, a mark without a
+                                        // packet or a mark on an attention word is a sticky schedule_fault (no stall).
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -73,10 +84,35 @@ module ot_hbm_accel_smh_attn #(
     wire [SUB*RBW-1:0] f_rl, f_rr;
     wire [NP*BBW-1:0]  f_bl, f_br;
     wire [NH*QLW-1:0]  f_ql, f_qr;
-    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT)) u_front (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
+    wire [191:0]  f_command;
+    wire [1098:0] f_packet;
+    wire          f_schedule_fault, i8_schedule_fault;
+    generate if (ENABLE_INT8) begin : g_int8
+        wire          i8_mark = command[116];
+        wire [1098:0] i8_out;
+        ot_smh_static_int8 u_int8 (.clk(clk), .rst_n(rst_n), .packet_in({packet[1098] & i8_mark, packet[1097:0]}),
+            .packet_out(i8_out));
+        assign f_command = {command[191:117], 1'b0, command[115:0]};
+        assign f_packet  = i8_out[1098] ? i8_out : (i8_mark ? 1099'd0 : packet);
+        reg i8_fault, i8_busy;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin i8_fault <= 1'b0; i8_busy <= 1'b0; end
+            else begin
+                i8_busy <= packet[1098] && i8_mark;              // the converter's second (high-half) edge
+                if ((i8_mark && (!packet[1098] || command[183] || i8_busy)) || (!i8_mark && packet[1098] && i8_out[1098]))
+                    i8_fault <= 1'b1;
+            end
+        assign i8_schedule_fault = i8_fault;
+    end else begin : g_no_int8
+        assign f_command = command;
+        assign f_packet  = packet;
+        assign i8_schedule_fault = 1'b0;
+    end endgenerate
+    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT)) u_front (.clk(clk), .rst_n(rst_n), .command(f_command), .kv_desc(kv_desc), .packet(f_packet),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .request(request),
         .rl(f_rl), .rr(f_rr), .bl(f_bl), .br(f_br), .ql(f_ql), .qr(f_qr),
-        .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(schedule_fault));
+        .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(f_schedule_fault));
+    assign schedule_fault = f_schedule_fault | i8_schedule_fault;
     // BE control: one broadcast register at the front, delayed inside every BE
     reg [28:0] be_cmd;
     always @(posedge clk or negedge rst_n) if (!rst_n) be_cmd <= 29'd0; else be_cmd <= command[111:83];

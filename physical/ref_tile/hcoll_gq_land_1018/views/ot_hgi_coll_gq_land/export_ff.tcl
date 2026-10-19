@@ -11,10 +11,10 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_LVT_FF_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_LVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_r1_b7918441e/base/6_final.odb
+read_db /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_n1_537e21701/base/6_final.odb
 set ::ot_ce_corner ff
-read_sdc /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_r1_b7918441e/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_r1_b7918441e/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_n1_537e21701/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_ot_hgi_coll_gq_land_asap7_ref_hcoll_gq_land_1018_n1_537e21701/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /src/physical/ref_tile/hcoll_gq_land_1018/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc

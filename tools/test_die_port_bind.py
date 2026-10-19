@@ -39,6 +39,26 @@ class T(unittest.TestCase):
         self.assertEqual(rc, 0, r['summary'])
         self.assertEqual(r['verdict'], 'PASS')
 
+    def test_unread_output_bits(self):
+        # A named net with no consumer used to pass and the SM would be synthesised away.
+        rc, r = run("module top (ck);\n input ck;\n wire [15:0] dead;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(dead));\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 16)
+        self.assertEqual(r['unread_nets'], {'dead': 16})
+
+    def test_open_output(self):
+        rc, r = run("module top (ck);\n input ck;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['output_open_ports'], 1)
+        self.assertIn('OUTPUT_OPEN', r['masters']['a']['fails'])
+
+    def test_top_output_is_a_consumer(self):
+        rc, r = run("module top (ck, y);\n input ck;\n output [15:0] y;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(y));\nendmodule\n")
+        self.assertEqual(rc, 0, r['summary'])
+
     def test_duplicate_port(self):
         # r2h2/r2h4 GEN emitted .tt(actual) AND .tt(1538'h0) on one instance; Verilog keeps one silently -> FAIL
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
@@ -101,6 +121,32 @@ class T(unittest.TestCase):
             rc, r = run(one, ['--pad-file', str(pf)])
             self.assertIn('input_tied', r['failing'])             # a pad bit tied HIGH is not padding
 
+    def test_declared_spare_outputs(self):
+        # TOK-S81-GAPS/SVCP: a declared spare output range may stay unread; undeclared bits and open ports still fail
+        die = ("module top (ck, y);\n input ck;\n output [11:0] y;\n wire [15:0] o;\n"
+               " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(o));\n assign_free x ();\nendmodule\n").replace(" assign_free x ();\n", "")
+        die = die.replace("output [11:0] y;\n wire [15:0] o;", "output [11:0] y;\n wire [15:0] o;\n wire [3:0] o_nc;")
+        die = die.replace(".o(o)", ".o({o_nc, y})")
+        rc, r = run(die)
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 4)
+        with tempfile.TemporaryDirectory() as d:
+            pf = Path(d) / 'pads.json'
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'spare face', 'ports': {'o': [[12, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])
+            self.assertEqual(r['summary']['spare_out_bits'], 4)
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[13, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['unread_net_bits'], 1)   # bit 12 is not declared
+            opn = "module top (ck);\n input ck;\n a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n"
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[0, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])                   # a fully declared open output port is spare
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[1, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['output_open_ports'], 1)  # partly declared: still OUTPUT_OPEN
+
     def test_params_sidecar(self):
         with tempfile.TemporaryDirectory() as d:
             pj = Path(d) / 'p.json'
@@ -124,3 +170,54 @@ def test_ternary_packed_range_width():
            '2*(2*RU+RS0+RS1+RS2):1)-1:0]relay_ck, input wire [7:0] a); endmodule\n')
     m = P.parse_modules(src, 'x.sv')[0]
     assert m.width('relay_ck', m.env()) == 30 and m.width('a', m.env()) == 8
+
+
+# ---- S81-LBGAP G6 (10-18): generate-label children, elaboration traps, duplicated child definitions
+G6_P = """
+module p #(parameter integer K = 1) (input wire ck, input wire [7:0] i, output wire [7:0] o);
+  generate if (K == 1) begin : g_one
+    c #(.RNE(1)) u_c (.ck(ck), .i(i), .o(o));
+  end else begin : g_bad
+    p_K_must_be_1 u_trap ();
+  end endgenerate
+endmodule
+"""
+G6_C_BASE = "module c (input wire ck, input wire [7:0] i, output reg [7:0] o); always @(posedge ck) o <= i; endmodule\n"
+G6_C_RNE = ("module c #(parameter integer RNE = 0) (input wire ck, input wire [7:0] i, output reg [7:0] o);\n"
+            "  always @(posedge ck) o <= RNE ? ~i : i; endmodule\n")
+G6_DIE = "module die (ck);\n  input ck;\n  wire [7:0] n;\n  p u_p (.ck(ck), .i(n), .o(n));\nendmodule\n"
+
+
+def run_g6(extra_fn=lambda d: []):
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'rtl').mkdir()
+        (d / 'rtl' / 'p.sv').write_text(G6_P)
+        (d / 'rtl' / 'c.sv').write_text(G6_C_BASE)
+        (d / 'rtl' / 'c_rne.sv').write_text(G6_C_RNE)
+        (d / 'bench.f').write_text(f"+define+X\n{d / 'rtl' / 'c_rne.sv'}\n")
+        (d / 'd.v').write_text(G6_DIE)
+        out = d / 'o.json'
+        p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '--rtl-root', str(d / 'rtl'),
+                            '--no-macro-dirs', '--out', str(out)] + list(extra_fn(d)), capture_output=True, text=True)
+        return p.returncode, json.loads(out.read_text()), p.stdout
+
+
+class G6(unittest.TestCase):
+    def test_label_child_trap_and_ambiguous_child(self):
+        rc, rec, so = run_g6()
+        cc = rec['child_closure']
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertIn('c', cc['ambiguous_children'])                 # the child after `begin : g_one` is seen
+        self.assertEqual(cc['unresolved_children'], {})              # the port-less trap is not an unresolved child
+        self.assertIn('p_K_must_be_1', cc['elab_traps'])
+
+    def test_prefer_list_resolves(self):
+        rc, rec, so = run_g6(lambda d: ['--prefer-list', str(d / 'bench.f')])
+        cc = rec['child_closure']
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(cc['ambiguous_children'], {})
+        self.assertTrue(cc['variant_children']['c']['chosen'].endswith('c_rne.sv'))
+        self.assertEqual(cc['variant_children']['c']['by'], 'prefer')
+

@@ -86,7 +86,7 @@
 //   by the 553-cycle crossing); alternating one lane's frames between two peers would mix two sequence spaces in one
 //   endpoint, so a destination field needs a per-destination link layer inside the frozen tile.
 // Mutants (bench only): OT_S81SL_LEP_MUT_TAGDROP (TX window does not stamp), OT_S81SL_LEP_MUT_WRONGCOPY (ab ignored: all
-// beats on pair A).
+// beats on pair A), OT_S81SL_LEP_MUT_LANDCUT (RX ignores the land bit: landed beats cut through to ri; MU-S81b).
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -386,7 +386,11 @@ module ot_s81sl_lep_core #(
     reg mrv, mcol, mwv; reg [1103:0] mrd, mwd; reg [31:0] rtq;
     always @(posedge clk) mrd <= ml_rd;
     wire rr_ring = rel && h0[0];
+`ifdef OT_S81SL_LEP_MUT_LANDCUT
+    wire rr_land = 1'b0;                               // MUTANT: land bit ignored (landed beats cut through to ri)
+`else
     wire rr_land = rr_ring && tagd(rb) && rb[TG + 1];
+`endif
     wire rr_dlv = rr_ring && !rr_land;
     wire [1103:0] db = rr_dlv ? rb : mrd;               // delivered beat: cut-through or replayed
     always @(posedge clk) begin
@@ -637,6 +641,48 @@ module ot_s81sl_lep_mu_ab #(
         .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),
         .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),
         .l2_f(l2_f), .l3_f(l3_f), .fault(fault));
+endmodule
+
+// MU-S81b (2026-10-19): hardened master of the copy-A-only multi-user endpoint (kit s81sl_lepmua) for the stages with NO
+// copy B (the 51 non-duplicated stage groups; host-less ends s_0S / s_0N / s_7S): MU_EN 1, AB_EN 0, HOST_EN 0.  Same core
+// and cycles as ot_s81sl_lep_mu #(.HOST_EN(0), .AB_EN(0)); neither the host ports nor the pair-B ports (lo2 / lo3, li2 /
+// li3, rxvb, l2_f / l3_f) are ports (the core reads none of them at HOST_EN 0 / AB_EN 0, generate), so the hard block
+// carries no tied pad and no constant output.  Faces (kit): W lanes A, N landing (dsdv_mu_land), E ring + mu_c / mu_rt.
+module ot_s81sl_lep_mu_a #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [33:0]     mu_c,
+    output wire [31:0]     mu_rt,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            fault
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .AB_EN(0), .NB(NB)) u (
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+        .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+        .l2_f(3'd0), .l3_f(3'd0), .fault(fault));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

@@ -74,7 +74,15 @@ module ot_pl_land_r #(
             rc <= rc + 1'b1;
             if (rc == kk - 1'b1) warm <= 1'b1;
         end
-    always @(posedge ck) o <= (warm && vld[sel]) ? bank[sel*W +: W] : {W{1'b0}};
+    // decoded slot select (one-hot compare + AND-OR, constant-index slices): a runtime bank[sel*W +: W] is a W-bit
+    // $shiftx that yosys SHARE can stall on for wide landings (pre_route_gate rtl runtime_partselect; PL-SMT W = 2,069)
+    reg [W-1:0] pick;
+    integer j;
+    always @* begin
+        pick = {W{1'b0}};
+        for (j = 0; j < D; j = j + 1) pick = pick | ({W{sel == j[AW-1:0]}} & bank[j*W +: W]);
+    end
+    always @(posedge ck) o <= (warm && vld[sel]) ? pick : {W{1'b0}};
 `ifndef SYNTHESIS
     reg fault = 1'b0;
     always @(posedge ck)
