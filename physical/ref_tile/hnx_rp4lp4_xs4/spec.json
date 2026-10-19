@@ -196,7 +196,9 @@
    "xs_a1",
    "xs_a2",
    "xs_g1",
-   "xs_g2"
+   "xs_g2",
+   "o_iw",
+   "o_ix"
   ],
   "S": [
    "bk1",
@@ -209,10 +211,6 @@
    "o_ilast_e",
    "o_itag_e",
    "o_iv_f"
-  ],
-  "ANY": [
-   "o_iw",
-   "o_ix"
   ]
  },
  "route": {
@@ -254,6 +252,10 @@
  "outhold": true,
  "pin_regs": {
   "enable": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
  },
  "keep_pin_regs": true,
  "pin_reg_split": true,
