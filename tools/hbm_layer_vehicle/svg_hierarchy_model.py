@@ -41,9 +41,12 @@ def model():
             parent_outline_um=[449.28,725.76],
             pair_select='For bankpair{j,j+4}, select the bank needed by outputlane(j-ordinal)%4; one2:1 source-local stage perpair',
             rotate='Four selected pairs undergo a registered cyclic4way rotation into four256bitsectors; static ordinal lowbits control fixed butterfly stages',
-            pair_select_edges=1,rotate_edges=2,
+            pair_select_edges=2,ring_transport_edges=2,cache_pin_rotate_edges=3,
             local_landing_edges=2,
-            proposed_additional_return_edges=5,
+            proposed_additional_return_edges=7,
+            selected_total_prefetch_margin_stream_edges=15,
+            metadata_delay_stream_edges=7,
+            source_bound_proof="ot_hbm_svg_return_regional,1632 groups,min=max7edges,threeoccupiedresets,II1; select/rotate/epoch mutants all fail",
             clocks='Separate stream roots for four pairregions and cachehub. Actual4slot fixed-latency landed crossings, no ready path across SM programme boundary. Halfcycle forwarded relay if placed reach exceeds405um.',
             region_to_center_manhattan_um=224.64/2+362.88/2,
             boundary_bits_per_region_edge=256,
@@ -56,7 +59,7 @@ def model():
             added_native_ingress_flops_per_SM=8*1140,
             net_flop_change_excluding_controls_per_SM=8*(1140-2280),
             bandwidth='Current physicalservice52B/edge finding remains. TheoreticalII1 landing capacity cannot be claimed as99B/edge service throughput.'),
-        status='MODEL BEFORE NATIVE WHOLE-SVG RTL; all release masters stay byte-identical')
+        status='REGIONAL COMPOSITION MODEL BEFORE RTL; production native OPEN retry still pending; all release masters stay byte-identical')
 
 
 if __name__ == '__main__':
