@@ -112,3 +112,29 @@ def test_failing_audit_retains_repaired_database():
     text = step.tcl_call('s81', '/work/die_repeaters.json',
                          repeat_nets=['n*_fck*'], fclk_policy='fail')
     assert 'write_db {/work/die_repeaters.fclk.fail.odb}; exit 3' in text
+
+
+@pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
+@pytest.mark.parametrize('fd,dmin,dmax,n', [
+    (2, 2, 4, 1),     # case_p4l3_rv xr lanes: one BUF in front of the capture clock -> 3 vs 2..4 (+-1)
+    (1, 1, 4, -1),    # r_f_0R01: 2 BUFs -> 3 vs 1..4 breaks the shallow bit (3-1 > 1): unfixable, audit fails it
+    (1, 1, 3, 1),     # r_f_0R11: 2 vs 1..3
+    (2, 0, 27, -1),   # bundle spread over 27 stages: not a clock problem, audit must fail it
+    (2, 1, 3, 0),     # already within +-1
+    (3, 1, 2, 0),     # clock deeper than data: never touched here
+])
+def test_fclk_equalize_plan(fd, dmin, dmax, n):
+    audit = Path(__file__).with_name('fclk_audit.tcl')
+    r = subprocess.run(['tclsh'], input=f'source {{{audit}}}\nputs [ot_die_rep_fclk_eq_plan {fd} {dmin} {dmax}]\n',
+                       text=True, capture_output=True)
+    assert not r.stderr, r.stderr
+    assert int(r.stdout.split()[-1]) == n
+
+
+def test_fclk_equalize_runs_before_the_audit():
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from die_repeaters import step
+    t = step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'], fclk_policy='fail', fclk_equalize=1)
+    assert t.index('ot_die_rep_fclk_equalize') < t.index('set ot_die_rep_fb [ot_die_rep_fclk_audit')
+    assert 'ot_die_rep_fclk_equalize' not in step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'])
