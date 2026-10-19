@@ -64,7 +64,7 @@ if [ "$TB" = lint_guard_mu ]; then
   echo "MU_HROOT $CASE: $(tail -1 "$OUT/$CASE.log")"; grep -q '^PASS' "$OUT/$CASE.log"; exit
 fi
 "$V" --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-WIDTH \
-  --top-module "$TB" -Mdir obj -j 8 -o sim $(cat "$L/$TB.f") > "$OUT/$CASE.build" 2>&1 \
+  --top-module "$TB" -Mdir obj -j ${VJ:-4} -o sim $(cat "$L/$TB.f") > "$OUT/$CASE.build" 2>&1 \
   || { echo "MU_HROOT $CASE: BUILD-ERR"; tail -20 "$OUT/$CASE.build"; exit 1; }
 ./obj/sim $PA > "$OUT/$CASE.log" 2>&1; rc=$?
 r=$(grep -E '^(PASS|FAIL)|^%Error|Fatal|fatal' "$OUT/$CASE.log" | tail -1)

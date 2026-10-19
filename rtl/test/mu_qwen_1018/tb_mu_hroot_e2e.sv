@@ -125,8 +125,9 @@ module tb_mu_hroot_e2e;
  task host_step(input integer uu,input integer rr);reg[17:0]p;begin
   p={2'(uu),3'd0,13'(100*rr+17*uu+1)};
   @(negedge ck);a_req=1;a_tok=18'(1000+10*rr+uu);a_pos=p;a_gen=2'(4*rr+uu+1);
-  k=0;while(!a_rdy&&k<2000)begin @(negedge ck);k=k+1;end
-  if(k>=2000)begin fail("allocator never ready for this user");end
+  #0.1;k=0;while(!a_rdy&&k<2000)begin @(negedge ck);#0.1;k=k+1;end   // sample after the combinational ready settles
+  if(k>=2000)begin fail("allocator never ready for this user");
+   $display("  dbg u%0d pos %h ubusy %b gp %b tc %b wl %b idf %b tv %b",uu,a_pos,alloc.g_mu.ubusy,alloc.g_mu.grant_pending,alloc.g_mu.terminal_consumed,a_wl,a_idf,t_v);end
   @(negedge ck);a_req=0;
   k=0;while(!a_gv&&k<50)begin @(negedge ck);k=k+1;end
   if(g_ep!=={14'(16'h0010>>2)+14'(rr),2'(uu)})fail("allocator epoch != {seq14[user], user}");
@@ -168,7 +169,7 @@ module tb_mu_hroot_e2e;
   for(r=0;r<ROUNDS;r=r+1)begin
    for(k=0;k<4;k=k+1)begin wr_of[k]=0;layer_seen[k]=0;end
    for(u=0;u<4;u=u+1)host_step(u,r);
-   if(!(owned&&a_busy))fail("4 steps not all owned");
+   if(!(owned&&a_busy&&ep.g_mu.n_q==4&&alloc.g_mu.ubusy==4'hf))fail("4 steps not all in flight (endpoint contexts / allocator allocations)");
    for(u=0;u<4;u=u+1)kv_start(u);
    // wait for the 4 retires of this round, then the 4 allocator terminals in the same order
    k=0;while(ret_n<4*(r+1)&&k<20000)begin @(negedge ck);k=k+1;end
