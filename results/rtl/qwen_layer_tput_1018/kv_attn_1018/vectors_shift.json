@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.qwen_layerbench.kv_attn_vectors.v1",
+ "gold": "gold",
+ "fx": "/srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/realmem/P8191",
+ "ksrc": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9",
+ "mutant": "shift",
+ "layers": {
+  "0": {
+   "pos": 8191,
+   "isa_splits": {
+    "score": 128,
+    "pv": 512
+   },
+   "fixture_identity": {
+    "die0": true,
+    "die1": true,
+    "die2": true,
+    "die3": true
+   },
+   "heads": {
+    "d0_g0": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 118.8346939086914,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d0_g1": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 40.58210754394531,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d1_g0": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 278.0482177734375,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d1_g1": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 73.3455810546875,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d2_g0": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 65.56623840332031,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d2_g1": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 12231.79296875,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d3_g0": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 46.93876266479492,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    },
+    "d3_g1": {
+     "isa_ref_eq_isa": 512,
+     "tp8_splits": [
+      128,
+      256
+     ],
+     "tp8_ref_diff_words_vs_isa": 512,
+     "tp8_ref_max_abs_rel": 78.36802673339844,
+     "att_region_equals_attn": false,
+     "mutant_changes_ref_words": 512
+    }
+   }
+  }
+ },
+ "ref_sha256": {
+  "tools/qwen_nearhbm_attn_ref.py": "3370a8444dc4eda7303bce11c7d5f603749c1a0f2e99ef88b47bb34220164f16",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ },
+ "verdict": "PASS"
+}

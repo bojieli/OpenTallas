@@ -1,0 +1,39 @@
+slice_smoke: /srv/opentallas-scratch/claude/qw-kvattn-1018/run_boot/tb_qwk_slice_boot.sv: 789 inputs (9 clock, 3 reset), 1004 outputs
+build: 618.65 s 3408184 KB
+== asbuilt_s1: SMOKE_PASS qwk_slice_boot MUT=0 edges 23755 (116.86 s 33512 KB )
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 271 after_reset 0
+== asbuilt_s2: SMOKE_PASS qwk_slice_boot MUT=0 edges 23755 (112.96 s 33824 KB )
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 229 after_reset 0
+== old76_s1: SMOKE_FAIL qwk_slice_boot MUT=0 errors 24 (287.02 s 34052 KB )
+SMOKE_ERR @8129 HOST loader fault (image refused)
+SMOKE_ERR @13517 HOST loader fault (image refused)
+SMOKE_ERR @16710 HOST loader fault (image refused)
+SMOKE_ERR @19726 HOST loader fault (image refused)
+SMOKE_ERR @22930 HOST loader fault (image refused)
+SMOKE_ERR @26134 HOST loader fault (image refused)
+SMOKE_ERR @30170 HOST loader fault (image refused)
+SMOKE_ERR @34206 HOST loader fault (image refused)
+== mut1: SMOKE_FAIL qwk_slice_boot MUT=0 errors 2 (113.06 s 33140 KB )
+KVB_ERR @12320 word at the dispatcher pins: target 7 addr 100 (expected 100) data 000000400001029f (image 000000400001029e)
+SMOKE_ERR @21755 boot words at the dispatcher pins differ from the images
+SMOKE_ERR @21755 KVB CDC sink streams differ from the compiled controller / front images
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 271 after_reset 0
+== mut2: SMOKE_FAIL qwk_slice_boot MUT=0 errors 8 (138.45 s 34404 KB )
+SMOKE_ERR @25755 dispatcher fault
+SMOKE_ERR @25755 not every image installed
+SMOKE_ERR @25755 installed ISA digest differs
+SMOKE_ERR @25755 local_configured not 3'b111 (own, wprg, lprg)
+SMOKE_ERR @25755 not all 160 boot CDC sinks applied
+SMOKE_ERR @25755 KVB CDC sink streams differ from the compiled controller / front images
+SMOKE_ERR @25755 u_lprg does not hold the compiled layer image bit-exact
+SMOKE_ERR @25755 setup_ready did not rise
+== mut3: SMOKE_FAIL qwk_slice_boot MUT=0 errors 2 (115.83 s 33452 KB )
+KVB_ERR @7600 word at the dispatcher pins: target 1 addr 1 (expected 1) data 00000000000001f6 (image 00000000000001f7)
+SMOKE_ERR @21755 boot words at the dispatcher pins differ from the images
+SMOKE_ERR @21755 u_lprg does not hold the compiled layer image bit-exact
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 271 after_reset 0
+== determinism asbuilt: RESET_DET ports 1004 nondet 476 cycles_equal True events 46

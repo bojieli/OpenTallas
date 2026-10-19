@@ -11,8 +11,10 @@
 // Order (qkd_static_kv_boot_dispatch DIECFG=1 LINKCFG=1 ESCFG=1 DIECAP=1): target 10 (die cfg) after the first, unaligned
 // POR + functional release; then the functional resets (die + HBM; NOT the POR pad, the die cfg keeps its words) are
 // re-asserted and released; then targets 1..9, 11, 12, 13, then the ISA target 0.
-// Images: +KVIMG=<dir> (tools/qwen_layerbench/kv_boot_images.py).  +KVB_T10FIX = DIAGNOSTIC: the HOST loader copy with
-// target_words(10) = 77 (the as-built loader says 76 = 32 + 43 + 1, the dispatcher's DIECAP=1 image is 32 + 43 + 2).
+// Images: +KVIMG=<dir> (tools/qwen_layerbench/kv_boot_images.py).  +KVB_T10FIX = the ALTERNATE HOST loader copy
+// qkd_host_program_loader_target_alt (run_kv_boot.sh KVB_ALT): 77 = DIAGNOSTIC target_words(10) = 77 on a pre-F-K1 loader
+// (76 = 32 + 43 + 1; the dispatcher's DIECAP=1 image is 32 + 43 + 2); 76 = the OLD pre-F-K1 loader as a MUTANT of the
+// fixed as-built loader (QW-KVATTN 10-18, KV-HROOT 81633db23).  +KVB_ALT_DESC=<s> names it in the log.
 // Mutants (+KVB_MUT=n, checker sensitivity, run on the DIAGNOSTIC loader): 1 = one target-7 controller word corrupted at
 // the slice edge (bit 0 of word 100, after the loader's digest); 2 = wrong target order (target 2 before target 1);
 // 3 = one layer-programme word (target 1 word 1, kgo of stage 1) corrupted at the slice edge.
@@ -27,7 +29,7 @@
     reg [63:0] kvb_tmp [0:KVB_N-1];
     reg [63:0] kvb_dig [0:13];
     integer kvb_wc [0:13];
-    string kvb_dir;
+    string kvb_dir, kvb_alt;
     integer kvb_mut = 0, kvb_fix = 0, kvb_i, kvb_t, kvb_a;
     // ---- the HOST root's image loader (real RTL) and its DIAGNOSTIC copy ----
     reg h_begin = 0, h_wv = 0, h_desc = 0, h_seal = 0, h_auth = 0;
@@ -39,7 +41,7 @@
         .word_desc(h_desc), .word_addr(h_addr), .word_data(h_data), .seal(h_seal), .auth_v(h_auth), .auth_epoch(16'h0b0b),
         .auth_digest(h_ad), .execution_active(1'b0), .pr(h_pr0), .program_ready(h_rdy0), .fault(h_f0), .digest(h_dg0),
         .program_epoch(h_ep0), .authorized_footer_valid(h_afv0), .authorized_footer(h_af0));
-    qkd_host_program_loader_target_t10w77 u_host_t10fix (.ck(ck), .rst_n(por_n), .begin_image(h_begin), .image_epoch(16'h0b0b),
+    qkd_host_program_loader_target_alt u_host_t10fix (.ck(ck), .rst_n(por_n), .begin_image(h_begin), .image_epoch(16'h0b0b),
         .image_target(h_t), .auth_target(h_t), .replay_target(h_rt1), .pw_count(h_pw), .dw_count(h_dw), .word_v(h_wv),
         .word_desc(h_desc), .word_addr(h_addr), .word_data(h_data), .seal(h_seal), .auth_v(h_auth), .auth_epoch(16'h0b0b),
         .auth_digest(h_ad), .execution_active(1'b0), .pr(h_pr1), .program_ready(h_rdy1), .fault(h_f1), .digest(h_dg1),
@@ -67,6 +69,7 @@
         if (!$value$plusargs("KVIMG=%s", kvb_dir)) kvb_dir = "img";
         if (!$value$plusargs("KVB_MUT=%d", kvb_mut)) kvb_mut = 0;
         kvb_fix = $test$plusargs("KVB_T10FIX") ? 1 : 0;
+        if (!$value$plusargs("KVB_ALT_DESC=%s", kvb_alt)) kvb_alt = "DIAGNOSTIC t10w77 copy";
         $readmemh({kvb_dir, "/digests.memh"}, kvb_dig);
         for (kvb_t = 0; kvb_t <= 13; kvb_t = kvb_t + 1) begin
             for (kvb_a = 0; kvb_a < KVB_N; kvb_a = kvb_a + 1) kvb_tmp[kvb_a] = 64'hdeadbeefdeadbeef;
@@ -76,7 +79,7 @@
             for (kvb_a = 0; kvb_a < KVB_N; kvb_a = kvb_a + 1) kvb_img[kvb_t * KVB_N + kvb_a] = kvb_tmp[kvb_a];
         end
         $display("KVB_INFO images %0s mut %0d host_loader %0s", kvb_dir, kvb_mut,
-                 kvb_fix ? "DIAGNOSTIC t10w77 copy" : "AS-BUILT qkd_host_program_loader_target");
+                 kvb_fix ? kvb_alt : "AS-BUILT qkd_host_program_loader_target");
     end
     // ---- dispatcher pins: every word bit-exact, in order, per target ----
     integer kvb_seen [0:13]; integer kvb_bad = 0, kvb_pin_first = -1, kvb_host_first = -1, kvb_ff = 0, kvb_ff_said = 0;

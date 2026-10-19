@@ -1,0 +1,6 @@
+primitive self-test: all bit-exact
+loaded 2 layers onto cpu (16 threads) in 2 s
+QWK_GOLD layer 0 pos 8191 me_kv calls 2
+QWK_GOLD layer 1 pos 8191 me_kv calls 2
+position 8191 done (4 s)
+{"positions": [8191], "wall_seconds": 4.3}
