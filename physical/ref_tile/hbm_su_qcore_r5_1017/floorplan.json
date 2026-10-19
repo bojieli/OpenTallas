@@ -32,10 +32,11 @@
   "W": [
    "rf_bword",
    "rf_bcmd",
+   "rf_rd_cmd",
+   "rf_drain_cmd",
    "rf_dsec",
    "slice_x",
-   "rf_drain_cmd",
-   "rf_rd_cmd",
+   "slice_t",
    "red_cmd",
    "fault"
   ],
@@ -89,11 +90,13 @@
  "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r5.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/ref_tile/hbm_su_qcore_r5_1017/sector_regions.tcl",
   "physical/ref_tile/hbm_su_qcore_r5_1017/kit.env",
   "physical/ref_tile/hbm_su_qcore_r5_1017/clock.sdc",
   "physical/ref_tile/hbm_su_qcore_r5_1017/signoff.sdc",

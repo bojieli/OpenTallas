@@ -6,7 +6,8 @@
 // conflicts, reducer commands from slice / RF / SFU operands), NRST reset phases.
 // Checks: rf_bcmd, red_sv, red_tag, red_x, red_rf_v bit-exact (!==) at every edge; rf_bword word c / rf_dsec bit-exact on
 // every edge whose class-c / class-5 read was valid 3 edges earlier (class 4 is issued valid every edge so the reducer's
-// RF operand is always defined); fault equal, except a write-conflict fault may report exactly one edge later.
+// RF operand is always defined); fault equal, except a write-conflict fault may report up to two edges later
+// (HH-11 r6: the per-sector conflict term is registered in the sector, then ORed into fault).
 // MUT 256: an extra read stage (reads k+4) -> FAIL.
 module tb_qcore_rg_lockstep;
  parameter integer MUT=0, NRST=4, EDGES=3000;
@@ -36,7 +37,7 @@ module tb_qcore_rg_lockstep;
   .rf_drain_cmd(rf_drain_cmd),.slice_x(slice_x),.rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(r_bw),.rf_bcmd(r_bc),
   .rf_dsec(r_ds),.red_sv(r_sv),.red_tag(r_tag),.red_x(r_x),.red_rf_v(r_rv),.rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),
   .sfu_x(sfu_x),.fault(r_f));
- integer checks=0, errors=0, cmp=0, lag=0, sv=0, fault_edges=0, wv=0; reg r_f_q=0;
+ integer checks=0, errors=0, cmp=0, lag=0, sv=0, fault_edges=0, wv=0; reg r_f_q=0, r_f_qq=0;
  reg [5:0] vh [0:3];          // vh[d][c]: class c valid at the pin edge d edges before the current one
  always @(posedge clk) begin vh[3]<=vh[2]; vh[2]<=vh[1]; vh[1]<=vh[0];
   vh[0]<={rf_rd_cmd[5*9+8],rf_rd_cmd[4*9+8],rf_rd_cmd[3*9+8],rf_rd_cmd[2*9+8],rf_rd_cmd[1*9+8],rf_rd_cmd[0*9+8]}; end
@@ -49,15 +50,15 @@ module tb_qcore_rg_lockstep;
   if({d_bc,d_sv,d_tag,d_x,d_rv}!=={r_bc,r_sv,r_tag,r_x,r_rv}) begin errors=errors+1;
    if(errors<6) $display("LOCKSTEP MISMATCH t=%0t bc %0d sv %b/%b x %h/%h", $time, d_bc!==r_bc, d_sv, r_sv, d_x, r_x); end
   if(d_f!==r_f) begin
-   if(r_f===1'b1 && r_f_q===1'b0 && d_f===1'b0) lag=lag+1;              // conflict fault one edge later: allowed
+   if(r_f===1'b1 && r_f_qq===1'b0 && d_f===1'b0) lag=lag+1;             // conflict fault <= two edges later: allowed
    else begin errors=errors+1; if(errors<6) $display("FAULT MISMATCH t=%0t dut %b ref %b", $time, d_f, r_f); end
   end
-  r_f_q=r_f;
+  r_f_qq=r_f_q; r_f_q=r_f;
  end
  integer k;
  initial begin
   for(k=0;k<NRST;k=k+1) begin
-   rst_n=0; cmp=0; r_f_q=0; repeat(4) @(negedge clk); rst_n=1; repeat(2) @(negedge clk);
+   rst_n=0; cmp=0; r_f_q=0; r_f_qq=0; repeat(4) @(negedge clk); rst_n=1; repeat(2) @(negedge clk);
    cmp=1; active=1; repeat(k==0 ? 40 : EDGES) @(negedge clk);    // phase 0: short, fault-free window
    active=0; repeat(16) @(negedge clk);
   end
