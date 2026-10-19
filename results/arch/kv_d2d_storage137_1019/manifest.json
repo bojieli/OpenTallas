@@ -1,0 +1,74 @@
+{
+  "source_commit": "fe8eac3f2",
+  "original_leaf_container_sha256": "9b3694353d39abc17f83e52f2f6de4273fa3dbe498a138dbee147e436bcefb67",
+  "original_macro512": {
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "kind": "file",
+    "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "git_blob": "b2871fbdcf602fa42ec6519e623cdeef084dff24",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+  },
+  "inputs": {
+    "original_macro512.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "replay_sf137_private.sv": "6419e53ffd85cb842c4df3a613866134cf43487f04e0169f5fe07f8827524f47",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192.v": "ebf1e916a989e0f3762fd38c4663e7deb7c6a73a845b056c5e9c3a174006fa1c",
+    "original_leaf.sv": "6cc16e447827167da35cc7758daef75ae022b383c1ee53662799ab99ff97c892"
+  },
+  "receipt": {
+    "unit": "oth-ubuntu-3641168-1792445461",
+    "host": "ot-epyc6",
+    "memory_gb": 4,
+    "threads": 1,
+    "exit_code": 0,
+    "remote_dir": "/srv/opentallas-scratch/claude/kv-d2d-storage137-1019"
+  },
+  "outputs": {
+    "original_macro512.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "verify_adaptation.py": "fcf1b854283e0652a28e75bc06e44910446c3555255a8c0328433be9ea07a7ee",
+    "replay_sf137_private.sv": "6419e53ffd85cb842c4df3a613866134cf43487f04e0169f5fe07f8827524f47",
+    "ot_sram_1r1w_64x137_m1_r2c2_p192.v": "ebf1e916a989e0f3762fd38c4663e7deb7c6a73a845b056c5e9c3a174006fa1c",
+    "mutate.py": "2ca7cfcbd05a7c157d5851563d1432b3caab6de4ece33fe775454dbb0cdb0dd1",
+    "original_leaf.sv": "6cc16e447827167da35cc7758daef75ae022b383c1ee53662799ab99ff97c892",
+    "tb.sv": "abf09bdb68767fc3970a6ec54610311209df9d4d969eb396bef2ee77d531a8b9",
+    "README.md": "3c322d88a4606739eae386e7825612c32d5e60ae57061674d99cd4155505b452",
+    "run_verilator.sh": "f575f35b95cbd37edb1c3a0a6816843276e1e67a1e18c5d6904e24948f4a12df",
+    "run.sh": "3df77393a459500853eca611a5e46df7f0376a09a76e1e4f2bc215371530ee5c",
+    "out/good.log": "d1d8b5c32f21ca31e0220c79ac771f40134ae8b604afc547ce8b3d5fc73f6452",
+    "out/verilator_bad_comment_failure.log": "cf81ab5aa4bd09e196499024edf3c2fce91533128be1a0a0e729193f4c0fbcda",
+    "out/verilator_build_new_macro.log": "23a157b2c41ad9178a39a4eb80fbb6b78562fb6ee763c464c847d08226e1c9d3",
+    "out/verilator_build_no_h1.log": "50f6133e634bfc40b34e817867987e9e06775e50507a80a94f82f2954684b63c",
+    "out/verdicts.log": "e37d4b43d063ba90afcb5c6f0ed9d5f6cbadff03ebe83d0e9bc32bc7014310cf",
+    "out/verilator_no_h0.log": "2f1f0f01d6cb308ab36e6d8f39e36b88d2e03359cd8f48010bc8784be5a74be4",
+    "out/verilator_build_no_h0.log": "cafc933345a68e5d8fb0fec8b962d52f89e1caf72bbbe212c9e0ca3a148715f0",
+    "out/verilator_build_swap_group.log": "53bc2fd166cdd02774667fa66c4fe616da90059da06a7c301ab2043ed796cab6",
+    "out/verilator_build_good.log": "8c0b28d57ba92a5ac80125b5d6dd4555eaa34daf7ae03e7a67c6141f06a4ffc3",
+    "out/new_macro.log": "a5bb78e4e0e503807200bb2934be6a180c73c778b29829b63e13b7618198ef22",
+    "out/verilator_new_macro.log": "cd0e0077b6079b96b06e8b77ec1b4f610894bd0548921830dbf62e25d03ff261",
+    "out/verilator_verdicts.log": "a4fd3960a542e62876e234ee196201d4aeb6c6c4f5b9f98c6891e178304f7a75",
+    "out/verilator_swap_group.log": "2f1f0f01d6cb308ab36e6d8f39e36b88d2e03359cd8f48010bc8784be5a74be4",
+    "out/verilator_no_h1.log": "3233c6a5fdc02597336032013d60adb16c2b616770a657d54b99e72bd0dab76d",
+    "out/iverilog_version.log": "f9199cc8658f4afcec3edeb93f29f23bb2aebf66d3eeb217cdc728aaa692f946",
+    "out/swap_group.log": "2e99afbdeae4c770c7358b7f3ae3198887fe9984b85c4fdc218a6807ee9d3988",
+    "out/verilator_good.log": "f555409cdb040f5e3456bb59ebad9304ac547dae167d99a3278a243c3a9e8a00",
+    "out/no_h1.log": "9089d83ade6688c86d45e8224a38f5e0c0814d0afb7ee6623d59da569f78568f",
+    "out/no_h0.log": "166cc355f178e311fcf7566c738ab14f42c09c8eb065cdff0045a6aeaf9bea8f",
+    "out/verilator_version.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  },
+  "final_receipt": {
+    "unit": "oth-ubuntu-3647487-1792445570",
+    "host": "ot-epyc6",
+    "memory_gb": 8,
+    "threads": 4,
+    "exit_code": 0,
+    "command": "bash run_verilator.sh && bash run.sh",
+    "verilator_version": "5.050",
+    "four_state": "Icarus11 OT_MEM_NO_INIT"
+  },
+  "mechanical_failure": {
+    "unit": "oth-ubuntu-3645726-1792445544",
+    "exit_code": 1,
+    "reason": "BADVLTPRAGMA comment beginning with tool name",
+    "preserved_log": "out/verilator_bad_comment_failure.log"
+  }
+}

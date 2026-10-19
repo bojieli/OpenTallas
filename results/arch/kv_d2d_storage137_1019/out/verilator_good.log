@@ -1,0 +1,5 @@
+PASS edges=1325 checks=1324 h0=314 h1=314 macro=697 firstuses=64 unwritten=3 collisions=314
+- tb.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 0.019 s; speed 709.221 us/s
+- Verilator: cpu 0.019 s on 1 threads; allocated 7 MB

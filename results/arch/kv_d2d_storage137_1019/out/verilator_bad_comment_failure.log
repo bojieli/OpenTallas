@@ -1,0 +1,5 @@
+%Error-BADVLTPRAGMA: tb.sv:37:4: Unknown verilator comment: '/*verilator is two-state; four-state first-use evidence comes from Icarus.*/'
+   37 |    /*verilator is two-state; four-state first-use evidence comes from Icarus.*/
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                     ... For error description see https://verilator.org/warn/BADVLTPRAGMA?v=5.050
+%Error: Exiting due to 1 error(s)
