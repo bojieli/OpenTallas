@@ -173,9 +173,11 @@ fi
 # case_kv/place_orientations*.json; no legal orientation at all -> exit 8.  OT_KV_PLACE_ORIENT=0 skips (never default).
 kv_orient() {
   [ "${OT_KV_PLACE_ORIENT:-1}" = 1 ] || return 0
-  python3 tools/qwen_kv_die/kv_place_orient.py --case $O/case_kv --report $O/case_kv/place_orientations_$1.json $2 \
-    >> $O/place_orient.log 2>&1 || { tail -3 $O/place_orient.log; echo "KV_PLACE_ORIENT FAIL ($1): no legal orientation"; exit 8; }
-  tail -1 $O/place_orient.log | cut -c1-400
+  local stage=${1:?kv_orient requires a report stage}
+  shift
+  python3 tools/qwen_kv_die/kv_place_orient.py --case "$O/case_kv" --report "$O/case_kv/place_orientations_${stage}.json" "$@" \
+    >> "$O/place_orient.log" 2>&1 || { tail -3 "$O/place_orient.log"; echo "KV_PLACE_ORIENT FAIL ($stage): no legal orientation"; exit 8; }
+  tail -1 "$O/place_orient.log" | cut -c1-400
 }
 if [ "${OT_KV_EXPAND:-all}" != none ]; then kv_orient expand; fi
 # KVPLAN 1815 (OT_KV_RST_REGIONAL=1, also read by kv_die.py): every reset / boot fan-out of the flattened die -> a local
