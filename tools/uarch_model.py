@@ -17449,3 +17449,9 @@ def hbm_svg_element_sizing_model():
     """Source-bound landing/local-pair and separate cache element outline proposal."""
     from hbm_layer_vehicle.svg_element_sizing_model import model
     return model()
+
+
+def hbm_svg_cache_native8_model():
+    """Packed136 assembler occupancy model, before cycle-equivalent native8 RTL."""
+    from hbm_layer_vehicle.cache_native8_model import model
+    return model()

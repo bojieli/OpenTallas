@@ -10,8 +10,8 @@ import math
 
 
 def model():
-    landing_slots = [dict(pair=p, banks=[p,p+4], origin_um=[(p%2)*224.64,(p//2)*362.88],
-                         outline_um=[224.64,362.88]) for p in range(4)]
+    landing_slots = [dict(pair=p, banks=[p,p+4], origin_um=None,
+                         outline_um=[380.16,198.72]) for p in range(4)]
     return dict(schema='opentallas.hbm-svg-regional-proposal.v1',
         opt_in_default=False,
         source_qualification='SRAM core FIFO and production landing exact+mutant proven; native boundary component Verilator5.050 exact+admission/prefetch mutants proven; whole-SVG native composition not yet proven',
@@ -40,7 +40,8 @@ def model():
         stage_B_regional_proposal=dict(
             repeatable_element='one native landing bank with actual FIFO+landing SRAMs, two local clock roots',
             paired_regions=landing_slots,
-            parent_outline_um=[449.28,725.76],
+            parent_outline_um=None,
+            packing="OPEN: four sized pair leaves plus separate129.6square rotator and nine remaining SRAMs require actual nonoverlapping slots and directed face/reach audit",
             pair_select='For bankpair{j,j+4}, select the bank needed by outputlane(j-ordinal)%4; one2:1 source-local stage perpair',
             rotate='Four selected pairs undergo a registered cyclic4way rotation into four256bitsectors; static ordinal lowbits control fixed butterfly stages',
             pair_select_edges=2,ring_transport_edges=2,cache_pin_rotate_edges=3,
@@ -51,7 +52,7 @@ def model():
             metadata_storage="two explicit eight-slot35-bit rings (drain labels and cache OPEN), each280bits plus35-bit native output; per16-bit local pointers; no seven-register metadata shift chain",
             source_bound_proof="ot_hbm_svg_return_regional,1632 groups,min=max7edges,threeoccupiedresets,II1; select/rotate/epoch mutants all fail",
             clocks='Separate stream roots for four pairregions and cachehub. Actual4slot fixed-latency landed crossings, no ready path across SM programme boundary. Halfcycle forwarded relay if placed reach exceeds405um.',
-            region_to_center_manhattan_um=224.64/2+362.88/2,
+            region_to_center_manhattan_um=None,
             boundary_bits_per_region_edge=256,
             fanout_rule='Register and KEEP per32bit select copies; no select drives all256loads; validate mapped copies',
             storage_rule='Do not implement5edge285bit delaychains as flops. Use explicit4slot ring/SRAM landing and priced clocked stages.',
