@@ -1,0 +1,42 @@
+{
+  "status": "SOURCE_UNIT_AND_GENERIC_CENSUS_PASS_NOT_PARENT_OR_NATIVE_QUALIFICATION",
+  "candidate_source_commit": "5c0e7bfc9",
+  "unit_harness_commit": "7c5a9a8b7",
+  "candidate_sha256": "bd9edd6321af07eb11d994de13403ead3daef23b3012c21847b170b5f87e16a8",
+  "model_commit": "81d711228",
+  "tool": {
+    "unit": "Verilator5.050",
+    "synthesis": "Yosys0.68"
+  },
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-3164309-1792429802",
+  "synth_unit": "oth-ubuntu-3153882-1792429667",
+  "unit_test": {
+    "exact_edges": 6000,
+    "isolated_fault_classes": 21,
+    "mutants": {
+      "4": "cr_q mismatch",
+      "5": "b_q mismatch"
+    },
+    "memory_model_scope": "existing legacy VM functional proxies; native timing and pin-access remain separate"
+  },
+  "native_macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 8,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 10,
+    "ot_sram_1r1w_256x256_m2_r2c2": 4
+  },
+  "kept_select_cells": 862,
+  "total_generic_flops": 6390,
+  "baseline_generic_flops": 5733,
+  "added_generic_flops": 657,
+  "register_outputs_over32": 0,
+  "register_terminal_influence_over32": 0,
+  "max_generic_stage_levels": 20,
+  "native_clock_scope": "22native macro pins +6390 generic FFclock pins, all source ck; no actual mapped/native pin arrival or TTFF timing proof yet",
+  "blockers": [
+    "w16_we input direct552; w1/SU inputs/combinationalwrite controls still require actual predecessor distribution/ownerport model",
+    "whole-parent ultimate consumers beyond VM outputs unproven",
+    "native PG/pinaccess, mapped area, clock/reset/data reach, TTFFphysical timing pending",
+    "full combined source production with final stream/station/native head pending"
+  ]
+}
