@@ -40,10 +40,10 @@ def main():
     ap.add_argument('--run', action='store_true')
     a = ap.parse_args()
     import numpy as np
-    a.out.mkdir(parents=True, exist_ok=True)
+    # A failed verification is evidence too. Never overwrite its output when a
+    # later caller retries; give every attempt a new directory.
+    a.out.mkdir(parents=True, exist_ok=False)
     target = a.out / 'MANIFEST.json'
-    if target.exists():
-        raise SystemExit('output manifest already exists; preserve prior fixture evidence')
     ref = json.loads(REF.read_text())
     # Fail before generating another user if the original full gold is absent
     # or changed. Verification includes all layer/head/history digests.
