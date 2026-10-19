@@ -1,0 +1,18 @@
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/mu-s81-2-seq/src/rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                                                                   : ... note: In instance 'dsdv_mu_seed.u_rr'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/mu-s81-2-seq/src/rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'dsdv_mu_seed.u_rr.relay_q'
+                       /srv/opentallas-scratch/claude/mu-s81-2-seq/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       /srv/opentallas-scratch/claude/mu-s81-2-seq/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.058 MB sources in 3 modules, into 0.023 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.010 s (elab=0.001, cvt=0.004, bld=0.000); cpu 0.010 s on 1 threads; allocated 33.383 MB

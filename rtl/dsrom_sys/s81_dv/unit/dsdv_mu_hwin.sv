@@ -16,12 +16,15 @@
 // event fires exactly on ts + D: no queue, no ready, no credit, no stall.  RX: every valid tag on mu_rt ({v, user 10,
 // pos 21} per returning end slice) must name an outstanding start of the table.
 // Faults t_wf (sticky): [0] RX tag of no outstanding start, or an event past its edge (-> die t_mf[2] beside hslot's
-// return mismatch); [1] window config: a word while armed / outstanding, sel 3, a D outside [NSLOT + 2, RL - 2] or
-// S <= NSLOT + 1 at the first start, or two events on one endpoint output in one edge (-> die t_mf[3]).
+// return mismatch); [1] window config: a word while armed / outstanding, sel 3, a D outside [nw + 2, RL - 2] or
+// a slot gap <= nw + 1 at the first start (nw = calendar slots per period, MU-S81-2/SEQ gap table), or two events on one endpoint output in one edge (-> die t_mf[3]).
 // f_mw = {v, 1'b0, d 24}: d[22:21] = 0 select event d[4:0], kind d[8], endpoint d[10:9]; 1 offset D = d[20:0] of the
 // selected event; 2 attribute of the selected event for slot d[9:0] = {land d[11], ab d[10]}; 3 = config fault.
-// f_mc = {v, sel, d 24} exactly as dsdv_mu_hslot (sel 0 S, sel 1 RL); hslot reports its own config faults.
-// MUT (bench negative controls): 3 window ab bit dropped (copy B never selected), 4 replay enable ignored.
+// f_mc = {v, sel, d 24} exactly as dsdv_mu_hslot (sel 0 slot gap words, sel 1 RL); hslot reports its own config faults.
+// MU-S81-2/SEQ: the slot entries wrap at nw (calendar slots per period), so eat[event][entry] is the calendar slot's
+// attribute in EVERY period (with entries wrapping at NSLOT 47 on a 46-slot AR period they drifted one slot a period).
+// MUT (bench negative controls): 3 window ab bit dropped (copy B never selected), 4 replay enable ignored, 5 gap index
+// stuck at 0.
 // Timing: f_ks / f_mc / f_mw / mu_rt land in pin flops; mu_c / mu_rc / t_wf leave flops.  ot_rst_relay reset.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, parameter integer NEP = 4,
@@ -37,6 +40,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     output reg  [1:0]        t_wf             // sticky faults
 );
     localparam integer SI = (NSLOT > 1) ? $clog2(NSLOT) : 1;
+    localparam integer SJ = SI + 1;
     localparam integer EI = (NEV > 1) ? $clog2(NEV) : 1;
     localparam integer PI = (NEP > 1) ? $clog2(NEP) : 1;
 `ifndef SYNTHESIS
@@ -53,18 +57,30 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     wire st = ks_q[52]; wire [9:0] su = ks_q[51:42]; wire [20:0] sp = ks_q[20:0];
     // ---- start table: the same record rule / slot timer / due edge as dsdv_mu_hslot
     reg [23:0] cs, crl; reg [31:0] tm; reg armed; reg [23:0] ph; reg [SI-1:0] sl, rp;
+    // MU-S81-2/SEQ (10-19): slot gap table, the same as dsdv_mu_hslot's (same f_mc words, same walk).  The record calendar (dv_mu_calendar --phase-q 4) has NON-uniform slots
+    // (AR 46: shift_k = 4 floor(k (P/4) / 46) -> gaps 21,312 / 21,316; MTP 10 + filler: 10 x 124,524 then 58,160), so
+    // one period S cannot hold it (user 3's start lands 4 edges off a uniform 21,312 grid -> t_mf[1] on the real unit).
+    // Each sel-0 word APPENDS one slot gap g[k] (cycles from slot k's start edge to slot k+1's); the slot timer walks
+    // g[0..n-1] cyclically (n = words written), and the slot entries wrap at nw = n (n >= 2) so the entry index IS the
+    // calendar slot.  One sel-0 word (n = 1) = the former uniform period S with nw = NSLOT: the previous behaviour.
+    // cs = the smallest gap.
+    reg [23:0] gt [0:NSLOT-1]; reg [SI:0] gn; reg [SI-1:0] gx, lw; reg [23:0] cg, ng;
     reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; reg [31:0] ts [0:NSLOT-1];
     wire [SI-1:0] ss = armed ? sl : {SI{1'b0}};
     wire on_cal = !armed || ph == 24'd0;
     reg udup; integer i;
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == su) udup = 1'b1; end
     wire col = vld[ss];
-    wire hcfg_bad = cs < 24'(NSLOT) || crl <= 24'(NSLOT);                 // hslot's own arming rule
+    wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
+    wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;                     // hslot's own arming rule
     wire rec = st && on_cal && !col && !udup && !(!armed && hcfg_bad);
     wire due = vld[rp] && ts[rp] + {8'd0, crl} - 32'd1 == tm;             // hslot's return edge: the entry retires
     function automatic [SI-1:0] nxt(input [SI-1:0] p);
-        nxt = (p == SI'(NSLOT - 1)) ? {SI{1'b0}} : p + 1'b1;
+        nxt = (p == lw) ? {SI{1'b0}} : p + 1'b1;
     endfunction
+    wire [SI-1:0] gxn = (MUT == 5 || {1'b0, gx} == gn - 1'b1) ? {SI{1'b0}} : gx + 1'b1;   // MUT 5: gap table index stuck at 0
+    always @(posedge ck) ng <= gt[gx] - 24'd1;          // next slot's gap, prefetched (gx = the slot after the current one)
+    always @(posedge ck) if (mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)) gt[gn[SI-1:0]] <= mc_q[23:0];
     // ---- event rows
     reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
     reg [1:0] eat [0:NEV-1][0:NSLOT-1];                  // {land / replay-en, ab} per event and calendar slot
@@ -73,9 +89,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     integer e, p;
     reg bad_d; reg [NEV-1:0] fire, lt;
     always @* begin
-        bad_d = cs <= 24'(NSLOT + 1);
+        bad_d = cs <= nw + 24'd1;
         for (e = 0; e < NEV; e = e + 1)
-            if ({3'd0, eD[e]} < 24'(NSLOT + 2) || {3'd0, eD[e]} + 24'd2 > crl) bad_d = 1'b1;
+            if ({3'd0, eD[e]} < nw + 24'd2 || {3'd0, eD[e]} + 24'd2 > crl) bad_d = 1'b1;
         for (e = 0; e < NEV; e = e + 1) begin
             fire[e] = vld[pe[e]] && !fd[e][pe[e]] && ts[pe[e]] + {11'd0, eD[e]} == tm;
             lt[e] = vld[pe[e]] && !fd[e][pe[e]] && (ts[pe[e]] + {11'd0, eD[e]} - tm) > 32'h7fffffff;
@@ -118,17 +134,23 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     always @(posedge ck or negedge rn)
         if (!rn) begin
             tm <= 32'd0; armed <= 1'b0; ph <= 24'd0; sl <= {SI{1'b0}}; rp <= {SI{1'b0}}; vld <= {NSLOT{1'b0}};
-            cs <= 24'd0; crl <= 24'd0; t_wf <= 2'd0; c_q <= {NEP*34{1'b0}}; rc_q <= {NEP*11{1'b0}};
+            cs <= 24'd0; crl <= 24'd0; t_wf <= 2'd0; gn <= {SJ{1'b0}}; gx <= {SI{1'b0}}; lw <= SI'(NSLOT - 1); cg <= 24'd0; c_q <= {NEP*34{1'b0}}; rc_q <= {NEP*11{1'b0}};
             for (e = 0; e < NEV; e = e + 1) begin pe[e] <= {SI{1'b0}}; fd[e] <= {NSLOT{1'b0}}; end
         end else begin
             tm <= tm + 32'd1;
-            if (mc_q[25] && idle) begin if (mc_q[24]) crl <= mc_q[23:0]; else cs <= mc_q[23:0]; end
+            if (mc_q[25] && idle) begin if (mc_q[24]) crl <= mc_q[23:0]; else begin
+                    if (gn != SJ'(NSLOT)) begin
+                        gn <= gn + 1'b1;
+                        if (gn == 0 || mc_q[23:0] < cs) cs <= mc_q[23:0];
+                        lw <= (gn == 0) ? SI'(NSLOT - 1) : gn[SI-1:0];             // nw = n for n >= 2
+                    end
+                end end
             if (armed) begin
-                if (ph == cs - 24'd1) begin ph <= 24'd0; sl <= nxt(sl); end else ph <= ph + 24'd1;
+                if (ph == cg) begin ph <= 24'd0; sl <= nxt(sl); cg <= ng; gx <= gxn; end else ph <= ph + 24'd1;
             end
             if (st && !armed) begin
                 if (bad_d) t_wf[1] <= 1'b1;
-                if (!hcfg_bad) begin armed <= 1'b1; ph <= 24'd1; end
+                if (!hcfg_bad) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; end
             end
             if (due) begin vld[rp] <= 1'b0; rp <= nxt(rp); end
             else if (!vld[rp] && !(rec && ss == rp)) rp <= nxt(rp);

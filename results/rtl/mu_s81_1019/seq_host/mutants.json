@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.bench_mutants.v1",
+ "bench": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_bench.sh",
+ "verilator": "5.050",
+ "mutants": [
+  {"id": "MU_MUT=1", "what": "dsdv_mu_hslot user field dropped from t_ku (user 0 on every return)", "case": "ar (46 AR users x 2 periods)",
+   "fail_regex": "^SEQHOST_MU FAIL .*\\(b\\) \\d+ expected events missing \\(first \\('KD'", "witness": "mut1_fail_witness.log"},
+  {"id": "MU_MUT=2", "what": "dsdv_mu_hslot slot-collision check dropped", "case": "f_collide",
+   "fail_regex": "^SEQHOST_MU FAULT0 FAIL", "witness": "mut2_fail_witness.log"},
+  {"id": "MU_MUT=5", "what": "dsdv_mu_hslot gap-table index stuck at 0 (= the former uniform period)", "case": "ar",
+   "fail_regex": "^SEQHOST_MU FAIL .*PROG MF \\d+ bit 1", "witness": "mut5_fail_witness.log"}
+ ]
+}
