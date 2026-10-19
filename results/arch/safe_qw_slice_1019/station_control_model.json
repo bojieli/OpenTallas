@@ -1,0 +1,662 @@
+{
+  "module": "qfd_dv_redstn2",
+  "reset": "rst_n",
+  "leaf_count": 112,
+  "max_data_reset_loads": 32,
+  "reset_release_added_edges": 2,
+  "child_reset_loads": "requires synthesis census; not bounded by data assignment partition",
+  "leaves": [
+    {
+      "target": "kcm1",
+      "lsb": 0,
+      "bits": 8
+    },
+    {
+      "target": "mode",
+      "lsb": 0,
+      "bits": 2
+    },
+    {
+      "target": "nwords",
+      "lsb": 0,
+      "bits": 8
+    },
+    {
+      "target": "sbase",
+      "lsb": 0,
+      "bits": 9
+    },
+    {
+      "target": "wsrc",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "khi",
+      "lsb": 0,
+      "bits": 8
+    },
+    {
+      "target": "klast_hi",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "klast_lo",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "klo",
+      "lsb": 0,
+      "bits": 8
+    },
+    {
+      "target": "whi",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "wlo",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "hn",
+      "lsb": 0,
+      "bits": 4
+    },
+    {
+      "target": "hr",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "hw",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "c8",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "c9",
+      "lsb": 0,
+      "bits": 3
+    },
+    {
+      "target": "lead",
+      "lsb": 0,
+      "bits": 4
+    },
+    {
+      "target": "j",
+      "lsb": 0,
+      "bits": 8
+    },
+    {
+      "target": "bt_re",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "bt_word",
+      "lsb": 0,
+      "bits": 9
+    },
+    {
+      "target": "fv1",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "fv2",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "fv3",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "r_v",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "fault",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 1
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 2
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 3
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 4
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 5
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 6
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 7
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 8
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 9
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 10
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 11
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 12
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 13
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 14
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 15
+    },
+    {
+      "target": "child",
+      "bits": null,
+      "lsb": null,
+      "index": 0
+    }
+  ],
+  "configuration_added_edges": 2,
+  "configuration_ii": 1,
+  "steady_data_added_edges": 0,
+  "cfg_valid_copies": 55,
+  "native_fanout_qualification": "PENDING"
+}
