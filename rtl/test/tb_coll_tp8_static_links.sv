@@ -39,7 +39,7 @@ module tb_coll_tp8_static_links #(
     // ETj on port j's TX frame, ERj on port j's RX frame, EV2 = extra cycles of port 2's TX VALID lane only (the die
     // gave serdes2_txv E 6 vs serdes2_tx E 5); LXj = the calendar's absorbed lane cycles (parent opt-in); TOKREG = face form
     parameter integer ET0 = 0, ET1 = 0, ET2 = 0, ER0 = 0, ER1 = 0, ER2 = 0, EV2 = 0,
-    parameter integer TOKREG = 0, LX0 = 0, LX1 = 0, LX2 = 0,
+    parameter integer TOKREG = 0, LX0 = 0, LX1 = 0, LX2 = 0, SAFEFACE = 0,
     parameter integer ISSUE_DEPTH = 8,            // MU-QWEN 10-18: stage-program rows of the bench issuer (<= 31)
     // Q-COLLCAL 10-18 (+define+OT_TP8S_REAL_LANES): the die lanes are the REAL forwarded half-cycle lanes + landings
     // (rtl/qwen_split/qfd_fwd_lane.sv: ot_qfd_lane_st hop 0 + half-cycle stations, ot_qfd_land ring D 4 read at rc - K)
@@ -148,9 +148,9 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_PRODUCTION_WRAPPER
             assign ptv[1:0]=u_parent.u_io.phy_tx_valid[1:0];
             assign ptpack[0+:1194]=u_parent.u_io.phy_tx[0+:1194];
-            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
+            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2),.SAFE(SAFEFACE))u_parent(
 `else
-            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_parent(
+            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE),.TOK_REG(TOKREG),.LX0(LX0),.LX1(LX1),.LX2(LX2),.SAFE(SAFEFACE))u_parent(
 `endif
               .clk(clk),.clk_pfold0(clk),.clk_pfold1(clk),.clk_pfold2(clk),.clk_pfold3(clk),
               .clk_xfold0(clk),.clk_xfold1(clk),.clk_xfold2(clk),.clk_xfold3(clk),

@@ -8,7 +8,7 @@
 // All acceptancefaults aggregate without changing the fixed schedule.
 module qfd_collective_static_io_production #(
  parameter integer PU=20,PS=339,LU=53,LS=376,RU=5,RS0=0,RS1=0,RS2=5,
- parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0   // TOKEN-XDIE-QTP8 opt-in pass-through (see qfd_collective_static_io)
+ parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0,SAFE=0   // TOKEN-XDIE-QTP8 opt-in pass-through (see qfd_collective_static_io)
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -63,7 +63,7 @@ module qfd_collective_static_io_production #(
  wire collective_fault;wire[4:0]raw_txv;wire[5*597-1:0]raw_tx;
  assign serdes_tx_valid=raw_txv[4:2];assign serdes_tx=raw_tx[2*597+:3*597];
  assign fault=collective_fault|shared_fault|(|transport_cdc_fault)|(|transport_abort);
- qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LU),.LS(LS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(1),.SIX_FIVE(1),.TOK_REG(TOK_REG),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_io(
+ qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LU),.LS(LS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(1),.SIX_FIVE(1),.TOK_REG(TOK_REG),.SAFE(SAFE),.LX0(LX0),.LX1(LX1),.LX2(LX2))u_io(
  .clk(clk),
  .clk_pfold0(clk_pfold0),
  .clk_pfold1(clk_pfold1),

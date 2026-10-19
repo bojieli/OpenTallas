@@ -31,6 +31,7 @@ from qwen_coll_tp8_static_bench import schedule, vectors, ND, GC  # noqa: E402
 
 KC, KW, PU, PS = 4, 2, 14, 339
 # TOKEN-XDIE-QTP8 10-18: die-lane / face-form options (all default 0 = the r5..s4 benches unchanged)
+SAFE_FACE = {"on": False}
 XD = dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0))
 # Q-COLLCAL 10-18 --real-lanes coll_lane_latency.json: the REAL forwarded lanes (+define+OT_TP8S_REAL_LANES), N / K per
 # SerDes port and direction (tx, txv, rx, rxv) from the die GEN; RL = {param: value} (empty = fixed-delay lanes as before)
@@ -123,6 +124,7 @@ def program_words(prog, nwords, cmd_pin_stages=0, start=None):
 def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
     xdtag = ("_d50" if D50["on"] else "") + ("_rl" + hashlib.sha256(json.dumps(RL["params"], sort_keys=True).encode()).hexdigest()[:8] if RL["params"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
         "_e" + "-".join(map(str, XD["lanes"])) + f"_v{XD['ev2']}_t{XD['tok_reg']}_x" + "-".join(map(str, XD["lx"])))
+    xdtag += "_safe_face" if SAFE_FACE["on"] else ""
     obj = out / f"obj_d{DEPTH}_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}{xdtag}"
     h = out / f"harness_phi{phi}{'_d50' if D50['on'] else ''}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
@@ -131,7 +133,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
         # TOKEN-XDIE-QTP8 10-18: the r11..r15 gearbox (ot_qfd_ucie_six_five) has NEGEDGE half-cycle registers; the 1-tick
         # pulse harness below puts every negedge in the same tick as its posedge, which is not a clock.  Here every root
         # is a 50 %-duty clock at half-tick resolution: core 10, FDI 12 (rising edge offset 2*FDIPHI), block 60 half-ticks.
-        step="bool ce=(tick%10)<5,fe=((tick+120-2*fphi)%12)<6,be=(tick%60)<30;t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->blk_ck=be;t->eval();tick++;"
+        step="bool ce=(tick%10)<5,le=((tick+10-"+str(2*phi)+")%10)<5,fe=((tick+120-2*fphi)%12)<6,be=(tick%60)<30;t->clk=ce;t->lck=le;t->fdi_ck=fe;t->blk_ck=be;t->eval();tick++;"
     elif six_five:
         step="bool ce=(tick%5==0),fe=(tick%6==fphi),be=(tick%30==0);t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->blk_ck=be;t->eval();t->clk=0;t->lck=0;t->fdi_ck=0;t->blk_ck=0;t->eval();tick++;"
     old_h = h.read_text() if h.exists() else None
@@ -146,6 +148,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
            f"-GLATU={lu}", f"-GLATS={ls}", f"-GPU={PU}", f"-GPS={PS}", f"-GKC={KC}", f"-GKW={KW}", f"-GXU={xu}",
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
+    cmd += ["-GSAFEFACE=" + str(int(SAFE_FACE["on"]))]
     if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
     cmd += [f"-G{k}={v}" for k, v in zip(("ET0", "ET1", "ET2", "ER0", "ER1", "ER2"), XD["lanes"])] + \
            [f"-GEV2={XD['ev2']}", f"-GTOKREG={XD['tok_reg']}"] + [f"-GLX{j}={v}" for j, v in enumerate(XD["lx"])]
@@ -204,6 +207,7 @@ def main():
     ap.add_argument("--lanes", type=int, nargs=6, default=[0] * 6, metavar=("ET0", "ET1", "ET2", "ER0", "ER1", "ER2"),
                     help="die-level lane cycles io_collective<->io_serdes_j (TX ETj, RX ERj), from the die GEN fwd_lanes.json")
     ap.add_argument("--valid-skew", type=int, default=0, help="extra cycles of port 2 TX valid lane vs its data lane")
+    ap.add_argument("--safe-face", action="store_true", help="opt-in landed/ring/reset/PHY-pin collective face")
     ap.add_argument("--tok-reg", type=int, default=0, choices=(0, 1), help="hardened face form (TOK_REG pin registers)")
     ap.add_argument("--lx", type=int, nargs=3, default=None, help="lane cycles the SerDes face calendars absorb (parent LX0..2); "
                     "default 0 0 0, or the GEN's LX with --real-lanes")
@@ -216,6 +220,7 @@ def main():
     ap.add_argument("--mu-cal", type=Path, help="MU-QWEN: JSON {cases: [{name, kind, cmds: [[cycle, mode, words], ...]}]} "
                     "from tools/qwen_static_schedule/mu_calendar (cycles relative; rebased to the stage start)")
     a = ap.parse_args()
+    SAFE_FACE["on"] = a.safe_face
     if a.mu_cal:
         global DEPTH
         MU["cases"] = json.loads(a.mu_cal.read_text())["cases"]
@@ -317,7 +322,7 @@ def main():
         if not ok:
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
-        schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
+        schema="opentallas.qwen.tp8.collective.static_links.v1", safe_face=a.safe_face, ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
         phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define, sequencer_face=a.seqsu, plusargs=a.plusarg,
         real_lanes=RL['params'], real_lanes_source=RL['src'], lane_meas=lane_meas, compiled_calendar=CAL,
         die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']), duty50=D50['on'],

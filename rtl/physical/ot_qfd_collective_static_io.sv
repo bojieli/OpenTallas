@@ -10,7 +10,7 @@ module qfd_collective_static_io #(
  // kits use TOK_REG=1; latency-neutral by construction); LX0..2 = die-level PHY-side lane cycles on SerDes face j that
  // the rx calendar must absorb (forwarded lanes + landing between io_collective and io_serdes_j: E_tx(peer port) +
  // E_rx(own port) from the die GEN fwd_lanes.json); the face then expects the peer frame at PHY = PS + LXj.
- parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0
+ parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0,SAFE=0
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -211,7 +211,7 @@ module qfd_collective_static_io #(
  end else assign pr=phy_rx[f*597+:PW];
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
- qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG))u_face(
+ qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG),.SAFE(SAFE))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
  .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
