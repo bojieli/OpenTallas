@@ -1,0 +1,1323 @@
+{
+  "schema": "opentallas.qwen.tp8.collective.static.v1",
+  "ranks": 8,
+  "lanes": 16,
+  "latu": 65,
+  "lats": 390,
+  "xu": 0,
+  "xs": 0,
+  "die_name_master": true,
+  "pr_b4": true,
+  "slice_latency": 23,
+  "gather_cadence": 8,
+  "mutant": null,
+  "production": false,
+  "cycle_span": "first compiled input slot to last compiled output slot (inclusive); every output checked at its exact compiled cycle",
+  "mechanism": "no credits/ready/backpressure: compiled command + fixed-offset rings; checks are fault-only",
+  "cases": [
+    {
+      "name": "reduce_8w_x16",
+      "kind": "pos",
+      "exact": true,
+      "messages": 16,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 72,
+          "first_slot": 73,
+          "first_out": 650,
+          "last_out": 657
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 80,
+          "first_slot": 81,
+          "first_out": 658,
+          "last_out": 665
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 88,
+          "first_slot": 89,
+          "first_out": 666,
+          "last_out": 673
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 96,
+          "first_slot": 97,
+          "first_out": 674,
+          "last_out": 681
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 104,
+          "first_slot": 105,
+          "first_out": 682,
+          "last_out": 689
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 112,
+          "first_slot": 113,
+          "first_out": 690,
+          "last_out": 697
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 120,
+          "first_slot": 121,
+          "first_out": 698,
+          "last_out": 705
+        },
+        {
+          "msg": 11,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 128,
+          "first_slot": 129,
+          "first_out": 706,
+          "last_out": 713
+        },
+        {
+          "msg": 12,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 136,
+          "first_slot": 137,
+          "first_out": 714,
+          "last_out": 721
+        },
+        {
+          "msg": 13,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 144,
+          "first_slot": 145,
+          "first_out": 722,
+          "last_out": 729
+        },
+        {
+          "msg": 14,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 152,
+          "first_slot": 153,
+          "first_out": 730,
+          "last_out": 737
+        },
+        {
+          "msg": 15,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 160,
+          "first_slot": 161,
+          "first_out": 738,
+          "last_out": 745
+        }
+      ],
+      "compiled_span_cycles": 705,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 1024
+    },
+    {
+      "name": "reduce_1w_x9_odd",
+      "kind": "pos",
+      "exact": true,
+      "messages": 9,
+      "words_per_message": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 618
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 41,
+          "first_slot": 42,
+          "first_out": 619,
+          "last_out": 619
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 42,
+          "first_slot": 43,
+          "first_out": 620,
+          "last_out": 620
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 43,
+          "first_slot": 44,
+          "first_out": 621,
+          "last_out": 621
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 44,
+          "first_slot": 45,
+          "first_out": 622,
+          "last_out": 622
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 45,
+          "first_slot": 46,
+          "first_out": 623,
+          "last_out": 623
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 46,
+          "first_slot": 47,
+          "first_out": 624,
+          "last_out": 624
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 47,
+          "first_slot": 48,
+          "first_out": 625,
+          "last_out": 625
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 1,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 626
+        }
+      ],
+      "compiled_span_cycles": 586,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 72
+    },
+    {
+      "name": "reduce_3w_x8_odd",
+      "kind": "pos",
+      "exact": true,
+      "messages": 8,
+      "words_per_message": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 620
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 43,
+          "first_slot": 44,
+          "first_out": 621,
+          "last_out": 623
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 46,
+          "first_slot": 47,
+          "first_out": 624,
+          "last_out": 626
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 49,
+          "first_slot": 50,
+          "first_out": 627,
+          "last_out": 629
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 52,
+          "first_slot": 53,
+          "first_out": 630,
+          "last_out": 632
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 55,
+          "first_slot": 56,
+          "first_out": 633,
+          "last_out": 635
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 58,
+          "first_slot": 59,
+          "first_out": 636,
+          "last_out": 638
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 3,
+          "cmd_cycle": 61,
+          "first_slot": 62,
+          "first_out": 639,
+          "last_out": 641
+        }
+      ],
+      "compiled_span_cycles": 601,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 192
+    },
+    {
+      "name": "gather_1w_x6",
+      "kind": "pos",
+      "exact": true,
+      "messages": 6,
+      "words_per_message": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "modes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 503,
+          "last_out": 510
+        },
+        {
+          "msg": 1,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 511,
+          "last_out": 518
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 519,
+          "last_out": 526
+        },
+        {
+          "msg": 3,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 527,
+          "last_out": 534
+        },
+        {
+          "msg": 4,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 72,
+          "first_slot": 73,
+          "first_out": 535,
+          "last_out": 542
+        },
+        {
+          "msg": 5,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 80,
+          "first_slot": 81,
+          "first_out": 543,
+          "last_out": 550
+        }
+      ],
+      "compiled_span_cycles": 510,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 384
+    },
+    {
+      "name": "gather_4w_x4",
+      "kind": "pos",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "modes": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 1,
+          "words": 4,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 503,
+          "last_out": 534
+        },
+        {
+          "msg": 1,
+          "mode": 1,
+          "words": 4,
+          "cmd_cycle": 72,
+          "first_slot": 73,
+          "first_out": 535,
+          "last_out": 566
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 4,
+          "cmd_cycle": 104,
+          "first_slot": 105,
+          "first_out": 567,
+          "last_out": 598
+        },
+        {
+          "msg": 3,
+          "mode": 1,
+          "words": 4,
+          "cmd_cycle": 136,
+          "first_slot": 137,
+          "first_out": 599,
+          "last_out": 630
+        }
+      ],
+      "compiled_span_cycles": 590,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 1024
+    },
+    {
+      "name": "mixed_8w_x24",
+      "kind": "pos",
+      "exact": true,
+      "messages": 24,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 72,
+          "first_slot": 73,
+          "first_out": 535,
+          "last_out": 598
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 163,
+          "first_slot": 164,
+          "first_out": 626,
+          "last_out": 689
+        },
+        {
+          "msg": 3,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 227,
+          "first_slot": 228,
+          "first_out": 690,
+          "last_out": 753
+        },
+        {
+          "msg": 4,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 291,
+          "first_slot": 292,
+          "first_out": 754,
+          "last_out": 817
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 355,
+          "first_slot": 356,
+          "first_out": 933,
+          "last_out": 940
+        },
+        {
+          "msg": 6,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 387,
+          "first_slot": 388,
+          "first_out": 850,
+          "last_out": 913
+        },
+        {
+          "msg": 7,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 478,
+          "first_slot": 479,
+          "first_out": 941,
+          "last_out": 1004
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 542,
+          "first_slot": 543,
+          "first_out": 1120,
+          "last_out": 1127
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 550,
+          "first_slot": 551,
+          "first_out": 1128,
+          "last_out": 1135
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 558,
+          "first_slot": 559,
+          "first_out": 1136,
+          "last_out": 1143
+        },
+        {
+          "msg": 11,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 566,
+          "first_slot": 567,
+          "first_out": 1144,
+          "last_out": 1151
+        },
+        {
+          "msg": 12,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 689,
+          "first_slot": 690,
+          "first_out": 1152,
+          "last_out": 1215
+        },
+        {
+          "msg": 13,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 753,
+          "first_slot": 754,
+          "first_out": 1216,
+          "last_out": 1279
+        },
+        {
+          "msg": 14,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 817,
+          "first_slot": 818,
+          "first_out": 1395,
+          "last_out": 1402
+        },
+        {
+          "msg": 15,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 849,
+          "first_slot": 850,
+          "first_out": 1312,
+          "last_out": 1375
+        },
+        {
+          "msg": 16,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 940,
+          "first_slot": 941,
+          "first_out": 1403,
+          "last_out": 1466
+        },
+        {
+          "msg": 17,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 1004,
+          "first_slot": 1005,
+          "first_out": 1467,
+          "last_out": 1530
+        },
+        {
+          "msg": 18,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 1068,
+          "first_slot": 1069,
+          "first_out": 1646,
+          "last_out": 1653
+        },
+        {
+          "msg": 19,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 1076,
+          "first_slot": 1077,
+          "first_out": 1654,
+          "last_out": 1661
+        },
+        {
+          "msg": 20,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 1084,
+          "first_slot": 1085,
+          "first_out": 1662,
+          "last_out": 1669
+        },
+        {
+          "msg": 21,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 1116,
+          "first_slot": 1117,
+          "first_out": 1579,
+          "last_out": 1642
+        },
+        {
+          "msg": 22,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 1207,
+          "first_slot": 1208,
+          "first_out": 1670,
+          "last_out": 1733
+        },
+        {
+          "msg": 23,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 1271,
+          "first_slot": 1272,
+          "first_out": 1734,
+          "last_out": 1797
+        }
+      ],
+      "compiled_span_cycles": 1757,
+      "fault": "00000000",
+      "fault_code": "0000000000000000000000000000000000000000",
+      "mismatches": 0,
+      "words_out": 7808
+    },
+    {
+      "name": "fault_nan",
+      "kind": "inject",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        }
+      ],
+      "compiled_span_cycles": 609,
+      "fault": "11111111",
+      "fault_code": "0000100001000010000100001000010000100001",
+      "mismatches": 0,
+      "words_out": 256
+    },
+    {
+      "name": "fault_inf",
+      "kind": "inject",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        }
+      ],
+      "compiled_span_cycles": 609,
+      "fault": "11111111",
+      "fault_code": "0000100001000010000100001000010000100001",
+      "mismatches": 0,
+      "words_out": 256
+    },
+    {
+      "name": "fault_overflow",
+      "kind": "inject_big",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        }
+      ],
+      "compiled_span_cycles": 609,
+      "fault": "11111111",
+      "fault_code": "0000100001000010000100001000010000100001",
+      "mismatches": 0,
+      "words_out": 256
+    },
+    {
+      "name": "fault_tag",
+      "kind": "fault",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        }
+      ],
+      "compiled_span_cycles": 609,
+      "fault": "01011101",
+      "fault_code": "0000000010000000001000010001100000000010",
+      "mismatches": 0,
+      "words_out": 256
+    },
+    {
+      "name": "fault_drop_word",
+      "kind": "fault",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 634,
+          "last_out": 641
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 64,
+          "first_slot": 65,
+          "first_out": 642,
+          "last_out": 649
+        }
+      ],
+      "compiled_span_cycles": 609,
+      "fault": "00110000",
+      "fault_code": "0000000000001000100000000000000000000000",
+      "mismatches": 0,
+      "words_out": 256
+    },
+    {
+      "name": "fault_late_producer",
+      "kind": "fault",
+      "exact": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 80,
+          "first_slot": 81,
+          "first_out": 543,
+          "last_out": 606
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 144,
+          "first_slot": 145,
+          "first_out": 722,
+          "last_out": 729
+        }
+      ],
+      "compiled_span_cycles": 689,
+      "fault": "00110000",
+      "fault_code": "0000000000001000100000000000000000000000",
+      "mismatches": 0,
+      "words_out": 704
+    },
+    {
+      "name": "fault_unreserved_schedule",
+      "kind": "conf",
+      "exact": true,
+      "messages": 6,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 625
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 48,
+          "first_slot": 49,
+          "first_out": 626,
+          "last_out": 633
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 56,
+          "first_slot": 57,
+          "first_out": 519,
+          "last_out": 582
+        },
+        {
+          "msg": 3,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 113,
+          "first_slot": 114,
+          "first_out": 576,
+          "last_out": 639
+        },
+        {
+          "msg": 4,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 170,
+          "first_slot": 171,
+          "first_out": 633,
+          "last_out": 696
+        },
+        {
+          "msg": 5,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 227,
+          "first_slot": 228,
+          "first_out": 690,
+          "last_out": 753
+        }
+      ],
+      "compiled_span_cycles": 713,
+      "fault": "11111111",
+      "fault_code": "1000010000100001000010000100001000010000",
+      "mismatches": 248,
+      "words_out": 1752
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+    "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/rom/ot_coll_tp8_static.sv": "12f3f13ef4d948877b11011da33e950d0d69816b2e8dc2e7843d6ab0e5dc064c",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "a22e80fa33ed0d3490ef9d5579de09bb25f43973122c37faaaa0e98b6a6b5bc3",
+    "rtl/test/tb_coll_tp8_static.sv": "453149efcfa99e7c3ac89a2fb64af0706e95c0f09fc11dc3d54a7d90dcd57f82",
+    "rtl/rom/ot_coll_sram_bank64.sv": "2b2dd801451b1369659a10d4b4f7509bf6d1fbbdcae4c932e0f434e254c97ca5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2"
+  },
+  "executable_sha256": "e1236e6605be1e7962ae357ff824efe182af6f755c7300d1dca48603a80a900c",
+  "native_layer_qualified": false
+}

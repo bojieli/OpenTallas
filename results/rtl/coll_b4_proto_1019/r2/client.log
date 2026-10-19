@@ -1,0 +1,43 @@
+ot-run: ot-epyc4       admits   924 GB (avail 760, growth 113, headroom 0, waiters 0/0 GB) load 129/128 running 34 disk 319 GB 
+ot-run: ot-epyc5       admits   550 GB (avail 497, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 11 disk 1026 GB 
+ot-run: ot-epyc6       admits   751 GB (avail 639, growth 113, headroom 0, waiters 0/0 GB) load 32/128 running 14 disk 6032 GB 
+ot-run: ot-epyc7       admits   904 GB (avail 713, growth 79, headroom 0, waiters 0/0 GB) load 39/96 running 16 disk 6422 GB 
+ot-run: ot-epyc8       admits  1225 GB (avail 939, growth 81, headroom 0, waiters 0/0 GB) load 35/128 running 22 disk 292 GB 
+ot-run: ot-pve1        admits   126 GB (avail 100, growth 8, headroom 0, waiters 0/0 GB) load 42/28 running 4 disk 1197 GB 
+ot-run: ot-agidock128  admits   110 GB (avail 90, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 260 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3170468-1792430012 after 0 s
+B4_RING PASS checks=4536 resetepochs=4 cycles=4800 OFF67 nativeP546 R514 distinctbankaddress/wrap bit513
+- rtl/test/qwen_coll_b4/tb_ring_b4.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 0.239 s; speed 201.844 us/s
+- Verilator: cpu 0.238 s on 1 threads; allocated 7 MB
+B4_RING MUTANT_CAUGHT r513 exit=1
+B4_RING MUTANT_CAUGHT banksel exit=1
+case qwen_ar_256w kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=833
+case qwen_layer_2x256w kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 compiled_span=1089
+case qwen_argmax_1w kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 compiled_span=470
+case qwen_layer_2x256w_argmax kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4160 compiled_span=1097
+COLL_TP8S PASS cases=4 latu=65 lats=390
+case reduce_8w_x16 kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 compiled_span=705
+case reduce_1w_x9_odd kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=72 compiled_span=586
+case reduce_3w_x8_odd kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=192 compiled_span=601
+case gather_1w_x6 kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=384 compiled_span=510
+case gather_4w_x4 kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 compiled_span=590
+case mixed_8w_x24 kind=pos latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=7808 compiled_span=1757
+case fault_nan kind=inject latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=609
+case fault_inf kind=inject latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=609
+/srv/opentallas-scratch/claude/coll-b4-proto-r2-1019/src/tools/hdc_golden.py:97: RuntimeWarning: overflow encountered in add
+  return z(np.asarray(a, dtype=F) + np.asarray(b, dtype=F))
+case fault_overflow kind=inject_big latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=8 fault=11111111 code=0000100001000010000100001000010000100001 words_out=256 compiled_span=609
+case fault_tag kind=fault latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=01011101 code=0000000010000000001000010001100000000010 words_out=256 compiled_span=609
+case fault_drop_word kind=fault latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00110000 code=0000000000001000100000000000000000000000 words_out=256 compiled_span=609
+case fault_late_producer kind=fault latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00110000 code=0000000000001000100000000000000000000000 words_out=704 compiled_span=689
+case fault_unreserved_schedule kind=conf latu=65 lats=390 xu=0 xs=0 mutant=- PASS mismatches=248 extra=0 out_err=0 fault=11111111 code=1000010000100001000010000100001000010000 words_out=1752 compiled_span=713
+COLL_TP8S PASS cases=13 latu=65 lats=390
+case qwen_ar_256w kind=pos latu=53 lats=378 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=797
+case qwen_layer_2x256w kind=pos latu=53 lats=378 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 compiled_span=1053
+case qwen_argmax_1w kind=pos latu=53 lats=378 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 compiled_span=446
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=378 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4160 compiled_span=1061
+COLL_TP8S PASS cases=4 latu=53 lats=378
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3170468-1792430012): exit 0
