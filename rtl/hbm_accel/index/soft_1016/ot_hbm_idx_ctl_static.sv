@@ -11,7 +11,11 @@
 //                                            (ot_hbm_idx_parent_static.sv:33,55,58-63)
 // No new logic, latency or flow control: the equivalence of ot_hbm_idx_client_static_soft against
 // ot_hbm_idx_client_static_sw (children cut) is proven in results/arch/hbm_idx_soft_parent_1016.
-module ot_hbm_idx_ctl_static #(parameter integer N_Q=4)(   // N_Q: scorer slots (A2P half die 2; see ot_hbm_idx_parent_static)
+// AM_MERGE (HBM-SU3 2026-10-17, default 0 = unchanged; d4f binds 1 with the argmax successor ot_hbm_argmax_static_sw_vm_r2):
+//   the VM share is ot_hbm_idx_vm_share_static_am, whose four bank-pair leaves do the ARGMAX 8:1 sector select and merge
+//   the lanes on a p = 0 -> 3 register chain: argmax_rr is ONE 264-bit word {lane valid8, data256}, 4 edges after the
+//   leaves' steer (argmax VMX = 4 + its pin register = 5). INDEX / TOPK faces and edges unchanged.
+module ot_hbm_idx_ctl_static #(parameter integer N_Q=4,AM_MERGE=0)(   // N_Q: scorer slots (A2P half die 2; see ot_hbm_idx_parent_static)
  input wire clk_program,clk_program_mem,clk_sel,clk_topk,input wire[3:0]clk_pair,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -35,7 +39,7 @@ module ot_hbm_idx_ctl_static #(parameter integer N_Q=4)(   // N_Q: scorer slots 
  output wire topk_busy,topk_done,topk_fault,
  // VM read group 4 share
  input wire[135:0]index_rq,output wire[2055:0]index_rr,
- input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr,
+ input wire[135:0]argmax_rq,output wire[(AM_MERGE!=0?264:2056)-1:0]argmax_rr,
  output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
  output wire share_fault
 );
@@ -65,7 +69,12 @@ module ot_hbm_idx_ctl_static #(parameter integer N_Q=4)(   // N_Q: scorer slots 
   .n(topk_n),.m(topk_m),.a_mirror(topk_a_mirror),.a_base(topk_a_base),.a_str(topk_a_str),.o_mirror(topk_o_mirror),
   .o_base(topk_o_base),.o_str(topk_o_str),.has_r(topk_has_r),.r_base(topk_r_base),.r_str(topk_r_str),
   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(cq),.cq_seq(cq_seq),.cr(cr),.busy(topk_busy),.done(topk_done),.fault(topk_fault));
- ot_hbm_idx_vm_share_static share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
+ if(AM_MERGE!=0)begin:g_share_am
+  ot_hbm_idx_vm_share_static_am share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
+   .vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),.topk_rr(topk_rr),.argmax_m(argmax_rr),.fault(share_fault));
+ end else begin:g_share
+  ot_hbm_idx_vm_share_static share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
   .vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),.topk_rr(topk_rr),.argmax_rr(argmax_rr),.fault(share_fault));
+ end
 endmodule
 `default_nettype wire

@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   648 GB (avail 641, growth 187, headroom 0, waiters 0/0 GB) load 82/128 running 39 disk 576 GB 
+ot-run: ot-pve1        admits    18 GB (avail 85, growth 72, headroom 0, waiters 0/0 GB) load 208/28 running 27 disk 1271 GB 
+ot-run: ot-agidock128  admits    -7 GB (avail 23, growth 28, headroom 0, waiters 5/88 GB) load 22/64 running 12 disk 280 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2905169-1792311614 after 0 s
+OUT MISMATCH half row 0 got 3fba3f8dbed840103fb6bfd53facc04640103fe7bee8bf82c012beefbd5a3fbf want 3fb73f8ebeea40153fb9bfd63fb0c04b3fe63ff0bf863eacbfeabf0a3f0a3e0f
+OUT MISMATCH half row 1 got 403bbf863fb83ffd40304015c0653f26c0813f9ebfe1c021400bbf06bff03f05 want 4039bf8b3fab400340324017c05f3f12c0903f27c05dbf9b40293d79be31bf47
+OUT MISMATCH half row 2 got 3fb63fa43fedc017c0173d25bec83d233f9e4029be10bf5ebf4c4015bf29beb2 want 3fac3fad3ff1c015c012bcf3bed73bd1be0c40773ec7be943f133f8dbf98bf6d
+OUT MISMATCH half row 3 got c051c01c403a407bbfb9be8dbf9540194046bf0fbf44bf173ff4bf33c0093f6f want c04fc01e4039407dbfbdbe77bf9340174064bf92bf833d843fb8bdf1bff13e8e
+OUT MISMATCH half row 4 got 3fafbdd1c01e3fb8bf32401bbf09bfbebebf3f2dbf4abf70c081c085c03ac065 want 3fa5bdf7c0243fb3bf1f401cbedebfb9bfd73eb4c026bfdfc02dc075bf8dc031
+LEAFENG mut=7 partials=4 half_rows=16 mismatches=16 fault=0 vp0 vs0 reduce_cmd_to_last_partial=159 add_cmd_to_last_write=73
+FAIL
+FAIL leaf_eng MUT=7
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2905169-1792311614): exit 1

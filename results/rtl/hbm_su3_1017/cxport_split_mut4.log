@@ -1,0 +1,6 @@
+MISMATCH t=11401 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+MISMATCH t=12301 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+MISMATCH t=12601 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+SFU MISMATCH t=12602 00000000/8effe91d
+MISMATCH t=13201 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+CXPORT_SPLIT FAIL legal_phase_faults=0 errors=33327 checks=24183 dw=22440 inj=14866 rc=995 rr=596 fault_edges=16104

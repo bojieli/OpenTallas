@@ -90,7 +90,7 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.01
  },
  "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Lane (220.32 x 151.2: the 259.2 x 216 trial measured TT 354.3 / spread 112.7 ps at 6% util): one master for all 4 lanes (S row R0, N row MX): t_w on the W half of the N face (to the merger), c_in on the E half (from the glue).",
  "job": {

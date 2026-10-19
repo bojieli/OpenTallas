@@ -264,6 +264,22 @@ class Pockets(unittest.TestCase):
         self.assertTrue(any(r[1] >= 4.4 - 1e-9 and r[3] <= 4.7 + 1e-9 and r[2] > 2 for r in added), added)
         self.assertEqual(self.close(out), out)  # idempotent
 
+    def test_pin_keepout_is_wide_spacing(self):
+        """KV-ECTL5 (DRT-0073 u_a/req_t[10]): the fill keeps >= the wide-metal spacing (2 M5 pitches = 0.096) free beside
+        a pin, so no fill rect sits closer than 0.072 um to it; the old one-pitch (0.048) keep-out did"""
+        import abstract_pin_stub as APS
+        self.assertEqual(APS.keep_um("M5"), 0.096)
+        self.assertEqual(APS.keep_um("M6"), 0.128)
+        self.assertEqual(APS.keep_um("M3"), 0.036)
+        out = self.close(self.text())
+        self.assertEqual(APS.pin_spacing_violations(out), [])
+        added = [r for r in self.m5(out) if r not in [o[1:] for o in self.OBS]]
+        keep = (0 - 0.096, 4.5 - 0.096, 0.192 + 0.096, 4.524 + 0.096)
+        self.assertFalse([r for r in added if APS._ov(r, keep)])
+        # a wide M5 OBS one pitch beside the M5 pin (vertical layer: side by side in x) is reported
+        bad = APS.pin_spacing_violations(self.text(obs=self.OBS + [("M5", 0.24, 4.0, 1.0, 5.0)]))
+        self.assertTrue(any(v[0] == "p" and v[1] == "M5" for v in bad), bad)
+
     def test_wide_gap_and_single_obstacle_untouched(self):
         import abstract_pin_stub as APS
         self.assertEqual(APS.find_pockets(self.text(obs=[("M5", 2, 2, 4, 6), ("M5", 8, 2, 10, 6)]))["rects"], [])

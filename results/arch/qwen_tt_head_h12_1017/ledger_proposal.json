@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.ledger_proposal.v1",
+ "rows": [
+  {
+   "design": "qwen_rom",
+   "unit": "TT.ROMCMD2 qfd_tt_head_static h12 second rom_cmd register (CMDREG=2, +1 ROM-tree command edge)",
+   "group": "TT.ROMCMD2",
+   "status": "PROPOSED (not adopted: h12 gate not submittable)",
+   "price_basis": "same upper bound as accepted TT.ROMCMD (+1 per ME op on the token path: +181 cycles/token AR, 0.073 %)",
+   "e2e_loss_pct_upper": 0.073,
+   "evidence": "results/arch/qwen_tt_head_h12_1017/tth_h12_bench_{m0c2,oldlat}.out: CMDREG=2 vs 2-register reference REGROUP_PASS cycles=65120; vs 1-register reference REGROUP_FAIL errs=65016"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "TT.PINREG qfd_tt_head_static owner-rule pin registers (ot_pin_regs, +1 per unregistered port)",
+   "group": "TT.PINREG",
+   "status": "PROPOSED; per-port list = route ot_pin_regs.tsv",
+   "price_basis": "not priced: ports on the token path (native_cmd/native_ret/kvd_*/m_f*) need the per-layer model; upper bound unknown until the per-port table is mapped"
+  }
+ ]
+}

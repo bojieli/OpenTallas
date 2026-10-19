@@ -1,0 +1,115 @@
+{
+ "name": "qkd_rlyi_258s",
+ "top": "qkd_rlyi_258s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 21.6,
+  "h": 95.04
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "s"
+  ],
+  "W": [
+   "a",
+   "y"
+  ],
+  "E": [
+   "b"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   9.72,
+   11.88
+  ],
+  "s": [
+   14.04,
+   16.2
+  ]
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "KV-RTRUNK: a result-trunk station is ONE register stage pin to pin (inject: a / y -> 2:1 -> flop -> b; header: trunk words -> AND / 2:1 -> flop -> beat word); its flop is the pin register of every pin; pv_trunk_gen counts exactly 1 core cycle per station (RS_D), so a flow-inserted pin register would change the static beat schedule; KV-KITS/NATIVE 10-18: the native successor registers / replicates its select pins in RTL instead"
+ },
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_min_tracks": 3,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:KV-KITS/NATIVE",
+  "branch": "claude/kv-native-1018",
+  "tag": "n1",
+  "purpose": "KV-KITS/NATIVE 10-18: PV result-trunk INJECT station with its select registered at the pin (s_r <= s; b <= s_r ? y : a; the generator drives s one T-chain edge earlier), 21.6 x 95.04 um, 64 per pair; successor of qkd_rlyi_258 (native capture s 259.3 > 190)",
+  "benches": [
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh pass qkd_rlyi_258s {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RTRUNK_LEAF PASS 0 errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_mutant",
+    "cmd": "bash rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh mut qkd_rlyi_258s {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RTRUNK_LEAF FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_mut.log"
+   },
+   {
+    "name": "neg_mutant_sel",
+    "cmd": "bash rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh smut qkd_rlyi_258s {RUN}/bench_s",
+    "expect": "fail",
+    "fail_regex": "RTRUNK_LEAF FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_rlyi_258s_smut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_rlyi_258s/views",
+  "record_to": "results/rtl/ref_tile/qkd_rlyi_258s",
+  "extra_paths": [
+   "rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh"
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-KITS/NATIVE 10-18: native-pin successor of qkd_rlyi_258 (CLOSED, not die-bindable: native capture FAIL on its select pins only). qkd_rlyi_258 s pin fanned out to 258 muxes (S + R 259.3 ps); here s feeds one pin flop. Same beat schedule, 0 cycles (pv_trunk_gen default; --rs-legacy keeps qkd_rlyi_258)."
+}

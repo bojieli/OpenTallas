@@ -24,6 +24,10 @@
 //     one edge ahead too: im_q[s][i] = (row i's issue cycle (+MUT adj) == age[s] at the next edge), from the next age
 //     (accept: 0, active: age + 1) and the next row value (a PW word written on this edge, the only way a row can
 //     change while a job can start); command / KIT / END / pending use im_q && i < length_q && active[s].
+// S81U-SEQ6 (gate6 e2c0d6208: TT -4.1 ps at im_q: the 24-b next-age increment age + 1 and the 24-b compare in one
+//   stage): the next age is held in its own flop ag1[s] (= age[s] + 1 whenever read: loaded with 1 when the job is
+//   accepted, together with age <= 0, and stepped with age while active), so im_q compares from a register.  Same
+//   values on every edge (age's own increment is unchanged); issue / KIT / END / command edges unchanged.
 // Native S81 command ABI: {slot,user10,pos21,tok21,arg24,op7}.
 // Each calendar row is {done24,issue24,engine4,arg24}. Engine14=KIT,
 // engine15=END. Three26-bit PW payloads load one actual76-bit storage row.
@@ -59,7 +63,7 @@ module ot_dsdv_fixed_issue #(
  reg[23:0]scan_max_done,scan_end_cycle,scan_kit_cycle;
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
- reg[23:0]age[0:1];reg[NOPS-1:0]pending[0:1];
+ reg[23:0]age[0:1],ag1[0:1];reg[NOPS-1:0]pending[0:1];
  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
  assign busy=|active;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
@@ -209,17 +213,17 @@ module ot_dsdv_fixed_issue #(
   for(s2=0;s2<2;s2=s2+1)for(i2=0;i2<NOPS;i2=i2+1)begin
    rn=mem[i2];
    if(do_write&&pw_a==7'(i2))case(pw_d[27:26])0:rn[25:0]=pw_d[25:0];1:rn[51:26]=pw_d[25:0];2:rn[75:52]=pw_d[23:0];default:;endcase
-   an=active[s2]?age[s2]+1'b1:24'd0;
+   an=active[s2]?ag1[s2]:24'd0;
    im_q[s2][i2]<=an==rn[51:28]+((MUT==1&&rn[27:24]<14)?24'd1:24'd0);
   end
   for(s2=0;s2<2;s2=s2+1)for(i2=0;i2<NOPS;i2=i2+1)
    dm_q[s2][i2]<=active[s2]&&age[s2]!=24'hffffff&&i2<length_q&&mem[i2][27:24]<14&&mem[i2][75:52]==age[s2];
   if(do_accept)begin
-   age[next_slot]<=0;pending[next_slot]<=0;
+   age[next_slot]<=0;ag1[next_slot]<=24'd1;pending[next_slot]<=0;
    users[next_slot]<=job_user;positions[next_slot]<=job_pos;tokens[next_slot]<=job_tok;
   end
   for(s2=0;s2<2;s2=s2+1)if(active[s2])begin
-   age[s2]<=age[s2]+1'b1;
+   age[s2]<=age[s2]+1'b1;ag1[s2]<=ag1[s2]+1'b1;
    for(i2=0;i2<NOPS;i2=i2+1)if(i2<length_q)begin
     eng2=mem[i2][27:24];
     if(dm_q[s2][i2])begin

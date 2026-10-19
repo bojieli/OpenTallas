@@ -1,0 +1,238 @@
+
+17. Printing statistics.
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       65 wire bits
+        3 public wires
+       65 public wire bits
+        3 ports
+       65 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000001000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+      137 wire bits
+        3 public wires
+      137 public wire bits
+        3 ports
+      137 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000010001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+      273 wire bits
+        3 public wires
+      273 public wire bits
+        3 ports
+      273 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       26 wire bits
+        4 public wires
+       26 public wire bits
+        4 ports
+       26 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+     1037 wire bits
+        3 public wires
+     1037 public wire bits
+        3 ports
+     1037 port bits
+        1 cells
+        1   $dff
+
+=== qkd_static_ectla_kiss ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      536 wires
+    10274 wire bits
+      536 public wires
+    10274 public wire bits
+       22 ports
+     2720 port bits
+      506 cells
+       26   $add
+       48   $adff
+        7   $and
+       36   $dff
+        9   $eq
+        6   $ge
+        4   $gt
+       44   $logic_and
+       24   $logic_not
+       16   $logic_or
+       12   $lt
+      195   $mux
+        5   $ne
+       14   $neg
+        8   $not
+        9   $or
+        5   $reduce_bool
+        1   $reduce_or
+       14   $shift
+        8   $shiftx
+       13   $sub
+        2   ot_sram_1r1w_128x256_m1_r2c2
+       10 submodules
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000000001
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000001111
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000000
+        2   $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        2   ot_nhb_rleaf_h
+
+=== ot_nhb_rleaf_h ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       31 wire bits
+        3 public wires
+       31 public wire bits
+        3 ports
+       31 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        8 wire bits
+        4 public wires
+        8 public wire bits
+        4 ports
+        8 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+     1025 wire bits
+        3 public wires
+     1025 public wire bits
+        3 ports
+     1025 port bits
+        1 cells
+        1   $dff
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      516 qkd_static_ectla_kiss
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000000001
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000001111
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000000
+        1 $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        1 ot_nhb_rleaf_h
+
+        +----------Count including submodules.
+        | 
+      570 wires
+    12408 wire bits
+      570 public wires
+    12408 public wire bits
+       56 ports
+     4854 port bits
+        - memories
+        - memory bits
+        - processes
+      516 cells
+       26   $add
+       52   $adff
+        7   $and
+       42   $dff
+        9   $eq
+        6   $ge
+        4   $gt
+       44   $logic_and
+       24   $logic_not
+       16   $logic_or
+       12   $lt
+      195   $mux
+        5   $ne
+       14   $neg
+        8   $not
+        9   $or
+        5   $reduce_bool
+        1   $reduce_or
+       14   $shift
+        8   $shiftx
+       13   $sub
+        2   ot_sram_1r1w_128x256_m1_r2c2
+       10 submodules
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000000001
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000001111
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000000
+        2   $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        2   ot_nhb_rleaf_h
+

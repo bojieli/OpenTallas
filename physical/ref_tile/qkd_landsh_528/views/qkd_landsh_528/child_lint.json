@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_landsh_528-f1-20cef08c0/record/views/qkd_landsh_528/provenance/qkd_landsh_528.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "qkd_landsh_528 51.84 x 82.08: PG M5 VDD 18 stripes (88% spread, 100% cov) / VSS 18 stripes (88% spread, 100% cov); strap M6; face pins 1066 blocked-above 0 blocked-same 0; clock ck insertion 114 ps; clock ckf insertion 131 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qkd_landsh_528",
+  "W": 51.84,
+  "H": 82.08,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 18,
+     "dir": "V",
+     "spread": 0.885,
+     "coverage": 1.0,
+     "shapes_on_top": 18
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 18,
+     "dir": "V",
+     "spread": 0.885,
+     "coverage": 1.0,
+     "shapes_on_top": 18
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1066,
+   "blocked_above": 0,
+   "covered_below": 303,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 114.37,
+    "min_ps": 83.64
+   },
+   "ckf": {
+    "max_ps": 131.04,
+    "min_ps": 95.21
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 548
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
