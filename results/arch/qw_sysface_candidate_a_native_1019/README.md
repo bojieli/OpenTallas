@@ -1,6 +1,40 @@
-# SYSFACE Candidate A native comparison — prelaunch inventory
+# SYSFACE Candidate A native source comparison
 
-**No mapping, simulation or STA has launched.** This is an isolated full-component comparative source diagnostic, not a SYSFACE gate. Original and Candidate A are the exact 76277b2cb32db263d527bb1e7c66ae91754f2ef1 modules: 677 non-clock/reset input bits, 145 state bits, 161 output aliases, zero added edges. The parent a0ab17388 failure remains unchanged. No publication duplication, producer integration, physical closure or production activation is included.
+**Native mapping and all-output source equivalence PASS; safe fanout/electrical closure FAIL; standalone timing HOLD.** This is an isolated full-component comparative source diagnostic, not a SYSFACE gate. Original and Candidate A are the exact 76277b2cb32db263d527bb1e7c66ae91754f2ef1 modules: 677 non-clock/reset input bits, 145 state bits, 161 output aliases, zero added edges. The parent a0ab17388 failure remains unchanged. No publication duplication, producer integration, physical closure or production activation is included.
+
+## Terminal admitted result
+
+Qwen lead reviewed the full prelaunch inventory and admitted canonical mapping, native/source proof and uncapped census only, at1 thread/4 GB/2 GB with automatic ot-run placement. All jobs are terminal on ep7 under /srv/opentallas-scratch/claude/sysface-candidate-a-native-1019. Client admission/exit logs and measured process receipts are preserved. The exact ten HBM canonical TT/FF library hashes match all ten contemporaneously observed inputs; additional library files in the platform inventory are not mapper inputs. Actual Yosys is0.67 git2d1509d1b under the pinned16470 image.
+
+| Actual isolated result | Original | Candidate A |
+|---|---:|---:|
+| Native cells / cell types |1217 /35|1085 /39|
+| Native Liberty cell area um² |147.155940|131.307480|
+| Actual DFFASRHQN cells |145|145|
+| Mapping elapsed / peak RSS KiB |2.81 s /150804|2.18 s /150976|
+| Arbitrary-state source/native SAT |32964 variables /84211 clauses PASS|30672 variables /78393 clauses PASS|
+| SAT peak RSS KiB |65640|62576|
+| Transparent BUF/INV instances |196|256|
+| Unsafe logic-root loads after transparent traversal |132,132,132,143|132,132,132,131,144|
+| Raw clock / reset / SETN literal loads |145 /145 /145|145 /145 /145|
+| Native declared PG MTerms / source graph bindings |2434 /0|2170 /0|
+| Known TT internal pin-capacitance violations |4|4|
+| Maximum native graph cell levels to FF D |7|8|
+| Native graph cell levels to fault D |7|7|
+
+Every source/native SAT miter leaves all677 inputs and145 present-state bits arbitrary and compares every161 post-transition output bits. native_proof.py reads the actual native mapped JSON and actual Liberty functions, rejects unsupported cells/state merges/reset/set/clock bindings, cuts the145 actual state cells into corresponding arbitrary present-state values, and derives next state from the real Liberty definition. DFFASRHQN is **ff(IQN,IQNN), next_state !D, clear !SETN, preset !RESETN, QN function IQN, simultaneous clear/preset L/L**. Every SETN is proven literal1 and RESETN is exactly rst_n. Actual output inversion/buffering is traced per state bit. No async2sync or generic positive-Q replacement occurs. The exhaustive SAT proof is binary functional next-state/reset-value equivalence; it does not establish analog reset recovery or native four-state timing behavior. The separate109457 source four-state checks remain scoped to76277.
+
+The candidate removes132 native cells in this isolated mapping but adds a fifth unsafe logic root. Known internal TT capacitances alone exceed real output max-cap limits: original62.133/61.758/63.526 fF against23.04 fF, and59.795 fF against46.08 fF; candidate61.778/61.738/61.469 fF against23.04 fF, and59.874 fF against46.08 fF. These are native Liberty pin-cap sums without external loads or wires, so each is already a definite internal electrical failure. Native capacitive unit is1 ff and timing unit1 ps. The complete census retains every root/endpoint, transparent inversion path, source support set, native cell/master, reset/set/clock role, declared PG MTerm, direct cap bound and FF endpoint graph depth. PG ITerm binding is NULL: a source graph is not a physical PG proof.
+
+Graph level counts are finite connectivity measurements, not timing: there is no TT/FF slack, delay reduction or full-parent timing transfer. Existing full-parent28 levels/833.5 ps and TT−57.924 ps remain separate. Candidate A is not SAFE and cannot proceed to a gate or activation on this result. No speculative benefit is reported.
+
+## Remaining exact boundary work
+
+All677 input bits and161 output aliases resolve to actual old-parent native connections. Those connections include original internal feedback, optimized shared nodes and external consumers. A native internal predicate can be shared outside the original source component after whole-parent optimization. Source ownership and actual per-bit cap/drive/arrival separation must close before standalone STA; assigning all observed sinks as external would double-count component feedback. The frozen signoff SDC's propagated-parent reference cannot be transplanted onto this unplaced component. Both original and candidate must receive the same explicit extracted boundaries. Until then TT/FF setup, hold, slew, actual ps depth, FF cap checks and physical reset/PG remain HOLD. No unit-cap fallback or artificial waveform is supplied.
+
+## Preserved prelaunch inventory and intended timing method
+
+The following records the reviewed plan. Mapping/proof/census portions have completed as reported above; timing remains held.
 
 ## Source and canonical dependency identities
 
@@ -50,4 +84,4 @@ At 15:02 PT ot-run reported 564–1249 GB admissible on ep4–8 and 99/100 GB on
 
 Proposed reservation is 1 thread, 4 GB RAM, 2 GB disk for sequential original/candidate mapping, graph census and native equivalence, with incremental immutable logs and measured RSS/disk. This is a capacity reservation, not a per-process cap or timeout. Use unpinned `ot-run --threads 1 --mem 4 --disk 2 --dir REMOTE_DIR -- bash run.sh`; this installed client defaults to automatic placement and has no --remote option. No arbitrary wall-time limit. Reuse completed outputs; do not restart a progressing job.
 
-ROOT/Qwen inventory review is pending. First proposed admission is mapping plus graph proof/census only. Standalone STA remains held until actual external load/arrival extraction closes. No build is authorized by this inventory itself.
+ROOT/Qwen inventory review authorized mapping plus graph proof/census only, now completed. Standalone STA remains held until actual external load/arrival extraction closes. No additional build, parent gate or physical qualification is authorized by this packet.
