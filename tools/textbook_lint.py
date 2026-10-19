@@ -144,8 +144,13 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 a failed job that was never admitted gives none), optional "failure" (what failed).  The daemon's
 #                 earlyoom retry (main a1f06d7f2) and lanes resubmitting after an OOM / harness crash use it
 #                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
+#   pin_order     (REFILL-0400/PO-LINK 2026-10-19, pin_order rule c81a8f458) the closed view's own bus bit order is
+#                 chunk-scrambled on an abutted joint: "source" (the COMMITTED abutted-joint audit hand-off / JSON naming
+#                 the block), "fix"; same RTL, outline and pin faces; the new kit.env carries an ordered layout
+#                 (OT_PIN_BALANCE_H from route.pin_balance, or PINEX=0 from an exact io_tcl) and the closed kit did not
+#                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture", "native_spread", "flow_failure")
+                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R

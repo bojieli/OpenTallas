@@ -22,7 +22,8 @@
   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
-  "rtl/lib/ot_rst_relay.sv"
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -74,10 +75,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:HBM-NEXT-UNITS-FUSED",
-  "branch": "claude/hbm-next-units-fused-1019",
-  "tag": "n1",
-  "purpose": "HBM-NEXT P=4 FUSED HC_PRE_NORM/HC_POST N-row lane (new static engine, one per VM bank, x32 replicated, hardened once): static calendar, fixed-edge VM returns, KX=4 x slots, 2 row-tagged coefficient slots; measured row II PRE 81 / POST 103 (m0 bench)",
+  "owner": "Claude:HBM-NEXT-UNITS-FUSED-SRAM",
+  "branch": "claude/hbm-next-units-fusedsram-1019",
+  "tag": "n2",
+  "purpose": "HBM-NEXT P=4 FUSED HC_PRE_NORM/HC_POST N-row lane (new static engine, one per VM bank, x32 replicated, hardened once): static calendar, fixed-edge VM returns, KX=4 x slots, 2 row-tagged coefficient slots; measured row II PRE 81 / POST 103 (m0 bench); n2: x store 80x256 + gain store 20x256 moved from runtime-indexed flop arrays into 1R1W SRAM macros (n1 gate yosys stall)",
   "benches": [
    {
     "name": "hnx_fused_exact",
@@ -202,17 +203,38 @@
    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
    "rtl/hdc/v41/ot_hdc_actquant.sv",
    "rtl/hdc/v41x/ot_dsrom_aq12.sv",
-   "rtl/lib/ot_rst_relay.sv"
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
   ],
   "views_to": "physical/ref_tile/hnx_fused_lane_1019/views",
-  "record_to": "results/arch/hbm_next_1019/units/fused/route_hnx_fused_lane_1019"
+  "record_to": "results/arch/hbm_next_1019/units/fused/route_hnx_fused_lane_1019",
+  "structural_change": "HBM-NEXT-UNITS-FUSED-SRAM: n1 gate FAILED synth_smoke (yosys OPT stall > 2,700 s on the 80x256 runtime-indexed x-store flop array); n2 moves xb and gb into ot_sram_1r1w_128x256_m1_r2c2 macros (registered read = the same 1-edge read, calendar and row II unchanged)"
  },
  "pin_regs": {
   "enable": false,
   "reason": "every lane input is captured by a pin flop (dv_q/dop_q/dx_q/dd_q, rv_q/rd_q, r_vq/r_dq, lid_q) and every output (rq_*, wq_*, up_*, fin, flt) is a flop Q in the RTL; the VM return edge RR+1 is counted from these flops, so automatic pin registers would break the fixed calendar"
  },
  "params": {},
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_xb",
+   "at": [
+    22.464,
+    140.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_gb",
+   "at": [
+    22.464,
+    77.76
+   ]
+  }
+ ],
  "children": [],
  "inter": [],
  "recipe": 4,
@@ -227,5 +249,6 @@
  "reset_landing": {
   "enable": true,
   "stages": 2
- }
+ },
+ "floorplan_note": "x store u_xb (KX NM = 80 of 128 rows) and gain store u_gb (NM = 20 rows) are 1R1W 128x256 macros (94.824 x 41.064) stacked at the W face (no W pins), 21.6 um channel, 20 um from the W core edge, stack centred N-S; std cells one band E of them, N face command/r/up, S face VM bank"
 }
