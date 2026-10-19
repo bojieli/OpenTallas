@@ -115,7 +115,17 @@
   ],
   "structural_change": "new master ot_hbm_accel_smh_fc_xr2 (rtl/hbm_accel/sm/ot_hbm_accel_smh_fc_xr2.sv): 2-stage relay, pin flop at each face; the closed one-stage fc_xr master stays byte-identical",
   "cycles_added": 1,
-  "reroute_reason": "closed view of the element exists (fc_xr 1e78e63ef, CLOSED TT/FF) but its routed native audit FAILS launch 409 > 220 on 2,642 pins: structural (one stage across 151 um), not a flow artifact; this is a NEW master (fc_xr2, +1 stage), not a re-route of the closed one",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "the element fc_xr has a CLOSED view (smn_fcxr_ref_fa-r2-c1dfe3d51, record 1e78e63ef) whose routed native audit FAILS launch 409 > 220 ps on 2,642 xo/lo pins (results/arch/hf5_1018/native/native_3_audit.json): structural, one register stage across the 151 um tile; this job routes the NEW 2-stage master ot_hbm_accel_smh_fc_xr2 (+1 cycle, pin flop at each face), same pin plan / outline / recipe",
+   "source": "results/arch/hf5_1018/native/native_3_audit.json",
+   "rtl_boundary": {
+    "top": "ot_hbm_accel_smh_fc_xr2",
+    "sources": [
+     "rtl/hbm_accel/sm/ot_hbm_accel_smh_fc_xr2.sv"
+    ]
+   }
+  },
   "views_to": "physical/ref_tile/smn_fcxr2_ref_fa/views",
   "record_to": "results/rtl/ref_tile/smn_fcxr2_ref_fa"
  },
