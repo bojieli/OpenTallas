@@ -6,6 +6,7 @@ Yosys binary strings never silently become unsigned Python integers.
 """
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
@@ -14,24 +15,45 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+class U32(int):
+    """An unsigned `parameter [31:0]` value (KV-PARAMS 10-19: ot_qkh_ktree SCALE); never sign-reinterpreted."""
+
+
+def _u32_literal(text):
+    m = re.fullmatch(r"(?:32\s*'\s*([hdb])\s*([0-9a-fA-F_]+)|(\d+))", text)
+    if not m:
+        return None
+    v = int(m[3]) if m[3] else int(m[2].replace('_', ''), dict(h=16, d=10, b=2)[m[1].lower()])
+    return v if 0 <= v < (1 << 32) else None
+
+
 def integer_defaults(source, module):
     text = re.sub(r'//[^\n]*|/\*.*?\*/', '', source, flags=re.S)
     m = re.search(r'\bmodule\s+' + re.escape(module) + r'\s*#\s*\((.*?)\)\s*\(', text, re.S)
     if not m:
         return {}
     result = {}
-    integer = False
+    kind = None
     for field in m[1].split(','):
         field = field.strip()
         if field.startswith('parameter'):
-            integer = bool(re.match(r'parameter\s+integer\s+', field))
-            field = re.sub(r'^parameter\s+integer\s+', '', field)
-        p = re.fullmatch(r'(\w+)\s*=\s*(-?\d+)', field)
-        if not integer or not p or not -(1 << 31) <= int(p[2]) < (1 << 31):
+            if re.match(r'parameter\s+integer\s+', field):
+                kind, field = 'int', re.sub(r'^parameter\s+integer\s+', '', field)
+            elif re.match(r'parameter\s*\[\s*31\s*:\s*0\s*\]\s*', field):
+                # unsigned 32-bit vector with a sized/decimal literal default: the only non-integer form admitted
+                kind, field = 'u32', re.sub(r'^parameter\s*\[\s*31\s*:\s*0\s*\]\s*', '', field)
+            else:
+                kind = None
+        p = re.fullmatch(r'(\w+)\s*=\s*(.+)', field)
+        if kind == 'int' and p and re.fullmatch(r'-?\d+', p[2]) and -(1 << 31) <= int(p[2]) < (1 << 31):
+            value = int(p[2])
+        elif kind == 'u32' and p and _u32_literal(p[2].strip()) is not None:
+            value = U32(_u32_literal(p[2].strip()))
+        else:
             raise ValueError(f'{module}: unsupported parameter declaration {field!r}')
         if p[1] in result:
             raise ValueError(f'{module}: duplicate parameter {p[1]}')
-        result[p[1]] = int(p[2])
+        result[p[1]] = value
     return result
 
 
@@ -44,9 +66,9 @@ def evaluated(overrides, defaults, module):
         if not isinstance(bits, str) or not re.fullmatch('[01]{32}', bits):
             raise ValueError(f'{module}.{name}: expected known 32-bit integer, got {bits!r}')
         value = int(bits, 2)
-        if bits[0] == '1':
+        if bits[0] == '1' and not isinstance(defaults[name], U32):
             value -= 1 << 32
-        values[name] = value
+        values[name] = U32(value) if isinstance(defaults[name], U32) else value
         literals[name] = "32'sb" + bits
     return values, literals
 
@@ -68,10 +90,11 @@ def preserve(root, module, overrides, rtl, view, profiles, diagnostic=False):
     if not defaults and not overrides:
         return {}, None
     profile = profiles.get(module)
-    if not isinstance(profile, dict) and diagnostic:
+    if not isinstance(profile, dict) and diagnostic and os.environ.get('OT_KV_PARAM_DIAG') == '1':
         # KV-GEN8 10-19 (OT_KV_PARAM_DIAG=1, DIAGNOSTIC only): no reviewed profile exists yet for this leaf.  Preserve
         # the exact evaluated parameters on the exact selected view/RTL identity, NEVER native-qualified; the chain
-        # stamps NOT_A_DIE_RESULT.  Strict runs still refuse here.
+        # stamps NOT_A_DIE_RESULT.  Strict runs still refuse here.  KV-PARAMS 10-19: only under OT_KV_PARAM_DIAG=1 itself;
+        # the plain --diagnostic-parameter-profiles fixture option still needs a supplied (unqualified) profile.
         profile = dict(parameters=values, identity=artifact_identity(root, view, rtl), diagnostic_autoprofile=True)
     if not isinstance(profile, dict):
         raise ValueError(f'{module}: missing selected parameter profile')
