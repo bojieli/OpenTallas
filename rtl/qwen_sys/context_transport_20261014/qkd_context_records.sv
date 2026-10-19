@@ -37,7 +37,7 @@ module qfd_host_native_context_rx(
  input wire[15:0]program_epoch,input wire[63:0]program_digest,
  input wire head_context_v,input wire[5:0]head_stage,
  input wire[17:0]head_token,head_position,input wire native_active,
- output reg host_epoch_valid,output wire[15:0]host_epoch,
+ output reg accepted_v,output reg host_epoch_valid,output wire[15:0]host_epoch,
  output reg[58:0]host_tag,output reg[1:0]host_gen,
  output reg host_fusedcap,output reg[15:0]host_image_epoch,output reg[63:0]host_image_digest,
  output reg fault
@@ -47,13 +47,14 @@ module qfd_host_native_context_rx(
  wire image_ok=program_ready&&rx_record[77:62]==program_epoch&&rx_record[141:78]==program_digest&&rx_record[61]==installed_fusedcap;
  assign host_epoch=host_tag[58:43];
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin host_epoch_valid<=0;host_tag<=0;host_gen<=0;host_fusedcap<=0;host_image_epoch<=0;host_image_digest<=0;fault<=0;end
+  if(!rst_n)begin accepted_v<=0;host_epoch_valid<=0;host_tag<=0;host_gen<=0;host_fusedcap<=0;host_image_epoch<=0;host_image_digest<=0;fault<=0;end
   else begin
+   accepted_v<=0;
    if(program_begin_v)begin host_epoch_valid<=0;if(native_active)fault<=1;end
    if(rx_v!==receive_slot)begin fault<=1;host_epoch_valid<=0;end
    if(receive_slot)begin
     if(rx_v!==1'b1||structure_ok!==1'b1||image_ok!==1'b1||native_active!==1'b0||program_begin_v!==1'b0||fault)begin fault<=1;host_epoch_valid<=0;end
-    else begin host_epoch_valid<=1;host_tag<=tag;host_gen<=rx_record[60:59];host_fusedcap<=rx_record[61];host_image_epoch<=rx_record[77:62];host_image_digest<=rx_record[141:78];end
+    else begin accepted_v<=1;host_epoch_valid<=1;host_tag<=tag;host_gen<=rx_record[60:59];host_fusedcap<=rx_record[61];host_image_epoch<=rx_record[77:62];host_image_digest<=rx_record[141:78];end
    end
    if(host_epoch_valid&&(!program_ready||program_epoch!=host_image_epoch||program_digest!=host_image_digest||installed_fusedcap!=host_fusedcap))begin host_epoch_valid<=0;if(native_active)fault<=1;end
    if(head_context_v&&head_stage>=1&&head_stage<=36)
