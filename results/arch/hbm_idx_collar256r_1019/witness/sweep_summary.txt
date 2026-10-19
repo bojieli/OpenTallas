@@ -1,0 +1,18 @@
+SUMMARY fan=0 mut=0 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=0 FAN32=0
+SUMMARY fan=0 mut=12 FAIL IDX256R_FAIL nonzero reserved row0 bit44 accepted MUT12
+SUMMARY fan=0 mut=13 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=13 FAN32=0
+SUMMARY fan=0 mut=14 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=14 FAN32=0
+SUMMARY fan=0 mut=1 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=1 FAN32=0
+SUMMARY fan=0 mut=2 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=2 FAN32=0
+SUMMARY fan=0 mut=3 FAIL IDX256R_FAIL control identity MUT3
+SUMMARY fan=0 mut=8 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=8 FAN32=0
+SUMMARY fan=0 mut=9 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=9 FAN32=0
+SUMMARY fan=1 mut=0 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=0 FAN32=1
+SUMMARY fan=1 mut=12 FAIL IDX256R_FAIL nonzero reserved row0 bit44 accepted MUT12
+SUMMARY fan=1 mut=13 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=13 FAN32=1
+SUMMARY fan=1 mut=14 FAIL IDX256R_FAIL control identity MUT14
+SUMMARY fan=1 mut=1 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=1 FAN32=1
+SUMMARY fan=1 mut=2 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=2 FAN32=1
+SUMMARY fan=1 mut=3 FAIL IDX256R_FAIL control identity MUT3
+SUMMARY fan=1 mut=8 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=8 FAN32=1
+SUMMARY fan=1 mut=9 PASS IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=9 FAN32=1

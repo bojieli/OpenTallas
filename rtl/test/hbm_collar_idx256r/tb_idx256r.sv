@@ -5,8 +5,10 @@
 // loaded row, rec on go); reference pw_addr[11:8]==0 on every write. Then a nonzero reserved bit in every reserved range
 // must fault the successor (reference does not), not load the row, and block a concurrent launch.
 // MUT=12 (reserved check disabled) must FAIL with IDX256R_FAIL.
+// L2H-PAD: FAN32=1 runs the same proof on the banked tile build; MUT 3/12/14 (go early / reserved off / record select) must FAIL.
 module tb_idx256r;
  parameter integer MUT=0;
+ parameter integer FAN32=0;   // L2H-PAD: 1 = the FAN32 banked tile configuration (kits hdie_col_idx256r_a/_b)
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0,cfg_v=0,desc_v=0,launch_v=0;
  reg [11:0] cfg_addr=0;reg[255:0]cfg_data=0;
@@ -15,7 +17,7 @@ module tb_idx256r;
  wire rd0,rd1,ac0,ac1,f0,f1;
  ot_hbm_static_cfg_collar_idx256 #(.PAGE_W(1),.NS(1),.NPR(6),.NREC(8),.NGO(2),.NB(2),.NF(5)) ref_c(
  .clk(clk),.clk_in(clk),.rst_n(rst_n),.tgt(8'd120),.cfg_v(cfg_v),.cfg_target(8'd120),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.launch_v(launch_v),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(we0),.pw_addr(a0),.pw_data(d0),.prm(p0),.start_v(s0),.go(g0),.rec(r0),.ready(rd0),.active(ac0),.fault(f0));
- ot_hbm_static_cfg_collar_idx256r #(.PAGE_W(1),.NS(1),.NPR(6),.NREC(8),.NGO(2),.NB(2),.NF(5),.MUT(MUT)) dut(
+ ot_hbm_static_cfg_collar_idx256r #(.PAGE_W(1),.NS(1),.NPR(6),.NREC(8),.NGO(2),.NB(2),.NF(5),.MUT(MUT),.FAN32(FAN32)) dut(
  .clk(clk),.clk_in(clk),.rst_n(rst_n),.tgt(8'd120),.cfg_v(cfg_v),.cfg_target(8'd120),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.launch_v(launch_v),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(we1),.pw_addr(a1),.pw_data(d1),.prm(p1),.start_v(s1),.go(g1),.rec(r1),.ready(rd1),.active(ac1),.fault(f1));
  // reserved masks per operand row (bit=1 reserved)
  function automatic [255:0] rmask(input integer r);
@@ -103,6 +105,6 @@ module tb_idx256r;
   @(negedge clk);cfg_addr=12'h802;cfg_data=bad;cfg_v=1;launch_v=1;
   @(negedge clk);cfg_v=0;launch_v=0;edges(5);
   if(!f1)$fatal(1,"IDX256R_FAIL concurrent reserved rejection");cases++;
-  $display("IDX256R_PASS cases=%0d reserved_rejects=%0d identity_edges=%0d writes=%0d launches=%0d MUT=%0d",cases,rejects,checks,writes,launches,MUT);$finish;
+  $display("IDX256R_PASS cases=%0d reserved_rejects=%0d identity_edges=%0d writes=%0d launches=%0d MUT=%0d FAN32=%0d",cases,rejects,checks,writes,launches,MUT,FAN32);$finish;
  end
 endmodule
