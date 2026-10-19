@@ -35,15 +35,15 @@
  ],
  "pins": {
   "W": [
+   "dh_run",
+   "rst_n",
+   "ck",
    "op_v",
    "op_user",
    "op_stage",
    "op_first",
    "op_cnt",
    "op_ff",
-   "ck",
-   "rst_n",
-   "dh_run",
    "op_fcode",
    "mu_fault",
    "dh_user",
@@ -52,6 +52,60 @@
   "N": [],
   "S": [],
   "E": []
+ },
+ "pin_ranges": {
+  "dh_run": [
+   3.0,
+   31.0
+  ],
+  "rst_n": [
+   31.5,
+   33.0
+  ],
+  "ck": [
+   33.5,
+   35.5
+  ],
+  "op_v": [
+   36.0,
+   37.5
+  ],
+  "op_user": [
+   37.5,
+   40.0
+  ],
+  "op_stage": [
+   40.0,
+   44.5
+  ],
+  "op_first": [
+   44.5,
+   51.5
+  ],
+  "op_cnt": [
+   51.5,
+   58.5
+  ],
+  "op_ff": [
+   58.5,
+   60.0
+  ],
+  "op_fcode": [
+   60.0,
+   63.0
+  ],
+  "mu_fault": [
+   63.0,
+   64.0
+  ],
+  "dh_user": [
+   64.0,
+   65.0
+  ],
+  "res_user": [
+   65.0,
+   66.5
+  ]
  },
  "recipe": 4,
  "hold_budget": "die",
@@ -68,14 +122,19 @@
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.025,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
- "structural_change": "NEW leaf (MU-LEAF-KIT 10-19, MU-QW-B1 4b): the Qwen ROM 4-user op-start observer leaf qfd_sys_face_mu_dhuser NU 4 OPSEG 1 PINREG 1 hardened on its own: one ot_rom_4096x72_m8 (v2 aligned, F16 image rom/qfd_tt_ctlm_opseg.viamap.hex, content-independent macro; ROM instance parameters dropped under SYNTHESIS) 20 um from the E edge (its E face carries PG rects: macro_edge rule) with its W pin edge toward a W std-cell band (~200 flops: fc/tc 44, prefetch entry ~55, outputs 31, header ~56), all pins on the W face, ck mid-face beside the register band. PINREG 1 (opt-in, default 0 unchanged): pin flop on dh_run[42:36], compensated anchor, op starts cycle-identical.",
+ "structural_change": "NEW leaf (MU-LEAF-KIT 10-19, MU-QW-B1 4b): the Qwen ROM 4-user op-start observer leaf qfd_sys_face_mu_dhuser NU 4 OPSEG 1 PINREG 1 hardened on its own: one ot_rom_4096x72_m8 (v2 aligned, F16 image rom/qfd_tt_ctlm_opseg.viamap.hex, content-independent macro; ROM instance parameters dropped under SYNTHESIS) 20 um from the E edge (its E face carries PG rects: macro_edge rule) with its W pin edge toward a W std-cell band (~200 flops: fc/tc 44, prefetch entry ~55, outputs 31, header ~56), all pins on the W face, ck mid-face beside the register band. PINREG 1 (opt-in, default 0 unchanged): pin flop on dh_run[42:36], compensated anchor, op starts cycle-identical. MU-LEAF-KIT2 10-19: (1) PINREG 1 lands ROM rd_out in a 72-flop capture register rq before any decode (gate k1 TT -134 ps: rom_q -> header/entry decode -> regs and -> ROM address); op starts unchanged (fire edge t_rom), compiler LEAF_MIN_GAP 2 -> 3 (F16 image min gap 7, unchanged). (2) pins spread over the full W face (3..66.5 um) with per-port pin_ranges + pin_balance (dh_run low, ck/rst_n mid, outputs high) instead of one region bunched low.",
  "slot_change_request": "none: new observer leaf, no die slot yet; the compute-die integration (MU.TOK.QW B3) places it beside the qfd_tt_ctlm_dv cluster's dh_q register (it observes seq_dh only).",
  "job": {
-  "owner": "Claude:MU-LEAF-KIT",
-  "branch": "claude/mu-leaf-kit-1019",
-  "tag": "k1",
+  "owner": "Claude:MU-LEAF-KIT2",
+  "branch": "claude/mu-leaf-kit2-1019",
+  "tag": "k2",
   "cycles_added": 0,
   "purpose": "Qwen ROM 4-user op-start leaf (MU-QW-B1 B1 option 2) as its own hard leaf: ROM + frame counter; lockstep PINREG 1 vs PINREG 0 on the F16 image, 2 frames (8.09M edges, 8,113 starts), +DRIFT fault equivalence, 4 mutants FAIL.",
   "views_to": "physical/ref_tile/qfd_sys_face_mu_dhuser/views",
