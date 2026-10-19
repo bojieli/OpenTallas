@@ -188,7 +188,11 @@ def main():
                    'rows: the 27-edge per-frame span VM re-read -> DEL0) + drain (~20) + TX (~41) exceed 64; the 128-row issuer '
                    'is what makes RS(P >= 16) one programme. Issuer leaf (ot_hgi_coll_issuer_m: 3 -> 6 64x512 macros, 128:1 '
                    'reads), fj programme target leaves and the v8g parent need re-gate at ROWS 128 / AR_ITER 1 (not submitted).']
-                   if rs_cmp else []) + ['A production-P reduce step does not fit one 64-row static_issuer_v6 programme: AR fields (load/read/pub tags, '
+                   if rs_cmp else []) + (['XDIE-HBM4 item 3 (delivery-offset edge) CLOSED: the ctl_v5 delivery_obase pin lands on the DEL0 '
+                   'valid edge when the compiler programs del_obase ONE row after the sink row (--del-edge 1); with the offset '
+                   'CHECKED (+ADRCHK) qa_ag16 / qa_rs64 / qa_rs32 / qa_rs16 / da_rs48 / da_ag48 PASS with adr_bad 0/0 and the '
+                   'same E; the del-edge-0 programme FAILS under the check (m_adr0). Compiler fix, no RTL change '
+                   '(step_cosim4/adr).'] if (Path(a.run4) / 'adr' / 'qa_rs64_pass.log').exists() else []) + ['A production-P reduce step does not fit one 64-row static_issuer_v6 programme: AR fields (load/read/pub tags, '
                          'pub_index) have no iteration step, so a loop body must span the tag lifetime (load -> pub_issue 12 edges -> '
                          '>= 7 tags, 14+ rows) and prologue/epilogue are ~27 rows each: rs8 needs 70 rows, rs16 96, rs64 117 '
                          '(compiler capacity assert). AG steps fit (64 frames: 50 rows) with iterated link seq / VM sector / '
