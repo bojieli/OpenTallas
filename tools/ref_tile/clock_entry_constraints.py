@@ -1790,3 +1790,47 @@ def direct_body(body, direct):
     masters = sorted({e['master'] for e in direct['entries']})
     return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
             + direct['bindings_tcl'] + body)
+
+
+# Generated clocks retain their actual phase/scenario constraints. This only
+# expands physical ownership/census; it creates no timing exceptions.
+CLOCK_FAMILY_TCL = (Path(__file__).resolve().parents[2] /
+                    "physical/common_flow/clock_family.tcl").read_text()
+
+def _clock_family_body(body):
+    for marker in ("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                   "set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                   "  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {",
+                   "proc ot_ce_clock_wire {pin clock} {"):
+        if body.count(marker) != 1:
+            raise ValueError("clock-entry body changed; revalidate generated-clock family extension")
+    body = body.replace("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                        "  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }\n  ot_cf_refresh")
+    body = body.replace("set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                        "lassign [ot_cf_pins $clock] pins ot_ce_family_owners")
+    body = body.replace("foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {",
+                        "lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners\n    foreach pin $ot_ce_family_pins {")
+    body = body.replace("foreach c [all_clocks] {lappend actual [get_full_name $c]}",
+                        "foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}")
+    body = body.replace("  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {\n      set an [get_full_name $a]; set bn [get_full_name $b]",
+                        "  set ot_ce_family_clocks {}\n  foreach c [all_clocks] {\n    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}\n  }\n  foreach a $ot_ce_family_clocks {\n    foreach b $ot_ce_family_clocks {\n      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]")
+    body = body.replace("proc ot_ce_clock_wire {pin clock} {",
+                        "proc ot_ce_legacy_clock_wire {pin clock} {")
+    # Existing ordinary-clock selection/pre-CTS semantics stay unchanged.
+    wrapper = r'''
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
+'''
+    return CLOCK_FAMILY_TCL + wrapper + body
+
+BODY = _clock_family_body(BODY)
+LEAF_BODY = _clock_family_body(LEAF_BODY)
+LANDED_BODY = _clock_family_body(LANDED_BODY)
