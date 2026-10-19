@@ -1,0 +1,127 @@
+{
+  "schema": "opentallas.s81_dieplace.geometry.v1",
+  "source_commit": "f282cac9e",
+  "base_commit": "6050bfac9",
+  "default_plan_sha256": "a92f7ab89fd50423d6f3b8d34885bba752d7dc86f1f16635712ce31ff1e419d5",
+  "placefix_plan_sha256": "a97bb62d4f49e4517b9f9e6dfd3a9ea55d9f6156e7e793b2fcd86293ac3175ce",
+  "default_byte_identical": true,
+  "service_slots_preserved": true,
+  "every_block_size_preserved": true,
+  "outline_preserved": true,
+  "north_frame_clearance_um": 310.5600000000013,
+  "base_band": {
+    "bit_mm": 32.2,
+    "est_on_body_repeaters": 201,
+    "top": {
+      "mu_0S": 21.8,
+      "mu_7S": 10.4
+    },
+    "relay_overlaps": 74,
+    "relay_overlap_pairs": {
+      "mu_0N|rt_0N": 30,
+      "jw_E_l0|jw_E_l1": 11,
+      "hf_7N_l1|hf_7N_l2": 9,
+      "jw_W_l0|jw_W_l1": 6,
+      "hrd_05|hrq_05": 3,
+      "hrd_03|hrq_03": 3,
+      "hrd_15|hrq_15": 3,
+      "jd_W|jw_E_l0": 2,
+      "hrd_01|mu_0S": 2,
+      "hrd_01|hrq_01": 2
+    },
+    "rule": "MU-DIE-S81/PATH: hop band = max(bits x 0.096 + 3, relay across) um, station = relay body; 160-um repeater pitch"
+  },
+  "placefix_band": {
+    "bit_mm": 0.0,
+    "est_on_body_repeaters": 0,
+    "top": {},
+    "relay_overlaps": 0,
+    "relay_overlap_pairs": {},
+    "rule": "MU-DIE-S81/PATH: hop band = max(bits x 0.096 + 3, relay across) um, station = relay body; 160-um repeater pitch"
+  },
+  "station_changes": {
+    "hrd_01": {
+      "before": 5,
+      "after": 6,
+      "added": 1
+    },
+    "jw_E_l1": {
+      "before": 24,
+      "after": 27,
+      "added": 3
+    },
+    "jw_W_l0": {
+      "before": 33,
+      "after": 37,
+      "added": 4
+    },
+    "jw_W_l1": {
+      "before": 33,
+      "after": 37,
+      "added": 4
+    },
+    "hf_7N_l0": {
+      "before": 58,
+      "after": 66,
+      "added": 8
+    },
+    "hf_7N_l1": {
+      "before": 59,
+      "after": 66,
+      "added": 7
+    },
+    "hf_7N_l2": {
+      "before": 59,
+      "after": 67,
+      "added": 8
+    },
+    "ht_7N": {
+      "before": 60,
+      "after": 68,
+      "added": 8
+    },
+    "jd_W": {
+      "before": 32,
+      "after": 33,
+      "added": 1
+    },
+    "rt_0N": {
+      "before": 66,
+      "after": 75,
+      "added": 9
+    },
+    "mu_0S": {
+      "before": 76,
+      "after": 86,
+      "added": 10
+    },
+    "mu_7S": {
+      "before": 69,
+      "after": 78,
+      "added": 9
+    }
+  },
+  "model": {
+    "relays": {
+      "before": 3113,
+      "after": 3185
+    },
+    "relay_bit_stages": {
+      "before": 843266,
+      "after": 863424
+    },
+    "bit_mm": {
+      "before": 395325,
+      "after": 395674
+    },
+    "worst_cut": {
+      "before": 0.5663,
+      "after": 0.5663
+    },
+    "over_reach_bits": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  "state": "GEOMETRY_PASS_PHYSICAL_REPLAY_PENDING_NOT_A_GATE"
+}
