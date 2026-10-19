@@ -21,6 +21,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
+ input wire [3:0]return_pair_clk,
  input wire [1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
  input wire reserve_v,output wire reserve_ready,input wire[31:0]reserve_base,
  input wire[14:0]reserve_row_base,input wire[11:0]reserve_total,
