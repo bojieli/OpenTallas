@@ -57,7 +57,7 @@ def derive(run,plan,source):
         if params:raise ValueError('reset standard has parameters')
         a,b=bits(ports['a']),bits(ports['b'])
         if len(a)!=1 or len(b)!=1:raise ValueError('reset standard width')
-        edges.setdefault(b[0],[]).append(dict(instance=inst,input_bit=list(a[0]),output_bit=list(b[0]),output_pin_xy=point(inst,'b'),clock=ports['ck']))
+        edges.setdefault(b[0],[]).append(dict(instance=inst,input_bit=list(a[0]),output_bit=list(b[0]),output_pin_xy=point(inst,'b'),clock=ports['ck'],clock_bit=list(bits(ports['ck'])[0])))
     if len(host)!=1:raise ValueError('exact host root not present')
     view=source/'physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join/qkd_astk_fault_join.lef'
     text=view.read_text();m=re.search(r'PIN rst_n\s+(.*?)END rst_n',text,re.S)
@@ -76,10 +76,12 @@ def derive(run,plan,source):
         if len(root_region)>1:raise ValueError('multiple regional reset roots')
         host_root=len(root_ports)==1 and bool(re.match(r'^n_(rst_|hboot)',root[0]))
         qualified=host_root or bool(root_region)
-        root_info=(dict(instance='host',port=root_ports[0],kind='HOST_OUTPUT',clock=host[0].get('ck_rst'),native_clock_port='ck_rst') if host_root else
+        root_info=(dict(instance='host',master='qkd_host_rt',port=root_ports[0],kind='HOST_OUTPUT',clock=host[0].get('ck_rst'),native_clock_port='ck_rst') if host_root else
                    dict(root_region[0],kind='REGIONAL_REGISTERED_RELEASE') if root_region else None)
         if qualified:
             root_info['id']=root_info['instance']+'.'+root_info['port']+':'+str(root)
+            root_info['root_id']=root_info['id']
+            root_info['clock_bit']=list(bits(root_info['clock'])[0]) if root_info.get('clock') else None
             root_info['output_bit']=list(root)
             expr=host[0][root_info['port']] if host_root else next(c[root_info['port']] for _,i,_,c in insts if i==root_info['instance'])
             index=list(reversed(P.expr_bits(expr,nets))).index(root)
@@ -93,10 +95,20 @@ def derive(run,plan,source):
             inherited_release=path,root_instance=root_info['instance'] if qualified else None,root_port=root_info['port'] if qualified else None,root_details=root_info,
             status='EXISTING_DEPTH_MEASURED_ADDITIVE_BRANCH_PENDING' if qualified else 'BLOCKED_UNKNOWN_RESET_ROOT',
             required_target_depth=path['registered_depth'] if qualified else None))
+    relevant={tuple(load['inherited_release']['root_bit']):load['root_details'] for load in loads if load['root_details']}
+    all_nodes={}
+    for info in relevant.values():
+        all_nodes[(info['id'],tuple(info['output_bit']))]=dict(info)
+    for bit,entries in edges.items():
+        path=trace_reset(bit,edges);info=relevant.get(tuple(path['root_bit']))
+        if info is None:continue
+        entry=dict(entries[0]);entry.update(root_id=info['id'],depth_from_root=path['registered_depth'],master='qkd_rlys_1',port='b')
+        all_nodes[(info['id'],bit)]=entry
     return dict(schema='opentallas.kv_fault_reset_loads.v1',status='REVIEW_ONLY_RESET_ADMISSION_OPEN',
         input_die_sha256=I.digest(die),native_lef_sha256=I.digest(view),
         input_place_sha256=I.digest(run/'case_kv/place.tcl'),input_lef_sha256=I.digest(run/'case_kv/elements.lef'),
         candidate_normalized_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True,separators=(',',':')).encode()).hexdigest(),loads=loads,
+        existing_reset_nodes=list(all_nodes.values()),existing_reset_node_count=len(all_nodes),
         load_count=len(loads),unknown_root_loads=sum(x['root_instance'] is None for x in loads),
         constraints=['Preserve every existing reset load and release edge',
                      'Depth is relative to exact host or regional output; it does not imply an equal global release edge',
