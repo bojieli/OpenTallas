@@ -97,6 +97,31 @@ def _concat(text, lhs_re):
     return [t.strip() for t in re.sub(r'//[^\n]*', '', m.group(1)).split(',')]
 
 
+# MU-QW-DIE 10-19: the landed re-cut qfd_tt_ctlm_dv_lpf (and its generated _lp) packs inside the wires-only child
+# u_thru (a wires-only parent cannot hold a clock-less instance): hr's top field is then a child OUTPUT port whose module
+# (in PARTS) drives it straight from qfd_dv_hr_pack #(ASBUILT 0).
+PARTS = ['rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv']
+
+
+def _child_packed(root: Path, t: str, top: str) -> bool:
+    for m in re.finditer(r'\b(\w+)\s+(?:#\s*\([^;]*?\)\s*)?\w+\s*\(([^;]*?)\)\s*;', t, re.S):
+        pm = re.search(r'\.(\w+)\(\s*' + re.escape(top) + r'\s*\)', m.group(2))
+        if not pm:
+            continue
+        for f in PARTS:
+            fp = root / f
+            if not fp.exists():
+                continue
+            src = re.sub(r'//[^\n]*', '', fp.read_text())
+            mm = re.search(r'\bmodule\s+' + re.escape(m.group(1)) + r'\b(.*?)\bendmodule\b', src, re.S)
+            if not mm:
+                continue
+            inst = re.search(r'qfd_dv_hr_pack\s*#\s*\(\s*\.ASBUILT\(\s*0\s*\)\s*\)\s*\w+\s*\(([^;]*?)\)\s*;', mm.group(1), re.S)
+            if inst and re.search(r'\.hr\(\s*' + re.escape(pm.group(1)) + r'\s*\)', inst.group(1)):
+                return True
+    return False
+
+
 def check(root: Path, ctlms, die_v=None):
     errs, info = [], {}
     # producer order
@@ -144,6 +169,8 @@ def check(root: Path, ctlms, die_v=None):
         top = a.group(1)
         inst = re.search(r'qfd_dv_hr_pack\s*(#\s*\(([^;]*?)\))?\s*\w+\s*\(([^;]*?)\)\s*;', t, re.S)
         packed = bool(inst and re.search(r'\.hr\(\s*' + re.escape(top) + r'\s*\)', inst.group(3)))
+        if not packed:
+            packed = _child_packed(root, t, top)
         asb = inst and inst.group(2) and re.search(r'\.ASBUILT\(\s*([^)]*)\)', inst.group(2))
         if asb:
             pn = asb.group(1).strip()

@@ -6,6 +6,8 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
     parameter integer DMUT = 0;
     parameter integer CYC = 4000;
     parameter integer NU = 4;                   // MU-ADOPT-CTLM 10-19: both sides at the cluster's NU, random dh_user
+    parameter integer OPSEG = 0;                // MU-QW-DIE 10-19: both sides OPSEG (leaf ROM empty -> leaf fault path;
+                                                // random DW5 / DW6 -> context record check / load; DMUT 29 must FAIL)
     reg ck = 1'b0; always #0.5 ck = ~ck;
     reg rst_n = 1'b0;
     reg [1:0] dh_user;
@@ -14,12 +16,12 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
     wire [5:0] a_cs, b_cs; wire [75:0] a_cpo, b_cpo; wire [68:0] a_cdo, b_cdo; wire a_cir, b_cir; wire [55:0] a_dc, b_dc;
     wire [379:0] a_nc, b_nc; wire [452:0] a_hr, b_hr; wire [115:0] a_cmd, b_cmd; wire a_es, b_es; wire [17:0] a_et, b_et;
     wire a_cf, b_cf;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .HARD_HR(1), .MUT(DMUT), .NU(NU)) u_a (.ck(ck), .rst_n(rst_n),
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .HARD_HR(1), .MUT(DMUT), .NU(NU), .OPSEG(OPSEG)) u_a (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(a_program_obs), .control_stores_ready(a_csr),
         .layer_context_v(a_lcv), .native_tok(a_nt), .native_pos(a_np), .command_stage(a_cs), .cal_program_obs(a_cpo),
         .cal_descriptor_obs(a_cdo), .cal_image_ready(a_cir), .dc(a_dc), .native_cmd(a_nc), .native_ret(native_ret),
         .hr(a_hr), .cmd(a_cmd), .ss5(ss5), .ag5(ag5), .emb_start(a_es), .emb_token(a_et), .cf(a_cf));
-    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .NU(NU)) u_b (.ck(ck), .rst_n(rst_n),
+    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .NU(NU), .OPSEG(OPSEG)) u_b (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(b_program_obs), .control_stores_ready(b_csr),
         .layer_context_v(b_lcv), .native_tok(b_nt), .native_pos(b_np), .command_stage(b_cs), .cal_program_obs(b_cpo),
         .cal_descriptor_obs(b_cdo), .cal_image_ready(b_cir), .dc(b_dc), .native_cmd(b_nc), .native_ret(native_ret),

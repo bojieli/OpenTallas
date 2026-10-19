@@ -15,8 +15,8 @@
 // Every input port is landed from the core region (port_regions), so the die presents all inputs on the flat schedule.
 // MU-QW-DIE 10-19: u_gi takes qfd_tt_ctlm_dv's OPSEG (MU-QW-B1 op-granular filler starts from the op-start leaf, explicit
 //   calendar ranges, per-user stage bank on leaf starts, filler result -> its tok / pos bank, dc user-0 gate) and the boot
-//   context record (coordinator 0ka: CTX_DW, image DW5 / DW6 -> filler banks on the seal edge).  The leaf itself is a
-//   sibling child of the flat parent (u_leaf, core region; its own hard tile, MU-LEAF-KIT) fed by dh_run_o = dh_q[43:0];
+//   context record (coordinator 0ka: CTX_DW, image DW5 / DW6 -> filler banks on the seal edge).  The leaf
+//   qfd_sys_face_mu_dhuser #(OPSEG 1) is g_op.u_leaf in here (its own hard tile, MU-LEAF-KIT), observing dh_q[43:0];
 //   op_fault (leaf fault | start collision | bad context record) rides the dcs start_fault bit (both OR into core_fault,
 //   as in qfd_tt_ctlm_dv).  OPSEG 0: the leaf inputs are tied 0 and every edge is the previous u_gi.
 // =====================================================================================================================
@@ -27,18 +27,13 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer UVM_STRIDE = 4096,
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
-    parameter integer OPSEG = 0
+    parameter integer OPSEG = 0,
+    parameter string  OPSEG_VIAMAP = "",
+    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
 ) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [186:0]  dh,
-    output wire [43:0]   dh_run_o,               // OPSEG: dh_q[43:0] to the op-start leaf (u_leaf dh_run)
-    input  wire          op_v,                   // OPSEG: the leaf's registered op start {user, stage, first, cnt}
-    input  wire [1:0]    op_user,
-    input  wire [5:0]    op_stage,
-    input  wire [9:0]    op_first,
-    input  wire [9:0]    op_cnt,
-    input  wire          op_lfault,              // OPSEG: the leaf's sticky mu_fault
     input  wire [1:0]    dh_user,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
@@ -73,7 +68,15 @@ module qfd_tt_ctlm_dv_gi #(
     localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
     localparam integer NF = (NU > 1) ? NU - 1 : 1;
     wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
-    assign dh_run_o = dh_q[43:0];
+    wire        op_v, op_lfault; wire [1:0] op_user; wire [5:0] op_stage; wire [9:0] op_first, op_cnt;
+    generate if (OPS != 0) begin : g_op
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
+            u_leaf (.ck(ck), .rst_n(rst_n), .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(op_lfault), .op_v(op_v),
+            .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(), .op_fcode());
+    end else begin : g_no_op
+        assign op_v = 1'b0; assign op_lfault = 1'b0; assign op_user = 2'd0; assign op_stage = 6'd0;
+        assign op_first = 10'd0; assign op_cnt = 10'd0;
+    end endgenerate
     wire        d_start = dh_q[42];
     wire [5:0]  d_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
@@ -279,6 +282,8 @@ module qfd_tt_ctlm_dv_thru (
     input  wire          cal_image_ready_i,
     input  wire          emb_start_i,
     input  wire [17:0]   emb_token_i,
+    input  wire [379:0]  ib_i,                   // QW-DIEFIX 10-19: the head's registered ROM command (cmd380 order)
+    output wire [379:0]  ib_hr,                  //   -> hr[452:73] in the slice layout (qfd_dv_hr_pack, zero logic)
     output wire [115:0]  cmd,
     output wire [75:0]   cal_program_obs,
     output wire [68:0]   cal_descriptor_obs,
@@ -292,6 +297,7 @@ module qfd_tt_ctlm_dv_thru (
     assign cal_image_ready = cal_image_ready_i;
     assign emb_start = emb_start_i;
     assign emb_token = emb_token_i;
+    qfd_dv_hr_pack #(.ASBUILT(0)) u_hr_pack (.cmd(ib_i), .hr(ib_hr));
     wire unused = &{1'b0, ck, rst_n};
 endmodule
 

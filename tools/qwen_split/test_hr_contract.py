@@ -77,6 +77,21 @@ class T(unittest.TestCase):
             errs, _ = H.check(r, H.CTLM)
             self.assertTrue(any('differs from the generated' in e for e in errs), errs)
 
+    def test_lpf_child_pack(self):
+        # MU-QW-DIE 10-19: the landed re-cut packs in its wires-only child u_thru; an as-built child must fail
+        with tempfile.TemporaryDirectory() as td:
+            r = Path(td)
+            for s in SRC + H.PARTS:
+                if (ROOT / s).exists():
+                    (r / s).parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy(ROOT / s, r / s)
+            errs, info = H.check(r, H.CTLM)
+            self.assertTrue(info['ctlm'][H.CTLM[1]]['packed'], errs)
+            pp = r / H.PARTS[0]
+            pp.write_text(pp.read_text().replace('qfd_dv_hr_pack #(.ASBUILT(0))', 'qfd_dv_hr_pack #(.ASBUILT(1))'))
+            errs, _ = H.check(r, H.CTLM)
+            self.assertTrue(any(H.CTLM[1] in e and 'raw cmd380' in e for e in errs), errs)
+
     def test_die_trace(self):
         dv = """  wire [452:0] h0;
   wire [452:0] h1;
