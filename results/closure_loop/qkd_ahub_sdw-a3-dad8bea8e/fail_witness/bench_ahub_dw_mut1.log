@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_ahub_sdw-a3-dad8bea8e bench bench_ahub_dw_mut1 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_ahub_sdw-a3-dad8bea8e log cl/bench_ahub_dw_mut1.a1b1.log captured 2026-10-18T23:31:04-07:00
+# fail_regex '^AHUB_DW FAIL mut=1 errors='
+AHUB_DW FAIL mut=1 first error cycle 742 pass 0: fr not on pvfin's R slot
+AHUB_DW FAIL mut=1 errors=2427

@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_ahub_sdw-a3-dad8bea8e bench bench_ahub_dw_mut3 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_ahub_sdw-a3-dad8bea8e log cl/bench_ahub_dw_mut3.a1b1.log captured 2026-10-18T23:33:12-07:00
+# fail_regex '^AHUB_DW FAIL mut=3 errors='
+AHUB_DW FAIL mut=3 first error cycle 741 pass 0: rz_epoch at pvfin.fr != pass epoch
+AHUB_DW FAIL mut=3 errors=2427
