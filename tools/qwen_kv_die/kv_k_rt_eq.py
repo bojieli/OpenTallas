@@ -118,23 +118,29 @@ def equalize_vport_sides(K, m):
 # ks_pvfst (kvs_attn.pvfst -> pvfin.fs, 65 b) and the pair result trunks on ks_pvp<p> (pvw_p.pr -> pvfin.p<p>); its slot
 # ages assume the start lands exactly when the pair streams do:  D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) == 0
 # (kv_static_params.schedule pvfin_start_align, PV_LEAD = max D(ks_pvst) to pvw_0 / pvw_1).  Not boot-programmable
-# (KV-BOOTAGE): the generator pads the start word up to the stream -- pads = max(0, -min_p align_p) core-clock relay
-# stations on ks_pvfst at its sink end (kv_bundle_eq machinery: the launch pin's clock trunk, every hop within reach,
-# legal free frames; kv_fwd_lanes / kv_lane_stations then give them their lane roles like every other pad).  A start word
-# that is LATER than the streams (align > 0) is not padded here (it would pad the 534-b pvp trunks): it stays a recorded
-# PVFIN_START_ALIGN FAIL.  Every consumer of D(ks_pvfst) (F_DLY, the hub's FR_OFS, the boot-age image) reads the padded
-# relay_stages / the post-station netlist table, never a constant.
+# (KV-BOOTAGE): the generator pads every member up to T = max(D(ks_pvfst) - PV_LEAD, D(ks_pvp_0), D(ks_pvp_1)) with
+# core-clock relay stations at its sink end (kv_bundle_eq machinery: the launch pin's clock trunk, every hop within reach,
+# legal free frames; kv_fwd_lanes / kv_lane_stations then give them their lane roles like every other pad).  The start
+# word gets T - (D(ks_pvfst) - PV_LEAD), a shorter pair trunk T - D(ks_pvp_p) (kvs14r-bccc561e3-pvfst plan: pvp_0 = pvp_1 + 1,
+# so a pvfst-only pad moved the skew to pair 1).  The pass fails closed if the plan is not [0, 0] after it.  Every
+# consumer of D(ks_pvfst) (F_DLY, the hub's FR_OFS, the boot-age image) reads the padded relay_stages / the post-station
+# netlist table, never a constant.
 def pvfin_align_on():
     return os.environ.get('OT_KV_PVFIN_ALIGN', '1') == '1'
 
 
 def pvfin_pads(paths):
-    """{path key: age} (kv_static_params.plan_paths / table_paths) -> (pads on ks_pvfst, align per pair before)"""
+    """{path key: age} (kv_static_params.plan_paths / table_paths) -> ({'pvfst'|'pvp_0'|'pvp_1': pads}, align per pair before).
+    Target T = max(D(ks_pvfst) - PV_LEAD, D(ks_pvp_0), D(ks_pvp_1)); every member is padded up to it, so the start word and
+    BOTH pair trunks land on the same edge (pvp0 == pvp1 is a structural equality: one pvfin slot law for both pairs)."""
     import kv_static_params as KSP
     al = KSP.schedule(paths)['attn']['pvfin_start_align']
     if None in al:
         return None, al
-    return max(0, -min(al)), al
+    PL = max(paths['pvst_0'], paths['pvst_1'])
+    s0 = paths['pvfst'] - PL
+    T = max(s0, paths['pvp_0'], paths['pvp_1'])
+    return dict(pvfst=T - s0, pvp_0=T - paths['pvp_0'], pvp_1=T - paths['pvp_1']), al
 
 
 def equalize_pvfin_start(K, m):
@@ -145,19 +151,20 @@ def equalize_pvfin_start(K, m):
     pads, before = pvfin_pads(KSP.plan_paths(m))
     if pads is None:
         raise ValueError(f'kv_pvfin_align: unresolved pvfin start path (align {before}): fail closed')
-    rec = dict(before=before, pads=pads)
+    mem = {('kvs_attn', 'pvfst', 'pvfin'): 'pvfst', ('pvw_0', 'pr', 'pvfin'): 'pvp_0', ('pvw_1', 'pr', 'pvfin'): 'pvp_1'}
+    walk_ = {}
 
     def plan_fn(name, stages, walk):
-        (mem, q), = stages.items()
-        rec['pvfst_walk'] = q
-        return {mem: pads}
-    if pads:
-        m = BEQ.equalize(K, m, bundles={'PV.fin_start': [('kvs_attn', 'pvfst', 'pvfin')]}, plan_fn=plan_fn,
-                         record_key='pvfin_align',
-                         rule='pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_p); the start word padded at its '
-                              'sink end (tools/qwen_kv_die/kv_k_rt_eq.py equalize_pvfin_start)')
+        walk_.update({mem[k]: v for k, v in stages.items()})
+        return {k: pads[mem[k]] for k in stages}
+    if any(pads.values()):
+        m = BEQ.equalize(K, m, bundles={'PV.fin_start': list(mem)}, plan_fn=plan_fn, record_key='pvfin_align',
+                         rule='pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_0) == D(ks_pvp_1); the shorter members '
+                              'padded at their sink end (tools/qwen_kv_die/kv_k_rt_eq.py equalize_pvfin_start)')
     else:
         m['pvfin_align'] = dict(bundles={}, added=[])
     after = KSP.schedule(KSP.plan_paths(m))['attn']['pvfin_start_align']
-    m['pvfin_align'].update(before=before, pads=pads, after=after, pvfst_walk=rec.get('pvfst_walk'))
+    m['pvfin_align'].update(before=before, pads=pads, after=after, walk=walk_)
+    if after != [0, 0]:
+        raise ValueError(f'kv_pvfin_align: pvfin start still misaligned after the pads: {before} -> {after} ({pads})')
     return m

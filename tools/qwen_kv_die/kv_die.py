@@ -1675,7 +1675,7 @@ def build(*args, **kwargs):
     if KSD.ON and KSD.PVFIN and kv_k_rt_eq.pvfin_align_on() and kwargs.get('split', len(args) > 7 and args[7]):
         m = kv_k_rt_eq.equalize_pvfin_start(sys.modules[__name__], m)     # KV-PVFST: pvfin start word on the PV streams
         r_ = m.get('pvfin_align') or {}
-        print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, {r_.get('pads', 0)} pad relays on ks_pvfst",
+        print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, pads {r_.get('pads')}",
               file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
