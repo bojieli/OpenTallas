@@ -19,7 +19,10 @@ P = 4 RULES (results/arch/hbm_next_1019/cmtp/isa_rows.md, HGI-1R):
         distinct x in a layer segment (the x-slot store keeps it for the other records) + (N - 1) x the publish beats
         on every SM record.  PRICED estimate, labelled.
   coll  COLL delivery lanes L (STUDY (a): L = 5 adopted, the widest the SerDes feeds; D1 4).
-  hc    HC further-row II (STUDY (d): 250 priced HCP x6 = D1; UNITS gate <= 950, target 600).
+  hc    HC further-row II: MEASURED 250.0 (HBM-NEXT-UNITS tb_hnx_hc_eng4, hnx RTL root + 4 ring quarters, Verilator
+        5.050, bit-exact N = 1, 2, 3, 4, 6, 8: HC_MIX 998 + 250 (N - 1); results/arch/hbm_next_1019/units/hc/README.md).
+        It replaces both the priced HCP x6 II (250, D1) and the stale measured static-engine II (4,385, codex 128-lane
+        engine the die does not bind) in the d4g row_ii; 600 / 950 kept as sensitivities only.
   vm    VM-resident N columns (D1 / VM grown) or as-built column swaps (STUDY (b)).
 
     PYTHONPATH=tools python3 tools/hbm_next/plane_compiler.py retime --out DIR [--jobs N]   (fleet: ~20-40 min)
@@ -34,6 +37,7 @@ import hashlib
 import json
 import math
 import multiprocessing as mp
+import re
 import sys
 from pathlib import Path
 
@@ -56,12 +60,23 @@ class Knobs:
     union_hist: bool = False     # measured lane histogram for the union experts (D1: mean P_e)
     m1: bool = False             # x-load + publish beats (D1: not priced)
     coll_lanes: int = 4          # D1 4, STUDY 5
-    hc_ii: float = 250.0         # D1 HCP x6 250
+    hc_ii: float = 250.0         # MEASURED (UNITS tb_hnx_hc_eng4, 250.0 cycles a further row); D1 priced the same 250
     vm_grown: bool = True        # D1: N columns VM-resident (grown VM); False = as-built column swaps
+    # SM area options (step 2, SM4 lever table; defaults = the P = 4 headline, identity on every earlier case)
+    P: int = 4                   # accumulator lanes a MAC column (= MTP / users lanes); P3a: 3
+    bf16_lanes: int = 0          # lanes on the BF16 column (0 = P; option (b): 1 -> BF16 SM.MATVEC records (fmt 0) and
+    #                              the SM attention (option B, on the BF16 column per ATT4 geometry) get 1 lane)
+    att_single: str = "record"   # with 1 attention lane: "record" = each position / user its own single-query
+    #                              record (the as-built d4g engine: N x the full measured span); "rows" = one row
+    #                              record with the fixed spans once (optimistic sensitivity)
 
     def tag(self):
         return (f"rpl{int(self.rpl)}_uh{int(self.union_hist)}_m1{int(self.m1)}_L{self.coll_lanes}_hc{int(self.hc_ii)}"
-                f"_vm{'G' if self.vm_grown else 'S'}")
+                f"_vm{'G' if self.vm_grown else 'S'}_P{self.P}_bf{self.bf16_lanes or self.P}")
+
+    @property
+    def att_lanes(self):
+        return self.bf16_lanes or self.P
 
 
 D1 = Knobs()
@@ -116,20 +131,23 @@ def post_sm(out, N, lanes, union, topk, kn: Knobs, hist):
         if key != seg:
             seen_x, seg = set(), key
         K, fmt, nc, rows_sm, esz = _sm_shape(c)
+        rl = kn.bf16_lanes if (fmt == 0 and kn.bf16_lanes) else lanes      # this record's lanes (option (b))
+        if rl != lanes:
+            notes["bf16_1lane"] = notes.get("bf16_1lane", 0) + 1
         if c.mtp_kind == "shared":
             f_d1 = max(1.0, math.ceil(N / lanes) / V.HBM_RATIO)
             base = c.base_cost / f_d1
-            f = sm_issue_factor(N, lanes, nc, rows_sm, kn.rpl)
+            f = sm_issue_factor(N, rl, nc, rows_sm, kn.rpl)
             nrow = N
             notes["sm_shared"] += 1
         else:
             f_d1 = max(1.0, math.ceil(math.ceil(pe) / lanes) / V.HBM_RATIO)
             base = c.base_cost / f_d1
             if kn.union_hist and hist:
-                f = sum(fr * sm_issue_factor(h, lanes, nc, rows_sm, kn.rpl) for h, fr in hist.items())
+                f = sum(fr * sm_issue_factor(h, rl, nc, rows_sm, kn.rpl) for h, fr in hist.items())
                 nrow = sum(fr * h for h, fr in hist.items())
             else:
-                f = sm_issue_factor(math.ceil(pe), lanes, nc, rows_sm, kn.rpl)
+                f = sm_issue_factor(math.ceil(pe), rl, nc, rows_sm, kn.rpl)
                 nrow = pe
             notes["sm_expert"] += 1
         new = base * f
@@ -148,6 +166,20 @@ def post_sm(out, N, lanes, union, topk, kn: Knobs, hist):
     notes["m1_cycles"] = round(notes["m1_cycles"], 1)
     notes["rpl_saved"] = round(notes["rpl_saved"], 1)
     return notes
+
+
+def att_single(out, bmodel, kn: Knobs):
+    """option (b) with att_single "record": an SM attention row record on ONE lane is N single-query records of the
+    full measured span (the draft bodies; the verify / users records are re-priced in post_pass with the KV ratio)"""
+    if kn.att_lanes != 1 or kn.att_single != "record" or not bmodel:
+        return 0
+    n = 0
+    for c in out:
+        m = re.match(r"att_B(\d+)_rows$", getattr(c, "mtp_kind", ""))
+        if m and c.npos > 1:
+            c.base_cost = c.npos * float(bmodel[m.group(1)][c.orig_op.split(".")[1].lower()])
+            n += 1
+    return n
 
 
 def install():
@@ -169,9 +201,41 @@ def install():
             elif mode == "users":
                 hist = CUR["hist"]["users"].get(P)
             nt = post_sm(out, P, kw.get("sm_k"), kw.get("union"), kw.get("topk", 6), kn, hist)
+            nt["att_single_records"] = att_single(out, kw.get("bmodel"), kn)
             st = dict(st, cmtp=nt)
         return out, st
     compile_verify._cmtp = True
+
+    orig_pp = M.post_pass
+
+    def post_pass(prog, N, P, kv, users, bex, bcomp):
+        kn = CUR["knobs"]
+        nt = orig_pp(prog, N, kn.att_lanes, kv, users, bex, bcomp)     # attention passes on the ATT lanes
+        if kn.att_lanes == 1 and kn.att_single == "record" and N > 1:
+            n = 0
+            for r in prog:
+                k = getattr(r, "mtp_kind", "")
+                m = re.match(r"att_B(\d+)_rows$", k)
+                if m:
+                    T_ = int(m.group(1))
+                    op = r.orig_op.split(".")[1].lower()
+                    full, comp = float(bex[str(T_)][op]), float(bcomp[str(T_)][op])
+                    r.base_cost = N * ((full - comp) + comp * M.kv_union_ratio(T_, 1, kv, users))
+                    n += 1
+            nt["att_single_record_rows"] = n
+        nt["att_lanes"] = kn.att_lanes
+        return nt
+    post_pass._cmtp = True
+    M.post_pass = post_pass
+
+    orig_pc = M.plane_cfg
+
+    def plane_cfg(P, rows_on=True, swap=None):
+        cfg = orig_pc(P, rows_on, swap)
+        if P > 1 and cfg.get("att_k"):
+            cfg["att_k"] = CUR["knobs"].att_lanes
+        return cfg
+    M.plane_cfg = plane_cfg
 
     def ds_compile(N, cfg, union, kv="upper", users=False):
         prev = CUR.get("mode")
@@ -195,17 +259,27 @@ def apply_knobs(kn: Knobs):
     M._ENV["kn"]["lanes"] = kn.coll_lanes
     M._ENV["vb"] = PS.VARIANTS["b"]
     V.HCP_II = float(kn.hc_ii)
+    V.HC_STATIC_II = float(kn.hc_ii)     # the measured basis of row_ii HC = the bound hnx engine (not the 4,385 engine)
     CUR["knobs"] = kn
     install()
 
 
-def case_jobs(st, P=4, kn: Knobs = D1):
+def users_union(uu, n):
+    """mean union of n independent users' top-6 (MTP-STATS has n = 2, 4, 6, 8; odd n linearly interpolated, labelled)"""
+    if n in uu:
+        return uu[n]
+    lo, hi = max(k for k in uu if k < n), min(k for k in uu if k > n)
+    return uu[lo] + (uu[hi] - uu[lo]) * (n - lo) / (hi - lo)
+
+
+def case_jobs(st, P=4, kn: Knobs = D1, mu_n=None):
     u6, uu = st["verify_union"][6]["mean"], st["users_union"]
     sw = None if kn.vm_grown else True
+    mu_n = mu_n or P
     return [("ds", "AR", "verify", dict(P=1, N=1)),
             ("ds", "MTP", "verify", dict(P=P, N=6, union=u6, kv="upper", swap=sw)),
             ("ds", "draft", "draft", dict(P=P, overlap=True, union=u6)),
-            ("ds", "MU", "verify", dict(P=P, N=P, union=uu.get(P, 6.0 * P), users=True, swap=sw))]
+            ("ds", "MU", "verify", dict(P=P, N=mu_n, union=users_union(uu, mu_n), users=True, swap=sw))]
 
 
 def _job(job):
@@ -214,11 +288,13 @@ def _job(job):
     return name, res
 
 
-def run_case(kn: Knobs, st, jobs_n, P=4):
+def run_case(kn: Knobs, st, jobs_n, P=None, mu_n=None):
     from hgi_sim import hbm_plane_model as M
+    P = P or kn.P
+    mu_n = mu_n or P
     apply_knobs(kn)
     with mp.get_context("fork").Pool(jobs_n) as pool:
-        res = dict(pool.imap_unordered(_job, case_jobs(st, P, kn), chunksize=1))
+        res = dict(pool.imap_unordered(_job, case_jobs(st, P, kn, mu_n), chunksize=1))
     mh = M._mh_ctl()
     ar = res["AR"]["cycles"]
     d = res["draft"]
@@ -231,7 +307,8 @@ def run_case(kn: Knobs, st, jobs_n, P=4):
                          overlap_credit=d["overlap"]["credit"], step_cycles=round(step, 1),
                          tok_s=round(M.TAU * M.CLK / step, 1), unit_busy=res["MTP"]["unit_busy"],
                          compile=res["MTP"].get("compile")),
-                mu=dict(step_cycles=mu, per_user_tok_s=round(M.CLK / mu, 1), agg_tok_s=round(P * M.CLK / mu, 1),
+                mu=dict(users=mu_n, step_cycles=mu, per_user_tok_s=round(M.CLK / mu, 1),
+                        agg_tok_s=round(mu_n * M.CLK / mu, 1),
                         unit_busy=res["MU"]["unit_busy"], compile=res["MU"].get("compile")))
 
 
@@ -240,9 +317,9 @@ CASES = [
     ("STUDY L5 reproduction", Knobs(coll_lanes=5)),
     ("+ union histogram", Knobs(coll_lanes=5, union_hist=True)),
     ("+ M1 x-load / publish (cost)", Knobs(coll_lanes=5, union_hist=True, m1=True)),
-    ("CMTP P4 headline: + rpl (K-/row-split)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True)),
-    ("headline, HC II 600 (UNITS target)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, hc_ii=600)),
-    ("headline, HC II 950 (UNITS gate)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, hc_ii=950)),
+    ("CMTP P4 headline: + rpl (K-/row-split), HC II 250 MEASURED", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True)),
+    ("headline, HC II 600 (sensitivity; old UNITS target)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, hc_ii=600)),
+    ("headline, HC II 950 (sensitivity; old UNITS gate)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, hc_ii=950)),
     ("headline, VM as built (column swaps)", Knobs(coll_lanes=5, union_hist=True, m1=True, rpl=True, vm_grown=False)),
 ]
 
@@ -274,15 +351,70 @@ def retime(a):
     return 0
 
 
+# SM area options (SM4 results/arch/hbm_next_1019/sm4/geometry.json lever_table; owner decision input)
+HEAD = dict(coll_lanes=5, union_hist=True, m1=True, rpl=True, hc_ii=250.0, vm_grown=True)
+OPTIONS = [
+    # (key, label, knobs, users in the multi-user step, lever_table row prefix)
+    ("base", "base: P=4, 8 separate closed x stores (lever (a) is exact and cycle-neutral: same records as (a))",
+     Knobs(**HEAD), 4, "base"),
+    ("a", "(a) P=4 + shared 4-lane x store", Knobs(**HEAD), 4, "(a) P=4"),
+    ("a_norpl", "(a) without the remainder-pass split (rpl 0: no 2-word lane-group supply / K-part combine in SM4)",
+     Knobs(**dict(HEAD, rpl=False)), 4, "(a) P=4"),
+    ("ab", "(a)+(b) P=4 on the block-dot column, BF16 column 1 lane (ATT single-query records)",
+     Knobs(**HEAD, bf16_lanes=1, att_single="record"), 4, "(a)+(b)"),
+    ("ab_rows", "(a)+(b) sensitivity: 1-lane ATT as one row record, fixed spans once (optimistic)",
+     Knobs(**HEAD, bf16_lanes=1, att_single="rows"), 4, "(a)+(b)"),
+    ("P3a_u3", "(P3a) P=3 + shared 3-lane x store, 3 users", Knobs(**HEAD, P=3), 3, "(P3a)"),
+    ("P3a_u4", "(P3a) P=3 + shared 3-lane x store, 4 users on 3 lanes (2 passes)", Knobs(**HEAD, P=3), 4, "(P3a)"),
+]
+GEOM = ROOT / "results/arch/hbm_next_1019/sm4/geometry.json"
+
+
+def options(a):
+    from hgi_sim import hbm_plane_model as M
+    st = M.load_stats(STATS)
+    CUR["hist"] = lane_hists()
+    lev = json.loads(GEOM.read_text())["lever_table"]
+    out = dict(schema="opentallas.hbm_next_1019.cmtp.area_options.v1", generated_utc=datetime.datetime.now(
+        datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, lever_basis=lev["basis"],
+        users_union_note="users union mean for 3 users linearly interpolated between MTP-STATS n = 2 and 4",
+        options={})
+    sel = [o for o in OPTIONS if not a.only or o[0] in a.only.split(",")]
+    for key, label, kn, mu_n, row in sel:
+        r = run_case(kn, st, a.jobs, kn.P, mu_n)
+        lv = next(x for x in lev["rows"] if x["option"].startswith(row))
+        die = lv["die_mm2"]
+        r.update(key=key, label=label, die_mm2=die, lever_row=lv["option"], per_mm2=dict(
+            ar=round(r["ar_tok_s"] / die, 3), mtp=round(r["mtp"]["tok_s"] / die, 3),
+            mu_agg=round(r["mu"]["agg_tok_s"] / die, 3)))
+        out["options"][key] = r
+        print(f"{key:8s} die {die:6.1f}  AR {r['ar_tok_s']:7.1f}  MTP {r['mtp']['tok_s']:7.1f} (verify "
+              f"{r['mtp']['verify_cycles']:.0f}, draft {r['mtp']['draft_cycles']:.0f})  MU{mu_n} agg "
+              f"{r['mu']['agg_tok_s']:7.1f} / user {r['mu']['per_user_tok_s']:7.1f}  /mm2 MTP {r['per_mm2']['mtp']}"
+              f" agg {r['per_mm2']['mu_agg']}", flush=True)
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        a.out.write_text(json.dumps(out, indent=1, default=str) + "\n")
+    srcs = ["tools/hbm_next/plane_compiler.py", "tools/hbm_next/isa_rows.py", "tools/hgi_sim/hbm_plane_model.py",
+            "tools/hgi_sim/ds_mtp_verify.py", "tools/hgi_sim/ds_mtp_draft.py", "tools/hgi_sim/timing.py",
+            "results/arch/hbm_mtp_next_1018/stats/summary.json", "results/arch/hbm_next_1019/sm4/geometry.json"]
+    out["sources_sha256"] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in srcs}
+    a.out.write_text(json.dumps(out, indent=1, default=str) + "\n")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    o = sub.add_parser("options")
+    o.add_argument("--out", type=Path, required=True)
+    o.add_argument("--jobs", type=int, default=4)
+    o.add_argument("--only", default="")
     r = sub.add_parser("retime")
     r.add_argument("--out", type=Path, required=True)
     r.add_argument("--jobs", type=int, default=4)
     r.add_argument("--only", default="")
     a = ap.parse_args()
-    return retime(a)
+    return options(a) if a.cmd == "options" else retime(a)
 
 
 if __name__ == "__main__":

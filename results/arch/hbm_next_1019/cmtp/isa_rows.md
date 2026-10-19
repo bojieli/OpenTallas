@@ -122,6 +122,16 @@ Record layout: `UOP (16 B) | SUT (32 B, if tmpl) | ROWX (32 B, if op[5]) | MDESC
   - a g-source lane-group broadcast in the remainder pass (two or four held lines at once);
   - for the K-split, g partial binary-counter accumulator sets for each remainder row;
   - a weight read order that interleaves the parts. That is the compiler's per-SM weight layout, not hardware.
+- **What this means on the SM4 leaf** (CMTP 10-19, read against `rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv` @ f43d62ae5). Each lane there is one unmodified d4g leafh with its own accumulator, and `hnx_rp4lp4_lanefan` broadcasts ONE row bundle `rl1` (818 b: control, 788-b weight word, x read address) to all P lanes.
+  - **The "2 accumulator sets per remainder row" are the 2 lanes of a pair.** Lane 0 holds row r's K-part-0 partial for position 4, and lane 1 holds its K-part-1 partial. Lanes 2 and 3 do the same for position 5. No lane needs a second accumulator, and no per-lane beat mask is needed.
+  - **What is new is the supply:** 2 different weight words in the same issue cycle. Word A (K part 0) goes to lanes 0 and 2, and word B (K part 1) goes to lanes 1 and 3, each with its own x read address (the part's K offset). The x target mask loads position 4 into lanes 0–1 and position 5 into lanes 2–3, with no change to the lane-select mechanism.
+    - As built, that is a second row bundle per leaf: +818 b into each leaf, and the tile's `rin_n` / `rin_s` doubled, or a 2× row-port rate.
+    - The row-split (`rpl` = 2) needs the same second word but no combine.
+  - **The K-split also needs:**
+    - (i) Each lane closes its row after its own part's chunks. The part-0 lane closes on an aligned power-of-two subtree; a short last part is the tree's +0 padding, which leaves the value unchanged.
+    - (ii) **One FP32 add a remainder row**, P0 + P1, in RNE with part 0 as the left operand: the top level of the golden tree. For g = 4 (the draft at N = 5) it is two levels, (P0 + P1) + (P2 + P3). That adder is in no closed view. It goes either on the publish path (lane 2j+1's word arrives LSKEW = 8 cycles after lane 2j's, so the merge adds instead of forwarding, which needs a pipelined FP32 add) or downstream as a VOP.
+  - **What it buys:** MTP 3,500.1 against 3,393.0 tok/s without it, +3.2 % (`area_options.json` `a` against `a_norpl`). 4 users gain nothing (N = P). The draft (N = 5) carries most of the gain.
+  - **CMTP recommendation:** SM4 builds `rpl` = 0 first. That needs no second row word and no adder, and `rpl` = 0 is the HGI-1R default. The split stays an opt-in lever, built only if the second row bundle fits the tile's pin and track budget.
 - **Pass plans:**
   - DS MTP verify (N = 6): pass 1 runs positions 0–3 on lanes 0–3; pass 2 runs position 4 on lanes 0–1 and position 5 on lanes 2–3, each pair split by K or by rows. That is 1.5 to 1.8 line issues per line against 2.0, so the SM time is max(1, issues / 1.374) = 1.09–1.31× AR against 1.456×.
   - The draft block (N = 5, g = 4): 1.25 to 1.4 issues, at most 1.02× AR.
