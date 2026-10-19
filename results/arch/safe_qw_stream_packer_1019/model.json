@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.qwen.safe_stream_static_packer.v1",
+  "status": "MODEL_BEFORE_BUILD_NOT_QUALIFIED",
+  "architecture": "64 independent BF16 slots; parallel eight-lane hit decode, exact highest-lane priority, balanced OR; no dynamic wide part-select",
+  "ports": {
+    "input_lanes": 8,
+    "FP32_per_lane": 1,
+    "input_bits_per_cycle": 456,
+    "pack_payload_bits": 1024,
+    "full_beat_min_edges": 8,
+    "sustained_elements_per_edge": 8,
+    "relay_payload_bits_per_direction_per_edge": 1088
+  },
+  "latency": {
+    "own_write_delta_edges": 0,
+    "relay_delta_edges": 0,
+    "table_tap_delta_edges": 0,
+    "own_completed_beat_to_output_edges": 1,
+    "backpressure": false
+  },
+  "storage_bits": {
+    "xb": 1024,
+    "eword": 1024,
+    "valid_bitmap": 64,
+    "beat_tags": 32,
+    "new_pipeline_state": 0,
+    "note": "Two distinct <=1024-bit one-beat snapshots, no indexed >2kb memory, no added delay lines."
+  },
+  "cost": {
+    "slot_decoders": 512,
+    "data_mask_bits": 8192,
+    "priority_exclusion_terms_max_per_slot": 7,
+    "new_state_bits": 0,
+    "replica_count": 1,
+    "area_and_slot_fit": "Requires actual mapped census; no physical admission or estimated area claim."
+  },
+  "routing": {
+    "local_write_data_sinks_per_BF16_bit_upper_bound": 64,
+    "slot_select_data_sinks_upper_bound": 16,
+    "wide_completion_enable_sinks": 1024,
+    "tracks": "Parent/control replication unresolved; source depth repair alone is not safe fanout qualification.",
+    "clock": "Existing ck only; source identities unchanged."
+  },
+  "qualification": [
+    "Exact fullstream numeric/relay/fault/throughput comparison including arbitrary enabled lane subsets and duplicate addresses.",
+    "Priority and duplicate-fault mutants.",
+    "Actual generic and mapped census; same-edge producer replicas needed before any physical gate if fanout >32.",
+    "Reset integration by seam_source; geometry/native clock/reach/PG remain unqualified."
+  ]
+}
