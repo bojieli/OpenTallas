@@ -414,14 +414,14 @@ module dsdv_svc_att_core #(
     always @(*) begin
         lw_v = '0;
         for (lk = 0; lk < 3; lk = lk + 1) begin lw_a[lk] = '0; lw_d[lk] = '0; end
-        for (lk = 0; lk < 2; lk = lk + 1) if (qrv[lk]) begin : g_lw
+        for (lk = 0; lk < 2; lk = lk + 1) begin : g_lw     // SVC2: temporaries assigned every pass (no latch)
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two;
             tg = qr_tag[17*lk +: 17];
             o144 = 12'(tg[13:10]) * 12'd144;
             two = {qr_data[256*lk +: 256], hold[lk]};
-            if (tg[16:15] == 2'd0) begin
+            if (qrv[lk] && tg[16:15] == 2'd0) begin
                 lw_v[lk] = 1'b1; lw_a[lk] = 10'(tg[7:0]); lw_d[lk] = qr_data[256*lk +: 256];
-            end else if (tg[16:15] == 2'd2) begin
+            end else if (qrv[lk] && tg[16:15] == 2'd2) begin
                 lw_a[lk] = 10'(wcount) + tg[9:0];
                 if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*lk +: 4] == 4'd0) begin
                     lw_v[lk] = 1'b1; lw_d[lk] = {112'd0, 144'(qr_data[256*lk +: 256] >> o144[7:0])};
