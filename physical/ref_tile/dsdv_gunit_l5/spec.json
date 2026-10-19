@@ -98,7 +98,7 @@
    "inst": "*g_bank?6?.u_m",
    "at": [
     43.2,
-    345.6
+    172.8
    ],
    "orient": "R0"
   },
@@ -107,7 +107,7 @@
    "inst": "*g_bank?7?.u_m",
    "at": [
     172.8,
-    345.6
+    172.8
    ],
    "orient": "R0"
   },
@@ -116,7 +116,7 @@
    "inst": "*g_bank?8?.u_m",
    "at": [
     302.4,
-    345.6
+    172.8
    ],
    "orient": "R0"
   },
@@ -125,7 +125,7 @@
    "inst": "*g_bank?9?.u_m",
    "at": [
     43.2,
-    388.8
+    216.0
    ],
    "orient": "MX"
   },
@@ -134,7 +134,7 @@
    "inst": "*g_bank?10?.u_m",
    "at": [
     172.8,
-    388.8
+    216.0
    ],
    "orient": "MX"
   },
@@ -143,7 +143,7 @@
    "inst": "*g_bank?11?.u_m",
    "at": [
     302.4,
-    388.8
+    216.0
    ],
    "orient": "MX"
   }
@@ -192,7 +192,7 @@
  },
  "outline": {
   "w": 388.8,
-  "h": 432.0
+  "h": 259.2
  },
  "recipe": 4,
  "clock": "cts",
@@ -220,7 +220,7 @@
    "ot_hdc_skf_decode_sq"
   ]
  },
- "structural_change": "S81-GUNIT whole model (10-19, FANOUT_SAFE 1 + CONTROL_SAFE 1 + Q4 1, LEAD-S81 approved): base table 3,072 b -> 12 native ot_sram_1r1w2c_32x64_m1 banks (registered read = old bases capture, 0 edges; selected-word write-before-launch = sticky fault); kept same-edge copies for every >32-load driver (mapped census 3ca0d8055); regional reset ot_rst_region16 (raw port -> 2 sync flops, 16 kept roots, release edge 3); Q4 fault/range stage (+40 HC edges, priced to the compiler: HC offsets remeasured with run_gu_bench.sh). Outline 388.8 x 432 (was 259.2^2). S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
+ "structural_change": "S81-GUNIT whole model (10-19, FANOUT_SAFE 1 + CONTROL_SAFE 1 + Q4 1, LEAD-S81 approved): base table 3,072 b -> 12 native ot_sram_1r1w2c_32x64_m1 banks (registered read = old bases capture, 0 edges; selected-word write-before-launch = sticky fault); kept same-edge copies for every >32-load driver (mapped census 3ca0d8055); regional reset ot_rst_region16 (raw port -> 2 sync flops, 16 kept roots, release edge 3); Q4 fault/range stage (+40 HC edges, priced to the compiler: HC offsets remeasured with run_gu_bench.sh). Outline 388.8 x 432 (was 259.2^2). S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge). SVCGU re-outline (10-19, after gate2 d9ef27598 FAIL fill 28%/band: measured native std 40,172 um2 + 12 macros 6,643 in 388.8 x 432): outline 388.8 x 259.2 (S face kept 388.8 um for the ~1,173 S pins), top macro pair moved y 345.6/388.8 -> 172.8/216, whole core is the std band (no band exception), fill ~46%.",
  "job": {
   "owner": "Claude:S81-GUNIT",
   "branch": "claude/s81-gunit-wm-1019",
@@ -243,7 +243,8 @@
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m0.log"
    },
    {
     "name": "gunit_mut8",
@@ -251,7 +252,8 @@
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m8.log"
    },
    {
     "name": "gunit_mut10",
@@ -259,23 +261,35 @@
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m10.log"
    },
    {
-    "name": "sinkhorn_p_eq",
-    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_p_eq.sh {RUN}/skeq 300 0",
+    "name": "sinkhorn_fs_eq",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skeq 300 0 0",
     "expect": "pass",
-    "pass_regex": "^MUT=0: SKP PASS cases=300 ",
+    "pass_regex": "^MUT=0 MUTQ4=0: SKF PASS cases=300 ",
     "threads": 4,
-    "peak_ram_gb": 8
+    "peak_ram_gb": 8,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_eq.log"
    },
    {
-    "name": "sinkhorn_p_mut1",
-    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_p_eq.sh {RUN}/skmut 40 1",
+    "name": "sinkhorn_fs_mut1",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skmut 40 1 0",
     "expect": "fail",
-    "fail_regex": "^MUT=1: SKP FAIL ",
+    "fail_regex": "^MUT=1 MUTQ4=0: SKF FAIL ",
     "threads": 4,
-    "peak_ram_gb": 8
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mut1.log"
+   },
+   {
+    "name": "sinkhorn_fs_mutq4",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skq4 300 0 1",
+    "expect": "fail",
+    "fail_regex": "^MUT=0 MUTQ4=1: SKF FAIL ",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mutq4.log"
    }
   ],
   "views_to": "physical/ref_tile/dsdv_gunit_l5/views",
@@ -299,15 +313,5 @@
   "enable": true,
   "stages": 2
  },
- "std_area_um2": 36000,
- "fill_reason": {
-  "lattice_channel_bound": {
-   "std_band_y_um": [
-    129.6,
-    302.4
-   ],
-   "why": "Outline 388.8 x 432 from the e6269d903 whole model (LEAD-S81 approved 10-19): one full-width std-cell band y 129.6..302.4 (67,184.6 um2) holds the ~35.6k um2 conservative std mass (~53%); 12 ot_sram_1r1w2c_32x64_m1 banks on the 43.2 lattice outside the band (x 43.2/172.8/302.4, y 43.2/86.4/345.6/388.8), pin faces oriented to their own channel (R0 = S-face pins, MX = N-face pins): y 43.2 -> S edge, y 86.4 -> band, y 345.6 -> band, y 388.8 -> N edge. Re-size from measured synthesis area. Approval: LEAD-S81 coordinator decision 10-19 relayed in the S81-GUNIT brief (outline accepted as the starting outline if synthesis fits); recorded under the ROOT approver token.",
-   "approved_by": "ROOT"
-  }
- }
+ "std_area_um2": 40200
 }

@@ -287,15 +287,18 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     wire signed [10:0] sfull = -11'sd126 - E;
     wire [4:0] shd = (!subn[0] || sfull <= 11'sd0 || sfull > 11'sd24) ? 5'd0 : sfull[4:0];
     wire zsd = subn[0] && (sfull > 11'sd24);
-    wire [3:0] lt_q; wire [10:0] E_q [0:1]; wire [4:0] sh_q [0:7];
+    // SVCGU 10-19 (native census 2eb2bda2b: g_shc bits up to 72 loads, g_lt up to 46): twice the kept copies --
+    // 8 lt copies (6 / 7 bits of a mux each), 15 Q2 shift copies (M' 6 x 4 bits, X' 9 x 3 bits) + 2 sub copies;
+    // same d, same edge: bit-identical, 0 edges
+    wire [7:0] lt_q; wire [10:0] E_q [0:1]; wire [4:0] sh_q [0:16];
     generate
-        for (j = 0; j < 4; j = j + 1) begin : g_lt
+        for (j = 0; j < 8; j = j + 1) begin : g_lt
             (* keep = 1 *) ot_skf_kr #(.W(1)) u_lt (.clk(clk), .d(lt), .q(lt_q[j]));
         end
         for (j = 0; j < 2; j = j + 1) begin : g_e
             (* keep = 1 *) ot_skf_kr #(.W(11)) u_e (.clk(clk), .d(E), .q(E_q[j]));
         end
-        for (j = 0; j < 8; j = j + 1) begin : g_shc     // 0..5 Q2 slices, 6..7 the registered s (sub) copies
+        for (j = 0; j < 17; j = j + 1) begin : g_shc     // 0..14 Q2 slices, 15..16 the registered s (sub) copies
             (* keep = 1 *) ot_skf_kr #(.W(5)) u_s (.clk(clk), .d(shd), .q(sh_q[j]));
         end
     endgenerate
@@ -304,26 +307,28 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     // ---- Q2: CPA, M', grid shift (sliced: own registered shift copy per output slice)
     wire [WP:0] pr0, pr1;
     ot_hdc_sk_cadd #(.W(WP)) u_xrc (.a(ps_q), .b(pc_q), .s0(pr0), .s1(pr1));
-    wire [23:0] mp = {lt_q[0] ? pr0[50:39] : pr0[51:40], lt_q[1] ? pr0[38:27] : pr0[39:28]};
+    wire [23:0] mp = {lt_q[0] ? pr0[50:45] : pr0[51:46], lt_q[4] ? pr0[44:39] : pr0[45:40],
+                      lt_q[1] ? pr0[38:33] : pr0[39:34], lt_q[5] ? pr0[32:27] : pr0[33:28]};
     wire [24:0] xpl = {xm3, 1'b0}, xpr = {1'b0, xm3};
-    wire [24:0] xp = {lt_q[2] ? xpl[24:12] : xpr[24:12], lt_q[3] ? xpl[11:0] : xpr[11:0]};
+    wire [24:0] xp = {lt_q[2] ? xpl[24:18] : xpr[24:18], lt_q[6] ? xpl[17:12] : xpr[17:12],
+                      lt_q[3] ? xpl[11:6] : xpr[11:6], lt_q[7] ? xpl[5:0] : xpr[5:0]};
     wire [23:0] msd; wire [26:0] xsd;
     generate
-        for (s = 0; s < 6; s = s + 1) begin : g_sh
+        for (s = 0; s < 15; s = s + 1) begin : g_sh
             wire [4:0] sh = sh_q[s];
-            if (s < 3) begin : g_m
+            if (s < 6) begin : g_m
                 wire [23:0] v = mp >> sh;
-                assign msd[8*s +: 8] = v[8*s +: 8];
+                assign msd[4*s +: 4] = v[4*s +: 4];
             end else begin : g_x
                 wire [26:0] v = {2'b00, xp} << (5'd24 - sh);
-                assign xsd[9*(s-3) +: 9] = v[9*(s-3) +: 9];
+                assign xsd[3*(s-6) +: 3] = v[3*(s-6) +: 3];
             end
         end
     endgenerate
     wire [23:0] ms_q [0:6]; wire [4:0] s_q [0:1];
     reg [26:0] xs_q; reg zs_q;
     always @(posedge clk) begin xs_q <= xsd; zs_q <= zs_q1; end
-    assign s_q[0] = sh_q[6]; assign s_q[1] = sh_q[7];   // s / sub of this step (held from Q1, as ms_q from Q2)
+    assign s_q[0] = sh_q[15]; assign s_q[1] = sh_q[16];   // s / sub of this step (held from Q1, as ms_q from Q2)
     generate
         for (j = 0; j < 7; j = j + 1) begin : g_ms     // 0..2 Q3 row groups, 3..6 final slices
             (* keep = 1 *) ot_skf_kr #(.W(24)) u_m (.clk(clk), .d(msd), .q(ms_q[j]));
