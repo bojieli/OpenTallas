@@ -1,0 +1,53 @@
+{
+  "source_commit": "8184033f0",
+  "status": "PASS isolated MODEL only",
+  "host": "ot-epyc6",
+  "unit": "oth-ubuntu-2446033-1792432276",
+  "remote": "/srv/opentallas-scratch/claude/sysface-cold-epoch-model-r4-1019/out",
+  "SU_checks": 420,
+  "MU_checks": 800,
+  "rejections_per_profile": 22,
+  "causal_mutants": [
+    {
+      "id": 1,
+      "cause": "wrong INIT token accepted"
+    },
+    {
+      "id": 2,
+      "cause": "snapshot executing active instead of selected pending"
+    },
+    {
+      "id": 3,
+      "cause": "consume unpublished pending with same epoch"
+    },
+    {
+      "id": 4,
+      "cause": "abort/new_epoch fails invalidation"
+    },
+    {
+      "id": 5,
+      "cause": "new pending retags resident epoch"
+    }
+  ],
+  "state": {
+    "FF": {
+      "base": 157,
+      "off": 157,
+      "on": 200
+    },
+    "extra": 43,
+    "scope": "generic MODEL state only; no native physical cost"
+  },
+  "sources": {
+    "rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_cold_epoch_model.sv": "15a5bd582962622ee371731df9bb483e0bba0a127bf61433e7382e545e901985",
+    "rtl/test/qwen_split/tb_mu_cold_epoch_model.sv": "785ca5284a3760d9f50b3a5127770a0c54407a9fa6bc7fbd824b80df9b79c05b",
+    "rtl/test/qwen_split/run_mu_cold_epoch_model.sh": "11712ad17e77bf7b8d2ec01e5f293896154d9235cc0849a9195c0f198b632135",
+    "rtl/test/qwen_split/fixtures/qfd_mu_embedding_epoch_d53159bb5.sv": "24f1ca2e15b4274630a483200b8349249ac9cc9d5247788c7f9008a538158ac4"
+  },
+  "scope_limits": [
+    "Authenticated token/gen/cold-role are explicit model boundaries; existing epoch observer does not export token/gen yet",
+    "INIT publication boundary must bind actual registered init_u0_q && d_start && stage0/user0 bank edge",
+    "No full LP bankload/source calendar/native provider joined witness yet",
+    "No production ABI, absolute FIRST, fixed timestamps or physical cost adoption"
+  ]
+}
