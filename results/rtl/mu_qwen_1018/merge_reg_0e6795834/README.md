@@ -54,3 +54,13 @@ Scope excludes OPSEG full2 steady-state rate and the real MU.TOK.QW run gated on
 | [sl_NEG_m_gap12_stnpend](evidence/runs/adopt_slice/runs/NEG_m_gap12_stnpend.out) | FAIL with behavioral witness | NEG_m_gap12_stnpend.out: bench2 (m) MUT=0: FAIL 1/8; # exit 1 | AS EXPECTED |
 | [sl_NEG_m_nu1_w](evidence/runs/adopt_slice/runs/NEG_m_nu1_w.out) | FAIL with behavioral witness | NEG_m_nu1_w.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1 | AS EXPECTED |
 | [tok](evidence/out/tok.out) | positives PASS; defined mutants FAIL; suite succeeds | tok.out: MU_TOK_SMOKE BENCHES: PASS; # exit 0 | AS EXPECTED |
+
+## Resolution 10-19 11:45 (QW-MUREG)
+
+- coll_mu_bi: STALE RECIPE. The old dv2f14bi fixture fails bit-identically (61424/22512 mismatches, coll+die faults 11111111) on current
+  SAFE source too; the release-die dv2f18dh2 + SAFE hard fixture PASSES (codex/qwen-mu-current-1019 e6b9c55f2). Re-pointed in
+  claude/qw-mureg-cur-1019 (cases.py mu_bi + negatives share _MUC; old fixture kept as *_dv2f14bi_diagnostic).
+- coll_mu_bi_mut_rank / _mut_rlat / _neg_overlap above are HOLLOW witnesses (same all-die fault signature as the failing positive).
+  Re-witnessed on the current fixture: rank 42288 / rlat 30720 mismatches with zero faults, neg_overlap issuer_fault 11111111;
+  results/rtl/mu_qwen_current_1019/qw_mureg_negatives on claude/qw-mureg-cur-1019 5f5080c86.
+- Still pending: sl_FACES_mut11_nu4 / sl_FACES_mut12_nu4 (r3, ot-pve1, single cc1plus each >1h40 CPU, progressing; not restarted).
