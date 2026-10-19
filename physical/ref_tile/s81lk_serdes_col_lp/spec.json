@@ -195,15 +195,6 @@
    ]
   },
   {
-   "view": "physical/ref_tile/s81lk_rate_match/views/ot_s81_rate_match",
-   "count": 1,
-   "inst": "u_rm",
-   "at": [
-    43.2,
-    3412.8
-   ]
-  },
-  {
    "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc",
    "count": 1,
    "inst": "u_enc",
@@ -311,7 +302,7 @@
  "job": {
   "owner": "Claude:S81-SERDES",
   "branch": "claude/s81-serdes-lpcol-1019",
-  "tag": "lpk1",
+  "tag": "lpk2",
   "purpose": "S81 SerDes column landed parent first kit (gate --cts)"
  },
  "inter": [],
@@ -319,5 +310,6 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "cdc_note": "lpk2: the landed-cluster gate refuses a HARD child whose clock pins sit on two region roots (lpk1 FAIL 'OT_LANDED: hard child u_rm clock pins on different region roots'), so the rate matcher u_rm (same RTL as the closed s81lk_rate_match tile: 8 x 512 gray-pointer elastic FIFO) and the status sync u_sts are SOFT CDC children synthesised in the parent: write side on ck_out, read side on ck_tx."
 }

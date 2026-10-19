@@ -1,0 +1,6 @@
+TB_S81_PDIE_COL MODE=1 MUT=0 sent=6000 got=6000 bad=0 idles_seen=555 stA=10 stB=10
+TB_S81_PDIE_COL PASS
+- rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv:58: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.716 s; speed 7.645 us/s
+- Verilator: cpu 0.716 s on 1 threads; allocated 12 MB

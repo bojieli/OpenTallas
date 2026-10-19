@@ -144,5 +144,9 @@
       "3": "pad 0 is the 6-stage e_flt status alignment pad in front of u_sts: the encoder fault never fires under the continuous stream (tx_v = live flag), so one stage less is unobservable; landing/reset mutants 1, 2, 4 and the region audit cover the generator"
     }
   },
-  "note": "S81-SERDES 10-19 (S81.STA.OWN.7): landed SerDes column; COORDINATOR LEAD-S81 11:53: pma_rck is a separate clock family from clk, crossed only by the CDC children u_rm (gray-FIFO rate matcher, elastic) and u_sts (2-flop status syncs); landings only inside one family (tx->ptx on clk; syn/dly/chn/out on pma_rck). Bench loops the flat parent's own pma_tx back into pma_rx (real KP4 frames, the decoder locks)."
+  "note": "S81-SERDES 10-19 (S81.STA.OWN.7): landed SerDes column; COORDINATOR LEAD-S81 11:53: pma_rck is a separate clock family from clk, crossed only by the CDC children u_rm (gray-FIFO rate matcher, elastic) and u_sts (2-flop status syncs); landings only inside one family (tx->ptx on clk; syn/dly/chn/out on pma_rck). Bench loops the flat parent's own pma_tx back into pma_rx (real KP4 frames, the decoder locks).",
+  "clock_outputs": [
+    "pma_tck"
+  ],
+  "mut_child": "u_enc"
 }

@@ -8,8 +8,9 @@ from the wires-only flat parent `rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_f
 Clock families (coordinator LEAD-S81 10-19 11:53: pma_rck is NOT the core PLL):
 - clk -> ck_tx (tx face reg, encoder, relay rows, rx/st output regs, read side of the CDC children), ck_ptx (PMA TX).
 - pma_rck -> ck_syn (PMA RX + dsyn), ck_dly, ck_chn, ck_out (dout + write side of the CDC children).
-- The ONLY rck -> clk crossings: `u_rm` (closed gray-FIFO rate matcher, elastic IDLE deletion: off-die boundary) and
-  `u_sts` (2-flop lock / fault synchronisers), declared CDC children (lp.py `child_pin_regions`, new opt-in), and the
+- The ONLY rck -> clk crossings: `u_rm` (gray-FIFO rate matcher, same RTL as the closed s81lk_rate_match tile, elastic
+  IDLE deletion: off-die boundary) and `u_sts` (2-flop lock / fault synchronisers), declared SOFT CDC children (lpk1
+  gate: the landed-cluster clock check refuses a HARD child with clock pins on two region roots) (lp.py `child_pin_regions`, new opt-in), and the
   regional reset runs (4 stages per region). No landing crosses the families. `related_same_frequency` is the
   landed-cluster STA convention (as the closed s81lk_rate_match tile); the CDC proof is the two-die link bench with
   die B 300 ppm slow (`rtl/dsrom_sys/s81_link/col/lp/run_col_lp_all.sh`).
@@ -26,7 +27,8 @@ output register; TX: +1 face register, 2 relay rows, +3 edges landing tx -> ptx.
    by lp at 405 um/hop.
 3. Fanout: PASS. Every child reset pin has its own pad; live flags drive one pin; landings per reader region.
 4. Depth: PASS. Parent glue is registers only (landings, pads, relays, syncs); no parent combinational in -> out path.
-5. Storage: WAIVED with reason: the 13 lp landing rings (D 4, 12,734 flops) are the LANDING-CONTRACT primitive
+5. Storage: WAIVED with reason: u_rm's 8 x 512 elastic FIFO is a flop array (as in the closed s81lk_rate_match tile;
+   a dual-clock SRAM raw macro is not a supported landed-cluster sink); the 13 lp landing rings (D 4, 12,734 flops) are the LANDING-CONTRACT primitive
    (fixed-rotation write ring, no runtime-indexed storage); e_flt 6-stage 1-bit status pad is trivial.
 6. Floorplan: PMAs (43.2,43.2) W / (345.6,43.2) E and all six children on the 43.2 lattice; pin densities tx 3.0,
    rx 3.2, pma 4.35 pins/um (<= 6); util measured by the gate. Aspect 7.4:1 WAIVED: approved die-edge SerDes slot

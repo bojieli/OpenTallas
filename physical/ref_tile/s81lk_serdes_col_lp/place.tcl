@@ -46,11 +46,8 @@ puts "REF_TILE place: [$i getName] ot_s81_kp4_dchn at 43.2 2851.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_s81_kp4_dout {u_out}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(3110.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_s81_kp4_dout at 43.2 3110.4 R0"
-set i [ot_ref_pick $ot_ref_by ot_s81_rate_match {u_rm}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(3412.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_s81_rate_match at 43.2 3412.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_s81_kp4_enc {u_enc}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(3585.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_s81_kp4_enc at 43.2 3585.6 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 8} { error "ref_tile place: expected 8 macros, netlist has $nb" }
+if {$nb != 7} { error "ref_tile place: expected 7 macros, netlist has $nb" }

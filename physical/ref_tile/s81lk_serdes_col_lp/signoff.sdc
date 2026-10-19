@@ -29,10 +29,10 @@ set ::ot_ce_require_wire 1
 set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
-set ::ot_ce_landed_child_pins 7
-set ::ot_ce_check_only [dict create {ot_s81_kp4_dchn/clk} 1 {ot_s81_kp4_ddly/clk} 1 {ot_s81_kp4_dout/clk} 1 {ot_s81_kp4_dsyn/clk} 1 {ot_s81_kp4_enc/clk} 1 {ot_s81_rate_match/rclk} 1 {ot_s81_rate_match/wclk} 1]
-set ::ot_ce_refs [dict create {ot_s81_kp4_dsyn/clk} {tt {251.5 275.1 302.5} ff {205.7 227.7 252.3} ss {327.0 353.0 384.1}} {ot_s81_kp4_ddly/clk} {tt {170.1 206.8 243.2} ff {139.2 172.6 208.5} ss {223.4 264.1 303.4}} {ot_s81_kp4_dchn/clk} {tt {245.0 258.9 291.4} ff {199.5 212.1 242.9} ss {319.8 335.7 369.4}} {ot_s81_kp4_dout/clk} {tt {272.2 295.4 317.1} ff {221.7 243.1 262.8} ss {353.8 380.0 403.9}} {ot_s81_rate_match/rclk} {tt {93.8 104.7 113.9} ff {75.0 86.0 95.1} ss {126.6 137.5 147.6}} {ot_s81_rate_match/wclk} {tt {146.9 153.8 164.6} ff {118.9 125.9 136.4} ss {193.9 200.5 211.7}} {ot_s81_kp4_enc/clk} {tt {265.7 286.4 322.9} ff {215.8 235.2 268.0} ss {347.8 370.6 412.5}}]
-set ::ot_ce_counts [dict create {ot_s81_kp4_dsyn} 1 {ot_s81_kp4_ddly} 1 {ot_s81_kp4_dchn} 1 {ot_s81_kp4_dout} 1 {ot_s81_rate_match} 1 {ot_s81_kp4_enc} 1]
+set ::ot_ce_landed_child_pins 5
+set ::ot_ce_check_only [dict create {ot_s81_kp4_dchn/clk} 1 {ot_s81_kp4_ddly/clk} 1 {ot_s81_kp4_dout/clk} 1 {ot_s81_kp4_dsyn/clk} 1 {ot_s81_kp4_enc/clk} 1]
+set ::ot_ce_refs [dict create {ot_s81_kp4_dsyn/clk} {tt {251.5 275.1 302.5} ff {205.7 227.7 252.3} ss {327.0 353.0 384.1}} {ot_s81_kp4_ddly/clk} {tt {170.1 206.8 243.2} ff {139.2 172.6 208.5} ss {223.4 264.1 303.4}} {ot_s81_kp4_dchn/clk} {tt {245.0 258.9 291.4} ff {199.5 212.1 242.9} ss {319.8 335.7 369.4}} {ot_s81_kp4_dout/clk} {tt {272.2 295.4 317.1} ff {221.7 243.1 262.8} ss {353.8 380.0 403.9}} {ot_s81_kp4_enc/clk} {tt {265.7 286.4 322.9} ff {215.8 235.2 268.0} ss {347.8 370.6 412.5}}]
+set ::ot_ce_counts [dict create {ot_s81_kp4_dsyn} 1 {ot_s81_kp4_ddly} 1 {ot_s81_kp4_dchn} 1 {ot_s81_kp4_dout} 1 {ot_s81_kp4_enc} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst} {tx}} outputs {{rx} {st}}} {ptx} {clock ot_io_ptx io_budget_ps 166.667 inputs {} outputs {{pma_tx} {pma_tck}}} {syn} {clock ot_io_syn io_budget_ps 166.667 inputs {{pma_rx}} outputs {}} {dly} {clock ot_io_dly io_budget_ps 166.667 inputs {} outputs {}} {chn} {clock ot_io_chn io_budget_ps 166.667 inputs {} outputs {}} {out} {clock ot_io_out io_budget_ps 166.667 inputs {} outputs {}}]
 set ::ot_ce_source_domains [dict create {ck_tx} {core} {ck_ptx} {ptx} {ck_syn} {syn} {ck_dly} {dly} {ck_chn} {chn} {ck_out} {out}]
 set ::ot_ce_explicit_domains 1

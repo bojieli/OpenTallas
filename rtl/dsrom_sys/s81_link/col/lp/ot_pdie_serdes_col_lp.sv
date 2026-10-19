@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 6 clock regions (tx, ptx, syn, dly, chn, out), 13 landed crossings (D 4, E = K = 2, +3 edges each), 2 alignment pads,
 // regional reset runs depth 5 (+ t(child) per child).  Record: rtl/dsrom_sys/s81_link/col/lp/ot_pdie_serdes_col_lp_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_live_t' one stage long
+//     4 = child reset run of 'u_enc' one stage long
 module ot_pdie_serdes_col_lp #(
     parameter integer MUT = 0
 ) (
@@ -108,8 +108,8 @@ module ot_pdie_serdes_col_lp #(
     assign lock__l_out = lpl_12_o;
     wire  e_flt__p_u_sts;  ot_pl_pad #(.W(1), .N((MUT == 3) ? 5 : 6)) u_lpp_0 (.ck(ck_tx), .d(e_flt), .q(e_flt__p_u_sts));   // align u_sts: +6
     wire  lock__p_u_sts;  ot_pl_pad #(.W(1), .N(3)) u_lpp_1 (.ck(ck_out), .d(lock__l_out), .q(lock__p_u_sts));   // align u_sts: +3
-    wire lpr_c_u_live_t;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_live_t (.ck(ck_tx), .d(lpr_tx), .q(lpr_c_u_live_t));   // t(u_live_t) = 0
-    wire lpr_c_u_enc;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_enc (.ck(ck_tx), .d(lpr_tx), .q(lpr_c_u_enc));   // t(u_enc) = 0
+    wire lpr_c_u_live_t;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_live_t (.ck(ck_tx), .d(lpr_tx), .q(lpr_c_u_live_t));   // t(u_live_t) = 0
+    wire lpr_c_u_enc;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_enc (.ck(ck_tx), .d(lpr_tx), .q(lpr_c_u_enc));   // t(u_enc) = 0
     wire lpr_c_u_live_r;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_live_r (.ck(ck_syn), .d(lpr_syn), .q(lpr_c_u_live_r));   // t(u_live_r) = 0
     wire lpr_c_u_syn;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_syn (.ck(ck_syn), .d(lpr_syn), .q(lpr_c_u_syn));   // t(u_syn) = 0
     wire lpr_c_u_dly;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_dly (.ck(ck_dly), .d(lpr_dly), .q(lpr_c_u_dly));   // t(u_dly) = 3

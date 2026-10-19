@@ -37,7 +37,6 @@ module tb_ot_pdie_serdes_col_lp;
                 nc = nc + 1; if (lo_rx !== dlo_rx[6]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=rx cycle=%0d flat=%h landed=%h", cyc, dlo_rx[6], lo_rx); end
                 nc = nc + 1; if (lo_st !== dlo_st[6]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=st cycle=%0d flat=%h landed=%h", cyc, dlo_st[6], lo_st); end
                 nc = nc + 1; if (lo_pma_tx !== dlo_pma_tx[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=pma_tx cycle=%0d flat=%h landed=%h", cyc, dlo_pma_tx[2], lo_pma_tx); end
-                nc = nc + 1; if (lo_pma_tck !== dlo_pma_tck[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=pma_tck cycle=%0d flat=%h landed=%h", cyc, dlo_pma_tck[2], lo_pma_tck); end
             end
         end
         if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=3000 warm=39", MUT, nc);

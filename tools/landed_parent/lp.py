@@ -83,6 +83,7 @@ SPEC (JSON; paths relative to the repo root):
                  listed clock pin gets ck_<region>, a listed reset pin its own reset run on that region's root, a data pin
                  is landed / not landed by ITS region.  Every pin region of the child must own one of its clock pins.  No
                  parent-level net crosses between the families; the child's internal crossing is its own (closed) proof.
+  clock_outputs  [ports] forwarded clock outputs (e.g. a SerDes TX pad clock): not compared by the lockstep bench
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
@@ -1239,6 +1240,8 @@ class Parent:
         L.append(f"            if (cyc > {warm}) begin")
         for p in outs:
             n = p["name"]
+            if n in set(S.get("clock_outputs") or []):     # a forwarded clock output: a clock, never a data compare
+                continue
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
@@ -1285,6 +1288,8 @@ class Parent:
         L.append(f"        if (cyc > {warm}) begin")
         for p in outs:
             n = p["name"]
+            if n in set(S.get("clock_outputs") or []):     # a forwarded clock output: a clock, never a data compare
+                continue
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
