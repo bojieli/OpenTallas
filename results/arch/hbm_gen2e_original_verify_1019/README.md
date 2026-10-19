@@ -1,6 +1,6 @@
 # GEN2e2 original-success verification
 
-Read-only pickup, 2026-10-19 13:48 PT. All 39 distinct original successful synthesis rows have actual terminal Yosys, TT and FF ETM artifacts, exact wrapper/netlist top and port order/directions/bit ranges, ETM library/cell names and bus bit ranges, and SHA256 for source/input and result artifacts. 38 outputs are on ot-epyc6; gq_issue's successful fourth round is on ot-pve1. Its three failed rounds remain preserved; the ep6 failed output was not mistaken for the final output.
+Read-only pickup, 2026-10-19 13:44 PT. All 39 distinct original successful synthesis rows have actual terminal Yosys, TT and FF ETM artifacts, exact wrapper/netlist top and port order/directions/bit ranges, ETM library/cell names and bus bit ranges, and SHA256 for source/input and result artifacts. 38 outputs are on ot-epyc6; gq_issue's successful fourth round is on ot-pve1. Its three failed rounds remain preserved; the ep6 failed output was not mistaken for the final output.
 
 The proposal's 37 old successes plus three formerly live names overlap on tkm, so they represent 39 distinct cells. Selector, score quarter and tkm are now complete. Original jobs.tsv has 79 distinct cells: 22 prior reuse and 57 new synthesis rows, of which 39 succeeded and 18 failed. Original views.json has 142 entries. No claim here independently qualifies the 22 reused views.
 
