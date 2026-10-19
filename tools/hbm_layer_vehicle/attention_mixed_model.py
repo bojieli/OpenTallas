@@ -64,7 +64,9 @@ def timing_profile(*, native_landing=False, native_return=False,
     calendar_extra = 2 * int(banked_calendar)
     command_only_extra = 2 * int(native_cache_safe)
     command_extra = calendar_extra + command_only_extra
-    native_padding = 8 * int(native_landing) + 7 * int(native_return) + 4 * int(native_cache_safe)
+    native_capture_stream_edges = (3 * 1024 + 833 - 1) // 833
+    native_base = native_capture_stream_edges + 2 + 2 + 3
+    native_padding = native_base * int(native_landing) + 7 * int(native_return) + 4 * int(native_cache_safe)
     return dict(native_landing=native_landing, native_return=native_return,
                 native_cache_safe=native_cache_safe, banked_calendar=banked_calendar,
                 read_admission_calibration=7,
@@ -76,6 +78,10 @@ def timing_profile(*, native_landing=False, native_return=False,
                 go_to_read_capture=6 + calendar_extra + command_only_extra,
                 go_to_packet_and_command=7 + command_extra,
                 native_padding=native_padding,
+                native_padding_terms=dict(hbm_capture_edges=3,hbm_period_ps=1024,stream_period_ps=833,
+                    capture_stream_edges=native_capture_stream_edges,reserve_edges=2,completion_edges=2,read_edges=3,
+                    native_base=native_base,regional_added_edges=7,cache_allowance_edges=4),
+                selected_return_leaf_read_to_return_edges=8,selected_drain_metadata_delay=8,
                 historical_attention_reference_bias=1,
                 historical_first_reference='rc0 + FIRST_GO + 8; preserve exactly at default0',
                 first_reference='legacy reference + native_padding, subject to previous actual tail and x-load constraints',

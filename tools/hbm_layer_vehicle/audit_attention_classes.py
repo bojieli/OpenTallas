@@ -98,13 +98,13 @@ def run(a):
             modes=[b['descriptor_mode'] for b in mixed['blocks']],
             note='only existing mode195:197 descriptor bits change; literal programme/HBM/XW/timing unchanged')
         out['native_api_profiles']=[]
-        for ce,ca,de in ((2,0,0),(4,2,2)):
-            native=P.compile_attention(first_rec,native_padding=19,command_extra=ce,calendar_extra=ca,programme_done_extra=de)
+        for padding,ce,ca,de in ((19,2,0,0),(19,4,2,2),(22,2,0,0),(22,4,2,2)):
+            native=P.compile_attention(first_rec,native_padding=padding,command_extra=ce,calendar_extra=ca,programme_done_extra=de)
             assert native['mem']==plain['mem']
             for i,(old,new) in enumerate(zip(plain['blocks'],native['blocks'])):
-                assert new['go_at']-old['go_at']==19+i*ce
-                assert new['first_abs']-old['first_abs']==19+(i+1)*ce
-                assert new['first_read_pin_abs']-old['first_read_pin_abs']==19+i*ce+ca
+                assert new['go_at']-old['go_at']==padding+i*ce
+                assert new['first_abs']-old['first_abs']==padding+(i+1)*ce
+                assert new['first_read_pin_abs']-old['first_read_pin_abs']==padding+i*ce+ca
                 assert new['cal'].cyc==old['cal'].cyc
             out['native_api_profiles'].append(dict(timing=native['budget']['timing'],
                 go_to_command=7+ce,go_to_read_pin=6+ca,run_edges=native['budget']['run_edges'],
