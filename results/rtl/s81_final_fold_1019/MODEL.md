@@ -18,6 +18,13 @@ RD transport to the unique global64-value owner (sid=beat//5, leaf=beat%5).
 The move map has1120 pairs/rank,4480 acrossTP4,143360 data bytes before
 headers. Exact line cycles require actual paths and reservations; no price
 is claimed from the map alone. No write may precede its source completion.
+The four HC residual copies are replicated on each TP4 rank. Therefore each
+rank combines only its20 owned beats; the combined result must then reach
+all three peer ranks before their POSTs. The explicit result allgather adds
+480 full1024-bit RD beats (61440 data bytes). The destination rank is part
+of every transport record. The current local-command binding admits only
+the arithmetic-owner rank; peer POST calendars remain blocked on actual
+allgather paths and bounded arrival proofs.
 
 VS arithmetic issues56 pairs at one per edge and performs448 FP32 adds
 (including the implementation's first add of negative zero), no MACs.

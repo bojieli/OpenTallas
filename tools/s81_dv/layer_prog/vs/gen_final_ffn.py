@@ -20,11 +20,15 @@ def main():
     p.add_argument('--fixtures', required=True)
     p.add_argument('--out', required=True)
     p.add_argument('--beat', type=int, default=0)
-    p.add_argument('--mutant', choices=['owner', 'row', 'order', 'earlybf16'])
+    p.add_argument('--post', action='store_true')
+    p.add_argument('--mutant', choices=['owner', 'row', 'order', 'posta1', 'postcoef'])
     a = p.parse_args()
+    if a.mutant in ('posta1', 'postcoef') and not a.post:
+        p.error('POST mutants require --post')
     fx, out = Path(a.fixtures), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     meta = json.loads((fx / 'meta.json').read_text())
+    assert meta['tp'] == 4
     experts = list(meta['experts'])
     assert len(experts) == 6 and experts == sorted(experts)
     assert 0 <= a.beat < 80
@@ -74,24 +78,59 @@ def main():
             for w in range(64):
                 image[4 * (F.ASSEMBLED + 16 * e) + w] = old[4 * (F.ASSEMBLED + 16 * ((e + 6) % 7)) + w]
     cmd = F.commands(a.beat // 5, a.beat % 5)['combine']
-    # earlybf16 uses the existing arithmetic RTL mutant in the dedicated bench.
-    if a.mutant == 'earlybf16':
-        raise ValueError('earlybf16 requires RTL MUT4, not modified golden data')
     pack = lambda words: sum(int(x) << (32 * i) for i, x in enumerate(words))
+    post_expected = []
+    if a.post:
+        residual = np.fromfile(fx/'ops/attn.hc_post.bin',np.float32).view(np.uint32).reshape(4,5120)
+        result = np.fromfile(fx/'ops/ffn.hc_post.bin',np.float32).view(np.uint32).reshape(4,5120)
+        coef = np.fromfile(fx/'ops/ffn.hc.pre_post.bin',np.float32).view(np.uint32)
+        comb = np.fromfile(fx/'ops/ffn.hc.sinkhorn.bin',np.float32).view(np.uint32)
+        assert len(coef) == 8 and len(comb) == 16
+        for h in range(16):
+            words = [int(residual[c,64*a.beat+8*(h//2)+4*(h%2)+w])>>16 for c in range(4) for w in range(4)]
+            packed = sum(x << (16*i) for i,x in enumerate(words))
+            for w in range(8):
+                image[4*(2*h)+w] = (packed>>(32*w)) & 0xffffffff
+            want = [int(result[c,64*a.beat+8*(h//2)+4*(h%2)+w])>>16 for c in range(4) for w in range(4)]
+            post_expected.append(sum(x << (16*i) for i,x in enumerate(want)))
+        for i,v in enumerate(list(coef)+list(comb)):
+            image[4*1008+i] = int(v)
+        if a.mutant == 'postcoef':
+            image[4*1010],image[4*1010+1] = image[4*1010+1],image[4*1010]
     (out / 'img.mem').write_text(''.join(f'{pack([image.get(4*r+w, 0) for w in range(4)]):032x}\n' for r in range(1024)))
     (out / 'imgv.mem').write_text(''.join(f'{int(4*r in image)}\n' for r in range(1024)))
     # Existing real VP/VS/VQ benchmark, command at600, subsequent real RDOUT.
     dur = 100  # conservative model bound; exact age printed by the RTL bench
     prog = [1 << 252 | 600 << 228 | 13 << 224 | dur << 186 | cmd,
             2 << 252 | 8 << 202 | F.COMBINED, 0]
-    (out / 'prog.mem').write_text(''.join(f'{x:064x}\n' for x in prog))
     y = expected[64 * a.beat:64 * (a.beat + 1)]
-    (out / 'exp.mem').write_text(''.join(f'{pack(y[i:i+8]):064x}\n' for i in range(0,64,8)))
-    (out / 'expm.mem').write_text('ff\n' * 8)
+    exp = [pack(y[i:i+8]) for i in range(0,64,8)]
+    last = 600
+    if a.post:
+        from layer_prog.lower_vs import vp_cmd
+        postcmd = F.commands(a.beat//5,a.beat%5)['post']
+        if a.mutant == 'posta1':
+            postcmd = vp_cmd(2,a0=1009,a1=450)
+        prog = [4 << 252 | 600 << 228 | vp_cmd(3,a0=0),
+                1 << 252 | 700 << 228 | 13 << 224 | dur << 186 | cmd,
+                1 << 252 | 800 << 228 | 2 << 224 | 100 << 186 | postcmd,
+                4 << 252 | 900 << 228 | vp_cmd(4,a0=32),
+                5 << 252 | 960 << 228,
+                2 << 252 | 8 << 202 | F.COMBINED,
+                2 << 252 | 8 << 210 | 16 << 202 | 32,
+                2 << 252 | 24 << 210 | 1 << 202 | 1008, 0]
+        exp += post_expected
+        exp.append(pack(coef))  # retained pre1008 plus actual post1009
+        last = 960
+    (out / 'prog.mem').write_text(''.join(f'{x:064x}\n' for x in prog))
+    (out / 'exp.mem').write_text(''.join(f'{x:064x}\n' for x in exp))
+    (out / 'expm.mem').write_text('ff\n' * len(exp))
     (out / 'xq.mem').write_text('0\n')
     (out / 'xqi.mem').write_text('0\n')
-    (out / 'params.txt').write_text(f'+sid={a.beat//5} +k={a.beat%5} +nxq=0 +last=600\n')
-    manifest = dict(beat=a.beat, mutant=a.mutant, source='actual L0 checkpoint FFN down outputs',
+    (out / 'params.txt').write_text(f'+sid={a.beat//5} +k={a.beat%5} +nxq=0 +last={last}\n')
+    if a.post:
+        paths += [fx / ('ops/' + n + '.bin') for n in ('attn.hc_post', 'ffn.hc_post', 'ffn.hc.pre_post', 'ffn.hc.sinkhorn')]
+    manifest = dict(beat=a.beat, mutant=a.mutant, source=f"actual {meta['layer']} checkpoint FFN down outputs",
                     scope='mapped arithmetic cut; transport not simulated', command=f'{cmd:040x}',
                     inputs={str(x): hashlib.sha256(x.read_bytes()).hexdigest() for x in paths},
                     golden_sha256=hashlib.sha256((fx/'ops/ffn.combine_allreduce.bin').read_bytes()).hexdigest())

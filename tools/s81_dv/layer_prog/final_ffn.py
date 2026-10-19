@@ -16,6 +16,17 @@ ROWS = 16
 COMBINE_BOUND = 100  # conservative pre-measurement slot, not adopted token price
 
 
+def expert_slot(expert, routed_ids):
+    ids = [int(i) for i in routed_ids]
+    if len(ids) != 6 or ids != sorted(set(ids)):
+        raise ValueError('FFN requires six unique routed IDs in canonical ascending order')
+    if expert == 'shared':
+        return 6
+    if not expert.startswith('exp') or int(expert[3:]) not in ids:
+        raise ValueError('capture producer is not one of the selected FFN experts')
+    return ids.index(int(expert[3:]))
+
+
 def owner(global_element):
     if not 0 <= global_element < 5120:
         raise ValueError('FFN global element outside5120')
@@ -47,12 +58,31 @@ def transfers(rank):
             source_sid, offset = divmod(local, 80)
             source_leaf, source_word = divmod(offset, 64)
             dst = owner(1280 * rank + local)
-            out.append(dict(rank=rank, expert=expert, global_element=1280 * rank + local,
+            out.append(dict(rank=rank, destination_rank=rank, expert=expert, global_element=1280 * rank + local,
                             source_sid=source_sid, source_leaf=source_leaf,
                             source_row=CAPTURE + 16 * expert + source_word // 4,
                             sid=dst['sid'], leaf=dst['leaf'], beat=dst['beat'],
                             row=ASSEMBLED + 16 * expert + dst['word'] // 4,
                             pairs=1, words=8, kind=4))
+    return out
+
+
+def broadcasts():
+    """Combined BF16-in-FP32 rows to the other three replicated-h ranks.
+
+    Two full1024-bit RD beats per peer, four row pairs each. Source rank is
+    the OUTPUT-row owner; this is an allgather, never a TP4 arithmetic sum.
+    """
+    out = []
+    for beat in range(80):
+        rank = beat // 20
+        for peer in range(4):
+            if peer == rank:
+                continue
+            for half in range(2):
+                out.append(dict(source_rank=rank,destination_rank=peer,beat=beat,
+                                source_sid=beat//5,source_leaf=beat%5,source_row=COMBINED+8*half,
+                                sid=beat//5,leaf=beat%5,row=COMBINED+8*half,pairs=4,words=32,kind=4))
     return out
 
 
@@ -63,7 +93,7 @@ def commands(sid, leaf):
         raise ValueError('invalid destination leaf')
     return dict(combine=vp_cmd(13, a0=ASSEMBLED, n=8, imm=vs_imm(ob=COMBINED)),
                 post=vp_cmd(2, a0=POST, a1=COMBINED), pre=PRE,
-                beat=5 * sid + leaf)
+                beat=5 * sid + leaf, owner_rank=(5 * sid + leaf)//20)
 
 
 def verify_moves(records):
@@ -107,8 +137,10 @@ def local_program(sid, leaf, binding):
     paths, collision reservations and POST/native timing remain other gates.
     """
     from layer_prog.lower_vs import ctl_payload
-    if not {'arrivals', 'leases', 'combine_issue', 'post_issue', 'post_end'} <= binding.keys():
+    if not {'rank', 'arrivals', 'leases', 'combine_issue', 'post_issue', 'post_end'} <= binding.keys():
         raise ValueError('missing final FFN arrival/lifetime/calendar binding')
+    if binding['rank'] != (5 * sid + leaf)//20:
+        raise ValueError('combine only on down OUTPUT-row owner; other ranks await result allgather')
     required = [m for rank in range(4) for m in transfers(rank)
                 if m['sid'] == sid and m['leaf'] == leaf]
     arrivals = binding['arrivals']
@@ -129,6 +161,6 @@ def local_program(sid, leaf, binding):
     c = commands(sid, leaf)
     return dict(templates=[('ffn.combine.owner', ctl_payload(1 << sid, 0, 1 << leaf, c['combine'])),
                            ('ffn.hc_post.y', ctl_payload(1 << sid, 0, 1 << leaf, c['post']))],
-                rows=[dict(eng=0, issue=combine, arg=0, what='VS13 routed-ID-order then shared'),
-                      dict(eng=0, issue=post, arg=1, what='POST real combined rows448..463; pre1008 retained')],
+                rows=[dict(issue=combine, arg=0, cycle_basis='VP c_v input pin', what='VS13 routed-ID-order then shared'),
+                      dict(issue=post, arg=1, cycle_basis='VP c_v input pin', what='POST real combined rows448..463; pre1008 retained')],
                 beat=c['beat'], latest_arrival=last)
