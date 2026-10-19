@@ -12,7 +12,10 @@
  "params": {},
  "orfs_vars": {
   "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link",
-  "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R"
+  "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -150,12 +153,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-TILES3 10-17 (coordinator 0co: 2x2 parent with an aligned tile pitch, no gaps on link paths): wires-only parent of the four hardened KP4 decoder tiles on the 43.2-um child lattice, every seam a 21.6-um channel. Pinwheel 2x2 (cluster coords): dsyn 194.4^2 at (43.2,43.2) SW, dchn 216x194.4 at (259.2,43.2) SE (grown E from 194.4 for util, S81-TILES4), ddly 237.6x146.88 at (43.2,259.2) NW, dout 248.4x233.28 at (302.4,259.2) NE. Seams: dsyn N x_q 4.32-118.8 == ddly S w_d (same x origin, straight 21.6-um hop); dsyn E k_* == dchn W k_* (same y origin, straight); dchn N cw_q/decision -> dout S cw/decision across 21.6 um (x overlap 302.4-453.6); ddly S r_d (x 170.6-276.5) -> dout W d_q (y 263.5-384.5) through the centre channel cross (~160 um, < 405 reach). Outer white space only at the SE (right of dchn) and NW (above ddly) corners, which no link crosses. p_d W aligned to dsyn's W face, q_* E aligned to dout's E face, clk / rst_n S at the centre channel (x 246-252) between dsyn and dchn. Outline 578.88 x 518.4 (1.12:1). RTL: ot_s81_kp4_dec.sv needs the hard_define OT_KP4_DEC_HARD wrapper (children without #(.MUT)) before gen -- deferred until the dsyn/ddly e5e84db07 routes are submitted, because dec.sv is in every child's extra_paths. S81-TILES5 10-17: dsyn grows 194.4 -> 216 square (GRT-0116 corner congestion); pitch kept: dchn (280.8, 43.2), ddly (43.2, 280.8), dout (324, 280.8), 21.6-um seams unchanged; outline 600.48 x 540; p_d W 47.52-250.56 (= dsyn's W face), clk / rst_n S at the dsyn|dchn channel x 267.8-273.2, n_corr / n_unc and q_* +21.6 with dchn / dout. S81-TILES6 10-17 ~23:55: all four children CLOSED (dsyn t2-e3dea7351, dchn/ddly t2-5f0b4a343, dout t2-cef44c405; views on main); dec.sv gets the OT_KP4_DEC_HARD wrapper (children without #(.MUT)); pitch and outline unchanged (child pins checked against the view LEFs: x_q/w_d and k_* seams straight, p_d/q_*/n_* parent pins on the children's faces). LATTICE FIX: the TILES5 re-pitch put dchn/ddly at 280.8 and dout at 324 / 280.8, which are OFF the 43.2-um child lattice (gen snapped dchn onto dsyn: channel 0). With dsyn 216 (5 x 43.2) the lattice-legal pitch is dchn (302.4, 43.2) and ddly (43.2, 302.4) (43.2-um straight seams for k_* and x_q), dout (302.4, 259.2) (21.6-um seams to dchn N cw and to ddly E; dchn cw x 306.9-479.3 now left-aligned with dout cw 306.8-421.1). Outline 600.48 x 540 kept (margins E 49.7 / N 47.5). Parent pins: q_* -21.6 with dout, n_corr / n_unc +21.6 with dchn, clk / rst_n S at the dsyn|dchn channel centre (x 278.6-284.0). Risk for review: ddly r_d (S face) -> dout W d_q crosses the 43.2 dsyn|ddly seam and the 21.6-um ddly|dout channel; the trial GRT gate measures it. S81-TILES8 10-18 (coordinator 0ej: widen the 21.6-um ddly|dout channel carrying the 544-b ddly r_d -> dout W d_q link to 43.2 um; outline may grow): ddly is 237.6 = 5.5 lattice pitches wide, so with every child origin on the 43.2-um lattice the ddly E (280.8) -> dout W gap can only be 21.6 + k*43.2; dout moves x 302.4 -> 345.6 (on lattice), channel 21.6 -> 64.8 um (narrowest lattice-legal width >= 43.2; an exact 43.2 needs dout off-lattice at 324). dout y and every other child unchanged; dchn N cw (x 306.9-479.3) -> dout S cw now x 350.0-464.3, still inside dchn's span (straight 21.6-um vertical hop). Outline 600.48 -> 622.08 x 540 (+21.6; E margin 49.68 -> 28.08 >= PIN_EDGE 20 + core 2.16). Parent pins unchanged (q_* E follow dout's unchanged y; S/W pins unchanged).",
+ "structural_change": "S81-TILES3 10-17 (coordinator 0co: 2x2 parent with an aligned tile pitch, no gaps on link paths): wires-only parent of the four hardened KP4 decoder tiles on the 43.2-um child lattice, every seam a 21.6-um channel. Pinwheel 2x2 (cluster coords): dsyn 194.4^2 at (43.2,43.2) SW, dchn 216x194.4 at (259.2,43.2) SE (grown E from 194.4 for util, S81-TILES4), ddly 237.6x146.88 at (43.2,259.2) NW, dout 248.4x233.28 at (302.4,259.2) NE. Seams: dsyn N x_q 4.32-118.8 == ddly S w_d (same x origin, straight 21.6-um hop); dsyn E k_* == dchn W k_* (same y origin, straight); dchn N cw_q/decision -> dout S cw/decision across 21.6 um (x overlap 302.4-453.6); ddly S r_d (x 170.6-276.5) -> dout W d_q (y 263.5-384.5) through the centre channel cross (~160 um, < 405 reach). Outer white space only at the SE (right of dchn) and NW (above ddly) corners, which no link crosses. p_d W aligned to dsyn's W face, q_* E aligned to dout's E face, clk / rst_n S at the centre channel (x 246-252) between dsyn and dchn. Outline 578.88 x 518.4 (1.12:1). RTL: ot_s81_kp4_dec.sv needs the hard_define OT_KP4_DEC_HARD wrapper (children without #(.MUT)) before gen -- deferred until the dsyn/ddly e5e84db07 routes are submitted, because dec.sv is in every child's extra_paths. S81-TILES5 10-17: dsyn grows 194.4 -> 216 square (GRT-0116 corner congestion); pitch kept: dchn (280.8, 43.2), ddly (43.2, 280.8), dout (324, 280.8), 21.6-um seams unchanged; outline 600.48 x 540; p_d W 47.52-250.56 (= dsyn's W face), clk / rst_n S at the dsyn|dchn channel x 267.8-273.2, n_corr / n_unc and q_* +21.6 with dchn / dout. S81-TILES6 10-17 ~23:55: all four children CLOSED (dsyn t2-e3dea7351, dchn/ddly t2-5f0b4a343, dout t2-cef44c405; views on main); dec.sv gets the OT_KP4_DEC_HARD wrapper (children without #(.MUT)); pitch and outline unchanged (child pins checked against the view LEFs: x_q/w_d and k_* seams straight, p_d/q_*/n_* parent pins on the children's faces). LATTICE FIX: the TILES5 re-pitch put dchn/ddly at 280.8 and dout at 324 / 280.8, which are OFF the 43.2-um child lattice (gen snapped dchn onto dsyn: channel 0). With dsyn 216 (5 x 43.2) the lattice-legal pitch is dchn (302.4, 43.2) and ddly (43.2, 302.4) (43.2-um straight seams for k_* and x_q), dout (302.4, 259.2) (21.6-um seams to dchn N cw and to ddly E; dchn cw x 306.9-479.3 now left-aligned with dout cw 306.8-421.1). Outline 600.48 x 540 kept (margins E 49.7 / N 47.5). Parent pins: q_* -21.6 with dout, n_corr / n_unc +21.6 with dchn, clk / rst_n S at the dsyn|dchn channel centre (x 278.6-284.0). Risk for review: ddly r_d (S face) -> dout W d_q crosses the 43.2 dsyn|ddly seam and the 21.6-um ddly|dout channel; the trial GRT gate measures it. S81-TILES8 10-18 (coordinator 0ej: widen the 21.6-um ddly|dout channel carrying the 544-b ddly r_d -> dout W d_q link to 43.2 um; outline may grow): ddly is 237.6 = 5.5 lattice pitches wide, so with every child origin on the 43.2-um lattice the ddly E (280.8) -> dout W gap can only be 21.6 + k*43.2; dout moves x 302.4 -> 345.6 (on lattice), channel 21.6 -> 64.8 um (narrowest lattice-legal width >= 43.2; an exact 43.2 needs dout off-lattice at 324). dout y and every other child unchanged; dchn N cw (x 306.9-479.3) -> dout S cw now x 350.0-464.3, still inside dchn's span (straight 21.6-um vertical hop). Outline 600.48 -> 622.08 x 540 (+21.6; E margin 49.68 -> 28.08 >= PIN_EDGE 20 + core 2.16). Parent pins unchanged (q_* E follow dout's unchanged y; S/W pins unchanged). SMHKP4 10-18: the closed 867a65ed7 view is native FAIL (launch 388 / capture 337 / TT spread 220): (1) wires-only parent -> no pin flops, so the route's io_ref reference fell back to the first register, the RAW child clock pin u_chn/clk (FF ~380-440 ps) while the child flops tick at pin + child R (TT 609-722, FF 511-570): input min delays ~250 ps early -> 3,276 + 7,670 CTS hold buffers, ~410 ps on every p_d pin -> capture 337; launch 388 is the same raw-pin basis (174 at the child-flop basis); (2) linked syn->dly pair TT 113 at child flops (gate 79): the dly leaf on the longest count-bisection trunk branch diverged under routed RC. Fix = LANDED boundary + region-matched tree: pin_regs on the parent (p_* in +1, every output +1 = +2 cycles, hw latency 66 -> 68; tb kp4_dec_hw models them, DLY_Q 8 / DLY_L 4, n_* compared), refglob p_d__ot_q* (the input landing flops are the IO reference at every stage), symmetric insertion-aware spine with tree-shared pads so the glue landing flops and the four children's flops share matched trunk wire.",
  "job": {
   "owner": "Claude:S81-TILES6",
-  "branch": "claude/s81kp4-dec-1017",
+  "branch": "claude/smhkp4-1018",
   "tag": "p1",
-  "cycles_added": 0,
+  "cycles_added": 2,
   "purpose": "S81 link KP4 decoder 2x2 parent cluster (wires-only) over the four hardened tiles dsyn/ddly/dchn/dout, 10-17.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
@@ -176,7 +179,8 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
    "tools/s81_link/rs544.py",
    "tools/s81_link/run_kp4_leaf_bench.sh",
-   "tools/s81_link/run_kp4_eq_bench.sh"
+   "tools/s81_link/run_kp4_eq_bench.sh",
+   "results/rtl/s81_link/kp4_dec_smhkp4"
   ],
   "benches": [
    {
@@ -202,9 +206,31 @@
      "verilator"
     ],
     "timeout_s": 3600,
-    "fail_regex": "^TB_S81_KP4_EQ FAIL$"
+    "fail_regex": "^TB_S81_KP4_EQ FAIL$",
+    "fail_witness": "results/rtl/s81_link/kp4_dec_smhkp4/dmut/run.log"
+   },
+   {
+    "name": "kp4_dec4_eq_preg",
+    "cmd": "bash tools/s81_link/run_kp4_eq_bench.sh preg {RUN}/bench_preg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 3600,
+    "fail_regex": "^TB_S81_KP4_EQ FAIL$",
+    "fail_witness": "results/rtl/s81_link/kp4_dec_smhkp4/preg/run.log"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/smhkp4_1018/native_closed_views.json",
+   "cell": "ot_s81_kp4_dec",
+   "vs": "s81lk_kp4_dec-p1-867a65ed7",
+   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native launch 387.8 / capture 337.0 / spread 220.1: wires-only parent, io_ref fell back to the raw child clock pin u_chn/clk (~250 ps before the child flops) -> 3,276 + 7,670 CTS hold buffers ~410 ps per p_d pin; linked syn->dly pair TT 113 at child flops",
+   "fix": "landed boundary: parent pin_regs (+1 in / +1 out, hw latency 66 -> 68, tb kp4_dec_hw DLY_Q 8 / DLY_L 4, PREGMUT mutant), refglob p_d__ot_q* (landing flops = IO reference), symmetric spine with tree-shared pads"
+  }
  },
  "child_clock_ref": "boundary",
  "macros": [],
@@ -220,5 +246,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "refglob": "p_d__ot_q*"
 }

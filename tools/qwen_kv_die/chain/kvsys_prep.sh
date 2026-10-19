@@ -23,7 +23,7 @@ if [ "${OT_KV_TREES:-0}" = 1 ]; then H14="$H14 --host-trees"; V14=$V14,host_tree
 # v1.4.3 (OT_KV_V143=1, needs OT_KV_TREES=1): G3S2 staged head ingress on the closed gather / sstage views, near-head
 # feed-through frames, grown groups, regional reset roots (kv_die.py --v143)
 BV=
-if [ "${OT_KV_RST_PIN_REG:-0}" = 1 ]; then
+if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18, = kv_die.py RST_PIN_REG)
   RPV=physical/ref_tile/qkd_rst_region_pr/views/qkd_rst_region_pr
   python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$RPV" > "$O/rst_pin_view_audit.json" || {
     cat "$O/rst_pin_view_audit.json"; echo 'OT_KV_RST_PIN_REG: selected view is not native PASS'; exit 6;

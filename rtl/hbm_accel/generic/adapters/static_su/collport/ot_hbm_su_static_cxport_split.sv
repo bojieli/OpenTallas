@@ -33,53 +33,96 @@ module ot_hbm_su_cx_epoch #(parameter integer MUT=0)(
 endmodule
 
 // ------------------------------------------------------------------------------------------------ delivery leaf, lane G
-module ot_hbm_su_static_cxport_dl #(parameter integer QID=0, G=0, MUT=0)(
- input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
- input wire del_valid,               // = hub del_valid[G]
- input wire [544:0] del_flit,        // = hub del_flit[545G +: 545]
- input wire [39:0] del_obase,        // = hub del_obase[40G +: 40]
- output reg [1:0] dw_v,              // = hub dw_v[2G +: 2]
- output reg [17:0] dw_row,           // = hub dw_row[18G +: 18]
- output reg [1023:0] dw_d,           // = hub dw_d[1024G +: 1024]
- output reg fault
+// HBM-CXDL 10-18 (route hbm_su_cx_dl_1017-s2-761317600 NEEDS_RTL: FF hold -95.1, TT setup -166.7, 1,045 endpoints):
+// classified NOT clock-tree skew (clk_s / clk_q leaf insertion differ ~47 ps at FF) but the 3:4 crossing INSIDE a
+// two-root leaf: dl_slot (clk_s) -> dw_d (clk_q) is timed by ordinary related-clock STA at the VCO tick (setup 1q =
+// 277.8 ps) and the coincident edge (hold 0), each less the distinct-entry reserve (setup 150 / hold 100); hold repair
+// stalls because the same endpoints fail setup (tools/ref_tile/README: a 3:4 crossing with any logic cannot close
+// natively in a leaf). Fix = the S81 x34 _s/_t precedent (ot_s81_vm_x34, closed 10-16) and RBH-SFUS bridge_release_s:
+// ONE clock root per leaf. The stream leaf ot_hbm_su_static_cxport_dl_s holds the pin registers and TWO banks
+// (one event per serial edge, events alternate banks); the serial leaf ot_hbm_su_static_cxport_dl_q reads the banks
+// alternately (one toggle flop, R kept copies) and keeps the old mux-only zeroing and dw_* / fault registers.
+// The bank -> dw arcs (and sfault_s -> sf_q) become parent-level 3:4 seam arcs with a calendar window (die STA owns
+// them with the epoch multicycle): bank written at stream edge A (A mod 4 in {0,1,3}, A = 4k+{0,1,3} -> bank
+// (3k + {0,1,2}) mod 2), read at serial edge n = ceil((3A+3)/4) => setup >= 3 quanta (833 ps); the bank is rewritten
+// >= 3 quanta after its read (hold window >= 833 ps). Seam 2 x 524 + 2 x 2R + 1 = 1,065 b (the hub's 4 slots would be
+// 2,129 b; slot 2 was never read). Same edges and outputs as before: lockstep vs the hub unchanged.
+module ot_hbm_su_static_cxport_dl_s #(parameter integer QID=0, G=0, MUT=0, R=4)(
+ input wire clk_s, rst_s_n,
+ input wire del_valid,
+ input wire [544:0] del_flit,
+ input wire [39:0] del_obase,
+ output reg [523:0] b0, b1,          // banks {nz 3, row 9, flit 512}
+ output reg [2*R-1:0] v0, v1,        // bank lane code {vh x R, vl x R}
+ output reg sfault_s
 );
- wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
- ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
- // PIN-FIRST SLOTS (HBM-SU6 10-17; gate bf7c343cb: del_valid / del_obase each drove ~1,048 decode gates straight from
- // the pin). The four phase slots ARE the pin registers: each holds the RAW lane {aperture partials, row, flit} plus R
- // kept copies of the 2-bit lane code {hi&v, !hi&v}; every pin feeds only its slot bits (<= 2 gate levels + the slot
- // enable). Half placement and valid zeroing moved to the serial side behind the 4:1 slot mux, one AND per bit, gated
- // by copy r of the lane code (<= ~131 loads per copy); the aperture check finishes there too (it feeds only FAULT).
- // Same edges as the hub (no added cycle): dw_* / fault at the same serial edge as before.
- localparam integer R=4;
+ reg [1:0] sp; reg wp;
+ always @(posedge clk_s or negedge rst_s_n)
+  if(!rst_s_n) begin sp<=2'd0; wp<=1'b0; end
+  else begin sp<=sp+2'd1; if(sp!=2'd2) wp<=~wp; end
  wire [39:0] ob_s = del_obase;
  wire hi_s = (MUT==2) ? 1'b0 : ob_s[6];
  wire vh_s = del_valid && hi_s, vl_s = del_valid && !hi_s;
  wire [2:0] nz_s = {|{ob_s[3:0], ob_s[17:16]^2'(QID), !del_flit[544], ob_s[5:4]^2'(G)}, |ob_s[28:18], |ob_s[39:29]};
- reg [523:0] dl_slot [0:3];                     // {nz 3, row 9, flit 512}
- (* keep = "true" *) reg [8*R-1:0] dv_slot;     // slot s: dv_slot[2R*s +: 2R] = {vh x R, vl x R}
- always @(posedge clk_s) begin
-  dl_slot[sp] <= {nz_s, ob_s[15:7], del_flit[511:0]};
-  for(integer s=0;s<4;s=s+1) if(sp==2'(s)) dv_slot[2*R*s +: 2*R] <= {{R{vh_s}}, {R{vl_s}}};
+ always @(posedge clk_s) if(sp!=2'd2) begin
+  if(wp) begin b1 <= {nz_s, ob_s[15:7], del_flit[511:0]}; v1 <= {{R{vh_s}}, {R{vl_s}}}; end
+  else   begin b0 <= {nz_s, ob_s[15:7], del_flit[511:0]}; v0 <= {{R{vh_s}}, {R{vl_s}}}; end
  end
- reg sfault_s;
  always @(posedge clk_s or negedge rst_s_n) if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && del_valid) sfault_s<=1'b1;
- wire [523:0] dl = dl_slot[rslot];
- reg [2*R-1:0] dv;
- always @* case(rslot) 2'd0: dv=dv_slot[0+:2*R]; 2'd1: dv=dv_slot[2*R+:2*R]; 2'd2: dv=dv_slot[4*R+:2*R]; default: dv=dv_slot[6*R+:2*R]; endcase
+endmodule
+
+module ot_hbm_su_static_cxport_dl_q #(parameter integer MUT=0, R=4)(
+ input wire clk_q, rst_q_n,
+ input wire [523:0] b0, b1,
+ input wire [2*R-1:0] v0, v1,
+ input wire sfault_s,
+ output reg [1:0] dw_v,
+ output reg [17:0] dw_row,
+ output reg [1023:0] dw_d,
+ output reg fault
+);
+ // read bank: serial edge n reads bank (n+1) mod 2 (n = 0 reads the unwritten bank 1, as the hub reads slot 3);
+ // MUT 4: off by one event.  R kept copies: copy r selects data quarter r (<= ~262 loads each).
+ (* keep = "true" *) reg [R-1:0] rp;
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) rp <= (MUT==4) ? {R{1'b0}} : {R{1'b1}}; else rp <= ~rp;
+ wire [2*R-1:0] dv = rp[0] ? v1 : v0;
  wire vh = dv[R], vl = dv[0];
- wire dbad = (vh || vl) && (|dl[523:521]);
+ wire [523:0] dlx;
+ for(genvar r=0;r<R;r=r+1) begin : g_sel
+  assign dlx[128*r +: 128] = rp[r] ? b1[128*r +: 128] : b0[128*r +: 128];
+ end
+ assign dlx[523:512] = rp[0] ? b1[523:512] : b0[523:512];
+ wire dbad = (vh || vl) && (|dlx[523:521]);
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) dw_v<=2'd0; else dw_v <= {vh, vl};
  always @(posedge clk_q) begin
-  dw_row <= {dl[520:512] & {9{vh}}, dl[520:512] & {9{vl}}};
+  dw_row <= {dlx[520:512] & {9{vh}}, dlx[520:512] & {9{vl}}};
   for(integer r=0;r<R;r=r+1) begin
-   dw_d[512+128*r +: 128] <= dl[128*r +: 128] & {128{dv[R+r]}};
-   dw_d[128*r +: 128]     <= dl[128*r +: 128] & {128{dv[r]}};
+   dw_d[512+128*r +: 128] <= dlx[128*r +: 128] & {128{dv[R+r]}};
+   dw_d[128*r +: 128]     <= dlx[128*r +: 128] & {128{dv[r]}};
   end
  end
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(dbad||sf_q) fault<=1'b1;
+endmodule
+
+// composition with the old leaf ports (bench lockstep vs the hub; the die binds dl_s + dl_q as two abutted leaves)
+module ot_hbm_su_static_cxport_dl #(parameter integer QID=0, G=0, MUT=0)(
+ input wire clk_s, clk_q, rst_s_n, rst_q_n,
+ input wire del_valid,
+ input wire [544:0] del_flit,
+ input wire [39:0] del_obase,
+ output wire [1:0] dw_v,
+ output wire [17:0] dw_row,
+ output wire [1023:0] dw_d,
+ output wire fault
+);
+ wire [523:0] b0, b1; wire [7:0] v0, v1; wire sf;
+ ot_hbm_su_static_cxport_dl_s #(.QID(QID),.G(G),.MUT(MUT)) u_s(.clk_s(clk_s),.rst_s_n(rst_s_n),.del_valid(del_valid),
+  .del_flit(del_flit),.del_obase(del_obase),.b0(b0),.b1(b1),.v0(v0),.v1(v1),.sfault_s(sf));
+ ot_hbm_su_static_cxport_dl_q #(.MUT(MUT)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.b0(b0),.b1(b1),.v0(v0),.v1(v1),.sfault_s(sf),
+  .dw_v(dw_v),.dw_row(dw_row),.dw_d(dw_d),.fault(fault));
 endmodule
 
 // ------------------------------------------------------------------------------------------------ inject leaf
@@ -196,35 +239,81 @@ endmodule
 // registers the whole slot word (rq, 528 b) and the lane select is serial->serial on the NEXT edge. COMPILER: the
 // SFU-source reducer command (red_sel / red_cmd osel=1, lane[6]=1) issues at E+1 instead of E = ceil((3A+3)/4); the
 // operand, its ro_v check and the reducer timeline are otherwise unchanged (sfu_x at E+1 is the hub's sfu_x at E).
-module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
- input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
+// HBM-CXDL 10-18 (route hbm_su_cx_rc_1017-s2-761317600 NEEDS_RTL: TT -173.4 / FF hold -77.9, 1,284 endpoints): same
+// class as dl -- every failing arc is a 3:4 crossing inside the two-root leaf (ro_slot / rr_slot1 -> ro / rr_wv / rr_w*
+// stream->serial, rc_slot -> pend / rc_d serial->stream), timed at the VCO tick less the 150 / 100 entry reserve.
+// Fix: one root per leaf. ot_hbm_su_static_cxport_rc_s (stream) holds the ro / rr pin banks (2 each, events alternate)
+// and reads the two serial rc banks alternately on its event edges; ot_hbm_su_static_cxport_rc_q (serial) holds the
+// reducer carry, writes the rc banks alternately on every serial edge, reads the ro / rr banks alternately. Seam
+// windows >= 3 quanta both ways (stream->serial as dl; serial m -> stream ceil((4m+3)/3): 3/5/4 q, rewrite >= 3 q after
+// read). Same edges / outputs as before (lockstep vs the hub).
+module ot_hbm_su_static_cxport_rc_s #(parameter integer MUT=0, R=4)(
+ input wire clk_s, rst_s_n,
  output reg rc_v,
  output reg [2:0] rc_tag,
  output reg [255:0] rc_d,
  input wire rr_v,
  input wire [2:0] rr_tag,
  input wire [255:0] rr_d,
+ input wire [15:0] ro_v,
+ input wire [511:0] ro_x,
+ output reg [527:0] ob0, ob1,        // ro banks {ro_v, ro_x}
+ output reg [267:0] rb0, rb1,        // rr banks {v, tag3, onehot8, d256}
+ input wire [260:0] cb0, cb1,        // serial rc banks
+ output reg sfault_s, rc_coll
+);
+ reg [1:0] sp; (* keep = "true" *) reg [R-1:0] wp;   // wp: bank of this event edge (write ro/rr; rc read = ~wp)
+ always @(posedge clk_s or negedge rst_s_n)
+  if(!rst_s_n) begin sp<=2'd0; wp<={R{1'b0}}; end
+  else begin sp<=sp+2'd1; if(sp!=2'd2) wp<=~wp; end
+ wire s_ev = sp!=2'd2;
+ always @(posedge clk_s) if(s_ev) begin
+  if(wp[0]) begin ob1 <= {ro_v, ro_x}; rb1 <= {rr_v, rr_tag, 8'd1 << rr_tag, rr_d}; end
+  else      begin ob0 <= {ro_v, ro_x}; rb0 <= {rr_v, rr_tag, 8'd1 << rr_tag, rr_d}; end
+ end
+ always @(posedge clk_s or negedge rst_s_n)
+  if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (rr_v||(|ro_v))) sfault_s<=1'b1;
+ // event p reads the rc bank written at serial m with p = ceil((4m+3)/3): p = 0 reads bank 1 (as the hub's slot 2)
+ wire [260:0] cbx;
+ for(genvar r=0;r<R;r=r+1) begin : g_cb
+  localparam integer LO = (261*r)/R, HI = (261*(r+1))/R;
+  assign cbx[HI-1:LO] = wp[r] ? cb0[HI-1:LO] : cb1[HI-1:LO];
+ end
+ wire [260:0] ev = s_ev ? cbx : 261'd0;
+ reg [260:0] pend;
+ always @(posedge clk_s) pend[259:0] <= ev[259:0];
+ always @(posedge clk_s or negedge rst_s_n)
+  if(!rst_s_n) begin rc_v<=1'b0; pend[260]<=1'b0; rc_coll<=1'b0; end
+  else begin
+   pend[260] <= ev[260] && ev[259];
+   rc_v <= (ev[260] && !ev[259]) || pend[260];
+   if(ev[260] && !ev[259] && pend[260]) rc_coll<=1'b1;
+  end
+ always @(posedge clk_s)
+  if(ev[260] && !ev[259]) begin rc_tag<=ev[258:256]; rc_d<=ev[255:0]; end
+  else if(pend[260]) begin rc_tag<=pend[258:256]; rc_d<=pend[255:0]; end
+endmodule
+
+module ot_hbm_su_static_cxport_rc_q #(parameter integer MUT=0, R=4)(
+ input wire clk_q, rst_q_n,
  input wire red_sv,
  input wire [31:0] red_tag,
  input wire [31:0] red_x,
  output reg rr_wv,
  output reg [4:0] rr_wa,
  output reg [255:0] rr_wd,
- input wire [15:0] ro_v,
- input wire [511:0] ro_x,
  input wire [11:0] red_sel,
  output reg [31:0] sfu_x,
+ input wire [527:0] ob0, ob1,
+ input wire [267:0] rb0, rb1,
+ output reg [260:0] cb0, cb1,
+ input wire sfault_s, rc_coll,
  output reg fault
 );
- wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
- ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
- reg sfault_s;
- reg [527:0] ro_slot [0:3];
- // MUX-ONLY CROSSING for rr: the tag is one-hot decoded on the stream side (slot {v, tag3, onehot8, d256})
- reg [267:0] rr_slot1 [0:3];
- always @(posedge clk_s) begin ro_slot[sp] <= {ro_v, ro_x}; rr_slot1[sp] <= {rr_v, rr_tag, 8'd1 << rr_tag, rr_d}; end
- always @(posedge clk_s or negedge rst_s_n)
-  if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (rr_v||(|ro_v))) sfault_s<=1'b1;
+ // rp: serial edge n reads the ro / rr bank (n+1) mod 2 and writes rc bank n mod 2 (= ~rp); MUT 4: off by one event
+ (* keep = "true" *) reg [R-1:0] rp;
+ always @(posedge clk_q or negedge rst_q_n)
+  if(!rst_q_n) rp <= (MUT==4) ? {R{1'b0}} : {R{1'b1}}; else rp <= ~rp;
  reg r_sv; reg [31:0] r_tag, r_x;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) r_sv<=1'b0; else r_sv<=red_sv;
  always @(posedge clk_q) begin r_tag<=red_tag; r_x<=red_x; end
@@ -233,20 +322,23 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  reg [255:0] carry;
  reg [255:0] cvec;
  always @* begin cvec=carry; if(cw) cvec[32*r_tag[12:10]+:32]=r_x; end
- // carry reset (HBM-SU6: rst_q_n drove 271 flops): two kept regional copies released one serial edge after the port.
- // Exact: at that first edge r_sv is still 0 (it is reset by the port), so carry would have reloaded 0 anyway.
  (* keep = "true" *) reg [1:0] crst_n;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) crst_n<=2'b00; else crst_n<=2'b11;
  for(genvar h=0;h<2;h=h+1) begin : g_carry
   always @(posedge clk_q or negedge crst_n[h])
    if(!crst_n[h]) carry[128*h+:128]<=128'd0; else carry[128*h+:128] <= emit ? 128'd0 : cvec[128*h+:128];
  end
- reg [260:0] rc_slot [0:2];
- always @(posedge clk_q) rc_slot[sq] <= {emit, r_tag[17]&&(MUT!=3), r_tag[16:14], cvec};
+ always @(posedge clk_q)
+  if(rp[0]) cb0 <= {emit, r_tag[17]&&(MUT!=3), r_tag[16:14], cvec};
+  else      cb1 <= {emit, r_tag[17]&&(MUT!=3), r_tag[16:14], cvec};
  reg [7:0] tv; reg [4:0] tdst [0:7];
- wire [267:0] rr1 = rr_slot1[rslot];
- wire rrv = rr1[267]; wire [2:0] rrt = rr1[266:264]; wire [7:0] rroh = rr1[263:256]; wire [255:0] rr_dd = rr1[255:0];
- wire tvh = |(tv & rroh);                     // tv[rrt] as an AND-OR of the one-hot tag
+ wire [267:0] rr1;
+ for(genvar r=0;r<R;r=r+1) begin : g_rr
+  localparam integer LO = (268*r)/R, HI = (268*(r+1))/R;
+  assign rr1[HI-1:LO] = rp[r] ? rb1[HI-1:LO] : rb0[HI-1:LO];
+ end
+ wire rrv = rr1[267]; wire [7:0] rroh = rr1[263:256]; wire [255:0] rr_dd = rr1[255:0];
+ wire tvh = |(tv & rroh);
  reg [4:0] tdh; integer u;
  always @* begin tdh = 5'd0; for(u=0;u<8;u=u+1) if(rroh[u]) tdh = tdh | tdst[u]; end
  reg rbad;
@@ -262,25 +354,10 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
   rr_wa <= tdh; rr_wd <= rr_dd;
   if(emit && r_tag[23]) tdst[r_tag[16:14]] <= r_tag[22:18];
  end
- reg [260:0] pend; reg rc_coll;
- wire [260:0] ev = s_ev ? rc_slot[oslot_i] : 261'd0;
- // HBM-SU6: only pend's valid bit is reset (rst_s_n drove 265 flops); its payload is read only under pend[260]
- always @(posedge clk_s) pend[259:0] <= ev[259:0];
- always @(posedge clk_s or negedge rst_s_n)
-  if(!rst_s_n) begin rc_v<=1'b0; pend[260]<=1'b0; rc_coll<=1'b0; end
-  else begin
-   pend[260] <= ev[260] && ev[259];
-   rc_v <= (ev[260] && !ev[259]) || pend[260];
-   if(ev[260] && !ev[259] && pend[260]) rc_coll<=1'b1;
-  end
- always @(posedge clk_s)
-  if(ev[260] && !ev[259]) begin rc_tag<=ev[258:256]; rc_d<=ev[255:0]; end
-  else if(pend[260]) begin rc_tag<=pend[258:256]; rc_d<=pend[255:0]; end
  reg [527:0] ro;
- always @(posedge clk_q) ro <= ro_slot[rslot];          // mux-only crossing; lane select next serial edge
- // HBM-SU6: red_sel[3:0] (528 / 264 loads, a runtime 32-b part-select) is decoded once into a 16-b one-hot (each bit
- // gates 33 loads); the select stays combinational from the pin because sfu_x at this edge is the contract (a pin flop
- // would move the SFU operand to E+2: reducer timeline change, not taken here).
+ for(genvar r=0;r<R;r=r+1) begin : g_ro
+  always @(posedge clk_q) ro[132*r +: 132] <= rp[r] ? ob1[132*r +: 132] : ob0[132*r +: 132];
+ end
  wire [15:0] ro_oh = 16'd1 << red_sel[3:0];
  wire ro_mine = red_sel[11] && red_sel[7] && red_sel[6];
  wire ro_ext  = red_sel[10:8]==3'd0 || red_sel[10:8]==3'd1 || red_sel[10:8]==3'd3;
@@ -291,6 +368,36 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s||rc_coll;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(rbad||ro_bad||sf_q) fault<=1'b1;
+endmodule
+
+// composition with the old leaf ports (bench lockstep vs the hub; the die binds rc_s + rc_q as two abutted leaves)
+module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
+ input wire clk_s, clk_q, rst_s_n, rst_q_n,
+ output wire rc_v,
+ output wire [2:0] rc_tag,
+ output wire [255:0] rc_d,
+ input wire rr_v,
+ input wire [2:0] rr_tag,
+ input wire [255:0] rr_d,
+ input wire red_sv,
+ input wire [31:0] red_tag,
+ input wire [31:0] red_x,
+ output wire rr_wv,
+ output wire [4:0] rr_wa,
+ output wire [255:0] rr_wd,
+ input wire [15:0] ro_v,
+ input wire [511:0] ro_x,
+ input wire [11:0] red_sel,
+ output wire [31:0] sfu_x,
+ output wire fault
+);
+ wire [527:0] ob0, ob1; wire [267:0] rb0, rb1; wire [260:0] cb0, cb1; wire sfs, rcc;
+ ot_hbm_su_static_cxport_rc_s #(.MUT(MUT)) u_s(.clk_s(clk_s),.rst_s_n(rst_s_n),.rc_v(rc_v),.rc_tag(rc_tag),.rc_d(rc_d),
+  .rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.ro_v(ro_v),.ro_x(ro_x),.ob0(ob0),.ob1(ob1),.rb0(rb0),.rb1(rb1),.cb0(cb0),.cb1(cb1),
+  .sfault_s(sfs),.rc_coll(rcc));
+ ot_hbm_su_static_cxport_rc_q #(.MUT(MUT)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),
+  .rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),.red_sel(red_sel),.sfu_x(sfu_x),.ob0(ob0),.ob1(ob1),.rb0(rb0),.rb1(rb1),
+  .cb0(cb0),.cb1(cb1),.sfault_s(sfs),.rc_coll(rcc),.fault(fault));
 endmodule
 
 // ------------------------------------------------------------------------------------------------ composition (bench)

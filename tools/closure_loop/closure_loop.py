@@ -123,6 +123,31 @@ def bench_crashed(st, rc, tail):
     if rc in BENCH_CRASH_RC or RESOURCE_RE.search(tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
+
+
+# BENCH-TOOL-RACE (ROOT-INF2 2026-10-18): Verilator 5.050 --hierarchical writes a two-target rule (<blk>.sv <blk>.mk) into
+# <top>_hier.mk; `make -j` runs that hier verilation twice in parallel, one copy rewrites the block's precompiled header
+# while the other compiles against it -> "one or more PCH files were found, but they were invalid" / "__pch.h.fast: No such
+# file".  The build exits 2 and the bench never ran: hcoll_v7_tkm_tile_e86 (HBM-TKM3 2/2 builds) would have been
+# NEEDS_RTL on a race.  A failing bench whose logs (stage log, spec logs, or any *.log written under the run's bench
+# tree during the stage) carry that signature is a tool crash: retried once, then NEEDS_HUMAN -- never an RTL verdict.
+TOOL_RACE_RE = re.compile(r"one or more PCH files were found, but they were invalid|"
+                          r"fatal error: \S*__pch\.h\.(?:fast|slow)\S*: No such file", re.M)
+
+
+def bench_tool_race(v, tail):
+    """the PCH-race line of a failed bench (tail first, then *.log under {run}/bench newer than the stage start), or ''"""
+    m = TOOL_RACE_RE.search(tail or "")
+    if m:
+        return m.group(0)
+    t, run = v.get("stage_tag"), v.get("run")
+    if not t or not run or not v.get("host"):
+        return ""
+    pat = TOOL_RACE_RE.pattern.replace("\\S", "[^[:space:]]").replace("(?:", "(")
+    r = ssh(v["host"], f"[ -f {run}/cl/{t}.start ] || exit 0; find {run}/bench -maxdepth 5 -name '*.log' -newer {run}/cl/{t}.start "
+                       f"-size -200M -print0 2>/dev/null | xargs -0 -r grep -hoE -m1 {shlex.quote(pat)} 2>/dev/null | head -1; true",
+            timeout=120)
+    return (r.stdout or "").strip()[:300] if not r.returncode else ""
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
@@ -5425,6 +5450,16 @@ def bench_track(j, fleet, stl):
         if v.get("fail_witnesses") is not j.get("fail_witnesses"):
             j.setdefault("fail_witnesses", {}).update(v.get("fail_witnesses") or {})
         e["state"] = "done"
+        race = "" if passed else bench_tool_race(v, tail)
+        if race:
+            if e["n"] < 2:
+                e["state"] = "retry"
+                event(j, f"bench track: {k} tool race (rc={rc}; BENCH-TOOL-RACE: {race[:200]}); retry once")
+                return True
+            stop_main_for_bench(j)
+            finish(j, "NEEDS_HUMAN", f"{k} tool race twice in the bench track (rc={rc})",
+                   f"NEEDS_HUMAN: bench {k} hit a build tool race twice (rc={rc}): {race}; route stopped")
+            return False
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
@@ -6068,6 +6103,9 @@ def step(j, fleet):
                 return crash(j, st, fleet, f"bench tool crash: rc={rc} ({'negative control' if st['expect'] == 'fail' else 'positive bench'}"
                                            f" with no verdict evidence)")
             passed = bench_outcome(j, st, rc, ok_extra)
+            race = "" if passed else bench_tool_race(j, tail)
+            if race:
+                return crash(j, st, fleet, f"bench tool race: rc={rc} (BENCH-TOOL-RACE: {race[:200]})")
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
                 finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
