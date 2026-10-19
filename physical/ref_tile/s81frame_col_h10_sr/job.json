@@ -1,0 +1,104 @@
+{
+ "name": "s81frame_col_h10_sr-fg1-COMMIT",
+ "block": "col_h10_l4_lp",
+ "ref_tile": true,
+ "owner": "Claude:TW3-S81-FRAMEGATE",
+ "purpose": "S81 col_h10 landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate",
+ "threads": 32,
+ "peak_ram_gb": 192,
+ "source": {
+  "branch": "claude/tw3-framegate-1019",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; col_h10_l4_lp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit.sv rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81frame_col_h10_sr/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81frame_col_h10_sr/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 192
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81frame_col_h10_sr --out {RUN}/record/views/col_h10_l4_lp --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536 --macro-view physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp --macro-view physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq --macro-view physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4 --macro-view physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS --macro-view physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N --macro-view physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S --macro-view physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd --macro-view physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd --macro-view physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu --macro-view physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd --macro-view physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu --macro-view physical/ref_tile/s81net_rstg/views/dsfd_rstg --macro-view physical/s81_die_views/bf_compact199/ot_v41_bf_col --macro-view physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots --macro-view physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566 --macro-view physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81frame_col_h10_sr/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+   "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+   "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd",
+   "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "physical/ref_tile/s81net_rstg/views/dsfd_rstg",
+   "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+   "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots",
+   "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81frame_col_h10_sr/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81frame_col_h10_sr/s81frame_col_h10_sr-fg1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "no_bench_reason": "frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)",
+ "structural_change": "TW3-S81-FRAMEGATE 10-19 (COORD 0jy option A): col_h10 landed frame (3 regions r0/r1/r2, every crossing landed as a compiler re-schedule, 3143 landings, reset hops {'r0': 0, 'r1': 4, 'r2': 7} at reach 405 from measured region centres {'r0': [623.2, 646.9], 'r1': [613.5, 1888.9], 'r2': [602.2, 3102.5]}); hard children legalised from the c26l GEN placement (tools/s81_dv/frame_kit.py)"
+}

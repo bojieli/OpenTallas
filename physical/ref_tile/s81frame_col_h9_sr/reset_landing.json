@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "col_h9_l4_lp",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n -> dsfd_cfifo_crs4 rst (2-stage rsync_q on cr) -> crs4 rs = n257 -> lp.py regional reset runs (ot_pl_pad chains per region, reach 405 hops from the measured centres); rst_n also reaches the 4 xo forwarded-clock relays u_xo* (.rs, async assert, their own RSREG). A kit landing would shift the crs4 release against the lane hop-0 gate the frame calendar is benched on"
+}
