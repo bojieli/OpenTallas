@@ -66,28 +66,87 @@ def plan_rows(c):
     for r in R:
         worst[root[r]] = max(worst[root[r]], lag[r])
     off = {h: min(0, 1 - worst[h]) for h in heads}
-    kids = collections.Counter(parent.values())
-    remaster = []
-    for r in sorted(kids):
-        m = I[r]['master']
-        remaster.append(dict(inst=r, old=m, master=m + '_rr', source=RR_SRC, rtl_deps=list(RR_DEPS)))
+    adj = collections.defaultdict(list)
+    for y, x in parent.items():
+        adj[x].append(y)
+        adj[y].append(x)
+    # feed fallbacks (a head whose rs has no reachable leaf home, e.g. a row starting inside a 28 um channel): the
+    # stations along the row's heaviest branch, shallowest first; finalize() re-roots the row's reset tree there
+    sub = collections.Counter()
+    for r in sorted(depth, key=depth.get, reverse=True):
+        sub[r] += 1
+        if r in parent:
+            sub[parent[r]] += sub[r]
+    kids_of = collections.defaultdict(list)
+    for y, x in parent.items():
+        kids_of[x].append(y)
+    alts = {}
+    for h in heads:
+        path, x = [], h
+        while kids_of[x] and len(path) < 16:
+            x = max(sorted(kids_of[x]), key=lambda k: sub[k])
+            path.append(x)
+        alts[h] = path
     size = collections.Counter(root.values())
-    stats = dict(stations=len(R), heads=len(heads), chained=len(parent), remastered=len(remaster),
-                 tails_base_master=len(R) - len(remaster), max_depth=max(depth.values(), default=0),
+    stats = dict(stations=len(R), heads=len(heads), chained=len(parent), max_depth=max(depth.values(), default=0),
                  merges=sum(1 for r in R if len(up[r]) > 1), max_row_stations=max(size.values(), default=0),
                  head_offsets=dict(collections.Counter(off.values())),
-                 rr_masters=dict(collections.Counter(x['master'] for x in remaster)),
                  domains=dict(collections.Counter(por[h]['source'][1] for h in heads)))
-    return dict(heads=off, parent=parent, depth=depth, lag=lag, root=root, remaster=remaster, stats=stats)
+    rows = dict(heads=off, parent=parent, depth=depth, lag=lag, root=root, adj=adj, alts=alts, stats=stats,
+                masters={r: I[r]['master'] for r in R})
+    fin = finalize(rows, {})
+    stats.update(remastered=len(fin['remaster']), tails_base_master=len(R) - len(fin['remaster']),
+                 rr_masters=dict(collections.Counter(x['master'] for x in fin['remaster'])))
+    return rows
 
 
-def check_release(rows, head_age, domain_age):
-    """independent edge-model check: every station releases its stage by D + 1 + depth (head_age: {head: A})."""
-    bad = []
-    age = {}
+def tree_dist(rows, f):
+    """reset-tree distance from station f over its row (undirected BFS tree) -> {station: (dist, reset parent)}"""
+    out = {f: (0, None)}
+    q = collections.deque([f])
+    while q:
+        x = q.popleft()
+        for y in sorted(rows['adj'][x]):
+            if y not in out:
+                out[y] = (out[x][0] + 1, x)
+                q.append(y)
+    return out
+
+
+def feed_offset(rows, f):
+    """target offset (<= 0) of a forest leaf feeding station f: every station x of the row releases its stage at
+    A + dist(f, x) + S_x <= D + 1 + depth(x)"""
+    t = tree_dist(rows, f)
+    return min(0, min(1 + rows['depth'][x] - rows['lag'][x] - d for x, (d, _) in t.items()))
+
+
+def finalize(rows, feeds):
+    """feeds {head: feed station} (default the head) -> reset parent map, feed list, remaster list"""
+    rparent, feed_of = {}, {}
+    for h in rows['heads']:
+        f = feeds.get(h, h)
+        for x, (d, p) in tree_dist(rows, f).items():
+            feed_of[x] = f
+            if p is not None:
+                rparent[x] = p
+    drivers = sorted(set(rparent.values()))
+    remaster = [dict(inst=r, old=rows['masters'][r], master=rows['masters'][r] + '_rr', source=RR_SRC,
+                     rtl_deps=list(RR_DEPS)) for r in drivers]
+    return dict(rparent=rparent, feed_of=feed_of, feeds=sorted(set(feed_of.values())), remaster=remaster)
+
+
+def check_release(rows, fin, feed_age, domain_age):
+    """independent edge-model check: every station releases its stage by D + 1 + depth (feed_age: {feed: A},
+    domain_age: {head: D}); rs age = forest leaf age at a feed, else the reset parent's rso age + 1."""
+    bad, age = [], {}
+
+    def rs_age(r):
+        if r not in age:
+            p = fin['rparent'].get(r)
+            age[r] = feed_age[r] if p is None else rs_age(p) + 1
+        return age[r]
     for r in sorted(rows['depth'], key=rows['depth'].get):
-        p = rows['parent'].get(r)
-        age[r] = head_age[r] if p is None else age[p] + 1     # rs age (head: forest leaf; else parent's rso)
+        rs_age(r)
         D = domain_age[rows['root'][r]]
         if age[r] + rows['lag'][r] > D + 1 + rows['depth'][r]:
             bad.append((r, age[r] + rows['lag'][r], D + 1 + rows['depth'][r]))

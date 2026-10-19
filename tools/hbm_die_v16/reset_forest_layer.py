@@ -70,7 +70,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
     # HBM-RSTROW (coordinator 0jp, Proposal A): relay rows carry their own reset (reset_rows.py).  Only row heads are
     # forest sinks; their leaves release at domain age + off (off <= 0) so every station releases by D + 1 + depth.
     rows = reset_rows.plan_rows(c) if relay_rows else None
-    offmap = {}
+    offmap, feeds = {}, {}
     if rows:
         for h, o in rows['heads'].items():
             offmap[(h, 'rs')] = o
@@ -137,6 +137,22 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                     leaf = g.reserve('hop', centre([s[1] for s in chunk]),
                                      targets=[('rst_n', s[1]) for s in chunk], allowed=allowed)
                 except GeometryError:
+                    if len(chunk) == 1 and rows and chunk[0][0][:2] in offmap and chunk[0][0][0] in rows['alts']:
+                        # HBM-RSTROW: an unhomable row head (row starts in a narrow channel) -> feed the row at a deeper
+                        # station of its heaviest branch; the stations above it take the reset backwards (rso -> rs)
+                        h, alt = chunk[0][0][0], None
+                        for f in rows['alts'][h]:
+                            try:
+                                fxy = g.pin(f, 'rs')
+                                alt = g.reserve('hop', fxy, targets=[('rst_n', fxy)], allowed=allowed)
+                            except GeometryError:
+                                continue
+                            feeds[h] = f
+                            offmap[(f, 'rs')] = reset_rows.feed_offset(rows, f)
+                            placed.append((alt, [((f, 'rs', 0, 1), fxy)]))
+                            break
+                        if alt is not None:
+                            continue
                     if len(chunk) == 1:
                         if survey is not None:   # --survey: record the unhomable sink, keep planning (layer refused)
                             survey.append(dict(pin=f'{chunk[0][0][0]}.{chunk[0][0][1]}', xy=[round(v, 1) for v in chunk[0][1]],
@@ -288,16 +304,20 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
     if rows:
         por_of = {x['instance']: (x['domain'], x['source'][1]) for x in c['clock_resets']
                   if x['kind'] == 'reset' and x['port'] == 'rs' and x['instance'] in rows['depth']}
-        missing = [h for h in rows['heads'] if h not in head_age]
+        fin = reset_rows.finalize(rows, feeds)
+        missing = [f for f in fin['feeds'] if f not in head_age]
         if missing and not survey:
-            raise GeometryError(f'{len(missing)} relay row heads got no forest leaf, e.g. {missing[:5]}')
+            raise GeometryError(f'{len(missing)} relay row feeds got no forest leaf, e.g. {missing[:5]}')
         if not missing:
-            st_age, bad = reset_rows.check_release(rows, head_age, {h: dom_age[por_of[h]] for h in rows['heads']})
+            st_age, bad = reset_rows.check_release(rows, fin, head_age, {h: dom_age[por_of[h]] for h in rows['heads']})
             if bad:
                 raise GeometryError(f'relay row release check: {len(bad)} stations release after D + 1 + depth, e.g. {bad[:5]}')
-            report['relay_rows']['max_station_rso_age'] = max(st_age.values(), default=0)
+            report['relay_rows']['max_station_rs_age'] = max(st_age.values(), default=0)
+        report['relay_rows'].update(fed_below_head=len(feeds), feeds_below_head={h: f for h, f in sorted(feeds.items())},
+                                    remastered=len(fin['remaster']),
+                                    rr_masters=dict(collections.Counter(x['master'] for x in fin['remaster'])))
         hops = []
-        for r, p in sorted(rows['parent'].items()):
+        for r, p in sorted(fin['rparent'].items()):
             dom = por_of[r][0]
             w = int(reset_rows.BASE.match(c['instances'][p]['master']).group(1))
             # rso sits on the o face of the _rr master (kit HBM-RSTROW-RTL); the placed base LEF has no rso yet: the
@@ -309,7 +329,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         report['relay_rows'].update(max_row_hop_um=max(hops, default=0), row_hops_over_reach=sum(h > reach for h in hops))
         if any(h > reach for h in hops):
             raise GeometryError(f'{sum(h > reach for h in hops)} relay-row reset hops exceed the reach')
-        remaster = rows['remaster']
+        remaster = fin['remaster']
     if survey:
         raise GeometryError(f'{len(survey)} reset sinks have no reachable leaf home (survey: see report unhomable)')
     if mut_skew:

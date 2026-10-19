@@ -305,7 +305,7 @@ def test_relay_rows_chain_heads_only(case):
     stages = {t['name']: (int(t['master'][len('hbfd_rrl_pad'):]) if 'pad' in t['master'] else 1) for t in spec['instances']}
     assert sorted(rep['domains']['stream:por_stream']['actual_leaf_ages']) == [D - 2, D]
     assert stages[leaf_of['a']] - stages[leaf_of['r0']] == 2
-    assert rr['max_station_rso_age'] == D - 2 + 2
+    assert rr['max_station_rs_age'] == D - 2 + 2
 
 
 def test_relay_rows_reject_cycle(case):
@@ -319,3 +319,39 @@ def test_relay_rows_reject_cycle(case):
     c['edges'] += [dict(source=['r0', 'o', 0, 1], sink=['r1', 'i', 0, 1]), dict(source=['r1', 'o', 0, 1], sink=['r0', 'i', 0, 1])]
     with pytest.raises(ValueError, match='relay-only cycles'):
         run(case, relay_rows=True)
+
+
+def test_relay_rows_feed_below_unhomable_head(case, monkeypatch):
+    """HBM-RSTROW: the head r0 has no leaf home (row starts in a channel) -> the row is fed at r1; r0 takes rs from
+    r1.rso (backwards), r2 from r1.rso; the feed target offset covers r0's depth-0 release (off = 1 - S_r0 - 1 = -3)."""
+    import reset_forest_geometry as RG
+    c, m, v = case
+    for name, w in (('hbfd_rly_624_EW', 624), ('hbfd_rly_48_EW', 48)):
+        pins = {'rs': (10, 0), 'ck': (12, 0)}
+        pins.update({f'o[{k}]': (0, 10) for k in range(w)})
+        pins.update({f'i[{k}]': (20, 10) for k in range(w)})
+        lef(v, name, 20, 20, pins)
+    for n, (mst, x) in {'r0': ('hbfd_rly_624_EW', 450), 'r1': ('hbfd_rly_48_EW', 300), 'r2': ('hbfd_rly_48_EW', 150)}.items():
+        m['placement'][n] = dict(m=mst, x=x, y=300, w=20, h=20, o='R0')
+        c['instances'][n] = dict(master=mst)
+        c['clock_resets'].append(dict(instance=n, port='rs', bits=1, kind='reset', domain='stream',
+                                      source=['hb_ckgen', 'por_stream']))
+    c['edges'] += [dict(source=['a', 'q', 0, 48], sink=['r0', 'i', 0, 48]), dict(source=['r0', 'o', 0, 48], sink=['r1', 'i', 0, 48]),
+                   dict(source=['r1', 'o', 0, 48], sink=['r2', 'i', 0, 48])]
+    real = RG.Geometry.reserve
+
+    def reserve(self, kind, point, targets=(), **kw):
+        if any(abs(q[0] - 460) < 1e-6 and abs(q[1] - 300) < 1e-6 for _, q in targets):
+            raise GeometryError('test: r0.rs walled in')
+        return real(self, kind, point, targets, **kw)
+    monkeypatch.setattr(RG.Geometry, 'reserve', reserve)
+    spec, rep = run(case, relay_rows=True)
+    rr = rep['relay_rows']
+    assert rr['feeds_below_head'] == {'r0': 'r1'}
+    ch = {e['dst'][0]: e['src'] for e in spec['edges'] if e['src'][1] == 'rso'}
+    assert ch == {'r0': ['r1', 'rso'], 'r2': ['r1', 'rso']}
+    assert [x['inst'] for x in spec['remaster']] == ['r1']
+    D = rep['domains']['stream:por_stream']['age']
+    assert sorted(rep['domains']['stream:por_stream']['actual_leaf_ages']) == [D - 3, D]
+    # r0 releases its stage at (D - 3) + 1 + 3 = D + 1 = D + 1 + depth 0: exact
+    assert rr['max_station_rs_age'] == D - 2
