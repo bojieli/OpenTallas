@@ -124,7 +124,7 @@ module tb_rd_pair;
   read_seen=0;readback(2,2,464);if(read_seen!=2) errors=errors+1;
   // Reset is a deliberate fault-injection event, not a run-time scheduling wait.
   phase=4;send(0,4,480);
-  wait(clean[0]);@(negedge clk);aborting=1;rst_n=0;
+  wait(clean[0]);@(posedge clk);@(negedge clk);aborting=1;rst_n=0;
   tick(8);rst_n=1;phase=5;tick(32);aborting=0;
   load();phase=2;writes=0;ndue=0;vseen=0;send(0,4,448);tick(70);
   if(writes!=4)errors=errors+1;
