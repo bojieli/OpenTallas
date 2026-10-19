@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.hbm_kr_ready_bridge.v1",
+  "verdict": "PASS",
+  "mutant": true,
+  "mutant_parameter": "MUT",
+  "fail_regex": "KR_BRIDGE_DATA_MISMATCH",
+  "returncode": 1,
+  "source_base_revision": "8389e864f",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kr_ready_bridge.sv": "faecd9fc8aa9193fcc1dd4eb87308bba8094fa60e492aa0a62780ed039dca100",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/test/hbm_accel/svg_rel/tb_hbm_kr_ready_bridge.sv": "e92539782a5b0c01d8846db833dd6365c1ccc2223e34dea964898bb692984cdc",
+    "tools/hbm_layer_vehicle/hbm_kr_ready_bridge.py": "4154336f2760af7672a4d5d33a9667719085884dddab41b32288d31831e5b4a8"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "log": "txn_mutant_fail.log",
+  "summary": []
+}

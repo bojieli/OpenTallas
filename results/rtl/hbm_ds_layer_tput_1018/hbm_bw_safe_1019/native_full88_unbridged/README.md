@@ -1,0 +1,1 @@
+Sourcea9604c68e full native production fails at stream720 in return CDC because the legacy same-edge KR consumer was connected directly to the native H9b previous-ready source. No operations completed. This failure motivated the explicit opt-in bridge in32477647e; it is not an AQ refresh failure.

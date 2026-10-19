@@ -1,0 +1,10 @@
+MEM sectors=35372
+V 640 0
+V 643 1
+V 646 2
+V 649 3
+FAULT svg cycle 720 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0)
+ISSUER rc 84 sq_n 4 gq_n 0 gh_at 0 go_busy 0 cache_ready 00 block_ready 0000 a_v 1 p_v 1 st_v 1 s_blk 10 rd_q 0
+[607083000] %Fatal: tb_hbm_svg_rel_sm.sv:112: Assertion failed in tb_hbm_svg_rel_sm: svg fault
+%Error: /srv/opentallas-scratch/claude/hbm-bw-final-1019/smb/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:112: Verilog $stop
+Aborting...
