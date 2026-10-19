@@ -1,0 +1,17 @@
+{
+  "scope": "TT Liberty clock input capacitance only, excludes clock network/internal switching",
+  "candidate": {
+    "wclk": 9.3458,
+    "rclk": 9.3458
+  },
+  "baseline": {
+    "clk": 9.3458
+  },
+  "candidate_cap_unit": "1, ff",
+  "baseline_cap_unit": "1, ff",
+  "candidate_macro_clock_cap_ff": 168.2244,
+  "baseline_macro_clock_cap_ff": 46.729,
+  "clock_cap_ratio": 3.6,
+  "delta_macro_clock_cap_ff": 121.4954,
+  "power_claim": null
+}
