@@ -1,0 +1,125 @@
+{
+ "name": "smh_int8_t1-t1-COMMIT",
+ "block": "ot_smh_int8_tile",
+ "ref_tile": true,
+ "owner": "Claude:LH-SMATT/INT8",
+ "purpose": "SAFE hard tile of the smh_attn ENABLE_INT8 packet-ingress adapter (COORD 0ki; GEN2e l13_int8 sets ENABLE_INT8 1 on all 16 SM): cycle-exact with ot_smh_static_int8 (low beat +2, high +3, priced), every pin registered in RTL, one 12-level logic stage, kept selects <=32 loads, no macros. Pin-bound outline (2,105 pins, N in / S out <=4.5 pins/um).",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/smh-int8-tile-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/sm/static",
+   "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+   "results/arch/lhsmatt_int8_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_smh_int8_tile u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/sm/static/ot_smh_int8_tile.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "i8t_exact",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_bench.sh {RUN}/i8t_exact none 20000 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^I8T PASS checked=",
+    "min_count_regex": "^I8T PASS checked=(\\d+)",
+    "pass_witness": "results/arch/lhsmatt_int8_1019/bench/exact.log"
+   },
+   {
+    "name": "i8t_mut_pend",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_bench.sh {RUN}/i8t_mut_pend pend 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/lhsmatt_int8_1019/bench/mut_pend.log"
+   },
+   {
+    "name": "i8t_mut_sign",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_bench.sh {RUN}/i8t_mut_sign sign 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/lhsmatt_int8_1019/bench/mut_sign.log"
+   },
+   {
+    "name": "i8t_mut_tag",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_bench.sh {RUN}/i8t_mut_tag tag 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/lhsmatt_int8_1019/bench/mut_tag.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/smh_int8_t1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/smh_int8_t1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/smh_int8_t1 --out {RUN}/record/views/ot_smh_int8_tile  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/smh_int8_t1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/smh_int8_t1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/smh_int8_t1/smh_int8_t1-t1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
