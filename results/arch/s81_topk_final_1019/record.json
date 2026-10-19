@@ -1,0 +1,712 @@
+{
+ "schema": "opentallas.s81_topk_final.v1",
+ "date": "2026-10-19",
+ "status": "exact production-shape candidate; default OFF; physical qualification pending",
+ "rtl_define": "OT_S81PH_SEL_INDEXED13",
+ "compiler_flag": "--bk-indexed13",
+ "vehicle": "real dsdv_bk_sel, 4x512 candidates, pinned Verilator 5.050 on ot-epyc8",
+ "classification": {
+  "old_price_cycles": 178,
+  "old_compiled_cycles": 6692,
+  "old_ingress_beats": 5983,
+  "dominant_cause": "Serial 276b V rung; sparse position windows require REBASE and nearly one two-beat BEAT per candidate. Not a reduction-order error or selector initiation-interval failure.",
+  "old_price_scope": "earlier final-select primitive; omits the production rung serialization"
+ },
+ "format": {
+  "type": 8,
+  "tuples_per_word": 13,
+  "tuple_bits": 36,
+  "tuple": "data[36*i+:16] BF16 score, data[36*i+16+:20] ORIGINAL index",
+  "mask": "data[480:468]",
+  "last": "data[481]",
+  "header": "unchanged type1, tag, base, k, qslot",
+  "ordering": "strictly ascending original indices in each quarter; native golden score/tie/index output order unchanged",
+  "empty_lanes": 3
+ },
+ "schedule": {
+  "candidates": 2048,
+  "ingress_logical_words": 164,
+  "hdr_single_beats": 4,
+  "packed_double_beats": 320,
+  "ingress_wire_beats": 324,
+  "rung_bits": 276,
+  "ingress_wire_bits": 89424,
+  "tail_budget_cycles": 640,
+  "egress_reserved_beats": 74,
+  "span_actual_L20_no_boot": 1033,
+  "span_safe_reserved_no_boot": 1037,
+  "span_actual_resetbench": 1035,
+  "span_reserved_resetbench": 1039,
+  "span_saving_vs_legacy_actual_cycles": 5659,
+  "no_added_unit_pipeline_cycles": true,
+  "drain": "last input+640; CTL at W0-10 on vi_n; reserve74vo_s slots; forbid unrelated southbound CTL during window"
+ },
+ "transport": {
+  "tp4_topk_merge_cycles": 551,
+  "tp4_record_payload_bytes": 16384,
+  "candidate_slot_bits": 64,
+  "candidate_slot": "BF16 score16 + originalidx20 + reserved28; retain existing 64b slot",
+  "payload_512b_flits": 256,
+  "local_repack_512b_words": 164,
+  "rank_tree_link_leg_cycles": 729,
+  "note": "No TP4 bandwidth or relay credit taken: existing 16384B all-gather price retained. INDEXED13 repacks only at selector rung. Packet/header/RS/relay latency remains inside existing measured551 collective and729 rank-tree leg; end-to-end production producer still GAP."
+ },
+ "resource_model": {
+  "additional_pin_capture_bits_per_quarter": 209,
+  "additional_capture_bits_four_quarters": 836,
+  "new_macro_count": 0,
+  "new_storage": "none; existing native line-memory macros",
+  "physical_qualification": "quarter master dsdv_bksel_q needs isolated INDEXED13 kit; all old closed views retained"
+ },
+ "producer_gaps": [
+  "No live RTL producer transports score+index candidates from TP4 all-gather to u_bk_sel.vi_s; compiler stimulus uses fixture scores.",
+  "No compiled runtime consumer forwards selected IDX egress into sparse gather.",
+  "Compiler op schedule remains price based and does not propagate this final-select overrun to downstream operations."
+ ],
+ "cost": {
+  "safe_window": {
+   "design": "s81",
+   "unit": "S81.TOPK_FINAL",
+   "group": "S81.TOPK_FINAL",
+   "measured": 1037.0,
+   "price": 178.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.8258,
+   "e2e_loss_pct": 0.939,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 835738.4,
+     "added_cycles": 6872.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6872.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.822
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1188683.1,
+     "added_cycles": 11167.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6872.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 859.0,
+     "e2e_loss_pct": 0.939
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_topk_final_1019/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": ""
+  },
+  "legacy": {
+   "design": "s81",
+   "unit": "S81.TOPK_FINAL",
+   "group": "S81.TOPK_FINAL",
+   "measured": 6692.0,
+   "price": 178.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 37.5955,
+   "e2e_loss_pct": 6.709,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 880978.4,
+     "added_cycles": 52112.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 52112.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 5.915
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1262198.1,
+     "added_cycles": 84682.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 52112.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 6514.0,
+     "e2e_loss_pct": 6.709
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/s81_topk_final_1019/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": ""
+  },
+  "note": "DAG matched8 final-select nodes, plus5MTPwave positions. Conditional candidate projection, not an adopted headline. No global ledger/default flip before physical and producer integration."
+ },
+ "benches": {
+  "indexed13": {
+   "check": {
+    "pass_": true,
+    "mismatches": 0,
+    "first": [],
+    "fault_edge": null,
+    "expected_beats": 73,
+    "got_beats": 73
+   },
+   "meta": {
+    "ncyc": 1334,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 36,
+    "sel_per_quarter": [
+     120,
+     137,
+     131,
+     124
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    }
+   }
+  },
+  "indexed13_corrupt": {
+   "check": {
+    "pass_": false,
+    "mismatches": 32,
+    "first": [
+     {
+      "edge": 1065,
+      "exp": "57a804d8803ff103dcd03d9b",
+      "got": "5a96057a804d8803ff103dcd"
+     },
+     {
+      "edge": 1066,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     },
+     {
+      "edge": 1067,
+      "exp": "b2550b03e0ab4109b1809563",
+      "got": "b61c0b2550b03e0ab4109b18"
+     },
+     {
+      "edge": 1068,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     },
+     {
+      "edge": 1069,
+      "exp": "69be15eda156f510c1c0fec6",
+      "got": "6d7f169be15eda156f510c1c"
+     },
+     {
+      "edge": 1070,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     },
+     {
+      "edge": 1071,
+      "exp": "19a121658212a92102d20924",
+      "got": "19bd219a121658212a92102d"
+     },
+     {
+      "edge": 1072,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     }
+    ],
+    "fault_edge": null,
+    "expected_beats": 73,
+    "got_beats": 73
+   },
+   "meta": {
+    "ncyc": 1334,
+    "mutant": "corrupt",
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 36,
+    "sel_per_quarter": [
+     120,
+     137,
+     131,
+     124
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    }
+   }
+  },
+  "indexed13_early": {
+   "check": {
+    "pass_": false,
+    "mismatches": 146,
+    "first": [
+     {
+      "edge": 1055,
+      "exp": "14c2b600801",
+      "got": "0"
+     },
+     {
+      "edge": 1063,
+      "exp": "4000b",
+      "got": "0"
+     },
+     {
+      "edge": 1064,
+      "exp": "400000000000000000000000",
+      "got": "0"
+     },
+     {
+      "edge": 1065,
+      "exp": "57a804d8803ff103dcd03d9b",
+      "got": "0"
+     },
+     {
+      "edge": 1066,
+      "exp": "322000000000000000000000",
+      "got": "0"
+     },
+     {
+      "edge": 1067,
+      "exp": "b2550b03e0ab4109b1809563",
+      "got": "0"
+     },
+     {
+      "edge": 1068,
+      "exp": "322000000000000000000000",
+      "got": "0"
+     },
+     {
+      "edge": 1069,
+      "exp": "69be15eda156f510c1c0fec6",
+      "got": "0"
+     }
+    ],
+    "fault_edge": null,
+    "expected_beats": 73,
+    "got_beats": 73
+   },
+   "meta": {
+    "ncyc": 1334,
+    "mutant": "early",
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 36,
+    "sel_per_quarter": [
+     120,
+     137,
+     131,
+     124
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    }
+   }
+  },
+  "indexed13_identity": {
+   "check": {
+    "pass_": false,
+    "mismatches": 1,
+    "first": [
+     {
+      "edge": 1065,
+      "exp": "37e402de902bea029eb027ec",
+      "got": "37e402de902bea029eb027ec"
+     }
+    ],
+    "fault_edge": null,
+    "expected_beats": 69,
+    "got_beats": 69
+   },
+   "meta": {
+    "ncyc": 1330,
+    "mutant": "corrupt",
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 34,
+    "sel_per_quarter": [
+     256,
+     128,
+     64,
+     64
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    },
+    "indexed13": true
+   }
+  },
+  "indexed13_ninf": {
+   "check": {
+    "pass_": true,
+    "mismatches": 0,
+    "first": [],
+    "fault_edge": null,
+    "expected_beats": 75,
+    "got_beats": 75
+   },
+   "meta": {
+    "ncyc": 1336,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 37,
+    "sel_per_quarter": [
+     512,
+     0,
+     0,
+     0
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    },
+    "indexed13": true
+   }
+  },
+  "indexed13_ties": {
+   "check": {
+    "pass_": true,
+    "mismatches": 0,
+    "first": [],
+    "fault_edge": null,
+    "expected_beats": 69,
+    "got_beats": 69
+   },
+   "meta": {
+    "ncyc": 1330,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 34,
+    "sel_per_quarter": [
+     256,
+     128,
+     64,
+     64
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    },
+    "indexed13": true
+   }
+  },
+  "indexed13_zeros": {
+   "check": {
+    "pass_": true,
+    "mismatches": 0,
+    "first": [],
+    "fault_edge": null,
+    "expected_beats": 75,
+    "got_beats": 75
+   },
+   "meta": {
+    "ncyc": 1336,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 37,
+    "sel_per_quarter": [
+     512,
+     0,
+     0,
+     0
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    },
+    "indexed13": true
+   }
+  },
+  "legacy": {
+   "check": {
+    "pass_": true,
+    "mismatches": 0,
+    "first": [],
+    "fault_edge": null,
+    "expected_beats": 73,
+    "got_beats": 73
+   },
+   "meta": {
+    "ncyc": 6993,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 6082,
+    "window": [
+     6722,
+     6797
+    ],
+    "drain": {
+     "vi_n_edge": 6712,
+     "vo_edge": 6714,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 36,
+    "sel_per_quarter": [
+     120,
+     137,
+     131,
+     124
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    }
+   }
+  },
+  "default_reject": {
+   "check": {
+    "pass_": false,
+    "mismatches": 70,
+    "first": [
+     {
+      "edge": 1065,
+      "exp": "57a804d8803ff103dcd03d9b",
+      "got": "10005220b"
+     },
+     {
+      "edge": 1066,
+      "exp": "322000000000000000000000",
+      "got": "522000000000000000000000"
+     },
+     {
+      "edge": 1067,
+      "exp": "b2550b03e0ab4109b1809563",
+      "got": "0"
+     },
+     {
+      "edge": 1068,
+      "exp": "322000000000000000000000",
+      "got": "0"
+     },
+     {
+      "edge": 1069,
+      "exp": "69be15eda156f510c1c0fec6",
+      "got": "0"
+     },
+     {
+      "edge": 1070,
+      "exp": "322000000000000000000000",
+      "got": "0"
+     },
+     {
+      "edge": 1071,
+      "exp": "19a121658212a92102d20924",
+      "got": "0"
+     },
+     {
+      "edge": 1072,
+      "exp": "322000000000000000000000",
+      "got": "0"
+     }
+    ],
+    "fault_edge": null,
+    "expected_beats": 73,
+    "got_beats": 5
+   },
+   "meta": {
+    "ncyc": 1334,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 423,
+    "window": [
+     1063,
+     1138
+    ],
+    "drain": {
+     "vi_n_edge": 1053,
+     "vo_edge": 1055,
+     "payload": 680283,
+     "n": 76,
+     "d": 1
+    },
+    "words": 36,
+    "sel_per_quarter": [
+     120,
+     137,
+     131,
+     124
+    ],
+    "golden_ok": true,
+    "golden": "attn.idx.topk_final (sorted)",
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    }
+   }
+  }
+ }
+}
