@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.pvm_mirror_native_behavior_1019.v1",
+  "source_commit": "fe8d2d456",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv": "4892b359416589ea8c47176f06f7bda9752cd3ce26e79e304c06471a7f4a3335",
+    "rtl/hbm_accel/sm/attn/test/tb_pv_merge_s3.sv": "f14a700272a306722faf5614ee75ea0766d965e6f05a4a1d58d3c9d373254e75",
+    "rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh": "3d721780aaae95d2f601a4ca06494348cd83cc5a5269a3ca8505c2d46c2d4fde",
+    "rtl/hbm_accel/sm/attn/test/pv_merge_golden.py": "ea1de7b754fc35f38a30cf69c95ec4a16799692cb912f815d9bad8cb4432b24c",
+    "tools/run_pvm_mirror_proofs_1019.sh": "1bd0dca0f866d90905508a1ac28d8a685787cd42c2f3b55f8e8fc52dd24039fd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ss.lib": "009690926e315148207706e48019965f37a81af8c3c9950ff29b8539858470ae",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib": "22360037e639207b501d54a64baac66893af84d24d61dacab937d32c1b341d7f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v": "fd3ad8c97191d4482473bd761a19c34d2067696f840b42db4fa68bc977ec94db",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib": "642e090b72ab9d166f6dfded41bbc9d8cbed381676eed9c26c183ce2fcfe3190",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.json": "af0b6da56ff85db23c330cd97a1557c5ca820c41d013d937dda59e31f33e9edd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v": "ffac4f90bcffc22577ee7129705bdfd5b733fa54b49b5123180f6f4dc1bebd3f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+  },
+  "verilator": "5.050",
+  "unit": "ot-epyc6:oth-ubuntu-125854-1792428168",
+  "exact": 240,
+  "tight": 192,
+  "mutants": {
+    "mut1": 240,
+    "mut4": 32,
+    "mut5": 121,
+    "pubearly": 33
+  },
+  "data_edge_delta": 0,
+  "scope": "Actual new compiler macro behavioral model +production golden calendars. Does not qualify clock,physicalgeometry,resetcopy synthesis transform,or access.",
+  "physical_qualified": false
+}
