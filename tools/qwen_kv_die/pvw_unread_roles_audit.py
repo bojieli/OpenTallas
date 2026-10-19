@@ -103,7 +103,7 @@ for net,bit in sorted(unread):
   assert bit==35
   # Registered shift chain has no wrap: bit35's input is bit34; bit35 is never read.
   assert sd[(snet,35)]==(snet,34)
-  role='fixed_width_delay_terminal';detail={'bit':35,'predecessor':[snet,34]}
+  role='fixed_width_delay_terminal';detail={'predecessor':[snet,34]}
  elif snet=='cmd_w':
   assert 32<=bit<60
   role='reserved_zero_command';detail={'all_full_word_writes_zero':True,'all_partial_writes_below_bit32':True}

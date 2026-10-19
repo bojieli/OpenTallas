@@ -1,0 +1,10 @@
+{
+  "source_commit": "39bb936f2",
+  "fleet_unit": "oth-ubuntu-3857863-1792427650",
+  "exit_code": 1,
+  "source_primary": "PASS",
+  "actual_primary": "PASS",
+  "failed_stage": "ledger formatting",
+  "exception": "TypeError: dict() got multiple values for keyword argument 'bit'",
+  "qualification": "audit implementation failure; no hardware verdict or waiver produced"
+}
