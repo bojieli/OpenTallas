@@ -111,6 +111,33 @@ class KvCheck(unittest.TestCase):
                      cal_basis='G-R0+h0', reset_cal=0,
                      age_contract='KVR-FWDAGE: G=R0; source-to-landing-output age E+1')
 
+    def test_actual_generator_form_and_render_feed_calendar_checker(self):
+        sys.path.insert(0, str(HERE.parent / 'qwen_kv_die'))
+        import kv_fwd_lanes as FL
+        for n in (1, 3):
+            with self.subTest(stations=n), tempfile.TemporaryDirectory() as t:
+                lines = ['module qkd_kv_die ();', '  wire [35:0] n_src;']
+                lines += [f'  wire [35:0] n_h{i};' for i in range(n)]
+                lines += ['  src s (.ck(n_clk_core_c[0]), .rs(n_rst_c[0]), .o(n_src));']
+                for i in range(n):
+                    a = 'n_src' if not i else f'n_h{i-1}'
+                    lines += [f'  qkd_rlys_36 r{i} (.ck(n_clk_core_c[0]), .a({a}), .b(n_h{i}));']
+                lines += [f'  dst d (.ck(n_clk_core_WS[0]), .rs(n_rst_ws[0]), .i(n_h{n-1}));', 'endmodule']
+                directions = dict(src=dict(ck='INPUT',rs='INPUT',o='OUTPUT'),
+                                  dst=dict(ck='INPUT',rs='INPUT',i='INPUT'))
+                formed = FL.form(lines, directions, {f'r{n-1}'})
+                self.assertEqual(len(formed['rep']['lanes']), 1)
+                d = Path(t); (d/'die.v').write_text('\n'.join(FL.render(lines,formed))+'\n')
+                (d/'lanes.json').write_text(json.dumps(formed['rep']))
+                report = LLS.kv_check(d/'die.v', d/'lanes.json')
+                self.assertEqual(report['verdict'], 'PASS', report)
+                row = formed['rep']['lanes'][0]
+                self.assertEqual(row['cal_basis'], 'G-R0+h0')
+                self.assertEqual(report['crossings_detail'][0]['cal_total'], int(n == 1))
+                row['cal_basis'] = 'total'  # producer/consumer schema drift must refuse
+                (d/'lanes.json').write_text(json.dumps(formed['rep']))
+                self.assertEqual(LLS.kv_check(d/'die.v',d/'lanes.json')['verdict'],'FAIL')
+
     def test_canonical_total_calendar_counts_hop0_once(self):
         rc,r,out=self.run_check(GOOD,row_edit=self.canonical)
         self.assertEqual(rc,0,out)
