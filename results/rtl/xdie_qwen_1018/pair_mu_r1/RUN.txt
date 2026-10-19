@@ -1,0 +1,14 @@
+MU-DQ-TOK 2026-10-19: paired compute <-> KV D2D co-sim (pair_r2 vehicle) on the NETLISTED seams of the MU RELEASE-die GENs.
+ot-run --mem 128 --threads 48 --hosts ot-epyc6 (Verilator 5.050), src = dv2f18mu GEN src (41b5e3b16) + this branch's fixes
+(qfd_native59_dv_service declarations restored; tb codec path g_cd), job.sh here.
+Seam: compute dv2f18mu out/case/die.v + fwd_lanes.json -> record_bundles.py audit PASS 9 (record_bundle_audit_dv2f18mu.json):
+  CS_TXS 2 | CS_RXV,CS_RXP 2 | CS_X3S lnk_kv_x3_slot E2 -> 3 | SC_TX 2 | SC_X3 2
+  KV kvs14r-bce531645-mu prep BUNDLE_EQ: K.rx_record 11 | K.tx_slot 9 | K.tx_record 9 ; die NTX 3
+Compiled TXDP: C [8,3,1,10], K [21,4,3,3].  GEN-bound: compute 0x09010308 = C [8,3,1,9]; KV 0x03030418 = K [24,4,3,3] (d2ds FRAME).
+RESULT: pair/t8192/phy9/l0/l0_phy9 PASS 35 layers bit-exact, landings on compiled cycles; 6 mutants FAIL.
+  C2K 31 + K2C 31 = 62 exposed/layer (PHY9 70), KVN 20 hidden, X +7/layer (L0 -215); roundtrip CMD->R31 land 1840.
+FINDING: both GEN-bound TXDPs FAIL (pair_gen_txdp; gen_c_only: compute C3 9 vs 10 -> compute epoch abort + native59 service
+  fault; gen_k_only: KV K0 24 vs 21 -> KV end fault).  Compute GEN must bind TXDP from its netlisted seam (C3 = 10, or land
+  lnk_kv_x3_slot at E1); KV GEN/d2ds view must bind K0 21 for K.tx_record 9 (or pad K.tx_record to 11 -> 23 as kvs14p).
+STAND-INS: vendored kvs14c kvs_attn with static_ctl LAND=0 (die: kvs_attn_fl, OT_KV_ATTN_LAND=1); KV d2ds FRAME; PHY model
+  LAT 5/9; seam register chains; outer-pin stimuli; SINGLE USER (4-user exchanges overlap: mu_d2d_overlap.py).
