@@ -44,8 +44,16 @@ class RegisteredCluster(unittest.TestCase):
         self.assertNotEqual(original, changed)
         with tempfile.NamedTemporaryFile(dir=RECEIPT.parent, suffix='.lib') as f:
             f.write(changed.encode());f.flush()
-            self.altered_receipt(lambda r:r.update(ff_lib=dict(path=str(Path(f.name).relative_to(ROOT)),
-                sha256=hashlib.sha256(Path(f.name).read_bytes()).hexdigest())))
+            changed_hash=hashlib.sha256(Path(f.name).read_bytes()).hexdigest()
+            binding=json.loads((ROOT/r['native_binding']['path']).read_text())
+            for item in binding['files']:
+                if item['path'].endswith('/native_probe_ff.lib'):item['sha256']=changed_hash
+            with tempfile.NamedTemporaryFile(dir=RECEIPT.parent, suffix='.json') as bf:
+                bf.write(json.dumps(binding).encode());bf.flush()
+                def amend(r):
+                    r['ff_lib']=dict(path=str(Path(f.name).relative_to(ROOT)),sha256=changed_hash)
+                    r['native_binding']=dict(path=str(Path(bf.name).relative_to(ROOT)),sha256=hashlib.sha256(Path(bf.name).read_bytes()).hexdigest())
+                self.altered_receipt(amend)
     def altered_gate(self, transform):
         r=json.loads(RECEIPT.read_text()); g=json.loads((ROOT/r['gate']['path']).read_text());transform(g)
         with tempfile.NamedTemporaryFile(dir=RECEIPT.parent, suffix='.json') as f:
@@ -66,6 +74,12 @@ class RegisteredCluster(unittest.TestCase):
         self.reject(lambda s:s.update(registered_boundary_contract=None))
         self.reject(lambda s:s.update(pin_regs={'enable':True,'exclude':'cfg.*'}))
         self.reject(lambda s:s['params'].update(PINPIPE=0))
+        # Updating both requested identity and receipt cannot launder a stale gate model.
+        self.spec['params']['PINPIPE']=0
+        self.altered_receipt(lambda r:r['identity']['params'].update(PINPIPE=0))
+        self.spec['params']['PINPIPE']=1
+        self.spec['children'][0]['view']='unproved-child'
+        self.altered_receipt(lambda r:r['identity']['children'][0].update(view='unproved-child'))
     def test_04_missing_tt_or_ff_or_comb_census_refuses(self):
         self.altered_receipt(lambda r:r.pop('tt_lib'))
         self.altered_receipt(lambda r:r.pop('ff_lib'))

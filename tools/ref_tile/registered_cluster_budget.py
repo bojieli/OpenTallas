@@ -19,7 +19,7 @@ def evidence_paths(spec, root):
     receipt = json.loads((Path(root) / entry['path']).read_text())
     return sorted({entry['path'], 'tools/hier_contract/pinreg_audit.py',
                    *(x['path'] for x in receipt['sources']),
-                   *(receipt[k]['path'] for k in ('gate', 'insertion', 'tt_lib', 'ff_lib', 'tt_probe', 'ff_probe'))})
+                   *(receipt[k]['path'] for k in ('gate', 'gate_spec', 'insertion', 'tt_lib', 'ff_lib', 'tt_probe', 'ff_probe', 'native_binding'))})
 
 
 def check(spec, root):
@@ -58,6 +58,21 @@ def check(spec, root):
          'verified source-pinned gate required')
     shipped = {f['path']: f for f in binding.get('files', [])}
     need(all(shipped.get(x['path'], {}).get('sha256') == x['sha256'] for x in sources), 'RTL differs from actual gate archive')
+    archived_spec = json.loads(artifact(receipt.get('gate_spec')).read_text())
+    gs = receipt['gate_spec']
+    need(shipped.get(gs['path'], {}).get('sha256') == gs['sha256'], 'gate spec differs from actual archived spec')
+    need({k: archived_spec.get(k) for k in identity} == identity, 'selected boundary identity differs from archived gate spec')
+    native = json.loads(artifact(receipt.get('native_binding')).read_text())
+    need(native.get('remote_host') == binding.get('remote_host') and native.get('remote_run') == binding.get('remote_run')
+         and native.get('source_commit') == 'snapshot-sha256:' + str(binding.get('manifest_sha256')), 'native probe source snapshot mismatch')
+    nf = {x['path']: x['sha256'] for x in native.get('files', [])}
+    need(nf.get('src/' + gs['path']) == gs['sha256'], 'native probe selected a different archived gate spec')
+    for key, remote in [('tt_probe', 'native_probe.tcl'), ('ff_probe', 'native_probe_ff.tcl'),
+                        ('tt_lib', 'routes/gate/work/orfs/native_probe_tt.lib'),
+                        ('ff_lib', 'routes/gate/work/orfs/native_probe_ff.lib')]:
+        need(nf.get(remote) == receipt.get(key, {}).get('sha256'), 'native probe script/output binding mismatch')
+    dbs = [x for x in nf if x.endswith('/4_1_cts.odb')]
+    need(len(dbs) == 1 and len(nf[dbs[0]]) == 64, 'actual saved ODB hash required')
     reset = gate.get('reset_landing', {})
     need(reset.get('ok') is True and reset.get('waived') is False and reset.get('max_sinks') == 2
          and reset.get('ports') and all(p.get('sinks') == 2 and p.get('flops') == 2 and p.get('macros') == 0 for p in reset['ports']),
