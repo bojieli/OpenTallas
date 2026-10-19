@@ -60,6 +60,27 @@ def main():
     r=audit(x,'top',roots)
     assert any(c['sink_pin']=='R' and c['pin_role']=='reset_set' and
                c['source_root']=='A' for c in r['crossings'])
+    # Unoptimized word flops preserve explicit clock polarity and reset/enable
+    # provenance; word arithmetic propagates conservatively through every bit.
+    x=deepcopy(d);m=x['modules']['paramod_child']
+    m['cells']['launch']={'type':'$dff','parameters':{'CLK_POLARITY':'1'},
+        'connections':{'CLK':[2],'D':[4,4],'Q':[5,9]}}
+    m['cells']['add']={'type':'$add','port_directions':{'A':'input','B':'input','Y':'output'},
+        'connections':{'A':[5],'B':[9],'Y':[10]}}
+    m['cells']['capture']={'type':'$adffe','parameters':{'CLK_POLARITY':'0'},
+        'connections':{'CLK':[3],'D':[10,9],'Q':[6,8],'ARST':[5],'EN':[4]}}
+    r=audit(x,'top',roots)
+    assert not r['issues'] and r['endpoint_owners']['top/nested/capture']['active_phase_from_root']==1
+    assert r['word_endpoint_widths']=={'top/nested/launch':2,'top/nested/capture':2}
+    assert any(c['sink_pin']=='ARST' and c['pin_role']=='reset_set' and c['source_root']=='A' for c in r['crossings'])
+    m['cells']['inv']={'type':'$not','connections':{'A':[3],'Y':[7]}}
+    m['cells']['capture']['connections']['CLK']=[7]
+    r=audit(x,'top',roots)
+    assert r['endpoint_owners']['top/nested/capture']['active_phase_from_root']==0
+    m['cells']['capture']['parameters']['CLK_POLARITY']='x'
+    try:audit(x,'top',roots)
+    except ValueError as e:assert 'polarity' in str(e)
+    else:raise AssertionError('unknown word clock polarity accepted')
     # Conflicting actual port aliases and width omissions reject explicitly.
     x=deepcopy(d);x['modules']['top']['ports']['ck_b']['bits']=[10]
     try:audit(x,'top',roots)
@@ -70,6 +91,7 @@ def main():
     except ValueError as e: assert 'port width' in str(e)
     else:raise AssertionError('missing vector bit accepted')
     print('PASS nested vector roots, swapped binding, missing root, inverter polarity, clock mux, unknown native leaf, explicit macro contract, alias conflict, width mismatch')
+    print('PASS word FF polarity, async reset/enable domains, conservative arithmetic and unknown-polarity rejection')
 
 
 if __name__=='__main__':main()

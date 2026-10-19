@@ -48,6 +48,7 @@ def audit(design, top, roots, native=None):
                 expand(typ, name, mapping, stack + [mod])
             else:
                 cells[name] = dict(type=typ, connections=con,
+                    parameters=cell.get('parameters',{}),
                     directions=cell.get('port_directions', child.get('ports', {}) if child else {}))
     expand(top, top, {}, [])
     def rootbit(pin):
@@ -63,7 +64,7 @@ def audit(design, top, roots, native=None):
         if b in clocks and clocks[b] != (root, 0):
             raise ValueError('conflicting root aliases: ' + pin)
         clocks[b] = (root, 0)
-    endpoints, comb, clock_buffers = {}, [], []
+    endpoints, comb, clock_buffers, word_widths = {}, [], [], {}
     for name, c in cells.items():
         typ, con = c['type'], c['connections']
         if typ in native:
@@ -76,12 +77,25 @@ def audit(design, top, roots, native=None):
             endpoints[name] = dict(clock=con[cp][0], edge=contract['edge'], outputs=[b for p in outs for b in con[p]],
                 inputs={p: bs for p, bs in con.items() if p != cp and p not in outs},
                 reset_pins=resets)
+        elif typ in ('$dff', '$dffe', '$adff', '$adffe', '$sdff', '$sdffe', '$sdffce', '$dffsr', '$dffsre'):
+            if not all(p in con for p in ('CLK','D','Q')) or len(con['CLK'])!=1 or len(con['D'])!=len(con['Q']):
+                raise ValueError('word sequential pin mismatch: '+name)
+            polarity=c.get('parameters',{}).get('CLK_POLARITY')
+            if not isinstance(polarity,str) or not re.fullmatch(r'0*[01]',polarity):
+                raise ValueError('word sequential clock polarity missing/unknown: '+name)
+            endpoints[name]=dict(clock=con['CLK'][0],edge='posedge' if int(polarity,2) else 'negedge',outputs=con['Q'],
+                inputs={p:bs for p,bs in con.items() if p not in ('CLK','Q')},
+                reset_pins=[p for p in con if p in ('ARST','SRST','CLR','SET')])
+            word_widths[name]=len(con['Q'])
         elif re.fullmatch(r'\$_(?:DFF|DFFE|SDFF|SDFFE|SDFFCE|DFFSR|DFFSRE)_[A-Z0-9]+_', typ):
             if not all(p in con for p in ('C', 'D', 'Q')) or len(con['C']) != 1:
                 raise ValueError('sequential pin mismatch: ' + name)
             endpoints[name] = dict(clock=con['C'][0], edge='posedge' if typ.split('_')[2][0] == 'P' else 'negedge', outputs=con['Q'],
                 inputs={p: bs for p,bs in con.items() if p not in ('C','Q')},
                 reset_pins=[p for p in con if p in ('R','S')])
+        elif typ in ('$not','$pos') and len(con.get('A',[]))==1 and len(con.get('Y',[]))==1:
+            clock_buffers.append((con['A'][0],con['Y'][0],typ=='$not'))
+            comb.append((name,con['A'],con['Y']))
         elif typ in ('$_NOT_', '$_BUF_'):
             clock_buffers.append((con['A'][0], con['Y'][0], typ == '$_NOT_'))
             comb.append((name, con['A'], con['Y']))
@@ -90,6 +104,17 @@ def audit(design, top, roots, native=None):
                 '$_ANDNOT_', '$_ORNOT_', '$_MUX_', '$_NMUX_', '$_AOI3_',
                 '$_OAI3_', '$_AOI4_', '$_OAI4_'}:
             comb.append((name, [b for p, bs in con.items() if p != 'Y' for b in bs], con['Y']))
+        elif typ in {'$not','$pos','$and','$or','$xor','$xnor','$logic_not','$logic_and','$logic_or',
+                '$reduce_and','$reduce_or','$reduce_xor','$reduce_xnor','$reduce_bool',
+                '$eq','$ne','$eqx','$nex','$lt','$le','$ge','$gt','$add','$sub','$mul','$div','$mod',
+                '$divfloor','$modfloor','$pow','$neg','$shl','$shr','$sshl','$sshr','$shift','$shiftx',
+                '$mux','$pmux','$bmux','$demux','$bwmux','$concat','$slice','$alu','$macc','$macc_v2','$fa','$lcu'}:
+            dirs=c.get('directions',{})
+            if set(dirs)!=set(con) or any(v not in ('input','output') for v in dirs.values()):raise ValueError('word combinational directions missing: '+name)
+            ins=[b for p,bs in con.items() if dirs[p]=='input' for b in bs]
+            outs=[b for p,bs in con.items() if dirs[p]=='output' for b in bs]
+            if not outs:raise ValueError('word combinational outputs missing: '+name)
+            comb.append((name,ins,outs))
         else:
             issues.append(f'unknown leaf {name}: {typ}; explicit native contract or supported generic primitive required')
     # Only explicit buffers/inverters can derive a clock. Data muxes and gates
@@ -165,6 +190,8 @@ def audit(design, top, roots, native=None):
     for root in sorted(set(roots.values()) - set(root_counts)):
         issues.append('declared root has no sequential/native endpoint: ' + root)
     return dict(status='FAIL' if issues else 'ENDPOINTS_ENUMERATED_NOT_TIMING_QUALIFIED',
+        **(dict(word_endpoint_widths=word_widths,
+                endpoint_count_note='Word FF endpoints each represent the stated vector width; endpoint counts are cell counts, not mapped clock-sink/area claims.') if word_widths else {}),
         scope='Recursive elaborated connectivity only; crossings are enumerated without waivers. Native pin clock owners, phase/age/reset timing and physical reach remain required.',
         top=top, leaf_cells=len(cells), endpoints=len(endpoints),
         endpoints_per_root=dict(sorted(root_counts.items())), issues=sorted(set(issues)),
