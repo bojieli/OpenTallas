@@ -34,9 +34,10 @@ Witnesses are in `results/rtl/s81_shlk_s10b_1019`.
 **hnp pos10** (SRAM + RSZ + S10B) passes with the same cycle counts as s10: 1074, 9288, 538, 639, 1282 and 4634. It adds the case `raw_b16`.
 
 **hnp mutants:**
-- `dqc10`, `hpref10` and `cxrc10` are caught.
+- `dqc10`, `hpref10`, `hphold10` and `cxrc10` are caught. `hphold10` is caught by the `raw_b16` case, whose 16k-sector segments make the first `st_left` step borrow right after the load.
 - `hrc10` is not exercised, because the host stream never runs dry mid-burst. seqhost mutant 16 catches it.
-- `hphold10` is described in the lane log.
+
+seqhost does not exercise mutants 15, 17 and 18 (one descriptor in the queue, row-aligned segments). The hnp bench covers them.
 
 ## SAFE-DESIGN checklist (before gate)
 
