@@ -1,0 +1,28 @@
+{
+  "cell_types": {
+    "$_AND_": 1696,
+    "$_DFFE_PN0N_": 2,
+    "$_DFFE_PN0P_": 2117,
+    "$_DFFE_PP_": 431,
+    "$_DFF_PN0_": 503,
+    "$_DFF_PN1_": 8,
+    "$_DFF_P_": 279,
+    "$_MUX_": 1563,
+    "$_NOT_": 718,
+    "$_OR_": 3875,
+    "$_SDFF_PN0_": 94,
+    "$_SDFF_PP0_": 498,
+    "$_XOR_": 1440,
+    "BUFx2_ASAP7_75t_R": 397,
+    "ot_rom_4096x72_m8": 3,
+    "ot_sram_1r1w_64x16_m1": 6
+  },
+  "clock_pins": 3941,
+  "leaf_cells": 13630,
+  "max_nonclock_load": 12,
+  "multiple_drivers": {},
+  "native_buffers": 397,
+  "over32": {},
+  "status": "PASS",
+  "undriven": {}
+}

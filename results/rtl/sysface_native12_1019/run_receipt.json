@@ -1,0 +1,19 @@
+{
+  "source": "0a5822253",
+  "generator": "91af844cc",
+  "fleet_host": "ot-epyc6",
+  "fleet_unit": "oth-ubuntu-306853-1792431120",
+  "remote": "/srv/opentallas-scratch/claude/sysface-native12-1019",
+  "status": "PASS",
+  "matrix": [
+    "cold2admissions4807samples",
+    "legacy1512events250839samples",
+    "reset128phases4149samples",
+    "full12954sourceequations",
+    "emitted9295Boolean+3932FF+9macro+397bufferbindings",
+    "generic directpins max12",
+    "structural10+emitted4negativeguards",
+    "copy_D/reset_short/buffer_input runtime mutants FAIL"
+  ],
+  "native_mapping": "LIVE separate source0a5822253, no native<=32/timing qualification yet"
+}
