@@ -28,12 +28,18 @@ so every link field moves +2 with it), sel_scan_drain = +2 idle edges after each
 histogram lands 4 edges after the last scan read instead of 2). op5's internal +2 (hist read, sums, recurrence) is
 covered by the existing 1-edge gap: its consumers (op3 found-clear, next op4's threshold, op6's ties) ride the same
 pipeline or come >= 2 edges later. '--pins none' keeps the historical core (both 0).
+
+SAFE FANOUT SELECTOR (LEAD2-HBM/L2H-IDXSEL 2026-10-19, route hidx_sel_g4p EARLY_FAIL_SETUP -570 ps from one pin flop per
+control bit broadcast to 4 quadrants + 12 SRAMs): the selector core takes every input through a kept relay copy (P1) and
+a per-consumer kept one-hot copy (P2), uniformly, so sel_in = 1 (pin) + 2; the shell adds an output relay before the pin
+flop (q0/q1 -> E/S faces up to ~500 um), sel_out = 2. Every selector-relative field edge is unchanged; the selected
+stream, link fields and TX move +3 edges and the frame grows +3 edges.
 """
 import argparse, json
 from pathlib import Path
 
 PIN_TABLES = {
-    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=1, sel_out=1, link_in=1, link_out=1,
+    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=3, sel_out=2, link_in=1, link_out=1,
                        link_core_out=5, sel_core_out=2, sel_scan_drain=2),
     'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0,
                  link_core_out=0, sel_core_out=0, sel_scan_drain=0),

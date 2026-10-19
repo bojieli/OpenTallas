@@ -1,0 +1,339 @@
+{
+ "name": "hidx_sel_s1a",
+ "top": "ot_hbm_idx_selector_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk_ctl",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "op",
+   "pass",
+   "addr",
+   "k",
+   "in_line",
+   "out_v",
+   "threshold_observe",
+   "selected_v",
+   "selected_observe",
+   "fault"
+  ],
+  "E": [
+   "clk_ctl",
+   "clk_q",
+   "clk_mem",
+   "rst_n",
+   "selected_line"
+  ],
+  "S": [
+   "out_line"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_hidx_sel_rep"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv, OWNER RULE 19:50; one kept flop per input bit at the pin, outputs = core reg + relay + pin flop; sel_in 3 / sel_out 2 scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "op": [
+   10.0,
+   10.696
+  ],
+  "pass": [
+   10.696,
+   11.043
+  ],
+  "addr": [
+   11.043,
+   12.434
+  ],
+  "k": [
+   12.434,
+   14.173
+  ],
+  "in_line": [
+   14.173,
+   425.916
+  ],
+  "out_v": [
+   425.916,
+   426.611
+  ],
+  "threshold_observe": [
+   426.611,
+   429.393
+  ],
+  "selected_v": [
+   429.393,
+   430.089
+  ],
+  "selected_observe": [
+   430.089,
+   439.826
+  ],
+  "fault": [
+   439.826,
+   440.0
+  ],
+  "clk_ctl": [
+   10.0,
+   10.096
+  ],
+  "clk_q": [
+   10.096,
+   10.48
+  ],
+  "clk_mem": [
+   10.48,
+   11.632
+  ],
+  "rst_n": [
+   11.632,
+   11.728
+  ],
+  "selected_line": [
+   12.728,
+   440.0
+  ],
+  "out_line": [
+   10.0,
+   590.0
+  ]
+ },
+ "outline": {
+  "w": 600.0,
+  "h": 450.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[0].mem",
+   "at": [
+    86.4,
+    194.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[1].mem",
+   "at": [
+    86.4,
+    235.488
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[2].mem",
+   "at": [
+    86.4,
+    276.576
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[0].mem",
+   "at": [
+    86.4,
+    317.664
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[1].mem",
+   "at": [
+    86.4,
+    358.752
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[2].mem",
+   "at": [
+    86.4,
+    399.84
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[0].mem",
+   "at": [
+    302.4,
+    194.4
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[1].mem",
+   "at": [
+    302.4,
+    235.488
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[2].mem",
+   "at": [
+    302.4,
+    276.576
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[0].mem",
+   "at": [
+    302.4,
+    317.664
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[1].mem",
+   "at": [
+    302.4,
+    358.752
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[2].mem",
+   "at": [
+    302.4,
+    399.84
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  }
+ ],
+ "clock": "cts",
+ "hold_budget": "die",
+ "slot_change_request": "IDX-SMALL 10-18, d4g plan (b): the v15 contract slot idx_sel (317.52x1164.24, 3.7:1, ~7.2k pins on a partial W face at 10.4/um) is superseded by the d4g grant slot idx_sel 600x450 (grants_d4g.json, FACES_ONLY, its E clock offset 581.3 lies outside a 450-um face). This kit takes 600x450 with W in_line+control+observes, E clock (SE end)+selected_line, S out_line (<= 5.8 pins/um); H-D4G places the xq root node W and the link E. (L2H-IDXSEL s1a/s1b: same slot and faces as g4/g4p; safe fanout core.)",
+ "job": {
+  "owner": "Claude LEAD2-HBM/L2H-IDXSEL",
+  "branch": "claude/l2h-idxsel-1019",
+  "tag": "s1a",
+  "purpose": "L2H-IDXSEL 10-19 SAFE fanout successor of hidx_sel_g4p (route hidx_sel_g4p-g4p-90b8aed47 EARLY_FAIL_SETUP TT -570 ps, 8,529 eps: one pin flop per op/pass/addr/k bit broadcast to 4 quadrants + 12 SRAMs; op_r[0]->qfault[3] 396 wire + 896 logic). RTL: P1 kept relay copies of the control word (2/quadrant + ctl) and in_line relay; P2 per-consumer KEPT registered one-hot copies (ot_hidx_sel_rep, non-parameterised, SYNTH_KEEP_MODULES): per lane op2 selects / line clears / emit + pack valids, per SRAM re/ing/addr, per 8 hist bins clear/add, per 2 hist read bits addr, per 4 lanes threshold; log-depth 4-lane prefix ranks in S2/S3/S4; qfault terms registered; shell output relay. Latency: sel_in 1->3, sel_out 1->2 (calendar frame 1408->1411, +0.21%). Geometry (hidx_sel_s1a): macros on the 43.2 lattice in x (cols 86.4 / 302.4, 43.2-um centre channel for the wd faces), macro stack N (y 194.4-440.9), std-cell band S. Benches run_selector_vl.sh (Verilator 5.050, die master): MUT0 PASS, MUT1-4 FAIL.",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/hbm_idx_static/selector_safe_1019",
+   "rtl/lib",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_selector_vectors.py"
+  ],
+  "benches": [
+   {
+    "name": "selector_safe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_vl.sh {RUN}/m0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "pass_regex": "IDX_SELECTOR_STATIC SHELL1 MUT0 frame2 checked512 errors0 fault0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m0.log"
+   },
+   {
+    "name": "selector_safe_mut1_ties",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_vl.sh {RUN}/m1 1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m1.log"
+   },
+   {
+    "name": "selector_safe_mut2_id",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_vl.sh {RUN}/m2 2 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m2.log"
+   },
+   {
+    "name": "selector_safe_mut3_wd_copy_late",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_vl.sh {RUN}/m3 3 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m3.log"
+   },
+   {
+    "name": "selector_safe_mut4_emit_copy_early",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_vl.sh {RUN}/m4 4 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m4.log"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
