@@ -339,7 +339,7 @@ module hnx_xs4_leaf #(
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
     // HNX-XS4 face split: the BF16 lanes on the W face take their own copy of the i stage (same D, same cycle; kept
     // so synthesis cannot merge them back: one register set per face, no 500-um fan-out).  MUT 4 (bench only):
-    // W-face weight bit 0 inverted.
+    // W-face weight sign bits inverted.
     (* keep *) reg iv_fw;
     (* keep *) reg ifirst_w, ilast_w;
     (* keep *) reg [TAGW-1:0] itag_w;
@@ -349,7 +349,7 @@ module hnx_xs4_leaf #(
         else iv_fw <= c3bv[0];
     always @(posedge clk) begin
         ifirst_w <= c3bd[CW-3]; ilast_w <= c3bd[CW-4]; itag_w <= c3bd[TAGW-1:0];
-        iwf_w <= w3b[LBS*266 +: LSB*16] ^ {{(LSB*16-1){1'b0}}, (MUT == 4)};
+        iwf_w <= w3b[LBS*266 +: LSB*16] ^ ((MUT == 4) ? {LSB{16'h8000}} : {(LSB*16){1'b0}});
     end
     assign o_iv_fw = iv_fw; assign o_ifirst_w = ifirst_w; assign o_ilast_w = ilast_w; assign o_itag_w = itag_w;
     assign o_iwf_w = iwf_w;

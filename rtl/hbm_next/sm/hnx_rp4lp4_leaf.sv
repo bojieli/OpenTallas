@@ -114,7 +114,7 @@ endmodule
 // lane's columns = the per-lane registered fan-out of the shared weight word) -> block-dot column + BF16 column (CLOSED
 // views) -> G1 -> slot-major publish.  Per lane exactly the d4g leafh datapath; cycle timing = hnx_rp4lp4_lf.
 // MUT: 1 = x-store lane alias (hnx_xs4 MUT 1), 2 = lane-select ignored, 3 = publish slot error, 4 = W-face BF16 weight
-// copy bit 0 inverted (hnx_xs4 MUT 4: proves the W-face lanes read the W copy).
+// copy sign bits inverted (hnx_xs4 MUT 4: proves the W-face lanes read the W copy).
 module hnx_rp4lp4_lfx #(parameter integer P = 4, parameter integer LSKEW = 8, parameter integer MUT = 0,
                         parameter integer TAGW = 16, parameter integer LBS = 2, parameter integer LSB = 16) (
     input  wire clk, input wire rst_n, input wire [25:0] st, input wire [817:0] rl1,

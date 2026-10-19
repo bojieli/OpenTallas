@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=12796 cycles=4000 warm=800
+- rtl/hbm_next/sm/lp/tb_hnx_rp4lp4x_flat_lp.sv:95: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 2.656 s; speed 1.506 us/s
+- Verilator: cpu 2.587 s on 1 threads; allocated 37 MB

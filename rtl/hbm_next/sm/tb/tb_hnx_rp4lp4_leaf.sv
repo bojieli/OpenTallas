@@ -10,6 +10,7 @@
 // Stimulus = production protocol: interleaved IL = 8 row chunks (first / last / tag {row, 0, slot}), random FP8/FP4/BF16
 // words, chunk K in [KMIN, KMAX] beats, column switches spaced, concurrent random x-write beats + lane-select beats.
 // THR = 1: throughput shape (back-to-back block-dot chunks, K = KMIN, no gaps): reports the issue span and publish span.
+// MUT 4 (shared x store only): the W-face BF16 weight copy has its sign bits inverted -> LANE MISMATCH.
 // MUT (negative controls): 1 lane alias (lane P-1 takes lane 0's x), 2 lane-select ignored, 3 lane 2 publishes in lane
 // 1's slot.  Each must FAIL ("LANE MISMATCH" / "STREAM MISMATCH").
 module tb_hnx_rp4lp4_leaf;
@@ -56,8 +57,25 @@ module tb_hnx_rp4lp4_leaf;
         assign d_g[gp*50 +: 50] = {dut.g_ln[gp].gv, dut.g_ln[gp].gf, dut.g_ln[gp].gy, dut.g_ln[gp].gt};
     end endgenerate
 
+    // ---- BF16-column coverage (shared-x-store leaf): words each lane's BF16 column (tct) produced
+    integer nbf [0:P-1], nbfnz [0:P-1], nbdnz [0:P-1];
+`ifdef HNX_XS4
+    generate for (gp = 0; gp < P; gp = gp + 1) begin : g_bfc
+        always @(negedge clk) if (rst_n && dut.g_ln[gp].fov) nbf[gp] = nbf[gp] + 1;
+        always @(negedge clk) if (rst_n && dut.g_ln[gp].fov && dut.g_ln[gp].fy[30:0] != 0) nbfnz[gp] = nbfnz[gp] + 1;
+        always @(negedge clk) if (rst_n && dut.g_ln[gp].bov && dut.g_ln[gp].by[30:0] != 0) nbdnz[gp] = nbdnz[gp] + 1;
+`ifdef HNX_XS4_DIAG
+        always @(negedge clk) if (rst_n && dut.g_ln[gp].fov && nbf[gp] < 6)
+            $display("DIAG lane %0d bf16 y %h fault %b xf_w %h xf_x %h", gp, dut.g_ln[gp].fy, dut.g_ln[gp].ffault,
+                     dut.g_ln[gp].xf_w[31:0], dut.g_ln[gp].xf_x[31:0]);
+        always @(negedge clk) if (rst_n && dut.g_ln[gp].xf_v && cyc % 500 == 0)
+            $display("DIAG lane %0d xf_v cyc %0d xf_w %h xf_x %h first %b last %b", gp, cyc, dut.g_ln[gp].xf_w[63:0],
+                     dut.g_ln[gp].xf_x[63:0], dut.g_ln[gp].xf_first, dut.g_ln[gp].xf_last);
+`endif
+    end endgenerate
+`endif
     // ---- stimulus
-    integer cyc, k, r, K, row, gap, bf, fp4, chunks, nlane_bad, nstream_bad, ncoll_m, ncoll_d, nwords, t_first, t_last_issue,
+    integer pj, t_pre, cyc, k, r, K, row, gap, bf, fp4, chunks, nlane_bad, nstream_bad, ncoll_m, ncoll_d, nwords, t_first, t_last_issue,
             t_last_pub, i, sel_cnt;
     integer nw [0:P-1];
     reg [49:0] hist [0:P-1][0:127];
@@ -74,6 +92,10 @@ module tb_hnx_rp4lp4_leaf;
             rl1 = wrand;
             rl1[817:796] = {(bf == 0), (bf != 0), (kk == 0), (kk == KK - 1), fp4[0], (bf != 0), rw[11:0], 1'b0, rr[2:0]};
             rl1[7] = 1'b1;                                   // x read enable
+            // BF16 weight elements (w_l[532 +: 256] = rl1[540 +: 256]) with exponents 100..110: products of random x stay
+            // finite (no overflow), so a BF16 result is a number, not almost always NaN / Inf (10-19: with raw random bits a
+            // sign-inverted BF16 weight copy went unnoticed, MUT 4)
+            for (j = 0; j < 16; j = j + 1) rl1[540 + j*16 + 7 +: 8] = 8'd100 + ($urandom % 11);
         end
     endtask
     task automatic beat;
@@ -98,30 +120,35 @@ module tb_hnx_rp4lp4_leaf;
     // row programme as a process: chunk after chunk
     reg run_rows;
     initial begin
-        st = {$urandom} % (1 << 26);
+        // VALID static straps (10-19): beat group g1 / g2 < NBEAT - 1 so the block-dot and BF16 x fields are written (a
+        // random 5-bit group >= 13 never writes its field: x stays 0, every BF16 product is +-0 -- MUT 4 went unseen)
+        st = {5'($urandom % 12), 7'($urandom), 5'($urandom % 12), 9'($urandom)};
         rl1 = 0; bk1 = 0; run_rows = 0;
         nlane_bad = 0; nstream_bad = 0; ncoll_m = 0; ncoll_d = 0; nwords = 0; t_first = -1; t_last_issue = 0; t_last_pub = 0;
         sel_cnt = 0;
-        for (i = 0; i < P; i = i + 1) nw[i] = 0;
+        for (i = 0; i < P; i = i + 1) begin nw[i] = 0; nbf[i] = 0; nbfnz[i] = 0; nbdnz[i] = 0; end
         cyc = 0;
         repeat (16) @(negedge clk);
         rst_n = 1'b1;
-        // x preload: every lane, every address (production: the x load precedes the pass)
-        @(negedge clk);
-        bk1 = 0; bk1[2068] = 1'b1; bk1[8 +: P] = (1 << P) - 1; bk1[P-1:0] = 1;
-        for (i = 0; i < P * 128 * 2; i = i + 1) begin
+        // x preload: every lane, every address, ALL 13 beats (10-19: the earlier preload wrote 2 random beats of 13 per
+        // address, leaving most x bits at the SRAM's power-up 0 -> most BF16 products were +-0 and a sign-inverted BF16
+        // weight copy (MUT 4) went unnoticed; signed zero canonicalises in this RTL)
+        for (i = 0; i < P; i = i + 1) begin
             @(negedge clk);
-            if (i % 256 == 0) begin bk1 = 0; bk1[2068] = 1'b1; bk1[P-1:0] = 1 << (i / 256); bk1[8 +: P] = (1 << P) - 1; end
-            else begin
-                for (k = 0; k < 64; k = k + 1) brand[k*32 +: 32] = $urandom;
-                bk1 = 0; bk1[2068] = 1'b1; bk1[2067:2061] = (i % 256) / 2; bk1[2060:2048] = 13'd1 << ($urandom % 13);
-                bk1[2047:0] = brand;
-            end
+            bk1 = 0; bk1[2068] = 1'b1; bk1[P-1:0] = 1 << i; bk1[8 +: P] = (1 << P) - 1;      // lane-select: target lane i
+            for (k = 0; k < 128; k = k + 1)
+                for (r = 0; r < 13; r = r + 1) begin
+                    @(negedge clk);
+                    for (pj = 0; pj < 64; pj = pj + 1) brand[pj*32 +: 32] = $urandom;
+                    bk1 = 0; bk1[2068] = 1'b1; bk1[2067:2061] = k; bk1[2060:2048] = 13'd1 << r; bk1[2047:0] = brand;
+                end
         end
+        @(negedge clk); bk1 = 0; bk1[2068] = 1'b1; bk1[P-1:0] = 1; bk1[8 +: P] = (1 << P) - 1;      // back to lane 0
+        t_pre = cyc;
         @(negedge clk); bk1 = 0;
         run_rows = 1;
         chunks = 0; row = 0; bf = 0;
-        while ((THR ? (chunks < NCHUNK) : (cyc < NCYC - 200))) begin
+        while ((THR ? (chunks < NCHUNK) : (cyc - t_pre < NCYC - 200))) begin
             K = THR ? KMIN : (KMIN + ($urandom % (KMAX - KMIN + 1)));
             fp4 = THR ? 0 : ($urandom % 2);
             for (k = 0; k < K; k = k + 1)
@@ -145,7 +172,8 @@ module tb_hnx_rp4lp4_leaf;
         // ---- verdict
         $display("HNX_RP4LP4 P=%0d MUT=%0d LSKEW=%0d chunks=%0d words=%0d sel_beats=%0d lane_bad=%0d stream_bad=%0d coll_model=%0d coll_dut=%0d",
                  P, MUT, LSKEW, chunks, nwords, sel_cnt, nlane_bad, nstream_bad, ncoll_m, ncoll_d);
-        for (i = 0; i < P; i = i + 1) $display("  lane %0d words %0d", i, nw[i]);
+        for (i = 0; i < P; i = i + 1) $display("  lane %0d words %0d bf16_words %0d bf16_nonzero %0d bd_nonzero %0d", i, nw[i], nbf[i],
+                                               nbfnz[i], nbdnz[i]);
         if (THR) $display("THROUGHPUT P=%0d chunks=%0d K=%0d rows=%0d issue_span=%0d first_issue=%0d last_pub=%0d publish_span=%0d words=%0d words_per_issue_cycle=%0.3f",
                  P, chunks, KMIN, chunks * IL, t_last_issue - t_first + 1, t_first, t_last_pub, t_last_pub - t_first + 1, nwords,
                  nwords * 1.0 / (t_last_issue - t_first + 1));
@@ -155,6 +183,10 @@ module tb_hnx_rp4lp4_leaf;
             integer ok;
             ok = (nlane_bad == 0) && (nstream_bad == 0) && (ncoll_m == 0) && (nwords > 0);
             for (i = 0; i < P; i = i + 1) if (nw[i] == 0) ok = 0;
+`ifdef HNX_XS4
+            // coverage: every lane produced non-zero BF16 (THR: block-dot only) and block-dot results (all-zero data proves nothing)
+            for (i = 0; i < P; i = i + 1) if ((nbfnz[i] == 0 && !THR) || nbdnz[i] == 0) begin ok = 0; $display("COVERAGE FAIL lane %0d", i); end
+`endif
             if (ok) begin $display("PASS HNX-RP4LP4 P=%0d", P); $finish; end
             else begin $display("FAIL HNX-RP4LP4 P=%0d MUT=%0d", P, MUT); $fatal(1, "bench failed"); end
         end

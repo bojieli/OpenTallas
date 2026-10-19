@@ -64,12 +64,12 @@ def main():
             "    assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;\n"
             "    // HNX-XS4 face split: the BF16 lanes on the W face take their own copy of the i stage (same D, same cycle; kept\n"
             "    // so synthesis cannot merge them back: one register set per face, no 500-um fan-out).  MUT 4 (bench only):\n"
-            "    // W-face weight bit 0 inverted.\n"
+            "    // W-face weight sign bits inverted.\n"
             "    (* keep *) reg iv_fw;\n    (* keep *) reg ifirst_w, ilast_w;\n    (* keep *) reg [TAGW-1:0] itag_w;\n"
             "    (* keep *) reg [LSB*16-1:0] iwf_w;\n"
             "    always @(posedge clk or negedge rst_n)\n        if (!rst_n) iv_fw <= 1'b0;\n        else iv_fw <= c3bv[0];\n"
             "    always @(posedge clk) begin\n        ifirst_w <= c3bd[CW-3]; ilast_w <= c3bd[CW-4]; itag_w <= c3bd[TAGW-1:0];\n"
-            "        iwf_w <= w3b[LBS*266 +: LSB*16] ^ {{(LSB*16-1){1'b0}}, (MUT == 4)};\n    end\n"
+            "        iwf_w <= w3b[LBS*266 +: LSB*16] ^ ((MUT == 4) ? {LSB{16'h8000}} : {(LSB*16){1'b0}});\n    end\n"
             "    assign o_iv_fw = iv_fw; assign o_ifirst_w = ifirst_w; assign o_ilast_w = ilast_w; assign o_itag_w = itag_w;\n"
             "    assign o_iwf_w = iwf_w;\n")
     leaf = s

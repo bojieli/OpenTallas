@@ -1,0 +1,19 @@
+LANE MISMATCH cyc 6946 lane 0 dut 1ea803bd70100 ref 16a803bd70100
+LANE MISMATCH cyc 6946 lane 1 dut 16fc756000100 ref 1efc756000100
+LANE MISMATCH cyc 6947 lane 0 dut 1743fa2d40111 ref 1f43fa2d40111
+LANE MISMATCH cyc 6947 lane 1 dut 1efdb60000111 ref 16fdb60000111
+LANE MISMATCH cyc 6948 lane 0 dut 1e57b39250122 ref 1657b39250122
+STREAM MISMATCH cyc 7027 dut 3f4f7e7580100 model 374f7e7580100
+STREAM MISMATCH cyc 7028 dut 3762b81a50111 model 3f62b81a50111
+STREAM MISMATCH cyc 7029 dut 3f43e651f0122 model 3743e651f0122
+STREAM MISMATCH cyc 7030 dut 3f3718f900133 model 373718f900133
+STREAM MISMATCH cyc 7031 dut 376421eb00144 model 3f6421eb00144
+HNX_RP4LP4 P=4 MUT=4 LSKEW=8 chunks=66 words=2020 sel_beats=141 lane_bad=11187 stream_bad=590 coll_model=0 coll_dut=0
+  lane 0 words 512 bf16_words 304 bf16_nonzero 304 bd_nonzero 152
+  lane 1 words 502 bf16_words 304 bf16_nonzero 304 bd_nonzero 142
+  lane 2 words 520 bf16_words 304 bf16_nonzero 304 bd_nonzero 142
+  lane 3 words 486 bf16_words 304 bf16_nonzero 304 bd_nonzero 131
+LANE MISMATCH count=11187
+STREAM MISMATCH count=590
+FAIL HNX-RP4LP4 P=4 MUT=4
+MUTANT CAUGHT p4_m4_t0
