@@ -30,10 +30,10 @@ module qkd_host_ctl_service_pins_rr #(
 `ifdef QKD_HR_PR_RR_MUTANT
  assign rst_q = rst_n;
 `else
- // KV-RELAYGEN: 7 KEPT identical relay copies (gate p6: 1508 reset loads); synthesis
- // (physical/common_flow/ot_rst_split.tcl) spreads the member reset loads over them, <= 256 a copy.
- wire [6:0] rst_c;
- ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_c));
+ // KV-RELAYGEN: 10 KEPT identical relay copies (2236 reset loads before synthesis optimisation); synthesis
+ // (physical/common_flow/ot_rst_copies.tcl) spreads the member reset loads over them, <= 256 a copy.
+ wire [9:0] rst_c;
+ ot_rst_relay #(.REGIONS(10),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_c));
  assign rst_q = rst_c[0];
 `endif
  qkd_host_ctl_service_pins #(.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(MUT)) u_m(

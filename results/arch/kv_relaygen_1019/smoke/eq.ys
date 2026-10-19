@@ -1,6 +1,5 @@
-read_json post.json
-rename top gate
-read_verilog gold.v
+read_verilog split/net.v
+read_verilog gold/net.v
 proc
 async2sync
 miter -equiv -flatten -make_assert gold gate miter

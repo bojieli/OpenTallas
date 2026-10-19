@@ -1,9 +1,8 @@
 import json
-d=json.load(open('post.json')); m=d['modules']['top']; c=m['cells']
-relay=[(n,x) for n,x in c.items() if 'u_rst_relay' in n and 'slice' in n]
-sync=[x for n,x in c.items() if 'u_rst_relay' in n and 'slice' not in n and 'DFF' in x['type']]
-q1=relay[1][1]['connections']['Q'][0]; sq=relay[1][1]['connections']['D'][0]
+d=json.load(open('split/post.json')); m=d['modules']['top']; c=m['cells']
+copy=[n for n in c if 'slice$122' in n and 'u_rst_relay' not in n][0]
+q=c[copy]['connections']['Q'][0]; dd=c[copy]['connections']['D'][0]
 for n,x in c.items():
-  if 'u_rst_relay' not in n and x['connections'].get('R')==[q1]:
-    x['connections']['R']=[sq]; print('MUTANT re-pointed',n,'from relay copy to its D (one edge early)'); break
-json.dump(d,open('post_mut.json','w'))
+  if n!=copy and x['connections'].get('R')==[q]:
+    x['connections']['R']=[dd]; print('MUTANT', n, 'reset moved from landing copy to the copy D (one edge early)'); break
+json.dump(d,open('split/post_mut.json','w'))

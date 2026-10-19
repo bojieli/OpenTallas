@@ -1,5 +1,0 @@
-Warning: Replacing memory \relay_q with list of registers. See ot_rst_relay.sv:42
-OT_KEEP_REGS: keep set on 3 register cells driving keep wires
-OT_RST_SPLIT: 2 multi-bit relay-reset register cells mapped to per-bit flops
-OT_RST_SPLIT u_a.u_rst_relay.rst_n: 3 copies, 601 loads -> [201,201,199] (400 ports moved) OK
-OT_RST_SPLIT 1 relay copy families (max 256 loads a copy); table ./ot_rst_split.tsv

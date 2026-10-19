@@ -120,8 +120,8 @@ module qkd_host_if_pins_observed_rr #(
 `ifdef QKD_HR_PR_RR_MUTANT
  assign rst_q = rst_n;
 `else
- // KV-RELAYGEN: 3 KEPT identical relay copies (gate p6: 647 reset loads); synthesis
- // (physical/common_flow/ot_rst_split.tcl) spreads the member reset loads over them, <= 256 a copy.
+ // KV-RELAYGEN: 3 KEPT identical relay copies (690 reset loads before synthesis optimisation); synthesis
+ // (physical/common_flow/ot_rst_copies.tcl) spreads the member reset loads over them, <= 256 a copy.
  wire [2:0] rst_c;
  ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
  assign rst_q = rst_c[0];

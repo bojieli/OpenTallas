@@ -1,4 +1,4 @@
-"""KV-RELAYGEN 2026-10-19: physical/common_flow/ot_rst_split.py (regional reset relay copies) on synthetic netlists."""
+"""KV-RELAYGEN 2026-10-19: physical/common_flow/ot_rst_copies.py (regional reset relay copies) on synthetic netlists."""
 import importlib.util
 import json
 import tempfile
@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-spec = importlib.util.spec_from_file_location("ot_rst_split", ROOT / "physical/common_flow/ot_rst_split.py")
+spec = importlib.util.spec_from_file_location("ot_rst_copies", ROOT / "physical/common_flow/ot_rst_copies.py")
 RS = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(RS)
 
@@ -86,6 +86,12 @@ class T(unittest.TestCase):
     def test_landing_family_name(self):
         _, _, tsv = self.run_nl(netlist(name="host_rst_n__ot_rlv"))
         self.assertIn("host_rst_n__ot_rlv\t3\t600", tsv)
+
+    def test_attribute_marked_family(self):
+        nl = netlist(name="u_m.rst_n_x")
+        nl["modules"]["top"]["netnames"]["u_m.rst_n_x"]["attributes"] = {"ot_rst_split": "00000000000000000000000000000001"}
+        _, _, tsv = self.run_nl(nl)
+        self.assertIn("u_m.rst_n_x\t3\t600", tsv)
 
     def test_single_bit_relay_untouched(self):
         nl = netlist(n_copies=1)

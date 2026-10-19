@@ -167,8 +167,8 @@ def wrapper(fl: dict, plist, clock: str) -> str:
         nc = int((fl.get("reset_copies") or {}).get(r, 1))
         if nc > 1:
             # KV-RELAYGEN 2026-10-19: N KEPT identical relay copies; the core still takes copy 0 and synthesis
-            # (physical/common_flow/ot_rst_split.tcl, kit "reset_relay_split") spreads its reset loads over all copies
-            L[-2:-1] = [f"        wire [{nc - 1}:0] fl_rstc__{r};  // KV-RELAYGEN: {nc} kept relay copies (ot_rst_split.tcl)",
+            # (physical/common_flow/ot_rst_copies.tcl, kit "reset_relay_split") spreads its reset loads over all copies
+            L[-2:-1] = [f"        wire [{nc - 1}:0] fl_rstc__{r};  // KV-RELAYGEN: {nc} kept relay copies (ot_rst_copies.tcl)",
                         f"        ot_rst_relay #(.REGIONS({nc}), .SYNC_STAGES(2), .TREE_STAGES(1)) u_fl_rst_{r} (.clk({clock}), "
                         f".rst_n_in({r}), .rst_n(fl_rstc__{r}));",
                         f"        assign fl_rst__{r} = fl_rstc__{r}[0];"]

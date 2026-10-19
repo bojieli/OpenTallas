@@ -78,10 +78,10 @@ module qkd_host_csr_service_pins_rr #(
 `ifdef QKD_HR_PR_RR_MUTANT
  assign rst_q = rst_n;
 `else
- // KV-RELAYGEN: 5 KEPT identical relay copies (gate p6: 960 reset loads); synthesis
- // (physical/common_flow/ot_rst_split.tcl) spreads the member reset loads over them, <= 256 a copy.
- wire [4:0] rst_c;
- ot_rst_relay #(.REGIONS(5),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
+ // KV-RELAYGEN: 6 KEPT identical relay copies (1369 reset loads before synthesis optimisation); synthesis
+ // (physical/common_flow/ot_rst_copies.tcl) spreads the member reset loads over them, <= 256 a copy.
+ wire [5:0] rst_c;
+ ot_rst_relay #(.REGIONS(6),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
  assign rst_q = rst_c[0];
 `endif
  qkd_host_csr_service_pins #(.ENABLE_SERVICE(ENABLE_SERVICE),.MUT_EPOCH(MUT_EPOCH),.NCNT(NCNT),.MUT_DIAG(MUT_DIAG)) u_m(

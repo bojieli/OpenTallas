@@ -21,7 +21,7 @@ QKD_HR_PR_RR_MUTANT (bench only): every relay in these wrappers bypassed (raw pi
 KV-RELAYGEN (10-19, SAFE-DESIGN item 3, audit results/arch/safe_audit_1019/kv.md): a member whose gate measured more than
 RR_MAX reset loads gets REGIONS = ceil(1.1 x loads / RR_MAX) KEPT relay copies (RR_LOADS, measured on gate p6: one relay
 flop drove 1,508 / 960 / 671 / 647 flops).  The copies are identical registers (same D / clock / async clear); the member
-still takes copy 0 at its rst_n pin and synthesis (physical/common_flow/ot_rst_split.tcl, kit "reset_relay_split") re-points
+still takes copy 0 at its rst_n pin and synthesis (physical/common_flow/ot_rst_copies.tcl, kit "reset_relay_split") re-points
 the member's reset loads over the copies, <= RR_MAX each, grouped by hierarchy so every copy serves one region.  Release
 timing is unchanged (+3 edges, all copies equal).  Members with <= RR_MAX loads keep REGIONS 1 (byte-identical wrapper).
 
@@ -51,13 +51,14 @@ INNER = {
     'qkd_host_prompt_capture_pins': 'qkd_host_prompt_capture_pins_pd',
     'qkd_host_if_pins_observed': 'qkd_host_if_pins_observed_pd',
 }
-# KV-RELAYGEN: measured reset loads per member type (gate p6 textbook high_fanout, 58693d40b) -> relay copies
+# KV-RELAYGEN: reset loads per member type as the synthesis pass sees them (ot_rst_copies.tsv of gate p7a 6597a7903, coarse
+# netlist before optimisation; the final netlist has fewer: gate p6 textbook 1,508 / 960 / 671 / 647) -> relay copies
 RR_MAX = 256
 RR_LOADS = {
-    'qkd_host_ctl_service_pins': 1508,     # u_control.u_pkg
-    'qkd_host_csr_service_pins': 960,      # u_control.u_csr
-    'qkd_host_record_port': 671,           # u_records
-    'qkd_host_if_pins_observed': 647,      # u_control.u_host
+    'qkd_host_ctl_service_pins': 2236,     # u_control.u_pkg
+    'qkd_host_csr_service_pins': 1369,     # u_control.u_csr
+    'qkd_host_record_port': 1929,          # u_records
+    'qkd_host_if_pins_observed': 690,      # u_control.u_host
 }
 
 
@@ -191,8 +192,8 @@ def wrapper(mod, src, ck):
     if nr == 1:
         relay = f' ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk({ck}),.rst_n_in(rst_n),.rst_n(rst_q));'
     else:
-        relay = (f' // KV-RELAYGEN: {nr} KEPT identical relay copies (gate p6: {RR_LOADS[mod]} reset loads); synthesis\n'
-                 f' // (physical/common_flow/ot_rst_split.tcl) spreads the member reset loads over them, <= {RR_MAX} a copy.\n'
+        relay = (f' // KV-RELAYGEN: {nr} KEPT identical relay copies ({RR_LOADS[mod]} reset loads before synthesis optimisation); synthesis\n'
+                 f' // (physical/common_flow/ot_rst_copies.tcl) spreads the member reset loads over them, <= {RR_MAX} a copy.\n'
                  f' wire [{nr - 1}:0] rst_c;\n'
                  f' ot_rst_relay #(.REGIONS({nr}),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk({ck}),.rst_n_in(rst_n),.rst_n(rst_c));\n'
                  f' assign rst_q = rst_c[0];')
