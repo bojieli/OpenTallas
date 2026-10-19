@@ -86,9 +86,10 @@ for cp in sorted((BASE/'legs').glob('*.log')):
 
 now=datetime.now().astimezone().isoformat(timespec='seconds')
 counts={s:sum(r['status']==s for r in rows) for s in ['AS EXPECTED','PENDING']}
+counts['UNEXPECTED']=sum(r['status'].startswith('UNEXPECTED') for r in rows)
 manifest=dict(source_commit='0e6795834',merged_main_commit='3fd57606f',collected_at=now,verilator='5.050',counts=counts,rows=rows)
 (DEST/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-lines=['# Qwen MU combined-commit regression','',f'Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot {now}.', '',f"{counts['AS EXPECTED']} / {len(rows)} legs have terminal results as expected; {counts['PENDING']} remain pending. This snapshot is not a full regression PASS.",'',
+lines=['# Qwen MU combined-commit regression','',f'Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot {now}.', '',f"{counts['AS EXPECTED']} / {len(rows)} legs have terminal results as expected; {counts['UNEXPECTED']} unexpected; {counts['PENDING']} remain pending. This snapshot is not a full regression PASS.",'',
 'Outer shell exit 0 alone does not validate a mutant. The table checks the behavioral output for nested amix/adopt_slice runs. SIGTERM/143 is infrastructure failure, never expected mutant failure. FACES mutant r3 supersedes r0; collective r2 supersedes the hollow cases=0 r0. Pending output is excluded because the generic collector can otherwise prefer an old completed copy.','',
 'Scope excludes OPSEG full2 steady-state rate and the real MU.TOK.QW run gated on B3-B5. DHUSER mutants report FAIL in their text while exiting 0 by design. ctlm_rest records its existing lp_m4 observability waiver.','',
 '| Leg | Expect | Actual | Status |','|---|---|---|---|']

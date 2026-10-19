@@ -10,3 +10,5 @@ ot-run: ot-agidock128  admits    18 GB (avail 73, growth 61, headroom 0, waiters
 ot-run: -> ot-pve1
 ot-heavy: waiting for memory on ot-pve1: need 0.7 x 32 = 22 GB, admissible 31 GB: available 75 GB, growth charged 53 GB (x0.5), young 21 GB, floor 12 GB
 ot-heavy: admitted on ot-pve1 as oth-ubuntu-1046023-1792416178 after 41 s
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1046023-1792416178): exit 1
+# ot-run rc=1 2026-10-19T09:23:53-07:00

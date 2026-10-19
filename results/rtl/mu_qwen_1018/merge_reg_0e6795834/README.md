@@ -1,8 +1,8 @@
 # Qwen MU combined-commit regression
 
-Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot 2026-10-19T08:52:55-07:00.
+Source `0e6795834` (merged as `3fd57606f`); Verilator 5.050. Snapshot 2026-10-19T09:29:14-07:00.
 
-40 / 44 legs have terminal results as expected; 4 remain pending. This snapshot is not a full regression PASS.
+40 / 44 legs have terminal results as expected; 1 unexpected; 3 remain pending. This snapshot is not a full regression PASS.
 
 Outer shell exit 0 alone does not validate a mutant. The table checks the behavioral output for nested amix/adopt_slice runs. SIGTERM/143 is infrastructure failure, never expected mutant failure. FACES mutant r3 supersedes r0; collective r2 supersedes the hollow cases=0 r0. Pending output is excluded because the generic collector can otherwise prefer an old completed copy.
 
@@ -23,7 +23,7 @@ Scope excludes OPSEG full2 steady-state rate and the real MU.TOK.QW run gated on
 | [amix_N0](evidence/runs/amix/runs/NEG_n_am7_f0.out) | FAIL with behavioral witness | NEG_n_am7_f0.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1 | AS EXPECTED |
 | [amix_N1](evidence/runs/amix/runs/NEG_n_am7_f1.out) | FAIL with behavioral witness | NEG_n_am7_f1.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1 | AS EXPECTED |
 | [amix_N2](evidence/runs/amix/runs/NEG_n_am7_f2.out) | FAIL with behavioral witness | NEG_n_am7_f2.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1 | AS EXPECTED |
-| [coll_mu_bi](clients/legs/coll_mu_bi.log) | PASS, cases>0 | Existing fleet job still active; no terminal behavioral verdict | PENDING |
+| [coll_mu_bi](evidence/out/coll_mu_bi.out) | PASS, cases>0 | coll_mu_bi.out: case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=22512 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227; COLL_TP8SL FAIL failed=mu_window,mu_window_ref_user0 | UNEXPECTED job exit 1 |
 | [coll_mu_bi_mut_rank](evidence/out/coll_mu_bi_mut_rank.out) | negative-control PASS, cases>0, expected FAIL witnessed | coll_mu_bi_mut_rank.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378 | AS EXPECTED |
 | [coll_mu_bi_mut_rlat](evidence/out/coll_mu_bi_mut_rlat.out) | negative-control PASS, cases>0, expected FAIL witnessed | coll_mu_bi_mut_rlat.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378 | AS EXPECTED |
 | [coll_mu_bi_neg_overlap](evidence/out/coll_mu_bi_neg_overlap.out) | negative-control PASS, cases>0, expected FAIL witnessed | coll_mu_bi_neg_overlap.out: case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=59384 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378 | AS EXPECTED |
