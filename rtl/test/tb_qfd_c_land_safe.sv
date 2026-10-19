@@ -1,3 +1,4 @@
+`ifndef SYNTHESIS
 `timescale 1ns/1ps
 module tb;
  parameter integer MUT=0;
@@ -29,3 +30,4 @@ module tb;
   $display("SAFE_LAND_PASS MUT%0d",MUT); $finish;
  end
 endmodule
+`endif
