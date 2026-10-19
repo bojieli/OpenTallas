@@ -1,0 +1,386 @@
+{
+ "schema": "opentallas.hbm_fault_cause_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 130,
+ "entries": [
+  {
+   "instance": "ep_N0",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "ep_N0__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 13847,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "ep_N0__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_N2",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "ep_N2__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 13870,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "ep_N2__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S0",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "ep_S0__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 13778,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "ep_S0__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S1",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "ep_S1__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 13801,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "ep_S1__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "ep_S3",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "ep_S3__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 13824,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "ep_S3__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "fault_cause",
+   "net": "hb_coll_NE__fault_cause",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7479,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "hb_coll_NE__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "fault_cause",
+   "net": "hb_coll_NW__fault_cause",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7384,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "hb_coll_NW__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "fault_cause",
+   "net": "hb_coll_SE__fault_cause",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7289,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "hb_coll_SE__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "fault_cause",
+   "net": "hb_coll_SW__fault_cause",
+   "width": 16,
+   "unread_ranges": [
+    [
+     0,
+     15
+    ]
+   ],
+   "bit_count": 16,
+   "die_line": 7172,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "hb_coll_SW__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "host_ep",
+   "master": "hfd_ep_static",
+   "port": "fault_cause",
+   "net": "host_ep__fault_cause",
+   "width": 11,
+   "unread_ranges": [
+    [
+     0,
+     10
+    ]
+   ],
+   "bit_count": 11,
+   "die_line": 26537,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "classification": "aggregate_fault_cause_observation_review",
+   "reason": "Diagnostic cause vector duplicates causes already reported by the observed aggregate fault; detailed attribution is optional to containment, root host-diagnostic policy review required.",
+   "evidence": {
+    "aggregate_fault_net": "host_ep__fault",
+    "aggregate_fault_consumers": [
+     {
+      "instance": "host_status",
+      "port": "h_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "source_semantics": "EP registers identical cause terms vs aggregate fault; rx_pingpong bank/ctl cause flags set together with faults (unused bankcause[4:3] zero). COLL shared fj registers sticky fault|any(cause_now) and sticky cause bits together.",
+    "host_intent_limit": "Existing source comment mentions fault_cause for detailed host diagnosis; current die consumes aggregate fault only. No automatic ABI waiver."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "input_die_sha256": "47f3575f56d7304ccb42667a929506ba8e177ff9a18c40efb61cfe6dc2010805",
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv": "62565a0bc080f3d4127580e59e3430d8b14e1c7c91559bd50dac757c70444e63",
+  "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv": "a668113a6d91edbd14df6b6da3ed784995f823835f2270550c6a5fd9c316071f",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv": "d2aca3d96273ff3689153a77a7d0617e540edf480a6dad1834c9f68174f7c98c",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv": "9dc4c623299ecb66d3a708ad68664c6cde1369ef007730016c2a335ea0ca7f42"
+ },
+ "validation": "Read-only source semantics and exact generated-die consumers, not new RTL simulation. Cause-specific negative mutant not run; review required."
+}
