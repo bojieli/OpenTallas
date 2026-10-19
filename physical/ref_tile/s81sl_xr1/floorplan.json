@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  345.6,
-  432.0
+  311.04,
+  395.28
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  429.84
+  308.88,
+  393.11999999999995
  ],
  "why": "spec outline",
  "std_area_um2": 12000,
@@ -90,7 +90,7 @@
   [
    "WARN",
    "util",
-   "utilisation 8% outside 45%-60% (std 12000 + macro 0 in core 145959 um2)",
+   "utilisation 10% outside 45%-60% (std 12000 + macro 0 in core 119915 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
@@ -121,6 +121,9 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/s81sl_xr1/pre_gpl.tcl",
+  "physical/ref_tile/s81sl_xr1/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

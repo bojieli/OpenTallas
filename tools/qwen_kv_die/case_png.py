@@ -29,7 +29,10 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--window')
     ap.add_argument('--title', default='')
+    ap.add_argument('--slots', help='RUN/rly_std.json: draw its land_slots (KV-LANDSLOT landing frames) as landings')
     a = ap.parse_args()
+    import json
+    slots = set(json.load(open(a.slots)).get('land_slots', {})) if a.slots else set()
     size, cur = {}, None
     for ln in open(a.case + '/elements.lef'):
         s = ln.strip()
@@ -52,12 +55,16 @@ def main():
     ww, wh = win[2] - win[0], win[3] - win[1]
     fig, ax = plt.subplots(figsize=(8 * ww / max(ww, wh) + 3, 8 * wh / max(ww, wh) + 1), dpi=180)
     used = set()
-    rx, ry, ox, oy = [], [], [], []
+    rx, ry, ox, oy, lx, ly = [], [], [], [], [], []
     for nm, mm, x, y in pos:
         w, h = size[mm]
         if x > win[2] or x + w < win[0] or y > win[3] or y + h < win[1]:
             continue
-        if mm.startswith(('qkd_rlys_', 'qkd_rly_', 'qkd_rst_region')):
+        if mm.startswith('qkd_landsh') or nm in slots:
+            lx.append(x + w / 2)
+            ly.append(y + h / 2)
+            continue
+        if mm.startswith(('qkd_rlys_', 'qkd_rly_', 'qkd_rst_region', 'qkd_rlysh')):
             (rx if (mm == 'qkd_rlys_1' and nm.startswith('rrs_')) else ox).append(x + w / 2)
             (ry if (mm == 'qkd_rlys_1' and nm.startswith('rrs_')) else oy).append(y + h / 2)
             continue
@@ -69,6 +76,8 @@ def main():
     ms = 0.3 if not a.window else 2
     ax.plot(ox, oy, '.', color='orange', ms=ms, label=f'data relay replicas ({len(ox)})')
     ax.plot(rx, ry, '.', color='red', ms=ms, label=f'reset stations ({len(rx)})')
+    if lx:
+        ax.plot(lx, ly, 'o', color='blue', ms=ms * 4, mfc='none', mew=0.4, label=f'landings ({len(lx)})')
     for lab, col in sorted(used):
         ax.add_patch(Rectangle((0, 0), 0, 0, facecolor=col, label=lab))
     ax.set_xlim(win[0], win[2])

@@ -28,11 +28,27 @@ def build(model, root):
         related = [['stream', 'ucie', 'coll_blk']]
         if 'clk_coll_blk' not in nets:
             raise ValueError('r10 collective is missing its real 200 MHz clock trunk')
+        serdes = sorted(n for n in nets if n.startswith('clk_serdes'))
+        if production.get('phy_clocks'):
+            # Q-DIE11-COLL 10-18: SerDes FDI roots are mesochronous with the core (source linkcal: same PLL, fixed
+            # phase; 1-bit tokens related-timed, records via the static CDC SRAM): related, 833.3 ps, never async
+            if serdes != ['clk_serdes0', 'clk_serdes1', 'clk_serdes2']:
+                raise ValueError(f'PHY-clocked collective needs clk_serdes0..2 trunks, got {serdes}')
+            periods['serdes'] = 2500.0/3
+            related = [['stream', 'ucie', 'coll_blk', 'serdes']]
+        elif serdes:
+            raise ValueError(f'SerDes FDI trunks {serdes} without the PHY-clock collective binding')
+    rel_pins = {production['master']: production['related_pins']} if production.get('related_pins') else {}
+    if model.get('dv_cluster_clocks'):
+        # Q-DIE11b 10-18: regional cluster clocks dropped at region centres; each cluster port on its region's clock
+        dc = model['dv_cluster_clocks']
+        rel_pins[dc['master']] = dc['related_pins']
     path = Path(root) / 'rtl/physical/ot_qfd_ucie_six_five.sv'
     return dict(schema='opentallas.qwen-source-clock-contract.v1',
                 clock_ports={m: sorted(ps) for m, ps in sorted(ports.items())},
                 clock_trunks=sorted(nets), periods_ps=periods, related_domains=related,
                 source=str(path.relative_to(root)), source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                 phase_ps={d: 0.0 for group in related for d in group},
+                **({'related_pins': rel_pins} if rel_pins else {}),
                 clock_generation='OPEN: real common-PLL/divider implementation and physical delivery required',
                 qualification=False)

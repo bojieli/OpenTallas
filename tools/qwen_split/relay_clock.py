@@ -1,4 +1,28 @@
 """Use explicit source-bound relay clocks; never infer a new frequency."""
+import re
+
+SERDES_INST = ('io_serdes', 'io_serdes_1', 'io_serdes_2')
+
+
+def _serdes_clock(model, bid, clock, bus):
+    """Q-DIE11-COLL 10-18: a SerDes s FDI bus relay runs on that PHY's own FDI clock clk_serdes<s>
+    (native_static_io_bind OT_SPLIT_COLL_PHY_CLOCKS).  Fail closed unless the bus is SerDes s's own bus, the trunk has
+    its real clk_rx.pll_serdes<s> root, drives SerDes PHY s's clk pin and at least one collective face_ck root, and
+    the bus really ends on that PHY."""
+    s = int(clock[-1])
+    _, kind, bits, eps = bus
+    if not bid.startswith(f'serdes{s}_'):
+        raise ValueError(f'relay clock {bid}: {clock} belongs to SerDes {s} buses only')
+    if kind != 'clock_trunk' or bits != 1 or ('clk_rx', f'pll_serdes{s}') not in eps:
+        raise ValueError(f'relay clock {bid}: {clock} lacks its actual clk_rx.pll_serdes{s} root')
+    if (SERDES_INST[s], 'clk') not in eps:
+        raise ValueError(f'relay clock {bid}: {clock} does not clock SerDes PHY {SERDES_INST[s]}')
+    if not any(i == 'io_collective' and p.startswith('face_ck') for i, p in eps):
+        raise ValueError(f'relay clock {bid}: {clock} reaches no collective face root')
+    data = [b for b in model['buses'] if b[0] == bid]
+    if len(data) != 1 or not any(i == SERDES_INST[s] for i, _ in data[0][3]):
+        raise ValueError(f'relay clock {bid}: bus does not end on SerDes PHY {SERDES_INST[s]}')
+    return clock
 
 
 def assigned_clock(model, bid, cls):
@@ -9,6 +33,8 @@ def assigned_clock(model, bid, cls):
     # The native binder owns the exact FDI bus identities and existing root.
     # Refuse stale metadata, absent clocks, duplicate roots or data-net aliases.
     buses = [b for b in model['buses'] if b[0] == clock]
+    if cls == 'coll_fdi' and len(buses) == 1 and re.fullmatch(r'clk_serdes[0-2]', clock):
+        return _serdes_clock(model, bid, clock, buses[0])
     if cls != 'coll_fdi' or clock != 'clk_ucie' or len(buses) != 1:
         raise ValueError(f'relay clock {bid}: invalid explicit FDI clock {clock}')
     _, kind, bits, eps = buses[0]

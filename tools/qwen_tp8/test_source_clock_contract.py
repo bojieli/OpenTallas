@@ -77,3 +77,50 @@ endmodule
 
 if __name__=='__main__':
     unittest.main()
+
+
+class CollectivePhyClocks(unittest.TestCase):
+    """Q-DIE11-COLL 10-18: SerDes link-side face roots leave clk_coll; per-bit related clocks reach the stand-in lib."""
+
+    def test_link_side_face_roots_leave_the_core_trunk(self):
+        from qwen_split import native_static_io_bind as B
+        ports = {'face_ck': (55, 'input'), 'relay_ck': (30, 'input')}
+        core = B.core_clock_pins(ports, True)
+        self.assertEqual(B.serdes_face_bits(0), [23, 25, 26, 28, 29, 30, 31, 32])
+        for b in range(55):
+            self.assertEqual(f'face_ck{b}' in core, b < 22 or b % 11 in B.FACE_CORE_SLOTS)
+        self.assertEqual(len(B.core_clock_pins(ports)), len(core) + 24)
+
+    def test_related_pins_follow_the_rtl_capture_roots(self):
+        from qwen_split import native_static_io_bind as B
+        ports = {'face_ck': (55, 'input'), 'relay_ck': (30, 'input'), 'serdes_tx': (1791, 'output'),
+                 'serdes_rx': (1791, 'input'), 'serdes_tx_valid': (3, 'output'), 'serdes_rx_valid': (3, 'input'),
+                 'serdes_up': (3, 'input'), 'shared_tx': (1043, 'output'), 'shared_tx_valid': (1, 'output'),
+                 'shared_rx': (1043, 'input'), 'shared_rx_valid': (1, 'input'), 'ucie_up': (1, 'input')}
+        rel = B.related_pins(ports, True)
+        self.assertEqual(rel['serdes_rx'][0], 'face_ck[28]')
+        self.assertEqual(rel['serdes_rx'][597], 'face_ck[39]')
+        self.assertEqual(rel['serdes_tx'][1790], 'face_ck[50]')
+        self.assertEqual(rel['srx2'], ['face_ck[50]'] * 597)
+        self.assertEqual(rel['shared_rx'][5], 'fdi_rx_ck')
+        self.assertEqual(rel['shared_tx_valid'], ['fdi_ck'])
+        self.assertEqual(B.related_pins(ports, False), {})
+        ports['serdes_rx'] = (1790, 'input')
+        with self.assertRaises(ValueError):
+            B.related_pins(ports, True)
+
+    def test_stand_in_lib_emits_per_bit_related_clocks(self):
+        import qwen_die_element_lib as E
+        lef = {'coll': {'clk': 1, 'face_ck': 3, 'fdi_ck': 1, 'd': 2, 'q': 1}}
+        E.IDX.update({('coll', 'clk'), ('coll', 'fdi_ck')})
+        stubs = {'coll': {'d': ['input', 0, set()], 'q': ['output', 0, set()]}}
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td) / 'x.lib'
+            E.write_lib('tt', lef, stubs, out, clock_ports={'coll': ['clk', 'face_ck', 'fdi_ck']},
+                        related_pins={'coll': {'d': ['face_ck[2]', 'fdi_ck'], 'q': ['fdi_ck']}})
+            text = out.read_text()
+            self.assertIn('pin (d[0]) { direction : input', text)
+            self.assertIn('related_pin : "face_ck[2]"', text)
+            self.assertIn('related_pin : "fdi_ck[0]"', text)
+            E.write_lib('tt', lef, stubs, out, clock_ports={'coll': ['clk', 'face_ck', 'fdi_ck']})
+            self.assertNotIn('face_ck[2]', out.read_text())
