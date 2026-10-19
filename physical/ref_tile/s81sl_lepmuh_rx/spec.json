@@ -265,7 +265,11 @@
    "v": "M3 M5"
   },
   "macro_halo_um": 10.8,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_sram_showahead_hit5",
+   "ot_s81sl_lep_rx_control"
+  ]
  },
  "structural_change": "RX_SRAM=1 structural successor: five32x128 true SRAM RX banks per lane with exact same-edge show-ahead/forwarding; five512x128 true SRAM TX banks per lane with exact original OLD-read/hold semantics. Reset-distinct frame, pointer, forwarding and host-capture regions remove wide control enables; balanced reset retains three-edge local release. Existing TXRP=1 +1 lane edge already priced; no additional data edges. Measured H std6462.29; actual A area pending. New full-width band pruned before tapcell, GPL-only row envelope restores full paid core. All physical acceptance and parent fit remain pending.",
  "pin_regs": {
@@ -361,8 +365,7 @@
  "orfs_vars": {
   "OT_CKKM_K": "8",
   "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/s81sl_lepmuh_rx/lep_gpl_row_envelope.tcl",
-  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/s81sl_lepmuh_rx/lep_gpl_row_envelope.tcl",
-  "SYNTH_KEEP_MODULES": "ot_sram_showahead_hit5"
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/s81sl_lepmuh_rx/lep_gpl_row_envelope.tcl"
  },
  "fill_reason": {
   "lattice_channel_bound": {

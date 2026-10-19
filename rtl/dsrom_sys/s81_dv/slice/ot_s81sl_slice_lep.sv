@@ -644,6 +644,15 @@ module ot_s81sl_lep_core #(
     wire bt_next=b_tag_next;
     wire m_tag_next=tagd(ml_rd);
 `endif
+    localparam integer CG=(OREP+7)/8;
+    wire [CG*6-1:0] control_local;
+    if(RX_SRAM!=0) begin:g_control_groups
+        for(genvar cg=0;cg<CG;cg=cg+1) begin:g_group
+            ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex}),.ring({{(4-NL){1'b0}},rringx}),
+                .hk({{(4-NL){1'b0}},rhkx}),.tag({{(4-NL){1'b0}},rtagx}),
+                .mv(ml_rv),.mt({ml_rd[TG],ml_rd[3:0]}),.sel(control_local[cg*6+:6]));
+        end
+    end
     for (c = 0; c < OREP; c = c + 1) begin : g_o
         localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
         if (LO < 1104) begin : g_on
@@ -653,9 +662,7 @@ module ot_s81sl_lep_core #(
                 always @(posedge clk or negedge reset_o)
                     if(!reset_o) begin sa_r<=0; sb_r<=0; sm_r<=0; ta_r<=0; tb_r<=0; tm_r<=0; end
                     else begin
-                        sa_r<=a_cut_next; sb_r<=b_cut_next;
-                        sm_r<=ml_rv && !a_cut_next && !b_cut_next;
-                        ta_r<=a_tag_next; tb_r<=bt_next; tm_r<=m_tag_next;
+                        {tm_r,tb_r,ta_r,sm_r,sb_r,sa_r}<=control_local[(c/8)*6+:6];
                     end
                 genvar ob;
                 for(ob=LO;ob<HI;ob=ob+1) begin:g_bit
@@ -1191,4 +1198,24 @@ module ot_s81sl_slice_lepe_nh (
         .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),   // host ports unread at HOST_EN 0
         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));   // MU ports unread at MU_EN 0
+endmodule
+
+// Nine independent combinational control regions serve <=8 registered select
+// slices each. The raw next-head metadata lands on the original select edge.
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_rx_control(
+ input wire [3:0] ne,ring,hk,tag,input wire mv,input wire [4:0] mt,output wire [5:0] sel);
+ wire ar=ne[0] && ne[1],br=ne[2] && ne[3] && !ar;
+`ifdef OT_S81SL_LEP_MUT_LANDCUT
+ wire ac=ar && ring[0],bc=br && ring[2];
+`else
+ wire ac=ar && ring[0] && !(hk[0] && hk[1]);
+ wire bc=br && ring[2] && !(hk[2] && hk[3]);
+`endif
+`ifdef OT_S81SL_LEP_MUT_STRIPALL
+ wire at=1'b1,bt=1'b1,rt=1'b1;
+`else
+ wire at=hk[0] && tag[1],bt=hk[2] && tag[3];
+ wire rt=mt[0] && (mt[3:1]==3'd1 || mt[3:1]==3'd2) && mt[4];
+`endif
+ assign sel={rt,bt,at,(mv && !ac && !bc),bc,ac};
 endmodule
