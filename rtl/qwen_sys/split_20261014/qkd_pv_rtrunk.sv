@@ -147,4 +147,57 @@ module qkd_pv_rs_hd_r #(
         end
     end
 endmodule
+// AD3-KV-RSHD 2026-10-18: qkd_pv_rs_hd_f, native successor of qkd_pv_rs_hd_r (same ports, same ONE register stage pin to
+// pin, same beat schedule; pv_trunk_gen --rs-hd f).  _r CLOSED (TT +258.9) but failed the native capture budget
+// (S + R 259.9 > 190 on 94 pins): each V copy va[k] = a0v[k] & a1v[k] joined the two T0 parts' pins and drove 16 data
+// muxes in BOTH output halves (o_data[8k +: 8] and o_data[256 + 8k +: 8]), so every select net crossed the tile; the T
+// select a0t & a1t drove the 32 epoch flops.  HALF-LOCAL SELECTS: the generator drives the V bit (y[256] = the inject
+// select) and the T bit (y[257] = the previous node's T; the head takes a = y) of both T0 parts from the SAME signals
+// through stations clocked together, so a0[256] == a1[256], a0[257] == a1[257] and every copy equals its bit in every
+// cycle (pv_rtrunk_bench pair lockstep).  Hence va[k] == v0[k] == v1[k]: the lower half muxes take part 0's copies only,
+// the upper half part 1's only (8 loads per copy, no AND, no cross-half net), and the epoch's two flop banks take one T
+// copy each (er <- a0t, o_epoch <- a1t; 16 loads each).  Function identical to qkd_pv_rs_hd_r under that invariant.
+module qkd_pv_rs_hd_f #(
+    parameter integer KV = 32                    // V copies per T0 half (copy 0 = a<q>[256]); 256 / KV data bits each
+)(
+    input  wire          ck,
+    input  wire [257:0]  a0,
+    input  wire [257:0]  a1,
+    input  wire [KV-2:0] a0v,
+    input  wire [KV-2:0] a1v,
+    input  wire          a0t,
+    input  wire          a1t,
+    input  wire [257:0]  b0,
+    input  wire [257:0]  b1,
+    input  wire [15:0]   ep,
+    output reg           o_valid,
+    output reg  [4:0]    o_beat,
+    output reg  [15:0]   o_epoch,
+    output reg  [511:0]  o_data
+);
+    localparam integer HB = 256 / KV;            // data bits of one half per V copy
+    wire [KV-1:0] v0 = {a0v, a0[256]};           // part 0 V copies -> lower half selects only
+    wire [KV-1:0] v1 = {a1v, a1[256]};           // part 1 V copies -> upper half selects only
+    wire t0 = a0[257] & a1[257];                 // beat / count (10 loads)
+    wire vb = b0[256] & b1[256];
+    reg [4:0] cnt;
+    reg [15:0] er;
+    integer k;
+    always @(posedge ck) begin
+        o_valid <= a0[256] | vb;
+        o_beat  <= t0 ? 5'd0 : cnt;
+        cnt     <= t0 ? 5'd1 : cnt + 5'd1;
+        er      <= a0t ? ep : er;
+        o_epoch <= a1t ? ep : er;
+        for (k = 0; k < KV; k = k + 1) begin
+`ifdef OT_QKD_RSHD_MUT
+            o_data[k*HB +: HB]       <= v0[k] ? a1[k*HB +: HB] : b0[k*HB +: HB];   // bench mutant: T0 halves swapped
+            o_data[256 + k*HB +: HB] <= v1[k] ? a0[k*HB +: HB] : b1[k*HB +: HB];
+`else
+            o_data[k*HB +: HB]       <= v0[k] ? a0[k*HB +: HB] : b0[k*HB +: HB];
+            o_data[256 + k*HB +: HB] <= v1[k] ? a1[k*HB +: HB] : b1[k*HB +: HB];
+`endif
+        end
+    end
+endmodule
 `default_nettype wire
