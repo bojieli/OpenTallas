@@ -1,9 +1,11 @@
 #!/bin/bash
 # S81-SAFE-FIX/C199 2026-10-19: formal equivalence of the RSPLIT retime of ot_v41_bmul2_rne_prepare (GRADUAL_RNE=1, XS=1,
 # the S81 BF lane multiplier) against the closed circuit (source commit 24cf7e2e3, the routed compact199 pinreg view).
-# Bounded model check of a miter over 14 cycles from an all-zero state with free inputs every cycle: both circuits are
-# feed-forward 8-stage pipelines (every register is a function of the inputs of the last <= 9 cycles), so 14 steps cover
-# every reachable state -> equivalence for all input sequences.  MUT=1 builds the RSPLIT_MUTANT_INC negative control,
+# Bounded model check of a miter over 20 cycles from an all-zero state with free inputs every cycle, outputs compared from
+# step 10 on (-prove-skip 9): both circuits are feed-forward 8-stage pipelines (after 9 cycles every register is a function
+# of the inputs of the last <= 9 cycles only), so steps 10..20 cover every state reachable after the pipeline has filled
+# -> equivalence for all input sequences.  (Before the fill the zero init is not a reachable joint state: gold s3_be = 0
+# implies the gate's registered shift = 1, in range, while both start at 0; y is a don't-care there in both circuits.)  MUT=1 builds the RSPLIT_MUTANT_INC negative control,
 # which must FAIL (counterexample).
 # usage: cd <src root> && MUT=0|1 bash results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/bmul_rsplit_equiv.sh <orig.sv>
 set -eo pipefail
@@ -20,7 +22,8 @@ chparam -set GRADUAL_RNE 1 -set XS 1 bmul_gold bmul_gate
 hierarchy -check; proc; flatten; async2sync; opt_clean
 miter -equiv -flatten -make_outputs bmul_gold bmul_gate miter
 hierarchy -top miter; opt -fast
-sat -verify -seq 14 -prove trigger 0 -set-init-zero -show-inputs -show-outputs miter
+sat -verify -seq 20 -prove-skip 9 -prove trigger 0 -set-init-zero -show-inputs -show-outputs miter
 " && rc=0 || rc=$?
 grep -E 'SAT (proof|temporal).*(SUCCESS|FAIL)|model found|Number of cells' $W/y.log | tail -4 || true
+[ -n "$LOG_OUT" ] && cp $W/y.log "$LOG_OUT"
 exit $rc

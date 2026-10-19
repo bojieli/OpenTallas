@@ -1,0 +1,35 @@
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-751682-1792417005 after 1 s
+SAT proof finished - no model found: SUCCESS!
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-751682-1792417005): exit 0
+--- yosys log (stat + sat summary)
+sat -verify -seq 20 -prove-skip 9 -prove trigger 0 -set-init-zero -show-inputs -show-outputs miter
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Imported 595 cells to SAT database.
+Import proof-constraint: \trigger = 1'0

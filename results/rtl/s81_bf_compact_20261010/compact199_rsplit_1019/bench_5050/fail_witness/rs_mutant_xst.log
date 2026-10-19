@@ -1,0 +1,8 @@
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-747437-1792416955 after 0 s
+rs_mutant_xst ok ['[7003000] %Fatal: cand_ot_v41_pair_w17w10.sv:183: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3300000000400010']
+ORACLE phase=1 positions=1 active_segments=8 nseg=1 cumulative_public_rows=16 value_assertions=32
+ORACLE phase=2 positions=1 active_segments=8 nseg=1 cumulative_public_rows=32 value_assertions=64
+[7003000] %Fatal: cand_ot_v41_pair_w17w10.sv:183: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3300000000400010
+%Error: cand_ot_v41_pair_w17w10.sv:183: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-747437-1792416955): exit 0

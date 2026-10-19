@@ -1,0 +1,205 @@
+{
+ "name": "s81sf_bfcol_c199r-f1-COMMIT",
+ "block": "ot_v41_bf_col",
+ "ref_tile": true,
+ "owner": "Claude:S81-SAFE-FIX/C199",
+ "purpose": "compact199 fallback kit (critical ot_v41_bf_: coordinator review + submit only)",
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/s81sf-c199-fallback-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/uarch/s81_bf_compact_hierarchy_20261010.json",
+   "results/uarch/s81_bf_compact_hierarchy_tall_20261010.json",
+   "results/rtl/s81_bf_compact_20261010/reticle",
+   "results/rtl/s81_bf_compact_20261010/bench",
+   "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050",
+   "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "physical/asap7_memory_macros/ot_rom_8192x274_m8"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_v41_bf_col #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200), .FAST(1), .PP(1), .BP(0), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .QBF(2), .QZE(1), .TCG(1), .GRADUAL_RNE(1), .BXST(2), .FXST(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_BMUL_RSPLIT --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/s81/ot_s81_bf_seam.sv rtl/s81/ot_s81_bf_native.sv rtl/common/ot_prefix.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/v41rom/ot_v41_bf16_lanes.sv rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_chain2.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bmul2_rne_prepare.sv rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv rtl/v41rom/ot_v41_rom_elem_qx_w10.sv rtl/v41rom/ot_v41_chain2u2.sv rtl/v41rom/ot_v41_kreg.sv rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_bf16_lanes3.sv rtl/v41rom/ot_v41_tile_clk.sv rtl/v41rom/ot_bf_hdly.sv rtl/v41rom/ot_v41_bf_col.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsplit",
+    "expect": "pass",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --positive-define rsplit=OT_BMUL_RSPLIT --work {RUN}/bench_c199r/rsplit --only rsplit; rc=$?; cat {RUN}/bench_c199r/rsplit/rsplit/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "pass_regex": "^TXN MATCH$",
+    "min_count_regex": "compared=(\\d+)",
+    "pass_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/positive_run.log"
+   },
+   {
+    "name": "rs_mutant_dp",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_dp=OT_BMUL_RSPLIT+QP_MUTANT_DP --work {RUN}/bench_c199r/rs_mutant_dp --only rs_mutant_dp; rc=$?; cat {RUN}/bench_c199r/rs_mutant_dp/rs_mutant_dp/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_dp.log"
+   },
+   {
+    "name": "rs_mutant_recut",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_recut=OT_BMUL_RSPLIT+W10_MUTANT_RECUT --work {RUN}/bench_c199r/rs_mutant_recut --only rs_mutant_recut; rc=$?; cat {RUN}/bench_c199r/rs_mutant_recut/rs_mutant_recut/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_recut.log"
+   },
+   {
+    "name": "rs_mutant_pinlat",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_pinlat=OT_BMUL_RSPLIT+PINLAT_MUTANT_B0 --work {RUN}/bench_c199r/rs_mutant_pinlat --only rs_mutant_pinlat; rc=$?; cat {RUN}/bench_c199r/rs_mutant_pinlat/rs_mutant_pinlat/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_pinlat.log"
+   },
+   {
+    "name": "rs_mutant_tcg",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_tcg=OT_BMUL_RSPLIT+TCG_MUTANT_EN --work {RUN}/bench_c199r/rs_mutant_tcg --only rs_mutant_tcg; rc=$?; cat {RUN}/bench_c199r/rs_mutant_tcg/rs_mutant_tcg/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_tcg.log"
+   },
+   {
+    "name": "rs_mutant_xst",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_xst=OT_BMUL_RSPLIT+XST_MUTANT_TAG --work {RUN}/bench_c199r/rs_mutant_xst --only rs_mutant_xst; rc=$?; cat {RUN}/bench_c199r/rs_mutant_xst/rs_mutant_xst/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_xst.log"
+   },
+   {
+    "name": "rs_mutant_fxst",
+    "expect": "fail",
+    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rs_mutant_fxst=OT_BMUL_RSPLIT+FXST_MUTANT_TAG --work {RUN}/bench_c199r/rs_mutant_fxst --only rs_mutant_fxst; rc=$?; cat {RUN}/bench_c199r/rs_mutant_fxst/rs_mutant_fxst/run.log 2>/dev/null; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator-5.050"
+    ],
+    "fail_regex": "%Fatal: .*DIFF TXN lane=",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/bench_5050/fail_witness/rs_mutant_fxst.log"
+   },
+   {
+    "name": "rsplit_formal_equiv",
+    "expect": "pass",
+    "cmd": "cd {SRC} && MUT=0 bash results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/bmul_rsplit_equiv.sh results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/closed_ot_v41_bmul2_rne_prepare.sv",
+    "pass_regex": "SAT proof finished - no model found: SUCCESS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "yosys"
+    ],
+    "pass_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/equiv_mut0.log"
+   },
+   {
+    "name": "rsplit_formal_mutant_inc",
+    "expect": "fail",
+    "cmd": "cd {SRC} && MUT=1 bash results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/bmul_rsplit_equiv.sh results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/closed_ot_v41_bmul2_rne_prepare.sv",
+    "fail_regex": "SAT proof finished - model found: FAIL",
+    "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/equiv_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "yosys"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sf_bfcol_c199r/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sf_bfcol_c199r/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sf_bfcol_c199r --out {RUN}/record/views/ot_v41_bf_col --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x274_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sf_bfcol_c199r/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sf_bfcol_c199r/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sf_bfcol_c199r/s81sf_bfcol_c199r-f1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-SAFE-FIX/C199 fallback (3 failed routes since last CLOSED): (1) RSPLIT zero-cycle retime of the 627-ps BF lane multiplier subnormal encode (formal-equivalent); (2) ref_tile kit replaces the bespoke route_hier flow: 432x216 (2:1) outline from synthesis area at 0.556 density, both ROMs on the 43.2 lattice with their pin faces in one 23.4-um channel, inputs spread over the FULL E face (3.6 pins/um, was 10.4/um over 74.5 um), clock pin on N above the register mass, 2-stage reset landing, io_hold 0.03."
+}

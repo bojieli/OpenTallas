@@ -37,8 +37,8 @@ MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x6
           'ot_sram_1r1w_32x128_m1': (51.408, 20.790)}
 CDC_LINT = RES / 'cdc/cdc_leaf_lint_cdc2.json'          # fleet run of cdc_leaf_lint.py --json on the KV-CDC2 leaves
 #                                                        (forks + per-family ports); cdc_leaf_lint.json = pre-fix REFUSED x3
-CDC_REVIEW = ('reviewed_gray_fifos (claude/kvhcl-cdc-1017 + kvhcl-cdc2-1017 event synchronisers / hard macros / chained '
-              'storage) coordinator review PENDING; D3 family clocks, D5 credit channels at the host/PHY off-die boundary')
+CDC_REVIEW = ('reviewed_gray_fifos (main + the (d) event-synchroniser port of claude/kv-hroot-cdc-1018; macros / chained '
+              'storage through main\'s extension mode) coordinator review PENDING; D3 family clocks, D5 credit channels at the host/PHY off-die boundary')
 FLAT = 1.0                                               # hier census area ~ the route synthesis (queue gate: 7,286 vs 5,415 hier)
 PINFLOP_UM2 = 0.45                                       # one pin register + its anchoring per pin bit
 DIRECT_TOP = {}
@@ -155,10 +155,10 @@ def main():
                                   reason='literal async reset roles only (data levels such as native_link_reset_seen are registered)'))
         if cdc:
             for k in ('clock', 'clock_ports', 'clock_data_paths', 'clock_relationship', 'clock_entry_domains',
-                      'cdc_synchronizers', 'macros'):
+                      'cdc_synchronizers', 'macros', 'reviewed_gray_fifo_extensions'):
                 if k in fields:
                     spec[k] = fields[k]
-            spec['sources'] = src + [f'physical/asap7_memory_macros/{k}/{k}_bb.v' for k in macros]
+            spec['sources'] = list(dict.fromkeys(src + [f'physical/asap7_memory_macros/{k}/{k}_bb.v' for k in macros]))
             other = sorted(p for f, v in lint[child]['inputs'].items() if f != 'core' for p in v) + \
                 sorted(p for f, v in lint[child]['outputs'].items() if f != 'core' for p in v)
             fams = '/'.join(leaf['families'])
@@ -183,8 +183,8 @@ def main():
         mut = f'--inst {inst_of(direct, child)}' if direct else f'--child {child[len("qkd_hr_"):]}'
         if child in MUTANT_PORT:
             mut += f' --port {MUTANT_PORT[child]}'
-        spec['job'] = dict(owner='Claude:KV-CDC2' if cdc else 'Claude:KV-HOSTCL',
-                           branch='claude/kv-cdc2-1018' if cdc else 'claude/kvj-a3-1017', tag='r2',
+        spec['job'] = dict(owner='Claude:KV-HROOT-CDC' if cdc else 'Claude:KV-HOSTCL',
+                           branch='claude/kv-hroot-cdc-1018' if cdc else 'claude/kvj-a3-1017', tag='r2',
                            purpose=f'HOST root cluster r2 child {child} (pre-route gate + route; parent qkd_host_root is CRITICAL)',
                            benches=[dict(name='cluster_lockstep', expect='pass', threads=16, peak_ram_gb=24, needs=['verilator'],
                                          cmd=f'{cg} exact --out {{RUN}}/bench/cg_exact',
