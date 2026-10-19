@@ -101,7 +101,9 @@ def main():
              f'({what})", chk, bad);')
     L += ['    $finish;', '  end', 'endmodule']
     (out / 'tb.sv').write_text('\n'.join(L) + '\n')
-    srcs = sorted((set(old['src']) | set(new['src'])) - {old['rtl'], new['rtl']})
+    # the unlanded tile's u_rly (qkd_kv_stack_relays) is body text, not a join member: its file is not in S.sources()
+    srcs = sorted((set(old['src']) | set(new['src']) | {'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'})
+                  - {old['rtl'], new['rtl']})
     dirs = sorted({str(Path(s).parent) for s in srcs})
     cmd = ['verilator', '--binary', '--timing', '-j', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
            '-Wno-TIMESCALEMOD', '--top-module', 'tb_hroot_land', '-Mdir', str(out / 'obj'), '-o', 'sim',

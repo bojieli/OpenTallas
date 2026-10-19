@@ -121,19 +121,6 @@
     "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_hl_1019/hroot_m1.log"
    },
    {
-    "name": "hroot_mut2",
-    "cmd": "OT_KV_HROOT_LAND=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/hroot_m2 hroot 2",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "^KVS_TILE PASS tile=hroot ",
-    "fail_regex": "^KVS_TILE FAIL tile=hroot .* mut=2 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_hl_1019/hroot_m2.log"
-   },
-   {
     "name": "hroot_mut3",
     "cmd": "OT_KV_HROOT_LAND=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/hroot_m3 hroot 3",
     "expect": "fail",

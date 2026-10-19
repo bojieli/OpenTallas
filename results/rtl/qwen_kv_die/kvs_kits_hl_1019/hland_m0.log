@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+HROOT_LAND PASS tile=hroot edges=4000 checks=51948 active_out=50909 outs=13 delayed_inputs=4 errors=0 mut=0 vs=unlanded_tile_inputs_plus1
+- ../out/hland_m0/tb.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.004 s; speed 1.840 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB
+
