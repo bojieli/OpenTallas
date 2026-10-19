@@ -7,10 +7,10 @@ LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=75301 ks=63 kp=83
 LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=75301 ks=63 kp=83
 LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=76201 ks=64 kp=84
 LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=76201 ks=64 kp=84
-LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=77101 ks=64 kp=85
-PGSLICE_RG errors serial=760 fault=0 stream=0 vm_write=176 lg_fault=0
-PGSLICE_RG FAIL errors=936 class_ok=1 checks=8352 data_edges=575 vm_writes=454
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=78001 ks=65 kp=86
+PGSLICE_RG errors serial=764 fault=0 stream=0 vm_write=160 lg_fault=0
+PGSLICE_RG FAIL errors=924 class_ok=1 checks=8352 data_edges=581 vm_writes=454
 - rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv:195: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 5.698 s; speed 181.749 ns/s
-- Verilator: cpu 5.175 s on 1 threads; allocated 64 MB
+- Verilator: $finish at 1us; walltime 4.972 s; speed 208.277 ns/s
+- Verilator: cpu 4.662 s on 1 threads; allocated 64 MB

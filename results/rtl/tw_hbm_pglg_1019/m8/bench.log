@@ -12,5 +12,5 @@ PGSLICE_RG errors serial=3174 fault=0 stream=0 vm_write=1286 lg_fault=0
 PGSLICE_RG FAIL errors=4460 class_ok=1 checks=29952 data_edges=2377 vm_writes=1789
 - rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv:195: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 14.754 s; speed 216.586 ns/s
-- Verilator: cpu 14.558 s on 1 threads; allocated 64 MB
+- Verilator: $finish at 3us; walltime 19.843 s; speed 161.048 ns/s
+- Verilator: cpu 14.890 s on 1 threads; allocated 64 MB
