@@ -1,0 +1,29 @@
+{
+ "reviewer": "codex coordinator",
+ "time": "2026-10-19T10:41:48.759765-07:00",
+ "gate_commit": "b0f1fd5a97c974f0fa5b2e3e05e7dfb34903bb8f",
+ "geometry_sha256": "64c0077ac23010af3482bb9ba8fde926dd572cfa2e89b375ec250b84bb931321",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "64c0077ac23010af3482bb9ba8fde926dd572cfa2e89b375ec250b84bb931321",
+  "components": {
+   "outline": "5ffa818658083e789f613bf755f7ba98fcff761ae01311366497c65a3483a175",
+   "macros": "b2544f5fd76f22f02bd69ac478a3f8b0224450741e1b4933ff733bed49a6fe12",
+   "pins": "2da045983e6b0c9b2d4408be23f35072b3315e195f5e4d8fe7d90dd2a8c23c25",
+   "clock_entry": "3d550c6537bbeac89d73dcc93e7d865ab05bba2fc85cf4ba3db6a681a1f597d3"
+  }
+ },
+ "verdict": "APPROVED",
+ "authority": "ROOT personally viewed exact PNG/checklist and delegated REVIEW/submit through S81 coordinator; source/native/geometry digests independently checked",
+ "checklist": {
+  "lattice": "Original child origins43.2/216; dimensions/keepouts unchanged; actual bounding-box stage max386.651<=405",
+  "std_cell_band": "Original428.2um2 soft/45909.5um2 hard;39% measured standard fill; reviewed actual floorplan+density",
+  "pin_spread": "Original full-face pins unchanged;1173 exact source/TT/FF data inventory",
+  "clock_entry": "Original clock knobs/entry; own TT774.0/FF606.1; spread36.2/33.8; clock1177 native sinks explicitly separate",
+  "shape": "345.6square unchanged; normal geometry identity exact vs reviewed b0 archivedfiles",
+  "source_safety": "All8207 native driver BUF/INV/HB4-transparent maxsignal14; no signal>32; localreset2 stages",
+  "native": "Own fresh TT110.849/106.917; FF all-tableminimum54.218>=25; no comb; parent routed/native linkage remains open"
+ },
+ "packet": "results/rtl/s81_slice_1017/capc_nativep1_1019/die_rc_order_review",
+ "exact_geometry_digest": "4d257926216ab9c50e0cc04ab87b7351313f370210d65dfaabca1d8749300c47"
+}
