@@ -43,7 +43,7 @@ module ot_s81ph_coll_lane_safe3 #(
     localparam integer HEAD_NS = (W + 1 + 15) / 16;          // credit rx forwarding slices (35)
     localparam integer HEAD_RL = (HEAD_NS + 7) / 8;          // leaves for them (8 slices x 2 flags each)
     localparam integer MEM_NS = (W + 1 + 7) / 8, MEM_NA = (MEM_NS + 3) / 4, MEM_RST = 2 * (MEM_NS + MEM_NA);
-    localparam integer EP_RN = 12, GB_RN = 21;
+    localparam integer EP_RN = 12, GB_RN = 22;   // = ot_s81ph_link_gbx_safe3 RN (checked there)
     localparam integer R_LOC = 0, R_CRX = 1, R_CTX = 2, R_HEAD = 3, R_EP = R_HEAD + HEAD_RL, R_MEM = R_EP + EP_RN,
                        R_GB = R_MEM + MEM_RST, NREG = R_GB + GB_RN;
     wire [NREG-1:0] rr;
@@ -80,7 +80,7 @@ module ot_s81ph_coll_lane_safe3 #(
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rrf),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
-    ot_s81ph_link_gbx_safe3 #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P),
+    ot_s81ph_link_gbx_safe3 #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P), .RN(GB_RN),
 `ifdef OT_S81PH_GBX3_MUT
         .MUT(`OT_S81PH_GBX3_MUT)
 `else

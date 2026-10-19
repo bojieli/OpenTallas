@@ -176,6 +176,9 @@ module ot_s81ph_link_ep_safe3 #(
 
     // ======================================================================== sender
     reg  [SEQW-1:0] una, snd, nxt;
+    // safe3: kept copy of snd for the ready / skip compares, in its own kept hierarchy (ot_s81ph_kff10,
+    // SYNTH_KEEP_MODULES): a same-D (* keep *) reg was merged back into snd by Yosys (mapped census 10-19: 33 loads)
+    wire [SEQW-1:0] snd_c;
     reg  [IW-1:0]   una_i, snd_i, nxt_i;
     reg  [CW-1:0]   credits;
     reg  [CW-1:0]   fr_seen;
@@ -204,13 +207,13 @@ module ot_s81ph_link_ep_safe3 #(
     //  (4) index registers are seq[IW-1:0] (RP a power of two): una_i_n = ack[IW-1:0], no add
     reg             rdy_r, rep_r;
     wire            replaying = PIPE ? rep_r : (snd != nxt);
-`ifdef OT_DSROM_LINK_MUT_FREECREDIT
-    assign in_ready = PIPE ? rdy_r : ((occ < RPS) && !replaying && pace_ok);
-`else
-    assign in_ready = PIPE ? rdy_r : ((credits != 0) && (occ < RPS) && !replaying && pace_ok);
-`endif
-    wire            accept = in_valid && in_ready;
-    wire            launch = (replaying && pace_ok) || accept;
+    // safe3: in_ready is a kept copy of rdy_r (the caller's pop), and accept is evaluated per consumer group from
+    // kept rdy_r copies (a: snd / snd_i / rdy / rep, b: nxt / credits, c: launch / pace / faults) -- same edge, same D.
+    (* keep = "true" *) reg [3:0] rdy_k;
+    assign in_ready = rdy_k[3];
+    wire            accept_a = in_valid && rdy_k[0], accept_b = in_valid && rdy_k[1], accept_c = in_valid && rdy_k[2];
+    wire            accept = accept_c;
+    wire            launch = (replaying && pace_ok) || accept_c;
     // replay storage: registered read of next cycle's index, same-cycle write forwarded
     wire [W:0]      rb_q;
     reg             rb_fwd;
@@ -232,10 +235,11 @@ module ot_s81ph_link_ep_safe3 #(
     (* keep = "true" *) reg [1:0] rep_ra;
     generate for (genvar ar = 0; ar < NAR; ar = ar + 1) begin : g_arep
         localparam integer LO = ar * ARS, HI = ((ar + 1) * ARS > W + 1) ? W + 1 : (ar + 1) * ARS;
-        (* keep = "true" *) reg a_rep_c;
+        (* keep = "true" *) reg a_rep_c, a_in_c;   // one-hot {replay, in} select copies: one AND-OR term per bit each
         always @(posedge clk) begin
             a_rep_c <= rep_ra[(2 * ar) / NAR];
-            b_pay[HI-1:LO] <= a_rep_c ? rb_q[HI-1:LO] : a_in[HI-1:LO];
+            a_in_c  <= !rep_ra[(2 * ar) / NAR];
+            b_pay[HI-1:LO] <= ({(HI-LO){a_rep_c}} & rb_q[HI-1:LO]) | ({(HI-LO){a_in_c}} & a_in[HI-1:LO]);
         end
     end endgenerate
     wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
@@ -248,6 +252,7 @@ module ot_s81ph_link_ep_safe3 #(
 
     // reverse-frame receive register; (T) its CRC check is computed on the input and registered beside it
     reg             rr_v;
+    (* keep = "true" *) reg [1:0] rrv_k, rrc_k;    // safe3: kept copies of rr_v / rr_crc_ok for the pending-slot enables
     reg  [RFW-1:0]  rr_f;
     reg             rr_crc_ok;
     wire [31:0]     r_rx_crc;
@@ -265,21 +270,28 @@ module ot_s81ph_link_ep_safe3 #(
     wire            p_take = pv && !s2v;
     // kept registered copies, same edge as s2v: ok_u = ack_ok for una / una_i; ok_c = ack_ok for control; ok_f = rr_ok
     // for the freed-credit path.  una_s = kept copy of una for the S2 subtracts.
-    (* keep = "true" *) reg ok_u, ok_c, ok_f;
+    // ok_u / ok_v / ok_c: same-edge copies of (p_take && !p_bad), each in its own kept hierarchy (ot_s81ph_kff1):
+    // the (* keep *) regs were partially merged by Yosys (mapped census 10-19: ok_u 37 loads)
+    wire ok_u, ok_v, ok_c; (* keep = "true" *) reg ok_f;
     (* keep = "true" *) reg [SEQW-1:0] una_s;
     wire [SEQW-1:0] p_dack = pack - una_s;
     wire            p_bad  = p_dack > (nxt - una_s);
+    wire ok_d = p_take && !p_bad;
+    ot_s81ph_kff1 u_k_oku (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_u));
+    ot_s81ph_kff1 u_k_okv (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_v));
+    ot_s81ph_kff1 u_k_okc (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_c));
     always @(posedge clk or negedge rst_v[0])
-        if (!rst_v[0]) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; ok_u <= 1'b0; ok_c <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
+        if (!rst_v[0]) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
         else begin
-            s2v <= p_take; ok_f <= p_take; ok_u <= p_take && !p_bad; ok_c <= p_take && !p_bad;
+            s2v <= p_take; ok_f <= p_take;
             una_s <= una_n;
             if (rr_ok0) begin pv <= 1'b1; pnak <= rr_nak0 | (pv && !p_take && pnak); end
             else if (p_take) begin pv <= 1'b0; pnak <= 1'b0; end
         end
     // S2 data: loaded every cycle (read only in S2-valid cycles, which follow a p_take edge)
     always @(posedge clk) begin
-        if (rr_ok0) begin pack <= rr_ack0; pfr <= rr_fr0; end
+        if (rrv_k[0] && rrc_k[0]) pack <= rr_ack0;
+        if (rrv_k[1] && rrc_k[1]) pfr <= rr_fr0;
         s2ack <= pack; s2fr <= pfr; s2nak <= pnak; s2dack <= p_dack; s2bad <= p_bad; s2dfr <= pfr - fr_seen;
     end
     wire            rr_ok   = PIPE ? s2v : rr_ok0;
@@ -330,12 +342,12 @@ module ot_s81ph_link_ep_safe3 #(
               if(!mem_rst_n[MEM_NS+mg]) begin wp_r<=0;rp_r<=0;ready_r<=1;end
               else begin
                 wp_r<=wp_r+IW'(wr);
-                rp_r<=wr?sndinx_1:sndinx_0;
-                ready_r<=wr?rdy_1:rdy_0;
+                rp_r<=wr?sndinx_1k:sndinx_0k;
+                ready_r<=wr?rdy_1k:rdy_0k;
               end
 `ifndef SYNTHESIS
             always @(posedge clk) if(rst_n && mem_rst_n[MEM_NS+mg])
-              if({wp_r,rp_r,ready_r,wr} !== {nxt_i,snd_i,rdy_r,accept})
+              if({wp_r,rp_r,ready_r,wr,rdy_k} !== {nxt_i,snd_i,rdy_r,accept,{4{rdy_r}}})
                 $fatal(1,"COLL replay group state differs group%0d",mg);
 `endif
         end
@@ -597,16 +609,19 @@ module ot_s81ph_link_ep_safe3 #(
 `endif
     // safe3: the same rdy / rep functions with every 10-bit compare evaluated in parallel on registers and the
     // rewind / skip / launch / ack selects applied to 1-bit results (no compare behind a 10-bit mux)
-    wire [SEQW-1:0] so      = snd - una;
+    wire [SEQW-1:0] so      = snd_c - una;
     wire            gt_so0  = d_ack > so, gt_so1 = d_ack > (so + 1'b1);
     wire            skp_0   = ack_ok && (lnch_0 ? gt_so1 : gt_so0), skp_1 = ack_ok && gt_so1;
-    wire            unq_0   = ok_u ? (rr_ack == nxt) : (una == nxt);           // una_n == nxt
-    wire            unq_1   = ok_u ? (rr_ack == nxtnx_1) : (una == nxtnx_1);   // una_n == nxt + 1
-    wire            snq     = snd == nxt, snq1 = (snd + 1'b1) == nxt;
+    // una_c: kept same-edge copy of una (ot_s81ph_kff10) for the una_n == / < compares (mapped census 10-19: una[0] 43)
+    wire [SEQW-1:0] una_c;
+    ot_s81ph_kff10 u_k_una (.clk(clk), .rst_n(rst_v[2]), .d(una_n), .q(una_c));
+    wire            unq_0   = ok_v ? (rr_ack == nxt) : (una_c == nxt);           // una_n == nxt
+    wire            unq_1   = ok_v ? (rr_ack == nxtnx_1) : (una_c == nxtnx_1);   // una_n == nxt + 1
+    wire            snq     = snd_c == nxt, snq1 = (snd_c + 1'b1) == nxt;
     wire            eq_0    = rewind ? unq_0 : (skp_0 ? (rr_ack == nxt) : (lnch_0 ? snq1 : snq));
     wire            eq_1    = rewind ? unq_1 : (skp_1 ? (rr_ack == nxtnx_1) : snq);
-    wire            lt_0    = ok_u ? ((nxt - rr_ack) < RPS) : ((nxt - una) < RPS);
-    wire            lt_1    = ok_u ? ((nxtnx_1 - rr_ack) < RPS) : ((nxtnx_1 - una) < RPS);
+    wire            lt_0    = ok_v ? ((nxt - rr_ack) < RPS) : ((nxt - una_c) < RPS);
+    wire            lt_1    = ok_v ? ((nxtnx_1 - rr_ack) < RPS) : ((nxtnx_1 - una_c) < RPS);
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            ck_0 = 1'b1, ck_1 = 1'b1;
 `else
@@ -617,6 +632,11 @@ module ot_s81ph_link_ep_safe3 #(
     wire            rdy_0 = ck_0 && lt_0 && eq_0 && pok_0;
     wire            rdy_1 = ck_1 && lt_1 && eq_1 && pok_1;
     wire            rep_0 = !eq_0, rep_1 = !eq_1;
+    // kept hierarchy boundary (ot_s81ph_kp20, SYNTH_KEEP_MODULES): the replay index / ready next states that the 18
+    // replay-group copies load are computed ONCE; synthesis cannot re-derive the rewind / skip select inside every group
+    // (mapped census: the select drove 156 group D loads).
+    wire [IW-1:0]   sndinx_0k, sndinx_1k; wire rdy_0k, rdy_1k;
+    ot_s81ph_kp20 u_kp_next (.a({sndinx_0, sndinx_1, rdy_0, rdy_1}), .y({sndinx_0k, sndinx_1k, rdy_0k, rdy_1k}));
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && ({rdy_0, rdy_1, rep_0, rep_1, skp_0, skp_1} !==
         {cok_0 && ((nxt - una_n) < RPS) && (sndnx_0 == nxt) && pok_0, cok_1 && ((nxtnx_1 - una_n) < RPS) && (sndnx_1 == nxtnx_1) && pok_1,
@@ -626,26 +646,28 @@ module ot_s81ph_link_ep_safe3 #(
 
     // safe3 state: the original single reset process split per reset leaf (same statements, PIPE 2 / MWR 1 only)
     always @(posedge clk or negedge rst_v[2])
-        if (!rst_v[2]) begin una <= 0; una_i <= 0; rdy_r <= 1'b1; rep_r <= 1'b0; rep_ra <= 2'b00; end
+        if (!rst_v[2]) begin una <= 0; una_i <= 0; rdy_r <= 1'b1; rdy_k <= 4'hf; rep_r <= 1'b0; rep_ra <= 2'b00; end
         else begin
             una <= una_n; una_i <= una_i_n;
-            rdy_r <= accept ? rdy_1 : rdy_0;
-            rep_r <= accept ? rep_1 : rep_0;
-            rep_ra <= {2{accept ? rep_1 : rep_0}};
+            rdy_r <= accept_a ? rdy_1k : rdy_0k;
+            rdy_k <= {4{accept_a ? rdy_1k : rdy_0k}};
+            rep_r <= accept_a ? rep_1 : rep_0;
+            rep_ra <= {2{accept_a ? rep_1 : rep_0}};
         end
     always @(posedge clk or negedge rst_v[3])
         if (!rst_v[3]) begin snd <= 0; snd_i <= 0; end
-        else begin snd <= accept ? sndnx_1 : sndnx_0; snd_i <= accept ? sndinx_1 : sndinx_0; end
+        else begin snd <= accept_a ? sndnx_1 : sndnx_0; snd_i <= accept_a ? sndinx_1k : sndinx_0k; end
+    ot_s81ph_kff10 u_k_snd (.clk(clk), .rst_n(rst_v[3]), .d(accept_a ? sndnx_1 : sndnx_0), .q(snd_c));
     always @(posedge clk or negedge rst_v[4])
         if (!rst_v[4]) begin nxt <= 0; nxt_i <= 0; end
-        else if (accept) begin nxt <= nxt + 1'b1; nxt_i <= idx_add(nxt_i, 1); end
+        else if (accept_b) begin nxt <= nxt + 1'b1; nxt_i <= idx_add(nxt_i, 1); end
     always @(posedge clk or negedge rst_v[5])
         if (!rst_v[5]) begin credits <= CREDITS[CW-1:0]; fr_seen <= 0; end
         else begin
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
             credits <= credits;
 `else
-            credits <= accept ? cred_1 : cred_r;
+            credits <= accept_b ? cred_1 : cred_r;
 `endif
             if (ok_f) fr_seen <= rr_fr;
         end
@@ -664,9 +686,10 @@ module ot_s81ph_link_ep_safe3 #(
             else if (!pace_ok) begin pace <= pace + PNUM_W;           pace_ok_r <= pace_ok_inc;    end
         end
     always @(posedge clk or negedge rst_v[8])
-        if (!rst_v[8]) begin rr_v <= 1'b0; rr_crc_ok <= 1'b0; rg_v <= 1'b0; fault <= 1'b0; fault_code <= 4'd0; tx_ack <= 0; end
+        if (!rst_v[8]) begin rr_v <= 1'b0; rr_crc_ok <= 1'b0; rrv_k <= 2'b00; rrc_k <= 2'b00; rg_v <= 1'b0; fault <= 1'b0; fault_code <= 4'd0; tx_ack <= 0; end
         else begin
             rr_v <= r_rx_v; rr_crc_ok <= (r_rx_crc == r_rx[31:0]);
+            rrv_k <= {2{r_rx_v}}; rrc_k <= {2{r_rx_crc == r_rx[31:0]}};
             rg_v <= rg_need;
             if (rg_need) tx_ack <= exp_seq;
             if (fault_n != 0 && !fault) begin fault <= 1'b1; fault_code <= fault_n; end
@@ -711,4 +734,18 @@ module ot_s81ph_link_ep_safe3 #(
     initial if (PIPE != 2 || MWR != 1 || SRAM != 1 || OLDREAD != 1 || DNR != 1 || RN < 12 || ORN < 3)
         $fatal(1, "ot_s81ph_link_ep_safe3: requires PIPE 2, MWR 1, SRAM 1, OLDREAD 1, DNR 1, RN >= 12, ORN >= 3");
 `endif
+endmodule
+
+// kept-hierarchy pass-through (unparameterized so SYNTH_KEEP_MODULES matches its name): a fanout boundary
+(* keep_hierarchy = 1 *) module ot_s81ph_kp20 (input wire [19:0] a, output wire [19:0] y);
+    assign y = a;
+endmodule
+
+// kept-hierarchy register copies (unparameterized so SYNTH_KEEP_MODULES matches the names): one instance = one physical
+// copy that Yosys cannot merge with a same-D sibling (safe-design checklist item 3, kept copies)
+(* keep_hierarchy = 1 *) module ot_s81ph_kff1 (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+(* keep_hierarchy = 1 *) module ot_s81ph_kff10 (input wire clk, input wire rst_n, input wire [9:0] d, output reg [9:0] q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 10'd0; else q <= d;
 endmodule

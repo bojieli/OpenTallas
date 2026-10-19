@@ -31,7 +31,7 @@ module ot_s81ph_link_gbx_safe3 #(
     // slot-store flag slices (8 slices x 2 flags per leaf)
     parameter integer NPC = (G + SL - 1) / SL, NRC = (3 * (S - G) + SL - 1) / SL, NHC = (G + SL - 1) / SL,
     parameter integer NCC = (FFW + SL - 1) / SL,
-    parameter integer KP = RL / 6, KR = RL / 2, KH = RL / 3, KC = RL / 3,
+    parameter integer KP = RL / 6, KR = RL / 2, KH = RL / 4, KC = RL / 3,
     parameter integer OP = 2, OR = OP + (NPC + KP - 1) / KP, OH = OR + (NRC + KR - 1) / KR, OC = OH + (NHC + KH - 1) / KH,
     parameter integer OS = OC + (NCC + KC - 1) / KC,
     parameter integer RN = OS + (NSH + 7) / 8,       // reset leaves the caller supplies (same release depth)
@@ -56,7 +56,7 @@ module ot_s81ph_link_gbx_safe3 #(
     localparam integer K1 = S - G;                   // 140 at S 596 / G 456
     localparam integer IB1 = $clog2(IDLE_P + 1);
 `ifndef SYNTHESIS
-    initial if (3 + RFW + G != BW || 3 * S > 4 * G || 3 * K1 > G || SL < 1 || RL < 6)
+    initial if (3 + RFW + G != BW || 3 * S > 4 * G || 3 * K1 > G || SL < 1 || RL < 6 || RN != OS + (NSH + 7) / 8)
         $fatal(1, "ot_s81ph_link_gbx_safe3: geometry");
 `endif
     // ============================================================== TX central control (the original FMT 1 control)
@@ -77,7 +77,7 @@ module ot_s81ph_link_gbx_safe3 #(
     //   t_k: slot (shifted k*K1) is taken in group phase k; r_k: rem's top k*K1 bits fill the low bits in phase k
     wire [5:0]     psel_n = {take_n && ph_n == 2'd0, take_n && ph_n == 2'd1, take_n && ph_n == 2'd2,
                              !idle_n && ph_n == 2'd1, !idle_n && ph_n == 2'd2, !idle_n && ph_n == 2'd3};
-    wire [1:0]     rsel_n = {take_n, need_n && !take_n};   // {load slot, clear}: rem <= slot when need
+    wire [1:0]     rsel_n = {take_n, !need_n};             // {load slot, keep}: rem <= slot when need (0 when not taken)
     always @(posedge clk or negedge rst_n[0]) begin
         if (!rst_n[0]) begin
             sh <= 0; st <= 0; sn <= 0; ph <= 0; ic <= 0; idle_q <= (IDLE_P == 1); beat_tx[2:0] <= 3'd0; fault <= 1'b0;
@@ -125,13 +125,12 @@ module ot_s81ph_link_gbx_safe3 #(
     // rem (original: if (!idle_q && need) rem <= slot): original bit j = RLO + k
     generate for (c = 0; c < NRC; c = c + 1) begin : g_rc
         localparam integer LO = c * SL, HI = ((c + 1) * SL > RW) ? RW : (c + 1) * SL;
-        (* keep = "true" *) reg [1:0] rs;            // {load, clear} copy
+        (* keep = "true" *) reg [1:0] rs;            // {load, keep} copy (neither: clear); one AND-OR term per bit each
         always @(posedge clk or negedge rst_n[OR + c / KR])
-            if (!rst_n[OR + c / KR]) rs <= 2'b01;   // reset state: need 1, take 0
-            else rs <= (MUT == 1) ? {take, need && !take} : rsel_n;
+            if (!rst_n[OR + c / KR]) rs <= 2'b00;   // reset state: need 1, take 0 -> clear
+            else rs <= (MUT == 1) ? {take, !need} : rsel_n;
         always @(posedge clk)
-            if (rs[1]) rem[HI-1:LO] <= slotv[RLO + LO +: (HI - LO)];
-            else if (rs[0]) rem[HI-1:LO] <= {(HI - LO){1'b0}};
+            rem[HI-1:LO] <= ({(HI-LO){rs[1]}} & slotv[RLO + LO +: (HI - LO)]) | ({(HI-LO){rs[0]}} & rem[HI-1:LO]);
     end endgenerate
     always @(posedge clk) beat_tx[BW-1:3] <= {gpay, r_tx};
     // ============================================================== RX
@@ -186,17 +185,15 @@ module ot_s81ph_link_gbx_safe3 #(
     // hold slices
     generate for (c = 0; c < NHC; c = c + 1) begin : g_hc
         localparam integer LO = c * SL, HI = ((c + 1) * SL > G) ? G : (c + 1) * SL;
-        (* keep = "true" *) reg [2:0] hs;
+        (* keep = "true" *) reg [3:0] hs;          // {h0, h1, h2, none}: one-hot, each drives one AND-OR term per bit
         always @(posedge clk or negedge rst_n[OH + c / KH])
-            if (!rst_n[OH + c / KH]) hs <= 3'd0;   // reset state: bv 0
-            else hs <= (MUT == 2) ? hs : hsel_n;
+            if (!rst_n[OH + c / KH]) hs <= 4'b0001;   // reset state: bv 0 -> hold
+            else hs <= (MUT == 2) ? hs : {hsel_n, hsel_n == 3'd0};
         for (i = LO; i < HI; i = i + 1) begin : g_b
             wire s1 = (i + K1 < G)     ? bg[(i + K1 < G) ? i + K1 : 0]         : 1'b0;
             wire s2 = (i + 2 * K1 < G) ? bg[(i + 2 * K1 < G) ? i + 2 * K1 : 0] : 1'b0;
             always @(posedge clk)
-                if (hs[2]) hold[i] <= bg[i];
-                else if (hs[1]) hold[i] <= s1;
-                else if (hs[0]) hold[i] <= s2;
+                hold[i] <= (hs[3] & bg[i]) | (hs[2] & s1) | (hs[1] & s2) | (hs[0] & hold[i]);
         end
     end endgenerate
     // f_rx slices: f_rx <= cut[1 +: FFW]; cut[j] = phase 1: j < G ? hold[j] : bg[j - G];

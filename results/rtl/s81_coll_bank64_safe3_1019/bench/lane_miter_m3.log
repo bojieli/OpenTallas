@@ -1,5 +1,12 @@
-ot-run: -> ot-epyc6
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2619984-1792435233 after 1 s
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-epyc6       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 169/128 running 44 disk 5627 GB 
+ot-run: ot-epyc7       admits   759 GB (avail 632, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 24 disk 6148 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1581613-1792453734 after 1 s
 Verilator 5.050 2026-07-01 rev v5.050
 COLL_SAFE3_BOUNDARY_ERR cycle=50 side=0 credit=1/1 valid=0/0 fault=000/000
 COLL_SAFE3_BOUNDARY_ERR cycle=50 side=1 credit=1/1 valid=0/0 fault=000/000
@@ -12,7 +19,7 @@ COLL_SAFE3_COVERAGE naks=3/5 replays=7/5 timeouts=2/2 crc_err=12/31 relocks=7 fi
 COLL_SAFE3_BOUNDARY FAIL errors=79775 sent=37025 received=36912 faults=000/000
 - rtl/dsrom_sys/s81_ph/test/tb_coll_safe3_boundary.sv:93: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 40us; walltime 3.616 s; speed 11.063 us/s
-- Verilator: cpu 3.614 s on 1 threads; allocated 9 MB
+- Verilator: $finish at 40us; walltime 3.609 s; speed 11.083 us/s
+- Verilator: cpu 3.608 s on 1 threads; allocated 9 MB
 sim exit 0
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2619984-1792435233): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1581613-1792453734): exit 1

@@ -79,10 +79,16 @@ module tb_xdie_s81 #(
             .fault(flt[ge]), .live(lv[2*ge +: 2]));
         // link-layer statistics (hierarchical reads of ot_s81ph_link_ep's counters; no logic is added to the DUT)
         wire [31:0] to0, to1, rt0, rt1;
+`ifndef XDIE_SAFE3_LANE
+        // (XDIE_SAFE3_LANE: the safe3 lane shim replaces ot_s81ph_coll_lane, so the LOVR what-if is not built)
         if (LOVR != 0) begin : g_sl
             assign to0 = u_ep.g_lo.u_ln0.u_ep.st_timeouts; assign to1 = u_ep.g_lo.u_ln1.u_ep.st_timeouts;
             assign rt0 = u_ep.g_lo.u_ln0.u_ep.st_retx_flits; assign rt1 = u_ep.g_lo.u_ln1.u_ep.st_retx_flits;
-        end else if (P % 2 == 0) begin : g_sw
+        end else
+`else
+        initial if (LOVR != 0) $fatal(1, "XDIE_SAFE3_LANE: LOVR what-if needs the legacy lane RTL");
+`endif
+        if (P % 2 == 0) begin : g_sw
             assign to0 = u_ep.g_lw.u_ln0.u.u_ep.st_timeouts; assign to1 = u_ep.g_lw.u_ln1.u.u_ep.st_timeouts;
             assign rt0 = u_ep.g_lw.u_ln0.u.u_ep.st_retx_flits; assign rt1 = u_ep.g_lw.u_ln1.u.u_ep.st_retx_flits;
         end else begin : g_se

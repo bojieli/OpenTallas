@@ -1,8 +1,15 @@
-ot-run: -> ot-epyc6
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2619671-1792435233 after 0 s
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-epyc6       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 169/128 running 44 disk 5627 GB 
+ot-run: ot-epyc7       admits   759 GB (avail 632, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 24 disk 6148 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1581584-1792453734 after 1 s
 Verilator 5.050 2026-07-01 rev v5.050
 [58000] %Fatal: ot_sram_oldread_b64.sv:54: Assertion failed in tb_coll_safe3_boundary.variant[1].safe.e.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0]: COLL_COLLISION_UNSAFE bank64 macro read/write same address bank0 depth0
 %Error: rtl/lib/ot_sram_oldread_b64.sv:54: Verilog $stop
 Aborting...
 sim exit 1
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2619671-1792435233): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1581584-1792453734): exit 1
