@@ -811,13 +811,14 @@ module qkd_kvpc_s_sched #(
         assign dtab[gi] = 7'(RP + ((RP + gi) % 2) + (MUT == 1 ? 1 : 0));
     end endgenerate
     reg [6:0] dsel, dcnt;
-    // KV-PC SAFE: the strap release hgo (u_ctl reset, 1994 loads) as 64 kept identical copies (ot_rst_split)
-    (* keep, ot_rst_split *) reg [63:0] hgo_qv;
+    // KV-PC SAFE: the strap release hgo (u_ctl reset, 1994 loads) as 72 kept identical copies (ot_rst_split)
+    // (KV-PC2: 64 -> 72: gate 164813 measured 2178 loads = 35 / copy at 64)
+    (* keep, ot_rst_split *) reg [71:0] hgo_qv;
     wire      hgo = hgo_qv[0];
     always @(posedge hclk) begin pc_q <= pc; dsel <= dtab[pc_q]; end
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) begin dcnt <= 7'd0; hgo_qv <= {64{1'b0}}; end
-        else if (dcnt == dsel) hgo_qv <= {64{1'b1}};
+        if (!h_rn) begin dcnt <= 7'd0; hgo_qv <= {72{1'b0}}; end
+        else if (dcnt == dsel) hgo_qv <= {72{1'b1}};
         else dcnt <= dcnt + 7'd1;
 
     // ---- kc chain station --------------------------------------------------------------------------------------------
@@ -1253,15 +1254,15 @@ module qkd_kvpc_s_port_child #(
     (* keep, ot_rst_split *) reg [1:0] col_sr_q__qv;   // KV-PC SAFE: 2 kept copies of col_sr_q
     function col_sr_q__f; input v; col_sr_q__f = v; endfunction
     wire col_sr_q = col_sr_q__qv[0:0];
-    (* keep, ot_rst_split *) reg [26:0] rv_q__qv;   // KV-PC SAFE: 27 kept copies of rv_q
+    (* keep, ot_rst_split *) reg [55:0] rv_q__qv;   // KV-PC SAFE: 56 kept copies of rv_q (KV-PC2: 27 -> 56, 1576 loads = 59 / copy at 27)
     function rv_q__f; input v; rv_q__f = v; endfunction
     wire rv_q = rv_q__qv[0:0];
     (* keep *) reg [287:0] rd_q;
     (* keep *) reg w_v_q;
     (* keep *) reg [255:0] w_d_q;
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) begin rv_q__qv <= {27{rv_q__f(1'b0)}}; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q__qv <= {2{col_sr_q__f(1'b0)}}; w_v_q <= 1'b0; end
-        else begin rv_q__qv <= {27{rv_q__f(pi[0])}}; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q__qv <= {2{col_sr_q__f(col_sr_e)}}; w_v_q <= w_v; end
+        if (!h_rn) begin rv_q__qv <= {56{rv_q__f(1'b0)}}; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q__qv <= {2{col_sr_q__f(1'b0)}}; w_v_q <= 1'b0; end
+        else begin rv_q__qv <= {56{rv_q__f(pi[0])}}; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q__qv <= {2{col_sr_q__f(col_sr_e)}}; w_v_q <= w_v; end
     always @(posedge hclk) begin rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport_nkw_kvpc_s #(.RQD(RQD), .MUT(MUT)) u_port (
         .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
@@ -2196,9 +2197,18 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     assign desc_r = !streaming && !fault_r && !wq_ne;
     assign phase_idle = !streaming && !wq_ne && !sq_ne;
     assign busy = streaming; assign ref_fault = fault_r;
+    // KV-PC2: streaming as master + identical copies.  The copies' hold term was each copy's own Q (bit 0 became a
+    // DFFE, the rest plain DFF: ot_rst_copies REFUSED the family, gate 164813).  Now one master streaming_m holds the
+    // state; every copy loads streaming_nx each edge (identical D), and the copies drive the loads.
+    (* keep *) reg streaming_m;
+    wire streaming_nx = (desc_v && !streaming && !fault_r) ? (desc_n != 0) :
+                        (rd_ok && (context_active ? ordinal+9'd1==context_count : j==nm1)) ? 1'b0 : streaming_m;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin streaming_m <= 1'b0; streaming__qv <= {7{streaming__f(0)}}; end
+      else begin streaming_m <= streaming_nx; streaming__qv <= {7{streaming__f(streaming_nx)}}; end
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
-        streaming__qv <= {7{streaming__f(0)}};v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
+        v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
@@ -2306,7 +2316,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
         // column
         if (rd_ok) begin
           j <= j_p1;
-          if (context_active ? ordinal+9'd1==context_count : j==nm1) streaming__qv <= {7{streaming__f(0)}};
+          // (streaming end: streaming_nx)
           if(context_active)ordinal<=ordinal+9'd1;
           if (!context_active && j[6:2] == 5'd31) done <= done | rd_oh;
           if(context_active && ordinal+9'd1==context_count)done<=done|32'hffffffff;
@@ -2328,7 +2338,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
           j <= first_sector; n <= desc_n; row <= desc_row;
           context_active__qv <= {5{context_active__f(context_accept)}};context_v<=desc_vpass;context_kb<=desc_k_order_b;context_k0<=desc_k_count0;ordinal<=0;context_count<=desc_n[8:0];
           v_consumer_order <= !context_accept && desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
-          streaming__qv <= {7{streaming__f((desc_n != 0))}}; nm1 <= desc_n - 11'd1; last <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
+          nm1 <= desc_n - 11'd1; last <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
           stale <= open_nx;                     // rows still open from the old descriptor close first
         end
       end

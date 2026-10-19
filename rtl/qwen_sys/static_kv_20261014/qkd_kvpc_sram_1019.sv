@@ -127,6 +127,13 @@ module qkd_kvpc_s_front #(
     wire idle_next = !emitting || last;
     wire start = pending != 0 && idle_next && ready;
     wire take = emitting && sc == C_S1;
+    // KV-PC2: emitting as master + identical copies (the copies' own-Q hold made bit 0 a DFFE and the family REFUSED by
+    // ot_rst_copies, gate 164813: 590 loads on one flop).  emitting_m holds the state; every copy loads emitting_nx.
+    (* keep *) reg emitting_m;
+    wire emitting_nx = start ? 1'b1 : (last ? 1'b0 : emitting_m);
+    always @(posedge pll_hbm or negedge hr)
+        if (!hr) begin emitting_m <= 1'b0; emitting__qv <= 26'd0; end
+        else begin emitting_m <= emitting_nx; emitting__qv <= {26{emitting_nx}}; end
     reg put_q;
     reg [296:0] out_q;
 
@@ -153,7 +160,7 @@ module qkd_kvpc_s_front #(
 
     always @(posedge pll_hbm or negedge hr)
         if (!hr) begin
-            wp <= 0; rp <= 0; bs <= 0; pending <= 0; emitting__qv <= 26'd0; cnt <= 0; sc <= 0; ra <= C_RA0;
+            wp <= 0; rp <= 0; bs <= 0; pending <= 0; cnt <= 0; sc <= 0; ra <= C_RA0;
             put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0; idle <= 1'b1;
             occupancy <= 0;
         end else begin
@@ -172,10 +179,10 @@ module qkd_kvpc_s_front #(
                 sc <= (sc == C_S1) ? C_S0 : sc + 1'b1;
                 if (take) begin
                     put_q <= 1'b1; rp <= rp + 1'b1; cnt <= cnt + 1'b1; ra <= ra + 1'b1;
-                    if (last) begin emitting__qv <= 26'd0; blk_freed <= 1'b1; end
+                    if (last) blk_freed <= 1'b1;
                 end
             end
-            if (start) begin emitting__qv <= {26{1'b1}}; cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
+            if (start) begin cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
         end
     always @(posedge pll_hbm) if (take) out_q <= mem_rd;
     assign co_out = {out_q[280:0], put_q};
