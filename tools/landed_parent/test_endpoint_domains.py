@@ -93,6 +93,9 @@ def main():
     m['cells']['wire']['connections']['zero']=[]
     r=audit(x,'top',roots)
     assert not r['issues'] and r['unconnected_child_output_ports']==[{'port':'top/nested/wire.zero','width':2}]
+    m['cells']['wire']['connections']['d']=[4]
+    r=audit(x,'top',roots)
+    assert any(c['sink']=='top/nested/capture' and c['source_root']=='INPUT:d' for c in r['crossings'])
     x['modules']['wire_child']['ports']['other']={'direction':'input','bits':[2]}
     m['cells']['wire']['connections']['other']=[4]
     try:audit(x,'top',roots)

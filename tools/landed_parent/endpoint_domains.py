@@ -176,7 +176,7 @@ def audit(design, top, roots, native=None):
     for p, spec in modules[top]['ports'].items():
         if spec['direction'] == 'input':
             for b in spec['bits']:
-                k = (top, b)
+                k = canonical((top, b))
                 if k not in clocks:
                     domains[k].add(('INPUT:' + p, None))
     readers = defaultdict(list)
