@@ -8,35 +8,35 @@
    "available": true,
    "title": "HBM d4g GEN2 die, Qwen3-8B (TP8, 8 dies in package), 8K context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 1296711.9,
+   "T_token_cycles": 1494146.2,
    "tau": null,
-   "per_accepted_cycles": 1296711.9,
-   "tok_s": 925.4,
+   "per_accepted_cycles": 1494146.2,
+   "tok_s": 803.1,
    "price_of_record": {
     "tok_s": 946.2,
     "cycles": 1268221.8,
     "source": "results/arch/token_path_1018/inputs/hbm_qwen_price_per_layer.json base.record"
    },
-   "vs_price_pct": -2.2,
-   "T_at_price_cycles": 1297036.2,
-   "pct_measured_current_rtl": 8.14,
-   "banner": "8.1% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 91.7% priced)",
+   "vs_price_pct": -15.12,
+   "T_at_price_cycles": 1494470.5,
+   "pct_measured_current_rtl": 19.47,
+   "banner": "19.5% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 80.4% priced)",
    "by_grade": {
-    "measured-current-RTL": 105499.1,
+    "measured-current-RTL": 290953.0,
     "measured-old-RTL": 0,
     "modelled-PHY": 1572.2,
-    "priced": 1189640.6
+    "priced": 1201621.0
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0814,
+    "measured-current-RTL": 0.1947,
     "measured-old-RTL": 0.0,
-    "modelled-PHY": 0.0012,
-    "priced": 0.9174
+    "modelled-PHY": 0.0011,
+    "priced": 0.8042
    },
    "by_kind": {
     "layer": 1179176.5,
     "xdie": 117535.4,
-    "adjust": 0
+    "adjust": 197434.3
    },
    "o_rule": "O from the S2 compiler schedule (static_schedule.json base.record); AR = realisable hypercube form (5 die links)",
    "xdie_summary": {
@@ -435,9 +435,144 @@
      "by_grade": {
       "priced": 0.0
      }
+    },
+    "reprice": {
+     "n": 1,
+     "die": 197434.3,
+     "xdie": 0.0,
+     "by_grade": {
+      "measured-current-RTL": 185453.9,
+      "priced": 11980.4
+     }
     }
    },
    "overrides_used": [
+    {
+     "slots": [
+      "reprice.collq"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.pg_cmd"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.pg_operand"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.pg_vmwrite"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.pg_reset"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.hc_tree"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.hc_xr"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.bank_pin"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.su_red"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.e86_tkm"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.qcore_r6"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.att_s32"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.att_merge"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.att_qwen"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.att_prog"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.att_desc"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.pt_p2"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.idx_link"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.idx_pin"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.land"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
+    {
+     "slots": [
+      "reprice.interaction"
+     ],
+     "record": "results/arch/hbm_reprice_1019/record.json"
+    },
     {
      "slots": [
       "L0.xdie.Q_AR#all_reduce_down"
@@ -1553,6 +1688,321 @@
       "commit": "1e4c81449",
       "origin": "snapshot of claude/tokpass-hbmq-1018 f5c3d8ba9:results/rtl/hbm_qwen_layer_tput_1018/price_per_layer.json"
      }
+    },
+    {
+     "slot": "reprice.collq",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 2.0,
+     "grade": "measured-current-RTL",
+     "total": 2.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.collq.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register); source d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
+    },
+    {
+     "slot": "reprice.pg_cmd",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 2530.0,
+     "grade": "measured-current-RTL",
+     "total": 2530.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.pg_cmd.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] +5 an SU-executed record (lane commands r0/r3 +5, r1/r2 +2; lockstep lanes); source TW-HBM-PGLG e7ea9096c region form, bench m0 PASS 8db52396a (lanes/TW-HBM-PGLG.md)"
+    },
+    {
+     "slot": "reprice.pg_operand",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 720.0,
+     "grade": "measured-current-RTL",
+     "total": 720.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.pg_operand.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] +10 an SU reduction record (red_sel/tree_cmd/slice_x/tree_o +10); source TW-HBM-PGLG e7ea9096c (lanes/H-D4G.md [TW-HBM-PGLG -> H-D4G-GEN2])"
+    },
+    {
+     "slot": "reprice.pg_vmwrite",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 5640.0,
+     "grade": "measured-current-RTL",
+     "total": 5640.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.pg_vmwrite.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] +12 an SU-executed record writing VM (drain write +12 serial; +16 stream); source TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
+    },
+    {
+     "slot": "reprice.pg_reset",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 4.0,
+     "grade": "priced",
+     "total": 4.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.pg_reset.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [modelled] +4 once per token (pg_stream +1 epoch of the 4:3 pg_clk); source TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
+    },
+    {
+     "slot": "reprice.hc_tree",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.hc_tree.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2); source HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
+    },
+    {
+     "slot": "reprice.hc_xr",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "priced",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.hc_xr.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [modelled] HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced; source HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
+    },
+    {
+     "slot": "reprice.bank_pin",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 977.0,
+     "grade": "priced",
+     "total": 977.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.bank_pin.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [priced] +1 a record with a VM-space operand read (bank pin flop on every answer); source HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
+    },
+    {
+     "slot": "reprice.su_red",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 1512.0,
+     "grade": "priced",
+     "total": 1512.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.su_red.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [priced] SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree; source HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
+    },
+    {
+     "slot": "reprice.e86_tkm",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.e86_tkm.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] +64 a COLL.TOPK_MERGE record (+2 NT at TP192); source HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
+    },
+    {
+     "slot": "reprice.qcore_r6",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.qcore_r6.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] write-conflict fault flag +1 edge: status only, 0 token cycles; source HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
+    },
+    {
+     "slot": "reprice.att_s32",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.att_s32.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839; source HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
+    },
+    {
+     "slot": "reprice.att_merge",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 8461.4,
+     "grade": "priced",
+     "total": 8461.4,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.att_merge.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [modelled] DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge); source HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3)"
+    },
+    {
+     "slot": "reprice.att_qwen",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 176165.9,
+     "grade": "measured-current-RTL",
+     "total": 176165.9,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.att_qwen.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule); source VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
+    },
+    {
+     "slot": "reprice.att_prog",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.att_prog.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] 0: S32 sub-runs keep QK+PV resident (1,019 KV8 / 971 KV4 words <= 1,024); source HBM-ATTGAP L2_s32_pos.json calendars word-identical"
+    },
+    {
+     "slot": "reprice.att_desc",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "priced",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.att_desc.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [modelled] 0: window staging (fixed descriptors, DMA refresh i+1 -> i off-path; Qwen has no window ring); source HBM-ATTGAP window_staging_check.json PASS (260 tokens); DMA ~134 KB/layer/token"
+    },
+    {
+     "slot": "reprice.pt_p2",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 396.0,
+     "grade": "measured-current-RTL",
+     "total": 396.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.pt_p2.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; source HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb"
+    },
+    {
+     "slot": "reprice.idx_link",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.idx_link.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] +5 an IDX.INDEX / IDX.TOPK record (link outputs +5); source HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
+    },
+    {
+     "slot": "reprice.idx_pin",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 0.0,
+     "grade": "measured-current-RTL",
+     "total": 0.0,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.idx_pin.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [measured] IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8; source HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
+    },
+    {
+     "slot": "reprice.land",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 888.4,
+     "grade": "priced",
+     "total": 888.4,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "attribution.land.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19 [priced] recorded factor on tok/s (half-cycle landed hops); source HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+    },
+    {
+     "slot": "reprice.interaction",
+     "kind": "adjust",
+     "n": 1,
+     "cycles": 137.6,
+     "grade": "priced",
+     "total": 137.6,
+     "source": {
+      "record": "results/arch/hbm_reprice_1019/record.json",
+      "pointer": "interaction.qwen_cycles",
+      "commit": "e861c00fb",
+      "origin": "override"
+     },
+     "note": "HBM-REPRICE2 10-19: S2 schedule of all terms together minus the sum of the single-term deltas"
     },
     {
      "slot": "L0.xdie.Q_AR#all_reduce_down",
