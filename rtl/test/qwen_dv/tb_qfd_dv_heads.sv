@@ -7,8 +7,15 @@
 // {go, ib, xl} is compared on every edge at one constant offset (the slice path minus the fabric path), taken from the
 // first go.  Ops: the production TP8 shapes (qkv k 8 S 512, o_proj k 2 S 256 x3, gate_up k 32 S 128, down k 6 S 256 x3)
 // with random x images.  Prints PASS / FAIL.
+// Q-H16C 10-18: ib is compared on GO edges only (go and xl on every edge).  The column head HOLDS ib (ot_qfd_xhead:
+// ib_c <= ib_q on g_q, FILL_LEAD edges after the go; the go reaches the corridors DX - FILL_LEAD later) and every
+// tile consumer samples ib only with its go (ot_qwen_w12_matvec: nout_r/k_r/... <= i_* on go).  The w130 heads
+// (FILL_LEAD 5, DX 14: DX - FILL_LEAD 9 vs the fabric's 8) therefore change the held ib one edge earlier relative to
+// the go than the fabric does: 1 non-go edge per op change x 64 tiles = the 192 mismatches of bench_h3, all with
+// equal go / xl.  The ib value on every go edge is still checked (IBMUT 1 flips ib bit 1 on the slice's go edges in
+// the trace: must FAIL).  Non-go ib differences are counted and printed as info.
 module tb_qfd_dv_heads;
-    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500, HD_W130 = 0;
+    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500, HD_W130 = 0, IBMUT = 0;
     localparam integer NW = 18, AW = 24, XCW = 12, NH = 8, TG = 4, IL = 8, NCOL = 48;
     localparam integer IBW = 3 * NW + 13 * AW + 13, CW = 1 + IBW + 128 + 8;
     reg clk = 0, rst_n = 0;
@@ -102,12 +109,13 @@ module tb_qfd_dv_heads;
     localparam integer NC = 8000;
     reg [IBW+128:0] rt [0:63][0:NC-1];
     reg [IBW+128:0] dt [0:63][0:NC-1];
-    integer cyc = 0, k, t, rfirst = -1, dfirst = -1, errors = 0, checks = 0, gos = 0, faults = 0;
+    integer cyc = 0, k, t, rfirst = -1, dfirst = -1, errors = 0, checks = 0, gos = 0, faults = 0, ibhold = 0;
+    reg rgo, dgo; reg [IBW+128:0] rv, dv;
     always @(negedge clk) if (rst_n && cyc < NC) begin
         for (k = 0; k < 64; k = k + 1) begin
             t = tid(4 * SID + k / 16, k % 16);
             rt[k][cyc] = {r_xl[t*TG*32 +: 128], r_ib[t*IBW +: IBW], r_go[t]};
-            dt[k][cyc] = {d_xl[k*128 +: 128], d_ib[k*IBW +: IBW], d_go[k]};
+            dt[k][cyc] = {d_xl[k*128 +: 128], d_ib[k*IBW +: IBW] ^ IBW'((IBMUT != 0 && d_go[k]) ? 2 : 0), d_go[k]};
             if (r_go[t] && rfirst < 0) rfirst = cyc;
             if (d_go[k] && dfirst < 0) dfirst = cyc;
             if (r_go[t]) gos = gos + 1;
@@ -157,12 +165,18 @@ module tb_qfd_dv_heads;
         for (t = rfirst; t + off < cyc && t + off < NC; t = t + 1)
             for (k = 0; k < 64; k = k + 1) begin
                 checks = checks + 1;
-                if (rt[k][t] !== dt[k][t + off]) begin
+                rv = rt[k][t]; dv = dt[k][t + off]; rgo = rv[0]; dgo = dv[0];
+                // ib (bits IBW:1) is a held field: compared only when a go is on the edge (either side)
+                if (!rgo && !dgo && rv[IBW:1] !== dv[IBW:1]) begin
+                    ibhold = ibhold + 1; rv[IBW:1] = 0; dv[IBW:1] = 0;
+                end
+                if (rv !== dv) begin
                     if (errors < 10) $display("FAIL tile %0d ref cyc %0d: go %0d/%0d xl ref %h slice %h", k, t,
                         rt[k][t][0], dt[k][t + off][0], rt[k][t][IBW+128 -: 128], dt[k][t + off][IBW+128 -: 128]);
                     errors = errors + 1;
                 end
             end
+        $display("INFO heads held-ib differences on non-go edges (not compared): %0d", ibhold);
         if (errors == 0 && faults == 0 && gos > 0)
             $display("PASS heads SID=%0d ops=%0d tile-edges=%0d tile gos=%0d slice-minus-fabric offset=%0d edges",
                      SID, op, checks, gos, off);
