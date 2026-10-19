@@ -101,7 +101,7 @@ def check(img_dir, log):
         for x in X['boot_cmd_after_seal']:
             exp.append((dw7 + 1 + x['edge'] + R['R_CMD'], 'CMD', int(x['cmd'], 16)))
     # decode stages whose whole compiled window lies inside the run (the run ends at PEND)
-    span = max([x['edge'] for v in X.values() for x in v] + [s['edge'] for s in img['status']])
+    span = max([x['edge'] for v in X.values() if isinstance(v, list) for x in v] + [s['edge'] for s in img['status']])
     pend = info.get('pend', 0)
     dec = [(e, s) for e, s in e0s if 1 <= s <= 36 and e + span <= pend]
     info['partial_stages'] = len([1 for e, s in e0s if 1 <= s <= 36 and e + span > pend])

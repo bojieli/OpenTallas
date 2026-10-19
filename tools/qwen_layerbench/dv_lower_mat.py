@@ -410,7 +410,8 @@ def splice(tile_first=40, ctlm_args=None, ages=None):
     import ctlm_image as CI
     a = argparse.Namespace(program=CI.DEF_PROGRAM, lowering=CI.DEF_LOWERING, token_path=CI.DEF_TOKEN_PATH,
                            relay=CI.DEF_RELAY, lane_ages=None, stage=1, sys_face_events=CI.DEF_SF_EVENTS, period=None,
-                           lead_margin=2, xpf_transport_edges=None, me_observe_edges=1, su_first_write=12, dv_lower=False)
+                           lead_margin=2, xpf_transport_edges=None, me_observe_edges=1, su_first_write=12, dv_lower=False,
+                           tload=False, lm_head=False, head_plan=CI.HEAD_PLAN)
     if ctlm_args:
         for k, v in ctlm_args.items():
             setattr(a, k, v)
