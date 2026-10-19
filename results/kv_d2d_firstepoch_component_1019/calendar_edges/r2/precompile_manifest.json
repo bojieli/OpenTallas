@@ -1,0 +1,81 @@
+{
+  "sources": {
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/ot_qwen_d2d_cal_sf_fe.sv": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf",
+    "tests/kv_d2d_firstepoch/tb_calendar_edges.sv": "c51bfebfad28958cc4f15e53e76f5f48260b1bd21692ea6f3c259fe8ded27f42",
+    "tests/kv_d2d_firstepoch/run_calendar_edges.py": "201d079477685f5d6b28b6c89a56a505825d715c6215ece7f0417e6a1ea7c2cb"
+  },
+  "mutations": {
+    "allow_w_plus_1": [
+      [
+        " && settled &&",
+        " &&"
+      ],
+      [
+        " && !cfg_recent &&",
+        " &&"
+      ]
+    ],
+    "emitted_credit": [
+      [
+        "if (cfg_we && !first_consumed && !bad_write) begin",
+        "if (cfg_we) begin"
+      ],
+      [
+        "if (write_entry) seen[",
+        "if (!cfg_addr[AW]) seen["
+      ]
+    ],
+    "omit_data_compare": [
+      [
+        "consumed_data == expected_data",
+        "1'b1"
+      ]
+    ],
+    "omit_base_compare": [
+      [
+        "cfg_base_c == EXPECTED_BOOT_BASE;",
+        "1'b1;"
+      ],
+      [
+        " && (base_copies_ok === 1'b1)",
+        ""
+      ]
+    ],
+    "reset_invalidation": [
+      [
+        "seen<=0; base_seen<=0; installed_epoch<=0; epoch_valid<=0;",
+        "installed_epoch<=0;"
+      ]
+    ],
+    "clear_poison_on_upload": [
+      [
+        "if (cfg_we) settled<=0;",
+        "if (cfg_we) begin settled<=0; poisoned<=0; end"
+      ]
+    ],
+    "queued_retry": [
+      [
+        "if (any_start && start_allowed) first_consumed<=1;",
+        "if (any_start && start_allowed) first_consumed<=1; if (receipt_ready) first_consumed<=1;"
+      ]
+    ],
+    "output_only_mask": [
+      [
+        "(start_allowed ? start_c : 4'b0)",
+        "start_c"
+      ],
+      [
+        "wire [3:0] effective_halt = halt_c | {4{ENABLE_FIRST_EPOCH_GUARD != 0 &&\n               (poisoned || fault || bad_write || pair_poison || reload || (any_start && !start_allowed))}};",
+        "wire [3:0] effective_halt = halt_c;"
+      ]
+    ],
+    "reload_invalidation": [
+      [
+        "if (reload) begin seen<=0; base_seen<=0; epoch_valid<=0; settled<=0; first_consumed<=0; end",
+        "if (reload) begin end"
+      ]
+    ]
+  },
+  "tool": "iverilog -g2012; vvp",
+  "scope": "4-state functional component; no native/physical qualification"
+}

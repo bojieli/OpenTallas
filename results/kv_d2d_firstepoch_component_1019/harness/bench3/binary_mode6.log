@@ -1,0 +1,6 @@
+RECEIPT mode=6 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=6 compares=7515 events=0 errors=0
+- tb_component.sv:156: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.015 s; speed 4.920 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB

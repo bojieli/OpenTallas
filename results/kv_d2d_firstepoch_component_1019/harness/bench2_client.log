@@ -1,0 +1,61 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: ot-epyc8       admits  1322 GB (avail 982, growth 33, headroom 0, waiters 0/0 GB) load 14/128 running 10 disk 68 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench2
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2226768-1792448538 after 0 s
+RECEIPT mode=0 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=0 compares=7515 events=41 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=1 ready=000 poison=000 seen=ffffffff7fffffff base=11
+COMPONENT_RESULT mode=1 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=2 ready=000 poison=000 seen=ffffffffffffffff base=01
+COMPONENT_RESULT mode=2 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=3 ready=000 poison=100 seen=0000ffff0000ffff base=00
+COMPONENT_RESULT mode=3 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=4 ready=000 poison=100 seen=ffffffffffffffff base=00
+COMPONENT_RESULT mode=4 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=5 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=5 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=6 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=6 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=7 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=7 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=8 ready=000 poison=000 seen=0000000000000000 base=00
+COMPONENT_RESULT mode=8 compares=7516 events=0 errors=0
+tb_component.sv:144: $finish called at 75210000 (1ps)
+RECEIPT mode=9 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=9 compares=7521 events=0 errors=0
+tb_component.sv:144: $finish called at 75260000 (1ps)
+RECEIPT mode=11 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=11 compares=7520 events=0 errors=0
+tb_component.sv:144: $finish called at 75280000 (1ps)
+RECEIPT mode=12 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=12 compares=7515 events=0 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=13 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=13 compares=7516 events=0 errors=0
+tb_component.sv:144: $finish called at 75210000 (1ps)
+RECEIPT mode=14 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=14 compares=7515 events=41 errors=0
+tb_component.sv:144: $finish called at 75200000 (1ps)
+RECEIPT mode=15 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=15 compares=7617 events=41 errors=0
+tb_component.sv:144: $finish called at 76220000 (1ps)
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2226768-1792448538): exit 0

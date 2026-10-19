@@ -1,0 +1,92 @@
+[
+  {
+    "name": "baseline",
+    "rc": 0,
+    "expected_verdict": true,
+    "source_sha256": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf",
+    "witness": [
+      "CALENDAR_EDGES_PASS checks=243"
+    ]
+  },
+  {
+    "name": "allow_w_plus_1",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "4ad5130ddea43ae18c14517e9862d0a614ffb2f950e6b1f67818f5afbea02afc",
+    "witness": [
+      "ASSERT_FAIL LAST_W_NOT_SETTLED scenario=1 time=350000 seen=ffffffff base=1 ready=1 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"
+    ]
+  },
+  {
+    "name": "emitted_credit",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "067e1a9c9240339e2e48e998dd88b365541f520bd1af3e6a2a40d6144b067977",
+    "witness": [
+      "ASSERT_FAIL REJECTED_RUNNING_WRITE_NO_CREDIT scenario=500 time=17500000 seen=ffffffff base=1 ready=0 poison=1 run=0 cnt=0007 pc=00000010 cur=001e8c00"
+    ]
+  },
+  {
+    "name": "omit_data_compare",
+    "rc": 0,
+    "expected_verdict": false,
+    "source_sha256": "d75173d45cf4e4944f168668dd7af7d1ce357822e91f3263ae055f82c0b098a2",
+    "witness": [
+      "CALENDAR_EDGES_PASS checks=243"
+    ]
+  },
+  {
+    "name": "omit_base_compare",
+    "rc": 0,
+    "expected_verdict": false,
+    "source_sha256": "f759a2665d59ed1414796bada885291d97fe307cc00cbcd332d6fb77dc13193e",
+    "witness": [
+      "CALENDAR_EDGES_PASS checks=243"
+    ]
+  },
+  {
+    "name": "reset_invalidation",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "aed76827790747ec1bbb96390846a831422b985e9ed10d050bbfcba8b106a6de",
+    "witness": [
+      "ASSERT_FAIL RESET_INVALIDATES scenario=1 time=11000 seen=xxxxxxxx base=x ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"
+    ]
+  },
+  {
+    "name": "clear_poison_on_upload",
+    "rc": 0,
+    "expected_verdict": false,
+    "source_sha256": "9cd1aa990fed3138565ea2bea50f5f7f799518146bd135125f279c52b639f4b9",
+    "witness": [
+      "CALENDAR_EDGES_PASS checks=243"
+    ]
+  },
+  {
+    "name": "queued_retry",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "78fb76be5a8935535d05e4ee812187cce508ce8c7d96dc1d800e03c90aa3cf43",
+    "witness": [
+      "ASSERT_FAIL MALFORMED_SAME_EDGE_VETO scenario=300 time=13380000 seen=ffffffff base=1 ready=0 poison=1 run=0 cnt=0000 pc=00000001 cur=00000000"
+    ]
+  },
+  {
+    "name": "output_only_mask",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "23c51f249b8279191677021bc7b39dd7dcbe966a8685e8d191fcd96fbe6956b2",
+    "witness": [
+      "ASSERT_FAIL OMISSION_START_VETO scenario=100 time=800000 seen=fffffffe base=1 ready=0 poison=1 run=1 cnt=0007 pc=00000010 cur=001e8c00"
+    ]
+  },
+  {
+    "name": "reload_invalidation",
+    "rc": 1,
+    "expected_verdict": true,
+    "source_sha256": "3c557afe6506166117f3e729b1d08ec797e7fd3a81eb3218d4bcd66c0f6f72b6",
+    "witness": [
+      "ASSERT_FAIL RELOAD_INVALIDATES scenario=600 time=17870000 seen=ffffffff base=1 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"
+    ]
+  }
+]

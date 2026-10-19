@@ -1,0 +1,99 @@
+{
+  "sources": {
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/ot_qwen_d2d_cal_sf_fe.sv": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf",
+    "tests/kv_d2d_firstepoch/tb_calendar_edges.sv": "8712041347e37f3be9d4d347019319f4bbaeb3eded3e8f026c792d49b2075f2f",
+    "tests/kv_d2d_firstepoch/run_calendar_edges.py": "0f5e04df28339eda9fd4f68923a843e769de95c9cdf1589cb9ff56755886422d"
+  },
+  "mutations": {
+    "allow_w_plus_1": [
+      [
+        " && settled &&",
+        " &&"
+      ],
+      [
+        " && !cfg_recent &&",
+        " &&"
+      ]
+    ],
+    "emitted_valid_credit": [
+      [
+        "if (cfg_we && !first_consumed && !bad_write) begin",
+        "if (cfg_valid && !first_consumed && !bad_write) begin"
+      ],
+      [
+        "if (write_entry) seen[",
+        "if (!cfg_addr[AW]) seen["
+      ],
+      [
+        "if (write_base) base_seen<=1;",
+        "if (cfg_addr[AW]) base_seen<=1;"
+      ]
+    ],
+    "emitted_credit": [
+      [
+        "if (cfg_we && !first_consumed && !bad_write) begin",
+        "if (cfg_we) begin"
+      ],
+      [
+        "if (write_entry) seen[",
+        "if (!cfg_addr[AW]) seen["
+      ]
+    ],
+    "omit_data_compare": [
+      [
+        "consumed_data == expected_data",
+        "1'b1"
+      ]
+    ],
+    "omit_base_compare": [
+      [
+        "cfg_base_c == EXPECTED_BOOT_BASE;",
+        "1'b1;"
+      ],
+      [
+        " && (base_copies_ok === 1'b1)",
+        ""
+      ]
+    ],
+    "reset_invalidation": [
+      [
+        "seen<=0; base_seen<=0; installed_epoch<=0; epoch_valid<=0;",
+        "installed_epoch<=0;"
+      ]
+    ],
+    "clear_poison_on_upload": [
+      [
+        "if (bad_write || pair_poison || fault || (any_start && !start_allowed)) poisoned<=1;",
+        "if (cfg_we && poisoned) poisoned<=0; else if (bad_write || pair_poison || fault || (any_start && !start_allowed)) poisoned<=1;"
+      ]
+    ],
+    "queued_retry": [
+      [
+        "(start_allowed ? start_c : 4'b0)",
+        "(start_allowed ? start_c : ((&seen) && base_seen && settled && poisoned ? 4'b1111 : 4'b0))"
+      ],
+      [
+        "(poisoned || fault || bad_write || pair_poison || reload || (any_start && !start_allowed))",
+        "(bad_write || pair_poison || reload || (any_start && !start_allowed))"
+      ]
+    ],
+    "output_only_mask": [
+      [
+        "(start_allowed ? start_c : 4'b0)",
+        "start_c"
+      ],
+      [
+        "wire [3:0] effective_halt = halt_c | {4{ENABLE_FIRST_EPOCH_GUARD != 0 &&\n               (poisoned || fault || bad_write || pair_poison || reload || (any_start && !start_allowed))}};",
+        "wire [3:0] effective_halt = halt_c;"
+      ]
+    ],
+    "reload_invalidation": [
+      [
+        "if (reload) begin seen<=0; base_seen<=0; epoch_valid<=0; settled<=0; first_consumed<=0; end",
+        "if (reload) begin end"
+      ]
+    ]
+  },
+  "tool": "iverilog -g2012; vvp",
+  "scope": "4-state functional component; no native/physical qualification"
+}

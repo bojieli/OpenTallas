@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: ot-epyc8       admits  1236 GB (avail 922, growth 52, headroom 0, waiters 0/0 GB) load 21/128 running 11 disk 64 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/mutant3
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2242091-1792448784 after 0 s
+RECEIPT mode=13 ready=100 poison=000 seen=ffffffffffffffff base=11
+CHECK_FAIL mode=13 cycle=7521 both counter branches unchanged
+COMPONENT_RESULT mode=13 compares=7516 events=0 errors=1
+FATAL: tb_component.sv:168: component failed
+       Time: 75210000  Scope: tb_component
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2242091-1792448784): exit 0

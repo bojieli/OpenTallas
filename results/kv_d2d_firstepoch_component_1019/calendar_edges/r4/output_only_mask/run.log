@@ -1,0 +1,3 @@
+ASSERT_FAIL OMISSION_START_VETO scenario=100 time=800000 seen=fffffffe base=1 ready=0 poison=1 run=1 cnt=0007 pc=00000010 cur=001e8c00
+FATAL: /srv/opentallas-scratch/claude/kv-d2d-calendar-edges-1019/r4/tests/kv_d2d_firstepoch/tb_calendar_edges.sv:15: calendar guard violation
+       Time: 800000  Scope: tb_calendar_edges.chk

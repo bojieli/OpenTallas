@@ -1,0 +1,301 @@
+{
+  "scope": "PRIVATE_FUNCTIONAL_COMPONENT",
+  "state_bits_original": 4118,
+  "state_bits_added": 269,
+  "public_adoption": false,
+  "source_hashes": {
+    "qkd_d2d_cal_seq_pin_bc_fe.sv": "44627cb232167113922576a6a273a9c93a3f62e73a3915131e03f31684db399a",
+    "qkd_d2d_firstepoch_component.sv": "54c92b208f162351514672834a5580d912a0d5a5e7dbd10ca36731337a66035e",
+    "ot_qwen_d2d_cal_sf_fe.sv": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf"
+  },
+  "baseline_cases": [
+    {
+      "case": "binary_mode0",
+      "mode": 0,
+      "compares": 7515,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode1",
+      "mode": 1,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode11",
+      "mode": 11,
+      "compares": 7520,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode13",
+      "mode": 13,
+      "compares": 7516,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode14",
+      "mode": 14,
+      "compares": 7515,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode15",
+      "mode": 15,
+      "compares": 7617,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode16",
+      "mode": 16,
+      "compares": 257115,
+      "events": 1411,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode17",
+      "mode": 17,
+      "compares": 6415,
+      "events": 2,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode2",
+      "mode": 2,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode3",
+      "mode": 3,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode4",
+      "mode": 4,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode5",
+      "mode": 5,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode6",
+      "mode": 6,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode7",
+      "mode": 7,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode8",
+      "mode": 8,
+      "compares": 7516,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "binary_mode9",
+      "mode": 9,
+      "compares": 7521,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode0",
+      "mode": 0,
+      "compares": 7515,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode1",
+      "mode": 1,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode11",
+      "mode": 11,
+      "compares": 7520,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode12",
+      "mode": 12,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode13",
+      "mode": 13,
+      "compares": 7516,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode14",
+      "mode": 14,
+      "compares": 7515,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode15",
+      "mode": 15,
+      "compares": 7617,
+      "events": 41,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode17",
+      "mode": 17,
+      "compares": 6415,
+      "events": 2,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode2",
+      "mode": 2,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode3",
+      "mode": 3,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode4",
+      "mode": 4,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode5",
+      "mode": 5,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode6",
+      "mode": 6,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode7",
+      "mode": 7,
+      "compares": 7515,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode8",
+      "mode": 8,
+      "compares": 7516,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    },
+    {
+      "case": "mode9",
+      "mode": 9,
+      "compares": 7521,
+      "events": 0,
+      "errors": 0,
+      "rc": 0
+    }
+  ],
+  "causal_controls": [
+    {
+      "name": "epoch",
+      "verdict": "CAUGHT",
+      "application_rc": 1,
+      "required_failure": "negative sticky veto"
+    },
+    {
+      "name": "metadata_capture",
+      "verdict": "CAUGHT",
+      "application_rc": 1,
+      "required_failure": "healthy pair receipt"
+    },
+    {
+      "name": "first_status",
+      "verdict": "CAUGHT",
+      "application_rc": 1,
+      "required_failure": "malformed receiver sticky fault"
+    },
+    {
+      "name": "output_mask",
+      "verdict": "CAUGHT",
+      "application_rc": 1,
+      "required_failure": "both counter branches unchanged"
+    }
+  ],
+  "native_physical_sram_endpipeline": "HOLD",
+  "notes": [
+    "All failures are preserved.",
+    "Mutant1 was ineffective/NOT_CAUGHT because it retained effective_halt.",
+    "STATUS producer payload is a typed verification fixture."
+  ]
+}

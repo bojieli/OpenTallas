@@ -1,0 +1,36 @@
+{
+  "qualification": "PRIVATE_FIXED_IMAGE_FUNCTIONAL_COMPONENT_PASS",
+  "source_hashes": {
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/ot_qwen_d2d_cal_sf_fe.sv": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf",
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/qkd_d2d_cal_seq_pin_bc_fe.sv": "44627cb232167113922576a6a273a9c93a3f62e73a3915131e03f31684db399a",
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/qkd_d2d_firstepoch_component.sv": "54c92b208f162351514672834a5580d912a0d5a5e7dbd10ca36731337a66035e",
+    "tests/kv_d2d_firstepoch/README.md": "783ea7cbe13d7129dcabc6cece35e61184bfef90fa4e9b08f79cb7d8e1104f2d",
+    "tests/kv_d2d_firstepoch/mutate_controls.py": "a3c9f268c216de64fbbb374ea20014daaa27a91ffed57c8f03dd23e870d7fd70",
+    "tests/kv_d2d_firstepoch/mutate_output_mask.py": "19fd028faa34573a3b7a5deaebabc9ad0b89f5ea9aa2b5f2abf2731250e2d13d",
+    "tests/kv_d2d_firstepoch/prepare_component.py": "3746f6f86c1502219425d56ecafc896ab62c9bd8ce7de0da5ca3e15ab9ccb211",
+    "tests/kv_d2d_firstepoch/run_calendar_edges.py": "0f5e04df28339eda9fd4f68923a843e769de95c9cdf1589cb9ff56755886422d",
+    "tests/kv_d2d_firstepoch/run_component.sh": "11f399f86e5de74e4c85926cf33b41b98ba64ec938ac1ef615964a06d2445bac",
+    "tests/kv_d2d_firstepoch/tb_calendar_edges.sv": "8712041347e37f3be9d4d347019319f4bbaeb3eded3e8f026c792d49b2075f2f",
+    "tests/kv_d2d_firstepoch/tb_component.sv": "54fd1346e0e1933bb62fffb93e3b9c4aed5384bec1595bb767974a5806ea4aaa"
+  },
+  "baseline_state_bits": 4118,
+  "added_state_bits": 269,
+  "combined_source_state_bits": 4387,
+  "full_fixture_pass_verdicts": 32,
+  "direct_four_state_checks": 267,
+  "direct_mutants_caught": 10,
+  "full_fixture_mutants_caught": 4,
+  "complete_mapped_area": null,
+  "native_phase": null,
+  "whole_parent_SU_MU_price": null,
+  "assertions": {
+    "W_PLUS_1_FORBIDDEN": "tests/kv_d2d_firstepoch/tb_calendar_edges.sv:32",
+    "EMITTED_VALID_NO_ACCEPTED_CREDIT": "tests/kv_d2d_firstepoch/tb_calendar_edges.sv:42",
+    "MALFORMED_UPLOAD_POISONS_WITHOUT_START": "tests/kv_d2d_firstepoch/tb_calendar_edges.sv:75",
+    "metadata_capture": "tests/kv_d2d_firstepoch/tb_component.sv:131",
+    "first_status": "tests/kv_d2d_firstepoch/tb_component.sv:149",
+    "epoch_compare": "tests/kv_d2d_firstepoch/tb_component.sv:157",
+    "output_mask": "tests/kv_d2d_firstepoch/tb_component.sv:161"
+  },
+  "hold": "Native/reset/fanout/PG/SRAM/endpipeline/variableimage/whole-token qualification"
+}

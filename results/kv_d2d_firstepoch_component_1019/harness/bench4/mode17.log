@@ -1,0 +1,5 @@
+RECEIPT mode=17 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=17 compares=6415 events=2 errors=0
+tb_component.sv:168: $finish called at 64200000 (1ps)

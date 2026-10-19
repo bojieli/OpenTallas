@@ -1,0 +1,146 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: ot-epyc8       admits  1268 GB (avail 944, growth 46, headroom 0, waiters 0/0 GB) load 20/128 running 11 disk 64 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench4
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2236527-1792448736 after 0 s
+RECEIPT mode=0 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=0 compares=7515 events=41 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=1 ready=000 poison=000 seen=ffffffff7fffffff base=11
+COMPONENT_RESULT mode=1 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=2 ready=000 poison=000 seen=ffffffffffffffff base=01
+COMPONENT_RESULT mode=2 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=3 ready=000 poison=100 seen=0000ffff0000ffff base=00
+COMPONENT_RESULT mode=3 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=4 ready=000 poison=100 seen=ffffffffffffffff base=00
+COMPONENT_RESULT mode=4 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=5 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=5 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=6 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=6 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=7 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=7 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=8 ready=000 poison=100 seen=0000000000000000 base=00
+COMPONENT_RESULT mode=8 compares=7516 events=0 errors=0
+tb_component.sv:168: $finish called at 75210000 (1ps)
+RECEIPT mode=9 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=9 compares=7521 events=0 errors=0
+tb_component.sv:168: $finish called at 75260000 (1ps)
+RECEIPT mode=11 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=11 compares=7520 events=0 errors=0
+tb_component.sv:168: $finish called at 75280000 (1ps)
+RECEIPT mode=12 ready=000 poison=100 seen=000fffff002fffff base=00
+COMPONENT_RESULT mode=12 compares=7515 events=0 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=13 ready=100 poison=000 seen=ffffffffffffffff base=11
+COMPONENT_RESULT mode=13 compares=7516 events=0 errors=0
+tb_component.sv:168: $finish called at 75210000 (1ps)
+RECEIPT mode=14 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=14 compares=7515 events=41 errors=0
+tb_component.sv:168: $finish called at 75200000 (1ps)
+RECEIPT mode=15 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=15 compares=7617 events=41 errors=0
+tb_component.sv:168: $finish called at 76220000 (1ps)
+RECEIPT mode=17 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+COMPONENT_RESULT mode=17 compares=6415 events=2 errors=0
+tb_component.sv:168: $finish called at 64200000 (1ps)
+COMPONENT_RESULT mode=0 compares=7515 events=41 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.742 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=1 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.848 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=2 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.749 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=3 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.015 s; speed 4.889 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=4 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.807 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=5 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.763 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=6 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.844 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=7 compares=7515 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.850 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=8 compares=7516 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.018 s; speed 4.117 ms/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=9 compares=7521 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.763 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=11 compares=7520 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.778 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=13 compares=7516 events=0 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.786 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=14 compares=7515 events=41 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 0.016 s; speed 4.739 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=15 compares=7617 events=41 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 76us; walltime 0.016 s; speed 4.688 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=16 compares=257115 events=1411 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.550 s; speed 4.677 ms/s
+- Verilator: cpu 0.550 s on 1 threads; allocated 7 MB
+COMPONENT_RESULT mode=17 compares=6415 events=2 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 64us; walltime 0.014 s; speed 4.548 ms/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2236527-1792448736): exit 0

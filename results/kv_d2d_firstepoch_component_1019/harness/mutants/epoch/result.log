@@ -1,0 +1,17 @@
+RECEIPT mode=5 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+CHECK_FAIL mode=5 cycle=7520 negative sticky veto
+CHECK_FAIL mode=5 cycle=7520 negative no calendar event
+CHECK_FAIL mode=5 cycle=7520 negative no token branch
+CHECK_FAIL mode=5 cycle=7520 negative no STATUS accepted
+CHECK_FAIL mode=5 cycle=7520 both run branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both pointer branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both counter branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both current words unchanged
+CHECK_FAIL mode=5 cycle=7520 both repeat/beat unchanged
+CHECK_FAIL mode=5 cycle=7520 both pointer copies unchanged
+CHECK_FAIL mode=5 cycle=7520 both run copies unchanged
+COMPONENT_RESULT mode=5 compares=7515 events=41 errors=11
+FATAL: tb_component.sv:168: component failed
+       Time: 75200000  Scope: tb_component

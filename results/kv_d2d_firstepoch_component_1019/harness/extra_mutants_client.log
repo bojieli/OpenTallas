@@ -1,0 +1,53 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: ot-epyc8       admits  1231 GB (avail 919, growth 56, headroom 0, waiters 0/0 GB) load 21/128 running 11 disk 64 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/extra_mutants
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2243459-1792448796 after 0 s
+RECEIPT mode=5 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+CHECK_FAIL mode=5 cycle=7520 negative sticky veto
+CHECK_FAIL mode=5 cycle=7520 negative no calendar event
+CHECK_FAIL mode=5 cycle=7520 negative no token branch
+CHECK_FAIL mode=5 cycle=7520 negative no STATUS accepted
+CHECK_FAIL mode=5 cycle=7520 both run branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both pointer branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both counter branches unchanged
+CHECK_FAIL mode=5 cycle=7520 both current words unchanged
+CHECK_FAIL mode=5 cycle=7520 both repeat/beat unchanged
+CHECK_FAIL mode=5 cycle=7520 both pointer copies unchanged
+CHECK_FAIL mode=5 cycle=7520 both run copies unchanged
+COMPONENT_RESULT mode=5 compares=7515 events=41 errors=11
+FATAL: tb_component.sv:168: component failed
+       Time: 75200000  Scope: tb_component
+HEALTHY_MISMATCH c=5106 bo=00000000040000000144000000014400/00000000040000000144000000014400 co=00000000/20000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5107 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5108 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5109 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5110 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5111 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5112 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+HEALTHY_MISMATCH c=5113 bo=00000000040000000144000000014400/00000000040000000144000000014401 co=00000000/30000000 ready=000 poison=100
+RECEIPT mode=0 ready=000 poison=100 seen=ffffffffffffffff base=01
+CHECK_FAIL mode=0 cycle=5119 healthy pair receipt
+CHECK_FAIL mode=0 cycle=5119 healthy pair not poison
+CHECK_FAIL mode=0 cycle=7520 healthy fault-free
+CHECK_FAIL mode=0 cycle=7520 real token start
+CHECK_FAIL mode=0 cycle=7520 first STATUS token plus15
+CHECK_FAIL mode=0 cycle=7520 changed STATUS receiver accepted
+CHECK_FAIL mode=0 cycle=7520 both firsts consumed
+COMPONENT_RESULT mode=0 compares=7515 events=0 errors=2422
+FATAL: tb_component.sv:168: component failed
+       Time: 75200000  Scope: tb_component
+RECEIPT mode=14 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+CHECK_FAIL mode=14 cycle=7520 malformed receiver sticky fault
+COMPONENT_RESULT mode=14 compares=7515 events=41 errors=1
+FATAL: tb_component.sv:168: component failed
+       Time: 75200000  Scope: tb_component
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2243459-1792448796): exit 0

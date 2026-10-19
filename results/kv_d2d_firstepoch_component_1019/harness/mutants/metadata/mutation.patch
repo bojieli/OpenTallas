@@ -1,0 +1,11 @@
+--- ../bench4/qkd_d2d_firstepoch_component.sv	2026-10-19 15:25:34.000000000 -0700
++++ metadata/qkd_d2d_firstepoch_component.sv	2026-10-19 15:26:37.113223700 -0700
+@@ -44,7 +44,7 @@
+   qkd_d2d_cal_seq_pin_bc_fe #(.ENABLE_FIRST_EPOCH_GUARD(ENABLE_FIRST_EPOCH_GUARD),.FIXED_IMAGE(FIXED_IMAGE)) u_bc(
+   .ck(ck),.rst_n(rst_n),.reload(reload),.epoch_go(epoch_go),.halt(halt),
+   .bcfg_tx_we(r1[39]),.bcfg_rx_we(r1[38]),.bcfg_addr(r1[37:32]),.bcfg_data(r1[31:0]),
+-  .bcfg_epoch(m1[16:1]),.bcfg_valid(m1[0]),.epoch_id(epoch_id),.epoch_valid(epoch_valid),
++  .bcfg_epoch(m0[16:1]),.bcfg_valid(m0[0]),.epoch_id(epoch_id),.epoch_valid(epoch_valid),
+   .pair_epoch(pair_epoch),.pair_ready(pair_ready),.pair_poison(pair_poison),
+   .cfg_epoch(ce),.cfg_valid(cv),.start_epoch(se),.start_valid(sv),.generation_poison(bc_generation_poison),
+   .cfg_tx_we(ct),.cfg_rx_we(cr),.cfg_addr(ca),.cfg_data(cd),.cal_start(cs),.cal_seg(seg),

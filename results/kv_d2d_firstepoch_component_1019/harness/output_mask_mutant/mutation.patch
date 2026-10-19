@@ -1,0 +1,23 @@
+--- ../bench4/ot_qwen_d2d_cal_sf_fe.sv	2026-10-19 15:25:34.000000000 -0700
++++ ot_qwen_d2d_cal_sf_fe.sv	2026-10-19 15:26:24.805955423 -0700
+@@ -52,9 +52,8 @@
+                          !running && (copies_ok === 1'b1) && (identity_ok === 1'b1) && !(|halt_c);
+     wire any_start = |start_c;
+     wire [3:0] authorized_start = (ENABLE_FIRST_EPOCH_GUARD != 0) ?
+-                          (start_allowed ? start_c : 4'b0) : start_c;
+-    wire [3:0] effective_halt = halt_c | {4{ENABLE_FIRST_EPOCH_GUARD != 0 &&
+-               (poisoned || fault || bad_write || pair_poison || reload || (any_start && !start_allowed))}};
++                          start_c : start_c;
++    wire [3:0] effective_halt = halt_c;
+     assign receipt_ready = epoch_valid && (&seen) && base_seen && settled &&
+                            !poisoned && !reload && !pair_poison && guard_rst_n && (base_copies_ok === 1'b1);
+     assign receipt_epoch = installed_epoch;
+@@ -180,7 +179,7 @@
+                 if (first[31:18] == 14'd0 || {1'b0, first[9:5]} + {1'b0, first[4:0]} > 6'd31) fault <= 1'b1;
+             end else if (running) begin
+                 if (cnt == 14'd1) begin
+-                    ev_v <= 1'b1; ev_port <= cur[16:14]; ev_kind <= cur[13:10]; ev_beat <= bcur;
++                    ev_v <= (ENABLE_FIRST_EPOCH_GUARD == 0 || (!poisoned && !pair_poison)); ev_port <= cur[16:14]; ev_kind <= cur[13:10]; ev_beat <= bcur;
+                     if (rep != 5'd0) begin rep <= rep - 5'd1; bcur <= bcur + 5'd1; end   // burst: next cycle
+                     else if (cur[17]) ;                                            // running: run_d
+                     else begin

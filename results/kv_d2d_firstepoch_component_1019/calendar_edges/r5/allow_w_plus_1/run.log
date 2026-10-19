@@ -1,0 +1,3 @@
+ASSERT_FAIL LAST_W_NOT_SETTLED scenario=1 time=350000 seen=ffffffff base=1 ready=1 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000
+FATAL: /srv/opentallas-scratch/claude/kv-d2d-calendar-edges-1019/r5/tests/kv_d2d_firstepoch/tb_calendar_edges.sv:15: calendar guard violation
+       Time: 350000  Scope: tb_calendar_edges.chk

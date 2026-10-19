@@ -1,0 +1,5 @@
+RECEIPT mode=13 ready=100 poison=000 seen=ffffffffffffffff base=11
+CHECK_FAIL mode=13 cycle=7521 both counter branches unchanged
+COMPONENT_RESULT mode=13 compares=7516 events=0 errors=1
+FATAL: tb_component.sv:168: component failed
+       Time: 75210000  Scope: tb_component

@@ -1,0 +1,11 @@
+--- ../bench4/ot_qwen_d2d_cal_sf_fe.sv	2026-10-19 15:25:34.000000000 -0700
++++ epoch/ot_qwen_d2d_cal_sf_fe.sv	2026-10-19 15:26:36.252721072 -0700
+@@ -37,7 +37,7 @@
+     wire write_base = cfg_we && !running && cfg_addr[AW];
+     wire [31:0] consumed_data = cfg_addr[AW-1:0] < NE/2 ? cfg_data_c[31:0] : cfg_data_c[63:32];
+     wire [31:0] expected_data = EXPECTED_IMAGE[32*cfg_addr[AW-1:0] +: 32];
+-    wire metadata_ok = cfg_valid && (!epoch_valid || cfg_epoch == installed_epoch);
++    wire metadata_ok = cfg_valid;
+     wire boot_data_ok = write_entry ? consumed_data == expected_data :
+                         write_base && cfg_addr == 6'd32 && cfg_base_c == EXPECTED_BOOT_BASE;
+     wire runtime_data_ok = write_base && cfg_addr == 6'd32 &&

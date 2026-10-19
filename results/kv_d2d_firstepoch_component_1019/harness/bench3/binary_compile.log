@@ -1,0 +1,621 @@
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'vm_drained'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:25: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                         ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'collective_drained'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:37: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'collective_busy'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:57: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'crom_fault'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:74: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                          ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'execution_active'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:86: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'admit_ready'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:651:104: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                                        ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_v'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:653:25: ... Location of port declaration
+  653 |     output reg          result_v,
+      |                         ^~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_done'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:654:25: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                         ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_fault'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:654:38: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                                      ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_cause'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:655:25: ... Location of port declaration
+  655 |     output wire [3:0]   result_cause,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_tag'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:656:25: ... Location of port declaration
+  656 |     output wire [58:0]  result_tag,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_gen'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:657:25: ... Location of port declaration
+  657 |     output wire [1:0]   result_gen,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_token'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:658:25: ... Location of port declaration
+  658 |     output wire [17:0]  result_token,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_value'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:659:25: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:25:27: Instance has missing pin: 'result_cycles'
+   25 |  ot_qwen_d2d_status_rx_sf sr0(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event0),.rx_slot(status_event0),
+      |                           ^~~
+                     current_safe_fo.sv:659:39: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'vm_drained'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:25: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'collective_drained'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:37: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'collective_busy'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:57: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'crom_fault'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:74: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                          ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'execution_active'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:86: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'admit_ready'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:651:104: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                                        ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_v'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:653:25: ... Location of port declaration
+  653 |     output reg          result_v,
+      |                         ^~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_done'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:654:25: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                         ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_fault'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:654:38: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                                      ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_cause'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:655:25: ... Location of port declaration
+  655 |     output wire [3:0]   result_cause,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_tag'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:656:25: ... Location of port declaration
+  656 |     output wire [58:0]  result_tag,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_gen'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:657:25: ... Location of port declaration
+  657 |     output wire [1:0]   result_gen,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_token'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:658:25: ... Location of port declaration
+  658 |     output wire [17:0]  result_token,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_value'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:659:25: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:39:27: Instance has missing pin: 'result_cycles'
+   39 |  ot_qwen_d2d_status_rx_sf sr1(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event1),.rx_slot(status_event1),
+      |                           ^~~
+                     current_safe_fo.sv:659:39: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'vm_drained'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:25: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'collective_drained'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:37: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'collective_busy'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:57: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'crom_fault'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:74: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                          ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'execution_active'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:86: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'admit_ready'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:651:104: ... Location of port declaration
+  651 |     output wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+      |                                                                                                        ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_v'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:653:25: ... Location of port declaration
+  653 |     output reg          result_v,
+      |                         ^~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_done'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:654:25: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                         ^~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_fault'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:654:38: ... Location of port declaration
+  654 |     output wire         result_done, result_fault,
+      |                                      ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_cause'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:655:25: ... Location of port declaration
+  655 |     output wire [3:0]   result_cause,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_tag'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:656:25: ... Location of port declaration
+  656 |     output wire [58:0]  result_tag,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_gen'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:657:25: ... Location of port declaration
+  657 |     output wire [1:0]   result_gen,
+      |                         ^~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_token'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:658:25: ... Location of port declaration
+  658 |     output wire [17:0]  result_token,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_value'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:659:25: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                         ^~~~~~~~~~~~
+%Warning-PINMISSING: tb_component.sv:54:27: Instance has missing pin: 'result_cycles'
+   54 |  ot_qwen_d2d_status_rx_sf sr2(.ck(ck),.rst_n(rst_n),.epoch16(ep),.rx_event(status_event2),.rx_slot(status_event2),
+      |                           ^~~
+                     current_safe_fo.sv:659:39: ... Location of port declaration
+  659 |     output wire [31:0]  result_value, result_cycles,
+      |                                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'layer_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:50:13: ... Location of port declaration
+   50 |  output reg layer_we,output reg[8:0]layer_addr,output reg[63:0]layer_data,
+      |             ^~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'layer_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:50:37: ... Location of port declaration
+   50 |  output reg layer_we,output reg[8:0]layer_addr,output reg[63:0]layer_data,
+      |                                     ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'layer_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:50:64: ... Location of port declaration
+   50 |  output reg layer_we,output reg[8:0]layer_addr,output reg[63:0]layer_data,
+      |                                                                ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'writer_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:51:13: ... Location of port declaration
+   51 |  output reg writer_we,output reg[7:0]writer_addr,output reg[63:0]writer_data,
+      |             ^~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'writer_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:51:38: ... Location of port declaration
+   51 |  output reg writer_we,output reg[7:0]writer_addr,output reg[63:0]writer_data,
+      |                                      ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'writer_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:51:66: ... Location of port declaration
+   51 |  output reg writer_we,output reg[7:0]writer_addr,output reg[63:0]writer_data,
+      |                                                                  ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'ownership_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:52:13: ... Location of port declaration
+   52 |  output reg ownership_we,output reg[1:0]ownership_addr,output reg[31:0]ownership_data,
+      |             ^~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'ownership_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:52:41: ... Location of port declaration
+   52 |  output reg ownership_we,output reg[1:0]ownership_addr,output reg[31:0]ownership_data,
+      |                                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'ownership_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:52:72: ... Location of port declaration
+   52 |  output reg ownership_we,output reg[1:0]ownership_addr,output reg[31:0]ownership_data,
+      |                                                                        ^~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'landing_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:53:18: ... Location of port declaration
+   53 |  output reg[31:0]landing_we,front_we,output reg[7:0]group_addr,output reg[63:0]group_data,
+      |                  ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'front_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:53:29: ... Location of port declaration
+   53 |  output reg[31:0]landing_we,front_we,output reg[7:0]group_addr,output reg[63:0]group_data,
+      |                             ^~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'group_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:53:53: ... Location of port declaration
+   53 |  output reg[31:0]landing_we,front_we,output reg[7:0]group_addr,output reg[63:0]group_data,
+      |                                                     ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'group_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:53:80: ... Location of port declaration
+   53 |  output reg[31:0]landing_we,front_we,output reg[7:0]group_addr,output reg[63:0]group_data,
+      |                                                                                ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'controller_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:54:19: ... Location of port declaration
+   54 |  output reg[127:0]controller_we,output reg[7:0]controller_addr,output reg[63:0]controller_data,
+      |                   ^~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'controller_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:54:48: ... Location of port declaration
+   54 |  output reg[127:0]controller_we,output reg[7:0]controller_addr,output reg[63:0]controller_data,
+      |                                                ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'controller_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:54:80: ... Location of port declaration
+   54 |  output reg[127:0]controller_we,output reg[7:0]controller_addr,output reg[63:0]controller_data,
+      |                                                                                ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'controller_last'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:55:19: ... Location of port declaration
+   55 |  output reg[127:0]controller_last,output reg[31:0]front_last,
+      |                   ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'front_last'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:55:51: ... Location of port declaration
+   55 |  output reg[127:0]controller_last,output reg[31:0]front_last,
+      |                                                   ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'diecfg_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:56:13: ... Location of port declaration
+   56 |  output reg diecfg_we,output reg[7:0]diecfg_addr,output reg[63:0]diecfg_data,
+      |             ^~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'diecfg_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:56:38: ... Location of port declaration
+   56 |  output reg diecfg_we,output reg[7:0]diecfg_addr,output reg[63:0]diecfg_data,
+      |                                      ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'diecfg_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:56:66: ... Location of port declaration
+   56 |  output reg diecfg_we,output reg[7:0]diecfg_addr,output reg[63:0]diecfg_data,
+      |                                                                  ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'es_cfg_we'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:58:13: ... Location of port declaration
+   58 |  output reg es_cfg_we,output reg[7:0]es_cfg_addr,output reg[63:0]es_cfg_data,
+      |             ^~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'es_cfg_addr'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:58:38: ... Location of port declaration
+   58 |  output reg es_cfg_we,output reg[7:0]es_cfg_addr,output reg[63:0]es_cfg_data,
+      |                                      ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'es_cfg_data'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:58:66: ... Location of port declaration
+   58 |  output reg es_cfg_we,output reg[7:0]es_cfg_addr,output reg[63:0]es_cfg_data,
+      |                                                                  ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'setup_ready'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:59:14: ... Location of port declaration
+   59 |  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
+      |              ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'fault_code'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:59:58: ... Location of port declaration
+   59 |  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
+      |                                                          ^~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'installed_epoch'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:60:18: ... Location of port declaration
+   60 |  output reg[15:0]installed_epoch,output reg[63:0]installed_isa_digest
+      |                  ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:21:45: Instance has missing pin: 'installed_isa_digest'
+   21 |  qkd_static_kv_boot_dispatch #(.LINKCFG(1)) u_dispatch (
+      |                                             ^~~~~~~~~~
+                     qkd_static_kv_boot_dispatch.sv:60:50: ... Location of port declaration
+   60 |  output reg[15:0]installed_epoch,output reg[63:0]installed_isa_digest
+      |                                                  ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:81:126: Instance has missing pin: 'epoch_valid'
+   81 |  .EXPECTED_IMAGE(D2D_CAL_K_TX_IMG),.EXPECTED_BOOT_BASE(D2D_CAL_K_TX_SEG2[4:0]),.EXPECTED_TOKEN_BASE(D2D_CAL_K_TX_SEG1[4:0])) u_cal(
+      |                                                                                                                              ^~~~~
+                     ot_qwen_d2d_cal_sf_fe.sv:9:27: ... Location of port declaration
+    9 |     output reg base_seen, epoch_valid, settled, poisoned, first_consumed,
+      |                           ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:81:126: Instance has missing pin: 'settled'
+   81 |  .EXPECTED_IMAGE(D2D_CAL_K_TX_IMG),.EXPECTED_BOOT_BASE(D2D_CAL_K_TX_SEG2[4:0]),.EXPECTED_TOKEN_BASE(D2D_CAL_K_TX_SEG1[4:0])) u_cal(
+      |                                                                                                                              ^~~~~
+                     ot_qwen_d2d_cal_sf_fe.sv:9:40: ... Location of port declaration
+    9 |     output reg base_seen, epoch_valid, settled, poisoned, first_consumed,
+      |                                        ^~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:101:126: Instance has missing pin: 'epoch_valid'
+  101 |  .EXPECTED_IMAGE(D2D_CAL_K_RX_IMG),.EXPECTED_BOOT_BASE(D2D_CAL_K_RX_SEG2[4:0]),.EXPECTED_TOKEN_BASE(D2D_CAL_K_RX_SEG1[4:0])) u_cal(
+      |                                                                                                                              ^~~~~
+                     ot_qwen_d2d_cal_sf_fe.sv:9:27: ... Location of port declaration
+    9 |     output reg base_seen, epoch_valid, settled, poisoned, first_consumed,
+      |                           ^~~~~~~~~~~
+%Warning-PINMISSING: qkd_d2d_firstepoch_component.sv:101:126: Instance has missing pin: 'settled'
+  101 |  .EXPECTED_IMAGE(D2D_CAL_K_RX_IMG),.EXPECTED_BOOT_BASE(D2D_CAL_K_RX_SEG2[4:0]),.EXPECTED_TOKEN_BASE(D2D_CAL_K_RX_SEG1[4:0])) u_cal(
+      |                                                                                                                              ^~~~~
+                     ot_qwen_d2d_cal_sf_fe.sv:9:40: ... Location of port declaration
+    9 |     output reg base_seen, epoch_valid, settled, poisoned, first_consumed,
+      |                                        ^~~~~~~
+%Warning-WIDTHTRUNC: qkd_d2d_firstepoch_component.sv:37:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ORIGINAL' generates 32 bits.
+                                                          : ... note: In instance 'tb_component.d0'
+   37 |  generate if(ORIGINAL) begin:g_original_bc
+      |           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: qkd_d2d_firstepoch_component.sv:72:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ORIGINAL' generates 32 bits.
+                                                          : ... note: In instance 'tb_component.d0'
+   72 |  generate if(ORIGINAL) begin:g_tx_original
+      |           ^~
+%Warning-WIDTHTRUNC: qkd_d2d_firstepoch_component.sv:92:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ORIGINAL' generates 32 bits.
+                                                          : ... note: In instance 'tb_component.d0'
+   92 |  generate if(ORIGINAL) begin:g_rx_original
+      |           ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:69:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ADM' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   69 |     localparam [31:0] TXB0 = ADM ? TX_SEG2 : TX_SEG1, RXB0 = ADM ? RX_SEG2 : RX_SEG1;
+      |                                  ^
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:69:66: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ADM' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   69 |     localparam [31:0] TXB0 = ADM ? TX_SEG2 : TX_SEG1, RXB0 = ADM ? RX_SEG2 : RX_SEG1;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:71:17: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ADM' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   71 |         if (ADM && ADM_OFS <= NI + 4) $error("ADM_OFS must exceed the image load (2 NE + 2) + 2");
+      |                 ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:72:17: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ADM' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   72 |         if (ADM && AUTO && FIRST_OFS < ADM_OFS + ADM_LEN + 4) $error("FIRST_OFS must follow the admission run + base switch");
+      |                 ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:72:17: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'AUTO' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   72 |         if (ADM && AUTO && FIRST_OFS < ADM_OFS + ADM_LEN + 4) $error("FIRST_OFS must follow the admission run + base switch");
+      |                 ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:82:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'AUTO' generates 32 bits.
+                                                 : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+   82 |     wire         go_in = AUTO ? auto_go : tok_go;
+      |                               ^
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:102:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ADM' generates 32 bits.
+                                                  : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  102 |             if (ep_rise && ADM) begin
+      |                         ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:107:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'AUTO' generates 32 bits.
+                                                  : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  107 |             if (AUTO && eact && !halt) begin
+      |                      ^~
+%Warning-WIDTHEXPAND: ot_qwen_d2d_cal_seq.sv:116:24: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'ip' generates 7 bits.
+                                                   : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  116 |                 x = ip >> 1;
+      |                        ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: ot_qwen_d2d_cal_seq.sv:117:24: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ip' generates 7 bits.
+                                                   : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  117 |                 if (ip < 2 * NE) begin
+      |                        ^
+%Warning-WIDTHEXPAND: ot_qwen_d2d_cal_seq.sv:127:24: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ip' generates 7 bits.
+                                                   : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  127 |                 if (ip == NI - 1) begin init <= 1'b0; cal_ready <= 1'b1; tokbase <= (ADM == 0); end
+      |                        ^~
+%Warning-WIDTHEXPAND: ot_qwen_d2d_cal_seq.sv:150:28: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'li' generates 6 bits.
+                                                   : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  150 |                     if (li == NL - 1) running <= 1'b0; else li <= li + 1'b1;
+      |                            ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:140:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ADM' generates 32 bits.
+                                                  : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  140 |             end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+      |                              ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:137:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ADM' generates 32 bits.
+                                                  : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  137 |             end else if (ADM && eact && e == E_ADM && adm_pend) begin
+      |                              ^~
+%Warning-WIDTHTRUNC: ot_qwen_d2d_cal_seq.sv:131:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ADM' generates 32 bits.
+                                                  : ... note: In instance 'tb_component.d2.g_private_bc.u_bc.u_seq.u_seq'
+  131 |             end else if (ADM && eact && (e == 32'd1 || e == 32'd2) && tokbase) begin
+      |                              ^~
+%Warning-WIDTHEXPAND: ot_qwen_d2d_cal_sf_fe.sv:38:50: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                    : ... note: In instance 'tb_component.d2.g_rx_private.u_cal'
+   38 |     wire [31:0] consumed_data = cfg_addr[AW-1:0] < NE/2 ? cfg_data_c[31:0] : cfg_data_c[63:32];
+      |                                                  ^
+%Warning-WIDTHTRUNC: qkd_d2d_cal_seq_pin_bc_fe.sv:118:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_FIRST_EPOCH_GUARD' generates 32 bits.
+                                                        : ... note: In instance 'tb_component.d2.g_private_bc.u_bc'
+  118 |     assign seq_epoch_go = ENABLE_FIRST_EPOCH_GUARD ? (epoch_go_q && guard_ok) : epoch_go_q;
+      |                                                    ^
+%Warning-WIDTHTRUNC: qkd_d2d_cal_seq_pin_bc_fe.sv:119:50: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_FIRST_EPOCH_GUARD' generates 32 bits.
+                                                        : ... note: In instance 'tb_component.d2.g_private_bc.u_bc'
+  119 |     assign guard_veto = ENABLE_FIRST_EPOCH_GUARD &&
+      |                                                  ^~
+%Warning-WIDTHTRUNC: qkd_d2d_cal_seq_pin_bc_fe.sv:125:14: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_FIRST_EPOCH_GUARD' generates 32 bits.
+                                                        : ... note: In instance 'tb_component.d2.g_private_bc.u_bc'
+  125 |         else if (ENABLE_FIRST_EPOCH_GUARD) begin
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_d2d_cal_seq_pin_bc_fe.sv:170:48: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_FIRST_EPOCH_GUARD' generates 32 bits.
+                                                        : ... note: In instance 'tb_component.d2.g_private_bc.u_bc'
+  170 |                      (ENABLE_FIRST_EPOCH_GUARD && (early_first || pair_poison || guard_fault_now || (epoch_go_q && !guard_ok)));
+      |                                                ^~
+%Warning-WIDTHEXPAND: qkd_d2d_firstepoch_component.sv:69:25: Operator ASSIGNW expects 128 bits on the Assign RHS, but Assign RHS's REPLICATE generates 94 bits.
+                                                           : ... note: In instance 'tb_component.d2'
+   69 |  assign original_outputs={dispatcher_fault,dt,dr,da,dd,ct,cr,ca,cd,cs,seg,ready,run,ly,adm,tok,bc_fault};
+      |                         ^
+%Warning-WIDTHEXPAND: qkd_d2d_firstepoch_component.sv:70:25: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 30 bits.
+                                                           : ... note: In instance 'tb_component.d2'
+   70 |  assign calendar_outputs={cf,running,tx_event,tx_port,tx_kind,tx_beat,rx_event,rx_port,rx_kind,rx_beat};
+      |                         ^
+%Warning-WIDTHTRUNC: tb_component.sv:66:8: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's VARREF 't' generates 32 bits.
+                                         : ... note: In instance 'tb_component'
+   66 |  target=t;ready=0;boot_pr=0;tick;
+      |        ^
+%Warning-WIDTHTRUNC: tb_component.sv:70:17: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's MODDIVS generates 32 bits.
+                                          : ... note: In instance 'tb_component'
+   70 |  if(a<64) w=a%2 ? D2D_CAL_K_RX_IMG[32*(a/2)+:32] : D2D_CAL_K_TX_IMG[32*(a/2)+:32];
+      |                 ^
+%Warning-WIDTHTRUNC: tb_component.sv:73:40: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'a' generates 32 bits.
+                                          : ... note: In instance 'tb_component'
+   73 |  boot_pr=0;boot_pr[74]=1;boot_pr[73:64]=a;boot_pr[31:0]=w;tick;
+      |                                        ^
+%Warning-WIDTHTRUNC: tb_component.sv:132:2: Operator TASKREF 'check' expects 256 bits on the Function Argument, but Function Argument's CONST '280'h7265636569766572206865616c746879206265666f72652069646c65206d7574616e74' generates 280 bits.
+                                          : ... note: In instance 'tb_component'
+  132 |  check(fresh[2] && !sfault[2],"receiver healthy before idle mutant");
+      |  ^~~~~
+%Warning-WIDTHTRUNC: tb_component.sv:134:2: Operator TASKREF 'check' expects 256 bits on the Function Argument, but Function Argument's CONST '288'h6d616c666f726d6564205354415455532061667465722069646c65206465746563746564' generates 288 bits.
+                                          : ... note: In instance 'tb_component'
+  134 |  check(sfault[2],"malformed STATUS after idle detected");
+      |  ^~~~~
+%Warning-WIDTHTRUNC: tb_component.sv:138:2: Operator TASKREF 'check' expects 256 bits on the Function Argument, but Function Argument's CONST '280'h636f6e73756d6572206d7574616e742063616c656e64617220756e6166666563746564' generates 280 bits.
+                                          : ... note: In instance 'tb_component'
+  138 |  check(!bf[2]&&!pp[2],"consumer mutant calendar unaffected");
+      |  ^~~~~
+%Warning-WIDTHTRUNC: tb_component.sv:142:2: Operator TASKREF 'check' expects 256 bits on the Function Argument, but Function Argument's CONST '272'h756e6368616e67656420535441545553207265636569766572206163636570746564' generates 272 bits.
+                                          : ... note: In instance 'tb_component'
+  142 |  check(fresh[2],"unchanged STATUS receiver accepted");check(firsts[2]==3,"both firsts consumed");
+      |  ^~~~~
+%Warning-WIDTHTRUNC: tb_component.sv:156:2: Logical operator IF expects 1 bit on the If, but If's VARREF 'errors' generates 32 bits.
+                                          : ... note: In instance 'tb_component'
+  156 |  if(errors)$fatal(1,"component failed");$finish;
+      |  ^~
+make: Entering directory '/srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench3/obj_binary'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_component__pch.h -o Vtb_component__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_component__pch.h -o Vtb_component__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.fast -c Vtb_component.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.fast -c Vtb_component___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.fast -c Vtb_component___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.fast -c Vtb_component__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.slow -c Vtb_component__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.slow -c Vtb_component___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.slow -c Vtb_component___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.slow -c Vtb_component___024unit__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_component__pch.h.slow -c Vtb_component__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_component__ALL.a    -pthread -lpthread -latomic   -o Vtb_component
+rm Vtb_component__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/kv-d2d-firstepoch-component-1019/bench3/obj_binary'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.588 MB sources in 22 modules, into 2.259 MB in 9 C++ files needing 0.002 MB
+- Verilator: Walltime 7.584 s (elab=0.030, cvt=0.219, bld=7.268); cpu 0.361 s on 2 threads; allocated 60.434 MB

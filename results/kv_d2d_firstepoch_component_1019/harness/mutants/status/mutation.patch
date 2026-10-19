@@ -1,0 +1,12 @@
+--- ../bench4/current_safe_fo.sv	2026-10-19 15:25:34.000000000 -0700
++++ status/current_safe_fo.sv	2026-10-19 15:26:37.967697478 -0700
+@@ -661,8 +661,7 @@
+     output wire         fault
+ );
+     wire [511:0] d = rx_payload[511:0];
+-    wire bad_hdr = rx_payload[547:543] != 0 || rx_payload[542:539] != 4'd15 || rx_payload[538:533] != 6'd63 ||
+-                   rx_payload[532:517] != epoch16 || rx_payload[516:512] != 0 || d[511:156] != 0;
++    wire bad_hdr = 1'b0;
+     // sticky fault: master + NG copies on one D net
+     (* keep = "true", dont_touch = "true" *) reg [NG:0] fc;      // fc[0] = master
+     wire fault_d = (rx_event != rx_slot || (rx_event && bad_hdr)) ? 1'b1 : fc[0];

@@ -1,0 +1,3 @@
+ASSERT_FAIL UPLOAD_MUST_NOT_CLEAR_POISON scenario=601 time=21230000 seen=00000001 base=0 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000
+FATAL: /srv/opentallas-scratch/claude/kv-d2d-calendar-edges-1019/r4/tests/kv_d2d_firstepoch/tb_calendar_edges.sv:15: calendar guard violation
+       Time: 21230000  Scope: tb_calendar_edges.chk

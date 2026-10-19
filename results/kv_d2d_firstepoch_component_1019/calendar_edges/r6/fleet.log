@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits  1079 GB (avail 817, growth 61, headroom 0, waiters 0/0 GB) load 34/128 running 16 disk 503 GB 
+ot-run: ot-epyc5       admits   482 GB (avail 394, growth 39, headroom 0, waiters 0/0 GB) load 42/128 running 7 disk 639 GB 
+ot-run: ot-epyc6       admits  1224 GB (avail 914, growth 54, headroom 0, waiters 0/0 GB) load 31/128 running 16 disk 687 GB 
+ot-run: ot-epyc7       admits  1086 GB (avail 811, growth 41, headroom 0, waiters 0/0 GB) load 14/96 running 13 disk 6272 GB 
+ot-run: ot-epyc8       admits  1263 GB (avail 941, growth 51, headroom 0, waiters 0/0 GB) load 20/128 running 11 disk 65 GB 
+ot-run: ot-pve1        admits    92 GB (avail 76, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1212 GB 
+ot-run: ot-agidock128  admits   108 GB (avail 85, growth 10, headroom 0, waiters 0/0 GB) load 5/64 running 5 disk 321 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-154029-1792448685 after 0 s
+{"name": "baseline", "rc": 0, "expected_verdict": true, "source_sha256": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf", "witness": ["CALENDAR_EDGES_PASS checks=267"]}
+{"name": "allow_w_plus_1", "rc": 1, "expected_verdict": true, "source_sha256": "4ad5130ddea43ae18c14517e9862d0a614ffb2f950e6b1f67818f5afbea02afc", "witness": ["ASSERT_FAIL W_PLUS_1_FORBIDDEN scenario=201 time=700000 seen=ffffffff base=1 ready=1 poison=0 run=1 cnt=0007 pc=00000010 cur=001e8c00"]}
+{"name": "emitted_valid_credit", "rc": 1, "expected_verdict": true, "source_sha256": "efb47dd20af6285e6a79479b5c8ab259d3a5cc70dda9431b474e12fa1b872983", "witness": ["ASSERT_FAIL EMITTED_VALID_NO_ACCEPTED_CREDIT scenario=50 time=1490000 seen=ffffffff base=1 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+{"name": "emitted_credit", "rc": 1, "expected_verdict": true, "source_sha256": "067e1a9c9240339e2e48e998dd88b365541f520bd1af3e6a2a40d6144b067977", "witness": ["ASSERT_FAIL REJECTED_RUNNING_WRITE_NO_CREDIT scenario=500 time=21200000 seen=ffffffff base=1 ready=0 poison=1 run=0 cnt=0007 pc=00000010 cur=001e8c00"]}
+{"name": "omit_data_compare", "rc": 1, "expected_verdict": true, "source_sha256": "d75173d45cf4e4944f168668dd7af7d1ce357822e91f3263ae055f82c0b098a2", "witness": ["ASSERT_FAIL MALFORMED_UPLOAD_POISONS_WITHOUT_START scenario=350 time=17080000 seen=ffffffff base=1 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+{"name": "omit_base_compare", "rc": 1, "expected_verdict": true, "source_sha256": "f759a2665d59ed1414796bada885291d97fe307cc00cbcd332d6fb77dc13193e", "witness": ["ASSERT_FAIL MALFORMED_UPLOAD_POISONS_WITHOUT_START scenario=352 time=17820000 seen=ffffffff base=1 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+{"name": "reset_invalidation", "rc": 1, "expected_verdict": true, "source_sha256": "aed76827790747ec1bbb96390846a831422b985e9ed10d050bbfcba8b106a6de", "witness": ["ASSERT_FAIL RESET_INVALIDATES scenario=200 time=11000 seen=xxxxxxxx base=x ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+{"name": "clear_poison_on_upload", "rc": 1, "expected_verdict": true, "source_sha256": "84287b5c1d6f9caa781fecfc6ebb7073535c5f3e37c597d79b9f12cd8a4c6ece", "witness": ["ASSERT_FAIL UPLOAD_MUST_NOT_CLEAR_POISON scenario=601 time=21600000 seen=00000001 base=0 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+{"name": "queued_retry", "rc": 1, "expected_verdict": true, "source_sha256": "770d8b8bfe061ad7474c82eb586c0917a324ecdd37b8a8734d8c806bd187e867", "witness": ["ASSERT_FAIL LATE_UPLOAD_NO_RETRY scenario=601 time=21960000 seen=ffffffff base=1 ready=0 poison=1 run=1 cnt=0007 pc=00000010 cur=001e8c00"]}
+{"name": "output_only_mask", "rc": 1, "expected_verdict": true, "source_sha256": "23c51f249b8279191677021bc7b39dd7dcbe966a8685e8d191fcd96fbe6956b2", "witness": ["ASSERT_FAIL W_START_FORBIDDEN scenario=200 time=350000 seen=ffffffff base=1 ready=0 poison=1 run=1 cnt=xxxx pc=xxxxxxxx cur=xxxxxxxx"]}
+{"name": "reload_invalidation", "rc": 1, "expected_verdict": true, "source_sha256": "3c557afe6506166117f3e729b1d08ec797e7fd3a81eb3218d4bcd66c0f6f72b6", "witness": ["ASSERT_FAIL RELOAD_INVALIDATES scenario=600 time=21570000 seen=ffffffff base=1 ready=0 poison=0 run=0 cnt=0000 pc=00000001 cur=00000000"]}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-154029-1792448685): exit 0

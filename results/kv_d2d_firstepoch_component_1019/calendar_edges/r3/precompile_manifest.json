@@ -1,0 +1,81 @@
+{
+  "sources": {
+    "rtl/qwen_sys/d2d_static_20261015/firstepoch_private/ot_qwen_d2d_cal_sf_fe.sv": "351145254ed523a0a062dd56151451b4d0184ebc5fae2ebd80f9608e9d161faf",
+    "tests/kv_d2d_firstepoch/tb_calendar_edges.sv": "236df203e13257f7465b51d467c050d8c4b3fee7cc53af05636313d0a938e878",
+    "tests/kv_d2d_firstepoch/run_calendar_edges.py": "94babdf362319f768e9d6c3ad6f448fead3aa998705515813737145133e24714"
+  },
+  "mutations": {
+    "allow_w_plus_1": [
+      [
+        " && settled &&",
+        " &&"
+      ],
+      [
+        " && !cfg_recent &&",
+        " &&"
+      ]
+    ],
+    "emitted_credit": [
+      [
+        "if (cfg_we && !first_consumed && !bad_write) begin",
+        "if (cfg_we) begin"
+      ],
+      [
+        "if (write_entry) seen[",
+        "if (!cfg_addr[AW]) seen["
+      ]
+    ],
+    "omit_data_compare": [
+      [
+        "consumed_data == expected_data",
+        "1'b1"
+      ]
+    ],
+    "omit_base_compare": [
+      [
+        "cfg_base_c == EXPECTED_BOOT_BASE;",
+        "1'b1;"
+      ],
+      [
+        " && (base_copies_ok === 1'b1)",
+        ""
+      ]
+    ],
+    "reset_invalidation": [
+      [
+        "seen<=0; base_seen<=0; installed_epoch<=0; epoch_valid<=0;",
+        "installed_epoch<=0;"
+      ]
+    ],
+    "clear_poison_on_upload": [
+      [
+        "if (bad_write || pair_poison || fault || (any_start && !start_allowed)) poisoned<=1;",
+        "if (cfg_we) poisoned<=0; else if (bad_write || pair_poison || fault || (any_start && !start_allowed)) poisoned<=1;"
+      ]
+    ],
+    "queued_retry": [
+      [
+        "if (any_start && start_allowed) first_consumed<=1;",
+        "if (any_start && start_allowed) first_consumed<=1; if (receipt_ready) first_consumed<=1;"
+      ]
+    ],
+    "output_only_mask": [
+      [
+        "(start_allowed ? start_c : 4'b0)",
+        "start_c"
+      ],
+      [
+        "wire [3:0] effective_halt = halt_c | {4{ENABLE_FIRST_EPOCH_GUARD != 0 &&\n               (poisoned || fault || bad_write || pair_poison || reload || (any_start && !start_allowed))}};",
+        "wire [3:0] effective_halt = halt_c;"
+      ]
+    ],
+    "reload_invalidation": [
+      [
+        "if (reload) begin seen<=0; base_seen<=0; epoch_valid<=0; settled<=0; first_consumed<=0; end",
+        "if (reload) begin end"
+      ]
+    ]
+  },
+  "tool": "iverilog -g2012; vvp",
+  "scope": "4-state functional component; no native/physical qualification"
+}

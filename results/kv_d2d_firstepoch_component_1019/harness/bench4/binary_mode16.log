@@ -1,0 +1,9 @@
+RECEIPT mode=16 ready=100 poison=000 seen=ffffffffffffffff base=11
+TOKEN_CONSUMER cycle=6300
+FIRST_STATUS cycle=6315 token_delta=15
+TOKEN_CONSUMER cycle=255900
+COMPONENT_RESULT mode=16 compares=257115 events=1411 errors=0
+- tb_component.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.550 s; speed 4.677 ms/s
+- Verilator: cpu 0.550 s on 1 threads; allocated 7 MB
