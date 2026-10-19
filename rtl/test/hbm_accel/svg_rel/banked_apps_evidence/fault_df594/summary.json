@@ -1,0 +1,63 @@
+{
+  "test_source": "abfb594f6",
+  "dut_origin": "df5942ca5",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc6",
+  "remote_root": "/srv/opentallas-scratch/claude/codex-banked-app-miter-1019-r5",
+  "application_profiles": [
+    "SVG PREL0",
+    "SVG PREL1",
+    "XC PREL0",
+    "XC PREL1"
+  ],
+  "application_edges_per_profile": 4263,
+  "application_completed_runs_per_profile": 6,
+  "application_wordfault_and_reset_witness": true,
+  "generic_profiles": [
+    "W135/XW46",
+    "W173/XW5",
+    "W135/XW47 opaque"
+  ],
+  "generic_valid_words_per_profile": 2100,
+  "generic_runs_per_profile": 6,
+  "generic_GO_gap_edges": 9,
+  "generic_protection_checks": 4,
+  "generic_reset_sequences": 6,
+  "verdict": "PASS",
+  "mutants": {
+    "1": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL tuple",
+      "observed_profile": "opaque47"
+    },
+    "2": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL tuple",
+      "observed_profile": "opaque47"
+    },
+    "3": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL active envelope",
+      "observed_profile": "opaque47"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+    "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv": "c0bc0848064805ead00b580324e4bef77f6fd5f871e2ec06601a77784ac52a67",
+    "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv": "8992585445611ab2ca0e308c27bbf55476ad79f8c3c1ea800515af7b909a4af1",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40",
+    "rtl/test/hbm_accel/svg_rel/gen_banked_app_references.py": "fada299505ec212763ce3041173d34dedf4d40e998bc980b7abc32d209dd3cd6",
+    "rtl/test/hbm_accel/svg_rel/tb_banked_apps.sv": "db6232930dc9756d7004f5ffdd81a2bbccf309b7cb09b068d2f77dd3359b043d",
+    "rtl/test/hbm_accel/svg_rel/run_banked_apps.sh": "927d37f46eb48660ef1065f76918dec6a32f59f97d13d0038fe82c2f443e5235",
+    "rtl/test/hbm_accel/svg_rel/tb_banked_calendar_opaque47.sv": "77a6a5352b04efacdadaff0ddd690de2d6f6282bb8a9f597065849f3927fe683",
+    "rtl/test/hbm_accel/svg_rel/run_banked_calendar_opaque47.sh": "80d3708a8bd4ff5feb51f5b1416ebffe168973602e34170571d532553895f362"
+  },
+  "limitations": [
+    "Application R/C extracted from qualified sources driven by unchanged static_x; oldXC outer input collar excluded.",
+    "Opaque47 generic transport proof; application remains46 contextbits.",
+    "Component proof only; mapped/physical audit independent."
+  ]
+}
