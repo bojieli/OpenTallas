@@ -1,0 +1,7 @@
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+[1911000] %Fatal: miter.sv:763: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_COPY_FAIL 14842
+%Error: /srv/opentallas-scratch/claude/sysface-physical-proof-1019/cold_mut_gate_input/miter/miter.sv:763: Verilog $stop
+Aborting...
