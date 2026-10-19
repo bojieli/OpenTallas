@@ -3,3 +3,5 @@ Plain station514/516 geometry-only diagnostic packet, sourcefeca73305; original 
 Native read-only immutable GRTODB/global-routing RC with unchanged signoffSDC:514TTsetup400.964ps/FFhold26.015ps,516TTsetup407.406ps/FFhold29.548ps. TT/FF pinflopspread51412.5/12.5ps,51610.7/11.3ps. Both WARN0fail/GRT0, utilwarningsonly. Not detailed-route final or parentclosure. Inputs hashes/fullnativeholdpaths included.
 
 No REVIEW/submit/adoption. Parent CPpositions/fullface405reach, xstncontrolsafety, landingage/overwrite/nativephases, resetledger/fullMUT8/compiler/hardclocks remainindependent blockers.
+
+Native flattened mapped fanout audit: exact514/516FF, maximum register nonclock load1 forboth; every data inputbit1sink. There is NO reset port, no asynchronous reset net and no enable/mux control in these plain stations. No>32internalcontrol load. External parent qfanout remains separate.
