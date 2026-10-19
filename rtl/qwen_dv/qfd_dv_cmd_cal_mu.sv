@@ -212,13 +212,12 @@ module qfd_dv_cmd_cal_mu #(
     reg  [1:0]   w3_ce;
     reg  [5:0]   w3_row [0:1];
     reg  [63:0]  w3_d [0:1];
-    reg  [7:0]   w3_sl [0:1];
     always @(posedge ck or negedge rst_n)
         if (!rst_n) w3_ce <= 2'b00;
         else w3_ce <= m_ce;
     always @(posedge ck) begin
-        if (m_ce[0]) begin w3_row[0] <= pw_row2; w3_d[0] <= pw_d2; w3_sl[0] <= pw_sl2; end
-        if (m_ce[1]) begin w3_row[1] <= pw_row2; w3_d[1] <= pw_d2; w3_sl[1] <= pw_sl2; end
+        if (m_ce[0]) begin w3_row[0] <= pw_row2; w3_d[0] <= pw_d2; end
+        if (m_ce[1]) begin w3_row[1] <= pw_row2; w3_d[1] <= pw_d2; end
     end
     wire [511:0] rd [0:1];
     reg          tl_rce_q, tl_v2, tl_v3; reg [5:0] tl_row_q; reg [63:0] tl_ctl_q, tl_ctl2, tl_ctl3; reg [1023:0] tl_pay3;
@@ -227,7 +226,13 @@ module qfd_dv_cmd_cal_mu #(
         wire [511:0] w3_mask;
         genvar h;
         for (h = 0; h < 8; h = h + 1) begin : g_wm
-            assign w3_mask[64*h +: 64] = {64{w3_sl[g][h]}};
+            genvar c;
+            for (c = 0; c < 2; c = c + 1) begin : g_copy
+                wire mask;
+                qfd_calpipe_mask #(.COPY_ID(16*g+2*h+c)) u_mask (
+                    .ck(ck), .write_ce(m_ce[g]), .mask_in(pw_sl2[h]), .mask(mask));
+                assign w3_mask[64*h+32*c +: 32] = {32{mask}};
+            end
         end
         ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((m_rce && (m_rbank == g[0])) || tl_rce_q),
             .r_addr_in(tl_rce_q ? tl_row_q : m_rrow), .rd_out(rd[g]),
@@ -313,6 +318,17 @@ module qfd_dv_cmd_cal_mu #(
             always @(posedge ck)
                 if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g][32*q +: 32] <= bword;
         end
+        // Match rd_v's pipeline/hold semantics in local kept CE copies.
+        // Each copy enables exactly32 WD flops instead of one512-load CE.
+        genvar c;
+        for (c = 0; c < 16; c = c + 1) begin : g_wce
+            wire valid;
+            qfd_calpipe_readvalid #(.COPY_ID(16*g+c)) u_v (
+                .ck(ck), .rst_n(rst_n), .clear(do_clear), .freeze(frz_u[g] || go_u[g]),
+                .read_ce(rce_q[g]), .valid(valid));
+            always @(posedge ck)
+                if (valid && !frz_u[g] && !go_u[g]) fq_wd[g][32*c +: 32] <= rds[32*c +: 32];
+        end
         always @(posedge ck or negedge rst_n)
             if (!rst_n) begin fq_we[g] <= 1'b0; fq_bypass[g] <= 1'b0; end
             else begin
@@ -320,10 +336,7 @@ module qfd_dv_cmd_cal_mu #(
                 fq_bypass[g] <= fq_we[g] && fq_wa[g] == fq_ra[g];
             end
         always @(posedge ck) begin
-            if (rd_v[g] && !frz_u[g] && !go_u[g]) begin
-                fq_wd[g] <= rds;
-                fq_wa[g] <= wh[g];
-            end
+            if (rd_v[g] && !frz_u[g] && !go_u[g]) fq_wa[g] <= wh[g];
         end
     end endgenerate
 
@@ -400,8 +413,10 @@ module qfd_dv_cmd_cal_mu #(
             nh_v[u] = 1'b1; nh_c[u] = hc_q[u]; dd = 12'd0;
             if (fn_ap != 4'd0) begin
                 if (fire_q[u]) begin nh_c[u] = csel; dd = dsel; end           // pop: the next FIFO slot
-            end else if (rd_v[u]) begin nh_c[u] = ent[0][115:0]; dd = dlt[0]; // FIFO empties: the word being pushed
-            end else nh_v[u] = 1'b0;
+            end else begin
+                // Invalid data is immaterial; keep rd_v off the wide data mux.
+                nh_c[u] = ent[0][115:0]; dd = dlt[0]; nh_v[u] = rd_v[u];
+            end
             nh_t[u] = ht_q[u] + {{(TW-12){1'b0}}, dd};
             fire_n[u] = run_n[u] && nh_v[u] && tdif == {{(TW-12){1'b0}}, dd};
         end
@@ -615,4 +630,21 @@ module qfd_calpipe_selector #(parameter integer COPY_ID = 0, parameter integer M
             if (clear) sel <= (MUT == 33) ? 4'b0001 : 4'b0010;
             else if (pop) sel <= {sel[2:0], sel[3]};
         end
+endmodule
+
+(* keep_hierarchy = 1 *)
+module qfd_calpipe_readvalid #(parameter integer COPY_ID = 0) (
+    input wire ck, rst_n, clear, freeze, read_ce, output reg valid
+);
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) valid <= 1'b0;
+        else if (clear) valid <= 1'b0;
+        else if (!freeze) valid <= read_ce;
+endmodule
+
+(* keep_hierarchy = 1 *)
+module qfd_calpipe_mask #(parameter integer COPY_ID = 0) (
+    input wire ck, write_ce, mask_in, output reg mask
+);
+    always @(posedge ck) if (write_ce) mask <= mask_in;
 endmodule
