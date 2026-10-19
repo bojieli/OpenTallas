@@ -17,7 +17,7 @@ import re
 def audit(design, top, roots, native=None):
     modules = design['modules']
     native = native or {}
-    cells, aliases, issues, parents = {}, defaultdict(list), [], {}
+    cells, aliases, issues, parents, open_outputs = {}, defaultdict(list), [], {}, []
     def canonical(b):
         if b not in parents:return b
         parents[b]=canonical(parents[b]);return parents[b]
@@ -49,6 +49,9 @@ def audit(design, top, roots, native=None):
             if child and not blackbox and typ not in native:
                 mapping = {};input_maps={}
                 for p, spec in child['ports'].items():
+                    if spec['direction']=='output' and not con.get(p):
+                        open_outputs.append(dict(port=name+'.'+p,width=len(spec['bits'])))
+                        continue
                     if p not in con or len(spec['bits']) != len(con[p]):
                         raise ValueError(f'{name}.{p}: missing or mismatched port width')
                     for b, outer in zip(spec['bits'], con[p]):
@@ -211,6 +214,7 @@ def audit(design, top, roots, native=None):
     for root in sorted(set(roots.values()) - set(root_counts)):
         issues.append('declared root has no sequential/native endpoint: ' + root)
     return dict(status='FAIL' if issues else 'ENDPOINTS_ENUMERATED_NOT_TIMING_QUALIFIED',
+        **(dict(unconnected_child_output_ports=open_outputs) if open_outputs else {}),
         **(dict(word_endpoint_widths=word_widths,
                 endpoint_count_note='Word FF endpoints each represent the stated vector width; endpoint counts are cell counts, not mapped clock-sink/area claims.') if word_widths else {}),
         scope='Recursive elaborated connectivity only; crossings are enumerated without waivers. Native pin clock owners, phase/age/reset timing and physical reach remain required.',

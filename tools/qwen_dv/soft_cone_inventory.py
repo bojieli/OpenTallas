@@ -37,6 +37,7 @@ def expand_hierarchy(design, top):
             if child and not int(child.get('attributes',{}).get('blackbox','0'),2):
                 cm={};input_maps={}
                 for p,v in child['ports'].items():
+                    if v['direction']=='output' and not con.get(p):continue
                     if p not in con or len(con[p])!=len(v['bits']):raise ValueError('port width '+full+'.'+p)
                     for b,outer in zip(v['bits'],con[p]):
                         if isinstance(b,str):
