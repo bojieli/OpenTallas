@@ -1,6 +1,6 @@
 `default_nettype none
 // Separate opt-in component. Canonical frontend is unchanged.
-// Input admission promises target capacity TWO edges later; this is not ready/credit flow.
+// Input admission promises target capacity THREE edges later; this is not ready/credit flow.
 // All roots must have qualified common frequency/phase; this component is not an async CDC.
 (* keep_hierarchy = "yes" *)
 module ot_hbm_owner_link_slice #(parameter integer W=6)(
@@ -12,12 +12,14 @@ module ot_hbm_owner_link_slice #(parameter integer W=6)(
   if(!first_rst_n)reset_q<=0;else reset_q<=1;
  (* keep = "yes" *) reg [1:0] wp,rp;
  reg [W-1:0] slots[0:3];
+ reg [W-1:0] input_q;
+ always @(posedge clk)input_q<=d;
  always @(posedge clk or negedge reset_q)
   if(!reset_q)begin wp<=0;rp<=3;end
   else begin wp<=wp+1'b1;rp<=rp+1'b1;end
  // Data is deliberately unreset. Only qualified/reset-cleared valid exposes it.
  assign preview=slots[rp];
- always @(posedge clk)begin slots[wp]<=d;q<=slots[rp];end
+ always @(posedge clk)begin slots[wp]<=input_q;q<=slots[rp];end
 endmodule
 
 (* keep_hierarchy = "yes" *)
@@ -40,7 +42,7 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
  (* keep = "yes" *) reg ctrl_rst;
  always @(posedge clk or negedge first_rst[0])
   if(!first_rst[0])ctrl_rst<=0;else ctrl_rst<=1;
- reg [1:0] wp,rp;reg [3:0] valid;
+ reg [1:0] wp,rp;reg [3:0] valid;reg input_valid_q;
  // This duplicate narrow ring follows the exact data slice phase.
  // Validate the selected ring word BEFORE its output FF edge, never external inputs.
  wire lane_ok=selected[275:274]==2'(J); // ordinal is packet[284:274]
@@ -49,10 +51,10 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
  assign out_packet=outgoing[284:0];
  assign out_target=(MUT==2)?~outgoing[285]:outgoing[285];
  always @(posedge clk or negedge ctrl_rst)
-  if(!ctrl_rst)begin wp<=0;rp<=3;valid<=0;out_v<=0;fault<=0;end
+  if(!ctrl_rst)begin wp<=0;rp<=3;valid<=0;input_valid_q<=0;out_v<=0;fault<=0;end
   else begin
    wp<=wp+1'b1;rp<=rp+1'b1;
-   valid[wp]<=in_v;
+   input_valid_q<=in_v;valid[wp]<=input_valid_q;
    out_v<=valid[rp]&&(lane_ok||MUT==1)&&(target_ok||MUT==3)&&reserved_ok&&!fault;
    if(valid[rp]&&(!lane_ok||!target_ok||!reserved_ok))fault<=1;
    if(MUT==4)out_v<=valid[wp];

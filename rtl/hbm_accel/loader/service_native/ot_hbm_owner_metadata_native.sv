@@ -50,12 +50,12 @@ module ot_hbm_owner_metadata_native #(parameter integer MUT=0)(
  always @(posedge clk)read_data<=(MUT==2)?half_data[0]:half_data[0]|half_data[1];
  reg ctrl_rst;
  always @(posedge clk or negedge first_rst[0])if(!first_rst[0])ctrl_rst<=0;else ctrl_rst<=1;
- reg [1:0] wp,rrp,wrp;reg [3:0] read_ring,write_ring;
+ reg [1:0] wp,rrp,wrp;reg [3:0] read_ring,write_ring;reg read_vq,write_vq;
  always @(posedge clk or negedge ctrl_rst)
-  if(!ctrl_rst)begin wp<=0;rrp<=1;wrp<=2;read_ring<=0;write_ring<=0;read_valid<=0;write_done<=0;end
+  if(!ctrl_rst)begin wp<=0;rrp<=2;wrp<=3;read_ring<=0;write_ring<=0;read_vq<=0;write_vq<=0;read_valid<=0;write_done<=0;end
   else begin
    wp<=wp+1'b1;rrp<=rrp+1'b1;wrp<=wrp+1'b1;
-   read_ring[wp]<=read_v;write_ring[wp]<=write_v;
+   read_vq<=read_v;write_vq<=write_v;read_ring[wp]<=read_vq;write_ring[wp]<=write_vq;
    read_valid<=read_ring[(MUT==3)?wrp:rrp];write_done<=write_ring[wrp];
   end
 endmodule
