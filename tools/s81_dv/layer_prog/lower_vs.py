@@ -165,7 +165,7 @@ def plan(die, sched, sl, fixtures=None):
                                     what=f'vs {name} {ks[0][1]} n={ks[0][2]} leaves {lm:05b}'))
             for k, kind, n in ks:
                 dur = VS_DUR[kind](n)
-                rec['leaves'][k] = dict(cmd=t, op=kind, n=n, dur=dur, end=t + dur)
+                rec['leaves'][k] = dict(cmd=t, op=kind, n=n, dur=dur, end=t + dur, tix=len(rec['templates']) - 1)
                 free[k] = t + dur + GUARD
             t += 1
         if t_cmd0 > t_op:
@@ -194,8 +194,12 @@ def lower(die, op, ctx):
         r = dict(base, rows=[], templates=[], events=[], status='LOWERED' if host == 'ffn.shared_swiglu' else 'PARTIAL',
                  fused_into=host)
     else:
-        ev = [dict(cycle=v['cmd'], inst=f'{sl}.leaf{k}.vs', port='s_d', dir='in', kind='VS', tag=f"{name}.{v['op']}",
-                   payload=f"n={v['n']} busy until {v['end']}", plan_only=True) for k, v in rec['leaves'].items()]
+        # LB2-S81/EVENTS: the vs command is slice-internal (vp forward -> s_d); at a cut boundary it is the CTL beat of
+        # the calendar row that carries it (dv_layer_compile emits that CTL event from the row): dir 'internal',
+        # carried_by = the template (family-local index, re-pointed by Prog.absorb); cycle = the calendar issue edge
+        ev = [dict(cycle=v['cmd'], inst=f'{sl}.leaf{k}.vs', port='s_d', dir='internal', kind='VS',
+                   tag=f"{name}.{v['op']}", payload=f"n={v['n']} busy until {v['end']}", issue=v['cmd'],
+                   carried_by=f"template {v['tix']}") for k, v in rec['leaves'].items()]
         r = dict(base, rows=rec['rows'], templates=rec['templates'], events=ev, status='LOWERED',
                  leaves=rec['leaves'], notes=rec['notes'])
     if name in ('ffn.swiglu', 'ffn.route_w', 'ffn.quant2'):

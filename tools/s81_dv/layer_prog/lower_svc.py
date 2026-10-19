@@ -79,6 +79,12 @@ ROLE = {0: 0x01990c, 1: 0x04124d, 2: 0x04110f, 3: 0x040ace, 4: 0x040908, 5: 0x04
         8: 0x055102, 9: 0x054a43, 10: 0x054900, 11: 0x0540e4, 12: 0x055101, 13: 0x054c65, 14: 0x02d906, 15: 0x02d447}
 
 
+QF_PRODUCER_GAP = ('the q words reach the entry q pins from u_s_3S (W) / u_s_4S (E) ot_s81sl_xr band bo; the slice send '
+                   'programme of the svc q stream (frame header rows + q / own-row payload rows) is not compiled, so a '
+                   'cut holding the producer slice cannot be checked for these words (a cut holding the svc entry is '
+                   'driven with them)')
+
+
 def tile_of(sid):
     return ROLE[sid] & 15
 
@@ -199,7 +205,7 @@ class Job:
         T = self.T
         n = -(-T // 2)
         t = t_q0
-        at, words = {}, []
+        at, words, fw = {}, [], {}
         go_min = None
         for name, ws in self.frames:
             if name.startswith('ATTN_Q') and name.endswith('0'):
@@ -215,6 +221,7 @@ class Job:
             if name == 'PV':
                 t = self.go + self.pvs + (40 if self.mutant == 'late' else 0)   # MUTANT 'late': PV frame 40 edges late
             at[name] = t
+            fw[name] = [(t + k, w) for k, w in enumerate(ws)]
             for k, w in enumerate(ws):
                 words.append((t + k, w))
             if name == 'WIN_LOAD':
@@ -223,7 +230,7 @@ class Job:
         j_pin = t_q0 - Q_ARM
         s_j = j_pin - max(j_age_w, j_age_e)
         pv_first = self.go + self.pvo + PV_LAT
-        return dict(at=at, words=words, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
+        return dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
                     po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + 159,
                     done=pv_first + 160 - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
 
@@ -246,6 +253,33 @@ class Job:
         sc = [C.pack_vals(self.sc[:, t]) for t in range(self.T)]
         pv = [C.pack_vals(self.pv[:, d]) for d in range(D)]
         return sc, pv
+
+
+def pv_words(job, s):
+    """the quarter-ST P.V stream at the P.V entry's {pv_d 513, pv_v} pins: 160 words back to back from pv_first (the
+    register set at edge pv_first - 1): per tile t (4 ST + w // 40) 8 beats of 5 words; word 0 = header {1, 440'd0,
+    pv_c 8, flags 64} (dsdv_svc_att.sv:349-350), words 1..4 = {0, 16 heads x 32 b} of dims 32 t + 8 (wi - 1) + pv_c
+    (tb_svc_lower decode).  Values: pv_c = the beat index (engine column order -- tb_svc_lower READS pv_c, it does not
+    assert it, so pv_c and the data are masked in the check; the value is what a consumer cut is driven with)"""
+    C = job.C
+    pv = job.pv                                                     # [16 heads, 512 dims] FP32 (fixture attn.pv)
+    vals = C.u32(pv) if hasattr(C, 'u32') else np.asarray(pv, np.float32).view(np.uint32)
+    out, e0 = [], s['pv_first'] - 1
+    hm = 1 | (1 << 513) | (((1 << 441) - 1) << 73)                 # v, pv_d[512], pv_d[511:72]
+    dm = 1 | (1 << 513)
+    for w in range(160):
+        t, b, wi = 4 * ST + w // 40, (w % 40) // 5, w % 5
+        if wi == 0:
+            d = (1 << 512) | (b << 64)
+            m = hm
+        else:
+            d = 0
+            for h in range(H):
+                d |= int(vals[h, 32 * t + 8 * (wi - 1) + b]) << (32 * h)
+            m = dm
+        out.append([e0 + w, f'{(d << 1) | 1:x}', f'{m:x}'])
+    out.append([e0 + 160, '0', '1'])                                # valid low after the last word
+    return out
 
 
 def _ages(die):
@@ -343,16 +377,29 @@ def lower(die, op, ctx):
                                        'index / per-slot header rows')]
         ev = [dict(cycle=s['j_w'], inst='u_rsv_05', port='j', dir='in', kind='SVCJ', tag='attn.job', payload=f'{jw:09x}'),
               dict(cycle=s['j_e'], inst='u_rsv_11', port='j', dir='in', kind='SVCJ', tag='attn.job', payload=f'{jw:09x}')]
+        # LB2-S81/EVENTS: every boundary event carries its words [[edge, value hex, mask hex], ...] on its ports
+        # (LSB-first concatenation of `ports`).  'in' words: the edge the consumer pin's landed register takes the value
+        # (tb_svc_lower: the tb drives at cycle c, the pin holds it from edge c); 'out' words: the edge the PRODUCER's
+        # output register takes it (tb_svc_lower samples pv_v / jd at cycle c = the register set at edge c - 1).
         for fname, t in s['at'].items():
+            ws = [[c, f'{(w << 1) | 1:x}', f'{(1 << 515) - 1:x}'] for c, w in s['frame_words'][fname]]
             for inst in ('u_rsv_05', 'u_rsv_11'):
-                ev.append(dict(cycle=t, inst=inst, port='q', dir='in', kind='QF', tag=f'attn.{fname}',
-                               payload=f'frame {fname} (producer u_s_3S / u_s_4S xr band bo)'))
+                ev.append(dict(cycle=t, inst=inst, port='q', ports=['q'], dir='in', kind='QF', tag=f'attn.{fname}',
+                               payload=f'frame {fname}: {len(ws)} q words {{2\'d0, d 512, v}} (producer u_s_3S / u_s_4S '
+                                       f'xr band bo)', words=ws, valid_bit=0, producer_gap=QF_PRODUCER_GAP))
         pvh = 'u_rsv_11' if ST < 2 else 'u_rsv_05'
-        ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', dir='out', kind='PV', tag='attn.pv',
-                       payload=f'160 words (quarter {ST}: 4 x 40-cycle windows) to u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi'))
+        ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', ports=['pv_v', 'pv_d'], dir='out', kind='PV',
+                       tag='attn.pv', payload=f'160 words (quarter {ST}: 4 x 40-cycle windows) to '
+                       f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s), valid_bit=0,
+                       data_masked='P.V values + header flags / pv_c (engine data, bit-exact in bench_svc; the cut '
+                                   'bench has no HBM window image): checked = valid, the header marker pv_d[512] '
+                                   'and the header zero field pv_d[511:72] on every compiled edge'))
         for inst, t in (('u_rsv_05', s['done_w']), ('u_rsv_11', s['done_e'])):
-            ev.append(dict(cycle=t, inst=inst, port='jd', dir='out', kind='SVCDONE', tag='attn.job', payload='done'))
+            ev.append(dict(cycle=t, inst=inst, port='jd', ports=['jd'], dir='out', kind='SVCDONE', tag='attn.job',
+                           payload='done {fault, done} = 01 one edge', words=[[t - 1, '1', '3'], [t, '0', '3']]))
         r['events'] = ev
+        # the lanes' valid bits (a data lane may hold stale bits while v = 0: dsdv_svc_rs.sv:264 pv_d <= rm_d every edge)
+        r['port_valid'] = [dict(inst=i, ports=pp, bit=0) for i in ('u_rsv_05', 'u_rsv_11') for pp in (['q'], ['pv_v', 'pv_d'])]
         im = job.hbm_image()
         layer = ctx.get('layer')
         r['files'] = {f'prog/svc/{layer}/hbm_window.hex': ''.join(f'{k:016x} {im[k]:064x}\n' for k in sorted(im)),

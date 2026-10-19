@@ -93,6 +93,10 @@ def collect(a):
         why.append('no sources.sha256 (bench file list)')
     doc = dict(schema=SCHEMA, layer=a.layer, cut=a.cut, slice=rp.get('slice'), prog=rp.get('prog'), t0=rp.get('t0'),
                out_checks=len(outs), cycles=(max(outs) - rp['t0']) if outs else None, run=r, mutants=muts,
+               by_kind=rp.get('by_kind'),
+               not_cut_words=dict(offdie=len(rp.get('offdie', [])), internal=len(rp.get('internal_events', [])),
+                                  note='offdie = past the die\'s elastic link layer (end-slice RD beats: bench_vpx); '
+                                       'internal = inside one instance (vs commands ride their CTL beat)'),
                valid=not why, why_invalid=why)
     Path(a.out).write_text(json.dumps(doc, indent=1) + '\n')
     print(f"{a.layer} {a.cut}: cycles {doc['cycles']} valid {doc['valid']} {'; '.join(why)}")

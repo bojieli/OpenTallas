@@ -10,6 +10,8 @@
   3 synthetic two-cut die: schedule-fed input == trace-fed input (compose); compose PASSES on the producer's real
     output and FAILS on a shifted one; shift / corrupt mutants change the replayed word; an unscheduled extra word on a
     strict replay FAILS the check
+  4 event words (LB2-S81/EVENTS): out-event streams (valid bit, masked data) checked at edge + age, consumer cuts driven
+    with the full words, in-event words, producer gaps -> unencoded, offdie / internal events apart, class mutants
 """
 import json
 import shutil
@@ -188,10 +190,126 @@ def synthetic(tmp):
            f'mutant {mu} changes exactly the targeted word')
 
 
+# ------------------------------------------------------------------------------------------------ event words (EVENTS)
+DIE2 = """module dv_die2 (ck, rst_n);
+  input wire ck;
+  input wire rst_n;
+  wire [9:0] w_pq_src, w_pq_dst;
+  wire [9:0] w_pq_lnd;
+  wire [9:0] r_pq_0;
+  wire [9:0] w_qq_src, w_qq_dst;
+  wire [9:0] w_qq_lnd;
+  unit_p u_p (.ck(ck), .rst_n(rst_n), .o_v({w_pq_src[0:0]}), .o_d({w_pq_src[8:1]}), .so({w_qq_src[7:0]}));
+  dsfd_dvrlyh_10_NS st_pq_0 (.i(w_pq_src), .o(r_pq_0), .ck(ck), .ck_o(ck), .rs(rst_n));
+  dsfd_dvrlyh_10_NS st_pq_1 (.i(r_pq_0), .o(w_pq_dst), .ck(ck), .ck_o(ck), .rs(rst_n));
+  dsfd_dvland_10 ld_pq (.ck_f(ck), .i(w_pq_dst), .ck(ck), .rs(rst_n), .k(3'd1), .o(w_pq_lnd), .fault());
+  dsfd_dvrlyh_10_NS st_qq_0 (.i(w_qq_src), .o(w_qq_dst), .ck(ck), .ck_o(ck), .rs(rst_n));
+  dsfd_dvland_10 ld_qq (.ck_f(ck), .i(w_qq_dst), .ck(ck), .rs(rst_n), .k(3'd2), .o(w_qq_lnd), .fault());
+  unit_c u_c (.ck(ck), .rst_n(rst_n), .bi({w_pq_lnd[8:0]}), .q({1'b0, w_qq_lnd[7:0]}));
+endmodule
+"""
+
+
+def mkcut2(d, insts, ports):
+    d.mkdir(parents=True)
+    tb = [dict(index=i, port=n, dir=p['dir'], kind='boundary', width=10, lo=0, bits=[[9, 0]])
+          for i, (n, p) in enumerate(ports.items())]
+    (d / 'tb_ports.json').write_text(json.dumps(tb))
+    (d / 'slice_ports.json').write_text(json.dumps(dict(ports={n: dict(p, width=10, lo=0) for n, p in ports.items()})))
+    (d / 'slice_insts.json').write_text(json.dumps(dict(how={i: 'set' for i in insts})))
+
+
+def events(tmp):
+    """LB2-S81/EVENTS: words-carrying events (out PV-like stream with a valid bit and masked data, in QF-like words, a
+    pulse), offdie / internal events, producer gaps, the class mutants"""
+    die = tmp / 'die.v'
+    die.write_text(DIE2)
+    D = R.DieBuild(die)
+    ok(D.links['pq']['age'] == 3 and D.links['qq']['age'] == 4, 'event die: pq age 1 + 1 + 1 = 3, qq age 1 + 2 + 1 = 4')
+    prog = tmp / 'prog'
+    (prog / 'prog').mkdir(parents=True)
+    # PV-like: producer u_p {o_d 8, o_v}: two valid words at producer edges 40, 41 (data nibble masked), then v low
+    pv = dict(cycle=41, inst='u_p', port='o_v / o_d', ports=['o_v', 'o_d'], dir='out', kind='PV', tag='pv',
+              payload='2 words', valid_bit=0, words=[[40, f'{(0x5A << 1) | 1:x}', '1f'], [41, f'{(0xA5 << 1) | 1:x}', '1f'],
+                                                     [42, '0', '1']])
+    qf = dict(cycle=60, inst='u_c', port='q', ports=['q'], dir='in', kind='QF', tag='qf', payload='2 words',
+              words=[[60, '3c', 'ff'], [61, 'c3', 'ff']], producer_gap='producer send programme not compiled')
+    rd = dict(cycle=70, inst='u_p', port='(outward)', dir='out', kind='RD', tag='rd', payload='x', boundary='offdie',
+              words=[[70, '9', 'f']])
+    vs = dict(cycle=20, inst='u_c.leaf0.vs', port='s_d', dir='internal', kind='VS', tag='vs', payload='x', issue=20,
+              carried_by='template 0', ctl_at=29)
+    vs2 = dict(vs, tag='vs2', ctl_at=None)
+    S = dict(layer='T', events=[pv, qf, rd, vs], links={'pq': dict(age_edges=3), 'qq': dict(age_edges=4)})
+    (prog / 'schedule.json').write_text(json.dumps(S))
+    (prog / 'prog/ctl_templates.json').write_text(json.dumps(dict(templates=[])))
+    P, Cc = tmp / 'cutP', tmp / 'cutC'
+    mkcut2(P, ['u_p'], {'o__w_pq_lnd': dict(dir='output', net='w_pq_lnd', peers=['u_c']),
+                        'o__w_qq_lnd': dict(dir='output', net='w_qq_lnd', peers=['u_c'])})
+    mkcut2(Cc, ['u_c'], {'i__w_pq_src': dict(dir='input', net='w_pq_src', peers=['u_p']),
+                         'i__w_qq_src': dict(dir='input', net='w_qq_src', peers=['u_p'])})
+    rP = tmp / 'rP'
+    ok(run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(P), '--out', str(rP), '--t0', '10']) == 0,
+       'event gen (producer cut)')
+    rp = json.loads((rP / 'replay.json').read_text())
+    # out words land at producer edge + age 3 + t0 10; mask 1f = v + low nibble of o_d (lane bits 1..4)
+    ok((rP / 'out.txt').read_text() == '53 0 1f 15\n54 0 1f b\n55 0 1 0\n',
+       'out-event words checked at edge + bundle age + t0 under the mask')
+    ok(rp['by_kind'].get('QF', {}).get('unencoded') == 1 and rp['partial'] is True,
+       'producer cut: QF with a producer gap is UNENCODED (partial), never checked')
+    ok(rp['by_kind']['RD'] == {'offdie': 1} and rp['by_kind']['VS'] == {'internal': 1},
+       'offdie RD and internal VS are listed apart')
+    ok(next(b for b in rp['boundary'] if b['port'] == 'o__w_pq_lnd')['valid_ref'] == dict(port='o__w_pq_lnd', bit=0),
+       'valid bit of the PV-like bundle recorded for the strict check')
+    run_ = tmp / 'runP'
+    run_.mkdir()
+    (run_ / 'status').write_text('TB_DV_SLICE PASS\n')
+    # trace: the words (+ data bits the mask leaves out), stale data while v = 0 (not an extra), then a valid extra
+    (run_ / 'trace.txt').write_text('53 0 1f5\n54 0 14b\n55 0 140\n60 0 1e0\n')
+    ok(run(['check', '--replay', str(rP), '--run', str(run_), '--out', str(tmp / 'cP.json')]) == 0 and
+       json.loads((tmp / 'cP.json').read_text())['ports'][0]['missed'] == [] and
+       json.loads((tmp / 'cP.json').read_text())['ports'][0]['n_unscheduled'] == 0,
+       'masked data + stale bits while v = 0 pass; the producer-gap QF lane is unchecked')
+    (run_ / 'trace.txt').write_text('53 0 1f5\n54 0 14b\n55 0 140\n60 0 141\n61 0 0\n')
+    ok(run(['check', '--replay', str(rP), '--run', str(run_), '--out', str(tmp / 'cP2.json')]) == 1 and
+       json.loads((tmp / 'cP2.json').read_text())['ports'][0]['n_unscheduled'] == 1,
+       'a valid word at an unscheduled cycle is an extra (the PV lane stays strict in a partial replay)')
+    ok([b['strict'] for b in rp['boundary']] == [True, False], 'the producer-gap lane is not strict, the PV lane is')
+    # consumer cut: the out-event words drive the producer register at edge + 1 + t0 with the FULL value
+    rC = tmp / 'rC'
+    ok(run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(Cc), '--out', str(rC), '--t0', '10']) == 0,
+       'event gen (consumer cut)')
+    tl = timeline(rC / 'in.txt')
+    ok(tl.get(0) == [(51.0, 0xB5), (52.0, 0x14B), (53.0, 0)], 'consumer cut driven with the full PV-like words at edge + 1 + t0')
+    ok(tl.get(1) == [(67.0, 0x3C), (68.0, 0xC3), (69.0, 0)], 'in-event QF words driven at landed - age + 1 + t0')
+    rc = json.loads((rC / 'replay.json').read_text())
+    ok(rc['partial'] is False and rc['by_kind']['QF'] == {'in_words': 2}, 'consumer cut: every event encoded (not partial)')
+    # internal VS without its CTL arrival -> unencoded
+    S2 = dict(S, events=[pv, vs2])
+    (prog / 'schedule.json').write_text(json.dumps(S2))
+    r2 = tmp / 'r2'
+    run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(Cc), '--out', str(r2), '--t0', '10'])
+    ok(json.loads((r2 / 'replay.json').read_text())['by_kind']['VS'] == {'unencoded': 1},
+       'an internal VS event with no CTL arrival (ctl_at) is UNENCODED')
+    (prog / 'schedule.json').write_text(json.dumps(S))
+    # class mutants
+    rm = tmp / 'mq'
+    run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(Cc), '--out', str(rm), '--t0', '10',
+         '--mutant', 'shift-kind:QF:2'])
+    ok(timeline(rm / 'in.txt').get(1) == [(69.0, 0x3C), (70.0, 0xC3), (71.0, 0)] and
+       timeline(rm / 'in.txt').get(0) == tl.get(0), 'mutant shift-kind:QF:2 moves only the QF words')
+    re_ = tmp / 'mpv'
+    run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(P), '--out', str(re_), '--t0', '10',
+         '--mutant', 'expect-shift:PV:1'])
+    (run_ / 'trace.txt').write_text('53 0 1f5\n54 0 14b\n55 0 140\n')
+    ok((re_ / 'out.txt').read_text() == '54 0 1f 15\n55 0 1f b\n56 0 1 0\n' and
+       run(['check', '--replay', str(re_), '--run', str(run_), '--out', str(tmp / 'cm.json')]) == 1,
+       'mutant expect-shift:PV:1 moves the PV checks one cycle: the real trace FAILS it')
+
+
 def main():
     with tempfile.TemporaryDirectory() as t:
         tmp = Path(t)
-        for f in (real_die, witnesses, synthetic):
+        for f in (real_die, witnesses, synthetic, events):
             d = tmp / f.__name__
             d.mkdir()
             f(d)

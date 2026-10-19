@@ -209,9 +209,20 @@ def lower(die, op, ctx):
                 events.append(dict(cycle=issue + lat, inst=src, port='ri_e' if d == 'W' else 'ri_w', dir='in',
                                    kind='CTL', tag=c['tag'], payload=f'template {ti}'))
             for s in leg['sends']:
-                events.append(dict(cycle=t0 + s['cycle'] - first + lat, inst=src, port='lep (outward line port)',
-                                   dir='out', kind='RD', tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',
-                                   payload='fixture a_allgather words'))
+                # LB2-S81/EVENTS: the beat as it leaves the outward port (bench_vpx SEND edge): header bits [51:0]
+                # exact, the 4 row pairs are leaf-store data (fixture rows; their producer is not compiled: GAP_PLACE).
+                # The outward port is INSIDE the end-slice lep master: at the die cut it continues as the reliable
+                # link lanes lt_lk_* (seq / CRC / credits: flow control at the off-die boundary, owner 10-14), so no
+                # cut sees this word at a fixed cycle -> boundary 'offdie' (bench_vpx checks it through the real lep)
+                ce = t0 + s['cycle'] - first + lat
+                hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
+                events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
+                                   tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',
+                                   payload='fixture a_allgather words', boundary='offdie',
+                                   observe=f'{src} outward ring port ({"ro_w" if d == "W" else "ro_e"} of the slice '
+                                           f'inside the lep master) -> lt_lk link lanes',
+                                   words=[[ce, f'{hdr:x}', f'{(1 << 52) - 1:x}']],
+                                   data_masked='row pairs [1075:52] = leaf rows (fixture)'))
             insts.append(src)
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '

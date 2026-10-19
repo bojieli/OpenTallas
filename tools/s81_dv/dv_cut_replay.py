@@ -26,6 +26,16 @@ partial -- dv_layer_record never counts a partial replay as a layer measurement)
        and the slice: it is DERIVED at each intermediate slice c at e - sum(bundle age + RSTOP_HOP) over the stops (die
        ages), with the hops field of that stop, so a cut on the line path sees it on both of its line faces.
   SVCJ at <svc entry>.j: the job word (payload hex) on the j pin at the event cycle.
+  WORDS (LB2-S81/EVENTS, 10-18): every event that carries `words` [[edge, value hex, mask hex]] on `ports` (the
+       compiler's word encoders: QF q frames at the svc entry q pins, PV P.V stream and SVCDONE jd pulses at the svc
+       entries' output registers, ...).  dir in: edge = the consumer pin's landed edge; dir out: edge = the producer
+       output register's edge, the word lands at each consumer at edge + the slowest lane age of its bundle.  The mask
+       selects the checked bits (data the cut cannot reproduce -- engine values without the HBM image, fixture rows --
+       is masked and named in the event's data_masked); a consumer cut is driven with the full value.  valid_bit names
+       the lane's valid bit: the strict check counts extra words on it only (data lanes may hold stale bits).
+  Not cut words: boundary 'offdie' events (beyond the die's elastic link layer: the end-slice RD beats leave through
+       the reliable link lanes, bench_vpx checks them) and dir 'internal' events (inside one instance: the vs command
+       rides the CTL beat of its calendar row, `ctl_at`) are listed apart and do not make a replay partial.
 Word timing: every encoded word is a ONE-cycle pulse of the producer register (the line / job registers are cleared
 the next edge); several words on one port in one cycle are OR'ed (a bit set twice with different values is an error).
 
@@ -40,11 +50,14 @@ edge k; cycles are layer cycles + --t0.
 
   dv_cut_replay.py ages    --die-v die.v.gz [--prog DIR] [--out ages.json]
   dv_cut_replay.py gen     --die-v die.v.gz --prog DIR --cut CUTDIR --out DIR [--t0 100] [--trace PDIR=RUN ...]
-                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>]] [--lane-age] [--allow-stale]
+                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> |
+                            expect-shift:<KIND>:<n>] [--lane-age] [--allow-stale]
   dv_cut_replay.py check   --replay DIR --run RUN [--out check.json]      (trace vs every encoded word, no extras)
   dv_cut_replay.py compose --cut NAME=REPLAY_DIR:RUN_DIR ... --out compose.json   (cross-cut lane consistency)
 Mutants (negative controls; replay.json verdict_kind MUTANT): shift moves every word of ONE boundary input lane by n
-cycles, corrupt flips one bit of its first word -- the bench must FAIL (commit the run as the fail witness).
+cycles, corrupt flips one bit of its first word, shift-kind:<KIND>:<n> moves every driven word of one event class,
+expect-shift:<KIND>:<n> moves every check of one event class (the RTL trace must then miss it) -- the bench / check
+must FAIL (commit the run as the fail witness).
 --lane-age is a DIAGNOSTIC: each output lane is checked at its own landing (tear-tolerant), never a schedule verdict.
 """
 import argparse
@@ -254,12 +267,93 @@ def derive_line_events(S, die):
     return out
 
 
+def lane_of_net(die, net):
+    m = re.fullmatch(r'w_(\w+?)_(src|lnd|dst)', net)
+    return m.group(1) if m and m.group(1) in die.links else None
+
+
+def event_words(e, die):
+    """LB2-S81/EVENTS: an event with `words` [[edge, value hex, mask hex]] on `ports` (LSB-first concatenation) ->
+    consumer-pin words.  dir in: the ports are the consumer's, the edge is the landed edge.  dir out: the ports are the
+    producer's output registers (w_<lane>_src nets), the edge is the register's; each consumer instance gets one word
+    on its landed nets at edge + the slowest lane age of its bundle (the line / port model).  bits = the full value
+    (what a consumer cut is driven with), chk = the bits the mask checks; valid = the consumer bit of `valid_bit`."""
+    pb = []
+    for p in e.get('ports') or [e['port']]:
+        b = die.port_bits(e['inst'], p)
+        if not b:
+            raise ValueError(f'event {e["kind"]} {e["tag"]}: no port {e["inst"]}.{p} in the die build')
+        pb += b
+    vb = e.get('valid_bit')
+    out = []
+    if e['dir'] == 'in':
+        groups = {e['inst']: [(i, nb) for i, nb in enumerate(pb)]}
+    else:
+        groups = defaultdict(list)
+        for i, nb in enumerate(pb):
+            lk = lane_of_net(die, nb[0]) if nb else None
+            if lk is None or not nb[0].endswith('_src'):
+                continue                                # a constant / unconnected producer bit leaves nothing
+            L = die.links[lk]
+            for inst in sorted({x[0] for x in L['dst']}):
+                groups[inst].append((i, (L['out_net'], nb[1])))
+    for inst, ib in groups.items():
+        bage = 0
+        if e['dir'] == 'out':
+            bage = max(die.links[die.by_out[nb[0]]]['age'] for _, nb in ib)
+        for edge, v, m in e['words']:
+            v, m = int(v, 16), int(m, 16)
+            bits = {nb: (v >> i) & 1 for i, nb in ib if nb is not None}
+            chk = {nb for i, nb in ib if nb is not None and (m >> i) & 1}
+            valid = {nb for i, nb in ib if nb is not None and i == vb}
+            out.append(dict(event=dict((k, x) for k, x in e.items() if k != 'words'), inst=inst, port=e['port'],
+                            cycle_land=edge + bage, bits=bits, chk=chk, valid=valid))
+    return out
+
+
+def valid_refs(S, die):
+    """consumer landed bit -> the landed bit of its bundle's valid flag, from the programme's port_valid declarations
+    and every event's valid_bit (producer ports map through their lanes to the consumer's landed nets)"""
+    decl = list(S.get('port_valid', []))
+    for e in S['events']:
+        if e.get('valid_bit') is not None:
+            decl.append(dict(inst=e['inst'], ports=e.get('ports') or [e['port']], bit=e['valid_bit']))
+    ref = {}
+    for d in decl:
+        pb = []
+        for p in d['ports']:
+            pb += die.port_bits(d['inst'], p)
+        if d['bit'] >= len(pb) or pb[d['bit']] is None:
+            continue
+        land = lambda nb: (die.links[lane_of_net(die, nb[0])]['out_net'], nb[1]) \
+            if nb and nb[0].endswith('_src') and lane_of_net(die, nb[0]) else nb
+        v = land(pb[d['bit']])
+        for nb in pb:
+            if nb is not None and land(nb) != v:
+                ref[land(nb)] = v
+    return ref
+
+
 def landed_words(S, T, die):
-    """(consumer inst, port) words at the consumer pin: [{event, inst, port, cycle_land, bits {(net, bit): v}}]"""
-    words, unenc = [], []
+    """(consumer inst, port) words at the consumer pin: [{event, inst, port, cycle_land, bits {(net, bit): v}}];
+    the events no cut can check at a fixed cycle (offdie) and the slice-internal ones are returned apart"""
+    words, unenc, offdie, internal = [], [], [], []
     evs = S['events'] + derive_line_events(S, die)
     for e in evs:
+        if e.get('boundary') == 'offdie':
+            offdie.append(e)
+            continue
+        if e['dir'] == 'internal':
+            (internal if e.get('ctl_at') is not None else unenc).append(e)
+            continue
+        if e.get('words') and not e.get('plan_only'):
+            try:
+                words += event_words(e, die)
+            except ValueError as x:
+                unenc.append(dict(e, why=str(x), words=None))
+            continue
         if e['dir'] != 'in':
+            unenc.append(e)       # the programme states what a unit sends, not the word (fixture payloads)
             continue
         if e.get('plan_only') or e['kind'] not in ENCODED:
             unenc.append(e)
@@ -277,10 +371,7 @@ def landed_words(S, T, die):
         bits = {nb: (val >> i) & 1 for i, nb in enumerate(pb) if nb is not None}
         words.append(dict(event=dict((k, v) for k, v in e.items() if k != 'payload') | {'payload': e['payload']},
                           inst=inst, port=e['port'], cycle_land=e['cycle'] + PIN_OFFSET[e['kind']], bits=bits, **meta))
-    for e in S['events']:
-        if e['dir'] == 'out':
-            unenc.append(e)       # the programme states what a unit sends, not the word (fixture payloads)
-    return words, unenc
+    return words, unenc, offdie, internal
 
 
 def stale_check(S, die, manifest):
@@ -315,7 +406,7 @@ def gen(a):
         print(f'dv_cut_replay: STALE -- {len(st["link_age_diffs"])} lane ages differ from the die build '
               f'(e.g. {st["link_age_diffs"][:3]}); recompile the programme on {a.die_v}')
         return 2
-    words, unenc = landed_words(S, T, die)
+    words, unenc, offdie, internal_ev = landed_words(S, T, die)
     host = None
     if a.host_boot is not None:
         words, host = host_boot_words(a, die, prog, S, words)
@@ -330,6 +421,7 @@ def gen(a):
     setm = defaultdict(lambda: defaultdict(int))       # in port -> cycle -> mask of bits already set
     checks = defaultdict(lambda: defaultdict(lambda: [0, 0]))   # out port -> cycle -> [mask, value]
     rec_in, rec_out, internal, outside = [], [], 0, 0
+    pgap, gap_lanes = set(), set()
     if mut and mut['kind'] == 'corrupt':
         firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and
                   any(die.by_out.get(n) == mut['link'] for n, _ in w['bits'])]
@@ -376,7 +468,9 @@ def gen(a):
                     if pin is None:
                         raise SystemExit(f'lane {lk} bit {bit}: source net {sb[0]} is not a cut input port')
                     kk, vv = k, v
-                    if mut and mut['link'] == lk:
+                    if mut and mut['kind'] == 'shift-kind' and w['event']['kind'] == mut['ev']:
+                        kk = k + mut['n']
+                    if mut and mut.get('link') == lk:
                         if mut['kind'] == 'shift':
                             kk = k + mut['n']
                         elif w['cycle_land'] == mut['at'] and bit == mut['bit']:
@@ -390,14 +484,30 @@ def gen(a):
                                    ports=sorted(hit), derived=w['event'].get('derived_from'),
                                    **{x: w[x] for x in ('template', 'hops', 'src_sid') if x in w}))
             else:                                       # cut -> neighbour: check the landed word
+                if w['event'].get('producer_gap'):
+                    key = (w['event']['kind'], w['event']['tag'], w['inst'])
+                    gap_lanes.add(lk)
+                    if key not in pgap:
+                        pgap.add(key)
+                        unenc.append(dict(w['event'], why='producer not programmed: ' + w['event']['producer_gap']))
+                    continue
                 op = cut.out_by_net.get(L['out_net'])
                 if op is None:
                     raise SystemExit(f'lane {lk}: {L["out_net"]} is not a cut output port')
                 tc = w['cycle_land'] + a.t0 - ((bage - L['age']) if a.lane_age else 0)
+                if mut and mut['kind'] == 'expect-shift' and w['event']['kind'] == mut['ev']:
+                    tc += mut['n']
                 m = v = 0
+                chk = w.get('chk')
                 for bit, b in lb.items():
+                    if chk is not None and (L['out_net'], bit) not in chk:
+                        continue
                     m |= 1 << bit
                     v |= b << bit
+                if not m:
+                    continue
+                if checks[op['port']][tc][0] & m & (checks[op['port']][tc][1] ^ v):
+                    raise SystemExit(f'conflict: check {op["port"]} at {tc} expects two values ({w["event"]["tag"]})')
                 checks[op['port']][tc][0] |= m
                 checks[op['port']][tc][1] |= v
                 rec_out.append(dict(lane=lk, tag=w['event']['tag'], kind=w['event']['kind'], at=f'{w["inst"]}.{w["port"]}',
@@ -442,6 +552,7 @@ def gen(a):
     (out / 'in.txt').write_text(''.join(f'{fmt(c)} {i} {v:x}\n' for c, i, v in ins))
     (out / 'out.txt').write_text(''.join(f'{fmt(c)} {i} {m:x} {v:x}\n' for c, i, m, v in outs))
     # boundary accounting: every boundary lane, its source and its scheduled traffic
+    vref = valid_refs(S, die)
     bnd = []
     for p in cut.ports.values():
         lk = None
@@ -455,11 +566,32 @@ def gen(a):
             src = 'trace' if p['port'] in tsrc else ('schedule' if p['port'] in setm else 'idle')
         else:
             src = 'checked' if p['port'] in checks else 'unchecked'
+        vr = {}
+        if p['dir'] == 'output':
+            own = sorted({v for (n, _), v in vref.items() if n == p['net']})
+            if own and own[0][0] in cut.out_by_net:
+                vr = dict(valid_ref=dict(port=cut.out_by_net[own[0][0]]['port'], bit=own[0][1]))
         bnd.append(dict(port=p['port'], dir=p['dir'], lane=lk, age=L['age'], K=L['K'], stations=L['stations'],
-                        source=src, peers=p['peers']))
+                        source=src, peers=p['peers'], **vr))
     bnd_insts = {x for b in bnd for x in b['peers']} | cut.insts
-    unenc_here = [dict((k, v) for k, v in e.items()) for e in unenc
-                  if str(e.get('inst', '')).split('.')[0] in bnd_insts]
+    here = lambda evs: [dict((k, v) for k, v in e.items() if k != 'words') for e in evs
+                        if str(e.get('inst', '')).split('.')[0] in bnd_insts]
+    unenc_here, offdie_here, internal_here = here(unenc), here(offdie), here(internal_ev)
+    # strict per output lane: no unencoded traffic can be on it (a producer-gap lane, or a lane whose producer /
+    # consumer instance has an unencoded event of unknown lanes)
+    loose = {str(e.get('inst', '')).split('.')[0] for e in unenc_here if not e.get('producer_gap')}
+    for b in bnd:
+        if b['dir'] == 'output':
+            L = die.links[b['lane']]
+            b['strict'] = b['lane'] not in gap_lanes and not ({x[0] for x in L['src'] + L['dst']} & loose)
+    by_kind = defaultdict(lambda: defaultdict(int))
+    for r in rec_in:
+        by_kind[r['kind']]['in_words'] += 1
+    for r in rec_out:
+        by_kind[r['kind']]['out_checks'] += 1
+    for x, n in ((unenc_here, 'unencoded'), (offdie_here, 'offdie'), (internal_here, 'internal')):
+        for e in x:
+            by_kind[e['kind']][n] += 1
     kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale']) else 'SCHEDULE')
     ncyc = int(max([c for c, *_ in outs] + [c for c, *_ in ins] + [a.t0]) + 50)
     doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
@@ -468,13 +600,15 @@ def gen(a):
                mutant=a.mutant or None, lane_age=a.lane_age, host_boot=host, verdict_kind=kind, stale=st,
                traces=traces, boundary=bnd, in_words=rec_in, out_checks=rec_out, internal_words=internal,
                unencoded=unenc_here, unencoded_total=len(unenc), partial=bool(unenc_here),
+               offdie=offdie_here, internal_events=internal_here, by_kind={k: dict(v) for k, v in sorted(by_kind.items())},
                in_events=len(ins), out_check_lines=len(outs), half_cycle_inputs=len(halves), ncyc=ncyc,
                expected_out={p: {fmt(c): [f'{mv[0]:x}', f'{mv[1]:x}'] for c, mv in sorted(cc.items())}
                              for p, cc in checks.items()})
     (out / 'replay.json').write_text(json.dumps(doc, indent=1) + '\n')
     print(f'dv_cut_replay gen {Path(cut.dir).name}: {kind}; {len(rec_in)} lane words in ({len(ins)} events), '
           f'{len(rec_out)} lane words checked ({len(outs)} check lines); boundary {len(bnd)} lanes '
-          f'({sum(b["source"] == "trace" for b in bnd)} trace-fed); unencoded boundary events {len(unenc_here)}; '
+          f'({sum(b["source"] == "trace" for b in bnd)} trace-fed); unencoded boundary events {len(unenc_here)} '
+          f'({sorted({e["kind"] for e in unenc_here})}), offdie {len(offdie_here)}, internal {len(internal_here)}; '
           f'stale {st["stale"]} die sha match {st["die_sha_match"]}; ncyc {ncyc}')
     return 0
 
@@ -528,7 +662,10 @@ def parse_mutant(s):
         return dict(kind='shift', link=f[1], n=int(f[2]))
     if f[0] == 'corrupt' and len(f) in (2, 3):
         return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) == 3 else None)
-    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>]')
+    if f[0] in ('shift-kind', 'expect-shift') and len(f) == 3:
+        return dict(kind=f[0], ev=f[1], n=int(f[2]))
+    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
+                     f'expect-shift:<KIND>:<n>')
 
 
 def trace_sources(die, cut, traces):
@@ -590,8 +727,15 @@ def check(a):
         exp = {float(c): (int(m, 16), int(v, 16)) for c, (m, v) in rp['expected_out'].get(b['port'], {}).items()}
         miss = [c for c, (m, v) in exp.items() if (value_at(ch, c) & m) != (v & m)]
         # strict (no unencoded boundary traffic in the programme): the lane carries nothing but the encoded words
-        extra = [c for c, v in ch if v and float(c) not in exp]
-        strict = not rp['partial']
+        # a lane of a bundle with a valid flag: a value change is an extra word only while the flag is set
+        vr = b.get('valid_ref')
+        if vr:
+            vch = tr.get(cut.ports[vr['port']]['index'], [])
+            live = lambda c: (value_at(vch, c) >> vr['bit']) & 1
+        else:
+            live = lambda c: True
+        extra = [c for c, v in ch if v and live(c) and float(c) not in exp]
+        strict = b.get('strict', not rp['partial'])
         n_bad = len(miss) + (len(extra) if strict else 0)
         bad += n_bad
         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],

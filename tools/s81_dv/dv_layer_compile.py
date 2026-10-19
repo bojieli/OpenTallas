@@ -440,6 +440,7 @@ class Prog:
         self.svc = []
         self.notes = []
         self.files = {}
+        self.port_valid = []         # [{inst, ports, bit}]: the valid bit of a lane bundle (LB2-S81/EVENTS strict check)
 
     def template(self, name, payload):
         if payload in self.templates:
@@ -462,7 +463,16 @@ class Prog:
             self.rows.append(row)
         self.gunit_rows += [tuple(x) for x in r.get('gunit_rows', [])]
         self.svc += r.get('svc_jobs', [])
-        self.events += r.get('events', [])
+        self.port_valid += [d for d in r.get('port_valid', []) if d not in self.port_valid]
+        # family events name the family's own template index ('template N'): re-point them into the shared table
+        # (LB2-S81/EVENTS: was copied unmapped -- right only while the family's templates came first)
+        for e in r.get('events', []):
+            e = dict(e)
+            for f in ('payload', 'carried_by'):
+                m = re.match(r'template (\d+)(.*)$', str(e.get(f, '')))
+                if m and e['kind'] in ('CTL', 'VS') and remap:
+                    e[f] = f'template {remap[int(m.group(1))]}{m.group(2)}'
+            self.events.append(e)
         self.files.update(r.get('files', {}))
 
     def vrow(self, eng, issue, tix, ctx=0, what=''):
@@ -553,12 +563,61 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     last_partial = go[-1] + BEAT['go_to_partial'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
+    gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '
+             'exchanges among all 16 slices whose beat cycles follow from every slice\'s go edge: the words need the '
+             '16-slice norm composition (lower_norm on every slice + the snake / all-gather schedule), not compiled')
     prog.events.append(dict(cycle=last_partial, inst=sl, port='(xfin NX exchange out: ro_e / ro_w / vo)', dir='out',
-                            kind='NX', tag=f'{which}.partial_roots', payload='golden-subtree roots (fixture)', plan_only=True))
+                            kind='NX', tag=f'{which}.partial_roots', payload='golden-subtree roots (fixture)', plan_only=True,
+                            gap=gap16))
     prog.events.append(dict(cycle=xq, inst=sl, port='ro_e / ro_w', dir='out', kind='XQ', tag=f'{which}.x_allgather',
-                            payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True))
+                            payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True, gap=gap16))
     return dict(slice=sl, sid=sid, ctl_latency=cp, t_issue0=t0, last_partial=last_partial, rstd=rstd, xq_at_ring=xq,
                 end=xq, templates=[th, tg] + tn + [tx])
+
+
+def row_ctl_events(die, prog):
+    """LB2-S81/EVENTS: every V calendar row (engine VN / VS) puts its CTL template on the slice control plane: the beat
+    arrives at each slice of its slice mask (on the engine's tier) at issue + ctl_path edges, on the ctl_path entry port.
+    Families that already state the arrival (norm smoke, vpx legs) must agree with this derivation (asserted); rows
+    whose family states only the unit-side effect (vs: the s_d command, slice-internal) get their CTL event here, and
+    the internal event records the arrival it rides on.  Returns the number of CTL events added."""
+    have = {}
+    for e in prog.events:
+        if e['kind'] == 'CTL':
+            have.setdefault((e['inst'], int(e['payload'].split()[1].rstrip(';'))), []).append(e['cycle'])
+    sid_of = {v['sid']: k for k, v in die.slices().items()}
+    added, paths = 0, {}
+    arrive = {}
+    for r in prog.rows:
+        if r['eng'] not in (ENG['VN'], ENG['VS']):
+            continue
+        ti = r['arg'] & 0x7F
+        mask = prog.templates[ti] & 0xFFFF
+        tier = 'N' if r['eng'] == ENG['VN'] else 'S'
+        for sid in range(16):
+            sl = sid_of.get(sid)
+            if not (mask >> sid) & 1 or sl is None or not sl.endswith(tier):
+                continue
+            cp = paths.setdefault(sl, ctl_path(die, sl))
+            c = r['issue'] + cp['edges']
+            arrive[(r['issue'], ti, sl)] = c
+            got = have.get((sl, ti), [])
+            if got:
+                assert c in got, f'CTL template {ti} at {sl}: family arrival {got} != row issue {r["issue"]} + path ' \
+                                 f'{cp["edges"]} = {c}'
+                continue
+            prog.events.append(dict(cycle=c, inst=sl, port=cp['entry_port'], dir='in', kind='CTL',
+                                    tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue']))
+            have.setdefault((sl, ti), []).append(c)
+            added += 1
+    for e in prog.events:
+        if e['kind'] == 'VS' and e.get('carried_by'):
+            ti = int(e['carried_by'].split()[1])
+            sl = e['inst'].split('.')[0]
+            e['ctl_at'] = arrive.get((e.get('issue', e['cycle']), ti, sl))
+            if e['ctl_at'] is None:
+                e['why'] = f'no calendar row issues template {ti} to {sl} at {e.get("issue")}'
+    return added
 
 
 class CalendarFull(Exception):
@@ -649,6 +708,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                    status='GAP', gaps=[dict(zip(('module', 'port', 'missing'), GAP_FRAME_PLACE)),
                                         dict(zip(('module', 'port', 'missing'), GAP_XS_ROM))])
         (out / 'prog/frame_cfg7' / f'{f}.json').write_text(json.dumps(rec, indent=1) + '\n')
+    n_row_ctl = row_ctl_events(die, prog)
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -660,10 +720,10 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
-            sub = '' if len(jobs) == 1 else f'job{k}/'
-            (out / 'prog' / sub).mkdir(parents=True, exist_ok=True)
-            (out / f'prog/{sub}host_boot.memh').write_text(memh(hs, 515))
-            files[f'prog/{sub}host_boot.memh'] = len(hs)
+            jd = '' if len(jobs) == 1 else f'job{k}/'
+            (out / 'prog' / jd).mkdir(parents=True, exist_ok=True)
+            (out / f'prog/{jd}host_boot.memh').write_text(memh(hs, 515))
+            files[f'prog/{jd}host_boot.memh'] = len(hs)
             cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
                             reload_edges=len(hs) * HOST_SLOT,
                             rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
@@ -693,7 +753,11 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source']),
         ops=sched['ops'], deps=sched['deps'], smoke=sub, events=sorted(prog.events, key=lambda e: e['cycle']),
-        links=links), indent=1) + '\n')
+        event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
+                    '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
+                    'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
+                    'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),
