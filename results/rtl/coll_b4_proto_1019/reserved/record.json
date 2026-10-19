@@ -1,0 +1,741 @@
+{
+  "schema": "opentallas.coll_b4.reserved_proto.v1",
+  "grade": "standalone core with modeled PHY; not whole-parent/issuer/phase/native timing proof",
+  "cache_guard": {
+    "parameters": {
+      "latu": 65,
+      "lats": 390,
+      "xu": 0,
+      "xs": 0,
+      "die_name_master": true,
+      "pr_b4": true,
+      "mutant": null
+    },
+    "source_sha256": {
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+      "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "rtl/rom/ot_coll_tp8_static.sv": "12f3f13ef4d948877b11011da33e950d0d69816b2e8dc2e7843d6ab0e5dc064c",
+      "rtl/physical/ot_qfd_io_collective_static.sv": "a22e80fa33ed0d3490ef9d5579de09bb25f43973122c37faaaa0e98b6a6b5bc3",
+      "rtl/test/tb_coll_tp8_static.sv": "453149efcfa99e7c3ac89a2fb64af0706e95c0f09fc11dc3d54a7d90dcd57f82",
+      "rtl/rom/ot_coll_sram_bank64.sv": "2b2dd801451b1369659a10d4b4f7509bf6d1fbbdcae4c932e0f434e254c97ca5",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2"
+    },
+    "executable_sha256": "e1236e6605be1e7962ae357ff824efe182af6f755c7300d1dca48603a80a900c",
+    "driver_sha256": "e9aa168b6b6c8850b486043e5c23aa18b94ac4b9fcef6263b01c7d27f058def7"
+  },
+  "shared_ucie_reservations": true,
+  "cases": [
+    {
+      "name": "shared_qwen_ar_256w",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 873
+        }
+      ],
+      "modes": [
+        0
+      ],
+      "words": [
+        256
+      ],
+      "span": 833,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "2048",
+        "first": "41",
+        "last": "873"
+      },
+      "stimuli_sha256": {
+        "part.hex": "27bf5567eb7e9146fc3df1b860c345921f24f8fdc3366e68545cf47a7f2121c8",
+        "sum.hex": "3c10861115a2cde8d7b5ab4a33d5388fa125f03f2c69dce1285449235d35f4dc",
+        "cmd.hex": "02afddf325db0f8c0b0b85c16dd22367bc08bc2d53f6d543c6dcd56c27c7f043"
+      }
+    },
+    {
+      "name": "shared_qwen_layer_2x256w",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 873
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 804,
+          "first_slot": 805,
+          "first_out": 1382,
+          "last_out": 1637
+        }
+      ],
+      "modes": [
+        0,
+        0
+      ],
+      "words": [
+        256,
+        256
+      ],
+      "span": 1597,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "4096",
+        "first": "41",
+        "last": "1637"
+      },
+      "stimuli_sha256": {
+        "part.hex": "d90e3f8294f6d13bb89ae246000382ffce29a6f2b65a4c2aa250445a620d24ef",
+        "sum.hex": "a4bc30fe4fdbd4c6ccda5061a711f492300bfe9ba75902c25f555991c754d6c9",
+        "cmd.hex": "319fb82cfb6d72f2523393ea3b13fa051a425cfbf0bfc61a436b1ab90e05c671"
+      }
+    },
+    {
+      "name": "shared_qwen_argmax_1w",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 503,
+          "last_out": 510
+        }
+      ],
+      "modes": [
+        1
+      ],
+      "words": [
+        1
+      ],
+      "span": 470,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "64",
+        "first": "41",
+        "last": "510"
+      },
+      "stimuli_sha256": {
+        "part.hex": "1ba9bb6de4f1eb0280b188aced8770377ddd7e7ef0c0d2b699360c4d3586c1b3",
+        "sum.hex": "0e49dbf06703f51a3179b948f2e361de2b38733fb0caba957102a181e4aec36f",
+        "cmd.hex": "47c8545dcf879f5551b399ed938be4bc4f6b0fd0c17699a9563c933a5b5666cc"
+      }
+    },
+    {
+      "name": "shared_qwen_layer_2x256w_argmax",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 40,
+          "first_slot": 41,
+          "first_out": 618,
+          "last_out": 873
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 804,
+          "first_slot": 805,
+          "first_out": 1382,
+          "last_out": 1637
+        },
+        {
+          "msg": 2,
+          "mode": 1,
+          "words": 1,
+          "cmd_cycle": 1175,
+          "first_slot": 1176,
+          "first_out": 1638,
+          "last_out": 1645
+        }
+      ],
+      "modes": [
+        0,
+        0,
+        1
+      ],
+      "words": [
+        256,
+        256,
+        1
+      ],
+      "span": 1605,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "4160",
+        "first": "41",
+        "last": "1645"
+      },
+      "stimuli_sha256": {
+        "part.hex": "4a90712cee2b908847a0fe4f0ebc4cd791081f87f94da4735d547881bbda41a3",
+        "sum.hex": "fc233cb87250f093386fb63d3705cfba035eead3c934dd9e56ad9d1f39d849c8",
+        "cmd.hex": "5886ae855c365d83dc81222b755ac27515ef30343428a1507395f964f0f39b40"
+      }
+    },
+    {
+      "name": "b4_mu_window",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 99,
+          "first_slot": 100,
+          "first_out": 677,
+          "last_out": 932
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 1623,
+          "first_slot": 1624,
+          "first_out": 2201,
+          "last_out": 2456
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 3010,
+          "first_slot": 3011,
+          "first_out": 3588,
+          "last_out": 3843
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 3774,
+          "first_slot": 3775,
+          "first_out": 4352,
+          "last_out": 4607
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 5262,
+          "first_slot": 5263,
+          "first_out": 5840,
+          "last_out": 6095
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 6694,
+          "first_slot": 6695,
+          "first_out": 7272,
+          "last_out": 7527
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 9968,
+          "first_slot": 9969,
+          "first_out": 10546,
+          "last_out": 10801
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 12220,
+          "first_slot": 12221,
+          "first_out": 12798,
+          "last_out": 13053
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 12984,
+          "first_slot": 12985,
+          "first_out": 13562,
+          "last_out": 13817
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 14384,
+          "first_slot": 14385,
+          "first_out": 14962,
+          "last_out": 15217
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 15539,
+          "first_slot": 15540,
+          "first_out": 16117,
+          "last_out": 16372
+        },
+        {
+          "msg": 11,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 16926,
+          "first_slot": 16927,
+          "first_out": 17504,
+          "last_out": 17759
+        },
+        {
+          "msg": 12,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 17690,
+          "first_slot": 17691,
+          "first_out": 18268,
+          "last_out": 18523
+        },
+        {
+          "msg": 13,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 19178,
+          "first_slot": 19179,
+          "first_out": 19756,
+          "last_out": 20011
+        },
+        {
+          "msg": 14,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 20245,
+          "first_slot": 20246,
+          "first_out": 20823,
+          "last_out": 21078
+        },
+        {
+          "msg": 15,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 21009,
+          "first_slot": 21010,
+          "first_out": 21587,
+          "last_out": 21842
+        },
+        {
+          "msg": 16,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 22497,
+          "first_slot": 22498,
+          "first_out": 23075,
+          "last_out": 23330
+        },
+        {
+          "msg": 17,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 23884,
+          "first_slot": 23885,
+          "first_out": 24462,
+          "last_out": 24717
+        },
+        {
+          "msg": 18,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 24648,
+          "first_slot": 24649,
+          "first_out": 25226,
+          "last_out": 25481
+        },
+        {
+          "msg": 19,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 26136,
+          "first_slot": 26137,
+          "first_out": 26714,
+          "last_out": 26969
+        },
+        {
+          "msg": 20,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 27203,
+          "first_slot": 27204,
+          "first_out": 27781,
+          "last_out": 28036
+        },
+        {
+          "msg": 21,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 27967,
+          "first_slot": 27968,
+          "first_out": 28545,
+          "last_out": 28800
+        },
+        {
+          "msg": 22,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 29455,
+          "first_slot": 29456,
+          "first_out": 30033,
+          "last_out": 30288
+        },
+        {
+          "msg": 23,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 30842,
+          "first_slot": 30843,
+          "first_out": 31420,
+          "last_out": 31675
+        },
+        {
+          "msg": 24,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 31606,
+          "first_slot": 31607,
+          "first_out": 32184,
+          "last_out": 32439
+        },
+        {
+          "msg": 25,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 33094,
+          "first_slot": 33095,
+          "first_out": 33672,
+          "last_out": 33927
+        },
+        {
+          "msg": 26,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 34161,
+          "first_slot": 34162,
+          "first_out": 34739,
+          "last_out": 34994
+        },
+        {
+          "msg": 27,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 34925,
+          "first_slot": 34926,
+          "first_out": 35503,
+          "last_out": 35758
+        },
+        {
+          "msg": 28,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 36413,
+          "first_slot": 36414,
+          "first_out": 36991,
+          "last_out": 37246
+        },
+        {
+          "msg": 29,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 37800,
+          "first_slot": 37801,
+          "first_out": 38378,
+          "last_out": 38633
+        }
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "words": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "span": 38534,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "61440",
+        "first": "100",
+        "last": "38633"
+      },
+      "stimuli_sha256": {
+        "part.hex": "4563cb5b0936617ab4c318f5d324c21008790a7a7c5e913a32b2f7d1127c8524",
+        "sum.hex": "59c9016ef6d28588d9c1396a1b4f0989dea8f965b831e522a418f104124a5607",
+        "cmd.hex": "5ca1dcecac9e84b36c4c4061e5270b3c431c3251624c7ff3fbd25544ad22388b"
+      }
+    },
+    {
+      "name": "b4_mu_ref_user0",
+      "passed": true,
+      "program": [
+        {
+          "msg": 0,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 3010,
+          "first_slot": 3011,
+          "first_out": 3588,
+          "last_out": 3843
+        },
+        {
+          "msg": 1,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 5262,
+          "first_slot": 5263,
+          "first_out": 5840,
+          "last_out": 6095
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 9968,
+          "first_slot": 9969,
+          "first_out": 10546,
+          "last_out": 10801
+        },
+        {
+          "msg": 3,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 12220,
+          "first_slot": 12221,
+          "first_out": 12798,
+          "last_out": 13053
+        },
+        {
+          "msg": 4,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 16926,
+          "first_slot": 16927,
+          "first_out": 17504,
+          "last_out": 17759
+        },
+        {
+          "msg": 5,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 19178,
+          "first_slot": 19179,
+          "first_out": 19756,
+          "last_out": 20011
+        },
+        {
+          "msg": 6,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 23884,
+          "first_slot": 23885,
+          "first_out": 24462,
+          "last_out": 24717
+        },
+        {
+          "msg": 7,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 26136,
+          "first_slot": 26137,
+          "first_out": 26714,
+          "last_out": 26969
+        },
+        {
+          "msg": 8,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 30842,
+          "first_slot": 30843,
+          "first_out": 31420,
+          "last_out": 31675
+        },
+        {
+          "msg": 9,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 33094,
+          "first_slot": 33095,
+          "first_out": 33672,
+          "last_out": 33927
+        },
+        {
+          "msg": 10,
+          "mode": 0,
+          "words": 256,
+          "cmd_cycle": 37800,
+          "first_slot": 37801,
+          "first_out": 38378,
+          "last_out": 38633
+        }
+      ],
+      "modes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "words": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "span": 35623,
+      "result": {
+        "mismatches": "0",
+        "extra": "0",
+        "out_err": "0",
+        "fault": "00000000",
+        "fault_code": "0000000000000000000000000000000000000000",
+        "words_out": "22528",
+        "first": "3011",
+        "last": "38633"
+      },
+      "stimuli_sha256": {
+        "part.hex": "8dfb4bfaa36510455d56b261ed4573e2472feb18b5ee3f1f508c0740d4e912c3",
+        "sum.hex": "e9af75369702f5a7eadcf4fadfdfbbb9f62b090e31150ba5d855634da278ee8c",
+        "cmd.hex": "0f628169f323d3d09afad21be4762679084b7ffb5295262fe4390f5a75ac31d7"
+      }
+    }
+  ],
+  "reference_identity": {
+    "message_map": [
+      2,
+      4,
+      6,
+      7,
+      11,
+      13,
+      17,
+      19,
+      23,
+      25,
+      29
+    ],
+    "same_absolute_normalized_input_output_cycles": true,
+    "same_numeric_stimuli": true,
+    "local_message_tags": "reference tags are compact message indices; not unchanged header/body proof"
+  },
+  "helper_sha256": {
+    "tools/qwen_coll_b4_reserved_proto.py": "dda2f431d6152bbf8cc95109e4f67d332d81cc358800134c66b48daf8a2b9446",
+    "tools/qwen_coll_tp8_static_bench.py": "e9aa168b6b6c8850b486043e5c23aa18b94ac4b9fcef6263b01c7d27f058def7",
+    "tools/qwen_static_schedule/mu_calendar.py": "2bdc33c0545ccf1f67528008957d5d31c1409966e01d43c1c522f7d85ca0bbf3"
+  }
+}

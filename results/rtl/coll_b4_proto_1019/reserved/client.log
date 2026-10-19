@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   992 GB (avail 782, growth 88, headroom 0, waiters 0/0 GB) load 118/128 running 31 disk 366 GB 
+ot-run: ot-epyc5       admits   808 GB (avail 629, growth 63, headroom 0, waiters 0/0 GB) load 55/128 running 9 disk 1016 GB 
+ot-run: ot-epyc6       admits   816 GB (avail 670, growth 99, headroom 0, waiters 0/0 GB) load 17/128 running 9 disk 6023 GB 
+ot-run: ot-epyc7       admits   940 GB (avail 738, growth 80, headroom 0, waiters 0/0 GB) load 35/96 running 17 disk 6460 GB 
+ot-run: ot-epyc8       admits  1269 GB (avail 963, growth 75, headroom 0, waiters 0/0 GB) load 23/128 running 19 disk 276 GB 
+ot-run: ot-pve1        admits   143 GB (avail 112, growth 8, headroom 0, waiters 0/0 GB) load 27/28 running 4 disk 1196 GB 
+ot-run: ot-agidock128  admits    86 GB (avail 73, growth 13, headroom 0, waiters 0/0 GB) load 18/64 running 8 disk 272 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3217638-1792431023 after 0 s
+B4_RESERVED shared_qwen_ar_256w PASS messages=1 span=833 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '2048', 'first': '41', 'last': '873'}
+B4_RESERVED shared_qwen_layer_2x256w PASS messages=2 span=1597 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '4096', 'first': '41', 'last': '1637'}
+B4_RESERVED shared_qwen_argmax_1w PASS messages=1 span=470 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '64', 'first': '41', 'last': '510'}
+B4_RESERVED shared_qwen_layer_2x256w_argmax PASS messages=3 span=1605 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '4160', 'first': '41', 'last': '1645'}
+B4_RESERVED b4_mu_window PASS messages=30 span=38534 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '61440', 'first': '100', 'last': '38633'}
+B4_RESERVED b4_mu_ref_user0 PASS messages=11 span=35623 result={'mismatches': '0', 'extra': '0', 'out_err': '0', 'fault': '00000000', 'fault_code': '0000000000000000000000000000000000000000', 'words_out': '22528', 'first': '3011', 'last': '38633'}
+B4_RESERVED PASS cases=6
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3217638-1792431023): exit 0

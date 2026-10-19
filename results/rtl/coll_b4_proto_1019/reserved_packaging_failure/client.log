@@ -1,0 +1,25 @@
+ot-run: ot-epyc4       admits   990 GB (avail 780, growth 87, headroom 0, waiters 0/0 GB) load 116/128 running 31 disk 312 GB 
+ot-run: ot-epyc5       admits   815 GB (avail 627, growth 56, headroom 0, waiters 0/0 GB) load 42/128 running 8 disk 1013 GB 
+ot-run: ot-epyc6       admits   819 GB (avail 672, growth 98, headroom 0, waiters 0/0 GB) load 18/128 running 9 disk 6023 GB 
+ot-run: ot-epyc7       admits   861 GB (avail 703, growth 101, headroom 0, waiters 0/0 GB) load 36/96 running 19 disk 6444 GB 
+ot-run: ot-epyc8       admits  1269 GB (avail 957, growth 69, headroom 0, waiters 0/0 GB) load 27/128 running 19 disk 278 GB 
+ot-run: ot-pve1        admits   142 GB (avail 111, growth 8, headroom 0, waiters 0/0 GB) load 29/28 running 4 disk 1196 GB 
+ot-run: ot-agidock128  admits    86 GB (avail 73, growth 13, headroom 0, waiters 0/0 GB) load 19/64 running 8 disk 272 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1526947-1792430951 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/coll-b4-reserved-1019/src/tools/qwen_coll_b4_reserved_proto.py", line 12, in <module>
+    from qwen_static_schedule import mu_calendar as M
+  File "/srv/opentallas-scratch/claude/coll-b4-reserved-1019/src/tools/qwen_static_schedule/mu_calendar.py", line 598, in <module>
+    KV_PHASE = _kv_phase_profile()
+  File "/srv/opentallas-scratch/claude/coll-b4-reserved-1019/src/tools/qwen_static_schedule/mu_calendar.py", line 594, in _kv_phase_profile
+    r = json.loads((ROOT / "results/arch/qwen_kv_static_programme_1017/die/report.json").read_text())["profile"]
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/coll-b4-reserved-1019/src/results/arch/qwen_kv_static_programme_1017/die/report.json'
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1526947-1792430951): exit 1
