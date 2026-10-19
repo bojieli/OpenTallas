@@ -1,11 +1,13 @@
 [Unit]
-Description=OpenTallas AUTO-OWNER: element owner watch (ACTIVE/STALE/UNOWNED of every open current-die element -> UNOWNED.json; automatic submit/gate/flow-failure/review-queue actions) then release tree re-render
+Description=OpenTallas AUTO-OWNER: element owner watch (ACTIVE/STALE/UNOWNED of every open current-die element -> UNOWNED.json; automatic submit/gate/flow-failure/review-queue actions), release task watch (LIVE/STALE/DEAD of every open release-tree task -> TASKS_STALE.json), then release tree re-render
 After=fleet-viz.service
 
 [Service]
 Type=oneshot
 WorkingDirectory=%h/claude-takeover-20261007
-ExecStart=/usr/bin/flock -n %h/claude-takeover-20261007/auto_owner/.lock /usr/bin/python3 -u %h/claude-takeover-20261007/tools/element_owner_watch.py --act
+# '-': a failed or lock-skipped element watch must not stop the task watch or the re-render (TASK-WATCH, owner 10-19)
+ExecStart=-/usr/bin/flock -n %h/claude-takeover-20261007/auto_owner/.lock /usr/bin/python3 -u %h/claude-takeover-20261007/tools/element_owner_watch.py --act
+ExecStart=-/usr/bin/flock -n %h/claude-takeover-20261007/auto_owner/.task_watch.lock /usr/bin/python3 -u %h/claude-takeover-20261007/tools/release_task_watch.py
 ExecStartPost=/usr/bin/python3 -u %h/claude-takeover-20261007/tools/release_tree_render.py
 Nice=10
 MemoryMax=3G

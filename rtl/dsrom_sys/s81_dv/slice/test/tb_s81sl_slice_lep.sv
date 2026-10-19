@@ -1,17 +1,20 @@
 `timescale 1ns/1ps
 // RTL-BUILD-S81 (2026-10-18): composition bench of the end-slice masters.  Die A = ot_s81sl_slice_lepw (sid 0: S tier,
-// column 0), die B = ot_s81sl_slice_lepe (sid 7: S tier, column 7), lanes cross-wired through 2 x 2 ot_pdie_ucie.
+// column 0), die B = ot_s81sl_slice_lepe (sid 15: N tier, column 7; lepe_nh sid 14: S tier, column 7), lanes cross-wired through 2 x 2 ot_pdie_ucie.
 // Line beats (kind CTL, slice mask 0 -> no slice acts on them) enter A's INWARD port ri_e with hops 3: A's unchanged ring
 // stop forwards them out of its outward port (hops 2) into the link, B's ring stop receives them on its outward input
 // ri_e and forwards them inward on ro_w with hops 1.  The reverse stream enters B's inward ri_w and leaves A's ro_e.
 // Every beat must arrive bit-exact (header hops decremented twice, src kept), in order; no slice or link fault.
 // S81-LEPV (10-18): +define+TB_SLEP_NH -> die B = ot_s81sl_slice_lepe_nh (s_7S master, no host ports); default die B =
 // ot_s81sl_slice_lepe (s_7N master, host plane present, host inputs idle in this bench).
+// S81-LBGAP G2 (10-18): sid = 2 * col + tier, the die straps (was 4'd7 under the old {tier, col} ring-stop decode).
 `ifdef TB_SLEP_NH
 `define TB_SLEP_E ot_s81sl_slice_lepe_nh
+`define TB_SLEP_BSID 4'd14
 `define TB_SLEP_EHOST
 `else
 `define TB_SLEP_E ot_s81sl_slice_lepe
+`define TB_SLEP_BSID 4'd15
 `define TB_SLEP_EHOST .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
 `endif
 module tb_s81sl_slice_lep #(parameter integer N = 200, parameter integer WAIT = 8000);
@@ -25,7 +28,7 @@ module tb_s81sl_slice_lep #(parameter integer N = 200, parameter integer WAIT = 
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(atx0), .tx1(atx1),
         .rx0({ast0, arx0}), .rx1({ast1, arx1}), .tf(),
         .fault(a_f));                                       // S81-LEPV: lepw has no host plane (HOST_EN 0)
-    `TB_SLEP_E B (.clk(clk), .rst_n(rst_n), .sid(4'd7), .ri_w(b_in), .ro_w(b_out), .vi(276'd0), .vo(), .bi(1104'd0),
+    `TB_SLEP_E B (.clk(clk), .rst_n(rst_n), .sid(`TB_SLEP_BSID), .ri_w(b_in), .ro_w(b_out), .vi(276'd0), .vo(), .bi(1104'd0),
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(btx0), .tx1(btx1),
         .rx0({bst0, brx0}), .rx1({bst1, brx1}), .tf(),
         `TB_SLEP_EHOST .fault(b_f));

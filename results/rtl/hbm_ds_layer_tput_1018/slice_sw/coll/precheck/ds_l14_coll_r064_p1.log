@@ -1,0 +1,5 @@
+COLLRPL PASS events=4843 drives=2436 checks=2407 vm_reads=800 vm_writes=2400 last_cyc=839
+- /srv/opentallas-scratch/claude/veh-fmt-coll/tb_coll_replay.sv:147: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 845ns; walltime 0.018 s; speed 46.454 us/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 9 MB

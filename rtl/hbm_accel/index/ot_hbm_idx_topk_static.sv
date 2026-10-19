@@ -25,14 +25,22 @@
 // A NaN score in row r faults the record (hgi_sim u_idx_topk: rows before r stand, row r and later write nothing):
 // their writes still occupy their slots with zero byte masks (the
 // calendar is unchanged), and the record ends with fault on the same edge done would rise.
+// PIN_IN (VEH-TOPKFIX 2026-10-19): 1 = the bound VM banks carry literal input pin flops (hfd_vms_bank_native_q0_faces,
+// ot_vms_bank_native_physical PIN_IN, every d4g quadrant): the bank samples n+1+PIN_IN and answers n+7+PIN_IN, so this
+// engine captures at n+8+PIN_IN, F = S_r + 2(ns-1) + 9 + PIN_IN, the hub echo is one edge later (compiler response
+// edge W+1+9+PIN_IN) and ACK defaults to 12+PIN_IN. Static fixed edges only; every later edge of the timeline above
+// moves with F. 0 = the historical non-face SW slice timing (bit-identical to the pre-PIN_IN engine).
 // MUT (bench): 1 ascending order ranks by score; 2 ties to the higher index; 3 select skips lanes 3/7;
-//              4 capture one edge early; 5 the second sector of a split output is not written.
+//              4 capture one edge early (at PIN_IN 1 = the stale non-face capture n+8); 5 the second sector of a
+//              split output is not written; 6 write acknowledgement checked one edge early (at PIN_IN 1 = stale ACK 12).
 module ot_hbm_idx_topk_static #(
     parameter integer MUT = 0,
     parameter integer IDW = 20,
-    parameter integer ACK = 12,     // measured: cq at W, hub W+1, bank W+3, echo W+9, response W+10, cr pin W+12
+    parameter integer PIN_IN = 0,   // VEH-TOPKFIX: 1 = pin-registered VM banks (see header)
+    parameter integer ACK = 12 + PIN_IN, // PIN_IN 0 measured: cq at W, hub W+1, bank W+3, echo W+9, response W+10, cr pin W+12
     parameter integer RT_EXTRA = 0  // fixed extra VM round-trip edges outside this engine (the hardened IDX root's vm_rr
                                     // pin register = 1): capture n+8+RT_EXTRA, every row +RT_EXTRA. Default 0 = as built.
+                                    // Total capture shift XRT = PIN_IN + RT_EXTRA (both are fixed round-trip edges).
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -72,13 +80,17 @@ module ot_hbm_idx_topk_static #(
         k_q <= k; order_q <= order; has_r_q <= has_r; am_q <= a_mirror; om_q <= o_mirror; n_q <= n; m_q <= m;
         a_base_q <= a_base; a_str_q <= a_str; o_base_q <= o_base; o_str_q <= o_str; r_base_q <= r_base; r_str_q <= r_str;
     end
-    reg [4:0] st; reg [3:0] cnt; reg flt, f_nan, s_inv;
+    // CW (HBM-BANKLAT-IDX 2026-10-19): the drain / acknowledgement counter holds 8+XRT and ACK-1; 4 bits (the as-built
+    // width, kept for every elaboration that fits) overflow once the d4g die adds relay stages to RT_EXTRA or ACK.
+    localparam integer CW = (8 + PIN_IN + RT_EXTRA < 16 && ACK - 1 < 16) ? 4 : 8;
+    reg [4:0] st; reg [CW-1:0] cnt; reg flt, f_nan, s_inv;
     reg [19:0] c_row; reg [17:0] c_rb, c_le, o_rb, r_rb;
     reg [14:0] i_sec; reg [14:0] i_left; reg i_tgl, i_first;
     // ------------------------------------------------------------ fixed read pipeline (face timing n+1 / n+7 / n+8)
     // info {v, bank3, first, last, off3, lastw3}
-    reg [11:0] dp [0:8+RT_EXTRA];
-    wire [11:0] di = dp[(MUT == 4) ? 6 + RT_EXTRA : 7 + RT_EXTRA];
+    localparam integer XRT = PIN_IN + RT_EXTRA;
+    reg [11:0] dp [0:8+XRT];
+    wire [11:0] di = dp[((MUT == 4) ? 6 : 7) + XRT];
     reg cap_v, cap_first, cap_last; reg [2:0] cap_off, cap_lastw; reg [255:0] cap_d;
     wire rd_now = st == E_RD && !i_tgl;
     wire rd_last = rd_now && i_left == 15'd0;
@@ -88,10 +100,10 @@ module ot_hbm_idx_topk_static #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             vm_rq <= 136'd0; cap_v <= 1'b0;
-            for (integer d = 0; d < 9 + RT_EXTRA; d = d + 1) dp[d] <= 12'd0;
+            for (integer d = 0; d < 9 + XRT; d = d + 1) dp[d] <= 12'd0;
         end else begin
             vm_rq <= 136'd0;
-            for (integer d = 1; d < 9 + RT_EXTRA; d = d + 1) dp[d] <= dp[d-1];
+            for (integer d = 1; d < 9 + XRT; d = d + 1) dp[d] <= dp[d-1];
             dp[0] <= 12'd0;
             if (rd_now && !rsid_bad) begin
                 vm_rq[17*i_sec[2:0] +: 17] <= {1'b1, am_q, i_sec};
@@ -188,7 +200,7 @@ module ot_hbm_idx_topk_static #(
     // ------------------------------------------------------------ write acknowledgement check (fixed edge)
     reg [2:0] ap [0:ACK];            // {expected, seq2}
     reg cr_v; reg [15:0] cr_tag; reg cr_we;
-    wire [2:0] ax = ap[ACK-1];
+    wire [2:0] ax = ap[(MUT == 6) ? ACK-2 : ACK-1];
     wire ack_bad = cr_v != ax[2] || (ax[2] && (cr_tag != {14'h0244, ax[1:0]} || !cr_we));
     reg wr_now;
     always @(posedge clk or negedge rst_n)
@@ -250,7 +262,7 @@ module ot_hbm_idx_topk_static #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= E_IDLE; busy <= 1'b0; done <= 1'b0; fault <= 1'b0; flt <= 1'b0; f_nan <= 1'b0; s_inv <= 1'b0;
-            cq <= 338'd0; cq_seq <= 2'd0; s1_v <= 8'd0; s1_nan <= 1'b0; wr_now <= 1'b0; wi <= 3'd0; cnt <= 4'd0;
+            cq <= 338'd0; cq_seq <= 2'd0; s1_v <= 8'd0; s1_nan <= 1'b0; wr_now <= 1'b0; wi <= 3'd0; cnt <= CW'(0);
             i_tgl <= 1'b0; s_ph <= 2'd0; s_cnt <= 4'd0;
         end else begin
             done <= 1'b0; fault <= 1'b0; cq[337] <= 1'b0; wr_now <= 1'b0;
@@ -274,10 +286,10 @@ module ot_hbm_idx_topk_static #(
                     i_tgl <= !i_tgl;
                     if (rd_now) begin
                         i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0;
-                        if (rd_last) begin cnt <= 4'(8 + RT_EXTRA); st <= E_DR; end
+                        if (rd_last) begin cnt <= CW'(8 + XRT); st <= E_DR; end
                     end
                 end
-                E_DR: if (cnt == 4'd0) st <= E_FL1; else cnt <= cnt - 4'd1;
+                E_DR: if (cnt == CW'(0)) st <= E_FL1; else cnt <= cnt - CW'(1);
                 E_FL1: st <= E_FL2;
                 E_FL2: st <= E_FL3;
                 E_FL3: begin s_ph <= 2'd0; s_cnt <= 4'd0; st <= E_SEL; end
@@ -303,16 +315,16 @@ module ot_hbm_idx_topk_static #(
                     if (wi + 3'd1 == nw) st <= E_NEXT;
                 end
                 E_NEXT: begin                                             // W_last+1
-                    if (c_row + 20'd1 == m_q) begin cnt <= 4'(ACK - 1); st <= E_END; end
+                    if (c_row + 20'd1 == m_q) begin cnt <= CW'(ACK - 1); st <= E_END; end
                     else begin
                         c_row <= c_row + 20'd1; c_rb <= c_rb + a_str_q; c_le <= c_le + a_str_q;
                         o_rb <= o_rb + o_str_q; r_rb <= r_rb + r_str_q; st <= E_ROW;
                     end
                 end
-                E_END: if (cnt == 4'd0) begin                             // W_last + ACK + 1
+                E_END: if (cnt == CW'(0)) begin                             // W_last + ACK + 1
                     done <= !(flt || f_nan || s_inv || ack_bad); fault <= flt || f_nan || s_inv || ack_bad;
                     busy <= 1'b0; st <= E_IDLE;
-                end else cnt <= cnt - 4'd1;
+                end else cnt <= cnt - CW'(1);
                 default: st <= E_IDLE;
             endcase
         end

@@ -1,0 +1,144 @@
+{
+ "name": "hbm_su_cx_ijq_1018u-x1-COMMIT",
+ "block": "ot_hbm_su_static_cxport_ij_q",
+ "ref_tile": true,
+ "owner": "Claude:CX-IJ",
+ "purpose": "HBM die d4g cxport one-root half: ot_hbm_su_static_cxport_ij_q (variant: unclustered CTS H-tree; submit only the variant that passes)",
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/hbm-cxij-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_vl_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_cxport_ij_q u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cxport_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/pos 2 0 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q2_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_lockstep_q0",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/q0 0 1 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q0_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_mut1",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut1 2 0 1 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cxport_split_mut4",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut4 2 0 4 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut4.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_cx_ijq_1018u/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_cx_ijq_1018u/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 12
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_cx_ijq_1018u --out {RUN}/record/views/ot_hbm_su_static_cxport_ij_q  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_cx_ijq_1018u/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_cx_ijq_1018u/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_cx_ijq_1018u/hbm_su_cx_ijq_1018u-x1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrite-after-read), die-level 3:4 seam arcs. Lockstep vs the hub on Verilator 5.050 PASS QID 2 and QID 0 (checks=24183); mutants 1/2/3/4 FAIL. ij_q (serial, x1 per quarter): E seam to ij_s 2,114 b (5.6/um); the four slices port-5 data 4,096 b on W (inj_q0/1, 5.4/um), S (inj_q2, 4.9/um) and N (inj_q3, 4.9/um, clock/reset/fault at the NE end beside the ob seam banks). HH-1 10-18 regate: 388.8 x 388.8 -> 216 x 388.8 (gate 388.8^2: pin flops ring a 389 um square, TT / FF pin-flop spread 97.2 / 92.7 ps > 80, util 2.7%); the ring now spans 216 x 389 um. Variant u: unclustered TritonCTS H-tree over the pin-band sinks (qkd_d2d_static 10-15 precedent: sparse pin-band tile, unclustered tree 442..508 ps).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "what": "one-root split of the two-root leaf hbm_su_cx_ij_1017 (never routed; same defect as hbm_su_cx_dl/rc_1017-s2-761317600)",
+  "why": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrit"
+ }
+}

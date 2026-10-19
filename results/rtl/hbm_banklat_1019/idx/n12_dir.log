@@ -1,0 +1,6 @@
+ot-run: ot-epyc6       admits  1040 GB (avail 862, growth 134, headroom 0, waiters 0/0 GB) load 10/128 running 7 disk 6722 GB 
+ot-run: ot-epyc7       admits  1036 GB (avail 889, growth 164, headroom 0, waiters 0/0 GB) load 112/96 running 30 disk 6799 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-45759-1792402096 after 1 s
+CASE n12_dir IDX_VM_QUERY_N12_LAT MUT0 via_ctl0 vmrt171 dut171 ctl0 bank_lanes168..168 commits514 reads514 blocks128 quant32 errors0 fault0 share_fault0 firstblock371 IDX_VM_QUERY_N12_LAT PASS 
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-45759-1792402096): exit 0

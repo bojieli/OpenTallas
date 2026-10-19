@@ -635,6 +635,37 @@ def compose(design, wl, ov):
                 layers=lay, overrides_used=used, evidence=b.get('evidence'), terms=terms)
 
 
+# ---------------------------------------------------------------- multi-user (MU-S81, owner MU.DECIDE option A, 10-18)
+MU_CAL = ROOT / 'results/arch/mu_s81_1018'
+
+
+def multi_user_ds(wls):
+    """S81 multi-user pricing: the latency user keeps the composed single-user rate (shift lemma, asserted by the
+    calendar's brute-force check); the other users run the same schedule shifted by whole slots, so aggregate =
+    users x composed per-user rate (+ AR fillers inside the MTP calendar at f_clk / step).  The user count is the
+    compiled calendar's (tools/s81_dv/dv_mu_calendar.py: integer windows, A/B copy colouring, 0 collisions), not
+    floor(T / II).  Grades: per-user = this composition's; users = modelled calendar (MU.TOK measures it)."""
+    mu = {}
+    for wl in ('ar', 'mtp'):
+        f = MU_CAL / f'calendar_{wl}.json'
+        w = wls.get(wl)
+        if not f.exists() or not w or not w.get('available'):
+            continue
+        cal = json.loads(f.read_text())
+        if cal['lemma']['brute_force']['result'] != 'PASS':
+            mu[wl] = dict(available=False, reason=f'calendar lemma {cal["lemma"]["brute_force"]["result"]}')
+            continue
+        per = w['tok_s']
+        fill = cal.get('fillers', 0) * (per / w['tau'] if wl == 'mtp' and w.get('tau') else 0.0)
+        mu[wl] = dict(available=True, users=cal['users'], fillers=cal.get('fillers', 0), per_user_tok_s=round(per, 1),
+                      aggregate_tok_s=round(cal['users'] * per + fill), slot_cycles=cal['slot'],
+                      period_cycles=cal['period'], dies=cal['config']['dies'], stacks=cal['config']['stacks'],
+                      total_mm2=cal['config']['total_mm2'], model_users=cal['config']['model_users'],
+                      calendar_per_user_tok_s=cal['per_user_tok_s'],
+                      record=str(f.relative_to(ROOT)), grade='per-user: this composition; users: modelled calendar')
+    return mu
+
+
 def run(pass_records=None, xdie_records=None):
     """records: None -> discovery (every TOKEN-PASS / LB2 / XDIE record); lists -> exactly those (tests, what-ifs)"""
     if pass_records is None and xdie_records is None:
@@ -657,6 +688,9 @@ def write(out, seen, page_dirs):
                grades=list(GRADES), inputs=_seen, records_seen=seen, designs={})
     for d, wls in out.items():
         doc = dict(schema=SCHEMA, design=d, workloads=wls)
+        if d == 'ds_rom':
+            doc['multi_user'] = multi_user_ds(wls)
+            idx.setdefault('multi_user', {})[d] = doc['multi_user']
         (OUT / f'{d}.json').write_text(json.dumps(doc, indent=1) + '\n')
         idx['designs'][d] = {wl: ({k: w[k] for k in ('title', 'tok_s', 'T_token_cycles', 'per_accepted_cycles', 'tau',
                                                          'pct_measured_current_rtl', 'banner', 'by_grade', 'price_of_record',

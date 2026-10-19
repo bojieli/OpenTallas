@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "HOURLY-QWLAND",
+ "generated": "2026-10-18 23:50 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main (--view --cell --case k0,k1,k2)",
+ "note": "h1 routes with the lane L_min credit (f20c82b74, io_hold_margin 0.03). EN 548: PASS, capture 244.9 -> 165.4 ps (a[493]), 0 pins over. EW landh0 548: the 548 a[*] data pins are fixed (no longer over), but ONE pin still fails: en at 351.4 ps (351.0 before the fix). en is the hop-0 ICG enable + ring write epoch (the source's released reset); the ETM has setup_rising 187.2 ps vs ck_s. It is not caused by hold pads, and the L_min fix does not change it. Open: classify the en budget (release-calendar static pin vs a re-timed enable).",
+ "records": [
+  {
+   "cell": "qfd_landh_548_EN_99x99",
+   "view": "physical/ref_tile/qfwd_landh_548_en_99x99/views/qfd_landh_548_EN_99x99",
+   "lib_cell": "qfd_landh_548_EN_99x99",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 139.6,
+   "spread_ps": 22.8,
+   "outputs": 549,
+   "inputs": 550,
+   "launch_ps": 123.4,
+   "launch_pin": "b[500]",
+   "capture_ps": 165.4,
+   "capture_pin": "a[493]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 409.1,
+    "k1": 413.9,
+    "k2": 214.2
+   },
+   "ff_spread_ps": 22.2,
+   "ff_launch_min_ps": 58.9,
+   "ff_hold_need_ps": -3.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_landh_548_en_99x99-h1-f85dc59b3",
+   "view_source": "origin/codex/closure-record-qfwd_landh_548_en_99x99-h1-f85dc59b3",
+   "mode": "case k0,k1,k2 (die ties the K strap, set_case_analysis dd4396a81); own R per clock"
+  },
+  {
+   "cell": "qfd_landh0_548_EW_65x99",
+   "view": "physical/ref_tile/qfwd_landh0_548_ew_65x99/views/qfd_landh0_548_EW_65x99",
+   "lib_cell": "qfd_landh0_548_EW_65x99",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 164.2,
+   "spread_ps": 21.1,
+   "outputs": 549,
+   "inputs": 550,
+   "launch_ps": 116.9,
+   "launch_pin": "b[13]",
+   "capture_ps": 351.4,
+   "capture_pin": "en",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 390.3,
+    "k1": 394.5,
+    "k2": 242.9
+   },
+   "ff_spread_ps": 20.5,
+   "ff_launch_min_ps": 59.7,
+   "ff_hold_need_ps": -9.8,
+   "pass": false,
+   "fail_why": "capture 351.40998 > 190 (1 pins)",
+   "job": "qfwd_landh0_548_ew_65x99-h1-f85dc59b3",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_548_ew_65x99-h1-f85dc59b3",
+   "mode": "case k0,k1,k2 (die ties the K strap, set_case_analysis dd4396a81); own R per clock"
+  }
+ ]
+}

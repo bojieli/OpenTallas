@@ -1,0 +1,207 @@
+{
+ "name": "hbm_su_cx_ijq_1018u",
+ "top": "ot_hbm_su_static_cxport_ij_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_q",
+ "reset_ports": [
+  "rst_q_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 388.8,
+  "exact": true
+ },
+ "std_area_um2": 4000,
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "inj_q0",
+   "inj_q1"
+  ],
+  "S": [
+   "inj_q2"
+  ],
+  "N": [
+   "inj_q3",
+   "clk_q",
+   "rst_q_n",
+   "fault"
+  ],
+  "E": [
+   "jb0",
+   "jb1",
+   "sfault_s",
+   "ins_coll",
+   "ob0",
+   "ob1"
+  ]
+ },
+ "pin_ranges": {
+  "inj_q0": [
+   4.0,
+   193.8
+  ],
+  "inj_q1": [
+   195.0,
+   384.8
+  ],
+  "inj_q2": [
+   4.0,
+   212.0
+  ],
+  "inj_q3": [
+   4.0,
+   208.999
+  ],
+  "clk_q": [
+   209.599,
+   209.999
+  ],
+  "rst_q_n": [
+   210.599,
+   211.0
+  ],
+  "fault": [
+   211.6,
+   212.0
+  ],
+  "jb0": [
+   4.0,
+   9.668
+  ],
+  "jb1": [
+   10.868,
+   16.536
+  ],
+  "sfault_s": [
+   17.736,
+   18.09
+  ],
+  "ins_coll": [
+   19.29,
+   19.645
+  ],
+  "ob0": [
+   20.845,
+   202.222
+  ],
+  "ob1": [
+   203.422,
+   384.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is registered in RTL (inputs land in pin registers / banks, every output is a register); a wrapper stage would move the fixed 3:4 seam calendar edges."
+ },
+ "structural_change": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrite-after-read), die-level 3:4 seam arcs. Lockstep vs the hub on Verilator 5.050 PASS QID 2 and QID 0 (checks=24183); mutants 1/2/3/4 FAIL. ij_q (serial, x1 per quarter): E seam to ij_s 2,114 b (5.6/um); the four slices port-5 data 4,096 b on W (inj_q0/1, 5.4/um), S (inj_q2, 4.9/um) and N (inj_q3, 4.9/um, clock/reset/fault at the NE end beside the ob seam banks). HH-1 10-18 regate: 388.8 x 388.8 -> 216 x 388.8 (gate 388.8^2: pin flops ring a 389 um square, TT / FF pin-flop spread 97.2 / 92.7 ps > 80, util 2.7%); the ring now spans 216 x 389 um. Variant u: unclustered TritonCTS H-tree over the pin-band sinks (qkd_d2d_static 10-15 precedent: sparse pin-band tile, unclustered tree 442..508 ps).",
+ "job": {
+  "owner": "Claude:CX-IJ",
+  "branch": "claude/hbm-cxij-1018",
+  "tag": "x1",
+  "purpose": "HBM die d4g cxport one-root half: ot_hbm_su_static_cxport_ij_q (variant: unclustered CTS H-tree; submit only the variant that passes)",
+  "record_to": "results/rtl/ref_tile/hbm_su_cx_ijq_1018u",
+  "views_to": "physical/ref_tile/hbm_su_cx_ijq_1018u/views",
+  "auto_merge": false,
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "what": "one-root split of the two-root leaf hbm_su_cx_ij_1017 (never routed; same defect as hbm_su_cx_dl/rc_1017-s2-761317600)",
+   "why": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrit"
+  },
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_vl_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ],
+  "benches": [
+   {
+    "name": "cxport_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/pos 2 0 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q2_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_lockstep_q0",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/q0 0 1 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q0_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_mut1",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut1 2 0 1 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cxport_split_mut4",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut4 2 0 4 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut4.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}
