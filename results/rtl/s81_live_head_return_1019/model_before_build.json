@@ -1,0 +1,28 @@
+{
+  "scope": "128-row single native bundle live public logits to existing explicit-ID argmax and registered return; normalized input fixture boundary",
+  "full_token_qualified": false,
+  "source": "ot_dsrom_head_bundle IOREG=1 SAFE=1 CUT=511 SPLIT9=1",
+  "rows": 128,
+  "k": 5120,
+  "macs": 655360,
+  "macros": "10 x actual4096x274",
+  "input_bits_per_cycle": 512,
+  "public_logit_bits_per_cycle_max": 200,
+  "reducer_lanes": 4,
+  "return_bits": 175,
+  "added_capture_edges": 1,
+  "model_bundle_cycles": 8414,
+  "return_tail_cycles": "derive from actual fixed-slot source bench before schedule adoption",
+  "replicas": 1,
+  "physical_area": "existing bundle masters only; new return registers and reducer sizing/physical fit unqualified",
+  "routing": "same-clock component only; no wire/clock/PG qualification",
+  "storage": "existing ROMs; reducer bounded token FIFO DEPTH2",
+  "su_mu_plan": "same fixed go slots for one owner then three sequential owners; not production46-user occupancy",
+  "dependencies": [
+    "real final-layer VM/HCP producer",
+    "full129280-row actual parallel field",
+    "real die return slot/link",
+    "DSpark body and Markov ownership",
+    "IDX helper wiring and paid slot"
+  ]
+}
