@@ -1,0 +1,4 @@
+STRICT_INITIAL_DIAGNOSTIC cycle28 tw_v0/0 x_v0/0 relaydiff0 controldiff0 twdatadiff0 xdatadiff1 MUT4
+[30000000] %Fatal: tb_header_compose_r2.sv:211: Assertion failed in tb_stream: STREAM_EQ_MISMATCH cycle37 MUT4
+%Error: rtl/test/qwen_dv/stream_controls/tb_header_compose_r2.sv:211: Verilog $stop
+Aborting...

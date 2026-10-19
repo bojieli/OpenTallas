@@ -1,0 +1,42 @@
+{
+  "consumer_source_commit": "1195cd50b",
+  "consumer_rtl_sha256": "99de07870c754f1c76f3c45bc0dc5768318e748d8796954a16eaa22f72aa698e",
+  "producer_source_commit": "55eb5d887",
+  "producer_generic_census_commit": "6d257d103",
+  "producer_ff": 201,
+  "producer_ff_scope": "Generic upstream only; consumer independently native6459FF",
+  "phase_ps": [
+    -80,
+    0,
+    80
+  ],
+  "period_ps": 833.333332,
+  "edges_per_phase": 10000,
+  "header_checks_per_phase": 1460000,
+  "all146_header_bits_seen0and1": true,
+  "all8_input_kinds": true,
+  "targeted_table_events_per_phase": 191,
+  "broadcast_table_events_per_phase": 161,
+  "targeted_sid_mask_per_phase": "ffff",
+  "mutants": {
+    "1rawvalid": 28,
+    "2wrongSID": 37,
+    "3consumerreset": 1,
+    "4oldSID": 37,
+    "5header_plus1edge_all3phases": 33,
+    "7header_capture_reset": 701
+  },
+  "qualified": false,
+  "open": [
+    "cfg2/SUwe25/SUaddr6usefulproducer source",
+    "Consumer95sameageresetleaves/globalparentforest",
+    "Actualphysicalnoepochvariantadmission",
+    "Nativeproducer/parentmappingandactualclockphase",
+    "ComposedE/Wproduction",
+    "Geometry/reach/PG/TTFF"
+  ],
+  "note": "ActualoldgenericLPwriter epoch diagnostics preserved; noepoch=0tie/source or SDC exception adopted.",
+  "bench_sha256": "456b8550ac41618e5511b2b0b77e6d0a9b7baa1ea1b9349f2faaf0fb8b39c286",
+  "binary_sha256": "ad8bd5eee714ca2ea4790c968c4365ec2299731fd7009dfb58c272a13c879dca",
+  "bench_generator_replay_byte_exact": true
+}

@@ -21,5 +21,5 @@
   "added_edges": 0,
   "equations_preserved": true,
   "qualified": false,
-  "scope": "ABC native combinational cells; sequential primitives generic. Boundary copies require original-edge producer proof; no native clock/reset/physical qualification."
+  "scope": "Actual ASAP7 native combinational and sequential primitive fixed point; no physical STA/clock/reset/reach qualification. Upstream input copies require actual source proof."
 }

@@ -1,0 +1,4 @@
+STRICT_INITIAL_DIAGNOSTIC cycle28 tw_v0/0 x_v0/0 relaydiff0 controldiff0 twdatadiff0 xdatadiff1 MUT7
+[584000000] %Fatal: tb_header_compose_r2.sv:56: Assertion failed in tb_stream: HEADER_CAPTURE_MISMATCH cycle701 portsw bit0 MUT7
+%Error: rtl/test/qwen_dv/stream_controls/tb_header_compose_r2.sv:56: Verilog $stop
+Aborting...

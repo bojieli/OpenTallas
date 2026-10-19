@@ -13,3 +13,5 @@ Preserved failures: first native mapping doubled genericenable-mux selects, prod
 Sizing and source provenance are in MODEL.md, sized/, native_sized/, native_final/ and compressed exact-equation certificates. tools/qwen_dv/stream_controls contains deterministic map/fork/reimport/audit/bench runners. R4 original E/W all10 source/receipts remain immutable; noduplicateoldproductionbuild. Actual combined E/W follows producerintegration.
 
 Safe checklist: input registration/reset OPEN in actualparent; reach405 OPEN; consumerallultimatefanout PASS24 with producerobligations OPEN; primitive depth13 PASS structural only, TT600ps OPEN; storage unchanged/noaddedholdingchains; actualfloorplan/PG/area utilization OPEN; native clockspread/TTFF/parentphase OPEN; static schedule unchanged0steadyedges, actualboot admission OPEN. No gate/CTS/route/REVIEW/submit/adoption is authorized by this packet.
+
+Actual header-only producer composition nowpasses: see header_composition/README.md and receipt.json. At eachof3phases,10kedges/1.46Mheaderchecks plus all16targetSIDs/broadcast andsixcausalmutants; cfg/SU/reset95andphysicalparent remainOPEN.

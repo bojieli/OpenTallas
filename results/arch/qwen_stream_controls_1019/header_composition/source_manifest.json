@@ -1,0 +1,20 @@
+[
+  {
+    "commit": "55eb5d887",
+    "source": "rtl/qwen_dv/qfd_dv_stream_header_producer.sv",
+    "copy": "rtl/test/qwen_dv/stream_controls/header_sources/qfd_dv_stream_header_producer.sv",
+    "sha256": "9975ea0f86c937ea29e44711f17e9bcfd18f442bf66e20c58865585ab59e14cc"
+  },
+  {
+    "commit": "55eb5d887",
+    "source": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "copy": "rtl/test/qwen_dv/stream_controls/header_sources/ot_pl_land_field_copies.sv",
+    "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab"
+  },
+  {
+    "commit": "55eb5d887",
+    "source": "rtl/common/landed_parent/ot_pl_land.sv",
+    "copy": "rtl/test/qwen_dv/stream_controls/header_sources/ot_pl_land.sv",
+    "sha256": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f"
+  }
+]
