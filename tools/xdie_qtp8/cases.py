@@ -143,6 +143,21 @@ CASES["rl_dv2f14bq_ls378_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-o
 CASES["rl_dv2f14bq_ls377_lx707"] = RLB + ["--real-lanes", QR, "--lats", "377", "--lx", "7", "0", "7", "--expect-fail"]
 CASES["rl_dv2f14bq_ls377_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "377", "--expect-fail"]
 
+# Q-COLLCAL3 10-18 (DRIVE-1800): the calendar is COMPILED from the lanes (--lats cal = tools/qwen_split/lane_groups.
+# collective_calendar: LS = max_j KC + KW + 17 + PS + LX_j + RS_j + RS_peer(j); dv2f14bq 377, dv2f14bi 378), not hand-set.
+# Per GEN: PASS at cal, FAIL at cal-1 (the compiled value is the minimum), mutants lx707 / KTV2 skew at cal FAIL.
+QI = "results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json"
+for g_, j_, kv_ in (("dv2f14bq", QR, 7), ("dv2f14bi", QI, 6)):   # kv_ = port 2 TX valid K one off its data K (as built 6 / 7)
+    J_ = ["--real-lanes", j_]
+    CASES.update({
+        f"cal_{g_}": RLB + J_ + ["--lats", "cal"],
+        f"cal_{g_}_seqsu": RLB + J_ + ["--lats", "cal", "--seqsu"],
+        f"cal_{g_}_minus1": RLB + J_ + ["--lats", "cal-1", "--expect-fail"],
+        f"cal_{g_}_lx707": RLB + J_ + ["--lats", "cal", "--lx", "7", "0", "7", "--expect-fail"],
+        f"cal_{g_}_ktv2skew": RLB + J_ + ["--real-lanes-override", f"KTV2={kv_}", "--lats", "cal", "--expect-fail"],
+        f"cal_{g_}_mut_rxearly": RLB + J_ + ["--lats", "cal", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+    })
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
