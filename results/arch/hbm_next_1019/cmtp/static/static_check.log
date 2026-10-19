@@ -1,12 +1,3 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
-ot-run: ot-epyc5       admits    81 GB (avail 335, growth 278, headroom 0, waiters 3/420 GB) load 153/128 running 33 disk 1605 GB 
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp-1019/opt
-ot-run: -> ot-epyc5
-ot-heavy: request 24G is charged 9G (class 'static_check.py' measured peak 0.3G, n=1+0 proved); the cap stays 24G
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4082376-1792401176 after 0 s
 mtp 0 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 300038 cycles 23783.4
 mtp 1 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 441398 cycles 31499.7
 mtp 2 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 303664 cycles 53895.1
@@ -70,7 +61,7 @@ mu 16 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound
 mu 17 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
 mu 18 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
 mu 19 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
-mu 20 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 184012 cycles 45245.5
+mu 20 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 187838 cycles 45245.5
 mu 21 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
 mu 22 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
 mu 23 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 201734 cycles 23135.9
@@ -136,4 +127,3 @@ ar 39 PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound
 ar head PASS {'C1': 0, 'C2': 0, 'C3': 0, 'C5': 0} vm peak (bookkeeping upper bound) 20484 cycles 6540.3
 ar MUTANT unit_double_book -> FAIL (witness ok) {'C1': 1, 'C2': 1, 'C3': 0, 'C5': 0} SU: kv_norm.rs moved 1.0 cycles earlier onto kv_norm.ss
 ar MUTANT raw_early -> FAIL (witness ok) {'C1': 0, 'C2': 1, 'C3': 0, 'C5': 0} wq_a starts 2 cycles before its producer attn_norm ends
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4082376-1792401176): exit 0

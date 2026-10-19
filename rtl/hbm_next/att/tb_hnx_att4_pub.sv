@@ -9,6 +9,7 @@
 // tags 4 x 16, sums 4 x 512}.
 module tb_hnx_att4_pub;
     parameter integer MUT = 0;
+    parameter integer NL = 3;           // query lanes = SM lanes P (P3 default, owner 10-19); stim keeps 4 lane fields
     localparam integer RB = 32 + 8 + 8 + 64 + 2048;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -19,8 +20,8 @@ module tb_hnx_att4_pub;
     reg ps = 0; reg [1:0] pl = 0; reg [2:0] psl = 0;
     wire pub_v, fault; wire [31:0] pub_data; wire [3:0] pub_word; wire [2:0] pub_out_slot; wire [1:0] pub_out_lane;
     wire [15:0] pub_tag;
-    ot_hnx_att4_spvm #(.LV(3), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .ev(ev), .sum_lo(sm[1023:0]), .tag_lo(tg[31:0]),
-        .sum_hi(sm[2047:1024]), .tag_hi(tg[63:32]), .pub_start(ps), .pub_lane(pl), .pub_slot(psl), .pub_v(pub_v),
+    ot_hnx_att4_spvm #(.NL(NL), .LV(3), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .ev(ev[NL-1:0]), .sum_lo(sm[1023:0]),
+        .tag_lo(tg[31:0]), .sum_hi(sm[512*NL-1:1024]), .tag_hi(tg[16*NL-1:32]), .pub_start(ps), .pub_lane(pl), .pub_slot(psl), .pub_v(pub_v),
         .pub_data(pub_data), .pub_word(pub_word), .pub_out_slot(pub_out_slot), .pub_out_lane(pub_out_lane),
         .pub_tag(pub_tag), .fault(fault));
     always @(posedge clk) begin

@@ -1,0 +1,16 @@
+STEP S3 case_f4c_t9p3 2026-10-19T06:43:28-07:00
+CASE rc=0 2026-10-19T06:53:43-07:00
+clock_regions stream {"seed_regions": 70, "regions": 69, "merges": 1, "merges_refused_box": 900, "near_entry_pairs": 4412, "near_tile_pairs": 443, "near_tile_pairs_cross_region": 55, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check stream regional {"pairs": 789929, "noncommon_ps": {"median": 7280.1, "p90": 10302.1, "max": 10558.2}, "ocv_10pct_max_ps": 1055.8, "insertion_ps": [13423.5, 13990.9]}
+clock stream sinks 3875 buffers 10562
+{"insts": 1214, "nets": 1058039, "excluded": 0, "homes": 938, "problems": 0, "clock": {"hbm": 873, "serial": 4362, "stream": 10562}}
+OVERREACH rc=0
+{"hop_um": 405.0, "nets_over": 696308, "by_class": {"RELAY": 694112, "STATUS": 1838, "RESET": 21, "CONFIG": 337}, "worst": {"RELAY": [29408.2, "n145755"], "STATUS": [29512.4, "n140878"], "RESET": [30816.9, "ckg_por_stream"], "CONFIG": [12415.7, "n383221"]}}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_EW.o', 'loads': 'hbfd_rly_624_EW', 'nets': 50000}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_WE.o', 'loads': 'hbfd_rly_624_WE', 'nets': 49856}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_sm_group_id.sm_packet', 'loads': 'ot_hbm_accel_smh_attn,ot_hbm_idx_score_quarter_static', 'nets': 17584}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_bankq_static.sum_out', 'loads': 'ot_hbm_hc_bankq_static', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sm_xload_xq_pegress.xw_data', 'loads': 'ot_hbm_accel_smh_attn', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_vm_kshare_splitstrap.fill_data', 'loads': 'ot_hbm_svc_vmdel_lane_n', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_wb_kport_q.w_k_wdata', 'loads': 'ot_hbm_svc_vm_kshare_splitstrap', 'nets': 16384}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2705233-1792417410): exit 0

@@ -56,6 +56,7 @@ VW, VO = SC.VM_WORDS, SC.VM_OFF
 SLOT_OFF = 1 << 28
 ALIGN = 8
 HPRE = ((0, 20480), (40960, 40964))
+PINNED = list(HPRE)     # pinned row arrays at fixed addresses: h / PRE + (whole token) the carried values
 VM_GROWN = VW + 5 * 30000
 
 
@@ -77,11 +78,16 @@ class UF:
 
 
 def desc_ivs(rec, dyn, L):
-    """row-0 (AR) VM intervals per operand"""
+    """row-0 (AR) VM intervals per operand -- the SAME extents as timing.footprint: SU b_half halves B / D (adjacent-
+    pair tables read at i >> 1; before 10-19 the full n over-read 32 words past the RoPE table = a false layer-20
+    live-in)"""
     from hgi_sim import timing as T
     out = {}
+    half = rec.unit == "SU" and rec.sut is not None and rec.sut.get("b_half")
     for k, d in rec.desc.items():
         if d.space == "VM":
+            if half and k in ("B", "D") and not (0 < d.n_sel < 63):
+                d = type(d)(**{**d.__dict__, "n": (d.n + 1) // 2})
             out[k] = [(lo, hi) for sp, lo, hi in T.intervals(d, dyn, L) if sp == "VM"]
     return out
 
@@ -94,6 +100,7 @@ def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
     a union-slot record, inputs included); HPRE words = the pinned entering columns; words no copy ever writes =
     CONSTANTS (one shared value); other words = data live from cycle 0.
     -> (vals, uf, opmap {(i, opk, cp): value id}, seg_end)"""
+    from hgi_sim import timing as T
     ex, start, end = s["ex"], s["start"], s["end"]
     order = [i for i in sorted(range(len(ex)), key=lambda i: start[i]) if i not in skip]
     SPC = SLOT_OFF // VO
@@ -108,7 +115,7 @@ def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
         ops = []
         seen = set()
         for opk, lst in desc_ivs(r, dyn, L).items():
-            isw = opk in ("O", "R")
+            isw = T.is_write_operand(r, opk)
             ivs = [(cp, a_, min(b_, VW)) for cp in cps for a_, b_ in lst if a_ < VW]
             ops.append((opk, isw, ivs))
             seen.update((isw, cp * VO + a_, cp * VO + b_) for cp, a_, b_ in ivs)
@@ -124,7 +131,7 @@ def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
                 for cp, a_, b_ in ivs:
                     wmask[a_:b_] = True
     hp = np.zeros(VW, bool)
-    for a_, b_ in HPRE:
+    for a_, b_ in PINNED:
         hp[a_:b_] = True
     vals = []
     uf = UF()
@@ -175,7 +182,7 @@ def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
                     ids |= read(p_, x0, x1, t, anchor)
                     continue
                 if hp[x0:x1].all():
-                    for h0, h1 in HPRE:
+                    for h0, h1 in PINNED:
                         if h0 <= x0 < h1:
                             if (p_, h0) not in pin_vid:
                                 pin_vid[(p_, h0)] = new(p_, h0, h1, -1.0, 1e18, "pinned_column", f"hpre{h0}")
@@ -233,7 +240,7 @@ def values(seg, s, fps, dyn, skip=frozenset(), joins=()):
             first = {}
             for cp, a_, b_ in ivs:
                 if hp[a_:b_].all() and cp // SPC == 0:      # the residual column h / PRE: updated IN PLACE
-                    for h0, h1 in HPRE:
+                    for h0, h1 in PINNED:
                         if h0 <= a_ < h1:
                             if (cp, h0) not in pin_vid:
                                 pin_vid[(cp, h0)] = new(cp, h0, h1, -1.0, 1e18, "pinned_column", f"hpre{h0}")
@@ -456,14 +463,83 @@ def _greedy_by_size(objs, floor):
     return hw, out
 
 
-def place(objs):
-    """pinned columns at 0 (in AR order); the rest by the better of first-fit by start time and greedy by size;
+def carried_values(segs):
+    """WHOLE TOKEN cross-segment VM flow from the footprints (AR word offsets; every copy folds onto its AR word):
+    per segment, the words read before any in-segment writer (a record's own self-overwritten destination excluded,
+    as C4) and the words written.  CARRIED = read-before-write in segment k AND written by an earlier segment (outside
+    h / PRE): a value one segment produces and a later one consumes -- it must sit at ONE address in both, so it is
+    pinned like h / PRE.  The pinned runs are closed over every footprint interval that touches them (a writer or
+    reader is wholly inside or wholly outside).  HOST = read-before-write and written by no segment (preloaded).
+    segs: [(key, s, fps)] in programme order -> dict(carried=[(lo, hi)], host=[...], detail)"""
+    hp = np.zeros(VW, bool)
+    for a_, b_ in HPRE:
+        hp[a_:b_] = True
+    rbw, wm, ivs_all = {}, {}, []
+    for key, s, fps in segs:
+        w, rb = np.zeros(VW, bool), np.zeros(VW, bool)
+        for i in sorted(range(len(s["ex"])), key=lambda i: s["start"][i]):
+            rd, wr = fps[i]
+            own = np.zeros(VW, bool)
+            wv = [(lo % VO, min(lo % VO + hi - lo, VW)) for sp, lo, hi in wr if sp == "VM" and lo % VO < VW]
+            for a_, b_ in wv:
+                own[a_:b_] = True
+            for sp, lo, hi in rd:
+                if sp == "VM" and lo % VO < VW:
+                    a_, b_ = lo % VO, min(lo % VO + hi - lo, VW)
+                    rb[a_:b_] |= ~w[a_:b_] & ~own[a_:b_]
+                    ivs_all.append((a_, b_))
+            for a_, b_ in wv:
+                w[a_:b_] = True
+                ivs_all.append((a_, b_))
+        rbw[str(key)], wm[str(key)] = rb & ~hp, w
+    keys = [str(k) for k, _, _ in segs]
+    car, host, det = np.zeros(VW, bool), np.zeros(VW, bool), []
+    before = np.zeros(VW, bool)
+    anyw = np.zeros(VW, bool)
+    for k in keys:
+        anyw |= wm[k]
+    for k in keys:
+        c = rbw[k] & anyw                           # earlier segment, or a later one / itself (next-token state)
+        if c.any():
+            det.append(dict(segment=k, words=int(c.sum()), from_earlier=int((c & before).sum())))
+        car |= c
+        host |= rbw[k] & ~anyw
+        before |= wm[k]
+    while True:                                     # close the runs over every interval that touches them
+        grow = False
+        for a_, b_ in ivs_all:
+            seg_ = car[a_:b_]
+            if seg_.any() and not seg_.all():
+                car[a_:b_] = True
+                grow = True
+        if not grow:
+            break
+
+    def runs(m):
+        w = np.nonzero(m)[0]
+        return [(int(r[0]), int(r[-1]) + 1) for r in np.split(w, np.nonzero(np.diff(w) != 1)[0] + 1)] if w.size else []
+    return dict(carried=runs(car), host=runs(host), consumers=det)
+
+
+def pinned_layout(n_rows):
+    """the token-wide pinned map: every PINNED interval as an n_rows row array at a fixed base, in AR order (the same
+    in every segment, whether or not the segment touches it) -> ({lo: base}, floor words)"""
+    addr, out = 0, {}
+    for lo, hi in sorted(PINNED):
+        out[lo] = addr
+        addr += n_rows * (-(-(hi - lo) // ALIGN) * ALIGN)
+    return out, addr
+
+
+def place(objs, pinmap=None):
+    """pinned columns at 0 (in AR order; pinmap = the token-wide fixed layout, whole-token images); the rest by the
+    better of first-fit by start time and greedy by size;
     -> dict(pinned_words, high_water, object_bound, method, per-method high water)"""
     addr = 0
     for o in sorted([o for o in objs if o["kind"] == "pinned_column"], key=lambda o: o["lo"]):
-        o["base"] = addr
+        o["base"] = addr if pinmap is None else pinmap[0][o["lo"]]
         addr += _need(o)
-    floor = addr
+    floor = addr if pinmap is None else pinmap[1]
     tries = dict(first_fit_by_time=_first_fit_by_time(objs, floor), greedy_by_size=_greedy_by_size(objs, floor))
     meth = min(tries, key=lambda k: tries[k][0])
     for n, b in tries[meth][1].items():
@@ -1067,8 +1143,17 @@ def assemble_token(out_dir, mode, N, segblobs, prologue, res):
     (out_dir / name).write_bytes(bytes(img))
     liveins = {k: dict(words=s["livein_words"], top=s["livein_top"][:4]) for k, s in res["segments"].items()
                if s.get("livein_words")}
+    pins = defaultdict(set)                 # every pinned interval at ONE base in every segment that touches it
+    for s in res["segments"].values():
+        for lo, b in s["alloc"].get("pinned_bases", {}).items():
+            pins[lo].add(b)
+    pin_ok = all(len(v) == 1 for v in pins.values())
+    car = res.get("carried", {})
+    host = car.get("host", [])
     return dict(image=name, bytes=len(img), records=nrec, sha256=hashlib.sha256(bytes(img)).hexdigest(),
-                liveins=liveins, one_vm_map=not liveins,
+                liveins=liveins, pinned_bases={k: sorted(v) for k, v in pins.items()}, pinned_one_base=pin_ok,
+                host_preloaded=host,
+                one_vm_map=(not liveins) and pin_ok and not host,
                 end_at=ends, end_ok=(ends == [nrec - 1]), ctl_ops=dict(ops), segments=table,
                 vm_need_words=need, fits_2p19=need <= 1 << 19,
                 errors=sum(len(s.get("errors", ())) for s in res["segments"].values()))
@@ -1122,14 +1207,25 @@ def main():
         datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, mode=a.mode, N=N, P=a.P,
         isa_version=IR.VERSION, segments={})
     a.out.mkdir(parents=True, exist_ok=True)
-    work = []
-    for key, seg, s in SC.schedule_segments(prog, None if a.whole else set(a.layers.split(","))):
-        fps = EG.footprints(seg, s)
+    work, pre = [], [(key, seg, s, EG.footprints(seg, s))
+                     for key, seg, s in SC.schedule_segments(prog, None if a.whole else set(a.layers.split(",")))]
+    pinmap = None
+    if a.whole and not a.legacy:            # carried values -> pinned (one address for producer and consumers)
+        cv = carried_values([(k, s, f) for k, _, s, f in pre])
+        PINNED[:] = list(HPRE) + cv["carried"]
+        pinmap = pinned_layout(N)
+        res["carried"] = dict(cv, pinned=[[lo, hi, pinmap[0][lo]] for lo, hi in sorted(PINNED)],
+                              pinned_words=pinmap[1],
+                                    rule="AR intervals read before any in-segment writer and written by some segment "
+                                   "(outside h / PRE): pinned N-row arrays at one token-wide base, like h / PRE")
+        print("carried", json.dumps(res["carried"])[:800], flush=True)
+    for key, seg, s, fps in pre:
         skip = frozenset() if (a.legacy or N == 1) else frozenset(union_skip(seg, s, fps))
         joins = () if (a.legacy or N == 1) else union_join_families(seg, s, skip)
         vals, uf, opmap, seg_end = values(seg, s, fps, dyn, skip, joins)
         objs, comp2obj = build_objects(vals, uf, N)
-        pl = place(objs)
+        pl = place(objs, pinmap)
+        pl["pinned_bases"] = {str(o["lo"]): o["base"] for o in objs if o["kind"] == "pinned_column"}
         se = None
         if not a.legacy:
             se = SegEmit(seg, s, dyn, objs, comp2obj, uf, opmap, N, a.mode, a.P, Aux(pl["high_water"]), fps, skip)
@@ -1140,9 +1236,9 @@ def main():
         for w in work:
             w[-1].aux = Aux(gh)
         res["vm_map"] = dict(aux_base=-(-gh // 32) * 32, largest_high_water=gh,
-                             note="pinned columns h / PRE at 0, every segment's aux at aux_base; values a segment reads "
-                                  "before its own writer (live-ins, not pinned) are listed in token.liveins: their "
-                                  "producer's placement is NOT yet tied to the consumer's (open)")
+                             note="pinned columns h / PRE + the carried values (res.carried) at one token-wide base, "
+                                  "every segment's aux at aux_base; token.one_vm_map requires no live-ins, one base "
+                                  "per pinned interval, no host-preloaded words")
     if users and not a.legacy:
         ustride, tried = user_stride([w[-1] for w in work])
         res["users_hbm"] = dict(hsh=USER_HSH, stride_bytes=ustride, collisions_by_stride={str(k): v for k, v in

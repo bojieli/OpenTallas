@@ -56,7 +56,7 @@
 // later (the compiler counts it, as the pin registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_smerge #(
-    parameter integer NL      = 4,
+    parameter integer NL      = 3,      // query lanes = P (P3 default, owner 10-19; generic 1..4)
     parameter integer L       = 16,
     parameter integer TAGW    = 16,
     parameter integer ALAT    = 7,

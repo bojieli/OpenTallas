@@ -16,7 +16,7 @@
 // adders, per-lane flop rings); STORE = 1 keeps per-lane merges but on flop stacks (the fallback).  Arithmetic identical.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_slice #(
-    parameter integer NL    = 4,
+    parameter integer NL    = 3,       // query lanes = SM accumulator lanes P (P3 default, owner 10-19; generic 1..4)
     parameter integer LV    = 4,
     parameter integer KVMUT = 0,
     parameter integer PVMUT = 0,
@@ -44,7 +44,7 @@ module ot_hnx_att4_slice #(
     input  wire                 mclr,
     input  wire                 mw_en,
     input  wire [3:0]           mw_addr,
-    input  wire [16*NL-1:0]     mw_data,
+    input  wire [63:0]          mw_data,     // fixed R10 layout: row 16 a + i, lane l = bit 4 i + l
     // per-lane results
     output wire [NL-1:0]        sc_v,
     output wire [32*NL-1:0]     sc_y,

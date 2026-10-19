@@ -21,13 +21,16 @@
 // Loaders (before cfg_v, as the P = 1 x loader):  x: xw_en / xw_lane / xw_addr / xw_data -- QK words 0..7 = lane's q
 // image, PV words 0..n_l-1 = p_l[o] (BF16, lane 0 of the word);  mask: mw_en / mw_addr / mw_data, 16 rows a word
 // (row 16 a + i, lane l = bit NL i + l); the per-lane row counts accumulate on the writes (mclr zeroes them).
+// P3 (owner 10-19 0le, lane HBM-NEXT-P3-UNITS): NL = the SM accumulator lane count P, production default 3 (generic
+// 1..4).  The mask word keeps the FIXED 4-bit-per-row layout of the CMTP R10 plan words (row 16 a + i, lane l = bit
+// 4 i + l, mw_data 64 b) at every NL, so the plan record is P-independent; bits of lanes >= NL are not stored.
 // Tag to lane l's columns: [15] pv [14] run_first [13] run_last; QK [12:3] = o_l, [2:0] = ring slot; PV [2:0] = slot.
 // Mutants (bench negative controls): MUT 1 = lane ordinals count every union row (zero insertion); MUT 2 = PV lanes
 // ignore the mask (accumulate every union row); MUT 3 = PV x read at the union row, not the lane ordinal; MUT 4 = lane l
 // reads lane l^1's mask bit.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_issue #(
-    parameter integer NL    = 4,
+    parameter integer NL    = 3,
     parameter integer MROWS = 256,
     parameter integer MUT   = 0
 ) (
@@ -45,7 +48,7 @@ module ot_hnx_att4_issue #(
     input  wire                 mclr,
     input  wire                 mw_en,
     input  wire [3:0]           mw_addr,
-    input  wire [16*NL-1:0]     mw_data,
+    input  wire [63:0]          mw_data,
     // from the converter
     input  wire                 b_valid,
     output wire                 b_ready,
@@ -84,13 +87,13 @@ module ot_hnx_att4_issue #(
     reg [8:0]    clen [0:NL-1];
     integer i, l2;
     reg [8:0] pc;
-    always @(posedge clk) if (mw_en) for (i = 0; i < 16; i = i + 1) mrow[{mw_addr, i[3:0]}] <= mw_data[NL*i +: NL];
+    always @(posedge clk) if (mw_en) for (i = 0; i < 16; i = i + 1) mrow[{mw_addr, i[3:0]}] <= mw_data[4*i +: NL];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) for (l2 = 0; l2 < NL; l2 = l2 + 1) begin cnt[l2] <= 9'd0; clen[l2] <= 9'd0; end
         else begin
             for (l2 = 0; l2 < NL; l2 = l2 + 1) begin
                 pc = 9'd0;
-                for (i = 0; i < 16; i = i + 1) pc = pc + {8'd0, mw_data[NL*i + l2]};
+                for (i = 0; i < 16; i = i + 1) pc = pc + {8'd0, mw_data[4*i + l2]};
                 if (mclr) cnt[l2] <= 9'd0;
                 else if (mw_en) cnt[l2] <= cnt[l2] + pc;
                 if (cfg_v) clen[l2] <= cnt[l2];
@@ -103,7 +106,7 @@ module ot_hnx_att4_issue #(
     wire [NL-1:0] m;
     genvar g;
     generate for (g = 0; g < NL; g = g + 1) begin : g_m
-        if (MUT == 4 && NL > 1) begin : g_swap
+        if (MUT == 4 && NL > 1 && (g ^ 1) < NL) begin : g_swap
             assign m[g] = mraw[g ^ 1];
         end else begin : g_ok
             assign m[g] = mraw[g];

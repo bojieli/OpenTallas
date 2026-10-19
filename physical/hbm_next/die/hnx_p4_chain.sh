@@ -45,11 +45,28 @@ tail -7 $A/lockstep.log; [ $rc = 0 ] || echo "S5_LOCKSTEP_FAIL (recorded; chain 
 fi
 step S6 views
 otr 16 1 python3 tools/hbm_die_v15/v16_views.py --out $B/hnx_vplan --contract $B/net/hnx_contract.json > $A/views.otrun 2>&1; tail -3 $A/views.otrun
+views_merge() {
 ssh $H "rm -rf $B/views_land && mkdir -p $B/views_land/synth && cp -al $G2V/. $B/views_land/synth/ 2>/dev/null; cp -al $B/views/synth/. $B/views_land/synth/ 2>/dev/null; \
   [ -d $B/hnx_vplan/synth ] && cp -al $B/hnx_vplan/synth/. $B/views_land/synth/ 2>/dev/null; cp $B/hnx_vplan/views.json $B/views_land/ && cp $B/net/hnx_contract.json $B/views_land/contract.json && \
   python3 -c \"
 import json,os; V=json.load(open('$B/views_land/views.json')); miss=[c for c,v in V.items() if v.get('kind','').startswith('SYNTH') and not os.path.exists('$B/views_land/synth/'+c+'/meta.json')]
-print('VIEWS', len(V), 'SYNTH_MISSING', len(miss), ' '.join(miss[:40]))\"" | tee $A/views_check.txt
+print('VIEWS', len(V), 'SYNTH_MISSING', len(miss), ' '.join(miss))\"" | tee $A/views_check.txt
+}
+views_merge
+# S6 structural fix (P3-DIE 10-19): the relay/landing layer of a new frame instantiates landing / lane-hop masters (hbfd_land0_*,
+# hbfd_lh0_*_f2, hbfd_lh_*_f4, ...) that neither GEN2's views nor an earlier hnx run synthesised.  The missing list is DERIVED
+# from this run's view plan (not a hand list): pull the plan rows + wrappers, add the wrappers to the case src (add-only),
+# synth exactly those masters (hnx_s6_synth.sh: GEN2 synth_master/etm form, normal priority, LIBCELLS=1 for lh0/land0),
+# fetch (source bytes checked), upload, and merge again.  No stubs: the chain still stops if any master stays missing.
+if ! grep -q "SYNTH_MISSING 0" $A/views_check.txt; then
+  MISS=$(sed -n 's/.*SYNTH_MISSING [0-9]* //p' $A/views_check.txt)
+  step S6S auto_synth $MISS
+  V=$A/vplan_s6; mkdir -p $V
+  rsync -a $H:$B/hnx_vplan/jobs.tsv $H:$B/hnx_vplan/views.json $V/ && rsync -a $H:$B/hnx_vplan/wrap/ $V/wrap/ && scp -q $H:$B/net/hnx_contract.json $V/hnx_contract.json || { echo S6S_PULL_FAIL; exit 16; }
+  ssh $H "mkdir -p $B/src/v16w && cp -n $B/hnx_vplan/wrap/v16w_*.sv $B/src/v16w/" || { echo S6S_WRAP_FAIL; exit 16; }
+  NOCHAIN=1 bash $W/tools/hbm_next/die/hnx_s6_synth.sh $MISS || { echo S6S_FAIL; exit 16; }
+  views_merge
+fi
 grep -q "SYNTH_MISSING 0" $A/views_check.txt || { echo S6_SYNTH_MISSING; exit 16; }
 step S7 gen
 $OTRUN --mem 64 --threads 2 --hosts $H --dir $B -- bash $B/hnx_case_relay.sh $TAG $B/views_land hnx_case_${TAG}_land > $A/gen.otrun 2>&1; echo "GEN rc=$? $(date -Is)"; tail -22 $A/gen.otrun
@@ -59,4 +76,4 @@ step S8 grt
 $OTRUN --mem 160 --threads 16 --hosts $H --dir $B/hnx_case_${TAG}_land -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/hnx_case_${TAG}_land/run.sh > $A/grt.otrun 2>&1; echo "GRT rc=$? $(date -Is)"
 ssh $H "cd $B/hnx_case_${TAG}_land/out; cat run.exit; grep -E 'OT_DIE_REP|overflow|Total wire|tns|wns' run.log | tail -15; cat neighbour_skew_gate.log; tail -5 hold_budget.log" > $A/grt_summary.txt 2>&1
 cat $A/grt_summary.txt
-echo HNX_P4_CHAIN_DONE
+echo HNX_P4_CHAIN_DONE TAG=$TAG
