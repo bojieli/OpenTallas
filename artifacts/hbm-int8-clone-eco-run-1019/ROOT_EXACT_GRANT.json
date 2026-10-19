@@ -1,0 +1,19 @@
+{
+  "approved": true,
+  "owner": "ROOT",
+  "allowed_stage": "INT8_CLONE_ECO_FEB988_V1",
+  "manifest_sha256": "e1020ba0c49754b21a16882c0ddd8679bb98aa842dc0743656930b02547d10c5",
+  "placement_model_png_sha256": "0a6d722b9f6977a72bd9764081921fa3ade9554e469b40d868f021626b2b492b",
+  "personally_reviewed_png": true,
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "checkpoint_sha256": "fc6b007164e4e5c2a934052922d40114cc4fc60602423d023aa53fa2a67d2081",
+  "reviewed_commit": "0853def0c",
+  "issued_at": "2026-10-19T15:06:10.483715-07:00",
+  "scope": "ONE isolated exactclone nativeOpenDBECO thenreadonlyfullproofs/fixtures; no CTS/route/gate/adoption/retry/IOpadding/constraintchanges",
+  "resource": {
+    "mem_GB": 16,
+    "threads": 2,
+    "disk_GB": 20,
+    "unpinned": true
+  }
+}

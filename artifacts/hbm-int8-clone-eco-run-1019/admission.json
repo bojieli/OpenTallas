@@ -1,0 +1,53 @@
+{
+  "status": "ADMITTED_ONE_EXACT_CLONE_IN_PROGRESS",
+  "source_commit": "0853def0c",
+  "manifest_sha256": "e1020ba0c49754b21a16882c0ddd8679bb98aa842dc0743656930b02547d10c5",
+  "manifest_entries": 69,
+  "root_grant_sha256": "c62982b4b797aba68aba692b7bbc2b8acd8b06b224fde02e472d8fa69d5f6cad",
+  "checkpoint_sha256": "fc6b007164e4e5c2a934052922d40114cc4fc60602423d023aa53fa2a67d2081",
+  "unpinned": true,
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-141381-1792447644",
+  "request": {
+    "mem_GB": 16,
+    "threads": 2,
+    "disk_GB": 20
+  },
+  "preflight": {
+    "ep5": {
+      "available_GB": 447,
+      "scratch_free_GB": 912
+    },
+    "ep6": {
+      "available_GB": 929,
+      "scratch_free_GB": 5718
+    },
+    "ep7": {
+      "available_GB": 754,
+      "scratch_free_GB": 6273
+    },
+    "ep8": {
+      "available_GB": 917,
+      "scratch_free_GB": 78
+    }
+  },
+  "hash_image_checks_all_four_hosts": true,
+  "remote_directory": "/srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019",
+  "native_helpers": "PINNED_KIT_ONLY_NO_RUNTIME_SUBSTITUTION",
+  "no_retry": true,
+  "no_adoption": true,
+  "local_client_pid": 2787978,
+  "local_parent_pid": 2787977,
+  "local_exec_session": 97725,
+  "remote_runner_pid": 141381,
+  "remote_openroad_pid": 141791,
+  "last_observed_phase": "clone_eco active; platform0; originalPG21246 PASS; no checkpoint/status or firstfailure",
+  "collection_owner": "/root/takeover2_hbm",
+  "next_collector_actions": [
+    "Preserve original live run and single grant; never invoke run.sh again",
+    "Read stage_exit_status/clone_eco.log/checkpoint.status and terminal ot-run RAN marker",
+    "After native checkpoint and raw export, sync all immutable logs and precise census/net reports",
+    "Render actual native placement/density with render_native.py; root personal PNG review",
+    "Review complete24978PG/conductor/strict/3186endpoint TTFF/292source precise caps/domains/electrical/pulse/fixtures; parentIO unqualified"
+  ]
+}
