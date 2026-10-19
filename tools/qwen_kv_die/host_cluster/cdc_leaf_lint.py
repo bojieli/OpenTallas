@@ -15,6 +15,9 @@ several families is reported (it is assigned to the first and the lint names the
 KV-CDC2 (10-18): the leaves bind leaf-local CDC forks (rtl/qwen_sys/host_cluster_cdc_20261018/forks.json) and their
 mixed-family output buses are split per family by gen_cluster.py; the pre-fix record (cdc_leaf_lint.json, REFUSED x3)
 stays as committed history, the fixed run writes cdc_leaf_lint_cdc2.json.
+
+KV-HROOT-CDC (10-18): runs on main's gray_fifo_cdc_constraints.py with the ported (d) event groups; hard SRAM macros
+use main's extension mode (reviewed_gray_fifo_extensions, blackbox view listed in sources, SAT-miter storage proof).
 """
 import argparse
 import json
@@ -47,6 +50,7 @@ LEAVES = {
         dict(name='fence_fault', src_domain='core', dst_domain='host', source=FENCE + 'fc',
              chain=[FENCE + 'fc1', FENCE + 'fc2'], sync_max_delay_ps=773.333, why='sticky fault level')]),
     'qkd_hr_ingest_qm': dict(families=('core', 'host', 'ingest'), macros=[dict(view=SRAM, count=32, inst='*')],
+                             ext='32 ot_sram_1r1w_32x128_m1 qm table macros, each clocked by one family root',
                              synchronizers=[
         dict(name='qm_csr', src_domain='ingest', dst_domain='core', source=QM + 'csr_tgl',
              chain=[QM + 'tg_s[0]', QM + 'tg_s[1]', QM + 'tg_s[2]'], payload=[QM + 'share_i'],
@@ -86,7 +90,25 @@ def sources(top, base=ROOT):
         need.add(mod)
         todo += [w for w in set(re.findall(r'\b(\w+)\s*(?:#\s*\(|\w+\s*\()', body[mod])) if w in owner and w != mod]
     used = {owner[m] for m in need}
-    return [f for f in files if f in used]
+    macros = [f'{m["view"]}/{Path(m["view"]).name}_bb.v' for m in LEAVES.get(top, {}).get('macros') or []]
+    return [f for f in files if f in used] + macros
+
+
+def macro_files(spec, base=ROOT):
+    """Liberty views of the declared macros (the lint reads them; the blackbox is already a source)."""
+    return [str(p.relative_to(base)) for m in spec.get('macros', []) for p in (base / m['view']).glob('*.lib')]
+
+
+def netlist(s, base=ROOT):
+    """The lint's own elaboration + netlist of spec s (main's API: extension mode when the leaf has macros)."""
+    hashes = G._elaborate_sources(s, base)[0]
+    doc = G.elaborate(str(base.resolve()), s['top'], hashes, (), G._yosys())
+    ext = G.extensions(s) is not None
+    return doc, (G._netlist(doc, s, G._macro_clock_pins(s, base), True) if ext else G._netlist(doc, s))
+
+
+def macro_domain(net, c):
+    return net.clock_domain.get(c['conn'][c['clock']][0])
 
 
 def base_spec(top, leaf, inputs, outputs, base=ROOT):
@@ -99,16 +121,15 @@ def base_spec(top, leaf, inputs, outputs, base=ROOT):
         s['cdc_synchronizers'] = leaf['synchronizers']
     if leaf.get('macros'):
         s['macros'] = leaf['macros']
+    if leaf.get('ext'):
+        s[G.EXTENSIONS] = dict(why=leaf['ext'])
     return s
 
 
 def infer_ports(top, leaf):
     """(inputs, outputs, notes): actual port families from the elaborated netlist."""
     s = base_spec(top, leaf, {}, {})
-    hashes, _ = G._elaborate_sources(s, ROOT)
-    hashes = hashes + G._macro_sources(s, ROOT)
-    doc = G.elaborate(str(ROOT), top, hashes, (), G._yosys())
-    net = G._netlist(doc, s, {k: v[2] for k, v in G._macro_views(s, ROOT).items()})
+    doc, net = netlist(s)
     m = doc['modules'][top]
     sampled = {}
     for q, f in net.flops.items():
@@ -116,10 +137,12 @@ def infer_ports(top, leaf):
             for leafbit in net.cone(bit):
                 sampled.setdefault(leafbit, set()).add((net.domain(q), pin))
     for c in net.macros.values():
-        for pin, bits in c['inputs'].items():
+        for pin, bits in c['conn'].items():
+            if pin == c['clock'] or c['dirs'][pin] != 'input':
+                continue
             for b in bits:
                 for leafbit in net.cone(b):
-                    sampled.setdefault(leafbit, set()).add((c['domain'], 'macro'))
+                    sampled.setdefault(leafbit, set()).add((macro_domain(net, c), 'macro'))
     ins, outs, notes = {}, {}, []
     for name, p in m['ports'].items():
         if name in CLOCKS.values():
@@ -137,8 +160,8 @@ def infer_ports(top, leaf):
                 for lb in net.cone(b):
                     if lb in net.flops:
                         fams.add(net.domain(lb))
-                    elif lb in net.macro_out:
-                        fams.add(net.macros[net.macro_out[lb]]['domain'])
+                    elif net.driver.get(lb, ('',))[0] == 'macro':
+                        fams.add(macro_domain(net, net.macros[net.driver[lb][1]]))
             fams = sorted(fams)
             if len(fams) > 1:
                 notes.append(f'output {name} driven by families {fams}')
@@ -185,9 +208,7 @@ def event_diagnostic(top, leaf, ins, outs):
     if not leaf.get('synchronizers'):
         return None
     s = base_spec(top, leaf, ins, outs)
-    hashes = G._elaborate_sources(s, ROOT)[0] + G._macro_sources(s, ROOT)
-    net = G._netlist(G.elaborate(str(ROOT), top, hashes, (), G._yosys()), s,
-                     {k: v[2] for k, v in G._macro_views(s, ROOT).items()})
+    net = netlist(s)[1]
     role = {}
 
     def tag(q, r):
@@ -222,8 +243,7 @@ def patched(top, leaf, ins, outs, scratch):
     import shutil
     s = base_spec(top, leaf, ins, outs)
     groups = list(s.get('cdc_synchronizers') or [])
-    for f in s['sources'] + [x[0] for x in G._macro_sources(s, ROOT)] + \
-            [str(p.relative_to(ROOT)) for m in s.get('macros', []) for p in (ROOT / m['view']).glob('*.lib')]:
+    for f in s['sources'] + macro_files(s):
         (scratch / f).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / f, scratch / f)
     applied = []
@@ -261,8 +281,7 @@ def unfixed(top, orig):
             shutil.copy(ROOT / f, scratch / f)
         (scratch / lf).write_text(re.sub(r'(?m)^(\s+)' + FORKS[orig]['fork'] + r'\b', lambda m: m.group(1) + orig, text))
         s = base_spec(top, leaf, {}, {}, scratch)
-        for f in [x[0] for x in G._macro_sources(s, ROOT)] + \
-                [str(p.relative_to(ROOT)) for m in s.get('macros', []) for p in (ROOT / m['view']).glob('*.lib')]:
+        for f in macro_files(s):
             (scratch / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / f, scratch / f)
         groups = [g for g in (leaf.get('synchronizers') or []) if not g['name'].startswith('qm_fault')] \
@@ -297,8 +316,7 @@ def run(top):
     m = re.match(r'reviewed_gray_fifos cross-family asynchronous control (\w+) \(core\) -> ', r.get('refusal', ''))
     if m:
         s = base_spec(top, leaf, ins, outs)
-        hashes = G._elaborate_sources(s, ROOT)[0] + G._macro_sources(s, ROOT)
-        doc, added, moved = split_reset(G.elaborate(str(ROOT), top, hashes, (), G._yosys()), top, m.group(1), leaf['families'])
+        doc, added, moved = split_reset(netlist(s)[0], top, m.group(1), leaf['families'])
         ins2 = {f: v + ([added[f]] if f in added else []) for f, v in ins.items()}
         for f in added:
             ins2.setdefault(f, [added[f]])
