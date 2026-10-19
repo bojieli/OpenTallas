@@ -316,6 +316,7 @@ def audit(a):
         res['error'] = 'gold elaboration failed: ' + (work / 'gold1.log').read_text()[-1500:]
         return res
     regs = gold_states(json.loads((work / 'gold1.json').read_text()), 'gold')
+    ge = observe_ge_cells(a.observe_ge, work / 'gold1.il')
     bit_of = {}
     for b_, ns in regs.items():
         for n in ns:
@@ -344,7 +345,15 @@ def audit(a):
     if obs:
         L += ['cd', 'cd gate'] + [x for i in range(len(obs)) for x in
                                   (f'add -wire S__proof_meta_{i:03d} 1', f"connect -set S__proof_meta_{i:03d} 1'0")]
-    res['observe_zero'] = dict(regex=a.observe_zero_regex, signals=obs) if a.observe_zero_regex else None
+    # --observe-ge: a reachable-state RANGE invariant (e.g. a 40-deep FIFO pointer never holds 40..63): a $ge cell added
+    # to the elaborated gold (gold1.il; its sha is recorded) whose output is proven ZERO the same joint way.
+    for i, w_ in enumerate(ge):
+        L += [f'add -wire S__proof_ge_{i:03d} 1', f'connect -set S__proof_ge_{i:03d} {w_["wire"]}']
+    if ge:
+        L += ['cd', 'cd gate'] + [x for i in range(len(ge)) for x in
+                                  (f'add -wire S__proof_ge_{i:03d} 1', f"connect -set S__proof_ge_{i:03d} 1'0")]
+    res['observe_zero'] = dict(regex=a.observe_zero_regex, signals=obs, ge=ge,
+                               gold1_il_sha256=sha(work / 'gold1.il')) if (a.observe_zero_regex or ge) else None
     L += ['cd', 'setattr -set keep 1 w:S__*']
     L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d']
     prelude = list(L)
@@ -371,6 +380,29 @@ def audit(a):
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
                                    f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
     return res
+
+
+def observe_ge_cells(specs, il):
+    """'WIRE:LSB:WIDTH:CONST' -> a $ge cell (WIRE[LSB+:WIDTH] >= CONST) appended to module gold of gold1.il."""
+    if not specs:
+        return []
+    text = il.read_text()
+    k = text.index('module \\gold\n')
+    e = text.index('\nend\n', k)
+    add, out = [], []
+    for i, sp in enumerate(specs):
+        wire, lsb, wid, const = sp.rsplit(':', 3)
+        lsb, wid, const = int(lsb), int(wid), int(const)
+        if not re.search(r'^  wire width \d+ (?:offset \d+ )?' + re.escape('\\' + wire) + r'$', text[k:e], re.M):
+            raise SystemExit(f'--observe-ge: gold has no wire {wire}')
+        name = f'kvp_obs_ge_{i:03d}'
+        add += [f'  wire width 1 \\{name}', f'  cell $ge $kvp_obs_ge_cell_{i:03d}', '    parameter \\A_SIGNED 0',
+                f'    parameter \\A_WIDTH {wid}', '    parameter \\B_SIGNED 0', f'    parameter \\B_WIDTH {wid}',
+                '    parameter \\Y_WIDTH 1', f'    connect \\A \\{wire} [{lsb + wid - 1}:{lsb}]',
+                f"    connect \\B {wid}'{format(const, '0' + str(wid) + 'b')}", f'    connect \\Y \\{name}', '  end']
+        out.append(dict(spec=sp, wire=name, predicate=f'{wire}[{lsb + wid - 1}:{lsb}] >= {const}'))
+    il.write_text(text[:e] + '\n' + '\n'.join(add) + text[e:])
+    return out
 
 
 def reset_base(a, work, prelude, states, pair):
@@ -452,6 +484,8 @@ def main(argv=None):
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
     a1.add_argument('--observe-zero-regex', help='gold-only registers proven ZERO jointly (see audit())')
+    a1.add_argument('--observe-ge', action='append', default=[],
+                    help="WIRE:LSB:WIDTH:CONST gold range predicate proven ZERO jointly (repeatable)")
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
     a1.add_argument('--reset-port', default='rst_n')
     a1.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
