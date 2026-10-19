@@ -253,12 +253,13 @@ module qfd_tt_ctlm_dv #(
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || mu_fault_q) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || mu_fault_q || ctx_write_fault) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
 
     // ------------------------------------------------------------------ static command calendar
+    wire ctx_write_fault;
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
@@ -274,6 +275,10 @@ module qfd_tt_ctlm_dv #(
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
         .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx_cal), .ctx_load(c_ctxld_cal));
+    qfd_mu_context_guard #(.NU(NU), .ENABLE(OPS), .MUT((MUT == 36) ? 1 : 0)) u_ctx_guard (
+        .ck(ck), .rst_n(rst_n), .load(ctx_ld), .load_mask(ctx_mask),
+        .consume(c_emb || c_seg), .consume_user(c_user),
+        .result_write(r_fill), .result_user(r_wr), .fault(ctx_write_fault));
     // user-0 gates (NU > 1): the head / XPF see the latency user's SU stream only (MUT 17: every user's)
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}}) || (MUT == 17);
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}}) || (MUT == 19);
