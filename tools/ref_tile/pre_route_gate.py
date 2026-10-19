@@ -2046,7 +2046,7 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
         pins = ((cr.get("macros") or {}).get("pins")) or []
         if not pins:
             continue
-        span, ok, raw_rows, eff = {}, True, [], {}
+        span, ok, raw_rows, eff, cot_rows = {}, True, [], {}, []
         for x in pins:
             inst, lpin = (str(x.get("pin", "")).rsplit("/", 1) + [""])[:2]
             kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
@@ -2062,6 +2062,12 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
                     lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
                     if b.get("mean") is not None:
                         eff[(inst, lpin)] = float(x["arr"]) + float(b["mean"])
+                    if cm and any(not ((v or {}).get(cc) or {}).get("boundary")
+                                  for v in (ins.get("clock_measurements") or {}).values() for cc in ("tt", "ff", "ss")):
+                        # ROOT-INF21 10-19: a boundary pin of a multi-root child record is co-timed with its ref too
+                        cot = CE.landed_record_pins(ROOT / kid["view"], ROOT)["cotimed"].get(lpin)
+                        if cot:
+                            cot_rows.append((inst, lpin, cot))
                 else:
                     raw = CE.landed_raw_pins(ROOT / kid["view"], ROOT)[lpin]
                     rlo, rmean, rhi = raw["refs"][c]
@@ -2072,6 +2078,8 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
                 break
             plo, phi = span.get(kid["inst"], (math.inf, -math.inf))
             span[kid["inst"]] = (min(plo, lo), max(phi, hi))
+        for inst, lpin, cot in cot_rows if ok else []:
+            raw_rows.append((inst, lpin, eff[(inst, lpin)], cot))
         for inst, lpin, e, raw in raw_rows if ok else []:
             r = eff.get((inst, raw["ref"]))
             row = dict(root=src, corner=c, pin=f"{inst}/{lpin}", co_timed=f"{inst}/{raw['ref']}", eff=round(e, 1),

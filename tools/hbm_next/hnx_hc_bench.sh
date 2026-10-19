@@ -6,6 +6,7 @@
 #       q_d4g   SPR 320, N 2, strides 0 (= the d4g bench exactly)        -> TB_HNX_HC_Q PASS
 #       q_m7    q_n4s with MUT 7 (reader ignores the row stride)         -> TB_HNX_HC_Q FAIL (fail witness)
 #       q_m8    q_n4s with MUT 8 (store ignores the row stride)          -> TB_HNX_HC_Q FAIL (fail witness)
+#       q_m9    q_n4s with MUT 9 (HUBFIX: E face copy of the beat-control register one edge late) -> FAIL (fail witness)
 #  2. HC_MIX N-row throughput + lockstep (tb_hnx_hc_eng4: ot_hnx_hc_root TPRE 6 + 4 x ot_hnx_hc_qeng ring = qcen + 8
 #     bankq tiles, the d4g U-ring form DRLY 2 / XRLY 1 / QDRLY 2, RAW0 167 / RS 104), golden = hdc_golden_v41 chunk8
 #     mixes + the codex tail reference (tools/rtl_hbm_hc_eng_static_gate.py --split):
@@ -21,7 +22,7 @@ V "start host=$(hostname) bundle=$(cat $B/BUNDLE_COMMIT 2>/dev/null)"
 H=rtl/hbm_next/hc
 COMMON=(rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv)
 QSRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_q.sv $H/ot_hnx_hc_q.sv $H/ot_hnx_hgi_hc_residual_vm.sv $H/ot_hnx_hgi_hc_result_vm.sv
-  $H/ot_hnx_hgi_hc_gathered_mix_reader.sv $H/ot_hnx_hc_xw_rx.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+  $H/ot_hnx_hgi_hc_gathered_mix_reader.sv $H/ot_hnx_hc_xw_rx.sv $H/ot_hnx_hc_xbrep.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
   rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv
   rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv "${COMMON[@]}"
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
@@ -44,7 +45,7 @@ ESRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_eng4.sv $H/ot_hnx_hc_root.sv $H/ot_hnx_hc_qen
 NS="-GSPR=80 -GRNPOS=4 -GRSTRIDE=1024 -GSSTRIDE=64"
 if [ "$ST" = q ]; then
   qbuild q_n4s "$NS -GMUT=0" & qbuild q_d4g "-GSPR=320 -GRNPOS=2 -GRSTRIDE=0 -GSSTRIDE=0 -GMUT=0" &
-  qbuild q_m7 "$NS -GMUT=7" & qbuild q_m8 "$NS -GMUT=8" &
+  qbuild q_m7 "$NS -GMUT=7" & qbuild q_m8 "$NS -GMUT=8" & qbuild q_m9 "$NS -GMUT=9" &
   wait
   # lint of the eng4 lockstep sources (catches elaboration errors before the 50 GB hierarchical builds)
   verilator --lint-only --timing -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN --top-module tb_hnx_hc_eng4 \
@@ -58,6 +59,7 @@ case $ST in
       [ "$np" = 2 ] && V "HNX_HC_Q_BENCH PASS 2/2" || V "HNX_HC_Q_BENCH FAIL $np/2"; exit 0;;
   qm7) qbuild q_m7 "$NS -GMUT=7"; exit 0;;
   qm8) qbuild q_m8 "$NS -GMUT=8"; exit 0;;
+  qm9) qbuild q_m9 "$NS -GMUT=9"; exit 0;;
 esac
 # ---- HC_MIX N-row cases
 case $ST in e0) NL="1 2 3 4 6 8";; *) NL="4";; esac
