@@ -30,6 +30,14 @@ hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),
 reg reset_n=0;wire runrs=rs&&reset_n,runrq=rq&&reset_n;
 wire[3:0] busy,valid,pfault,calrun;wire[2421:0] cmd[0:3],rawcmd[0:3];
 ot_hbm_su_bridge_release_s rel(.clk_serial(clk),.rst_n(runrq),.prog_busy(busy[0]),.bridge_rst_n(br),.fault(brfault));
+// TEST-ONLY physical-clock observer basis. Control/calendar counters remain unchanged.
+realtime serial_edge_ns=0.0,start_event_ns=0.0;
+function automatic integer elapsed_serial_ps(input realtime event_ns);
+ elapsed_serial_ps=$rtoi((event_ns-start_event_ns)*1000.0+0.5);
+endfunction
+function automatic integer measured_serial_age(input realtime event_ns);
+ measured_serial_age=$rtoi(elapsed_serial_ps(event_ns)/1112.0+0.5);
+endfunction
 integer clock_stream=0,clock_serial=0;time last_stream_ps=0,last_serial_ps=0;
 always @(posedge stream)begin
  clock_stream++;
@@ -37,7 +45,7 @@ always @(posedge stream)begin
  last_stream_ps=$rtoi($realtime*1000+0.5);
 end
 always @(posedge clk)begin
- clock_serial++;
+ serial_edge_ns=$realtime;clock_serial++;
  if(clock_serial>1&&($rtoi($realtime*1000+0.5)-last_serial_ps)!=1112)$fatal(1,"CLOCK_SERIAL_PERIOD");
  last_serial_ps=$rtoi($realtime*1000+0.5);
 end
@@ -159,47 +167,47 @@ end
  (out/'fragment_lifetimes.json').write_text(json.dumps(dict(scope='INTEGER SOURCE OWNERSHIP; real RTL checks emitted separately',overwrites=overwrites,writes=writes,reads=reads),indent=2)+'\n')
  s.append('''integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
 always @(posedge clk)begin
- if(station_start)begin startqt=qt;root_seen=0;
+ if(station_start)begin start_event_ns=$realtime;startqt=qt;root_seen=0;
   if(qt!=6011+9000*(episode+abort_mode)&&!(abort_mode&&qt==6011))$fatal(1,"CP_FIXED_STARTUP_PHASE");
   $display("PROGRAMME_START episode=%0d qt=%0d st=%0d aborted=%0d",episode,qt,st,(abort_mode&&qt==6011));
  end
  #0.001;
  if(runrq&&root_v&&!root_seen)begin root_seen=1;
-  $display("ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,qt-startqt,root_x,capture_count,add_count);
-  if(qt-startqt!=591)$fatal(1,"ROOT_AGE");
+  $display("ROOT episode=%0d age=%0d counter_age=%0d elapsed_ps=%0d data=%h captures=%0d adds=%0d",episode,measured_serial_age(serial_edge_ns),qt-startqt,elapsed_serial_ps(serial_edge_ns),root_x,capture_count,add_count);
+  if(elapsed_serial_ps(serial_edge_ns)!=591*1112)$fatal(1,"ROOT_AGE");
   if(root_x!==gold[episode]||capture_count!=1280||add_count!=1281)$fatal(1,"ROOT_NUMERIC");roots++;
  end
  if(runrq&&rsv)begin
-  $display("SCALAR episode=%0d age=%0d tag=%h data=%h",episode,qt-startqt,rtag,rx);
-  if(qt-startqt!=613)$fatal(1,"SCALAR_AGE");
+  $display("SCALAR episode=%0d age=%0d counter_age=%0d elapsed_ps=%0d tag=%h data=%h",episode,measured_serial_age(serial_edge_ns),qt-startqt,elapsed_serial_ps(serial_edge_ns),rtag,rx);
+  if(elapsed_serial_ps(serial_edge_ns)!=613*1112)$fatal(1,"SCALAR_AGE");
   if(rx!==gold[episode]||rtag!=32'h100)$fatal(1,"SCALAR_IDENTITY");scalars++;
  end
 end
 ''')
  s.append('''always @(posedge clk)if(runrq)begin
  if(|wv)begin
-  $display("RF_PIN episode=%0d age=%0d v=%h addr=%h data=%h",episode,qt-startqt,wv,wa,wd);
-  if(qt-startqt!=646||wv!=1||wa[7:0]!=0||wd[31:0]!==gold[episode])$fatal(1,"RF_WRITE_PIN_ID_AGE");
+  $display("RF_PIN episode=%0d age=%0d elapsed_ps=%0d v=%h addr=%h data=%h",episode,measured_serial_age($realtime),elapsed_serial_ps($realtime),wv,wa,wd);
+  if(elapsed_serial_ps($realtime)!=646*1112||wv!=1||wa[7:0]!=0||wd[31:0]!==gold[episode])$fatal(1,"RF_WRITE_PIN_ID_AGE");
  end
  if(cmd[0][127])begin
-  if(qt-startqt!=648||cmd[0][126:119]!=0)$fatal(1,"RF_CLASS5_ID_AGE");
-  $display("RF_CLASS5 episode=%0d age=%0d",episode,qt-startqt);
+  if(elapsed_serial_ps($realtime)!=648*1112||cmd[0][126:119]!=0)$fatal(1,"RF_CLASS5_ID_AGE");
+  $display("RF_CLASS5 episode=%0d age=%0d elapsed_ps=%0d",episode,measured_serial_age($realtime),elapsed_serial_ps($realtime));
  end
  if(cmd[0][166])begin
-  if(qt-startqt!=650||cmd[0][165]!=1||cmd[0][151:136]!=4096||cmd[0][135:128]!=1)$fatal(1,"DRAIN_ID_AGE_MASK");
-  $display("RF_DRAIN episode=%0d age=%0d",episode,qt-startqt);
+  if(elapsed_serial_ps($realtime)!=650*1112||cmd[0][165]!=1||cmd[0][151:136]!=4096||cmd[0][135:128]!=1)$fatal(1,"DRAIN_ID_AGE_MASK");
+  $display("RF_DRAIN episode=%0d age=%0d elapsed_ps=%0d",episode,measured_serial_age($realtime),elapsed_serial_ps($realtime));
  end
  #0.001;
- if(startqt>0&&qt-startqt==651&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
+ if(start_event_ns>0.0&&elapsed_serial_ps(serial_edge_ns)==651*1112&&core.rf_dsec[31:0]!==gold[episode])$fatal(1,"RF_DSEC_CAPTURE");
  if(s0_0.u_slice.su_w_done[0])begin
-  $display("SERIAL_RETIRE episode=%0d age=%0d",episode,qt-startqt);
-  if(qt-startqt!=670)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
+  $display("SERIAL_RETIRE episode=%0d age=%0d counter_age=%0d elapsed_ps=%0d",episode,measured_serial_age(serial_edge_ns),qt-startqt,elapsed_serial_ps(serial_edge_ns));
+  if(elapsed_serial_ps(serial_edge_ns)!=670*1112)$fatal(1,"SERIAL_NATIVE_DONE_AGE");retired++;
  end
 end
 ''')
  for replica in range(6):
   s.append(f'''always @(posedge clk)begin #0.001;
- if(runrq&&startqt>0&&qt-startqt==647&&core.u_rf.g_bank[0].u_bank.g_replica[{replica}].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica={replica}");
+ if(runrq&&start_event_ns>0.0&&elapsed_serial_ps(serial_edge_ns)==647*1112&&core.u_rf.g_bank[0].u_bank.g_replica[{replica}].v0!==gold[episode])$fatal(1,"RF_COHERENT_COMMIT replica={replica}");
 end
 ''')
  for q in range(4):

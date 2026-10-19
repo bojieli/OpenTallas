@@ -75,3 +75,29 @@ fixed raw control-field ABI used by the reference text generator. Stage the
 same frozen tools directory beside tests/; the station helper adds ROOT/tools
 and ROOT/tools/hbm_static to sys.path. This dependency is source generation
 only, and does not add a compiler/arithmetic model to the station DUT.
+
+Prepared observer correction, **not in frozen native c7**: the mini's actual
+diag showed qt602-startqt10=592 while all1281 real adds, root40a2a1ed,
+1280 captures/1281 adds and every source fault flag were correct. The start
+counter was read before another always block's blocking increment; the root
+observer read it after #1ps. The future full observer records start_event_ns
+at actual command0 and serial_edge_ns at every actual serial rising edge.
+Post-NBA observers use that settled event timestamp, excluding their #1ps
+observation delay. Pre-edge RF command/pin observers use $realtime directly.
+Control, programme, host/calendar images and DUT source remain unchanged.
+
+| Event | Unchanged true edge after command0 | Exact elapsed ps |
+|---|---:|---:|
+| Root held capture |591|657192|
+| Scalar export |613|681656|
+| RF write pin |646|718352|
+| Six coherent RF commits |647|719464|
+| Class5 command |648|720576|
+| DRAIN command |650|722800|
+| RF dsec capture |651|723912|
+| Serial native done |670|745040|
+
+The future checks require these exact physical durations; they never accept an
+extra cycle. The old qt age remains counter_age diagnostic data only. This is
+a testbench observer correction, with zero change to arithmetic/data/control
+calendars or charged latency, pending the actual frozen c7 terminal verdict.
