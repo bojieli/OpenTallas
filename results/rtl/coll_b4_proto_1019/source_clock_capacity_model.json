@@ -1,0 +1,180 @@
+{
+  "status": "SOURCE MODEL; elaborated/mapped census and physical arrivals pending",
+  "source_revision": "1866aaeee",
+  "opt_in": "PR_B4=1 and OT_COLL_B4_NATIVE define together",
+  "LU": 65,
+  "LS": 390,
+  "ring_OFF": 67,
+  "ring_capacity_words": 128,
+  "ring_groups": [
+    {
+      "clock_port": "clk_pring0",
+      "memory_vector_index": 0,
+      "useful_width": 546,
+      "mask_padding_bits": 30,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_pring.g_b[0].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_pring1",
+      "memory_vector_index": 1,
+      "useful_width": 546,
+      "mask_padding_bits": 30,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_pring.g_b[1].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_pring2",
+      "memory_vector_index": 2,
+      "useful_width": 546,
+      "mask_padding_bits": 30,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_pring.g_b[2].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_pring3",
+      "memory_vector_index": 3,
+      "useful_width": 546,
+      "mask_padding_bits": 30,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_pring.g_b[3].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_rring0",
+      "memory_vector_index": 9,
+      "useful_width": 514,
+      "mask_padding_bits": 62,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_rring.g_b[0].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_rring1",
+      "memory_vector_index": 10,
+      "useful_width": 514,
+      "mask_padding_bits": 62,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_rring.g_b[1].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_rring2",
+      "memory_vector_index": 11,
+      "useful_width": 514,
+      "mask_padding_bits": 62,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_rring.g_b[2].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    },
+    {
+      "clock_port": "clk_rring3",
+      "memory_vector_index": 12,
+      "useful_width": 514,
+      "mask_padding_bits": 62,
+      "root_scope": "one scalar group root; native pins independently identifiable",
+      "native_clock_sink_paths": [
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[0].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[1].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[2].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[3].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[4].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[5].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[6].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[7].u_m.clk",
+        "u_coll.u_rring.g_b[3].g_native64.u_group.g_bank[8].u_m.clk"
+      ]
+    }
+  ],
+  "logical_PR_clock_roots": 8,
+  "native_PR_clock_sinks": 72,
+  "other_S_ring_roots": 5,
+  "other_fold_roots": 8,
+  "glue_roots": 1,
+  "total_logical_core_clock_ports": 22,
+  "total_native_core_clock_references": 86,
+  "native_PR_macro_area_um2": 39773.306880000004,
+  "native_PR_physical_bits": 147456,
+  "useful_PR_bits": 135680,
+  "normal_memory_added_edges": 0,
+  "landing_TX_RX_added_edges_model_only": [
+    6,
+    6
+  ],
+  "diagnostic_option_implemented": false,
+  "reset": "Existing core pointer/local reset; no memory bulk reset. Regional crossings boot/reset not composed.",
+  "unresolved": [
+    "Mapped source/capacity/clock-group census",
+    "72 actual native arrivals and connected softroot references",
+    "Whole core glue ownership (baseline actualTT277.3ps FAIL)",
+    "Core production/unit/old default results pending",
+    "Additional3edge/crossing integrated regional landing proof and calendar model",
+    "Whole parent/MU/nativephase/hold/reach/pinaccess/DRC"
+  ]
+}

@@ -1,0 +1,7 @@
+# B4 native64 source prototype
+
+ROOT approved source direction based on83eff245e B4 model. Isolated branch codex/coll-b4-bank64-1019. Source1866aaeee couples PR_B4=1 plus OT_COLL_B4_NATIVE with128word P/R capacity, four usefulP546 and fourR514 native9x64 groups,13 memoryclock vector entries (4P+5S+4R), eight distinct P/R topclocks and LU guard. Default preprocessed port interface and legacy g_b.u_m instance paths stay intact; no availability/fault retime. Dependency0a3a80f9f copies all7native views byte-identical fromb65718325.
+
+This is a memory/core prototype only. Regional +3edge crossings are not implemented or qualified; LU65/LS390 and+2616 tokencycles remain the parent model until actual composition. Source clock/capacity model enumerates all72 memory pinpaths but is not an elaborated/native physical receipt. No physical gate.
+
+First prototype cb9024bfe ring unit on ot-agidock128 completed PASS4536 checks,4800cycles/four resetepochs, native vs wide + independenthistory; both R513-loss and wrongbankselection mutants caught. Final source1866aaeee r2 independently repeated these golden/mutant passes on ot-epyc7. Standalone core B4 production/unit suites and defaultB2 production comparison now running from the same immutable snapshot; terminal results pending. Remote /srv/opentallas-scratch/claude/coll-b4-proto-r2-1019, unpinned admission.
