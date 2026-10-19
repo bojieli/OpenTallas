@@ -61,11 +61,9 @@
  "blocks": [],
  "findings": [],
  "referenced": [
-  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
-  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
-  "physical/common_flow/ft_flop_mid.tcl",
-  "physical/common_flow/ft_flop_mid_release.tcl",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv",
   "physical/ref_tile/qkd_kvs_hroot_k1/kit.env",
   "physical/ref_tile/qkd_kvs_hroot_k1/clock.sdc",
   "physical/ref_tile/qkd_kvs_hroot_k1/signoff.sdc",
