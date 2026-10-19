@@ -1,5 +1,5 @@
 {
-  "status": "STRUCTURAL_MODEL_PRE_RTL",
+  "status": "RTL_FUNCTIONAL_NATIVE_PENDING",
   "source_macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.json",
   "macro": "ot_sram_1r1w_32x64_m1",
   "macro_bits": 2048,
@@ -59,8 +59,8 @@
     "scale_wait": 0,
     "root_argmax": 1
   },
-  "method": "Synchronous read lookahead; compare-and-forward read/write collision explicitly rather than relying on macro read-during-write. 1 read and 1 write each cycle, no arbitration/stalls. Physical ports are nine64-bit banks padded to576; upper30 mask bits0. Delay CE is always1 with nonzero read offset, so reset does not fan out to18 CE pins and exactD/startup unchanged.",
-  "geometry": "Compiler-native32x64 m1, density W5.961/E5.903 pins/um. Nine-bank3x3 groups use43.2lattice origins and>=20um channels; actual gross302.4x172.8 allocation per logical port, external pin/PG access and routed timing still pending.",
+  "method": "Synchronous read lookahead with explicit collision bypass;1R1W peredge, no stalls. Physical bank count isceil(actualW/64), and every unused final physical bit has mask0. Delays use constantly enabledR/W with nonzero read offset; valid masks hide reset contents, preserving exactD/startup and avoiding reset CEfanout.",
+  "geometry": "True compiler32x64 m1, W5.961/E5.903 pins/um. Actual8/9-bank groups use43.2lattice and>=20um channels, gross302.4x172.8 allocation per logical port.42actual SRAMclock sinks per slice fed from one parent root via routedCTS; no42-root claim. Access/TT/FF/clock receipt pending.",
   "qualification": "Timing, util, reset fanout, argmax pipelining and parent W/E landing prices require measured synth/benches before kit gate",
   "reset_release_added_edges": {
     "core": 2,
@@ -88,5 +88,42 @@
   "scalar_generic_flop_delta_vs_safe_storage": 3285,
   "scalar_argmax_pipeline_added_logical_bits": 63,
   "required_reset_boot_guard_cycles": 16,
-  "production_reset_to_epoch_ledger": "PENDING join with production controller; benchguard16 is explicit reset-only startup contract, not proven absorbed by admission."
+  "production_reset_to_epoch_ledger": "PENDING join with production controller; benchguard16 is explicit reset-only startup contract, not proven absorbed by admission.",
+  "client_padding_contracts": [
+    {
+      "instance": "u_sks",
+      "payload_bits": 514,
+      "native_banks": 9,
+      "tail_masked_zero_bits": 62,
+      "native_tail_unused_read_bits": "rd_out[63:2]"
+    },
+    {
+      "instance": "u_skn",
+      "payload_bits": 514,
+      "native_banks": 9,
+      "tail_masked_zero_bits": 62,
+      "native_tail_unused_read_bits": "rd_out[63:2]"
+    },
+    {
+      "instance": "u_hb",
+      "payload_bits": 512,
+      "native_banks": 8,
+      "tail_masked_zero_bits": 0,
+      "native_tail_unused_read_bits": "none"
+    },
+    {
+      "instance": "u_h9",
+      "payload_bits": 512,
+      "native_banks": 8,
+      "tail_masked_zero_bits": 0,
+      "native_tail_unused_read_bits": "none"
+    },
+    {
+      "instance": "u_scale_wait",
+      "payload_bits": 512,
+      "native_banks": 8,
+      "tail_masked_zero_bits": 0,
+      "native_tail_unused_read_bits": "none"
+    }
+  ]
 }
