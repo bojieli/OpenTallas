@@ -20,7 +20,7 @@ import numpy as np
 
 ACK, RANK = 12, 3
 WS = int(sys.argv[sys.argv.index('--ws') + 1]) if '--ws' in sys.argv else 8
-PMIN = int(sys.argv[sys.argv.index('--pmin') + 1]) if '--pmin' in sys.argv else 5
+PMIN = int(sys.argv[sys.argv.index('--pmin') + 1]) if '--pmin' in sys.argv else 6
 ELAT = 14 + (WS.bit_length() - 1)
 HUB_TO_BANK, RESP = 2, 9
 SPECIAL = np.array([0x00000000, 0x80000000, 0x7f800000, 0xff800000, 0x00000001, 0x3f800000, 0xbf800000,

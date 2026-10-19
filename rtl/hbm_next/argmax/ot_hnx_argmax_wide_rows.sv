@@ -6,12 +6,12 @@
 // closed engine runs at LP = 8 WS = 64 lanes (ot_hgi_argmax18_m GENERIC18, parameter only: lane j of beat b carries
 // word index 64 b + j; per-lane strictly-greater update + registered lower-index tie tree -> numpy.argmax semantics
 // for any LP). Beat b of row r: sectors sec0_r + 8 b ..; first-beat word mask off = a[2:0], last-beat mask on the
-// last sector's last word and every sector past it. Row read period = max(nb_r, PMIN = 5) edges (nb_r = ceil(ns_r / 8)):
+// last sector's last word and every sector past it. Row read period = max(nb_r, PMIN = 6) edges (nb_r = ceil(ns_r / 8)):
 // the write-tag slot rule of the original (a slot is reused two rows later, >= 10 edges after its last use) needs
-// >= 5 edges a row, which ns >= 5 gave before; the reader now idles to 5 edges on short rows (static, compiler-known).
-// Timeline: S_0 = G+3, beat b of row r on S_r + b, S_{r+1} = S_r + max(nb_r, 5), L_r = S_r + nb_r + 9,
+// >= 5 edges a row (the original n >= 33 rule); MEASURED: a 5-edge period FAULTS the hub (rows 4, n 64), so PMIN = 6.
+// Timeline: S_0 = G+3, beat b of row r on S_r + b, S_{r+1} = S_r + max(nb_r, 6), L_r = S_r + nb_r + 9,
 // out_v at L_r + ELAT (ELAT = 14 + log2(WS) = 17), W0 = L + ELAT + 1, W1 = W0 + 1, end = W1_{R-1} + ACK + 1.
-// Row II = max(ceil(ns / 8), 5) edges (DS n 1,347: 22 or 23) instead of ns (169..170). WS 1 + PMIN 1 = the original.
+// Row II = max(ceil(ns / 8), 6) edges (DS n 1,347: 22 or 23) instead of ns (169..170). WS 1 + PMIN 1 = the original.
 // MUT (bench): 1 A row stride dropped; 2 O row stride dropped; 3 id word-offset from row 0; 4 beat bank rotation
 // dropped (sector k of a beat taken from bank k); 5 last-beat sector mask dropped (sectors past the row end live).
 // ---- original header (ot_hnx_argmax_static_rows):
@@ -32,7 +32,7 @@
 // MUT (bench): 1 A row stride dropped; 2 O row stride dropped; 3 id word-offset correction taken from row 0.
 module ot_hnx_argmax_wide_rows #(
     parameter integer WS = 8,          // sectors a beat (power of two, <= 8 = the slice's banks)
-    parameter integer PMIN = 5,        // minimum read edges a row (write-tag slot reuse)
+    parameter integer PMIN = 6,        // minimum read edges a row (write-tag slot reuse; 5 measured to FAULT the hub)
     parameter integer MUT = 0,
     parameter integer ACK = 12,
     parameter integer ELAT = 14 + $clog2(WS),

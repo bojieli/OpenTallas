@@ -10,7 +10,7 @@
 // 'argmax' record client (packet client 0). STREAM rows enter on compiler edges (stream.mem: the SU reduce stream
 // at its declared boundary). The calendar cal.mem comes from tools/hbm_argmax_static_vectors.py, never the DUT.
 module tb_hnx_argmax_wide;
-    parameter integer MUT = 0, WS = 8, PMIN = 5;
+    parameter integer MUT = 0, WS = 8, PMIN = 6;
     localparam integer NE = 16384, NPRE = 8192, NCHK = 1024;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
