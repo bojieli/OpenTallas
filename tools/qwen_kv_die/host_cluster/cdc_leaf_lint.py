@@ -70,12 +70,17 @@ LEAVES = {
 }
 
 
+def all_files(top):
+    """Every file sources() scans: the child's generated file, the CDC forks and the census sources."""
+    toks = ' '.join(CENSUS.read_text().splitlines()[:2]).split()
+    return [f'{CLUSTER_DIR}/{top}.v'] + [v['file'] for v in FORKS.values()] + \
+        [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
+
+
 def sources(top, base=ROOT):
     """The census sources plus the CDC forks that define the module closure of `top` (the child's generated file first);
     `base` is the tree whose files are read (a scratch copy for the --unfix mutant)."""
-    toks = ' '.join(CENSUS.read_text().splitlines()[:2]).split()
-    files = [f'{CLUSTER_DIR}/{top}.v'] + [v['file'] for v in FORKS.values()] + \
-        [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
+    files = all_files(top)
     body, owner = {}, {}
     for f in files:
         text = re.sub(r'//[^\n]*|/\*.*?\*/', '', (base / f).read_text(), flags=re.S)
@@ -102,7 +107,7 @@ def macro_files(spec, base=ROOT):
 def netlist(s, base=ROOT):
     """The lint's own elaboration + netlist of spec s (main's API: extension mode when the leaf has macros)."""
     hashes = G._elaborate_sources(s, base)[0]
-    doc = G.elaborate(str(base.resolve()), s['top'], hashes, (), G._yosys())
+    doc = G.elaborate(str(base.resolve()), s['top'], hashes, (), G._yosys(), s.get('cdc_synchronizers') is not None)
     ext = G.extensions(s) is not None
     return doc, (G._netlist(doc, s, G._macro_clock_pins(s, base), True) if ext else G._netlist(doc, s))
 
@@ -276,7 +281,7 @@ def unfixed(top, orig):
         n = len(re.findall(r'(?m)^\s+' + FORKS[orig]['fork'] + r'\b', text))
         if not n:
             raise SystemExit(f'{top} binds no {FORKS[orig]["fork"]}')
-        for f in set(sources(top)) | {FORKS[orig]['original']} | {v['file'] for v in FORKS.values()}:  # sources(base) reads every fork
+        for f in set(all_files(top)) | set(sources(top)) | {FORKS[orig]['original']}:  # sources(base) scans every file
             (scratch / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / f, scratch / f)
         (scratch / lf).write_text(re.sub(r'(?m)^(\s+)' + FORKS[orig]['fork'] + r'\b', lambda m: m.group(1) + orig, text))
@@ -321,7 +326,7 @@ def run(top):
         for f in added:
             ins2.setdefault(f, [added[f]])
         original = G.elaborate
-        G.elaborate = lambda *a: doc
+        G.elaborate = lambda *a, **k: doc
         try:
             r = lint(top, leaf, ins2, outs)
         finally:
