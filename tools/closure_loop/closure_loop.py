@@ -90,7 +90,7 @@ PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10
 EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC", "EARLY_FAIL_STALL")
 TERMINAL = {"SMOKE_OK", "CLOSED", "LOST_CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
             "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
-RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
+RESOURCE_RE = re.compile(r"OT_FLOW_MISSING|Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)|"
@@ -2038,14 +2038,54 @@ TT_OVERLAY_FLEET = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32/tools/clos
 def tt_overlay_fallback(cmd):
     """2026-10-08: specs that call the snapshot's own tools/closure_loop/tt_overlay.py on a commit predating it (26f14af32;
     qfd_io_emb_tap-4b111850att, qfd_sp_*-e0370c82ctt: 'can't open file ... tt_overlay.py') run the fleet's tt-batch
-    overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
+    overlay copy (kept at main on every host) instead.
+    FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
+    overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit.
+    PATHPICK 2026-10-18 (ROOT-2130): the fleet copy is REQUIRED (ot_pick + the stage precheck), never a silent fallback."""
     if TT_OVERLAY_REL not in cmd:
         return cmd
-    # FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
-    # overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit
-    pick = (f"python3 \"$(ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1 | grep . || "
-            "echo tools/closure_loop/tt_overlay.py)\" ")
-    return cmd.replace(TT_OVERLAY_REL, pick)
+    return cmd.replace(TT_OVERLAY_REL, f"python3 \"$(ot_pick {' '.join(TT_OVERLAY_FLEET)})\" ")
+
+
+# PATHPICK 2026-10-18 (ROOT-2130, QK-LAND600C): stage scripts run under `set -o pipefail`.  The fleet-path picks the
+# daemon and 2,000+ specs use -- `X=$(ls -d A B 2>/dev/null | head -1) && ...` and `$(ls -d A B | head -1 | grep . ||
+# echo rel)` -- break on a host that has only ONE of the candidates (ot-epyc5: no /home/ubuntu/closure-loop-local): ls
+# exits 2, so the assignment fails and the `&&`-chained TT overlay + OT_CTS_FIX_HOOKS are skipped while the route still
+# runs after `;` (or the `|| echo` also prints and the picked path is two lines).  qfwd_landh0_600_en, s81lk_kp4_dec-p1,
+# hcoll_ring_ag_ctln_1018-r5c, qkd_hr_core_guard-r4, qkd_kvs_emb-e1, hv16_dbk_cpl-q1 routed without the overlay.  Every
+# literal multi-path pick is rewritten to ot_pick (test -e each path in order; rc 0 when one exists), and the stage
+# script first checks that each pick resolves: none -> OT_FLOW_MISSING, exit 97, a FLOW failure (retried on another
+# host via RESOURCE_RE, then NEEDS_HUMAN) -- never a route without its overlay / hooks.
+OT_PICK_FN = ('ot_pick() { local p; for p in "$@"; do [ -e "$p" ] && { printf \'%s\\n\' "$p"; return 0; }; done; '
+              'echo "OT_FLOW_MISSING: none of $* exists on $(hostname)" >&2; return 1; }\n')
+PATH_PICK_RE = re.compile(r"\$\(ls -d((?:\s+/[^\s()$|;&*?\[{}'\"]+)+)\s*(?:2>/dev/null\s*)?\|\s*head -1"
+                          r"(?:\s*\|\s*grep \.\s*\|\|\s*echo\s+([^\s()$|;&]+))?\s*\)")
+OT_FLOW_MISSING_RC = 97
+
+
+def path_picks_safe(cmd):
+    """(cmd with every literal `$(ls -d P1 P2 .. | head -1 [| grep . || echo F])` -> `$(ot_pick P1 P2 ..)`,
+    [the candidate tuples]).  The `|| echo F` fallback is dropped: a required fleet path is checked, not guessed."""
+    groups = []
+
+    def rep(m):
+        paths = tuple(m.group(1).split())
+        if paths not in groups:
+            groups.append(paths)
+        return f"$(ot_pick {' '.join(paths)})"
+    cmd = PATH_PICK_RE.sub(rep, cmd)
+    for m in re.finditer(r"\$\(ot_pick ([^)]*)\)", cmd):
+        paths = tuple(m.group(1).split())
+        if paths not in groups:
+            groups.append(paths)
+    return cmd, groups
+
+
+def path_pick_precheck(groups):
+    """shell: fail the stage loudly (OT_FLOW_MISSING, rc 97) when a fleet path the command needs is absent on this host"""
+    return "".join(f"ot_pick {' '.join(shlex.quote(p) for p in g)} >/dev/null || {{ echo 'OT_FLOW_MISSING: stage needs one "
+                   f"of {' '.join(g)} (flow failure, reroute_reason flow_failure)'; exit {OT_FLOW_MISSING_RC}; }}\n"
+                   for g in groups)
 
 
 def subst(text, j):
@@ -3572,8 +3612,9 @@ def launch_stage(j, st, cmd):
         before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
         env += before
         cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
-    cmd = tt_overlay_fallback(cmd)
-    body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
+    cmd, picks = path_picks_safe(tt_overlay_fallback(cmd))
+    body = (f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n"
+            f"{OT_PICK_FN}{path_pick_precheck(picks)}{env}{subst(cmd, j)}\n")
     run = j["run"]
     # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
     # the second copy overwrote the script and rc (dsrom_softmax_safe_div2b: hold ECO 'rc=10 output exists' while the
@@ -6293,6 +6334,19 @@ def precollect_cmd(spec):
 ROUTE_CORNER_CHECK = "ttb_routed_at_TC"
 
 
+def overlay_skipped(j):
+    """PATHPICK: True when the job's command runs the TT overlay but {CL}/ttb_corner.txt (its mark) was never written"""
+    cmds = " ".join(str((st or {}).get("cmd") or "") for st in ((j["spec"].get("stages") or {}).values())
+                    if isinstance(st, dict))
+    if "OT_TTB_CORNER_MARK={CL}/ttb_corner.txt" not in cmds or not j.get("host") or not j.get("run"):
+        return False
+    try:
+        r = ssh(j["host"], f"test -s {j['run']}/cl/ttb_corner.txt && echo MARK || echo NOMARK", timeout=60)
+    except Exception:  # noqa: BLE001
+        return False
+    return "NOMARK" in (r.stdout or "")
+
+
 def route_corner_check_cmd(c):
     """LOOP-CORNER 2026-10-10: the ttb_routed_at_TC check only grepped {CL}/ttb_corner.txt, where tt_overlay also writes
     'TC ...' for unrelated patches (direct config.mk); SM piece routes that loaded SS liberties passed it (and closed at
@@ -6339,6 +6393,15 @@ def do_verdict(j, fleet, stl):
         elif not ok:
             failed.append(c["name"])
     j["checks"], j["failed_checks"] = checks, failed
+    if ROUTE_CORNER_CHECK in failed and overlay_skipped(j):
+        # PATHPICK 2026-10-18: the route ran WITHOUT the TT overlay / CTS fix hooks (a fleet-path pick failed): its
+        # slacks are not a measurement of this design -- a FLOW failure, never NEEDS_RTL and never CLOSED
+        finish(j, "NEEDS_HUMAN", "FLOW_FAILURE: TT overlay did not run (no {CL}/ttb_corner.txt): resubmit with "
+                                 "reroute_reason flow_failure",
+               "NEEDS_HUMAN: FLOW_FAILURE: the route ran without the TT overlay / OT_CTS_FIX_HOOKS ({CL}/ttb_corner.txt "
+               "never written; see the route log for OT_FLOW_MISSING / can't open file); the slacks are not valid. "
+               "Resubmit with reroute_reason flow_failure.")
+        return
     if (j.get("eco") or {}).get("installed"):     # the post-route hold ECO replaced the route: its DRC counts
         m["drc"], m["eco"] = j["eco"]["result"]["drc"], j["eco"]["result"]
     ss, ff, drc = m.get("ss_ps"), m.get("ff_ps"), m.get("drc")
