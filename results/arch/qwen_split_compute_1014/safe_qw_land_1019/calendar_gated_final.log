@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   923 GB (avail 760, growth 113, headroom 0, waiters 0/0 GB) load 93/128 running 38 disk 315 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-land-1019/calendar_gated3
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3787809-1792426444 after 0 s
+RESET_FINALIZE PASS: exact taps/straps, unknown-root refusal, idempotence
+SAFE300_CALENDAR PASS: bound-master reset2, Kminus1, legacy unchanged, idempotence
+GATED180_CALENDAR PASS: total age preserved, ring K minus capture1, legacy unchanged, idempotent
+SAFE_BUNDLE_CALENDAR PASS: profile survives audit projection; mixed landing ages compare correctly; wrong K rejected
+SAFE_BIND_PROFILE PASS: actual master owns profile, stale metadata refused
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3787809-1792426444): exit 0
