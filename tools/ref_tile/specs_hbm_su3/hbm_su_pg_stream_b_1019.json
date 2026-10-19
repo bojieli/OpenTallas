@@ -17,7 +17,8 @@
   "G": 2,
   "READ_RETURN": 10,
   "WRITE_RETURN": 7,
-  "STRAP": 1
+  "STRAP": 1,
+  "FAULT_REG": 1
  },
  "clock_port": "pg_clk",
  "reset_ports": [
@@ -110,9 +111,9 @@
  },
  "structural_change": "HBM-PGSTREAM-B 10-19 (coordinator 07:11, HBM-SAFE-PGSTREAM option b): ONE tile = ot_hbm_su_static_pg_stream_split (pg_stream_q on clk_ctl + pg_stream_s on pg_clk) with the banked 2,346-b seam INSIDE as landed crossings, two regional roots. Replaces the abutted q/s halves (2 x 432 x 216; 2 x 2,346 seam pins; pin-legal outlines 1-3 % util; GPL-0305 under routability ON, gates 20261019-063054) and supersedes hbm_su_pg_stream_1019 (FAIL 0ff805777: cross_clock -126.9 / -479.3 ps on the 1q related default with logic in the crossing). The seam arcs are now bank -> mux -> register with calendar windows request 4q/2q, return 2q/4q, inject 3q/7q, constrained by spec seam_windows (set_max/min_delay, latency included, sign-off inter-clock reserve on top). RTL edges = TW3-PGSTREAM split (ij +1 serial, pg_fault +2 serial, given to H-D4G). ",
  "job": {
-  "owner": "Claude:HBM-PGSTREAM-B",
-  "branch": "claude/hbm-pgstream-b-1019",
-  "tag": "b1",
+  "owner": "Codex:PGSTREAM-CDC",
+  "branch": "codex/pgstream-cdc-1019",
+  "tag": "b2",
   "purpose": "HBM die d4g LIGHT SU slice stream sibling: one two-root tile, banked seam inside (landed crossings)",
   "record_to": "results/rtl/ref_tile/hbm_su_pg_stream_b_1019",
   "views_to": "physical/ref_tile/hbm_su_pg_stream_b_1019/views",
@@ -128,12 +129,12 @@
    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream.sv",
    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
-   "results/rtl/hbm_pgstream_b_1019"
+   "results/rtl/hbm_pgstream_cdc_1019"
   ],
   "benches": [
    {
     "name": "pgs_b_lockstep",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 10 7",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m0 0 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -142,11 +143,11 @@
     "expect": "pass",
     "pass_regex": "PG_STREAM_SPLIT PASS checks=",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/hbm_pgstream_b_1019/m0/bench.log"
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_1019/m0/bench.log"
    },
    {
     "name": "pgs_b_lockstep_rt18",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rt18 0 1500 1 18 15",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/rt18 0 1500 1 18 15 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -155,11 +156,11 @@
     "expect": "pass",
     "pass_regex": "PG_STREAM_SPLIT PASS checks=",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/hbm_pgstream_b_1019/rt18/bench.log"
+    "pass_witness": "results/rtl/hbm_pgstream_cdc_1019/rt18/bench.log"
    },
    {
     "name": "pgs_b_mut12_seam_window",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m12 12 1500 1 10 7",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m12 12 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -167,12 +168,12 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_b_1019/m12/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m12/bench.log",
     "why": "seam-window mutant: request bank read one stream edge early into a pre-stage (same data, same launch edge) -> setup 1q < the declared 4q seam window; window checker only"
    },
    {
-    "name": "pgs_b_mut3",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 10 7",
+    "name": "pgs_b_mut13_fault_publish",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m13 13 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -180,12 +181,25 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_b_1019/m3/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m13/bench.log",
+    "why": "registered fault source inverted: independent publication and exact two-stage serial capture scoreboard"
+   },
+   {
+    "name": "pgs_b_mut3",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m3 3 1500 1 10 7 1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m3/bench.log",
     "why": "return staging removed: bank rewritten 0 ps after its read (window checker)"
    },
    {
     "name": "pgs_b_mut2",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 10 7",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m2 2 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -193,12 +207,12 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_b_1019/m2/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m2/bench.log",
     "why": "stream half reads the wrong request bank"
    },
    {
     "name": "pgs_b_mut8",
-    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 10 7",
+    "cmd": "bash tools/hbm_static/su_pg_stream_split_vl_run.sh {RUN}/bench/m8 8 1500 1 10 7 1",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -206,7 +220,7 @@
     ],
     "expect": "fail",
     "fail_regex": "PG_STREAM_SPLIT FAIL errors=",
-    "fail_witness": "results/rtl/hbm_pgstream_b_1019/m8/bench.log",
+    "fail_witness": "results/rtl/hbm_pgstream_cdc_1019/m8/bench.log",
     "why": "serial half reads the wrong inject bank"
    }
   ]
@@ -421,6 +435,44 @@
    "setup_q": 3,
    "hold_q": 7,
    "why": "inject banks written at stream 12m / 12m+3 / 12m+9, read at serial 12m+4 / +8 / +12, rewritten one epoch later (bench measured 3q / 7q)"
+  }
+ ],
+ "cdc_synchronizers": [
+  {
+   "name": "pg_fault_level",
+   "src_domain": "core",
+   "dst_domain": "serial",
+   "source": "u_s.g_pgf_reg.pgf_q",
+   "chain": [
+    "u_q.fs[0]",
+    "u_q.fs[1]"
+   ],
+   "sync_max_delay_ps": 250,
+   "why": "stream fault OR published by one source register, then exact two-stage serial level synchronizer; one added stream publication edge, no data-calendar effect"
+  },
+  {
+   "name": "pg_leaf_reset",
+   "src_domain": "serial",
+   "dst_domain": "core",
+   "source": "u_q.rcl",
+   "chain": [
+    "u_s.rq_s[0]",
+    "u_s.rq_s[1]"
+   ],
+   "sync_max_delay_ps": 250,
+   "why": "existing serial reset source followed by exact two-stage stream reset release synchronizer; unchanged edges"
+  },
+  {
+   "name": "pg_tap_reset",
+   "src_domain": "serial",
+   "dst_domain": "core",
+   "source": "u_q.rct",
+   "chain": [
+    "u_s.rs_s[0]",
+    "u_s.rs_s[1]"
+   ],
+   "sync_max_delay_ps": 250,
+   "why": "existing serial reset source followed by exact two-stage stream reset release synchronizer; unchanged edges"
   }
  ]
 }
