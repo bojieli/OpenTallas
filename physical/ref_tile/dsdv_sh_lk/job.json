@@ -1,5 +1,5 @@
 {
- "name": "dsdv_sh_lk-dsdv_sh_lk-COMMIT",
+ "name": "dsdv_sh_lk-dsdv_sh_lk-6cd8863f9",
  "block": "dsdv_sh_lk",
  "ref_tile": true,
  "owner": "Claude:S81-SHLK2",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-shlk-1018",
-  "commit": "COMMIT",
+  "commit": "6cd8863f9",
   "extra_paths": [
    "physical/dsdv_seq_host_pins",
    "results/rtl/rtl_build_s81_1018/seq",
@@ -168,7 +168,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_sh_lk/dsdv_sh_lk-dsdv_sh_lk-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_sh_lk/dsdv_sh_lk-dsdv_sh_lk-6cd8863f9"
   }
  ],
  "cycles_added": 0,
