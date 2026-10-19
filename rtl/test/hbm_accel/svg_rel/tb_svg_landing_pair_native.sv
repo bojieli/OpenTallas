@@ -86,7 +86,7 @@ module tb_svg_landing_pair_native;
   begin pattern={32'(bank),32'(block),32'(row),32'(epoch),32'(bank+row*17),32'(row^32'hdeadbeef),32'(epoch*136+block*34+row),32'(bank^block^row^epoch)};end
  endfunction
  task idle(input integer count);begin repeat(count)@(negedge sched_clk);end endtask
- task send_bank(input integer b,block,count);
+ task automatic send_bank(input integer b,block,count);
   integer r;begin
    for(r=0;r<count;r=r+1)begin
     @(negedge pair_hbm_clk);while(!in_ready[b])begin in_v[b]=0;@(negedge pair_hbm_clk);end
@@ -178,7 +178,7 @@ module tb_svg_landing_pair_native;
   // Original duplicate check survives the composed leaf and its separate fault Q.
   check_nominal=0;send_bank(0,0,1);idle(30);if(!bank_fault[0])begin errors=errors+1;$display("PAIR_DUPLICATE_GUARD_FAIL");end
   errors=errors+ref_errors[0]+ref_errors[1];
-  $display("SVG_NATIVE_PAIR %s mut=%0d J=%0d errors=%0d payload_groups=%0d masked_warm_groups=%0d windows=%0d independent_valid=%0d latency=%0d/%0d old_miter_errors=%0d/%0d",errors==0?"PASS":"FAIL",MUT,J,errors,data_outputs,warm_outputs,windows,independent_valid_cases,latency_min,latency_max,ref_errors[0],ref_errors[1]);
+  $display("SVG_NATIVE_PAIR %s mut=%0d J=%0d errors=%0d payload_groups=%0d masked_warm_groups=%0d windows=%0d independent_valid=%0d latency=%0d/%0d old_miter_errors=%0d/%0d packets=%0d/%0d",errors==0?"PASS":"FAIL",MUT,J,errors,data_outputs,warm_outputs,windows,independent_valid_cases,latency_min,latency_max,ref_errors[0],ref_errors[1],ref_packets[0],ref_packets[1]);
   if(errors)$fatal(1,"native landing pair mismatch");$finish;
  end
 endmodule
