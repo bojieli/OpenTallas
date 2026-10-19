@@ -88,8 +88,10 @@ def children():
     return ch
 
 
-def macros():
-    """the attention share's staging SRAMs: u_stage0 / u_stage1 x lane l x slice b (NSTAGE 2, NL 4, NB 2)"""
+def macros(pmem=False):
+    """the attention share's staging SRAMs: u_stage0 / u_stage1 x lane l x slice b (NSTAGE 2, NL 4, NB 2); with pmem
+    (SVCB 10-19, COORD 0ix (2) option (b)) the att p store: 2 banks (even / odd) x 2 halves of ot_sram_1r1w_256x256 in
+    the E column under the two E staging macros (x 1468.8, y 1080 .. 1339.2, beside smhq / smhr, W of the N-face C relays)"""
     spots = [(43.2, 43.2), (43.2, 129.6), (43.2, 216.0), (1512.0, 43.2), (1512.0, 129.6), (1512.0, 216.0)]
     spots += [(43.2, r2(907.2 + 86.4 * j)) for j in range(8)] + [(1468.8, 907.2), (1468.8, 993.6)]
     out = []
@@ -100,6 +102,11 @@ def macros():
                 out.append(dict(view=SRAM, count=1, at=list(spots[n]),
                                 inst=f"*u_stage{st}.g_macro.g_lane?{ln}?.g_slice?{b}?.g_256.u_mem"))
                 n += 1
+    if pmem:
+        for bk in range(2):
+            for hf in range(2):
+                out.append(dict(view=SRAM, count=1, at=[1468.8, r2(1080.0 + 86.4 * (2 * bk + hf))],
+                                inst=f"*u_att.g_pmem.g_bank?{bk}?.g_half?{hf}?.u_mem"))
     return out
 
 
@@ -167,10 +174,16 @@ def io_tcl(faces, margin=4.32):
     return "\n".join(lines) + "\n", dens
 
 
+# SVCB (10-19, COORD 0ix (2)): the att p store (4 x 256x256 SRAM) only in the 4 P.V owner positions of quarter ST 0
+# (rs_pvslot: rsv_08 / 09 / 10 / 12, kit dsdv_svc_rs_lp, PMEM 1); the 10 other non-entry positions take dsdv_svc_rs_lp_np
+# and the entries (rsv_05 / rsv_11, not owners at ST 0) dsdv_svc_rs_entry_lp, both PMEM 0 (no store; fault 23 if mis-bound).
 VARIANTS = {
-    "dsdv_svc_rs_lp": dict(entry=False, flat="dsdv_svc_rs_f", what="dsdv_svc_rs (14 non-entry slices)"),
-    "dsdv_svc_rs_entry_lp": dict(entry=True, flat="dsdv_svc_rs_entry_f",
-                                 what="dsdv_svc_rs_entry (entry slices rsv_05 W / rsv_11 E: the half's host endpoint)"),
+    "dsdv_svc_rs_lp": dict(entry=False, flat="dsdv_svc_rs_f", pmem=1,
+                           what="dsdv_svc_rs P.V owner positions (rsv_08 / 09 / 10 / 12 at ST 0: att p store in SRAM)"),
+    "dsdv_svc_rs_lp_np": dict(entry=False, flat="dsdv_svc_rs_f", pmem=0,
+                              what="dsdv_svc_rs non-owner positions (the 10 other non-entry slices: no att p store)"),
+    "dsdv_svc_rs_entry_lp": dict(entry=True, flat="dsdv_svc_rs_entry_f", pmem=0,
+                                 what="dsdv_svc_rs_entry (entry slices rsv_05 W / rsv_11 E: the half's host endpoint; no att p store)"),
 }
 VL = "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
 WIT = "results/rtl/s81_dv_1016/svc_rs/lp"
@@ -199,7 +212,7 @@ def main():
         kit(top, **v)
 
 
-def kit(TOP, entry, flat, what):
+def kit(TOP, entry, flat, what, pmem):
     NAME = TOP
     src = (ROOT / "tools/s81_dv/svc_rs/rs_files.sh").read_text()
     import re
@@ -224,7 +237,7 @@ def kit(TOP, entry, flat, what):
              "w_v", "w_a", "w_m", "w_d", "w_st"]
     spec = dict(
         name=NAME, top=TOP, kind="cluster",
-        sources=files, params={"SRAM_MACRO": 1, "MUT": 0},
+        sources=files, params={"SRAM_MACRO": 1, "MUT": 0, "PMEM": pmem},
         defines=["SU_SMU_T", "SVCQ_ENG_FG3", "OT_SVC_RS_HARD"], hard_define="OT_SVC_RS_HARD",
         # SYNTH_ARGS -noshare (S81-SVCBK 10-18): the @6bc7f0f30 gates sat >7 h in yosys SHARE on the runtime-indexed
         # part-selects of dsdv_svc_sx / dsdv_svc_att; production practice (hbm_norm_noshare, lane_kh_overlay)
@@ -233,14 +246,15 @@ def kit(TOP, entry, flat, what):
         # 2 read ports) and land 640 x 256 (163,840 b, 3 write / 4 read ports), plus pvq 8 x 2,120, sw 32 x 512, tr 4 x
         # 512 x 18.  The cap is set to the largest MEASURED memory (not unbounded); SRAM banking of pmem is the open
         # coordinator option (lanes/COORD-REVIEW-QUEUE.md, AD-S81-SVC).
-        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}", "SYNTH_ARGS": "-noshare", "SYNTH_MEMORY_MAX_BITS": "262144"},
+        # SVCB 10-19: pmem is SRAM now (option (b)); the largest flop memory left is land 640 x 256 = 163,840 b.
+        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}", "SYNTH_ARGS": "-noshare", "SYNTH_MEMORY_MAX_BITS": "163840"},
         # ref_tile admits multiple_cts_roots only on leaf tiles (and then no sdc_extra): a landed CLUSTER takes the
         # Q-CLUSTER form (qc_kit.py): clock cts, one TritonCTS tree per region clock port, the lp.py SDC creates ck_<r>
         clock="cts", clock_port="ck_c", clock_ports=["ck_c", "ck_sm"],
         reset_ports=["rst"],
         sdc_extra=[f"{D}/lp/{TOP}.sdc"],
         outline=dict(w=W, h=H), cluster_level=2,
-        children=children(), macros=macros(),
+        children=children(), macros=macros(pmem=bool(pmem)),
         pins={"ANY": ports}, io_tcl=f"physical/dsdv_svc_rs_lp_pins/{TOP}.tcl",
         recipe=4, hold_budget="die", inhold=False, outhold=False,
         route=dict(pd=0.5, threads=16, peak_ram_gb=256, hold_margin_ns=0.03, io_hold_margin_ns=0.03, macro_halo_um=5.4),  # io margin >= 0.025 (KITS 10-18)
@@ -258,8 +272,10 @@ def kit(TOP, entry, flat, what):
                            "Up face split up_d (done / credits / acks) + up_f (fault / rg status) so the END / done path never "
                            "sees the SM fault.  Score tree / dn / up_d / P.V / HBM ports unchanged; SM face +3, up_f / hs +6, "
                            + ("host jd / fault / st_rg +6 (hc, q, hw, j, pv 0), " if entry else "") +
-                           "reset +3 (compiler record)."),
-        job=dict(owner="Claude:PL-SVC", branch="claude/svc-rs-gate-1018", tag=TOP,
+                           "reset +3 (compiler record).  SVCB 10-19 (COORD 0ix (2) option (b)): the att p store is SRAM (2 even / odd banks x "
+                           "2 x ot_sram_1r1w_256x256, one-cycle static prefetch, read schedule unchanged) in the P.V owner kit "
+                           f"only (PMEM {pmem} here); land stays flops."),
+        job=dict(owner="Claude:HOURLY-S81/SVCB", branch="claude/s81-svcb-1019", tag=TOP,
                  purpose=f"S81-DV regional service slice {what} as a landed parent (2 regions)",
                  extra_paths=["rtl/dsrom_sys/s81_dv", "rtl/common/landed_parent", "physical/dsdv_svc_rs_lp_pins",
                               "results/arch/s81_dv_1016/svc_rs/lp"],

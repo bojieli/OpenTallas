@@ -1,0 +1,285 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "dsdv_svc_rs_f",
+ "top": "dsdv_svc_rs_lp_np",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "c": {
+   "clock_port": "ck_c",
+   "children": [
+    "u_att",
+    "u_dn",
+    "u_pc0",
+    "u_pc1",
+    "u_pv",
+    "u_se",
+    "u_sx",
+    "u_ud",
+    "u_uf"
+   ]
+  },
+  "sm": {
+   "clock_port": "ck_sm",
+   "children": [
+    "u_sm"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "sm_st",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_att"
+   ],
+   "width": 1,
+   "readers": [
+    "u_sm.j_st"
+   ],
+   "ring": "u_lpl_0_w (ck_c)",
+   "read": "u_lpl_0_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "sm_kind",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_att"
+   ],
+   "width": 4,
+   "readers": [
+    "u_sm.j_kind"
+   ],
+   "ring": "u_lpl_1_w (ck_c)",
+   "read": "u_lpl_1_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "sm_jid",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_att"
+   ],
+   "width": 8,
+   "readers": [
+    "u_sm.j_jid"
+   ],
+   "ring": "u_lpl_2_w (ck_c)",
+   "read": "u_lpl_2_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "r_v",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_se"
+   ],
+   "width": 1,
+   "readers": [
+    "u_sm.r_v"
+   ],
+   "ring": "u_lpl_3_w (ck_c)",
+   "read": "u_lpl_3_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "r_p",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_se"
+   ],
+   "width": 1,
+   "readers": [
+    "u_sm.r_p"
+   ],
+   "ring": "u_lpl_4_w (ck_c)",
+   "read": "u_lpl_4_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "r_j",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_se"
+   ],
+   "width": 3,
+   "readers": [
+    "u_sm.r_j"
+   ],
+   "ring": "u_lpl_5_w (ck_c)",
+   "read": "u_lpl_5_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "r_d",
+   "src_region": "c",
+   "dst_region": "sm",
+   "src_nodes": [
+    "u_se"
+   ],
+   "width": 512,
+   "readers": [
+    "u_sm.r_d"
+   ],
+   "ring": "u_lpl_6_w (ck_c)",
+   "read": "u_lpl_6_r (ck_sm)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "o_fo",
+   "src_region": "sm",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_sm"
+   ],
+   "width": 1,
+   "readers": [
+    "u_uf.o_fo"
+   ],
+   "ring": "u_lpl_7_w (ck_sm)",
+   "read": "u_lpl_7_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  }
+ ],
+ "pads": [
+  {
+   "net": "a_f",
+   "reader": "u_uf",
+   "stages": 6
+  },
+  {
+   "net": "dstray",
+   "reader": "u_uf",
+   "stages": 6
+  },
+  {
+   "net": "r_f",
+   "reader": "u_uf",
+   "stages": 6
+  },
+  {
+   "net": "rcol",
+   "reader": "u_uf",
+   "stages": 6
+  },
+  {
+   "net": "x_f",
+   "reader": "u_uf",
+   "stages": 6
+  }
+ ],
+ "reset": {
+  "port": "rst",
+  "root_region": "c",
+  "depth": 3,
+  "hops": {
+   "c": 0,
+   "sm": 2
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 2759,
+  "pads": 30,
+  "reset": 14
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "c-sm"
+  ],
+  "reset_hops": [
+   "c-sm"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_dn": 0,
+   "u_pc0": 0,
+   "u_pc1": 0,
+   "u_att": 0,
+   "u_sx": 0,
+   "u_se": 0,
+   "u_sm": 3,
+   "u_pv": 0,
+   "u_ud": 0,
+   "u_uf": 6
+  },
+  "input_port_offset_edges": {
+   "dn_i": 0,
+   "up_d_i": 0,
+   "up_f_i": 6,
+   "ri": 0,
+   "gi_v": 0,
+   "gi_d": 0,
+   "si_v": 0,
+   "si_d": 0,
+   "rk": 0,
+   "wd": 0,
+   "rv": 0,
+   "r_data": 0,
+   "r_tag": 0,
+   "r_beat": 0,
+   "hs": 6
+  },
+  "output_port_offset_edges": {
+   "dn_o": 0,
+   "up_d_o": 0,
+   "up_f_o": 6,
+   "ro": 0,
+   "go_v": 0,
+   "go_d": 0,
+   "so_v": 0,
+   "so_d": 0,
+   "rq": 0,
+   "w_v": 3,
+   "w_a": 3,
+   "w_m": 3,
+   "w_d": 3,
+   "w_st": 3
+  },
+  "reset_release_added_edges": 3,
+  "max_added_edges": 6
+ },
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['c-sm']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 8,
+  "reset_hops": 1,
+  "fails": []
+ }
+}
