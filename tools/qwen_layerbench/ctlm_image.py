@@ -522,6 +522,42 @@ def digest(words):
     return d
 
 
+# ------------------------------------------------------------------------------------------------ F16 WTN1 template
+WTN1_FIRST, WTN1_LAST, WTN1_RECORDS = 400, 438, 13
+WTN1_HEADER = 0x57544e3101640340          # record0 third PW: 'WTN1' rev1 base400 count13 (+[5:0] record tail)
+
+
+def splice_wtn1(image, manifest):
+    """Place the 13-record / 39-PW WTN1 witness template (qfd_dv_typed_witness_control, PW400..438)
+    into the deployment image. Refuses unless every target PW is unused (zero) in the compiled image,
+    the manifest is the exact 13x3 ascending layout and record0 carries the WTN1 header, so the
+    install order the controller enforces (PW0 restart, PW400..438 once, in order) is the image order.
+    Returns (image, wtn1 record for ctlm_image.json)."""
+    recs = manifest['records']
+    if (manifest.get('witness_PW_first'), manifest.get('witness_PW_last')) != (WTN1_FIRST, WTN1_LAST) \
+            or len(recs) != WTN1_RECORDS:
+        raise CompileError('WTN1 manifest is not the 13-record PW400..438 template')
+    img = list(image)
+    for i, r in enumerate(recs):
+        first = WTN1_FIRST + 3 * i
+        words = [int(w, 16) for w in r['words']]
+        if r['first_PW'] != first or r['family_id'] != i or len(words) != 3:
+            raise CompileError(f'WTN1 record {i} out of order (first_PW {r["first_PW"]})')
+        if (words[2] >> 6) != ((WTN1_HEADER >> 6) if i == 0 else 0) or ((words[2] >> 2) & 15) != i:
+            raise CompileError(f'WTN1 record {i} header/tail mismatch')
+        if ((words[0] >> 22) & 4095) == 0:
+            raise CompileError(f'WTN1 record {i} has an empty slice mask')
+        for k in range(3):
+            if img[first + k]:
+                raise CompileError(f'PW{first + k} is used by the compiled image ({img[first + k]:016x}); '
+                                   'WTN1 needs PW400..438 free')
+            img[first + k] = words[k]
+    return img, dict(first_PW=WTN1_FIRST, last_PW=WTN1_LAST, records=WTN1_RECORDS,
+                     manifest_model_pw_sha256=manifest.get('model_pw_sha256'),
+                     receiver='qfd_dv_typed_witness_control (SAFE_PHYS candidate, default off)',
+                     added_PW_transfers=0, note='39 previously-zero PW of the 1024-PW image; boot-time only')
+
+
 # ------------------------------------------------------------------------------------------------ main compile
 plan_meta = {}
 
@@ -827,9 +863,14 @@ def main():
     ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
     ap.add_argument('--tload', action='store_true',
                     help='compile BOOT table-load entries and payload blocks for tt_ctlm.tl -> dvs_W5.st_wi')
+    ap.add_argument('--wtn1', default=None,
+                    help='witness_template_packet manifest.json: splice the F16 WTN1 template into PW400..438')
     a = ap.parse_args()
     try:
         image, rec = compile_image(a)
+        if a.wtn1:
+            image, rec['wtn1'] = splice_wtn1(image, json.loads((ROOT / a.wtn1).read_text()))
+            rec['digest'] = f'{digest(image):016x}'
     except (CompileError, AssertionError) as e:
         print(f'CTLM_IMAGE REFUSED: {e}')
         return 2

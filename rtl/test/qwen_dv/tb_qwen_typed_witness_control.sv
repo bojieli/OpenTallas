@@ -5,7 +5,11 @@
 //  0 PW addr data_hi data_lo   1 AUTH level   2 PROFILE digest_hi digest_lo epoch fusedcap
 //  3 START user stage epoch    4 ISSUE user slice pidx stage epoch   5 RETIRE user mexpf
 //  9 END
-module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELECT=0);
+// PHYS=1 selects SAFE_PHYS (pin + output face registers: every output is the
+// legacy output delayed by exactly LAG=2 edges; reset lands in 2+1 stages, so
+// stimulus starts RGAP edges after release for every instance in the run).
+module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELECT=0,PHYS=0);
+ localparam integer LAG=PHYS?2:0,RGAP=PHYS?4:0;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg pw_v=0;reg[9:0]pw_addr=0;reg[63:0]pw_data=0;reg auth=0,fusedcap=0;reg[63:0]dig=0;reg[15:0]pep=0;
  reg start_v=0;reg[1:0]start_user=0;reg[5:0]start_stage=0;reg[15:0]start_epoch=0;
@@ -15,7 +19,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
  wire[15:0]observation;wire obs_fault;
  wire template_ready;wire[3:0]context_active,all_complete;wire group_complete;wire[1:0]complete_user;wire[3:0]complete_group;wire fault;
  qfd_dv_typed_su_observer #(.ENABLE(EN)) obs(.ck(ck),.rst_n(rst_n),.su_issue(su_issue),.cmd_user(cmd_user),.su_pidx(su_pidx),.cmd_slice(cmd_slice),.observation(observation),.fault(obs_fault));
- qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE),.SAFE_SELECT(SELECT)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
+ qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE),.SAFE_SELECT(SELECT),.SAFE_PHYS(PHYS)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
   .all_copies_authenticated(auth),.fusedcap(fusedcap),.installed_digest(dig),.installed_epoch(pep),
   .start_v(start_v),.start_user(start_user),.start_stage(start_stage),.start_epoch(start_epoch),
   .retire_v(retire_v),.retire_user(retire_user),.ME_XPF_retired(mexpf),
@@ -32,18 +36,23 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
  .observation(observation),.event_stage(ev_stage),.event_epoch(ev_epoch),
  .template_ready(rready),.context_active(ractive),.all_witnesses_complete(rall),
  .group_complete(rgroup),.complete_user(ru),.complete_group(rg),.fault(rfault));
- integer overflow_injected=0,overflow_checked=0,overflow_slot=0,oi;
+ integer overflow_injected=0,overflow_checked=0,overflow_slot=0,oi,ref_injected=0;
+ // Change the same (first) pending record in both controllers at each one's own
+ // pending edge (they differ by LAG), exercising the actual cache publication
+ // edge with an unsigned carry beyond the 13-bit counter.
+ always @(negedge ck)if($test$plusargs("OVERFLOW")&&!ref_injected&&reference_dut.pending)begin
+  reference_dut.templates[reference_dut.pending_group][12:0]=13'd8190;
+  for(oi=0;oi<12;oi=oi+1)reference_dut.templates[reference_dut.pending_group][34+8*oi+:8]=8'd255;
+  ref_injected=1;
+ end
  always @(negedge ck)if($test$plusargs("OVERFLOW")&&!overflow_injected&&dut.pending)begin
-  // Change the same pending record in both controllers, exercising the actual
-  // cache publication edge with an unsigned carry beyond the 13-bit counter.
   dut.templates[dut.pending_group][12:0]=13'd8190;
-  reference_dut.templates[dut.pending_group][12:0]=13'd8190;
-  for(oi=0;oi<12;oi=oi+1)begin
-   dut.templates[dut.pending_group][34+8*oi+:8]=8'd255;
-   reference_dut.templates[dut.pending_group][34+8*oi+:8]=8'd255;
-  end
+  for(oi=0;oi<12;oi=oi+1)dut.templates[dut.pending_group][34+8*oi+:8]=8'd255;
   overflow_slot=2*dut.pending_user+dut.pending_slot;overflow_injected=1;$display("F16_INJECT_OVERFLOW expected_due=253");
  end
+ reg[16:0] rdl[0:3];integer di;initial for(di=0;di<4;di++)rdl[di]=0;
+ wire[16:0] rnow={rready,ractive,rall,rgroup,ru,rg,rfault};
+ always @(posedge ck)begin for(di=3;di>0;di--)rdl[di]<=rdl[di-1];rdl[0]<=rnow;end
  always @(posedge ck)begin
  #0.1;
  if(overflow_injected&&!overflow_checked&&dut.cache_valid[overflow_slot])begin
@@ -51,7 +60,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   overflow_checked=1;$display("F16_ACTUAL_CACHE_OVERFLOW_PASS due=253");
  end
  if(rst_n&&{template_ready,context_active,all_complete,group_complete,complete_user,complete_group,fault}!==
- {rready,ractive,rall,rgroup,ru,rg,rfault})$fatal(1,"F16_STRUCTURAL_EDGE_MISMATCH");
+ (LAG==0?rnow:rdl[LAG-1]))$fatal(1,"F16_STRUCTURAL_EDGE_MISMATCH");
  end
  end endgenerate
  integer mech_injected=0,mi;
@@ -82,6 +91,22 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   end
  end end
  end endgenerate
+ // SAFE_PHYS mechanism mutants: a template write-enable sector firing for the
+ // previous (already written) record, and a stuck run-control reset leaf.
+ generate if(PHYS)begin:phys_mut
+  integer tpl_injected=0;
+  for(genvar xr=0;xr<12;xr=xr+1)begin:tw
+   for(genvar xs=0;xs<9;xs=xs+1)begin:ts
+    always@(negedge ck)if($test$plusargs("TPL_WRONG")&&(tpl_injected==0||tpl_injected==xr+1)&&dut.gp.tr[xr+1].sc[xs].ff.q)begin
+     dut.gp.tr[xr].sc[xs].ff.q=1'b1;
+     if(tpl_injected==0)$display("F16_TPL_WRONG_INJECT record=%0d",xr);tpl_injected=xr+1;
+    end
+   end
+  end
+  initial if($test$plusargs("RLEAF_STUCK"))begin
+   wait(dut.pending);force dut.gp.rlr.q=1'b1;$display("F16_RLEAF_STUCK_INJECT");
+  end
+ end endgenerate
  always@(negedge ck)if(SELECT&&dut.pending&&!select_injected)begin
   if($test$plusargs("SELECT_WRONG"))begin
    
@@ -97,10 +122,11 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   end
   if($test$plusargs("RESET_CLEAR"))begin
    rst_n=0;select_injected=1;#0.1;
+   if(PHYS)begin repeat(4)@(posedge ck);#0.1;end // landed synchronous reset
    for(si=0;si<15;si=si+1)if(dut.template_select[si]!==0)$fatal(1,"F16_RESET_SELECT_NOT_CLEAR");
    for(si=0;si<8;si=si+1)for(sj=0;sj<14;sj=sj+1)if(dut.publish_enable[si][sj]!==0)$fatal(1,"F16_RESET_BANK_NOT_CLEAR");
    if(dut.pending!==0||dut.cache_valid!==0||template_ready!==0)$fatal(1,"F16_RESET_OWNERSHIP_NOT_CLEAR");
-   $display("F16_PENDING_ASYNC_CLEAR_PASS");$finish;
+   if(PHYS)$display("F16_PENDING_LANDED_CLEAR_PASS");else $display("F16_PENDING_ASYNC_CLEAR_PASS");$finish;
   end
  end
  always@(posedge ck)begin
@@ -130,6 +156,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   fd=$fopen(f,"r");if(fd==0)$fatal(1,"cannot open stim");
   completions=0;retired=0;first_fault=-1;ready_seen=0;starts=0;done=0;maxlive=0;for(q=0;q<4;q++)ngrp[q]=0;
   repeat(4)@(posedge ck);#0.2 rst_n=1;
+  repeat(RGAP)@(posedge ck);
   edge_i=0;have=0;
   while(!done)begin
    // drive inputs for this edge
@@ -146,7 +173,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
      3:begin start_v=1;start_user=a[1:0];start_stage=b[5:0];start_epoch=c[15:0];starts++;end
      4:begin su_issue=1;cmd_user=a[1:0];cmd_slice=b[3:0];su_pidx=c[8:0];ev_stage_n=d[5:0];ev_epoch_n=e[15:0];end
      5:begin retire_v=1;retire_user=a[1:0];mexpf=b[0];
-        if(EN!=0&&!all_complete[a[1:0]])$display("TWC_RETIRE_EARLY edge=%0d user=%0d",edge_i,a);end
+        if(EN!=0&&PHYS==0&&!all_complete[a[1:0]])$display("TWC_RETIRE_EARLY edge=%0d user=%0d",edge_i,a);end
      9:done=1;
      default:$fatal(1,"bad kind");
     endcase
@@ -160,6 +187,14 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
    end
    if(template_ready)ready_seen=1;
    if($countones(context_active)>maxlive)maxlive=$countones(context_active);
+   if((fault||obs_fault)&&first_fault<0)begin first_fault=edge_i;$display("TWC_FIRST_FAULT edge=%0d ctl=%0d obs=%0d",edge_i,fault,obs_fault);end
+   edge_i++;
+  end
+  // Drain the LAG-edge output face so trailing completions/faults are seen.
+  pw_v=0;start_v=0;retire_v=0;su_issue=0;
+  repeat(LAG)begin
+   @(posedge ck);#0.2;
+   if(group_complete)begin ngrp[complete_user]=(complete_group==12)?0:complete_group+1;completions++;end
    if((fault||obs_fault)&&first_fault<0)begin first_fault=edge_i;$display("TWC_FIRST_FAULT edge=%0d ctl=%0d obs=%0d",edge_i,fault,obs_fault);end
    edge_i++;
   end
