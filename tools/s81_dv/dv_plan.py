@@ -61,7 +61,7 @@ P4K = False                       # p4k (10-18, S81-DIE5, coordinator 0dt): the 
                                   # beside the column-3 E and column-4 W slices open the enclosed unit voids to the streets
 P4L = False                       # p4l (10-18, S81-DIE6): p4k + --no-mix4 + the built end-slice link endpoint masters
 MU = 0                            # MU-S81/DIE (10-19): 0 single-user p4l (default, byte-identical); 1 multi-user (MU_EN);
-                                  # 2 multi-user copy-A/B rank-die variant (MU_EN + AB_EN on s_0N, +2 SerDes lanes)
+                                  # 2 multi-user copy-A/B rank-die variant (MU_EN + AB_EN on s_0S, +2 SerDes lk_WS2 / lk_WS3, rt_0S)
                                   # dsdv_slice_lepw (column 0) / dsdv_slice_lepe (column 7; rtl ot_s81sl_slice_lep{w,e}):
                                   # rx lanes 514 b {st 2, rx 512} on the 562 relay master; the HOST PLANE of the cross-die link
                                   # (f_host 515 + f_lf 4 + f_ks 53 = 572 b -> seqhost on 3 x 276 lanes hf_7N_l*; t_host 77 + t_kd 54
@@ -129,6 +129,54 @@ def chain(pts, hop=None):
     return out, len(cuts), L
 
 
+def chain_at(pts, stations, hop=None):
+    """chain() with EXPLICIT station points (MU-DIE-S81/MAB copy-B lanes: stations staggered against the A lanes'
+    stations in the street and phase-shifted per lane in the 40-um SerDes gap so no two station views overlap).
+    Every station must lie on the polyline in order; every hop (arc length, endpoints included) <= hop."""
+    hop = hop or HOP_UM
+    legs = []
+    for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+        for a, b in (((x1, y1), (x2, y1)), ((x2, y1), (x2, y2))):
+            d = abs(b[0] - a[0]) + abs(b[1] - a[1])
+            if d > 0:
+                legs.append((a, b, d))
+    L = sum(d for _, _, d in legs)
+
+    def arc(q):
+        acc = 0.0
+        for a, b, d in legs:
+            if (min(a[0], b[0]) - 1e-6 <= q[0] <= max(a[0], b[0]) + 1e-6 and
+                    min(a[1], b[1]) - 1e-6 <= q[1] <= max(a[1], b[1]) + 1e-6):
+                return acc + abs(q[0] - a[0]) + abs(q[1] - a[1])
+            acc += d
+        raise AssertionError(f'station {q} not on the route')
+    cuts = [arc(q) for q in stations]
+    ts = [0.0] + cuts + [L]
+    assert all(t1 > t0 for t0, t1 in zip(ts, ts[1:])), ('stations out of order', cuts)
+    assert max(t1 - t0 for t0, t1 in zip(ts, ts[1:])) <= hop + 1e-6, ('hop over reach', [round(t1 - t0, 1) for t0, t1 in zip(ts, ts[1:])])
+    corners = []
+    acc = 0.0
+    for _, _, d in legs[:-1]:
+        acc += d; corners.append(acc)
+
+    def at(t):
+        acc = 0.0
+        for a, b, d in legs:
+            if t <= acc + d + 1e-9:
+                f = (t - acc) / d
+                return (a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f)
+            acc += d
+        return legs[-1][1]
+    marks = sorted(set([0.0] + cuts + corners + [L]))
+    out = []
+    for t0, t1 in zip(marks, marks[1:]):
+        if t1 - t0 > 1e-6:
+            p0, p1 = at(t0), at(t1)
+            out.append((p0[0], p0[1], p1[0], p1[1]))
+    chain.stations = [at(t) for t in cuts]
+    return out, len(cuts), L
+
+
 class Plan:
     def __init__(self):
         self.blocks, self.links, self.idx = [], [], {}
@@ -162,8 +210,8 @@ class Plan:
             return
         self._link(lid, cls, bits, src, dst, pts, note)
 
-    def _link(self, lid, cls, bits, src, dst, pts, note=None):
-        segs, s, L = chain(pts)
+    def _link(self, lid, cls, bits, src, dst, pts, note=None, stations=None):
+        segs, s, L = chain(pts) if stations is None else chain_at(pts, stations)
         self.links.append(dict(i=lid, c=cls, b=bits, d=1, s=s, L=round(L, 1),
                                sp=[[round(x, 1), round(y, 1)] for x, y in chain.stations],
                                e=[[self.idx[src[0]], src[1], round(src[2][0], 1), round(src[2][1], 1), 'box'],
@@ -565,7 +613,7 @@ def host_lanes(P, facts, colx, streets):
 
 
 def mu_lanes(P, facts, colx, streets):
-    """MU-S81/DIE (10-19): the multi-user die variants of p4l (MU 1: MU_EN; MU 2: + copy-A/B lane pair on s_0N).
+    """MU-S81/DIE (10-19): the multi-user die variants of p4l (MU 1: MU_EN; MU 2: + copy-A/B lane pair on s_0S).
     Masters: seqhost -> dsdv_seq_host_mux (slot table + end-slice windows), end slices -> the _mu / _mus / _mab masters
     (ot_s81sl_slice_lep.sv).  Per end slice the seqhost sends mu {mu_c 34, mu_rc 11} (45 b) and the N-tier end slices
     return rt {mu_rt 32}:
@@ -575,20 +623,22 @@ def mu_lanes(P, facts, colx, streets):
       s_0S / s_7S  mu_0S / mu_7S: seqhost W face -> column-4 margin tracks k = -1 / -2 below the seqhost -> the 30-um band
             between the rsv tops and the row-1 frames -> the rsv_09 | rsv_11 gap -> the strip between the rsv bottoms and
             the regional controllers -> under the frames (y < 1.7 mm) -> column-0 / column-7 slice channel -> S face
-    The S-tier RX tags are not returned (the column-4 margin has 2 free tracks below the seqhost; the S-tier slices
-    receive the same {user, pos} as the N tier).  f_mc boot config = host-stream CSR 0x15 decoded from f_host (0 wires).
-    MU 2 adds lk_WN2 (W edge above lk_WN1) and lk_WN3 (W edge below lk_WN0) and their tx2 / rx2 / tx3 / rx3 lanes along
-    the N street and the PHY faces: vertical 512 / 562 legs need relay masters dsfd_dvrlyh_512_SN / _NS and
-    562_NS that have NO closed view yet (stand-ins; edge-strip gap 40 um between frame and PHY -- COORD slot decision
-    shared with AD-S81-LINK's landed serdes column)."""
+    MU 1: the S-tier RX tags are not returned (the column-4 margin has 2 free tracks below the seqhost; the S-tier
+    slices receive the same {user, pos} as the N tier).  f_mc boot config = host-stream CSR 0x15 decoded from f_host
+    (0 wires).  MU 2 (MU-DIE-S81/MAB 10-19, copyb_relay_plan.json): the copy-A/B pair moves to s_0S (dsdv_slice_lepw_mab;
+    s_0N back to dsdv_slice_lepw_mu) because lk_WN2 / lk_WN3 overlapped the grown SerDes slots; copy-B beats arrive on
+    s_0S only, so its RX tags return on rt_0S (seqhost dsdv_seq_host_mab, NRT 3) through the column-4 E strip; the two
+    B SerDes slots lk_WS2 / lk_WS3 and their 2 x 276-b lane bundles are built by copyb_lanes()."""
     Q = P.blocks[P.idx['seqhost']]
     B = lambda n: P.blocks[P.idx[n]]
     xm4 = lambda k: colx(4) - 30.0 - 16.0 * k
     ftop = max(b['y'] + b['h'] for b in P.blocks if b['kind'] == 'frame')
     qw = Q['x']
     # ---- masters
-    sm = {'s_0N': 'dsdv_slice_lepw_mab' if MU == 2 else 'dsdv_slice_lepw_mu', 's_0S': 'dsdv_slice_lepw_mus',
-          's_7N': 'dsdv_slice_lepe_mu', 's_7S': 'dsdv_slice_lepe_nh_mus', 'seqhost': 'dsdv_seq_host_mux'}
+    # MU 2 (MU-DIE-S81/MAB 10-19, copyb_relay_plan if_slot_3596): the copy-A/B pair sits on the S-tier W end s_0S
+    sm = {'s_0N': 'dsdv_slice_lepw_mu', 's_0S': 'dsdv_slice_lepw_mab' if MU == 2 else 'dsdv_slice_lepw_mus',
+          's_7N': 'dsdv_slice_lepe_mu', 's_7S': 'dsdv_slice_lepe_nh_mus',
+          'seqhost': 'dsdv_seq_host_mab' if MU == 2 else 'dsdv_seq_host_mux'}
     for n, m in sm.items():
         B(n)['master'] = m
     # ---- s_0N: mirror of ht_7N through the top strip (y below the host lanes' ftop + 90 .. 240)
@@ -624,30 +674,105 @@ def mu_lanes(P, facts, colx, streets):
         pts = [(qw, yq), (xm, yq), (xm, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
         P._link(nm, 'unit', 276, ('seqhost', 'mu' + sn[2:], pts[0]), (sn, 'mu', pts[-1]), pts,
                 f'MU: seqhost {{mu_c, mu_rc}} -> end slice {sn} (rsv gap, under the frames)')
+    if MU == 2:
+        # rt_0S (MU-DIE-S81/MAB): s_0S carries copy B, so its RX tags {v, user, pos} must reach the seqhost RX tag check
+        # (dsdv_mu_hslot t_mf[2]); the column-4 W margin is full below the seqhost (jw_W / jw_E x2 / jd_W / jd_E /
+        # mu_0S / mu_7S), so rt_0S leaves the seqhost E face and runs down the column-4 E channel strip (between the
+        # s_4S E face + its r_f_4R return lanes and the f_4R frames) to the rsv-top band, then mirrors mu_0S (third
+        # position in the band, the rsv_09 | rsv_11 gap and the rsv-bottom strip).
+        S4 = B('s_4S'); S = B('s_0S')
+        xe = S4['x'] + S4['w'] + 20.5                  # 10.5 um E of the r_f_4R* return lanes (S4 E face + 10); its 25.92-um
+        # 276_NS stations span S4 E + 7.5 .. f_4R* - 0.3 (strip 33.7 um)
+        fx = min(b['x'] for b in P.blocks if b['kind'] == 'frame' and b['x'] > S4['x'] + S4['w'])
+        assert S4['x'] + S4['w'] + 15.0 < xe < fx - 5.0, (xe, fx)
+        ye = Q['y'] + 40.0
+        yb = rtop + (fbot1 - rtop) * 5.0 / 6.0
+        xg = gx0 + (gx1 - gx0) * 5.0 / 6.0
+        yl = rbot - 90.0
+        xs = S['x'] + S['w'] / 2.0 + 180.0
+        pts = [(Q['x'] + Q['w'], ye), (xe, ye), (xe, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
+        P._link('rt_0S', 'unit', 276, ('s_0S', 'rt', pts[-1]), ('seqhost', 'rt0S', pts[0]), pts[::-1],
+                'MU: end slice s_0S RX tag mu_rt (copy-A/B endpoint) -> seqhost (column-4 E strip, rsv gap, under the frames)')
     L = {l['i']: l for l in P.links}
     facts['mu_lanes'] = {n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L'])
-                         for n in ('mu_0N', 'rt_0N', 'mu_0S', 'mu_7S')}
-    facts['mu'] = dict(variant={1: 'MU_EN (multi-user)', 2: 'MU_EN + AB_EN on s_0N (copy-A/B rank die)'}[MU],
+                         for n in ('mu_0N', 'rt_0N', 'mu_0S', 'mu_7S') + (('rt_0S',) if MU == 2 else ())}
+    facts['mu'] = dict(variant={1: 'MU_EN (multi-user)', 2: 'MU_EN + AB_EN on s_0S (copy-A/B rank die)'}[MU],
                        masters=sm, packed=dict(s_7N='mu in ht_7N bits 131..175, rt in hf_7N_l2 bits 20..51'),
                        f_mc='host-stream CSR 0x15 decoded from f_host in dsdv_seq_host_mux (0 wires)')
     if MU == 2:
-        # copy-B lane pair of s_0N: two more SerDes PHYs on the W edge (above lk_WN1 / below lk_WN0)
-        WN0, WN1 = B('lk_WN0'), B('lk_WN1')
-        P.block('lk_WN2', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN1['y'] + WN1['h'] + 100.0, 260, 2250)
-        P.block('lk_WN3', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN0['y'] - 100.0 - 2250.0, 260, 2250)
-        sxf = S0['x']
-        yc = S0['y'] + SLICE_H / 2
-        for k, sgn in (('2', 1), ('3', -1)):
-            lk = f'lk_WN{k}'; LK = B(lk)
-            yst = yc + sgn * 165.0
-            lx = LK['x'] + LK['w']
-            ly = LK['y'] + 20.0 if sgn > 0 else LK['y'] + LK['h'] - 20.0
-            P.link(f'lt_{lk}', 'coll', COLL_LANE, ('s_0N', 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)),
-                   [(sxf, yst), (lx, yst), (lx, ly)], 'MU copy-B link lane tx (street + PHY face)')
-            P.link(f'lr_{lk}', 'coll', COLL_LANE + 50, (lk, 'rx', (lx, ly + 10 * sgn)), ('s_0N', 'rx' + k, (sxf, yst + 10 * sgn)),
-                   [(lx, ly + 10 * sgn), (lx, yst + 10 * sgn), (sxf, yst + 10 * sgn)], 'MU copy-B link lane rx (PHY face + street)')
-        facts['mu']['ab'] = dict(endpoint='s_0N', phys=['lk_WN2', 'lk_WN3'], owed='512/562 vertical relay views + edge slot (COORD)')
+        copyb_lanes(P, facts, B)
 
+
+# MU-DIE-S81/MAB: copy-B SerDes slots (results/arch/mu_s81_1018/copyb_relay_plan.json if_slot_3596, width = rev2 259.2)
+CB_SLOTS = {'lk_WS2': (11332.32, 'bottom'), 'lk_WS3': (243.12, 'top')}
+CB_SLOT_W, CB_SLOT_H = 259.2, 3596.4
+CB_LANE = 276                 # copy-B link = 2 lanes of 276 b on the CLOSED dsfd_dvrlyh_276_* stations (tx 512 = 276 + 236,
+                              # rx 514 = 276 + 238): a 512 / 562-b NS station (>= 54 um wide) does not fit the 40.8-um gap
+CB_HX = (330.5, 690.5, 1050.5, 1440.5)   # street stations: um W of the s_0S W face (A stations at 377.6 / 755.2 / 1132.9)
+CB_HSTAG = 20.0              # x stagger of odd street lanes (276_EW / WE 17.28 wide)
+CB_GX0, CB_GDX = 274.0, 4.0   # gap lane x (lane j: 274 + 4 j; the 25.92-um 276_NS/SN view spans 261.0 .. 299.0)
+CB_GP, CB_GPH = 380.0, 24.0   # gap station pitch + per-lane phase (stations of the 4 lanes of a gap >= 24 um apart in y)
+
+
+def copyb_lanes(P, facts, B):
+    """MU 2 copy-B lane pair on s_0S (copyb_relay_plan.json, MU-S81b; slot rev2 3596.4 tall): lk_WS2 above lk_WS1 (digital
+    bottom) and lk_WS3 below lk_WS0 (digital top); every A slot / attach point unchanged.  Each B link (tx 512, rx 514)
+    is a 2-lane bundle of 276 b (lanes l0 / l1, cycle aligned, own forwarded clock, equal station counts) so every
+    station binds a CLOSED half-cycle relay view: street legs dsfd_dvrlyh_276_EW / WE (x staggered against the A lanes'
+    512 / 562 stations), gap legs 276_SN / NS in the 40.8-um gap between the SerDes column and the f_0L frames (the
+    retired dsfd_dvrlyh_512_NS / _SN / 562_NS stand-ins had no view and no room).  The 4 lanes of a gap turn so that
+    they never cross each other (street order == gap x order == PHY-face order)."""
+    S = B('s_0S')
+    for lk, (y, dig) in CB_SLOTS.items():
+        P.block(lk, 'ot_pdie_serdes_ab', 'link', 'edge', 0.0, y, CB_SLOT_W, CB_SLOT_H)
+    for a, b in (('lk_WS2', 'lk_WS1'), ('lk_WS2', 'lk_WN0'), ('lk_WS3', 'lk_WS0')):
+        A_, B_ = B(a), B(b)
+        assert A_['y'] + A_['h'] <= B_['y'] or B_['y'] + B_['h'] <= A_['y'], (a, b)
+    ylo = B('f_0L01')['y'] + B('f_0L01')['h']       # S street (W of s_0S): f_0L01 top .. f_0L02 bottom
+    yhi = B('f_0L02')['y']
+    assert 379.0 < yhi - ylo < 381.0, (ylo, yhi)
+    xf = S['x']
+    xend = 260.0                                     # PHY E-face attach x (as the A lanes)
+    hx = [xf - d for d in CB_HX]
+    names = [('lt', 'tx', 0), ('lt', 'tx', 1), ('lr', 'rx', 0), ('lr', 'rx', 1)]
+    W2, W3 = B('lk_WS2'), B('lk_WS3')
+    rows = {}
+    for gap, lk, k in (('up', 'lk_WS2', '2'), ('dn', 'lk_WS3', '3')):
+        for j, (d, port, ln) in enumerate(names):
+            xl = CB_GX0 + CB_GDX * j
+            if gap == 'up':
+                ys = ylo + 85.0 + 30.0 * (4 + j)
+                ye = W2['y'] + 85.0 + 30.0 * j
+                ys_ = [yhi + 24.0 + CB_GP * m + CB_GPH * j for m in range(40)]
+                vs = [y for y in ys_ if y < ye - 20.0]
+                while len(vs) > 1 and (ye - vs[-2]) + (xl - xend) <= HOP_UM:
+                    vs.pop()
+            else:
+                ys = ylo + 85.0 + 30.0 * (3 - j)
+                ye = W3['y'] + W3['h'] - 85.0 - 30.0 * j
+                ys_ = [ylo - 106.0 - CB_GP * m - CB_GPH * j for m in range(40)]
+                vs = [y for y in ys_ if y > ye + 20.0]
+                while len(vs) > 1 and (vs[-2] - ye) + (xl - xend) <= HOP_UM:
+                    vs.pop()
+            pts = [(xf, ys), (xl, ys), (xl, ye), (xend, ye)]
+            odd = round((ys - ylo - 85.0) / 30.0) % 2     # street lanes 30 um apart, 276_EW / WE views 32.4 tall: odd lanes
+            st = [(x + CB_HSTAG * odd, ys) for x in hx] + [(xl, y) for y in vs]     # sit CB_HSTAG um nearer s_0S
+            nm = f'{d}_{lk}_l{ln}'
+            if d == 'lt':
+                P._link(nm, 'coll', CB_LANE, ('s_0S', port + k, pts[0]), (lk, port, pts[-1]), pts,
+                        f'MU copy-B link lane tx (S street + SerDes gap, lane {ln} of 2)', stations=st)
+            else:
+                P._link(nm, 'coll', CB_LANE, (lk, port, pts[-1]), ('s_0S', port + k, pts[0]), pts[::-1],
+                        f'MU copy-B link lane rx (SerDes gap + S street, lane {ln} of 2)', stations=st[::-1])
+            rows[nm] = len(st)
+    for lk in ('lk_WS2', 'lk_WS3'):
+        for d in ('lt', 'lr'):
+            assert rows[f'{d}_{lk}_l0'] == rows[f'{d}_{lk}_l1'], ('bundle lanes must land at one age', lk, d, rows)
+    L = {l['i']: l for l in P.links}
+    facts['mu']['ab'] = dict(endpoint='s_0S', phys=['lk_WS2', 'lk_WS3'], slot=[CB_SLOT_W, CB_SLOT_H],
+                             lanes={n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in rows},
+                             relay='closed dsfd_dvrlyh_276_{EW,WE,NS,SN} (2 x 276-b lanes per B link)',
+                             source='results/arch/mu_s81_1018/copyb_relay_plan.json if_slot_3596 (MU-S81b)')
 
 def build():
     P = Plan()
@@ -1250,7 +1375,7 @@ def main():
     ap.add_argument('--p4j', action='store_true', help='p4j: p4i + RET 70 (frame/slice RTL return width) + q/P.V entry under the slice-column voids (0 um of lane over a block)')
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
-    ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0N (+2 SerDes)')
+    ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2 / lk_WS3, rt_0S)')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')

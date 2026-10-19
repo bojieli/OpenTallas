@@ -422,7 +422,7 @@
    "pma_rx": 544,
    "pma_rck": 1
   },
-  "dsdv_seq_host_mux": {
+  "dsdv_seq_host_mab": {
    "ck": 1,
    "rst_n": 1,
    "tap_k": 8,
@@ -458,7 +458,8 @@
    "mu_rc_0n": 11,
    "mu_rc_0s": 11,
    "mu_rt_7n": 32,
-   "mu_rt_0n": 32
+   "mu_rt_0n": 32,
+   "mu_rt_0s": 32
   },
   "ot_s81sl_slice_lepe_mu": {
    "clk": 1,
@@ -543,6 +544,33 @@
    "fault": 1,
    "mu_c": 34,
    "mu_rc": 11
+  },
+  "ot_s81sl_slice_lepw_mu": {
+   "clk": 1,
+   "rst_n": 1,
+   "sid": 4,
+   "ri_e": 1104,
+   "ro_e": 1104,
+   "vi": 276,
+   "vo": 276,
+   "bi": 1104,
+   "bo": 1104,
+   "xc": 4416,
+   "rt": 560,
+   "ck_line": 16,
+   "ck_v": 2,
+   "ck_xc": 16,
+   "ck_rt": 8,
+   "ch_b": 1,
+   "tx0": 512,
+   "tx1": 512,
+   "rx0": 514,
+   "rx1": 514,
+   "tf": 2,
+   "fault": 1,
+   "mu_c": 34,
+   "mu_rc": 11,
+   "mu_rt": 32
   },
   "ot_s81sl_slice_lepw_mab": {
    "clk": 1,
@@ -2860,8 +2888,8 @@
    ],
    "port_note": "p4l: tx 512 -> PHY tx; rx 514 = {PHY st 2, rx 512} on a 562 lane (landed); NO host plane (HOST_EN 0: the master has no t_host / t_kd / f_host / f_lf / f_ks ports); ch_b strap 1 (SerDes basis: every end-slice port crosses the switch, S81-LINKTO corrected S-tier map); S81-LBGAP/G3: inbound line / rung / return lanes landed (dsfd_dvland_276 / 276l / 70); parameter-free (no HB)"
   },
-  "dsdv_seq_host_mux": {
-   "module": "dsdv_seq_host_mux",
+  "dsdv_seq_host_mab": {
+   "module": "dsdv_seq_host_mab",
    "view": null,
    "view_note": "MU-S81/DIE: dsdv_seq_host_mu NSLOT 47 NEV 8 (worktree RTL; unit not hardened, hslot leaf kit owed MU-S81/KIT)",
    "clk": "ck",
@@ -3186,9 +3214,24 @@
        ]
       }
      ]
+    },
+    "rt0S.i": {
+     "land": true,
+     "lanes": [
+      {
+       "split": [
+        [
+         "mu_rt_0s",
+         0,
+         0,
+         32
+        ]
+       ]
+      }
+     ]
     }
    },
-   "port_note": "p4l: cw; per-half job jw_E (s_j + s_hw_e) / jw_W (s_j copied + s_hw_w); jd_E / jd_W {jd, hc, st_rg} per half (landed); host plane hf / ht to end slice s_7N (landed); MU-S81/DIE: mu_c/mu_rc to s_7N in ht spare bits, s_0N/0S/7S on mu_* lanes; mu_rt from s_7N in hf_l2 spare bits, s_0N on rt_0N"
+   "port_note": "p4l: cw; per-half job jw_E (s_j + s_hw_e) / jw_W (s_j copied + s_hw_w); jd_E / jd_W {jd, hc, st_rg} per half (landed); host plane hf / ht to end slice s_7N (landed); MU-S81/DIE: mu_c/mu_rc to s_7N in ht spare bits, s_0N/0S/7S on mu_* lanes; mu_rt from s_7N in hf_l2 spare bits, s_0N on rt_0N; MU-DIE-S81/MAB: + s_0S (copy-A/B endpoint) mu_rt on rt_0S (column-4 E strip)"
   },
   "dsdv_slice_lepe_mu": {
    "module": "ot_s81sl_slice_lepe_mu",
@@ -3827,6 +3870,211 @@
    ],
    "port_note": "p4l: tx 512 -> PHY tx; rx 514 = {PHY st 2, rx 512} on a 562 lane (landed); NO host plane (HOST_EN 0: the master has no t_host / t_kd / f_host / f_lf / f_ks ports); ch_b strap 1 (SerDes basis: every end-slice port crosses the switch, S81-LINKTO corrected S-tier map); S81-LBGAP/G3: inbound line / rung / return lanes landed (dsfd_dvland_276 / 276l / 70); parameter-free (no HB)"
   },
+  "dsdv_slice_lepw_mu": {
+   "module": "ot_s81sl_slice_lepw_mu",
+   "view": null,
+   "view_note": "cluster not hardened; leaf ot_s81sl_lep_nh kit s81sl_lepnh (HOST_EN 0) (critical gate under review), lane tiles dsfd_coll_lane_w/e; MU-S81/DIE: MU_EN 1 (leaf ot_s81sl_lep_mu + dsdv_mu_land, kits owed MU-S81/KIT)",
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "straps": [
+    "sid",
+    "ch_b"
+   ],
+   "strap_values": {
+    "sid": "auto_slice",
+    "ch_b": "1'b1"
+   },
+   "ports": {
+    "xrE.o": {
+     "port": "ro_e",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 4
+    },
+    "xrE.i": {
+     "port": "ri_w",
+     "lane": 276,
+     "land": true
+    },
+    "xrW.o": {
+     "port": "ro_w",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 12
+    },
+    "xrW.i": {
+     "port": "ri_e",
+     "lane": 276,
+     "land": true
+    },
+    "vN.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vS.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vN.i": {
+     "port": "vi",
+     "lane": 276,
+     "land": true
+    },
+    "vS.i": {
+     "port": "vi",
+     "lane": 276,
+     "land": true
+    },
+    "xf.o": {
+     "port": "xc",
+     "lane": 276,
+     "kind": "xc",
+     "ck": "ck_xc"
+    },
+    "ret.i": {
+     "port": "rt",
+     "lane": 70,
+     "order": "ret",
+     "land": true
+    },
+    "q.o": {
+     "hb": 1,
+     "lanes": [
+      {
+       "split": [
+        [
+         "bo",
+         0,
+         0,
+         1
+        ],
+        [
+         "bo",
+         52,
+         1,
+         275
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "bo",
+         327,
+         0,
+         237
+        ]
+       ]
+      }
+     ]
+    },
+    "pv.i": {
+     "port": "bi",
+     "hb": 1,
+     "lane": 1104,
+     "adapter": "dsfd_dvland_pvrd",
+     "out_w": 1104,
+     "adapter_straps": {
+      "nw": "8'd160",
+      "rb": "10'd0"
+     }
+    },
+    "tx0.o": {
+     "port": "tx0",
+     "lane": 512
+    },
+    "rx0.i": {
+     "lanes": [
+      {
+       "split": [
+        [
+         "rx0",
+         0,
+         0,
+         514
+        ]
+       ]
+      }
+     ],
+     "land": true
+    },
+    "tx1.o": {
+     "port": "tx1",
+     "lane": 512
+    },
+    "rx1.i": {
+     "lanes": [
+      {
+       "split": [
+        [
+         "rx1",
+         0,
+         0,
+         514
+        ]
+       ]
+      }
+     ],
+     "land": true
+    },
+    "mu.i": {
+     "land": true,
+     "lanes": [
+      {
+       "split": [
+        [
+         "mu_c",
+         0,
+         0,
+         34
+        ],
+        [
+         "mu_rc",
+         0,
+         34,
+         11
+        ]
+       ]
+      }
+     ]
+    },
+    "rt.o": {
+     "lanes": [
+      {
+       "split": [
+        [
+         "mu_rt",
+         0,
+         0,
+         32
+        ]
+       ]
+      }
+     ]
+    }
+   },
+   "mode_unused": [
+    {
+     "port": "bi",
+     "when": "hb0",
+     "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+    },
+    {
+     "port": "rt",
+     "when": "lanes_without_producer",
+     "lane": 70,
+     "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
+    }
+   ],
+   "port_note": "p4l: tx 512 -> PHY tx; rx 514 = {PHY st 2, rx 512} on a 562 lane (landed); NO host plane (HOST_EN 0: the master has no t_host / t_kd / f_host / f_lf / f_ks ports); ch_b strap 1 (SerDes basis: every end-slice port crosses the switch, S81-LINKTO corrected S-tier map); S81-LBGAP/G3: inbound line / rung / return lanes landed (dsfd_dvland_276 / 276l / 70); parameter-free (no HB)"
+  },
   "dsdv_slice_lepw_mab": {
    "module": "ot_s81sl_slice_lepw_mab",
    "view": null,
@@ -4017,10 +4265,31 @@
      ]
     },
     "tx2.o": {
-     "port": "tx2",
-     "lane": 512
+     "lanes": [
+      {
+       "split": [
+        [
+         "tx2",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "tx2",
+         276,
+         0,
+         236
+        ]
+       ]
+      }
+     ]
     },
     "rx2.i": {
+     "land": true,
      "lanes": [
       {
        "split": [
@@ -4028,18 +4297,48 @@
          "rx2",
          0,
          0,
-         514
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "rx2",
+         276,
+         0,
+         238
         ]
        ]
       }
-     ],
-     "land": true
+     ]
     },
     "tx3.o": {
-     "port": "tx3",
-     "lane": 512
+     "lanes": [
+      {
+       "split": [
+        [
+         "tx3",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "tx3",
+         276,
+         0,
+         236
+        ]
+       ]
+      }
+     ]
     },
     "rx3.i": {
+     "land": true,
      "lanes": [
       {
        "split": [
@@ -4047,12 +4346,21 @@
          "rx3",
          0,
          0,
-         514
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "rx3",
+         276,
+         0,
+         238
         ]
        ]
       }
-     ],
-     "land": true
+     ]
     }
    },
    "mode_unused": [
@@ -4069,9 +4377,99 @@
     }
    ],
    "port_note": "p4l: tx 512 -> PHY tx; rx 514 = {PHY st 2, rx 512} on a 562 lane (landed); NO host plane (HOST_EN 0: the master has no t_host / t_kd / f_host / f_lf / f_ks ports); ch_b strap 1 (SerDes basis: every end-slice port crosses the switch, S81-LINKTO corrected S-tier map); S81-LBGAP/G3: inbound line / rung / return lanes landed (dsfd_dvland_276 / 276l / 70); parameter-free (no HB)"
+  },
+  "ot_pdie_serdes_ab": {
+   "clk": "clk",
+   "rst": [
+    "rst",
+    "low"
+   ],
+   "ports": {
+    "tx.i": {
+     "land": true,
+     "lanes": [
+      {
+       "split": [
+        [
+         "tx",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "tx",
+         276,
+         0,
+         236
+        ]
+       ]
+      }
+     ]
+    },
+    "rx.o": {
+     "lanes": [
+      {
+       "split": [
+        [
+         "rx",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "rx",
+         276,
+         0,
+         236
+        ],
+        [
+         "st",
+         0,
+         236,
+         2
+        ]
+       ]
+      }
+     ]
+    }
+   },
+   "module": "ot_pdie_serdes_col",
+   "view": null,
+   "phy": true,
+   "top_ports": [
+    {
+     "port": "pma_tx",
+     "dir": "output",
+     "bits": 544
+    },
+    {
+     "port": "pma_tck",
+     "dir": "output",
+     "bits": 1
+    },
+    {
+     "port": "pma_rx",
+     "dir": "input",
+     "bits": 544
+    },
+    {
+     "port": "pma_rck",
+     "dir": "input",
+     "bits": 1
+    }
+   ],
+   "view_note": "STAND-IN until s81lk_serdes_col closes: landed SerDes column parent ot_pdie_serdes_col (rtl/dsrom_sys/s81_link/col, same ports as ot_pdie_serdes), slot 259.2 x 3596.4 (p4l_lkcol rev2, COORD 10-19 02:00); S81-PILOT 10-19; MU-DIE-S81/MAB: copy-B slot (2 x 276-b lane bundles per direction)"
   }
  },
- "plan": "S81-DV p4l copy-A/B rank die (results/arch/s81_dv_1016/p4l_mab/plan.json)",
+ "plan": "S81-DV p4l copy-A/B rank die (results/arch/s81_dv_1016/p4l_mab_lkcol/plan.json)",
  "relay_views": {
   "dsfd_dvrly_276_EW": "dv4c-33a9d31b4 (native PASS)",
   "dsfd_dvrly_276_WE": "dv4-cfe2c1cf4 (native PASS)",
@@ -6567,5 +6965,5 @@
    "reason": "PHY min_period 900 ps; ctrl_rg2 ckh uses its signed-off hclk domain through the existing async FIFO"
   }
  },
- "land_plan_note_mu": "MU lanes (mu_*, rt_0N, lt/lr_lk_WN2/3) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan"
+ "land_plan_note_mu": "MU lanes (mu_*, rt_0N, rt_0S, lt/lr_lk_WS2/3_l0/l1) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan"
 }

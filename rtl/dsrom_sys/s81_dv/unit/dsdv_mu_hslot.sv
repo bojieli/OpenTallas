@@ -282,3 +282,32 @@ module dsdv_seq_host_mux (
         .cw_a(cw_a), .cw_d(cw_d), .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}));
 endmodule
+// MU-DIE-S81/MAB (2026-10-19): the seqhost of the copy-A/B rank die (plan p4l_mab_lkcol: AB pair on s_0S).  Copy-B beats
+// arrive on s_0S only, so its RX tags return on mu_rt_0s (lane rt_0S) and the RX tag check (t_mf[2]) covers 3 end
+// slices (NRT 3).  Everything else is dsdv_seq_host_mux exactly.
+module dsdv_seq_host_mab (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [7:0]    tap_k, sink_k,
+    input  wire [275:0]  vi_s, output wire [275:0] vo_s,
+    input  wire [275:0]  vi_n, output wire [275:0] vo_n,
+    input  wire [514:0]  f_host, output wire [76:0] t_host, input wire [3:0] f_lf,
+    input  wire [52:0]   f_ks,   output wire [53:0] t_kd,
+    output wire [3:0]    t_mf,
+    output wire [32:0]   s_j,    input  wire [1:0]  s_jd_w, s_jd_e,
+    output wire [291:0]  s_hw_w, s_hw_e, input wire [8:0] s_hc_w, s_hc_e,
+    input  wire [1:0]    st_rg_w, st_rg_e,
+    output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d,
+    output wire [33:0]   mu_c_7n, mu_c_7s, mu_c_0n, mu_c_0s,
+    output wire [10:0]   mu_rc_7n, mu_rc_7s, mu_rc_0n, mu_rc_0s,
+    input  wire [31:0]   mu_rt_7n, mu_rt_0n, mu_rt_0s
+);
+    reg [25:0] mc;
+    always @(posedge ck) mc <= (f_host[0] && f_host[514:513] == 2'd0 && f_host[8:1] == 8'h15) ? f_host[58:33] : 26'd0;
+    dsdv_seq_host_mu #(.NSLOT(47), .NEV(8), .NEP(4), .NRT(3)) u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
+        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks),
+        .t_kd(t_kd), .f_mc(mc), .t_mf(t_mf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
+        .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
+        .cw_a(cw_a), .cw_d(cw_d), .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
+        .mu_rt({mu_rt_0s, mu_rt_0n, mu_rt_7n}));
+endmodule
