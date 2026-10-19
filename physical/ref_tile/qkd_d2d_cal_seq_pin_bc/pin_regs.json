@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_d2d_cal_seq_pin_bc",
+ "enable": false,
+ "reason": "Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin and every output is a tile output register (one stage after the sequencer; the inner anchor runs EP_SKEW-2 so the epoch-anchored outputs keep the pin tile edges). A generic extra stage would shift the compiled calendar."
+}

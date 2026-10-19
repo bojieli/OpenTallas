@@ -1,0 +1,15 @@
+SEQ TRIAL start Sun Oct 18 23:45:24 PDT 2026 kv_expand sha 368163297e27
+BINDING qkd_seq_st qkd_seq_static rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv
+EXPAND rc=0
+{"removed": 1, "added": 9, "wires": 10, "frames": {"qkd_seq_st": [1, 9, 0]}}
+{"qkd_seq_st": {"module": "qkd_seq_static_s", "instances": 1, "leaves_per_instance": 9, "internal_wires_per_instance": 10, "straps": [], "rtl_ports_without_die_port": ["hs"], "leaf_pin_bits": 6541, "tie_pin_bits": 0, "open_parent_inputs": {}, "connectivity_checks": {"undriven_inputs": 0, "multiple_drivers": 0, "unbound_parent_inputs": 0, "overlaps": 0, "outside_slot": 0}}}
+{"qkd_seq_core_static_s": {"view": "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv"}, "qkd_seq_fan_s": {"view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv"}, "qkd_seq_xs_s": {"view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv"}}
+33218:ot_mts::place [$_blk findInst seq__g_fan_0__u_fan] 6371.136 25725.600 R0
+33219:ot_mts::place [$_blk findInst seq__g_fan_1__u_fan] 6371.136 25596.000 R0
+33220:ot_mts::place [$_blk findInst seq__g_fan_2__u_fan] 6846.336 25725.600 MY
+33221:ot_mts::place [$_blk findInst seq__g_fan_3__u_fan] 6846.336 25596.000 MY
+33222:ot_mts::place [$_blk findInst seq__g_xs_0__u_xs] 6500.736 25596.000 MX
+33223:ot_mts::place [$_blk findInst seq__g_xs_1__u_xs] 6673.536 25596.000 MX
+33224:ot_mts::place [$_blk findInst seq__g_xs_2__u_xs] 6500.736 25768.800 MX
+33225:ot_mts::place [$_blk findInst seq__g_xs_3__u_xs] 6673.536 25768.800 MX
+33226:ot_mts::place [$_blk findInst seq__u_core] 6630.336 25725.600 MX

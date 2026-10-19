@@ -40,6 +40,11 @@ module tb_dsdv_idx_rg;
     parameter integer MUT = 0;
     parameter bit SRAM_MACRO = 1;
     parameter integer CKH_PS = 900;
+    // S81-L20 10-19: request-depth probe (default 8 / 8 = the record controller and reader, byte-identical behaviour):
+    // DQC = dsfd_ctrl_rg2 request buffer entries a PC, DQR = the reader's outstanding-request cap (<= DQC - 1 so a
+    // slice request can never meet a full owner FIFO)
+    parameter integer DQC = 8;
+    parameter integer DQR = 8;
     localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
 
     // ------------------------------------------------------------------ clocks / reset
@@ -120,7 +125,7 @@ module tb_dsdv_idx_rg;
     wire [32*256-1:0] k_wdata, kr_data; wire [32*32-1:0] k_wstrb;
     genvar r;
     generate for (r = 0; r < R; r = r + 1) begin : g_r
-        dsdv_idx_rg #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO)) u (
+        dsdv_idx_rg #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQ(DQR)) u (
             .ck(ck), .rst(rst), .sid(4'(r)), .qi(qch[r]), .qo(qch[r + 1]), .si(sch[r]), .so(sch[r + 1]),
             .rqi(rq_tb[r]), .rqo(rq_c[r]), .rdi(rd_c[r]), .rdo(rd_s[r]), .st(st[r]));
         wire ck_o_unused;
@@ -133,7 +138,7 @@ module tb_dsdv_idx_rg;
                 $display("TRC %0d r%0d slot w %0d r_v %0d r_w %0d a_v %0d a_w %0d iq_n %0d infl %0d ws %0d gw %0d head_w %0d head_ready %0d",
                          cyc, r, u.ew, u.r_v, u.r_w, u.a_v, u.a_w, u.iq_n, u.infl, u.ws, u.gw, u.ih[20:5], u.h_ready);
         end
-        dsfd_ctrl_rg2 u_c (.clk(ck), .ckh(ckh), .rst_n(rst), .rq(rq_c[r]), .rd(rd_c[r]), .ck_o(ck_o_unused),
+        dsfd_ctrl_rg2 #(.DQ(DQC)) u_c (.clk(ck), .ckh(ckh), .rst_n(rst), .rq(rq_c[r]), .rd(rd_c[r]), .ck_o(ck_o_unused),
             .k_v(k_v[2 * r +: 2]), .k_rdy(k_rdy[2 * r +: 2]), .k_addr(k_addr[60 * r +: 60]), .k_len(k_len[8 * r +: 8]),
             .k_tag(k_tag[34 * r +: 34]), .k_we(k_we[2 * r +: 2]), .k_wdata(k_wdata[512 * r +: 512]),
             .k_wstrb(k_wstrb[64 * r +: 64]), .k_wr_done(k_wr_done[2 * r +: 2]), .kr_v(kr_v[2 * r +: 2]),

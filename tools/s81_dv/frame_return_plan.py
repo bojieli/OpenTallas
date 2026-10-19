@@ -272,7 +272,9 @@ def golden_vals(mat, x, nseg):
 
 def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, frame_schedule=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
-    land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs"""
+    land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
+    seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
+    legalising (a per-segment term changes the calendar, so it cannot be added after planning)"""
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     topo = load_topology(master)
@@ -307,8 +309,11 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, fra
     segs = S.segments(mat.K, nseg)
     beat = [class_last_beat(stream, 0, len(stream), *S.unit_range(mat.fmt, a0, el)) for a0, el in segs]
 
+    sx = list(seg_extra) if seg_extra is not None else [0] * len(segs)
+    assert len(sx) == len(segs), (sx, len(segs))
+
     def emit_edge(p, s):
-        return e0 + beat[s] + off[p]
+        return e0 + beat[s] + off[p] + sx[s]
     vals = golden_vals(mat, x, nseg)
     assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters)
     rep, ret = compose(topo, leaves_for(assign, emit_edge, vals))
