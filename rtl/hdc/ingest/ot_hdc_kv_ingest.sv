@@ -86,6 +86,10 @@ module ot_hdc_kv_ingest #(
     //           stack bit k is set and the segment is unringed, captured with the other ap0 fields), so stage A1 is a
     //           four-operand add ap1_rbase = base + pp0 + pp1 + pp2 (= base + stk * stride mod 2^32, stk < 8).  Same
     //           bubble edges and values as APIPE 4, edge for edge.
+    //   APIPE = 8 (S81-SAFE-FIX/SH 2026-10-19, dsdv_sh_lk route lint: ap1_gs -> a2_blk + IKEY offsets -> ap_kcode 22
+    //           levels / 775-787 ps, over the 600-ps stage rule): as 7 with stage B split in two.  B0 (apb_*) registers
+    //           the block base a2_blk = rbase + sb * 2176, the IKEY code / scale offsets (bit-disjoint fields: no carry
+    //           chain) and a2_raddr; B adds them (two-operand adds).  One more bubble edge a row (four), same values.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
@@ -654,7 +658,11 @@ module ot_hdc_kv_ingest #(
 `else
         else if (ap_inval) ap_ok <= 1'b0;
 `endif
-        else ap_ok <= (APIPE >= 2) ? (st_act && ap_ok1) : st_act;
+`ifdef OT_ING_MUT_APBSKIP
+        else ap_ok <= (APIPE >= 2) ? (st_act && ap_ok1) : st_act;               // mutant: APIPE 8 stage B0 not waited for
+`else
+        else ap_ok <= (APIPE >= 8) ? (st_act && ap_okb) : (APIPE >= 2) ? (st_act && ap_ok1) : st_act;
+`endif
     end
     // APIPE 2: stage A (ap1_*) registers the per-row decomposition, stage B (ap_*) the products / sums from it
     reg         ap_ok1;
@@ -708,8 +716,23 @@ module ot_hdc_kv_ingest #(
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
         end
     end
+    // APIPE 8: stage B0 (apb_*) = block base, IKEY offsets, row address; stage B = two-operand sums
+    reg         ap_okb, apb_mine;
+    reg  [31:0] apb_blk, apb_koff, apb_soff, apb_raddr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ap_okb <= 1'b0;
+        else if (ap_inval) ap_okb <= 1'b0;
+        else ap_okb <= st_act && ap_ok1;
+    end
+    always @(posedge clk) if (!ap_okb) begin
+        apb_blk  <= a2_blk;
+        apb_koff <= ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
+        apb_soff <= {26'd0, a2_q} << 1;
+        apb_raddr <= a2_raddr; apb_mine <= ap1_mine;
+    end
     always @(posedge clk) if (!ap_ok) begin
-        if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
+        if (APIPE >= 8) begin ap_raddr <= apb_raddr; ap_kcode <= apb_blk + apb_koff; ap_kscal <= apb_blk + apb_soff; ap_mine <= apb_mine; end
+        else if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
         else begin ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine; end
     end
     // =============================================================================

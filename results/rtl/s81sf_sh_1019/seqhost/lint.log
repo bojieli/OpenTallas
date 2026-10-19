@@ -95,65 +95,65 @@
                                                                                                                                 : ... note: In instance 'dsdv_seq_host.u_l0.u_h.fence'
    73 |   if(PROTECT)begin:g_ecc
       |   ^~
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:137:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:141:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  137 |     initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
+  141 |     initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
       |                           ^~
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:149:25: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'dq_n' generates 3 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:153:25: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'dq_n' generates 3 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  149 |     assign d_rdy = dq_n < DQ;
+  153 |     assign d_rdy = dq_n < DQ;
       |                         ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:160:43: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'lane' generates 4 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:164:43: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'lane' generates 4 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  160 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+  164 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
       |                                           ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:160:65: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'word' generates 16 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:164:65: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'word' generates 16 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  160 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+  164 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
       |                                                                 ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:275:43: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:279:43: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  275 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+  279 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
       |                                           ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:275:22: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:279:22: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  275 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+  279 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
       |                      ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:276:21: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 16 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:280:21: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 16 bits.
                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  276 |                 o_t = o_by >> o_lhd;
+  280 |                 o_t = o_by >> o_lhd;
       |                     ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:304:27: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pr_s' generates 16 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:308:27: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pr_s' generates 16 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  304 |     assign r_addr = pr_hb + pr_s;
+  308 |     assign r_addr = pr_hb + pr_s;
       |                           ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:395:37: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_sec' generates 5 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:399:37: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_sec' generates 5 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  395 |                     st_wa = u_raddr + st_sec;
+  399 |                     st_wa = u_raddr + st_sec;
       |                                     ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:400:109: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_ph' generates 3 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:404:109: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_ph' generates 3 bits.
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  400 |                             st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
+  404 |                             st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
       |                                                                                                             ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:427:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:431:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  427 |     assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
+  431 |     assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
       |                                                            ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:557:51: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:561:51: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  557 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+  561 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
       |                                                   ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:557:30: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:561:30: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  557 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+  561 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
       |                              ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:559:32: Operator FUNCREF 'bw_idx' expects 4 bits on the Function Argument, but Function Argument's SHIFTR generates 16 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:563:32: Operator FUNCREF 'bw_idx' expects 4 bits on the Function Argument, but Function Argument's SHIFTR generates 16 bits.
                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  559 |                             bv[bw_idx(pr_slot, r_by >> p_lhd, hw_word(pt_g, p_lhd, r_by & ((16'd1 << p_lhd) - 16'd1)))]
+  563 |                             bv[bw_idx(pr_slot, r_by >> p_lhd, hw_word(pt_g, p_lhd, r_by & ((16'd1 << p_lhd) - 16'd1)))]
       |                                ^~~~~~
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:558:45: Operator LT expects 16 bits on the RHS, but RHS's VARREF 'p_tlo' generates 5 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:562:45: Operator LT expects 16 bits on the RHS, but RHS's VARREF 'p_tlo' generates 5 bits.
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  558 |                         if ((r_by >> p_lhd) < p_tlo)
+  562 |                         if ((r_by >> p_lhd) < p_tlo)
       |                                             ^
 %Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_rom_host_ingest.sv:162:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
@@ -570,35 +570,35 @@
                                                                                                                               : ... Suggest using delayed assignment '<='
   118 |       out_v<=1;out_d<=head;in_cr<=1;nr=rp+1'b1;nc=nc-1'b1;nh=nh-1'b1;
       |                                                             ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:516:78: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:520:78: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  516 |                         for (bi = 0; bi < 16; bi = bi + 1) g_word[bi*8 +: 8] = cv[gi*16 + bi];
+  520 |                         for (bi = 0; bi < 16; bi = bi + 1) g_word[bi*8 +: 8] = cv[gi*16 + bi];
       |                                                                              ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:548:35: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:552:35: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  548 |                             r_idx = bw_idx(pr_slot, bi[3:0], hw_word(pt_g, p_lhd, {pt_s[14:0], 1'b0}));
+  552 |                             r_idx = bw_idx(pr_slot, bi[3:0], hw_word(pt_g, p_lhd, {pt_s[14:0], 1'b0}));
       |                                   ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:549:36: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:553:36: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  549 |                             r_word = bk[r_idx];
+  553 |                             r_word = bk[r_idx];
       |                                    ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:550:62: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:554:62: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  550 |                             r_word[{pt_s[2:0], 1'b0}*8 +: 8] = rd_data[bi*8 +: 8];
+  554 |                             r_word[{pt_s[2:0], 1'b0}*8 +: 8] = rd_data[bi*8 +: 8];
       |                                                              ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:551:66: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:555:66: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  551 |                             r_word[({pt_s[2:0], 1'b0}+1)*8 +: 8] = rd_data[(16+bi)*8 +: 8];
+  555 |                             r_word[({pt_s[2:0], 1'b0}+1)*8 +: 8] = rd_data[(16+bi)*8 +: 8];
       |                                                                  ^
-%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:557:30: Blocking assignment '=' in sequential logic process
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:561:30: Blocking assignment '=' in sequential logic process
                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
                                                                                                       : ... Suggest using delayed assignment '<='
-  557 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+  561 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
       |                              ^
 %Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:108:92: Bits of signal are not used: 'lf_q'[2,0]
                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l0'
@@ -752,37 +752,37 @@
                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_hx'
   120 |                 wire [W-1:0] row = mem[rbin_c[AW*gs +: AW]];
       |                              ^~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:175:18: Bits of signal are not used: 'qd'[255:237,231:229,223:220,215:172,167:6,3:0]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:179:18: Bits of signal are not used: 'qd'[255:237,231:229,223:220,215:172,167:6,3:0]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  175 |     wire [255:0] qd = sd[qi_slot];
+  179 |     wire [255:0] qd = sd[qi_slot];
       |                  ^~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:241:18: Bits of signal are not used: 'od'[255:237,231:229,223:220,215:172,167:144,47:16,5:0]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:245:18: Bits of signal are not used: 'od'[255:237,231:229,223:220,215:172,167:144,47:16,5:0]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  241 |     wire [255:0] od = (QPIPE != 0) ? of_d : od_s;
+  245 |     wire [255:0] od = (QPIPE != 0) ? of_d : od_s;
       |                  ^~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:298:18: Bits of signal are not used: 'pd'[255:229,223:220,215:172,167:144,47:0]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:302:18: Bits of signal are not used: 'pd'[255:229,223:220,215:172,167:144,47:0]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  298 |     wire [255:0] pd = sd[pr_slot];
+  302 |     wire [255:0] pd = sd[pr_slot];
       |                  ^~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:317:17: Signal is not used: 'ra_w1'
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:321:17: Signal is not used: 'ra_w1'
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  317 |     wire [2:0]  ra_w1 = ra_w0 + 3'd1;           
+  321 |     wire [2:0]  ra_w1 = ra_w0 + 3'd1;           
       |                 ^~~~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:332:26: Bits of signal are not used: 'sh'[511:32]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:336:26: Bits of signal are not used: 'sh'[511:32]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  332 |             wire [511:0] sh = pr >> {rp[4:0], 3'b000};
+  336 |             wire [511:0] sh = pr >> {rp[4:0], 3'b000};
       |                          ^~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:342:18: Bits of signal are not used: 'st_d'[255:234,223:218,215:184,167:144,111:85,6:0]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:346:18: Bits of signal are not used: 'st_d'[255:234,223:218,215:184,167:144,111:85,6:0]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  342 |     reg  [255:0] st_d;
+  346 |     reg  [255:0] st_d;
       |                  ^~~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:471:17: Bits of signal are not used: 'r_idx'[31:5]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:475:17: Bits of signal are not used: 'r_idx'[31:5]
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  471 |     reg [31:0]  r_idx;
+  475 |     reg [31:0]  r_idx;
       |                 ^~~~~
-%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:718:24: Parameter is not used: 'LBW'
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:737:24: Parameter is not used: 'LBW'
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  718 |     localparam integer LBW = LWP + 1;                        
+  737 |     localparam integer LBW = LWP + 1;                        
       |                        ^~~
 %Warning-LATCH: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:77:5: Latch inferred for signal 'dsdv_seq_host.u_l0.u_sd.kk' (not all control paths of combinational always assign a value)
                                                                                                         : ... Suggest use of always_latch for intentional latches
@@ -844,5 +844,5 @@
                       ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
                       ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 1.968 MB sources in 30 modules, into 1.516 MB in 6 C++ files needing 0.000 MB
-- Verilator: Walltime 0.776 s (elab=0.090, cvt=0.549, bld=0.000); cpu 0.776 s on 1 threads; allocated 57.383 MB
+- Verilator: Built from 1.979 MB sources in 30 modules, into 1.517 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.541 s (elab=0.060, cvt=0.393, bld=0.000); cpu 0.541 s on 1 threads; allocated 57.391 MB

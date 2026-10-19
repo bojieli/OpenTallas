@@ -83,7 +83,10 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "apstale": ["-DOT_HOSTNATIVE_PIPE", "-DOT_ING_MUT_APSTALE"],
         # S81-SHLK 10-18: dsdv_sh_lk's ingest (FPIPE 2, APIPE 7: registered host-FIFO head + realigner pointer copies)
         "pos7": ["-DOT_HOSTNATIVE_PIPE7"], "hreg7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREG"],
-        "hregv7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREGV"], "rac7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_RAC"]}[mode]
+        "hregv7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_HREGV"], "rac7": ["-DOT_HOSTNATIVE_PIPE7", "-DOT_ING_MUT_RAC"],
+        # S81-SAFE-FIX/SH 10-19: APIPE 8 (IKEY address stage split): pos8 must pass, apbskip8 / apstale8 must be caught
+        "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
+        "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
                                                   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"]] + [w / "tb.sv"]
 ok_all = True
@@ -119,7 +122,7 @@ for name, c in cases.items():
 if mode in ("fencevis", "fencevis2"):
     print("HNP_NEG_DETECTED (visibility check)" if vis_only else "HNP_NEG_MISSED (no visibility-only catch)")
     sys.exit(1 if vis_only else 0)
-if mode in ("pos", "base", "pos2", "pos7"):
+if mode in ("pos", "base", "pos2", "pos7", "pos8"):
     print("HNP_PASS" if ok_all else "HNP_FAIL")
     sys.exit(0 if ok_all else 1)
 print("HNP_NEG_DETECTED" if not ok_all else "HNP_NEG_MISSED")
