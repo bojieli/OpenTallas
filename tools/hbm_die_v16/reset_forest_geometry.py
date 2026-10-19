@@ -25,18 +25,20 @@ class GeometryError(ValueError):
 
 
 class Geometry:
-    def __init__(self, manifest, views, relay_views, reach, overfly=None):
+    def __init__(self, manifest, views, relay_views, reach, overfly=None, prefix='hbfd_rrl_'):
         self.pl = manifest['placement']
         self.W, self.H = manifest['die_um']
         self.expected_hashes = manifest.get('consumed_view_sha256', {})
         self.views, self.relay_views = Path(views), Path(relay_views or views)
         self.reach = reach
         self.cache, self.hashes, self.reserved = {}, {}, {}
-        self.relay = {k: self.lef('hbfd_rrl_' + k, self.relay_views) for k in ('hop', 'sync')}
+        # L2H-GEN2D-RST 10-19: prefix 'hbfd_rrl_c' = compact carrier tiles (hbfd_rrl_c.sv; relay_views holds their LEFs)
+        self.prefix = prefix
+        self.relay = {k: self.lef(prefix + k, self.relay_views) for k in ('hop', 'sync')}
         for kind, (w, h, pins) in self.relay.items():
             for p in ('rst_n_in', 'rst_n', 'clk'):
                 if p not in pins:
-                    raise GeometryError(f'hbfd_rrl_{kind}: missing LEF pin {p}')
+                    raise GeometryError(f'{prefix}{kind}: missing LEF pin {p}')
         self.radius = max(max(w / 2 + h / 2, *(md((w / 2, h / 2), xy) for xy in pins.values()))
                           for w, h, pins in self.relay.values())
         self.budget = reach - 2 * self.radius - 2 * GRID
