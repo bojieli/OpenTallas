@@ -16,9 +16,10 @@
 //   "c CMD u hex", "c EMB u tok", "c SEG u base tok pos", "c MES tok pos", "c SUA n", "c HD hex", "c CST stage",
 //   "c DC hex" (dc on change), "c STA user stage rng first cnt" (u_cal start consumed at the next posedge),
 //   "c FAULT code" (calendar fault rise), "c OPF lcode coll" (op_fault rise / leaf code change), "c END f code sf opf lcode",
+//   "c LCV tok pos stage" (layer_context_v: head + filler native contexts, MU-DQ-BOOTCTX FCTX),
 //   "c XLD mask" (runtime context loaded: ctx_ld with x_ld), "c RXF rx leaf" (face receiver / ctx leaf fault rise).
 module tb_mu_opseg_dv;
-    parameter integer NU = 1, MUT = 0, OPSEG = 0, CTX_SRC = 0, LMUT = 0;
+    parameter integer NU = 1, MUT = 0, OPSEG = 0, CTX_SRC = 0, LMUT = 0, FCTX = 0;
     reg ck = 1'b0;
     always #5 ck = ~ck;
     reg rst_n = 1'b0;
@@ -38,7 +39,7 @@ module tb_mu_opseg_dv;
     qfd_mu_ctx_rx_die #(.NU((NU > 1) ? NU : 4), .MUT(LMUT)) u_cx (.ck(ck), .rst_n(rst_n), .prog_context_slot(ctx_slot),
         .prog_rx_v(ctx_slot), .rx_payload(rx_rec), .ctx_x(ctx_x), .ctx_user(xu), .mu_fault(lf_f));
     reg rxf_l = 0;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC)) dut (.ck(ck), .rst_n(rst_n),
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX)) dut (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
         .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst),
         .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd),
@@ -74,6 +75,7 @@ module tb_mu_opseg_dv;
                                        dut.l_first, dut.l_cnt);
             if (dut.u_cal.fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, dut.u_cal.fault_code);
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
+            if (lcv) $fdisplay(lg, "%0d LCV %h %h %0d", cyc, ntk, nps, cst);
             if (dut.x_ld && dut.ctx_ld) $fdisplay(lg, "%0d XLD %0d", cyc, dut.ctx_mask);
             if ((rx_cf | lf_f) && !rxf_l) $fdisplay(lg, "%0d RXF %0d %0d", cyc, rx_cf, lf_f);
             rxf_l = rx_cf | lf_f;

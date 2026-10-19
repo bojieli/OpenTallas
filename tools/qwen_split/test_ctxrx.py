@@ -85,9 +85,12 @@ def test_gen_params_mu():
     os.environ['OT_QWEN_MU_NU'] = '4'
     out, rec = P.gen_params([('tt_ctlm', P.TT_MASTER), ('mu_ctxrx', P.CTXRX_MASTER)], [('dvw_hr_wi', None)])
     assert out[P.TT_MASTER]['CTX_SRC'] == 1 and out[P.CTXRX_MASTER]['NU'] == 4 and rec['ctxrx'] == dict(nu=4)
+    assert out[P.TT_MASTER]['FCTX'] == 1 and rec['fctx'] == 1
+    out, rec = P.gen_params([('tt_ctlm', P.TT_MASTER), ('sys_face', 'qfd_sys_face')], [('dvw_hr_wi', None)])
+    assert out['qfd_sys_face']['MU_HEAD'] == 1
     os.environ['OT_QWEN_MU_NU'] = '1'
     out, rec = P.gen_params([('tt_ctlm', P.TT_MASTER), ('mu_ctxrx', P.CTXRX_MASTER)], [('dvw_hr_wi', None)])
-    assert P.CTXRX_MASTER not in out and 'CTX_SRC' not in out.get(P.TT_MASTER, {})
+    assert P.CTXRX_MASTER not in out and 'CTX_SRC' not in out.get(P.TT_MASTER, {}) and 'FCTX' not in out.get(P.TT_MASTER, {})
 
 
 if __name__ == '__main__':

@@ -77,13 +77,17 @@
 // ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
 // only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
+// MU_HEAD (MU-DQ-BOOTCTX 2026-10-19; opt-in, 0 = unchanged on every edge): on the Qwen multi-user die the ctlm's
+// layer context also carries the fillers' native contexts (user on tt_native_pos[17:16], qfd_tt_ctlm_dv FCTX); the HOST
+// context receiver checks user-0 contexts only (qfd_host_native_context_rx MU_HEAD).  Re-close: MU-DQ-SYSFACE.
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
-    parameter ROM_INSTANCE = "sys_face_cfg"
+    parameter ROM_INSTANCE = "sys_face_cfg",
+    parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -322,7 +326,7 @@ module qfd_sys_face #(
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
     wire        rp_tx_v;
     reg         t_running_q;
-    qfd_sys_face_record_port u_record (
+    qfd_sys_face_record_port #(.MU_HEAD(MU_HEAD)) u_record (
         .ck(ck), .rst_rn(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),

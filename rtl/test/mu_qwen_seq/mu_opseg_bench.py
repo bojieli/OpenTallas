@@ -50,7 +50,7 @@ Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
 check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
-(neg_ctx), 32 head-start user not carried on native_pos[17:16] (C8 of MU-DQ-D2DUSER, red), 33 runtime-load
+(neg_ctx), 35 filler native context not raised (C10, red), 32 head-start user not carried on native_pos[17:16] (C8 of MU-DQ-D2DUSER, red), 33 runtime-load
 same-filler rule not checked (neg_xcoll), 34 = the ctx leaf's MUT 1: record loaded into the wrong user (d2d_ctx).
 C9 (d2d_ctx, MU-DQ-BOOTCTX): every record loaded (XLD log, label = slot + 1, load on slot + 2, mask = its user) and no
 face-receiver / leaf fault (RXF).
@@ -77,6 +77,7 @@ PRE = {u: (0x2000 + 0x111 * u, 8186 - 6 * u) for u in range(1, NU)}   # filler b
 CTX = dict(mask=None, tag=O.CTX_TAG)                                   # per case (ctx_part: mask {1, 3}; neg_ctx: bad tag)
 RT = dict(recs=[])                  # d2d_ctx / neg_xcoll: runtime records [(event cycle, user, tok, pos13)]
 RT_LD = 2                           # record slot event -> bank load edge (leaf register, ctlm ctx_x pin register)
+NCTX_BASE = 0x10                    # filler attention LOCAL SEG base (mu_opcal layer_entries C.loc_seg(0x10))
 U0 = (0x1100, 8186)
 
 
@@ -94,7 +95,7 @@ def build(work, vl, nu, opseg, mut, jobs):
     dmut, lmut = (0, 1) if mut == 34 else (mut, 0)
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GLMUT={lmut}', '-Mdir', str(d)] + srcs + [str(TB)]
+           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GFCTX={opseg}', f'-GLMUT={lmut}', '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -110,7 +111,7 @@ def run(work, exe, name, events, ncyc, romdir):
     args = [str(exe), f'+EV={evf}', f'+LOG={lg}', f'+NCYC={ncyc}', f'+OT_ROM_DIR={romdir}']
     r = subprocess.run(args, capture_output=True, text=True)
     if r.returncode != 0: sys.exit(f'RUN FAILED {name}: {r.stdout[-2000:]} {r.stderr[-2000:]}')
-    out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf', 'xld', 'rxf')}
+    out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf', 'xld', 'rxf', 'lcv')}
     out['end'] = None
     out['ctxu'] = None
     for ln in lg.read_text().split('\n'):
@@ -130,6 +131,7 @@ def run(work, exe, name, events, ncyc, romdir):
         elif k == 'STA': out['sta'].append((c,) + tuple(int(x) for x in p[2:7]))
         elif k == 'FAULT': out['faults'].append((c, p[2]))
         elif k == 'OPF': out['opf'].append((c, p[2], int(p[3])))
+        elif k == 'LCV': out['lcv'].append((c, int(p[2], 16), int(p[3], 16), int(p[4])))
         elif k == 'XLD': out['xld'].append((c, int(p[2])))
         elif k == 'RXF': out['rxf'].append((c, int(p[2]), int(p[3])))
         elif k == 'END': out['end'] = (int(p[2]), p[3], int(p[4]), int(p[5]), p[6])
@@ -233,6 +235,19 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         e = r['end']
         if r['faults'] or r['opf'] or r['rxf'] or e is None or e[0] or e[2] or e[3] or e[4] != '0000':
             fails.append(f'{name} C1 {n} faulted: cal {r["faults"][:3]} opf {r["opf"][:3]} rxf {r["rxf"][:2]} end {e}')
+    # C10 (MU-DQ-BOOTCTX FCTX) filler native contexts: every filler head start at base NCTX_BASE (SEG log, label P) raises
+    # layer_context_v at P + 2 with native_tok = its tok, native_pos = {user, pos}; no other filler context; the latency
+    # user's contexts are the reference's
+    w10 = sorted((c + 2, tok, (u << 16) | pos) for c, u, b, tok, pos in mu['seg'] if u != 0 and b == NCTX_BASE and c + 2 < end_cut)
+    g10 = sorted((c, tok, pos) for c, tok, pos, stg in mu['lcv'] if pos >> 16 and c < end_cut)
+    u0m = [x for x in mu['lcv'] if not x[2] >> 16 and x[0] < end_cut]
+    u0s = [x for x in sol['lcv'] if x[0] < end_cut]
+    if g10 != w10 or u0m != u0s or not w10:
+        miss = [x for x in w10 if x not in g10][:2]; extra = [x for x in g10 if x not in w10][:2]
+        fails.append(f'{name} C10 filler native contexts (got {len(g10)} want {len(w10)}; missing {miss}; extra {extra}); '
+                     f'user-0 contexts mu {len(u0m)} vs solo {len(u0s)}')
+    summ.setdefault('c10', {})[name] = dict(filler_contexts=len(g10), per_user={u: sum(1 for x in g10 if x[2] >> 16 == u) for u in range(1, NU)},
+                                            user0_contexts=len(u0m))
     # C9 runtime records: each loaded on slot + RT_LD (XLD label = the posedge before), mask = its user
     w8 = sorted((c + RT_LD - 1, 1 << (u - 1)) for c, u, tok, pos in RT['recs'])
     if sorted(mu['xld']) != w8:

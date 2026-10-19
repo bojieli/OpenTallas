@@ -133,6 +133,15 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out[TT_MASTER].update(CTX_SRC=1)
             out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: CTX_SRC 1 (ctx_x from qfd_mu_ctx_rx_die)'
             rec['ctxrx'] = dict(nu=nu)
+        # MU-DQ-BOOTCTX: fillers' native59 contexts (tt_ctlm FCTX 1: base-0x10 filler LOCAL SEG starts raise the head
+        # layer context) and the face's HOST-context check limited to user 0 (qfd_sys_face MU_HEAD 1; MU-DQ-SYSFACE re-close)
+        if TT_MASTER in masters:
+            out[TT_MASTER].update(FCTX=1)
+            out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: FCTX 1 (filler native contexts)'
+        if 'qfd_sys_face' in masters:
+            out.setdefault('qfd_sys_face', {}).update(MU_HEAD=1)
+            out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
+        rec['fctx'] = 1
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")

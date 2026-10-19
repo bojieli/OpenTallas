@@ -118,6 +118,16 @@
 //   30 / 31 -> calendar MUT 4 / 5 (TLOAD payload halves swapped / table word one edge late; QLB-C4b's 9 / 10 -- 9 is
 //   HARD_HR's here);  27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
 //   (u mod (NU-1)) + 1; 29 record not checked (a bad tag loads and does not fault).
+// FILLER NATIVE CONTEXT (MU-DQ-BOOTCTX 10-19, FCTX 1, opt-in, OPSEG only; 0 = unchanged): the hard head raises
+//   layer_context_v only for an accepted start at prog_base 0 (the latency user's decode stage start), but a filler's
+//   attention (kv) ops run as a LOCAL SEG at prog_base NCTX_BASE (mu_opcal layer_entries: C.loc_seg(0x10)), so native59
+//   never opened a filler context.  Here: a head start (st) of a filler (hu != 0) at base NCTX_BASE raises
+//   layer_context_v on the edge the head would for base 0 (h_start -> head pin register -> layer_context_v register =
+//   2 edges, FCTX_LAT), with the head's own native_tok / native_pos (latched on every accepted start: the filler's
+//   tok_b / pos_b, user on [17:16]) and command_stage (= that segment's user stage, per-user stage bank).  native59 NU 4
+//   (MU-DQ-D2DUSER) keys the context by native_pos[17:16].  The closed qfd_sys_face's host-context check must skip
+//   filler contexts (qfd_host_native_context_rx MU_HEAD 1, re-close owner MU-DQ-SYSFACE).  0 added edges; 2 flops.
+//   MUT 35 (bench only): the filler context is not raised (the pre-fix hardware).
 // D2D USER (MU-DQ-D2DUSER 10-19, NU > 1): native_pos[17:16] = the user of the latest head start (see hu below), the
 //   carrier native59 stamps into the D2D CMD / Q epoch[1:0]; no port change, no added edge.  MUT 32 = user not carried.
 // =====================================================================================================================
@@ -135,7 +145,9 @@ module qfd_tt_ctlm_dv #(
     parameter string  OPSEG_VIAMAP = "",
     parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg",
     parameter integer HR_ASBUILT = 0,               // QW-DIEFIX: 1 = bench mutant (as-built hr layout)
-    parameter integer CTX_SRC = 0                   // MU-DQ-BOOTCTX: 1 = runtime filler context on ctx_x (OPSEG only)
+    parameter integer CTX_SRC = 0,                  // MU-DQ-BOOTCTX: 1 = runtime filler context on ctx_x (OPSEG only)
+    parameter integer FCTX = 0,                     // MU-DQ-BOOTCTX: 1 = filler native context at base NCTX_BASE
+    parameter [11:0]  NCTX_BASE = 12'h010
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -149,7 +161,7 @@ module qfd_tt_ctlm_dv #(
     input  wire          fab,
     output wire [75:0]   program_obs,
     output wire          control_stores_ready,
-    output wire          layer_context_v,
+    output wire          layer_context_v,           // head layer context | filler native context (FCTX)
     output wire [17:0]   native_tok,
     output wire [17:0]   native_pos,
     output wire [5:0]    command_stage,
@@ -321,6 +333,13 @@ module qfd_tt_ctlm_dv #(
         else if (s_me) hu <= 2'd0;
         else if (c_seg) hu <= (NU > 1 && MUT != 32) ? 2'(c_user) : 2'd0;
     wire [17:0] native_pos_h;
+    // filler native context (FCTX, see the header): 2 edges after the filler's base-NCTX_BASE head start, as the head's
+    wire        lcv_h;
+    reg  [1:0]  fcx;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) fcx <= 2'd0;
+        else fcx <= {fcx[0], (FCTX != 0) && (OPS != 0) && (MUT != 35) && st_h && st_base == NCTX_BASE && hu != 2'd0};
+    assign layer_context_v = lcv_h | fcx[1];
     assign native_pos = (NU > 1) ? (native_pos_h | {hu, 16'd0}) : native_pos_h;
 
     // ------------------------------------------------------------------ SU observation (was seq_su's xs / su_observe)
@@ -357,7 +376,7 @@ module qfd_tt_ctlm_dv #(
         ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
             .stage_start(hd_start), .stage(hd_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h), .rom_cmd(ib_q),
+            .layer_context_v(lcv_h), .native_tok(native_tok), .native_pos(native_pos_h), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
             .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -392,7 +411,7 @@ module qfd_tt_ctlm_dv #(
         qfd_tt_ctlm_head_static u_head (
             .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
             .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h),
+            .layer_context_v(lcv_h), .native_tok(native_tok), .native_pos(native_pos_h),
             .clk(ck), .ck_sched(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
             .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
