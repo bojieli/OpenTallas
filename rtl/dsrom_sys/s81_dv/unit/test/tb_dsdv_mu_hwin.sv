@@ -78,7 +78,11 @@ module tb_dsdv_mu_hwin;
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
     integer kconst = -1;
-    task automatic cfg(input [25:0] w); begin f_mc = w; @(posedge ck); #0.1; f_mc = 0; @(posedge ck); #0.1; end endtask
+    task automatic cfg(input [25:0] w); begin f_mc = w; @(posedge ck); #0.1; f_mc = 0;
+`ifndef FAST_CFG
+        @(posedge ck); #0.1;
+`endif
+    end endtask
     task automatic wcfg(input [25:0] w); begin f_mw = w; @(posedge ck); #0.1; f_mw = 0;
 `ifndef FAST_CFG
         @(posedge ck); #0.1;
