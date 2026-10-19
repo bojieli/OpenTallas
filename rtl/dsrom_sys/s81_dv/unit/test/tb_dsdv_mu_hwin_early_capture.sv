@@ -79,6 +79,12 @@ ROUNDS=4, T0=1000+32*NS;
 `else
     integer miter_edges=0,mi;
     always @(negedge ck) begin
+`ifdef FOUR_STATE_GUARDS
+       if(rst_n && $isunknown({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf}))
+          $fatal(1,"EARLY_X observable output/fault after external reset release c%0d",cyc);
+       if(rst_n && dut.rn && $isunknown({dut.vld,dut.evld,dut.ok,dut.fire,dut.adv,dut.due,dut.radv,dut.armed}))
+          $fatal(1,"EARLY_X source-qualified control c%0d",cyc);
+`endif
        if({mu_c,mu_rc,wf} !== {anchor_c,anchor_rc,anchor_wf})
           $fatal(1,"EARLY_MITER OUTPUT c%0d actual=%h anchor=%h",cyc,{mu_c,mu_rc,wf},{anchor_c,anchor_rc,anchor_wf});
        if(rst_n && dut.rn && anchor.rn) begin
@@ -86,6 +92,12 @@ ROUNDS=4, T0=1000+32*NS;
              {anchor.rp,anchor.rpb,anchor.rec,anchor.rec_q,anchor.ok,anchor.radv,anchor.armed,anchor.hold,anchor.fire,anchor.adv,anchor.vld,anchor.evld,anchor.okq,anchor.h_fr,anchor.h_rfr,anchor.due,anchor.rok,anchor.rhold,anchor.global_count,anchor.table_empty})
              $fatal(1,"EARLY_MITER CONTROL c%0d",cyc);
           for(mi=0;mi<NEV;mi=mi+1) begin
+`ifdef FOUR_STATE_GUARDS
+             if(anchor.ok[mi] && anchor.h_fr[mi] && $isunknown({dut.h_ts[mi],dut.h_ep[mi],dut.h_eu[mi],dut.h_at[mi]}))
+                $fatal(1,"EARLY_X qualified head c%0d e%0d",cyc,mi);
+             if(anchor.rok && anchor.h_rfr && $isunknown(dut.h_rts))
+                $fatal(1,"EARLY_X qualified retirement c%0d",cyc);
+`endif
              if({dut.pe[mi],dut.pbi[mi],dut.fd[mi]&dut.vld} !== {anchor.pe[mi],anchor.pbi[mi],anchor.fd[mi]&anchor.vld})
                 $fatal(1,"EARLY_MITER POINTER_FD c%0d e%0d",cyc,mi);
              // Raw head contents/compares are unqualified until actual valid/fresh controls.

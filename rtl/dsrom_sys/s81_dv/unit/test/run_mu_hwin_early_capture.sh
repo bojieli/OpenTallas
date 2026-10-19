@@ -72,5 +72,17 @@ stress)
  done
  run reset_ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D +define+OCCUPIED_RESET_STRESS
  ;;
+four_state)
+ mkdir "$O/four_state"
+ iverilog -V > "$O/four_state/iverilog_version.txt" 2>&1
+ iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
+  -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${files[@]}" \
+  > "$O/four_state/build.log" 2>&1
+ for phase in 0 1 2 3 4 5 6 7 8 90 93; do
+  log="$O/four_state/run_phase${phase}.log"
+  vvp "$O/four_state/tb.vvp" +reset_phase=$phase > "$log" 2>&1
+  grep -q '^MUWIN PASS' "$log"
+ done
+ ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac
