@@ -1,0 +1,37 @@
+{
+  "kind": "FUNCTIONAL_ONLY",
+  "cases": [
+    {
+      "case": 0,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "adeb44cc9e8a4ea52081d0aabfd29f4d01c6b57a15267d61b63a228819fde84e"
+    },
+    {
+      "case": 1,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "9628691dad961834d3e0f3e75569698ce574fbd1775159733fbdd1a84b0ec30f"
+    },
+    {
+      "case": 2,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "0c6015dc79371869c58c73567b70f5890ec4f1a0298659823848fc5f6b7e239a"
+    },
+    {
+      "case": 3,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "0bc0a7d500378372d9fd1d5aa0c4a6e63a8068856939dacf44ea5097b88e7a91"
+    },
+    {
+      "case": 4,
+      "exit": 1,
+      "application_pass": false,
+      "log_sha256": "a68c300ea41e37fb4ac93d4aa629a694ccacb93f77fb313420fc9cc2a51decde"
+    }
+  ],
+  "production_H": null,
+  "remaining": "NO_NATIVE, health failure, cancellation, duplicate client errors and nine causal categories pending"
+}
