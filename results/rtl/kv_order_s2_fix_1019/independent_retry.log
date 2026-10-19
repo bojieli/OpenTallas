@@ -1,0 +1,25 @@
+ot-run: ot-epyc4       admits  1038 GB (avail 824, growth 97, headroom 0, waiters 0/0 GB) load 82/128 running 31 disk 308 GB 
+ot-run: ot-epyc5       admits   901 GB (avail 744, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 12 disk 1051 GB 
+ot-run: ot-epyc6       admits   317 GB (avail 331, growth 109, headroom 0, waiters 0/0 GB) load 29/128 running 16 disk 6061 GB 
+ot-run: ot-epyc7       admits   575 GB (avail 503, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 17 disk 6477 GB 
+ot-run: ot-epyc8       admits  1147 GB (avail 911, growth 108, headroom 0, waiters 0/0 GB) load 38/128 running 27 disk 359 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-62888-1792426950 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+FIFO_INDEPENDENT_PASS cycles=30000 pushes=11969 pops=11866 full=3712 empty=4518 clear=31 simultaneous=4885
+- results/rtl/kv_order_s2_1019/tb_fifo_independent.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.105 s; speed 572.740 us/s
+- Verilator: cpu 0.105 s on 1 threads; allocated 7 MB
+[132000] %Fatal: tb_fifo_independent.sv:12: Assertion failed in tb_fifo_independent: FIFO_MISMATCH cycle 65 count 3
+%Error: results/rtl/kv_order_s2_1019/tb_fifo_independent.sv:12: Verilog $stop
+Aborting...
+[38000] %Fatal: tb_fifo_independent.sv:12: Assertion failed in tb_fifo_independent: FIFO_MISMATCH cycle 18 count 6
+%Error: results/rtl/kv_order_s2_1019/tb_fifo_independent.sv:12: Verilog $stop
+Aborting...
+[36000] %Fatal: tb_fifo_independent.sv:12: Assertion failed in tb_fifo_independent: FIFO_MISMATCH cycle 17 count 7
+%Error: results/rtl/kv_order_s2_1019/tb_fifo_independent.sv:12: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-62888-1792426950): exit 0

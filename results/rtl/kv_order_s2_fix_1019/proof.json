@@ -1,0 +1,26 @@
+{
+  "status": "functional_PASS_physical_pending",
+  "source_base": "646351cb0",
+  "verilator": "5.050",
+  "external_exact_cycles": 600000,
+  "reset_count": 916,
+  "capacity": 8,
+  "edge_delta": 0,
+  "II": 1,
+  "independent_cycles": 30000,
+  "mutants": [
+    "RAW_drop",
+    "wrong_prefetch",
+    "wrong_cache_advance",
+    "local_issue_wrong",
+    "front_rotate_wrong",
+    "map_local_select_wrong"
+  ],
+  "reset_test": "generated actual balanced wrapper varied2000 phases, all first/final copies checked; two registered edges",
+  "logs": {
+    "reset.log": "4f831538b0b2d74295aa6204f26522a89936ef393451a5bfeb5474f10e10795c",
+    "new_mutants_retry.log": "69e50998cb18cf97188695f0c4848aed5c517c0fa6884a467f4298b7389302eb",
+    "independent_retry.log": "c51bd095b47ee8741f0906340139518259d4a09b770d4a167f3be7a6f315f851",
+    "bench.log": "ee4bd2b6a7d991c3cc82499e3f218011089d02b990cf33982068d827af8ef855"
+  }
+}
