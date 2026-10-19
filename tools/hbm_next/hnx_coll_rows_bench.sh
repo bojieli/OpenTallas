@@ -20,6 +20,7 @@ grep -q 'parameter integer KMAX=64' "$O/ot_hgi_coll_tkm_static_k64.sv" || { V "K
 src=(rtl/hbm_next/coll/tb/tb_hnx_coll_rows.sv "$p/ot_hfd_coll_q3_static_host_v4.sv" "$p/ot_hfd_coll_q2_static_host_v4.sv"
  "$p/ot_hgi_coll_static_program_target.sv" "$p/ot_hfd_coll_q_static_v4.sv" "$p/ot_hgi_coll_static_issuer.sv"
  "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_reduce_static.sv"
+ "$p/ot_hgi_coll_pring_captured_static.sv" "$p/ot_hgi_coll_pring_static_state_capture.sv" rtl/hdc/ot_hdc_fp32_mul_lat.sv
  "$p/ot_hgi_coll_static_vmwrite.sv" "$p/ot_hgi_coll_static_link_capture.sv" "$p/ot_hgi_coll_static_capture_ctl.sv"
  "$p/ot_hgi_coll_static_pinreg_ctl.sv" "$p/ot_hgi_coll_static_pinreg_store.sv" "$p/ot_hgi_coll_static_seq_ctl.sv"
  "$p/ot_hgi_coll_argmax_static.sv" rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv

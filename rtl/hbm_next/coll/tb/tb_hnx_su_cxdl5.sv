@@ -37,10 +37,10 @@ module tb_hnx_su_cxdl5;
    for(t=0;t<NT;t=t+1) for(q=0;q<5;q=q+1) begin sv[t][q]=0; si[t][q]=-1; end
    for(s=0;s<4;s=s+1) for(k=0;k<NT;k=k+1) begin occ[s][k][0]=-1; occ[s][k][1]=-1; end
    own_n = (lanes==5) ? M-X : M;
-   // own lane s: flit m (i = 4m + s) at its m-th event edge
+   // own lane s: flit m (i = 4m + s) at its m-th event edge from stream edge 8 (stimulus is live 2 serial edges after release)
    for(s=0;s<4;s=s+1) begin
     m=0;
-    for(t=0;t<NT && m<own_n;t=t+1) if(t%4!=2) begin
+    for(t=8;t<NT && m<own_n;t=t+1) if(t%4!=2) begin
      sv[t][s]=1; si[t][s]=4*m+s; occ[s][ev(t)][m%2]=4*m+s; m=m+1;      // flit 4m+s: half = m mod 2
     end
    end
@@ -49,7 +49,7 @@ module tb_hnx_su_cxdl5;
     integer qi[0:4095]; n4=0;
     for(m=own_n;m<M;m=m+1) for(s=0;s<4;s=s+1) begin qi[n4]=4*m+s; n4=n4+1; end
     head=0;
-    for(t=0;t<NT-8 && head<n4;t=t+1) begin
+    for(t=8;t<NT-8 && head<n4;t=t+1) begin
      found=-1;
      for(q=head;q<n4 && q<head+8 && found<0;q=q+1) if(qi[q]>=0) begin
       integer i2, s2, h2, k2;
