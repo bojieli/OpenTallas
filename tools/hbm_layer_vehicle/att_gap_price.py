@@ -64,7 +64,7 @@ def merge_cycles(nodes_q, levels_q, levels_top, r_hop):
                 total=round(q_prog * SER + ag + top * SER, 1))
 
 
-def ledger_rows(doc, price_path, evidence):
+def ledger_rows(doc, price_path, evidence, merge_status):
     """r25gq (HBM die) rows of the three d4g attention terms, each priced alone against the d4g base (ledger rule)."""
     import sys
     sys.path.insert(0, str(ROOT / "tools" / "throughput"))
@@ -105,8 +105,9 @@ def ledger_rows(doc, price_path, evidence):
                             pw(a3, "SU edge model from the RTL constants of the merge bench (start 5, fill +13, lane "
                                    "LAT 30, store read +3, drain +7, 3:4 serial) + d4g ring all-gather (ag_cycles)"),
                             evidence or rel(price_path), "committed_bench",
-                            note="exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise "
-                                 "tree incl. +0 pads, final == fixture PV); cycles MODELLED (not a die run). HBM-ATTGAP 10-19.",
+                            note=("exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise "
+                                  "tree incl. +0 pads, final == fixture PV): " + merge_status + "; cycles MODELLED (not a "
+                                  "die run). HBM-ATTGAP 10-19."),
                             group="ATT.D4G.PV_MERGE"))
     for r in rows:
         r["share_basis"] = "modelled"
@@ -127,6 +128,7 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--ledger", action="store_true", help="write the ATT.D4G.* rows into the accepted-cost ledger")
     ap.add_argument("--evidence", default="", help="committed evidence path of the sub-run / merge benches")
+    ap.add_argument("--merge-status", default="RTL bench pending", help="state of the att_merge_su.py RTL bench")
     a = ap.parse_args(argv)
     pl = json.loads(PL.read_text())
     base = pl["ar_cycles"]
@@ -190,7 +192,7 @@ def main(argv=None):
                                      merge=round(n640 * m640["total"] + n128 * m128["total"], 1)))
     Path(a.out).write_text(json.dumps(doc, indent=1) + "\n")
     if a.ledger:
-        ledger_rows(doc, a.out, a.evidence)
+        ledger_rows(doc, a.out, a.evidence, a.merge_status)
     print(json.dumps({k: (v["ds_ar_tok_s"], v.get("ds_ar_loss_pct")) if isinstance(v, dict) and "ds_ar_tok_s" in v
                       else v.get("feasible") for k, v in rows.items()}))
     print(json.dumps(doc["breakdown_chosen"]), json.dumps(m640))
