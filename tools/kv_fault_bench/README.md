@@ -15,7 +15,10 @@ walk computes source-to-sink bounds, refuses missing source coverage, and refuse
 individually, check sink persistence, reset and observe a complete quiet window,
 hold all sources together, and reset an in-flight fault. Mutants disconnect the
 first source or replace it with the second source; mutant verdicts require a real
-sink mismatch during that first source's individual test.
+sink mismatch during that first source's individual test. The baseline tests every
+source individually. Mutant vectors include only the affected source's individual
+test plus shared simultaneous/reset cases; `tested_source_ids` records this scope.
+The graph walk still checks coverage of every source in all modes.
 
 Run only on the fleet, with source-pinned inputs and Verilator 5.050:
 

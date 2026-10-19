@@ -98,7 +98,8 @@ def generate(plan, output, mutant='none', candidate_mode=False):
         rows.append(f'{int(not reset):x} {stimulus:x} {word:x} {case:x}\n')
         return expected[sink]
     tick(reset=True)
-    for s in sources:
+    tested_sources = sources if mutant=='none' else sources[:1]
+    for s in tested_sources:
         case += 1; tick(reset=True)
         # Single-edge pulse, then quiet long enough for the slowest path.
         tick([s['id']])
@@ -169,7 +170,7 @@ endmodule
     if mutant != 'none':
         text = text.replace('if(q !== expected)', f'if(q[{idx[sink]}] !== expected[{idx[sink]}])')
     (output/'tb.sv').write_text(text)
-    meta = dict(source_count=len(sources),node_count=len(ops),cycles=len(rows),quiet_cycles=quiet,max_leaf_latency=max(latencies.values()),latencies=latencies,mutant=mutant,candidate_mode=candidate_mode,qualification='logical topology only; fixed-cycle transports do not qualify CDC or physical lanes',plan_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True).encode()).hexdigest())
+    meta = dict(source_count=len(sources),node_count=len(ops),cycles=len(rows),quiet_cycles=quiet,max_leaf_latency=max(latencies.values()),latencies=latencies,mutant=mutant,tested_source_ids=[s['id'] for s in tested_sources],candidate_mode=candidate_mode,qualification='logical topology only; fixed-cycle transports do not qualify CDC or physical lanes',plan_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True).encode()).hexdigest())
     (output/'manifest.json').write_text(json.dumps(meta,indent=2)+'\n')
     return meta
 
