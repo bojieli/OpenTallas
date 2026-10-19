@@ -21,3 +21,5 @@ Safe-design checklist before gate:
 8. PASS: static event schedule, unchanged eight-edge bank recurrence, no credits/backpressure; zero data cycles added. Die area charge above must reach DIE/CMTP before binding.
 
 Critical tile: report PNG/checklist only. No REVIEW.json or submission. Draft hold_merge stays true until coordinator review. No programme merge until exactness is collected.
+
+Final exactness collection: all25 paired128x256 matrix legs completed with expected outcomes (outcome_check.json). All10 nominal slice/publication runs PASS, all14 mutants FAIL including storage skew6, schedule stress0faults. Padded alias publication576nodes PASS and normalized HDL/lib identity proof establish equivalence to the tested paired128 model. Gate source snapshot is51850fd26 with manifest9c33fc6064fd60da80ab6badb15059af47858e403ebb656268d0fac9aa515c66; normal auto --cts gate1003344 remains LIVE on epyc8.

@@ -1,0 +1,127 @@
+[
+  {
+    "run": "nl4_s03",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m0",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m1",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m2",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m3",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m4",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_m5",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "pub_s2",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sched3",
+    "outcome": "0 faults",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_imut1",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_imut2",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_imut3",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_imut4",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_k486",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_k490",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_k500",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_s00",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_s03",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_s10",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_sdj",
+    "outcome": "PASS",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_smut1",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_smut2",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_smut3",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_smut4k",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  },
+  {
+    "run": "sh_smut6",
+    "outcome": "FAIL",
+    "expected_outcome": true
+  }
+]
