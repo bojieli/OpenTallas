@@ -127,3 +127,38 @@ There is no "N = 1 = d4g" reference, because d4g has no such unit. N = 1 is chec
 2. Kit the top (`ot_hnx_fused_top`: csum tree, heap, divc, rsqrt) as a cluster parent with 32 lane children. The DIE lane has to place the 32 lanes beside their VM banks.
 3. CMTP: flip FUSED.HC_PRE_NORM to 81 MEASURED (c1 404) and FUSED.HC_POST to 103 MEASURED (c1 196), with the KX = 4 rgap 0 rule. For KX = 2, the compiler needs rgap >= 64 (the minimum between 1 and 64 is not measured).
 4. The ROWX decode from the HGI-1R record word into the lane JOB (nm1, rgap, rs_A/rs_B/rs_O in sectors = words / 8) sits in the top's job decode. Check it against `tools/hbm_next/isa_rows.py` when CMTP's binary emitter lands.
+
+## n3 gate verdict and n4 structural redesign (LH-P3UNITS/FUSED, 2026-10-19 11:30)
+
+**n3 gate (ot-epyc6 `ref_gate/hnx_fused_lane_1019-20261019-060819`): FAIL.** Synthesis finished (kept `ot_hnx_fused_el`:
+12,885 um2 / 12,523 flops each; lane 118,651 um2, 897,521 cells, **113,400 flops**). textbook_lint **REFUSE**:
+clock_domain (113,400 flops on one root > 110,000) and high_fanout (one reset relay flop -> 16,053 async-reset loads > 8,000);
+WARN logic_depth 617 ps (kk -> hcpost m4 input). CTS then stalled > 14,400 s in hold repair (worst -35.6 ps on the 20 x 11
+`u_rmeta` flop chain, 9,400+ hold buffers); placement worst setup -123.8 ps at `wq_s[10]`. The client died; the stale GRT
+container was killed (no gate_result). Benches m0 10/10 + m1..m6 FAIL were PASS on 1073b91b5.
+
+**n4 (4028eb45b): halve the datapath instead of squeezing it.**
+- HC_PRE_NORM's mix `x = bf16(((h0 p0 + h1 p1) + h2 p2) + h3 p3)` is exactly the first three sums of HC_POST's chain
+  `o = bf16((((r0 c0 + r1 c1) + r2 c2) + r3 c3) + y p)`, and the two ops never run together (one record at a time, op static per
+  record). `ot_hnx_fused_el2` keeps ONE f12 product/sum chain per element: PRE taps `bf16(s3)` (the mix's RNE), HC_POST
+  takes `bf16(s4)`. Same f12 multiplier/adder cores (only register cuts differ); the sum-2/3 operand order is swapped
+  vs the mix (IEEE add commutes). The lane loads the PRE operands into `op[1..4]` and zeroes `op[0]` (the `y * p` lane, exact 0);
+  coefficients are `post ? wsw : pre_q` (static per record). Removes 4 multipliers + 3 adders + the 6/12-deep operand
+  delays from each of the 8 columns (est. el 12.9k -> ~8.6k um2; lane ~85k um2 std, ~80k flops).
+- Every delay line >= 4 deep is `ot_hdc_delay_ring RING 1` (u_rmeta 20 x 11, chunk-chain u_sd 32 x 6..36, u_wm, el2 u_d2/u_d3/u_d4).
+- `ot_rst_relay REGIONS 9`: one kept relay copy per element column + control.
+- Timing: x leaves at ML + 3 AL + 1 = 26 (was 24) -> PRE c1 +2 edges; POST c1 unchanged; row II unchanged (PRE 81, POST 103).
+  CMTP: FUSED.HC_PRE_NORM c1 404 -> 406 (+2/record), to be confirmed by m0.
+
+### SAFE-DESIGN checklist (owner 10-19), lane n4 `hnx_fused_lane_1019` and fallback `hnx_fused_lane_t648_1019`
+
+| # | Item | Result |
+|---|---|---|
+| 1 | Pins registered, 2-stage reset landing | PASS: every input/output is a pin flop in the RTL (pin_regs opt-out documented: RR+1 counted from them); reset_landing 2 stages + ot_rst_relay. |
+| 2 | Reach <= 405 um/cycle | PASS by geometry: 345.6 x 518.4, every pin <= 260 um from the centred macros; t648 fallback <= 324 um. Gate measures reach. |
+| 3 | Fanout <= ~32 / kept copies | FIXED: reset 16,053 loads -> 9 kept relay copies (~1.2k each, buffered); broadcast `post`/`kk`/`sws` selects are registered control (n3 WARN `kk` 1,284 loads -> gate re-measures; replicate per column if it stays > 600 ps). |
+| 4 | Depth <= 600 ps / 20 levels | n3 617 ps (17 levels) on kk -> hcpost m4: n4 adds a 2:1 static `post` select on b/p; f12 l7/l6r have an input-side cut. WAIVED-pending-measurement: if the gate depth stays > 600 ps, register the coefficient selects (cb*_q one edge ahead, kk_next). |
+| 5 | Storage > 2 kb in SRAM; delay lines as rings | PASS: x store 80 x 256 and gain 20 x 256 in 1R1W macros (n2); all >= 4-deep delays are rings (n4). |
+| 6 | Floorplan | PASS (local gate): macros on the 43.2 lattice (129.6, 172.8 / 259.2), centred, 45 um channel, std on all sides (one band); outline from synthesis (n3 measured el + lane-local; n4 estimate) at ~0.5; aspect 1.5 (t648 1.9). |
+| 7 | Clock | PASS-pending: ~80k flops on one centre-fed root (WARN guidance > 15k; t648 WARN clock_span); the --cts gate measures pin-flop spread <= 80 TT+FF. io_hold_margin 0.03. |
+| 8 | Static schedule | PASS: no credits/backpressure; +2 PRE c1 edges handed to CMTP (cost model c(N) = c1 + (N-1)(II + rgap)). |

@@ -40,7 +40,8 @@ def analyse(log):
         kd = Path(td)
         (kd / 'floorplan.json').write_text(json.dumps(dict(die=[0, 0, 10, 10], blocks=[])))
         binding = dict(archive_sha256='a' * 64)
-        out = 'GATE_SOURCE_ARCHIVE_SHA256=' + 'a' * 64 + '\nGATE_FLOW_RC=0 GATE_FLOW_S=1\nGATE_IOP_RC=0\n' + log
+        out = ('GATE_SOURCE_ARCHIVE_SHA256=' + 'a' * 64 + '\nGATE_FLOW_RC=0 GATE_FLOW_S=1\nGATE_IOP_RC=0\n'
+               'GATE_TB_RC=0\nGATE_TB textbook_lint: PASS fixture cells 1 flops 1\n' + log)
         gate = G.Gate()
         # Isolate actual-pin acceptance from separate port-latency/clock-policy tests.
         with patch.object(G, 'check_port_latency'), patch.object(G, 'clock_item'):

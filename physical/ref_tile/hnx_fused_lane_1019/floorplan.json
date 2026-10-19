@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  475.2,
-  475.2
+  345.6,
+  518.4
  ],
  "core": [
   2.16,
   2.16,
-  473.03999999999996,
-  473.03999999999996
+  343.44,
+  516.24
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -64,8 +64,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_xb",
    "idx": 0,
-   "x": 22.464,
-   "y": 248.4,
+   "x": 129.6,
+   "y": 259.2,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -77,8 +77,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_gb",
    "idx": 0,
-   "x": 22.464,
-   "y": 185.76,
+   "x": 129.6,
+   "y": 172.8,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -89,6 +89,7 @@
  "referenced": [
   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_ring.sv",
   "rtl/hdc/ot_hdc_fpu.sv",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
   "rtl/proto/ot_fp32_add_rne_pipe.sv",

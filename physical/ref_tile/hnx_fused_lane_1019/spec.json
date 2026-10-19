@@ -5,6 +5,7 @@
  "sources": [
   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_ring.sv",
   "rtl/hdc/ot_hdc_fpu.sv",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
   "rtl/proto/ot_fp32_add_rne_pipe.sv",
@@ -30,8 +31,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 475.2,
-  "h": 475.2
+  "w": 345.6,
+  "h": 518.4
  },
  "layer_cap": "M5",
  "pins": {
@@ -74,14 +75,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "synth_keep_modules": [
-   "ot_hnx_fused_el"
+   "ot_hnx_fused_el2"
   ]
  },
  "job": {
-  "owner": "Claude:HBM-NEXT-UNITS-FUSED-SRAM",
+  "owner": "Claude:LEAD-HBM/LH-P3UNITS/FUSED",
   "branch": "claude/hbm-next-units-fusedsram-1019",
-  "tag": "n3",
-  "purpose": "HBM-NEXT P=4 FUSED HC_PRE_NORM/HC_POST N-row lane (new static engine, one per VM bank, x32 replicated, hardened once): static calendar, fixed-edge VM returns, KX=4 x slots, 2 row-tagged coefficient slots; measured row II PRE 81 / POST 103 (m0 bench); n2: x store 80x256 + gain store 20x256 moved from runtime-indexed flop arrays into 1R1W SRAM macros (n1 gate yosys stall)",
+  "tag": "n4",
+  "purpose": "HBM-NEXT P=3 FUSED HC_PRE_NORM/HC_POST N-row lane (static engine, one per VM bank, x32, hardened once); n4 SAFE-DESIGN structural redesign: PRE mix folded onto the HC_POST product/sum chain (op-exclusive), ring-buffer delays, reset relay per element column; row II PRE 81 / POST 103 unchanged, PRE c1 +2",
   "benches": [
    {
     "name": "hnx_fused_exact",
@@ -189,6 +190,7 @@
    "results/arch/hbm_next_1019/units/fused/witness",
    "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
    "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
    "rtl/hdc/ot_hdc_fpu.sv",
    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
    "rtl/proto/ot_fp32_add_rne_pipe.sv",
@@ -211,7 +213,7 @@
   ],
   "views_to": "physical/ref_tile/hnx_fused_lane_1019/views",
   "record_to": "results/arch/hbm_next_1019/units/fused/route_hnx_fused_lane_1019",
-  "structural_change": "HBM-NEXT-UNITS-FUSED-SRAM: n1 gate FAILED synth_smoke (yosys OPT stall > 2,700 s on the 80x256 runtime-indexed x-store flop array); n2 moves xb and gb into ot_sram_1r1w_128x256_m1_r2c2 macros (registered read = the same 1-edge read, calendar and row II unchanged); n3: element columns kept as ot_hnx_fused_el (synthesised once), -noshare, outline 259.2 -> 475.2 from the measured n2 synthesis (852,881 cells)"
+  "structural_change": "LH-P3UNITS/FUSED n4: n3 gate FAILED (textbook REFUSE 113,400 flops on one root > 110,000 and one reset relay flop driving 16,053 async loads; CTS stalled > 14,400 s in hold repair on the 20x11 rmeta flop chain). n4 halves the datapath instead of squeezing: the HC_PRE_NORM mix = the first three sums of the HC_POST chain, so one f12 product/sum chain per element serves both ops (ot_hnx_fused_el2; -4 multipliers -3 adders -18-deep delays per column); every delay >= 4 deep is an ot_hdc_delay_ring (no flop-to-flop hold chain); ot_rst_relay REGIONS 9 (one kept copy per element column + control); outline 345.6 x 518.4 (DIE lane width 345.6; height from the estimated n4 synthesis ~85k um2 std at ~0.5)"
  },
  "pin_regs": {
   "enable": false,
@@ -224,8 +226,8 @@
    "count": 1,
    "inst": "*u_xb",
    "at": [
-    22.464,
-    248.4
+    129.6,
+    259.2
    ]
   },
   {
@@ -233,8 +235,8 @@
    "count": 1,
    "inst": "*u_gb",
    "at": [
-    22.464,
-    185.76
+    129.6,
+    172.8
    ]
   }
  ],
@@ -253,7 +255,7 @@
   "enable": true,
   "stages": 2
  },
- "floorplan_note": "n2 gate (259.2 outline) synthesised in 4,438 s (> 2,700 cap: SHARE 1,476 s + ABC 1,385 s) to 852,881 cells / 94,740 flops, ~104k um2 std area (72.6k comb + ~31k seq est.) -> outline 475.2 x 475.2 (util ~0.47 + 2 macros); the 8 element columns are one kept module ot_hnx_fused_el (synthesised once) and SYNTH_ARGS -noshare (the hbm norm production precedent, tools/hbm_norm_noshare.py). x store u_xb and gain store u_gb 1R1W 128x256 macros stacked at the W face (no W pins), 20 um from the core edge, 21.6 um channel, centred N-S.",
+ "floorplan_note": "n4: 345.6 x 518.4 (DIE lane width 345.6 beside the bank pair; height 12 x 43.2 from the estimated n4 std area ~85k um2 = 8 x ~8.6k el2 + 15.6k lane control at util ~0.5; n3 measured el 12,885 um2 / 12,523 flops, lane-local 15.6k). u_gb at (129.6,172.8) and u_xb at (129.6,259.2): both on the 43.2 lattice, centred in x, stacked at mid height with a 45 um channel, std cells on all four sides (one connected band, no island). Pins N = command/up/r (450 on 345.6 um, 1.3/um), S = VM bank (547, 1.6/um).",
  "orfs_vars": {
   "SYNTH_ARGS": "-noshare"
  }
