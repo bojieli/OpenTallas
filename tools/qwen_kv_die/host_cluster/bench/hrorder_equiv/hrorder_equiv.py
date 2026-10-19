@@ -34,6 +34,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mode', choices=['exact', 'mutant'])
     ap.add_argument('--out', required=True)
+    ap.add_argument('--s2',action='store_true')
     ap.add_argument('--sram', action='store_true')
     ap.add_argument('--sram-mut',type=int,default=0)
     ap.add_argument('--m', choices=sorted(MUTANTS))
@@ -58,7 +59,7 @@ def main():
     ver = subprocess.run([a.verilator, '--version'], capture_output=True, text=True).stdout.strip()
     print('HRORDER_EQUIV verilator', ver, flush=True)
     cmd = [a.verilator, '--binary', '--timing', '-O2', '--x-assign', '0', '--x-initial', '0', '-Wno-fatal', '-Wno-lint',
-           '-Wno-style', '-j', '4', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + (['-DOT_HOST_BOOT_FIFO_DEFAULT=1',f'-DOT_HOST_BOOT_FIFO_MUT={a.sram_mut}'] if a.sram else []) + srcs
+           '-Wno-style', '-j', '4', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + (['-DOT_HOST_BOOT_FIFO_DEFAULT=1',f'-DOT_HOST_BOOT_FIFO_MUT={a.sram_mut}'] if a.sram else []) + (['-DOT_HOST_ORDER_S2_DEFAULT=1'] if a.s2 else []) + srcs
     with open(out / 'vl.log', 'w') as f:
         r = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT)
     if r.returncode:

@@ -36,7 +36,7 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_
  wire[289:0]head;
  generate if(SRAM_FIFO)begin:g_sram_fifo
   qkd_host_boot_fifo8_sram #(.W(290),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(iv_q&&count<8),.wp(wp),
-   .wd(id_q),.next_rp(send?rp+3'd1:rp),.head(head));
+   .wd(id_q),.rp(rp),.next_rp(send?rp+3'd1:rp),.head(head));
  end else begin:g_flop_fifo
   reg[289:0]q[0:7];
   always @(posedge ck)if(iv_q&&count<8)q[wp]<=id_q;

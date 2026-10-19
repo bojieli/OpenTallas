@@ -11,7 +11,10 @@
 // Output per stack is {data256,row19,col5,bank5,lpc5,v}291, four initial
 // downstream credits per logical PC. End marker66 is held until real commit count reaches
 // all previously emitted sectors. Host QPIPE is write-only; RMW faults.
-module qkd_host_ingest_map #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT,ORDERED=0,BOOT_SCRATCH_ROW=0)(
+`ifndef OT_HOST_ORDER_S2_DEFAULT
+`define OT_HOST_ORDER_S2_DEFAULT 0
+`endif
+module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_S2_DEFAULT,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT,ORDERED=0,BOOT_SCRATCH_ROW=0)(
  input wire ck,rst_n,
  input wire[289:0]ing,output reg ing_cr,
  output reg[1163:0]out,input wire[127:0]out_cr,
@@ -33,7 +36,7 @@ module qkd_host_ingest_map #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIF
  generate if(SRAM_FIFO)begin:g_sram_fifo
   wire[284:0]payload;
   qkd_host_boot_fifo8_sram #(.W(285),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(wr),.wp(wp),
-   .wd(iq_dec[293:9]),.next_rp(adv?rp1:rp),.head(payload));
+   .wd(iq_dec[293:9]),.rp(rp),.next_rp(adv?rp1:rp),.head(payload));
   assign word={payload,hd};
  end else begin:g_flop_fifo
   reg[293:0]q[0:7];
@@ -92,11 +95,30 @@ module qkd_host_ingest_map #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIF
  wire wr=iq[0]&&count<8;
  wire adv=emit||emit_marker;
  wire[2:0]rp1=rp+3'd1;
- always @(posedge ck)begin
-  if(wr)q_ctl[wp]<=iq_dec[8:0];
-  if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];
-  else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];
- end
+ always @(posedge ck)if(wr)q_ctl[wp]<=iq_dec[8:0];
+ generate if(KEPT_SELECT)begin:g_control_head
+  (* keep=1 *)reg[7:0]rp_oh;
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)rp_oh<=8'b1;
+   else if(adv)rp_oh<={rp_oh[6:0],rp_oh[7]};
+  (* keep=1 *)wire[7:0]adv_oh={rp_oh[6:0],rp_oh[7]};
+  (* keep=1 *)reg[8:0]hold_ctl,adv_ctl;
+  always @*begin
+   hold_ctl=0;adv_ctl=0;
+   for(integer j=0;j<8;j++)begin
+    hold_ctl=hold_ctl|(q_ctl[j]&{9{rp_oh[j]}});
+    adv_ctl=adv_ctl|(q_ctl[j]&{9{adv_oh[j]}});
+   end
+  end
+  (* keep=1 *)wire[8:0]hold_value=(wr&&wp==rp)?iq_dec[8:0]:hold_ctl;
+  (* keep=1 *)wire[8:0]adv_value=(wr&&wp==rp1)?iq_dec[8:0]:adv_ctl;
+  always @(posedge ck)hd<=adv?adv_value:hold_value;
+ end else begin:g_control_legacy
+  always @(posedge ck)begin
+   if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];
+   else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];
+  end
+ end endgenerate
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
    iq<=0;crq<=0;aq<=0;mcq<=0;wp<=0;rp<=0;count<=0;out<=0;ing_cr<=0;marker_v<=0;marker<=0;

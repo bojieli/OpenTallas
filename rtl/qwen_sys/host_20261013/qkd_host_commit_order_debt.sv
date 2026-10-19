@@ -4,7 +4,10 @@
 // within each PC but may arrive in any inter-PC order. Only the contiguous
 // globally issued prefix returns credit/visibility. No payload is changed.
 // Control FF storage and <=8:1 registered stages; no unprotected SRAM.
-module qkd_host_commit_order_debt #(parameter integer MUT=0)(
+`ifndef OT_HOST_ORDER_S2_DEFAULT
+`define OT_HOST_ORDER_S2_DEFAULT 0
+`endif
+module qkd_host_commit_order_debt #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_S2_DEFAULT)(
  input wire ck,rst_n,input wire issue_v,input wire[6:0]issue_pc,input wire[127:0]acks,
  output reg prefix_v,output reg[31:0]prefix_count,output reg fault,output reg order_quiet
 );
@@ -33,7 +36,7 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
  wire take=iqv&&!fault&&total<256;
  always @(posedge ck)begin
   iqpc<=issue_pc;
-  for(integer k=0;k<4;k++)s2[k]<=s1[k*8+sel1[2:0]];
+  if(!KEPT_SELECT)for(integer k=0;k<4;k++)s2[k]<=s1[k*8+sel1[2:0]];
   sel1<=rp[7:3];sel2<=sel1[4:3];s3<=s2[sel2];
   if(v3)front[fw]<=s3;
  end
@@ -41,9 +44,33 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
   reg[6:0]words[0:7];
   always @(posedge ck)begin
    if(take&&wp[7:3]==5'(b))words[wp[2:0]]<=iqpc;
-   s1[b]<=words[rp[2:0]];
+   if(!KEPT_SELECT)s1[b]<=words[rp[2:0]];
   end
  end
+ generate if(KEPT_SELECT)begin:g_kept_select
+  for(genvar b=0;b<32;b++)begin:g_local
+   (* keep=1 *)reg[7:0]read_oh;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)read_oh<=8'b1;
+    else if(fetch)read_oh<={read_oh[6:0],read_oh[7]};
+   reg[6:0]picked;
+   always @*begin
+    picked=0;
+    for(integer j=0;j<8;j++)picked=picked|(g_bank[b].words[j]&{7{read_oh[j]}});
+   end
+   always @(posedge ck)s1[b]<=picked;
+  end
+  (* keep=1 *)reg[7:0]stage2_oh;
+  always @(posedge ck)stage2_oh<=8'b1<<rp[5:3];
+  for(genvar k=0;k<4;k++)begin:g_s2
+   reg[6:0]picked;
+   always @*begin
+    picked=0;
+    for(integer j=0;j<8;j++)picked=picked|(s1[k*8+j]&{7{stage2_oh[j]}});
+   end
+   always @(posedge ck)s2[k]<=picked;
+  end
+ end endgenerate
  for(genvar k=0;k<128;k++)begin:g_pc
   wire add=take&&iqpc==7'(k),physical=aq[k],consume=pop&&head_oh[k];
   always @(posedge ck or negedge rst_n)begin
