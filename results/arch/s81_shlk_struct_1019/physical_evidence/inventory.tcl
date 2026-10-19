@@ -40,6 +40,40 @@ foreach i [$b getInsts] {
  set bb [$i getBBox]
  puts $f "MACRO\t[$i getName]\t[[$i getMaster] getName]\t[$bb xMin]\t[$bb yMin]\t[$bb xMax]\t[$bb yMax]"
 }
+# Actual net spans; use real ITerm average coordinates, not macro centers.
+foreach net [$b getNets] {
+ set nm [string map [list "\\" ""] [$net getName]]
+ if {![regexp {u_sd[./]|apx_|apb_|__ot_rlv} $nm]} {continue}
+ set xs {};set ys {};set unknown 0
+ foreach it [$net getITerms] {
+  lassign [$it getAvgXY] ok x y
+  if {!$ok} {incr unknown;continue}
+  lappend xs $x;lappend ys $y
+ }
+ foreach bt [$net getBTerms] {
+  set bb [$bt getBBox]
+  lappend xs [expr {([$bb xMin]+[$bb xMax])/2}]
+  lappend ys [expr {([$bb yMin]+[$bb yMax])/2}]
+ }
+ if {[llength $xs]<2} {continue}
+ set xs [lsort -integer $xs];set ys [lsort -integer $ys]
+ set xmin [lindex $xs 0];set xmax [lindex $xs end];set ymin [lindex $ys 0];set ymax [lindex $ys end]
+ puts $f "NETSPAN\t$nm\t[llength $xs]\t$unknown\t$xmin\t$ymin\t$xmax\t$ymax\t[expr {$xmax-$xmin+$ymax-$ymin}]"
+}
+set hopcells [dict create]
+foreach net [$b getNets] {
+ set nm [string map [list "\\" ""] [$net getName]]
+ if {![regexp {u_sd[./]sd_hop_payload\[[0-9]+\]$} $nm]} {continue}
+ foreach it [$net getITerms] {
+  if {[$it getIoType] ne "OUTPUT"} {continue}
+  set i [$it getInst];dict set hopcells [$i getName] $i
+ }
+}
+foreach i [dict values $hopcells] {
+ set bb [$i getBBox]
+ puts $f "HOPCELL\t[$i getName]\t[$bb xMin]\t[$bb yMin]\t[$bb xMax]\t[$bb yMax]"
+}
+puts $f "HOPCOUNT\t[dict size $hopcells]"
 close $f
 puts ESCAPE_INVENTORY_DONE
 exit
