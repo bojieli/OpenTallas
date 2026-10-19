@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1043 GB (avail 798, growth 68, headroom 0, waiters 0/0 GB) load 61/128 running 23 disk 412 GB 
+ot-run: ot-epyc5       admits   617 GB (avail 545, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 10 disk 562 GB 
+ot-run: ot-epyc6       admits   957 GB (avail 783, growth 113, headroom 0, waiters 0/0 GB) load 145/128 running 43 disk 559 GB 
+ot-run: ot-epyc7       admits   371 GB (avail 361, growth 101, headroom 0, waiters 0/0 GB) load 505/96 running 74 disk 502 GB 
+ot-run: ot-epyc8       admits  1079 GB (avail 867, growth 112, headroom 0, waiters 0/0 GB) load 53/128 running 31 disk 564 GB 
+ot-run: ot-pve1        admits   130 GB (avail 103, growth 2, headroom 0, waiters 0/0 GB) load 10/28 running 1 disk 1210 GB 
+ot-run: ot-agidock128  admits    96 GB (avail 80, growth 13, headroom 0, waiters 0/0 GB) load 24/64 running 13 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1501071-1792438840 after 0 s
+
+gzip: stdin: unexpected end of file
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1501071-1792438840): exit 2

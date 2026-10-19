@@ -1,0 +1,10 @@
+CALR_CAPACITY case0 ready1 fault0 fc00
+CALR_CAPACITY case1 ready1 fault0 fc00
+CALR_CAPACITY case2 ready1 fault0 fc00
+CALR_CAPACITY case3 ready1 fault0 fc00
+CALR_CAPACITY case4 ready0 fault1 fc10
+QREADY_CALR_CAPACITY_PASS 248_249_390_1023_accept_1024_reject
+- rtl/test/qwen_dv/qready/tb_qready_calr_capacity.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 870ns; walltime 0.001 s; speed 676.109 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB

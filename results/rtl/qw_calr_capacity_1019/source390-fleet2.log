@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  1013 GB (avail 793, growth 84, headroom 0, waiters 0/0 GB) load 50/128 running 25 disk 392 GB 
+ot-run: ot-epyc5       admits   659 GB (avail 541, growth 80, headroom 0, waiters 0/0 GB) load 62/128 running 10 disk 897 GB 
+ot-run: ot-epyc6       admits   946 GB (avail 776, growth 113, headroom 0, waiters 0/0 GB) load 167/128 running 42 disk 5805 GB 
+ot-run: ot-epyc7       admits   364 GB (avail 356, growth 101, headroom 0, waiters 0/0 GB) load 493/96 running 75 disk 6308 GB 
+ot-run: ot-epyc8       admits  1077 GB (avail 866, growth 112, headroom 0, waiters 0/0 GB) load 52/128 running 32 disk 97 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1506779-1792438926 after 1 s
+CALR_SOURCE390_NATIVE_PASS exact390 commands all38stages4users; address mutant causal FAIL
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1506779-1792438926): exit 0

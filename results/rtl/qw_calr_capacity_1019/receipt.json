@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.qwen.calr-capacity-source390.v1",
+  "base_source": "26b514ed1",
+  "source_body": "4e718c010:results/rtl/qlb_c4b_1018/clayer2/layer_s1.json",
+  "source_sha256": {
+    "rtl/test/qwen_dv/qready/tb_qready_calr_capacity.sv": "ab215fd71f3f78e0d711b8a320ae9d117ec68439ec96c9456de666bd6847cde9",
+    "rtl/test/qwen_dv/qready/tb_qready_calr_source390.sv": "42e612a5a1c80f063a220af3f0600d8bfed1784e040826812d663778b4b1ca80",
+    "rtl/test/qwen_dv/qready/run_calr_source390.py": "bdcc8c8daf18106eda74f3ccdab5704775850849ee1ff2fbb4099c3913071928",
+    "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv": "846ff155dfc024d1ab74b727d5050278870cb869dca30da211535cc957638414",
+    "rtl/qwen_dv/qfd_dv_calendar_rom.sv": "40bcb5c65a08f295ec5be2fe9ad00ab585922e169a1f14870bf149ae2e00dfff",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "tools/qwen_layerbench/calendar_rom_image.py": "6a751cee20d02722668be793cad05a883c4b55a1cead1c16b6f91e1833a50ec4",
+    "tools/qwen_layerbench/programme_store.py": "dc7c106ffa145507f8c7699183ba65337797f0dea35d43b0eea617bbc70813f7",
+    "results/rtl/qw_calr_capacity_1019/source_layer_s1.json": "c3a6709a854287d50e09db7566ebd29febd50da99a84d6dfe13be59922558ab6"
+  },
+  "verilator": "5.050",
+  "capacity": {
+    "unit": "oth-ubuntu-2871517-1792438882",
+    "host": "ot-epyc4",
+    "accepted": [
+      248,
+      249,
+      390,
+      1023
+    ],
+    "rejected": [
+      1024
+    ],
+    "scope": "NU4 header seal only"
+  },
+  "native_port": {
+    "unit": "oth-ubuntu-1506779-1792438926",
+    "host": "ot-epyc8",
+    "commands": 390,
+    "stages": 38,
+    "users": 4,
+    "row_checks": 14896,
+    "mutant": "wrong ROM address causal CAL_DATA_MISMATCH"
+  },
+  "full_token_qualified": false,
+  "production_bound": false
+}

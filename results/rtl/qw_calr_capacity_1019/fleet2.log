@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits  1040 GB (avail 795, growth 68, headroom 0, waiters 0/0 GB) load 49/128 running 23 disk 392 GB 
+ot-run: ot-epyc5       admits   649 GB (avail 543, growth 88, headroom 0, waiters 0/0 GB) load 63/128 running 12 disk 897 GB 
+ot-run: ot-epyc6       admits   953 GB (avail 781, growth 113, headroom 0, waiters 0/0 GB) load 144/128 running 42 disk 5805 GB 
+ot-run: ot-epyc7       admits   371 GB (avail 361, growth 101, headroom 0, waiters 0/0 GB) load 498/96 running 74 disk 6309 GB 
+ot-run: ot-epyc8       admits  1079 GB (avail 867, growth 112, headroom 0, waiters 0/0 GB) load 51/128 running 32 disk 97 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2871517-1792438882 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+CALR_CAPACITY case0 ready1 fault0 fc00
+CALR_CAPACITY case1 ready1 fault0 fc00
+CALR_CAPACITY case2 ready1 fault0 fc00
+CALR_CAPACITY case3 ready1 fault0 fc00
+CALR_CAPACITY case4 ready0 fault1 fc10
+QREADY_CALR_CAPACITY_PASS 248_249_390_1023_accept_1024_reject
+- rtl/test/qwen_dv/qready/tb_qready_calr_capacity.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 870ns; walltime 0.001 s; speed 676.109 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2871517-1792438882): exit 0

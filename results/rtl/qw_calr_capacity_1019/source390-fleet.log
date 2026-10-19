@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1025 GB (avail 793, growth 76, headroom 0, waiters 0/0 GB) load 51/128 running 24 disk 392 GB 
+ot-run: ot-epyc5       admits   661 GB (avail 543, growth 81, headroom 0, waiters 0/0 GB) load 57/128 running 10 disk 897 GB 
+ot-run: ot-epyc6       admits   958 GB (avail 784, growth 113, headroom 0, waiters 0/0 GB) load 148/128 running 43 disk 5805 GB 
+ot-run: ot-epyc7       admits   363 GB (avail 355, growth 101, headroom 0, waiters 0/0 GB) load 495/96 running 75 disk 6308 GB 
+ot-run: ot-epyc8       admits  1079 GB (avail 866, growth 111, headroom 0, waiters 0/0 GB) load 51/128 running 32 disk 97 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-calr-capacity-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1506044-1792438914 after 0 s
+tar (child): source390.tgz: Cannot open: No such file or directory
+tar (child): Error is not recoverable: exiting now
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1506044-1792438914): exit 2
