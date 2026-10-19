@@ -82,6 +82,16 @@ module dsfd_selt_q #(
 `else
     parameter integer FRPR = 0
 `endif
+    ,
+    // S81-BKSQ 10-18 (s81dvbk_sq gate3 FAIL textbook.high_fanout: rst_s[1] drove 9,751 reset loads > 8,000): RSTR 1 =
+    // regional reset tree.  rst_s[0] (the first synchroniser stage, unchanged) feeds NRC (* keep *) copies of the
+    // second stage, each async-cleared by the port and loading rst_s[0] exactly as rst_s[1] did, so every copy
+    // asserts and releases on the same edges as rst_n (0 cycles, exact).  Each copy resets one region (<= ~220
+    // flops): [0] lane decode / command pin flops / credits / faults, [4:1] sq, [8:5] sq1, [10:9] oq, [12:11] oq1,
+    // [54:13] the slice (its RSTW 42 layout: own state, sweep, 2 x 16 bin groups, 2 x 4 accumulator lane groups).
+    // RMUT (bench only, OT_DSDV_BK 5): copy 1 held in reset (proves the copies are wired to their regions).
+    parameter integer RSTR = 0,
+    parameter integer RMUT = 0
 ) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,        // die reset net (active low)
@@ -96,28 +106,42 @@ module dsfd_selt_q #(
     reg [1:0] rst_s;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
+    localparam integer NRC = (RSTR != 0) ? 55 : 1;
+    localparam integer SRW = (RSTR != 0) ? 42 : 1;
+    wire [NRC-1:0] rst_c;
+    generate if (RSTR != 0) begin : g_rr
+        (* keep = "true" *) reg [NRC-1:0] rc;
+        always @(posedge ck[0] or negedge rst[0])
+            if (!rst[0]) rc <= {NRC{1'b0}};
+            else rc <= {NRC{rst_s[0]}} & ~((RMUT != 0) ? {{(NRC-2){1'b0}}, 2'b10} : {NRC{1'b0}});
+        assign rst_c = rc;
+    end else begin : g_rr0
+        assign rst_c = rst_n;
+    end endgenerate
+    wire rst_q = rst_c[0];                        // the quarter's own control flops
+    wire [SRW-1:0] rst_sl = (RSTR != 0) ? rst_c[NRC-1 -: SRW] : rst_n;
     // lane: pin flop (inside ot_s81ph_sel_in, STG 0) + decode
     wire b_v, b_last, h_v, act, e_fmt, e_orphan, e_link;
     wire [15:0] b_lv; wire [255:0] b_val; wire [319:0] b_idx; wire [1:0] b_q, h_q, act_q; wire [9:0] h_k; wire [7:0] h_tag;
-    ot_s81ph_sel_in #(.STG(0)) u_in (.clk(ck[0]), .rst_n(rst_n), .lane(lane), .b_v(b_v), .b_lv(b_lv), .b_val(b_val),
+    ot_s81ph_sel_in #(.STG(0)) u_in (.clk(ck[0]), .rst_n(rst_q), .lane(lane), .b_v(b_v), .b_lv(b_lv), .b_val(b_val),
         .b_idx(b_idx), .b_last(b_last), .b_q(b_q), .h_v(h_v), .h_k(h_k), .h_tag(h_tag), .h_q(h_q), .act(act),
         .act_q(act_q), .e_fmt(e_fmt), .e_orphan(e_orphan), .e_link(e_link));
     // beat register in front of the slice (the native crossbar register)
     reg x_v, x_last; reg [15:0] x_lv; reg [255:0] x_val; reg [319:0] x_idx;
-    always @(posedge ck[0] or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= b_v;
+    always @(posedge ck[0] or negedge rst_q) if (!rst_q) x_v <= 1'b0; else x_v <= b_v;
     always @(posedge ck[0]) begin x_last <= b_last; x_lv <= b_lv; x_val <= b_val; x_idx <= b_idx; end
     // command pin flops
     reg [`SELT_CB-1:0] cq; reg crq;
     wire [`SELT_CB-1:0] f_cx; wire f_crx;
     generate if (QIO != 0) begin : g_qi
         reg [`SELT_CB-1:0] cq0; reg crq0;
-        always @(posedge ck[0] or negedge rst_n) if (!rst_n) begin cq0 <= {`SELT_CB{1'b0}}; crq0 <= 1'b0; end
+        always @(posedge ck[0] or negedge rst_q) if (!rst_q) begin cq0 <= {`SELT_CB{1'b0}}; crq0 <= 1'b0; end
                                                 else begin cq0 <= f_c; crq0 <= f_cr[0]; end
         assign f_cx = cq0; assign f_crx = crq0;
     end else begin : g_qi0
         assign f_cx = f_c; assign f_crx = f_cr[0];
     end endgenerate
-    always @(posedge ck[0] or negedge rst_n) if (!rst_n) begin cq <= {`SELT_CB{1'b0}}; crq <= 1'b0; end
+    always @(posedge ck[0] or negedge rst_q) if (!rst_q) begin cq <= {`SELT_CB{1'b0}}; crq <= 1'b0; end
                                             else begin cq <= f_cx; crq <= f_crx; end
     // the slice (unchanged) and its line memory
     wire s_rdy, o_valid, o_last; reg o_ready;
@@ -126,8 +150,8 @@ module dsfd_selt_q #(
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
     ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2), .ILD(ILD),
-        .FRPN((SAFE != 0 && FRPR != 0) ? 3 : 0), .FRPW(256)) u_s (
-        .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
+        .FRPN((SAFE != 0 && FRPR != 0) ? 3 : 0), .FRPW(256), .RSTW(SRW)) u_s (
+        .clk(ck[0]), .rst_n(rst_sl), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
         .c_rem(cq[64:54]), .c_hclr(cq[65]), .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf), .s_last(s_last),
@@ -144,18 +168,34 @@ module dsfd_selt_q #(
     end endgenerate
     // faults (sticky, fail closed): overrun = a beat while the slice is not ready, or a beat / rebase with no header
     reg [2:0] flt;
-    always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) flt <= 3'd0;
+    always @(posedge ck[0] or negedge rst_q)
+        if (!rst_q) flt <= 3'd0;
         else flt <= flt | {e_link, e_fmt, (x_v & ~s_rdy) | e_orphan};
     // status from flops
     reg [`SELT_SB-1:0] sq;
-    always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) sq <= {`SELT_SB{1'b0}};
-        else sq <= {flt, act_q, act, h_tag, h_k, h_v, x_v & s_rdy, s_rdy,
+    wire [`SELT_SB-1:0] sq_d = {flt, act_q, act, h_tag, h_k, h_v, x_v & s_rdy, s_rdy,
                     s_ovf, s_emitted, s_done2, s_stopped, s_hfin, s_last, s_bf, s_bc, s_gf, s_gc};
+    genvar rb;
+    generate if (RSTR == 0) begin : g_sqd
+        always @(posedge ck[0] or negedge rst_n)
+            if (!rst_n) sq <= {`SELT_SB{1'b0}};
+            else sq <= sq_d;
+    end else begin : g_sqr                       // bit b on copy 1 + b * 4 / SB
+        for (rb = 0; rb < `SELT_SB; rb = rb + 1) begin : g_b
+            always @(posedge ck[0] or negedge rst_c[1 + (rb * 4) / `SELT_SB])
+                if (!rst_c[1 + (rb * 4) / `SELT_SB]) sq[rb] <= 1'b0; else sq[rb] <= sq_d[rb];
+        end
+    end endgenerate
     generate if (QIO != 0) begin : g_qs
         reg [`SELT_SB-1:0] sq1;
-        always @(posedge ck[0] or negedge rst_n) if (!rst_n) sq1 <= {`SELT_SB{1'b0}}; else sq1 <= sq;
+        if (RSTR == 0) begin : g_d
+            always @(posedge ck[0] or negedge rst_n) if (!rst_n) sq1 <= {`SELT_SB{1'b0}}; else sq1 <= sq;
+        end else begin : g_r                     // bit b on copy 5 + b * 4 / SB
+            for (rb = 0; rb < `SELT_SB; rb = rb + 1) begin : g_b
+                always @(posedge ck[0] or negedge rst_c[5 + (rb * 4) / `SELT_SB])
+                    if (!rst_c[5 + (rb * 4) / `SELT_SB]) sq1[rb] <= 1'b0; else sq1[rb] <= sq[rb];
+            end
+        end
         assign t_s = sq1;
     end else begin : g_qs0
         assign t_s = sq;
@@ -164,15 +204,33 @@ module dsfd_selt_q #(
     reg [CW-1:0] crd;
     always @(*) o_ready = crd != 0;
     reg [`SELT_OB-1:0] oq;
-    always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) begin crd <= DM[CW-1:0]; oq <= {`SELT_OB{1'b0}}; end
-        else begin
-            crd <= crd + (crq ? 1'b1 : 1'b0) - ((o_valid && o_ready) ? 1'b1 : 1'b0);
-            oq <= {o_last, o_ninf, o_lv, o_idx, o_valid && o_ready};
+    wire [`SELT_OB-1:0] oq_d = {o_last, o_ninf, o_lv, o_idx, o_valid && o_ready};
+    generate if (RSTR == 0) begin : g_oqd
+        always @(posedge ck[0] or negedge rst_n)
+            if (!rst_n) begin crd <= DM[CW-1:0]; oq <= {`SELT_OB{1'b0}}; end
+            else begin
+                crd <= crd + (crq ? 1'b1 : 1'b0) - ((o_valid && o_ready) ? 1'b1 : 1'b0);
+                oq <= oq_d;
+            end
+    end else begin : g_oqr                       // crd on copy 0; oq bit b on copy 9 + b * 2 / OB
+        always @(posedge ck[0] or negedge rst_q)
+            if (!rst_q) crd <= DM[CW-1:0];
+            else crd <= crd + (crq ? 1'b1 : 1'b0) - ((o_valid && o_ready) ? 1'b1 : 1'b0);
+        for (rb = 0; rb < `SELT_OB; rb = rb + 1) begin : g_b
+            always @(posedge ck[0] or negedge rst_c[9 + (rb * 2) / `SELT_OB])
+                if (!rst_c[9 + (rb * 2) / `SELT_OB]) oq[rb] <= 1'b0; else oq[rb] <= oq_d[rb];
         end
+    end endgenerate
     generate if (QIO != 0) begin : g_qo
         reg [`SELT_OB-1:0] oq1;
-        always @(posedge ck[0] or negedge rst_n) if (!rst_n) oq1 <= {`SELT_OB{1'b0}}; else oq1 <= oq;
+        if (RSTR == 0) begin : g_d
+            always @(posedge ck[0] or negedge rst_n) if (!rst_n) oq1 <= {`SELT_OB{1'b0}}; else oq1 <= oq;
+        end else begin : g_r                     // bit b on copy 11 + b * 2 / OB
+            for (rb = 0; rb < `SELT_OB; rb = rb + 1) begin : g_b
+                always @(posedge ck[0] or negedge rst_c[11 + (rb * 2) / `SELT_OB])
+                    if (!rst_c[11 + (rb * 2) / `SELT_OB]) oq1[rb] <= 1'b0; else oq1[rb] <= oq[rb];
+            end
+        end
         assign t_o = oq1;
     end else begin : g_qo0
         assign t_o = oq;
@@ -191,6 +249,9 @@ module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0
 `else
     parameter integer FRPR = 0
 `endif
+    ,
+    parameter integer RSTR = 0,              // S81-BKSQ 10-18: dsfd_selt_q RSTR (regional reset tree; 0 cycles)
+    parameter integer RMUT = 0               // bench-only mutant (dsfd_selt_q RMUT)
 ) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,
@@ -200,7 +261,7 @@ module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0
     output wire [`SELT_SB-1:0]   t_s,
     output wire [`SELT_OB-1:0]   t_o
 );
-    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO), .FRPR(FRPR), .ILD(ILD)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO), .FRPR(FRPR), .ILD(ILD), .RSTR(RSTR), .RMUT(RMUT)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(

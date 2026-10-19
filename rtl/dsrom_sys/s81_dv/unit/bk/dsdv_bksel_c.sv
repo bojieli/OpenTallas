@@ -23,6 +23,9 @@ endmodule
 
 // S81U-BK3: the selector quarter leaf dsfd_selt_q2 (DM 4, SAFE, CMP_RETIME, PIPE2, QIO, ILD, FRPR: the closed s81b-selt_q2-frprildb
 // configuration)
+// S81-BKSQ 10-18: RSTR 1 = the quarter's regional reset tree (gate3 @368403ff4 FAIL textbook.high_fanout: one reset
+// flop rst_s[1] -> 9,751 loads > 8,000; now 55 kept copies of the second synchroniser stage, <= ~220 flops each,
+// same assert / release edges: 0 cycles).  Bench mutant OT_DSDV_BK 5: one copy (the sq status group 0) held in reset.
 module dsdv_bksel_q (
     input  wire [0:0]   ck,
     input  wire [0:0]   rst,
@@ -32,6 +35,11 @@ module dsdv_bksel_q (
     output wire [864:0] t_s,
     output wire [353:0] t_o
 );
-    dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst), .lane(lane),
+`ifdef OT_DSDV_BK
+    localparam integer RMUT = (`OT_DSDV_BK == 5) ? 1 : 0;
+`else
+    localparam integer RMUT = 0;
+`endif
+    dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1), .RSTR(1), .RMUT(RMUT)) u_q (.ck(ck), .rst(rst), .lane(lane),
         .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule

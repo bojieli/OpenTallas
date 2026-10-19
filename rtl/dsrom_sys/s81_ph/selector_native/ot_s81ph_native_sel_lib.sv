@@ -137,10 +137,15 @@ module ot_s81ph_native_sel_hist #(
     // the inputs (valid, enables, digits, clear) registered one edge, and each 4-bin group sum split into two
     // registered Kogge-Stone pair sums (+1 edge in each of the two trees).  gsel -> gbin is unchanged (the control's
     // step-B round trip stays aligned); gsum arrives 3 edges later, gbin 1 (the slice's settle counters cover it).
-    parameter integer HPIPE = 0
+    parameter integer HPIPE = 0,
+    // S81-BKSQ 10-18 (s81dvbk_sq gate3 FAIL textbook.high_fanout: one reset flop -> 9,751 loads): RSTW > 1 = rst_n is
+    // RSTW registered copies of the same reset (one per region; every copy asserts and releases on the same edges as
+    // the single rst_n), the bins in RSTW groups of 256 / RSTW, group g cleared by rst_n[g]; the input / valid flops
+    // by rst_n[0].  Exact (identical copies); 0 cycles.  1 = the single reset (default, unchanged).
+    parameter integer RSTW = 1
 ) (
     input  wire                 clk,
-    input  wire                 rst_n,
+    input  wire [RSTW-1:0]      rst_n,
     input  wire                 clr,
     input  wire                 i_v,
     input  wire [W-1:0]         i_en,
@@ -153,6 +158,7 @@ module ot_s81ph_native_sel_hist #(
     localparam integer LW = (W > 1) ? $clog2(W) : 1;
     localparam integer HW = LW + 1;                 // per-beat count width
     localparam [CB-1:0] SAT = {CB{1'b1}};
+    wire rst0 = rst_n[0];
 
     // HPIPE: registered inputs (x_*); HPIPE 0: the ports themselves
     wire           x_v, x_clr;
@@ -162,8 +168,8 @@ module ot_s81ph_native_sel_hist #(
         reg          r_v, r_clr;
         reg [W-1:0]  r_en;
         reg [W*8-1:0] r_dg;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin r_v <= 1'b0; r_clr <= 1'b0; end
+        always @(posedge clk or negedge rst0)
+            if (!rst0) begin r_v <= 1'b0; r_clr <= 1'b0; end
             else begin r_v <= i_v; r_clr <= clr; end
         always @(posedge clk) begin r_en <= i_en; r_dg <= i_dg; end
         assign x_v = r_v; assign x_clr = r_clr; assign x_en = r_en; assign x_dg = r_dg;
@@ -182,8 +188,8 @@ module ot_s81ph_native_sel_hist #(
             assign h1_lo_d[16*gl +: 16] = 16'h0001 << d[3:0];
         end
     endgenerate
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin v1 <= 1'b0; v2 <= 1'b0; end
         else begin v1 <= x_v && !x_clr; v2 <= v1 && !x_clr; end
     end
     always @(posedge clk) begin h1_hi <= h1_hi_d; h1_lo <= h1_lo_d; end
@@ -209,11 +215,23 @@ module ot_s81ph_native_sel_hist #(
             assign hbin_d[CB*gb +: CB] = s[CB] ? SAT : s[CB-1:0];
         end
     endgenerate
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) hbin <= {256*CB{1'b0}};
-        else if (x_clr) hbin <= {256*CB{1'b0}};
-        else if (v2) hbin <= hbin_d;
-    end
+    generate if (RSTW == 1) begin : g_hb1
+        always @(posedge clk or negedge rst0) begin
+            if (!rst0) hbin <= {256*CB{1'b0}};
+            else if (x_clr) hbin <= {256*CB{1'b0}};
+            else if (v2) hbin <= hbin_d;
+        end
+    end else begin : g_hbr
+        // regional reset: group gb of 256 / RSTW bins on its own reset copy
+        localparam integer GB = 256 / RSTW;
+        for (gb = 0; gb < RSTW; gb = gb + 1) begin : g_r
+            always @(posedge clk or negedge rst_n[gb]) begin
+                if (!rst_n[gb]) hbin[GB*CB*gb +: GB*CB] <= {GB*CB{1'b0}};
+                else if (x_clr) hbin[GB*CB*gb +: GB*CB] <= {GB*CB{1'b0}};
+                else if (v2) hbin[GB*CB*gb +: GB*CB] <= hbin_d[GB*CB*gb +: GB*CB];
+            end
+        end
+    end endgenerate
 
     // group sums: 4-bin sums, then 16-bin sums
     reg [64*(CB+2)-1:0] gs1;
@@ -267,10 +285,13 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_s81ph_native_sel_pack #(
     parameter integer W  = 16,
-    parameter integer PW = 37
+    parameter integer PW = 37,
+    // S81-BKSQ 10-18: RSTW > 1 = rst_n is RSTW identical registered reset copies; the accumulator lanes in RSTW
+    // groups of W / RSTW lanes, group g cleared by rst_n[g]; every other flop by rst_n[0].  Exact; 0 cycles.
+    parameter integer RSTW = 1
 ) (
     input  wire            clk,
-    input  wire            rst_n,
+    input  wire [RSTW-1:0] rst_n,
     input  wire            i_v,
     input  wire            i_fl,
     input  wire [W-1:0]    i_sel,
@@ -285,6 +306,7 @@ module ot_s81ph_native_sel_pack #(
     localparam integer CE  = 1 + LW + PW;           // {v, z, payload}
     localparam integer RE  = 1 + PW;                // {v, payload}
     localparam integer NCR = (LW + 1) / 2;
+    wire rst0 = rst_n[0];
 
     // stage 1: shift counts
     wire [W*(LW+1)-1:0] inc;
@@ -308,8 +330,8 @@ module ot_s81ph_native_sel_pack #(
     reg          s1_v, s1_fl;
     reg [LW:0]   s1_cnt;
     reg [W*CE-1:0] s1_e;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin s1_v <= 1'b0; s1_fl <= 1'b0; end
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin s1_v <= 1'b0; s1_fl <= 1'b0; end
         else begin s1_v <= i_v; s1_fl <= i_v && i_fl; end
     end
     always @(posedge clk) begin s1_e <= e_d; s1_cnt <= inc[(LW+1)*(W-1) +: LW+1]; end
@@ -318,8 +340,8 @@ module ot_s81ph_native_sel_pack #(
     wire [NCR*W*CE-1:0]   crf;
     wire [NCR*(LW+1)-1:0] crc;
     reg  [NCR-1:0]        cr_v, cr_fl;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin cr_v <= 0; cr_fl <= 0; end
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin cr_v <= 0; cr_fl <= 0; end
         else begin
             cr_v  <= (NCR > 1) ? {cr_v[(NCR > 1 ? NCR-2 : 0):0], s1_v} : s1_v;
             cr_fl <= (NCR > 1) ? {cr_fl[(NCR > 1 ? NCR-2 : 0):0], s1_fl} : s1_fl;
@@ -365,8 +387,8 @@ module ot_s81ph_native_sel_pack #(
             end
         end
     endgenerate
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin ro_v <= 0; ro_fl <= 0; frun <= 0; end
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin ro_v <= 0; ro_fl <= 0; frun <= 0; end
         else begin
             ro_v  <= (NCR > 1) ? {ro_v[(NCR > 1 ? NCR-2 : 0):0], cp_v} : cp_v;
             ro_fl <= (NCR > 1) ? {ro_fl[(NCR > 1 ? NCR-2 : 0):0], cp_fl} : cp_fl;
@@ -417,8 +439,9 @@ module ot_s81ph_native_sel_pack #(
     reg [W*RE-1:0] oline_d;
     reg            ov_d;
     integer l;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    generate if (RSTW == 1) begin : g_acc1
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin
             acc <= 0; oflush <= 1'b0; o_v <= 1'b0; o_bv <= 1'b0; o_fl <= 1'b0;
         end else begin
             o_v <= 1'b0; o_fl <= 1'b0; o_bv <= rq_v;
@@ -438,6 +461,47 @@ module ot_s81ph_native_sel_pack #(
             end
         end
     end
+    end else begin : g_accr
+    // the same next state, the accumulator in RSTW reset regions (lane groups)
+    reg [W*RE-1:0] acc_n;
+    always @(*) begin
+        acc_n = acc;
+        if (oflush) acc_n = {W*RE{1'b0}};
+        else if (rq_v) begin
+            if (rq_tot[LW]) begin
+                acc_n = win[2*W*RE-1:W*RE];
+                if (rq_fl && rq_tot[LW-1:0] == 0) acc_n = {W*RE{1'b0}};
+            end else if (rq_fl) acc_n = {W*RE{1'b0}};
+            else acc_n = win[W*RE-1:0];
+        end
+    end
+    always @(posedge clk or negedge rst0) begin
+        if (!rst0) begin
+            oflush <= 1'b0; o_v <= 1'b0; o_bv <= 1'b0; o_fl <= 1'b0;
+        end else begin
+            o_v <= 1'b0; o_fl <= 1'b0; o_bv <= rq_v;
+            if (oflush) begin
+                o_v <= 1'b1; o_fl <= 1'b1; oflush <= 1'b0;
+            end else if (rq_v) begin
+                if (rq_tot[LW]) begin
+                    o_v <= 1'b1;
+                    if (rq_fl) begin
+                        if (rq_tot[LW-1:0] != 0) oflush <= 1'b1;
+                        else o_fl <= 1'b1;
+                    end
+                end else if (rq_fl) begin
+                    o_v <= (rq_tot != 0); o_fl <= 1'b1;
+                end
+            end
+        end
+    end
+    localparam integer GL = W / RSTW;
+    for (gr = 0; gr < RSTW; gr = gr + 1) begin : g_r
+        always @(posedge clk or negedge rst_n[gr])
+            if (!rst_n[gr]) acc[GL*RE*gr +: GL*RE] <= {GL*RE{1'b0}};
+            else acc[GL*RE*gr +: GL*RE] <= acc_n[GL*RE*gr +: GL*RE];
+    end
+    end endgenerate
     always @(*) oline_d = oflush ? acc : win[W*RE-1:0];
     always @(posedge clk) begin
         for (l = 0; l < W; l = l + 1) begin
