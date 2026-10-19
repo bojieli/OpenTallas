@@ -326,7 +326,7 @@ endmodule
 
 // Same physical edge as the original pin/state registers. The canonical
 // ot_keep_regs.tcl synthesis hook must retain these declared register copies.
-// Each constant-index bank owns <=28 bits; no binary pointer drives a wide mux.
+// Hierarchy protects each 16-bit bank from global ABC enable absorption.
 module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
  input wire clk,rst_c_n,cfg_v,run,recs_done,programme_accept,
  input wire [7:0] cfg_target,tg,
@@ -342,64 +342,83 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
  output wire [220:0] rec
 );
  genvar g,r;
- generate for(g=0;g<11;g=g+1)begin:g_bank
-  (* keep *) reg cv;
-  always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
-  if(g<10)begin:g_payload
-   (* keep *) reg [7:0] ct;
-   (* keep *) reg [11:0] ca;
-   always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
-   localparam integer LO=g*28;
-   localparam integer B=(256-LO<28)?256-LO:28;
-   (* keep *) reg [7:0] rd_oh;
-   wire [3:0] rp = (MUT==12 && g==2) ? {1'b0,rptr_next[2:0]+3'd1} : rptr_next;
-   always @(posedge clk)rd_oh <= (rptr_next<8) ? (8'b1<<rp) : 8'd0;
-   reg [B-1:0] rows[0:7];
-   wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
-   wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<6;
-   wire output_cfg=programme_accept && cv;
-   reg [B-1:0] pw_q;
-   always @(posedge clk)if(output_cfg)pw_q<=cd[LO+:B];
-   assign pw_data[LO+:B]=pw_q;
-   for(r=0;r<8;r=r+1)begin:g_record
-    always @(posedge clk)if(record_cfg && ca[8:0]==r)rows[r]<=cd[LO+:B];
-   end
-   reg [7:0] val;
-   if(LO<=32 && LO+B>32)begin:g_valid
-    integer v;
-    always @(posedge clk or negedge rst_c_n)
-     if(!rst_c_n)val<=0;
-     else for(v=0;v<8;v=v+1)if(record_cfg && ca[8:0]==v)val[v]<=cd[32];
-   end else begin:g_no_valid
-    always @* val=8'd0;
-   end
-   reg [B-1:0] selected;
-   integer j;
-   always @*begin
-    selected=0;
-    for(j=0;j<8;j=j+1)selected=selected|(rows[j]&{B{rd_oh[j]}});
-    if(LO<=32 && LO+B>32)selected[32-LO]=|(val&rd_oh);
-   end
-   assign selected_record[LO+:B]=selected;
-   for(r=0;r<6;r=r+1)begin:g_operand
-    reg [B-1:0] operand;
-    always @(posedge clk)if(operand_cfg && ca[9:0]==r)operand<=cd[LO+:B];
-    assign prm[r*256+LO+:B]=operand;
-   end
-   if(LO+B>35)begin:g_emit
-    localparam integer EL=(LO<35)?35:LO;
-    localparam integer EB=LO+B-EL;
-    (* keep *) reg [31:0] local_cnt;
-    always @(posedge clk)local_cnt<=cnt_next;
-    wire [31:0] local_cmp=(MUT==3)?local_cnt+1'b1:local_cnt;
-    wire step=run && !recs_done && cur_off==local_cmp;
-    reg [EB-1:0] emitted;
-    always @(posedge clk)if(step)emitted<=selected[EL-LO+:EB];
-    assign rec[EL-35+:EB]=emitted;
-   end
-  end else begin:g_addr
-   always @(posedge clk)if(programme_accept && cv)pw_addr<=lin;
+ generate for(g=0;g<16;g=g+1)begin:g_bank
+  wire [95:0] local_prm;
+  wire [15:0] local_rec;
+  (* keep_hierarchy *) ot_hbm_idx256_payload_bank #(.LO(g*16),.MUT(MUT)) u_payload(
+   .clk(clk),.rst_c_n(rst_c_n),.cfg_v(cfg_v),.run(run),.recs_done(recs_done),
+   .programme_accept(programme_accept),.cfg_target(cfg_target),.tg(tg),
+   .cfg_addr(cfg_addr),.cd(cd[g*16+:16]),.valid_data(cd[32]),
+   .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
+   .selected_record(selected_record[g*16+:16]),.pw_data(pw_data[g*16+:16]),
+   .prm(local_prm),.rec(local_rec));
+  for(r=0;r<6;r=r+1)begin:g_operand_wires
+   assign prm[r*256+g*16+:16]=local_prm[r*16+:16];
   end
+  if(g>=3)assign rec[g*16-35+:16]=local_rec;
+  else if(g==2)assign rec[0+:13]=local_rec[3+:13];
  end endgenerate
+ (* keep *) reg addr_cv;
+ always @(posedge clk or negedge rst_c_n)if(!rst_c_n)addr_cv<=0;else addr_cv<=cfg_v;
+ always @(posedge clk)if(programme_accept && addr_cv)pw_addr<=lin;
+endmodule
+
+(* keep_hierarchy *) module ot_hbm_idx256_payload_bank #(parameter integer LO=0,MUT=0)(
+ input wire clk,rst_c_n,cfg_v,run,recs_done,programme_accept,valid_data,
+ input wire [7:0] cfg_target,tg,
+ input wire [11:0] cfg_addr,
+ input wire [15:0] cd,
+ input wire [31:0] cur_off,cnt_next,
+ input wire [3:0] rptr_next,
+ output wire [15:0] selected_record,
+ output reg [15:0] pw_data,
+ output wire [95:0] prm,
+ output wire [15:0] rec
+);
+ (* keep *) reg cv;
+ (* keep *) reg [7:0] ct;
+ (* keep *) reg [11:0] ca;
+ always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
+ always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
+ (* keep *) reg [7:0] rd_oh;
+ wire [3:0] rp=(MUT==12 && LO==32)?{1'b0,rptr_next[2:0]+3'd1}:rptr_next;
+ always @(posedge clk)rd_oh<=(rptr_next<8)?(8'b1<<rp):8'd0;
+ reg [15:0] rows[0:7];
+ wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
+ wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<6;
+ always @(posedge clk)if(programme_accept && cv)pw_data<=cd;
+ genvar r,b;
+ generate for(r=0;r<8;r=r+1)begin:g_record
+  always @(posedge clk)if(record_cfg && ca[8:0]==r)rows[r]<=cd;
+ end endgenerate
+ reg [15:0] selected;
+ integer j;
+ always @*begin
+  selected=0;
+  for(j=0;j<8;j=j+1)selected=selected|(rows[j]&{16{rd_oh[j]}});
+ end
+ generate if(LO==32)begin:g_valid
+  reg [7:0] val;
+  integer v;
+  always @(posedge clk or negedge rst_c_n)
+   if(!rst_c_n)val<=0;
+   else for(v=0;v<8;v=v+1)if(record_cfg && ca[8:0]==v)val[v]<=valid_data;
+  assign selected_record={selected[15:1],|(val&rd_oh)};
+ end else assign selected_record=selected;
+ for(r=0;r<6;r=r+1)begin:g_operand
+  reg [15:0] operand;
+  always @(posedge clk)if(operand_cfg && ca[9:0]==r)operand<=cd;
+  assign prm[r*16+:16]=operand;
+ end
+ if(LO>=32)begin:g_emit
+  (* keep *) reg [31:0] local_cnt;
+  always @(posedge clk)local_cnt<=cnt_next;
+  wire [31:0] local_cmp=(MUT==3)?local_cnt+1'b1:local_cnt;
+  wire step=run && !recs_done && cur_off==local_cmp;
+  reg [15:0] emitted;
+  always @(posedge clk)if(step)emitted<=selected_record;
+  assign rec=emitted;
+ end else assign rec=16'b0;
+ endgenerate
 endmodule
 `default_nettype wire
