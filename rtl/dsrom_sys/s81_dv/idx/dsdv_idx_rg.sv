@@ -64,7 +64,7 @@
 // Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
 // 2-flop synchronous release.
 // MUT (bench negative controls only): 1 lane hash off by one, 2 rk always returned to the slice, 3 scale sector of the
-// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed.
+// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed, 6 spec om ignored.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_rg #(
     parameter integer MUT = 0,
@@ -686,8 +686,8 @@ module dsdv_idx_rg #(
             default: hb = '0;
         endcase
         // open lanes (spec om): no HDR / empty BEAT of that lane (e_ix 1-3 lane 1, 4-6 lane 2, 7-9 lane 3)
-        if ((e_ix[3:0] >= 4'd1 && e_ix[3:0] <= 4'd3 && om[0]) || (e_ix[3:0] >= 4'd4 && e_ix[3:0] <= 4'd6 && om[1]) ||
-            (e_ix[3:0] >= 4'd7 && e_ix[3:0] <= 4'd9 && om[2])) hb = '0;
+        if (MUT != 6 && ((e_ix[3:0] >= 4'd1 && e_ix[3:0] <= 4'd3 && om[0]) || (e_ix[3:0] >= 4'd4 && e_ix[3:0] <= 4'd6 && om[1]) ||
+            (e_ix[3:0] >= 4'd7 && e_ix[3:0] <= 4'd9 && om[2]))) hb = '0;
     end
     wire        slot = ended && !wdone && ew < nw && tc == et;
     wire [15:0] ej = ew + j0;                // absolute word
