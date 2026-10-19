@@ -16,7 +16,7 @@ for m in re.finditer(r'\b(\w+)\s+(\\?[^\s()]+)\s*\((.*?)\);',t,re.S):
  name=cell.lstrip('\\'); prefix='u_ot_pr_core.controller.'
  if not name.startswith(prefix):continue
  suffix=name[len(prefix):]
- base=re.split(r'[\[$]',suffix,1)[0]
+ base=re.split(r'[\[$]',suffix,maxsplit=1)[0]
  if base in contract['forbidden_families']:forbidden.append(name)
  if base not in found:continue
  pins=dict(re.findall(r'\.(\w+)\(([^()]*)\)',body))
@@ -24,7 +24,7 @@ for m in re.finditer(r'\b(\w+)\s+(\\?[^\s()]+)\s*\((.*?)\);',t,re.S):
  found[base].append(record)
  if pins.get('CLK','').strip()!='clk':errors.append('unexpected clock: '+name)
  if not pins.get('D','').strip():errors.append('missing D: '+name)
- unreset={'head_local','fresh_addr_local','head_bank_local','head_read_global'}
+ unreset={'head_local','fresh_addr_local','head_bank_local','head_read_global','look_head_bank_local'}
  has_async=bool({'RESETN','SETN'} & pins.keys())
  if base=='row_local':
   bit=int(re.findall(r'\[(\d+)\]',suffix)[-1]); expect_async=bit>=19

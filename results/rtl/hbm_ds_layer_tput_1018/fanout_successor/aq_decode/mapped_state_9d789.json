@@ -1,0 +1,3857 @@
+{
+  "schema": "opentallas.bw_aq_mapped_state.v1",
+  "source_netlist_sha256": "7860fbb587182c02805927ab20839285999bd1a58cd1f0a956a09219ee7cfcc8",
+  "contract_sha256": "7a68aee3514bda321f34a3d45fdacced0a0f576335ac059830b795b4ebeba5b2",
+  "pass_copy_structure": true,
+  "pass_global_fanout": false,
+  "errors": [],
+  "families": {
+    "head_local": [
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06492_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06502_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06503_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06504_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06505_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06506_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06507_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06508_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06509_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06510_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06511_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06493_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06494_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06495_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06496_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06497_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06498_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06499_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06500_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[0][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06501_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06472_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06482_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06483_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06484_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06485_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06486_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06487_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06488_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06489_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06490_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06491_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06473_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06474_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06475_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06476_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06477_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06478_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06479_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06480_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[1][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06481_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06452_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06462_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06463_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06464_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06465_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06466_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06467_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06468_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06469_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06470_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06471_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06453_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06454_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06455_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06456_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06457_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06458_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06459_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06460_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[2][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06461_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06432_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06442_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06443_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06444_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06445_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06446_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06447_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06448_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06449_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06450_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06451_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06433_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06434_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06435_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06436_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06437_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06438_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06439_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06440_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[3][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06441_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06412_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06422_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06423_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06424_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06425_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06426_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06427_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06428_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06429_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06430_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06431_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06413_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06414_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06415_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06416_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06417_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06418_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06419_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06420_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[4][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06421_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06392_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06402_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06403_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06404_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06405_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06406_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06407_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06408_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06409_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06410_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06411_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06393_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06394_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06395_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06396_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06397_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06398_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06399_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06400_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[5][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06401_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06372_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06382_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06383_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06384_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06385_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06386_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06387_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06388_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06389_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06390_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06391_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06373_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06374_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06375_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06376_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06377_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06378_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06379_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06380_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[6][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06381_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_06352_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[10] ",
+          "QN": "_06362_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[11] ",
+          "QN": "_06363_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[12] ",
+          "QN": "_06364_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[13] ",
+          "QN": "_06365_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[14] ",
+          "QN": "_06366_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[15] ",
+          "QN": "_06367_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[16] ",
+          "QN": "_06368_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[17] ",
+          "QN": "_06369_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[18] ",
+          "QN": "_06370_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][19]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[19] ",
+          "QN": "_06371_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[1] ",
+          "QN": "_06353_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[2] ",
+          "QN": "_06354_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[3] ",
+          "QN": "_06355_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[4] ",
+          "QN": "_06356_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[5] ",
+          "QN": "_06357_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[6] ",
+          "QN": "_06358_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[7] ",
+          "QN": "_06359_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[8] ",
+          "QN": "_06360_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_local[7][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[9] ",
+          "QN": "_06361_"
+        }
+      }
+    ],
+    "row_local": [
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[0] ",
+          "QN": "_06332_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[10] ",
+          "QN": "_06342_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[11] ",
+          "QN": "_06343_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[12] ",
+          "QN": "_06344_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[13] ",
+          "QN": "_06345_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[14] ",
+          "QN": "_06346_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[15] ",
+          "QN": "_06347_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[16] ",
+          "QN": "_06348_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[17] ",
+          "QN": "_06349_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[18] ",
+          "QN": "_06350_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][19]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11685_",
+          "QN": "_06329_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][40] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[1] ",
+          "QN": "_06333_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][20]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11686_",
+          "QN": "_06330_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][40] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][21]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06331_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][40] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[2] ",
+          "QN": "_06334_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[3] ",
+          "QN": "_06335_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[4] ",
+          "QN": "_06336_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[5] ",
+          "QN": "_06337_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[6] ",
+          "QN": "_06338_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[7] ",
+          "QN": "_06339_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[8] ",
+          "QN": "_06340_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[0][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[9] ",
+          "QN": "_06341_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[0] ",
+          "QN": "_06309_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[10] ",
+          "QN": "_06319_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[11] ",
+          "QN": "_06320_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[12] ",
+          "QN": "_06321_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[13] ",
+          "QN": "_06322_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[14] ",
+          "QN": "_06323_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[15] ",
+          "QN": "_06324_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[16] ",
+          "QN": "_06325_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[17] ",
+          "QN": "_06326_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[18] ",
+          "QN": "_06327_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][19]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11685_",
+          "QN": "_06306_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][41] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[1] ",
+          "QN": "_06310_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][20]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11686_",
+          "QN": "_06307_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][41] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][21]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06308_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][41] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[2] ",
+          "QN": "_06311_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[3] ",
+          "QN": "_06312_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[4] ",
+          "QN": "_06313_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[5] ",
+          "QN": "_06314_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[6] ",
+          "QN": "_06315_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[7] ",
+          "QN": "_06316_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[8] ",
+          "QN": "_06317_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[1][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[9] ",
+          "QN": "_06318_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[0] ",
+          "QN": "_06286_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[10] ",
+          "QN": "_06296_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[11] ",
+          "QN": "_06297_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[12] ",
+          "QN": "_06298_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[13] ",
+          "QN": "_06299_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[14] ",
+          "QN": "_06300_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[15] ",
+          "QN": "_06301_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[16] ",
+          "QN": "_06302_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[17] ",
+          "QN": "_06303_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[18] ",
+          "QN": "_06304_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][19]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11685_",
+          "QN": "_06283_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][42] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[1] ",
+          "QN": "_06287_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][20]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11686_",
+          "QN": "_06284_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][42] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][21]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06285_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][42] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[2] ",
+          "QN": "_06288_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[3] ",
+          "QN": "_06289_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[4] ",
+          "QN": "_06290_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[5] ",
+          "QN": "_06291_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[6] ",
+          "QN": "_06292_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[7] ",
+          "QN": "_06293_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[8] ",
+          "QN": "_06294_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[2][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[9] ",
+          "QN": "_06295_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[0] ",
+          "QN": "_06263_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][10]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[10] ",
+          "QN": "_06273_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][11]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[11] ",
+          "QN": "_06274_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][12]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[12] ",
+          "QN": "_06275_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][13]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[13] ",
+          "QN": "_06276_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][14]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[14] ",
+          "QN": "_06277_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][15]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[15] ",
+          "QN": "_06278_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][16]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[16] ",
+          "QN": "_06279_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][17]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[17] ",
+          "QN": "_06280_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][18]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[18] ",
+          "QN": "_06281_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][19]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11685_",
+          "QN": "_06260_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][43] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[1] ",
+          "QN": "_06264_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][20]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11686_",
+          "QN": "_06261_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][43] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][21]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06262_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][43] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[2] ",
+          "QN": "_06265_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[3] ",
+          "QN": "_06266_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[4] ",
+          "QN": "_06267_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[5] ",
+          "QN": "_06268_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][6]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[6] ",
+          "QN": "_06269_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][7]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[7] ",
+          "QN": "_06270_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][8]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[8] ",
+          "QN": "_06271_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_local[3][9]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_row[9] ",
+          "QN": "_06272_"
+        }
+      }
+    ],
+    "q_n_local": [
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[0] ",
+          "QN": "_06259_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[1] ",
+          "QN": "_00014_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[2] ",
+          "QN": "_00015_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[3] ",
+          "QN": "_00016_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[4] ",
+          "QN": "_00017_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[5] ",
+          "QN": "_00018_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[0][6]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[6] ",
+          "QN": "_00019_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[0] ",
+          "QN": "_06258_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[1] ",
+          "QN": "_00020_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[2] ",
+          "QN": "_00021_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[3] ",
+          "QN": "_00022_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[4] ",
+          "QN": "_00023_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[5] ",
+          "QN": "_00024_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[1][6]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[6] ",
+          "QN": "_00025_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[0] ",
+          "QN": "_06251_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[1] ",
+          "QN": "_06252_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[2] ",
+          "QN": "_06253_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[3] ",
+          "QN": "_06254_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[4] ",
+          "QN": "_06255_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[5] ",
+          "QN": "_06256_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[2][6]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[6] ",
+          "QN": "_06257_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[0] ",
+          "QN": "_06244_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[1] ",
+          "QN": "_06245_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[2] ",
+          "QN": "_06246_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[3] ",
+          "QN": "_06247_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[4] ",
+          "QN": "_06248_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[5] ",
+          "QN": "_06249_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.q_n_local[3][6]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.q_n_next[6] ",
+          "QN": "_06250_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "ac_v_local": [
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[0][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10775_",
+          "QN": "_06620_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[0][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10776_",
+          "QN": "_06621_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[0][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10777_",
+          "QN": "_06622_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[0][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10778_",
+          "QN": "_06623_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[1][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10775_",
+          "QN": "_06624_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[1][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10776_",
+          "QN": "_06625_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[1][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10777_",
+          "QN": "_06626_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[1][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10778_",
+          "QN": "_06627_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[2][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10775_",
+          "QN": "_06628_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[2][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10776_",
+          "QN": "_06629_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[2][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10777_",
+          "QN": "_06630_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[2][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10778_",
+          "QN": "_06631_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[3][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10775_",
+          "QN": "_06632_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[3][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10776_",
+          "QN": "_06633_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[3][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10777_",
+          "QN": "_06634_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[3][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10778_",
+          "QN": "_06635_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[4][0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10775_",
+          "QN": "_06636_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[4][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10776_",
+          "QN": "_06637_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[4][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10777_",
+          "QN": "_06638_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.ac_v_local[4][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10778_",
+          "QN": "_01119_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][71] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "row_word_act_local": [
+      {
+        "cell": "u_ot_pr_core.controller.row_word_act_local[0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06351_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][40] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_word_act_local[1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06328_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][41] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_word_act_local[2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06305_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][42] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.row_word_act_local[3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11687_",
+          "QN": "_06282_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][43] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "fresh_addr_local": [
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[0] ",
+          "QN": "_06532_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[1] ",
+          "QN": "_06533_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[2] ",
+          "QN": "_06534_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[3] ",
+          "QN": "_06535_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[4] ",
+          "QN": "_06536_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[0][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[5] ",
+          "QN": "_06537_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][0]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[0] ",
+          "QN": "_06519_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][1]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[1] ",
+          "QN": "_06520_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][2]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[2] ",
+          "QN": "_06521_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][3]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[3] ",
+          "QN": "_06522_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][4]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[4] ",
+          "QN": "_06523_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_addr_local[1][5]$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qwp[5] ",
+          "QN": "_06524_"
+        }
+      }
+    ],
+    "successor_local": [
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][0]$_DFF_PN1_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11670_",
+          "QN": "_06526_",
+          "RESETN": "_29695_",
+          "SETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] "
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11671_",
+          "QN": "_06527_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11672_",
+          "QN": "_06528_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11673_",
+          "QN": "_06529_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11674_",
+          "QN": "_06530_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[0][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11675_",
+          "QN": "_06531_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][0]$_DFF_PN1_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11670_",
+          "QN": "_06513_",
+          "RESETN": "_29695_",
+          "SETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] "
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11671_",
+          "QN": "_06514_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11672_",
+          "QN": "_06515_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11673_",
+          "QN": "_06516_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11674_",
+          "QN": "_06517_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.successor_local[1][5]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11675_",
+          "QN": "_06518_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "fresh_local": [
+      {
+        "cell": "u_ot_pr_core.controller.fresh_local[0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qpush ",
+          "QN": "_06525_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.fresh_local[1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.qpush ",
+          "QN": "_06512_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "blk_bank": [
+      {
+        "cell": "u_ot_pr_core.controller.blk_bank[0]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_09994_",
+          "QN": "_01503_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.blk_bank[1]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10323_",
+          "QN": "_01172_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.blk_bank[2]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10324_",
+          "QN": "_01171_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.blk_bank[3]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10325_",
+          "QN": "_01170_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.blk_bank[4]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10316_",
+          "QN": "_01179_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "blk_valid": [
+      {
+        "cell": "u_ot_pr_core.controller.blk_valid$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11643_",
+          "QN": "_06543_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "head_bank_local": [
+      {
+        "cell": "u_ot_pr_core.controller.head_bank_local[0]$_DFFE_PP_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10380_",
+          "QN": "_01118_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_bank_local[1]$_DFFE_PP_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10381_",
+          "QN": "_01117_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_bank_local[2]$_DFFE_PP_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10382_",
+          "QN": "_01116_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_bank_local[3]$_DFFE_PP_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10383_",
+          "QN": "_01115_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.head_bank_local[4]$_DFFE_PP_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10384_",
+          "QN": "_06639_"
+        }
+      }
+    ],
+    "command_bank_local": [
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_local[0]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_bank[0] ",
+          "QN": "_06544_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_local[1]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_bank[1] ",
+          "QN": "_06545_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_local[2]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_bank[2] ",
+          "QN": "_06546_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_local[3]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_bank[3] ",
+          "QN": "_06547_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_local[4]$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.r_bank[4] ",
+          "QN": "_06548_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "command_bank_valid": [
+      {
+        "cell": "u_ot_pr_core.controller.command_bank_valid$_DFF_PN0_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_11644_",
+          "QN": "_06549_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ],
+    "head_read_global": [
+      {
+        "cell": "u_ot_pr_core.controller.head_read_global$_DFF_P_",
+        "library": "DFFHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "\\u_ot_pr_core.controller.head_d[0] ",
+          "QN": "_01114_"
+        }
+      }
+    ],
+    "tail_set_local": [
+      {
+        "cell": "u_ot_pr_core.controller.tail_set_local[0]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10328_",
+          "QN": "_00000_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.tail_set_local[1]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10329_",
+          "QN": "_00001_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      },
+      {
+        "cell": "u_ot_pr_core.controller.tail_set_local[2]$_DFFE_PN0P_",
+        "library": "DFFASRHQNx1_ASAP7_75t_R",
+        "pins": {
+          "CLK": "clk",
+          "D": "_10176_",
+          "QN": "_00948_",
+          "RESETN": "\\u_ot_pr_core.u_rst.relay_q[0][7] ",
+          "SETN": "_29695_"
+        }
+      }
+    ]
+  },
+  "forbidden_cells": [],
+  "nonreset_over32": [
+    {
+      "label": "_44088_/Y (OR2x2_ASAP7_75t_R)",
+      "loads": 178,
+      "root_type": "comb"
+    },
+    {
+      "label": "_50112_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 136,
+      "root_type": "comb"
+    },
+    {
+      "label": "_31842_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 106,
+      "root_type": "comb"
+    },
+    {
+      "label": "_34226_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 96,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44102_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 94,
+      "root_type": "comb"
+    },
+    {
+      "label": "_30671_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 49,
+      "root_type": "comb"
+    },
+    {
+      "label": "_34285_/Y (AO221x1_ASAP7_75t_R)",
+      "loads": 48,
+      "root_type": "comb"
+    },
+    {
+      "label": "_30734_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 45,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44647_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 44,
+      "root_type": "comb"
+    },
+    {
+      "label": "_35041_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 42,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45938_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 42,
+      "root_type": "comb"
+    },
+    {
+      "label": "u_ot_pr_core.controller.tail_set_local[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 40,
+      "root_type": "ff"
+    },
+    {
+      "label": "_30820_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44154_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44308_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44351_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44409_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_44572_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45294_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45352_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45393_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45461_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45504_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45723_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45764_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45806_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_45847_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46482_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46523_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46564_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46605_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46646_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46687_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46728_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46769_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46810_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46851_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46892_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46947_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47025_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47262_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47303_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47697_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47841_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_47882_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 38,
+      "root_type": "comb"
+    },
+    {
+      "label": "_40948_/Y (OA211x2_ASAP7_75t_R)",
+      "loads": 36,
+      "root_type": "comb"
+    },
+    {
+      "label": "_40963_/Y (AND4x1_ASAP7_75t_R)",
+      "loads": 36,
+      "root_type": "comb"
+    },
+    {
+      "label": "_30539_/Y (OR2x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32544_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32561_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32575_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32589_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32603_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32617_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32631_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32677_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32696_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32710_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32724_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32738_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32752_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32766_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_32780_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 35,
+      "root_type": "comb"
+    },
+    {
+      "label": "_31415_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48080_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48086_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48156_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48212_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48215_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48278_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48343_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48401_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48459_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48520_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48578_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48637_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48699_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48702_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48765_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48824_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48883_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_48941_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49007_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49063_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49127_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49191_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49249_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49307_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49365_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49423_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49480_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49538_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49597_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49654_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49716_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49773_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49831_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49889_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_49945_/Y (AO32x1_ASAP7_75t_R)",
+      "loads": 34,
+      "root_type": "comb"
+    },
+    {
+      "label": "_30661_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 33,
+      "root_type": "comb"
+    },
+    {
+      "label": "_46208_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 33,
+      "root_type": "comb"
+    }
+  ]
+}

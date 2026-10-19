@@ -1,5 +1,5 @@
 {
-  "source": "9d7897923",
+  "source": "a2cb44a57",
   "production_wq": 64,
   "clock": "clk, positive edge, no new domain",
   "families": {
@@ -7,17 +7,20 @@
     "row_local": 88,
     "q_n_local": 28,
     "ac_v_local": 20,
-    "row_word_act_local": 4,
-    "fresh_addr_local": 12,
-    "successor_local": 12,
-    "fresh_local": 2,
+    "row_word_act_local": 12,
+    "fresh_addr_local": 24,
+    "successor_local": 24,
+    "fresh_local": 4,
     "blk_bank": 5,
     "blk_valid": 1,
     "head_bank_local": 5,
     "command_bank_local": 5,
     "command_bank_valid": 1,
     "head_read_global": 1,
-    "tail_set_local": 3
+    "bank_n": 224,
+    "bank_n_word_local": 448,
+    "look_head_bank_local": 10,
+    "tail_set_regions": 24
   },
   "forbidden_families": [
     "c_oh",
@@ -30,7 +33,8 @@
       "fresh_addr_local",
       "head_bank_local",
       "head_read_global",
-      "row_local[18:0]"
+      "row_local[18:0]",
+      "look_head_bank_local"
     ],
     "main_aq_async": [
       "q_n_local",
@@ -40,12 +44,14 @@
       "blk_valid",
       "command_bank_local",
       "command_bank_valid",
-      "tail_set_local"
+      "tail_set_regions"
     ],
     "regional_async": [
       "row_local[21:19]",
       "row_word_act_local",
-      "ac_v_local"
+      "ac_v_local",
+      "bank_n",
+      "bank_n_word_local"
     ]
   },
   "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate."
