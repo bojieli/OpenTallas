@@ -301,7 +301,7 @@ module ot_hbm_r14_aq_pc_safe #(
         // eliminate a wide conditional hold-enable without another edge.
         ac_b[g]<=0;ac_row[g]<=0;
         for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=0;
-        for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
+        for(integer j=0;j<8;j=j+1)if(!found&&bank_n_word_local[0][g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
           found=1;ac_v[g]<=1;
           for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
         end

@@ -110,5 +110,20 @@
     "data_edges_added": 0,
     "proof_obligation": "Exhaustive count0..127,length0..15 under legal length1..4 plus existing6000transaction exact/mutant and actualmappedcensus",
     "status": "modelbeforeRTL"
+  },
+  "bridge_pop32_successor": {
+    "actual_map4_failure": "kr_rdy port47:18pop decisions feeding4RPbits each stillfactorreadymultiple times",
+    "structure": "9 real nonempty captures each owns32payloadbits/four8b pointer slices;18independent16b pushvalid/ready regions unchanged. Popdecisionlocal fanout expected<=16, rawready expected<=32.",
+    "extra_ff": -9,
+    "data_edges_added": 0,
+    "ABI": "unchanged legacy same-edgeconsumer andnativepreviousreadyproducer, +1HBM collar unchanged",
+    "status": "model beforeRTL; actualcensus/occupiedreset/exact/mutants required"
+  },
+  "act_need_partition_successor": {
+    "actual_map4_failure": "ACTgroup40/34 shared eligibility with canonical bank_n/refreshkeys",
+    "structure": "Use existing real bank_n_word_local[0] retained same-edge counts forACTgroup need; canonicalbank_n remainsrefresh/generalaccounting. These copies already own lookrowwordnonempty andnowACTeligibility, no aliases or extraFF.",
+    "extra_ff": 0,
+    "data_edges_added": 0,
+    "status": "modelbeforeRTL; exact23968 andactualcensus required"
   }
 }

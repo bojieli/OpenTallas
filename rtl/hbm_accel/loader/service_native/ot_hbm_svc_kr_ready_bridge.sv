@@ -25,7 +25,7 @@ module ot_hbm_svc_kr_ready_bridge #(parameter integer WIDTH=277,MUT=0,REGIONAL_V
   // Omitting redundant reset factoring keeps consumer ready local.
   assign pop_regions[r]=valid_regions[r]&&out_rdy;
  end
- ot_hbm_svc_ring_bw_safe #(.WIDTH(WIDTH),.DEPTH(3),.REGIONAL(1),.REGIONAL_NONEMPTY(1)) u_ring(
+ ot_hbm_svc_ring_bw_safe #(.WIDTH(WIDTH),.DEPTH(3),.REGIONAL(1),.REGIONAL_NONEMPTY(1),.NONEMPTY_GROUP(2)) u_ring(
   .clk(clk),.rst_n(rst_n),.in_v(push),.in_data(in_data),
   .out_v(out_v),.pop(out_v&&out_rdy),.out_data(out_data),
   .cnt(occupancy),.cnt_next(next_count),.fault(fault),
