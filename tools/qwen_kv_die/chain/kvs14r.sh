@@ -25,6 +25,12 @@ if [ ! -d $W ]; then
 fi
 cd $W
 [ "$(git rev-parse --short=9 HEAD)" = $C ] || { echo "wrong commit"; exit 2; }
+# KVR-PLACE 10-19: kv_astk_expand.view_readiness recovers each ASTK leaf's gate-snapshot source blob (git show
+# <start_commit>:<src>); the mirror fetches only the run ref, so a fresh mirror lacked f932059e1 and the prep refused
+# ("exact selected source not bound by gate snapshot") -- fetch every leaf gate's start commit the mirror is missing
+for c_ in $(python3 -c "import json,glob;print(' '.join(sorted({json.load(open(f)).get('source_binding',{}).get('start_commit','') for f in glob.glob('physical/ref_tile/qkd_astk*/gate_result.json')}-{''})))"); do
+  git cat-file -e "$c_^{commit}" 2>/dev/null || git -C $M fetch -q $GH "$c_" || true
+done
 miss=
 while IFS=$'\t' read -r n rb sha; do
   case $n in qkd_d2d_static*) f=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static/qkd_d2d_static.lef;;
