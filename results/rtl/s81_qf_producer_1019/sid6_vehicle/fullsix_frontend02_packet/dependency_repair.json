@@ -1,0 +1,39 @@
+{
+  "scope": "Actual dependency omission repair only; frontend01 frozen failure retained",
+  "dependency": {
+    "path": "rtl/hdc/ot_hdc_delay_rf.sv",
+    "ref": "ceaed19c4",
+    "sha256": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+    "bytes": 1823,
+    "modules": [
+      "ot_hdc_delay_rf"
+    ],
+    "actual_parent_path": "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+    "actual_parent_sha256": "eb68af1600b861259df9a692365e0e3342931629eefa7cdddbef125640514891",
+    "calls": [
+      {
+        "line": 232,
+        "text": "ot_hdc_delay_rf #(.W(34 + SW), .D(AL + 1)) u_asb_rf (.clk(clk), .rst_n(rst_n), .d({add_t, add_e, add_wait}),"
+      },
+      {
+        "line": 234,
+        "text": "ot_hdc_delay_rf #(.W(66 + SW), .D(AL + 1)) u_fsb_rf (.clk(clk), .rst_n(rst_n), .d({fw_t, fw_d, fw_e, FWW}),"
+      }
+    ],
+    "recursive_closure": "Self-contained module, no include/import/submodule instantiations: only din/dout/mem/wptr sequential state and combinational assigns. Existing return-tree register-file delay implementation, not new datapath hardware."
+  },
+  "source_count_before": 125,
+  "source_count_after": 126,
+  "unchanged": [
+    "All125 original source bytes",
+    "Fullsix TB, clocks/reset,72 tracepoint bindings, actual43 selected statements",
+    "Weights/all1012frameROM+7XSROMs/CTL/gold/15epochs",
+    "Verilator settings, capacityreservation256GB/1thread/disk80GB, no process/wall limit",
+    "CAP reset CFG with faults retained; no numericPASS, nativeNULL, original deadlines"
+  ],
+  "changed": [
+    "One existing CEA source file added",
+    "source_files.f appends that existing module",
+    "Fresh fullsix_frontend_02 directory and source hash manifest"
+  ]
+}
