@@ -19,7 +19,7 @@
 // traffic (no faults), then random serial (vmr_cmd, su_wq) and stream (LG returns, far, inject) inputs -> the sticky
 // faults rise mid-run, so the fault offset is exercised.
 module tb_hbm_su_pg_stream_split;
- parameter integer QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500;
+ parameter integer QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500, FAULT_REG=0;
  localparam integer Q=278;
  localparam integer WSU [0:2] = '{4*Q, 2*Q, 3*Q};   // setup windows: request, return, inject (= seam_windows setup_q)
  localparam integer WHO [0:2] = '{2*Q, 4*Q, 7*Q};   // rewrite-after-read windows (= seam_windows hold_q)
@@ -41,7 +41,7 @@ module tb_hbm_su_pg_stream_split;
  ot_hbm_su_static_pg_stream #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MULTIRATE(1),
   .COLLPORT(1),.RSYNC(1),.STRAP(1),.IJ_REG(1)) ref_i(`PGS_CONN(r));
  ot_hbm_su_static_pg_stream_split #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),
-  .STRAP(1)) dut(`PGS_CONN(d));
+  .STRAP(1),.FAULT_REG(FAULT_REG)) dut(`PGS_CONN(d));
  // ---------------------------------------------------------------- clocks (coincident every 3 serial / 4 stream edges)
  localparam realtime T0 = 10.008;   // first coincident edge (12q multiple)
  initial begin #(T0); forever begin pg_clk=1; #0.417; pg_clk=0; #0.417; end end
@@ -69,6 +69,17 @@ module tb_hbm_su_pg_stream_split;
  // ---------------------------------------------------------------- compare
  integer errors=0, checks=0, sk=0, chk=0, wchecks=0;
  reg [40:0] rij_h [0:2]; reg rpgf_h [0:2];
+ reg pgf_source_ref=0;
+ reg [1:0] pgf_sync_ref=0;
+ // Independent source-publication + two-stage capture reference. Fault
+ // reporting adds one stream publication edge; the data calendar is unchanged.
+ always @(posedge pg_clk) begin
+  if(!dut.u_s.leaf_rst_n || !brst_n) pgf_source_ref<=0;
+  else pgf_source_ref <= (|dut.u_s.leaf_fault)||(|dut.u_s.bridge_fault);
+ end
+ always @(posedge clk_ctl or negedge rst_n)
+  if(!rst_n) pgf_sync_ref<=0;
+  else pgf_sync_ref<={pgf_sync_ref[0],pgf_source_ref};
  task automatic err(input [8*24-1:0] what); begin
   errors=errors+1;
   if(errors<=8) $display("MISMATCH %0s t=%0t sk=%0d", what, $time, sk);
@@ -82,7 +93,9 @@ module tb_hbm_su_pg_stream_split;
    if(r_ijbad) cov_bad=cov_bad+1;
    if(d_surr!==r_surr) err("su_rr");
    if({d_ijbad,d_ijrow,d_ijv}!==rij_h[0]) err("ij (+1 serial)");
-   if(d_pgf!==rpgf_h[1]) err("pg_fault (+2 serial)");
+   if(FAULT_REG!=0) begin
+    if(d_pgf!==pgf_sync_ref[1]) err("pg_fault registered CDC");
+   end else if(d_pgf!==rpgf_h[1]) err("pg_fault (+2 serial)");
   end
   rij_h[0]<={r_ijbad,r_ijrow,r_ijv}; rpgf_h[0]<=r_pgf; rpgf_h[1]<=rpgf_h[0];
   sk=sk+1;

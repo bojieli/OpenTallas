@@ -76,7 +76,7 @@ module ot_hbm_su_static_pg_stream_q #(
 endmodule
 
 module ot_hbm_su_static_pg_stream_s #(
- parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1
+ parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1,FAULT_REG=0
 )(
  input wire pg_clk,
  input wire bridge_rst_n,
@@ -124,7 +124,19 @@ module ot_hbm_su_static_pg_stream_s #(
    .su_rr(leaf_rr[h*257+:257]),.su_w_done(leaf_done[h]),.lg_rq(s_rq[h*17+:17]),.lg_wq(s_wq[h*281+:281]),
    .lg_rr(s_rr[h*257+:257]),.lg_w_done(s_done[h]),.fault(leaf_fault[h]));
  end
- assign pgf_s=(|leaf_fault)||(|bridge_fault);
+ // FAULT_REG is opt-in: publish the stream fault OR in a source-domain
+ // register before the exact two-flop serial synchronizer. The arbitrary
+ // fault transition is not part of the banked data calendar.
+ wire pgf_raw=(|leaf_fault)||(|bridge_fault);
+ generate if(FAULT_REG!=0) begin:g_pgf_reg
+  reg pgf_q;
+  always @(posedge pg_clk)
+   if(!leaf_rst_n || !bridge_rst_n) pgf_q<=1'b0;
+   else pgf_q <= (MUT==13) ? !pgf_raw : pgf_raw;
+  assign pgf_s=pgf_q;
+ end else begin:g_pgf_legacy
+  assign pgf_s=pgf_raw;
+ end endgenerate
  ot_hbm_vm_lg_pair_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.LOCAL_SPLIT(1)) u_tap(
   .clk(pg_clk),.rst_n(tap_rst_n),.local_rq(s_rq),.far_rq(far_rq),.local_wq(s_wq),.far_wq(far_wq),
   .local_read(lg_read),.local_write(lg_write),.near_rq(lg_rq),.near_wq(lg_wq),.near_rr(lg_rr),.near_w_done(lg_w_done),
@@ -157,7 +169,7 @@ endmodule
 
 // composition with ot_hbm_su_static_pg_stream's ports (bench lockstep; the die binds _q + _s as two abutted leaves)
 module ot_hbm_su_static_pg_stream_split #(
- parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1
+ parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1,FAULT_REG=0
 )(
  input wire clk_ctl,
  input wire pg_clk,
@@ -190,7 +202,7 @@ module ot_hbm_su_static_pg_stream_split #(
   .rq_b0(rq_b0),.rq_b1(rq_b1),.wq_b0(wq_b0),.wq_b1(wq_b1),.rr_b0(rr_b0),.rr_b1(rr_b1),
   .ijb0(ijb0),.ijb1(ijb1),.ijb2(ijb2),.pgf_s(pgf_s),.rc_leaf(rc_leaf),.rc_tap(rc_tap));
  ot_hbm_su_static_pg_stream_s #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),
-  .B39_NOOP(B39_NOOP),.STRAP(STRAP)) u_s(
+  .B39_NOOP(B39_NOOP),.STRAP(STRAP),.FAULT_REG(FAULT_REG)) u_s(
   .pg_clk(pg_clk),.bridge_rst_n(bridge_rst_n),.pos(pos),
   .rq_b0(rq_b0),.rq_b1(rq_b1),.wq_b0(wq_b0),.wq_b1(wq_b1),.rr_b0(rr_b0),.rr_b1(rr_b1),
   .ijb0(ijb0),.ijb1(ijb1),.ijb2(ijb2),.pgf_s(pgf_s),.rc_leaf(rc_leaf),.rc_tap(rc_tap),

@@ -57,7 +57,7 @@ core_out = ['lg_rq', 'lg_wq', 'lg_fault', 'far_rr', 'far_w_done']
 
 
 def bench(nm, sub, mut, rr=10, wr=7, qid=1, why=None):
-    b = dict(name=nm, cmd=f'bash {BENCH} {{RUN}}/bench/{sub} {mut} 1500 {qid} {rr} {wr}', threads=4, peak_ram_gb=8,
+    b = dict(name=nm, cmd=f'bash {BENCH} {{RUN}}/bench/{sub} {mut} 1500 {qid} {rr} {wr} 1', threads=4, peak_ram_gb=8,
              needs=['verilator'])
     if why is None:
         b.update(expect='pass', pass_regex='PG_STREAM_SPLIT PASS checks=', min_count_regex='checks=(\\d+)',
@@ -72,6 +72,7 @@ benches = [
     bench('pgs_b_lockstep_rt18', 'rt18', 0, 18, 15),
     bench('pgs_b_mut12_seam_window', 'm12', 12, why='seam-window mutant: request bank read one stream edge early into a '
           'pre-stage (same data, same launch edge) -> setup 1q < the declared 4q seam window; window checker only'),
+    bench('pgs_b_mut13_fault_publish', 'm13', 13, why='registered fault source inverted: independent publication and exact two-stage serial capture scoreboard'),
     bench('pgs_b_mut3', 'm3', 3, why='return staging removed: bank rewritten 0 ps after its read (window checker)'),
     bench('pgs_b_mut2', 'm2', 2, why='stream half reads the wrong request bank'),
     bench('pgs_b_mut8', 'm8', 8, why='serial half reads the wrong inject bank'),
@@ -107,7 +108,7 @@ s = dict(
              'rtl/lib/ot_rst_relay.sv', f'{S_}/ot_hbm_su_static_vm_bank_leaf_s.sv', f'{S_}/ot_hbm_su_static_vm_ports.sv',
              'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv',
              'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv', 'rtl/hdc/ot_hdc_delay.sv'],
-    params=dict(QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, STRAP=1),
+    params=dict(QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, STRAP=1, FAULT_REG=1),
     clock_port='pg_clk', reset_ports=['rst_n', 'bridge_rst_n'],
     reset_landing=dict(enable=True, stages=3, clock='clk_ctl',
                        why='3 serial stages = one 3:4 epoch (12q): bridge / inject slot counters of both roots release on '
@@ -125,7 +126,7 @@ s = dict(
     io_flop_at_pins=dict(cols=4, allow_none=True), keep_pin_regs=True, inhold=False, outhold=False,
     std_area_um2=3500, fill_reason=dict(pin_bound=PIN_BOUND),
     structural_change=WHY,
-    job=dict(owner='Claude:HBM-PGSTREAM-B', branch='claude/hbm-pgstream-b-1019', tag='b1',
+    job=dict(owner='Codex:PGSTREAM-CDC', branch='codex/pgstream-cdc-1019', tag='b2',
              purpose='HBM die d4g LIGHT SU slice stream sibling: one two-root tile, banked seam inside (landed crossings)',
              record_to=f'results/rtl/ref_tile/{name}', views_to=f'physical/ref_tile/{name}/views', auto_merge=False,
              reroute_reason=dict(kind='rtl_change', what='merge of the one-root halves hbm_su_pg_stream_q/_s_1019 into one '
@@ -140,6 +141,18 @@ s = dict(
     clock_entry_domains={'core': dict(ratio=[1, 1], ports=['pg_clk'], inputs=core_in, outputs=core_out),
                          'serial': dict(ratio=[4, 3], ports=['clk_ctl'], inputs=serial_in, outputs=serial_out)},
     seam_windows=seam_windows,
+    cdc_synchronizers=[
+        dict(name='pg_fault_level', src_domain='core', dst_domain='serial',
+             source='u_s.g_pgf_reg.pgf_q', chain=['u_q.fs[0]', 'u_q.fs[1]'], sync_max_delay_ps=250,
+             why='stream fault OR published by one source register, then exact two-stage serial level synchronizer; '
+                 'one added stream publication edge, no data-calendar effect'),
+        dict(name='pg_leaf_reset', src_domain='serial', dst_domain='core',
+             source='u_q.rcl', chain=['u_s.rq_s[0]', 'u_s.rq_s[1]'], sync_max_delay_ps=250,
+             why='existing serial reset source followed by exact two-stage stream reset release synchronizer; unchanged edges'),
+        dict(name='pg_tap_reset', src_domain='serial', dst_domain='core',
+             source='u_q.rct', chain=['u_s.rs_s[0]', 'u_s.rs_s[1]'], sync_max_delay_ps=250,
+             why='existing serial reset source followed by exact two-stage stream reset release synchronizer; unchanged edges'),
+    ],
 )
 out = Path('tools/ref_tile/specs_hbm_su3') / f'{name}.json'
 out.write_text(json.dumps(s, indent=1) + '\n')

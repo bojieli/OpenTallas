@@ -5,13 +5,13 @@
 # usage: su_pg_stream_split_vl_run.sh OUT [MUT] [EDGES] [QID] [READ_RETURN] [WRITE_RETURN]
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-out=$(realpath -m "$1"); mut=${2:-0}; edges=${3:-1500}; qid=${4:-1}; rr=${5:-10}; wr=${6:-7}; mkdir -p "$out"
+out=$(realpath -m "$1"); mut=${2:-0}; edges=${3:-1500}; qid=${4:-1}; rr=${5:-10}; wr=${6:-7}; fault_reg=${7:-0}; mkdir -p "$out"
 S=rtl/hbm_accel/generic/adapters/static_su
 T=tb_hbm_su_pg_stream_split
 verilator --version | tee "$out/version.txt"
 build() {
 verilator --binary --timing -j "${OT_THREADS:-4}" -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN --top-module $T \
- -GMUT=$mut -GEDGES=$edges -GQID=$qid -GREAD_RETURN=$rr -GWRITE_RETURN=$wr --Mdir "$out/obj" -o pgs \
+ -GMUT=$mut -GEDGES=$edges -GQID=$qid -GREAD_RETURN=$rr -GWRITE_RETURN=$wr -GFAULT_REG=$fault_reg --Mdir "$out/obj" -o pgs \
  rtl/lib/ot_rst_relay.sv $S/ot_hbm_su_static_vm_ports.sv $S/ot_hbm_su_static_vm_bank_leaf_s.sv \
  $S/programme/multirate_bridge.sv $S/programme/multirate_bridge_split.sv \
  $S/top/ot_hbm_su_static_pg_lg_tap.sv $S/top/ot_hbm_su_static_pg_stream.sv $S/top/ot_hbm_su_static_pg_stream_split.sv \
