@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-wqbg
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-wqbg
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-wqbg
+ot-run: ot-epyc9       admits   957 GB (avail 815, growth 145, headroom 0, waiters 0/0 GB) load 90/128 running 53 disk 303 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81c-wqbg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81c-wqbg
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-566913-1792476603 after 0 s
+WQBG golden_self_check_PASS True 512 0 0
+WQBG P600 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P224 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P126 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG s224 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P130 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P225 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P228 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P230 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P240 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P250 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P300 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG P400 words 625 golden_equal 625 rows_full_golden 512 bit_exact True nodes {'((0, 1), (2, 1))': 113, '((0, 2),)': 399}
+WQBG FAIL_P223 words 44 golden_equal 44 rows_full_golden 36 bit_exact False nodes {'((0, 1), (2, 1))': 8, '((0, 2),)': 28}
+WQBG FAIL_P124 words 625 golden_equal 44 rows_full_golden 36 bit_exact False nodes {'((0, 1), (2, 1))': 8, '((0, 2),)': 28}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-566913-1792476603): exit 0
