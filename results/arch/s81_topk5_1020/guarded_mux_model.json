@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.topk5.guarded_mux_model.v1",
+  "status": "before RTL; unbound leaf pilot",
+  "trigger": {
+    "actual_native_k8_max_fanout": 1184,
+    "source": "slice o_in_c/r1_d admission data selects, not fixed ACC32 arithmetic",
+    "old_word_bits": 592
+  },
+  "master": {
+    "payload_bits": 148,
+    "replicas_per_592bit_word": 4,
+    "input_payload_bits_per_cycle": 296,
+    "select_bits_per_cycle": 2,
+    "output_bits_per_cycle": 148,
+    "port_bytes_per_cycle": {
+      "inputs": 37.25,
+      "outputs": 18.5
+    },
+    "fixed_latency_edges": 3,
+    "extra_edges_vs_existing_capture": 2,
+    "semantics": "y=(s0?a:0)|(s1?b:0); static select must be exclusive in release, pilot also proves both asserted OR",
+    "stages": [
+      {
+        "name": "A",
+        "payload_bits": 296,
+        "select_bits": 2,
+        "function": "registered boundary capture"
+      },
+      {
+        "name": "B",
+        "payload_bits": 296,
+        "select_bits": 26,
+        "function": "same-age payload transport and thirteen local select copies"
+      },
+      {
+        "name": "C",
+        "payload_bits": 148,
+        "function": "13 fixed <=12bit masked merge chunks with registered output"
+      }
+    ],
+    "sequential_bits": 770,
+    "runtime_indexed_storage": false,
+    "largest_per_stage_storage_bits": 322,
+    "fanout_budget": {
+      "input_data": 1,
+      "input_select": 1,
+      "Aselect": 13,
+      "Bselect": 12,
+      "raw_reset": 2,
+      "reset_l1": 28
+    },
+    "reset_edges": 2,
+    "timing_budget": "one AND+OR masked merge per bit; no resource arbitration",
+    "source_area_estimate_um2": [
+      160,
+      240
+    ],
+    "candidate_outline_um": [
+      32.4,
+      32.4
+    ],
+    "fill_estimate": [
+      0.1524,
+      0.2286
+    ],
+    "pin_face_budget": {
+      "W": "a148 =>4.57/um",
+      "E": "y148 =>4.57/um",
+      "N": "b148 =>4.57/um",
+      "S": "s2,clk,reset =>0.124/um"
+    },
+    "reach_geometric_upper_um": 64.8,
+    "floorplan_admission": "Pin-limited leaf needs specific actual synthesized area/PNG exception before any physical gate; no gate authorization inferred"
+  },
+  "whole_slice_integration_obligations": [
+    "Use four exact-width masters per592bit word; last bit control captured on identical edge.",
+    "r1_d source/valid must shift+2 together before compare.",
+    "o_in_c admission+tag/valid must shift+2; FIFO in-flight credit/occupancy counts include two new tokens.",
+    "Parent source-selector fanout still requires bounded local kept publications; leaf does not fix original controller by itself.",
+    "Production slice golden miter and static throughput/firstvalid/reset proof before integration/adoption.",
+    "Mapped actual all-driver including reset census before any physical leaf gate.",
+    "Real hardened abstracts/clock/reach of replicated leaves and compiler schedule +2 price before quarter gate."
+  ]
+}
