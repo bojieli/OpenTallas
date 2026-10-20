@@ -112,6 +112,7 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
 RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
 RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
+RLY_D2D_FIRST = __import__('os').environ.get('OT_KV_RLY_D2D_FIRST', '0') == '1'   # KV-BIND12: wide D2D words placed first
 REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
                  __import__('os').environ.get('OT_KV_REACH_W', '').split(',') if t))
 
@@ -3288,6 +3289,14 @@ def _relays(m):
                         j_ = max([i_ + 1 for i_, b_ in enumerate(rest_) if b_[0] in ('lx', 'lr', 'host_fdi')
                                   or b_[0].startswith(pvx_)] or [0])
                         order_ = rest_[:j_] + top_ + rest_[j_:]
+    if RLY_D2D_FIRST:
+        # KV-BIND12 10-20 (OT_KV_RLY_D2D_FIRST=1, default off): the wide (>= 296 b, 82-um tall) words incident on the D2D end
+        # take their relay spots before every other chain: d19b corridor dump -- 1..174-b relays of the HOST / ctl / kvi /
+        # link_cfg / pll words scattered over the HOST-top / D2D channel left no 45 x 82 spot near the S-face pin span for
+        # ks_kvs_attn__attn__tx_payload's terminal stage (remaining 438 um); the small words fit anywhere afterwards
+        d2dw_ = [b_ for b_ in order_ if b_[2] >= 296 and any(e_[0] == 'd2d_kv' for e_ in b_[3])]
+        order_ = d2dw_ + [b_ for b_ in order_ if b_[0] not in {x_[0] for x_ in d2dw_}]
+        m['rly_d2d_first'] = [b_[0] for b_ in d2dw_]
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
