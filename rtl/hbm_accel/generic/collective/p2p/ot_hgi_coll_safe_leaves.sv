@@ -396,7 +396,22 @@ module ot_hgi_coll_static_program_target_s128 #(
     wire frame_bad=occupied || lv || draining || checking || fault || dv || ahb_q || seg_q[7] || ldh_q ||
         (seen!=0 && row!=a_row) || ((seen & seg_q[6:0])!=0) || (seg_q[6] && dsp_q);
     wire desc=dv && tm_q;
-    wire dacc=desc && !(occupied || lv || draining || checking || seen!=0 || fault || cv || dbad_q);
+    wire desc_guard=!(occupied || lv || draining || checking || seen!=0 || fault || cv || dbad_q);
+    wire dacc=desc && desc_guard;
+    generate if(ASSEMBLY_PIPE!=0)begin:g_descriptor_fields
+        // Two copies of the existing descriptor capture edge give each held
+        // field its own physical accept cone; no shared 38-load mux enable.
+        (* keep = "true" *) reg [1:0] desc_copy;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)desc_copy<=0;
+            else desc_copy<={2{desc_v}};
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin base<=0;limit<=0;end
+            else begin
+                if(desc_copy[0] && tm_q && desc_guard)base<=base_q[PW-1:0];
+                if(desc_copy[1] && tm_q && desc_guard)limit<=limit_q[PW:0];
+            end
+    end endgenerate
     // COLLFJ native census 10-20: six 256-bit write enables had logical fanout 264.
     // Sixteen kept write-enable copies per segment each serve one 16-bit chunk.
     // The SRAM-style write landing is one internal edge later; first assembly read
@@ -480,7 +495,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
             if(PCREG!=0)issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
             seen<=0;if(ASSEMBLY_PIPE==0)loaded<=0;row<=0;draining<=0;step<=0;
-            base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
+            if(ASSEMBLY_PIPE==0)begin base<=0;limit<=0;end checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             issuer_cfg<=0;issuer_start<=0;fw_q<=fw;
@@ -522,7 +537,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             if(desc)begin
                 if(!dacc)fault<=1;
                 else begin
-                    base<=base_q[PW-1:0];limit<=limit_q[PW:0];configured<=0;
+                    if(ASSEMBLY_PIPE==0)begin base<=base_q[PW-1:0];limit<=limit_q[PW:0];end configured<=0;
 `ifndef OT_PT_MUT_LATE_SPC
                     if(PCREG!=0)issuer_start_pc<=base_q[PW-1:0];                     // mutant: start_pc only at launch (v7 start faults)
 `endif
