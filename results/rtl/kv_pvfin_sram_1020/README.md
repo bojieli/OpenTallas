@@ -1,6 +1,6 @@
 # PVFIN SRAM successor (K.STA.PVFIN)
 
-Source behavior proved at `ccf0752a2`; native census is pending. No layout or release qualification claimed.
+Source behavior proved at `ccf0752a2`; its production native census FAIL is preserved. R6 `21d73156e` is in proof/census. No layout or release qualification claimed.
 
 The established uarch vehicle is the single 512-bit PVFIN beat slice in
 `results/arch/qwen_kv_pvfin_1017/plan.json` (existing arithmetic model).
@@ -68,3 +68,17 @@ R5 verification (V5.050, source hashes in r5_proof/m*/source.sha256):
   selectors and omitted macro Liberty roles (516 role errors); its 17
   fanout violations, max 1536, were principally selector distribution.
   The production census includes SKEW=1 and the actual SRAM Liberty.
+
+R5 mapped verdict (not overwritten): FAIL max166 /117 violations /0 role
+errors. Area including SRAM is 34,863.011 um2; four macros total 4,275.089
+um2, leaving ~30,588 um2 cells and ~48.6% utilisation in the inherited
+259.2-square frame after macro subtraction. Violation classes: 80-bit
+command capture shared enable (166); 32-bit CE and forwarding selects
+(64); operand taps folded into FP input decode (40); active/control (38).
+All arithmetic-library drivers are <=32 on this vehicle. R6 divides data
+selectors into16-bit pieces and command captures into8-bit pieces, with
+independent pin images. Gate admission remains blocked on R6 census.
+
+The live-variable multiplier independently passed 11,997 valid outputs
+per seed x3 against the original LAT6 multiplier, including subnormals,
+NaN/Inf, finite overflow, arbitrary 32-bit operands and midstream reset.

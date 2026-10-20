@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.pvfin-sram.source-proof.v1",
   "source_commit": "ccf0752a2",
-  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
+  "status": "BEHAVIOR_PASS_NATIVE_FAIL",
   "tool": "Verilator 5.050",
   "shape": {
     "lanes": 16,
@@ -47,7 +47,17 @@
       "timed_beats": 7680
     },
     "total_complete_commands": 328,
-    "total_timed_beats": 10496
+    "total_timed_beats": 10496,
+    "mul_live_fp32_corners": {
+      "source_commit": "ccc2ec81f",
+      "checked_per_seed": 11997,
+      "seeds": [
+        1,
+        29,
+        53
+      ],
+      "class_coverage": "zeros, normal/subnormal boundaries, max finite, Inf, NaN, random32bit, occupied-pipeline reset"
+    }
   },
   "files": [
     {
@@ -111,7 +121,15 @@
       "sha256": "0f99b98ce6a172db7dc74cf15d1c295e7f0464c1e34a6eff24c30225bbec439a"
     }
   ],
-  "native_status": "pending production mapped census; no gate admission",
+  "native_status": {
+    "status": "FAIL",
+    "report": "results/rtl/kv_pvfin_sram_1020/r5_native_fail.json.gz",
+    "max_dynamic_loads": 166,
+    "violations": 117,
+    "role_errors": 0,
+    "area_um2": 34863.01066,
+    "scope": "production SKEW=1, 4 SRAM Liberty roles present; all >32 drivers in tile controls/selectors"
+  },
   "remote": "ot-epyc5:/srv/opentallas-scratch/claude/codex-pvfin-v4-1020",
   "build_unit": "oth-ubuntu-1995447-1792494659",
   "census_job": "ot-run session44312 src_r5/native_run.log"
