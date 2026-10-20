@@ -317,6 +317,24 @@ def emit_files(die, op, ctx, sl):
              f'prog/xs/{op["id"]}/pq_calendar_action.viamap.hex': viamap([w & ((1 << 72) - 1) for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/pq_calendar_time.viamap.hex': viamap([w >> 72 for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/is_d.txt': ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal['iss'].items()))}
+    if os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1':
+        if not lc['PASS']:
+            raise CalendarFault(('shared layer calendar not admitted', lfault))
+        # The per-op directories remain diagnostic vehicles. A release XS has
+        # one immutable ROM pair: emit its admitted shared image and issuer.
+        prefix = 'prog/xs/layer_calendar/'
+        packed = lc['packed']
+        files[prefix + 'pq_calendar_action.viamap.hex'] = viamap([w & ((1 << 72)-1) for w in packed] + [0]*(4096-len(packed)))
+        files[prefix + 'pq_calendar_time.viamap.hex'] = viamap([w >> 72 for w in packed] + [0]*(4096-len(packed)))
+        files[prefix + 'pq_phase0.viamap.hex'] = viamap(r['phase'] + [0]*(4096-len(r['phase'])))
+        stream = r['stream'] + [0]*(16384-len(r['stream']))
+        for bank in range(4):
+            files[prefix + f'pq_stream{bank}.viamap.hex'] = viamap(stream[bank*4096:(bank+1)*4096])
+        files[prefix + 'is_d.txt'] = ''.join(f'{t} {v:040x}\n' for t,v in sorted(lc['iss'].items()))
+        files[prefix + 'manifest.json'] = json.dumps(dict(schema='opentallas.s81_dv.xs_shared_calendar.v1',
+            layer=ctx.get('layer'), slice=sl, rows=lc['rows'], unique_intervals=lc['unique_intervals'],
+            segments=lc['segments'], windows=lc['windows'], action_edges_preserved=True,
+            physical_roms='existing 2x4096x72 calendar + 1x4096x72 phase + 4x4096x72 stream'), indent=1) + '\n'
     return files, cal
 
 
