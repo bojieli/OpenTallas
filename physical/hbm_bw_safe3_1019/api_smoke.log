@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: ot-epyc7       admits   845 GB (avail 692, growth 101, headroom 0, waiters 0/0 GB) load 48/96 running 21 disk 6437 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-bw-safe3-api-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2901577-1792425143 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+BW_SAFE3_BAND: 34081 soft cells; one FENCE x2.16..429.84 y270..291.06; pin/hold cells excluded
+BW_SAFE3_API_PASS region=bw_safe3_core_band cells=34081 boxes=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2901577-1792425143): exit 0

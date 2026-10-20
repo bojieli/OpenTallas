@@ -1,0 +1,1 @@
+Source3eea95a41 isolatedAQ proofWQ32 only:23,968edges/2238pushes/1982columns/1677rows plusHEAD/ACT/REFRESH mutants. This was not productionWQ64; laterAQ worker separately proves final successor at64. Mapped fullcontroller usesQD64; fullproduction80d actual64 is independently qualified. No physicaladoption.

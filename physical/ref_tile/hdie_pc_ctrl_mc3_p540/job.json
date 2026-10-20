@@ -1,0 +1,154 @@
+{
+ "name": "hdie_pc_ctrl_mc3_p540-mc3_p540-COMMIT",
+ "block": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/HBM-MC3",
+ "purpose": "HBM-MC3 structural fix of the native-audit hold (bw_p540_v6: 202 drivers >32 endpoints, ~190 reset; 9 nets >405 um: pc_id_q 441..500 um, reset landing 413 um). RST_FOREST=1: ot_rst_forest s0 -> 8 l1 -> 192 l2 KEPT reset copies (same 3 release edges as ot_rst_relay, 5 with the face landing) + ot_rst_copies synthesis pass (reset_relay_split max_loads 28: every reset load re-pointed over the 192 leaves in name-local groups = per bank / bank group / slice); synchronous resets on the reset family made asynchronous (ring/skid/ready_seen/k_rdy_q/fault_detail: one endpoint per flop); PCID_LOCAL=1 kept per-use pc_id copies + pc_id pins moved E->N beside k_addr. 0 data cycles added; face_txn edges_safe 166921 unchanged.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/l2h-bw-safe-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/hbm_bw_face_1019",
+   "physical/dsrom_window_source",
+   "physical/qwen_die_masters",
+   "physical/common_flow"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(.OREG(1), .KREG(1), .KRREG(1), .RREG(1), .WPAY(1), .RESET_LANDING(2), .SRAM_P192(1), .PURE_FACE(1), .RST_FOREST(1), .PCID_LOCAL(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_forest.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "face_txn_mc3_pos",
+    "cmd": "mkdir -p {RUN} && verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb -GMUT_ID_TAG=0 -GRST_FOREST=1 -GPCID_LOCAL=1 --Mdir {RUN}/obj_face_txn_mc3_pos -j 4 rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_forest.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v > {RUN}/build_face_txn_mc3_pos.log 2>&1 && {RUN}/obj_face_txn_mc3_pos/Vtb > {RUN}/face_txn_mc3_pos.log 2>&1; rc=$?; tail -4 {RUN}/face_txn_mc3_pos.log; test $rc -eq 0 && grep -q 'BW_FACE_TXN PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9b=88783 edges_safe=166921' {RUN}/face_txn_mc3_pos.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "sources": [
+     "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/lib/ot_rst_forest.sv",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"
+    ]
+   },
+   {
+    "name": "face_txn_mc3_mut_idtag",
+    "cmd": "mkdir -p {RUN} && verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb -GMUT_ID_TAG=1 -GRST_FOREST=1 -GPCID_LOCAL=1 --Mdir {RUN}/obj_face_txn_mc3_mut_idtag -j 4 rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_forest.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v > {RUN}/build_face_txn_mc3_mut_idtag.log 2>&1 && {RUN}/obj_face_txn_mc3_mut_idtag/Vtb > {RUN}/face_txn_mc3_mut_idtag.log 2>&1; rc=$?; tail -4 {RUN}/face_txn_mc3_mut_idtag.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "sources": [
+     "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/lib/ot_rst_forest.sv",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"
+    ],
+    "fail_regex": "BW_FACE_TXN FAIL errors=[1-9][0-9]* MUT_ID_TAG=1",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/hbm_bw_safe_1019/mc3/face_txn_mc3_mut_idtag.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_pc_ctrl_mc3_p540/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_pc_ctrl_mc3_p540/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_pc_ctrl_mc3_p540 --out {RUN}/record/views/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_pc_ctrl_mc3_p540/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_pc_ctrl_mc3_p540/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_pc_ctrl_mc3_p540/hdie_pc_ctrl_mc3_p540-mc3_p540-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-MC3 structural fix of the native-audit hold (bw_p540_v6: 202 drivers >32 endpoints, ~190 reset; 9 nets >405 um: pc_id_q 441..500 um, reset landing 413 um). RST_FOREST=1: ot_rst_forest s0 -> 8 l1 -> 192 l2 KEPT reset copies (same 3 release edges as ot_rst_relay, 5 with the face landing) + ot_rst_copies synthesis pass (reset_relay_split max_loads 28: every reset load re-pointed over the 192 leaves in name-local groups = per bank / bank group / slice); synchronous resets on the reset family made asynchronous (ring/skid/ready_seen/k_rdy_q/fault_detail: one endpoint per flop); PCID_LOCAL=1 kept per-use pc_id copies + pc_id pins moved E->N beside k_addr. 0 data cycles added; face_txn edges_safe 166921 unchanged.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "new master kit (reset forest + local pc_id copies) after the native census hold of hdie_pc_ctrl_bw_face_p540; hdie_pc_ctrl_bw_face_p540 never closed (cancelled 18:44)"
+ }
+}

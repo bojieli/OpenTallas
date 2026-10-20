@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm_pc_bw_safe_txn.v1",
+  "verdict": "PASS",
+  "data_equivalence_pass": false,
+  "mutant": true,
+  "mutant_parameter": "BW_MUT_ID_TAG",
+  "fail_regex": "BW_SAFE_TXN_BEAT_MISMATCH",
+  "returncode": 1,
+  "source_base_revision": "1cc470d0d",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv": "9f2c385499493641f714567ced8caeafdacd0a07a81b9801f7ca54d6b117fee4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "aaf5bfa2e5baf5b1db29ddaf42e858e75666a93785436b898ddd64ca1aa2c5d5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv": "244038b56abff7f6194c8b8de8ea0f6043406edf102489835d76751d9ea95a55",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "61bc4e92771c0a2f735c6fbcb98df4505399f7d2dbfedf7176b24ddc4256ce4f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "83633af492001e2e291ff2b0651fbeda073ae88bc974a930578ea2d6a415431d",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "b539362adb381fb40f4a3efc390a84408abbacbbd0a9fbc7cb772a03ea55295f",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "tools/hbm_layer_vehicle/hbm_pc_bw_safe_txn.py": "29223011020395df421edee9256c8447885c8102ec07424bfda1007568a327e8"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "log": "txn_mutant_fail.log",
+  "summary": []
+}

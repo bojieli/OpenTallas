@@ -1,0 +1,23 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 26% = (macros/children 50620 + std 3680) / outline 205286 um2 (lattice/channel-bound gate-rule exception: Owner-approved13macro43.2lattice geometry; one connected soft-cell fence x2.16..429.84 y270..291.06 (9007um2), excluding firm boundary exceptions. Adjust band only after updated measured synthesis area; no current placement claim.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Native H9b pure K pin capture, KR registered readiness and outputs, PHY return capture and OREG pin output flops. Custom PRE_GLOBAL_PLACE preserves stock recipe3 pin-split/hold/pin-flop order; generated duplicate wrappers disabled.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  }
+ ]
+}

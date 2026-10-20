@@ -1,0 +1,1 @@
+Source57c5e70f3 IMUT2 expert-ID mutation at the same priced static cadence. Expected arithmetic failure occurs despite39/39 exactGO and no owner fault:11/23 operations pass, routed payload results mismatch. Wrapper exit0 is not the checker verdict.

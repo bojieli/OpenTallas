@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.hbm_bw_unit.v1",
+ "pattern": "ds",
+ "defines": [
+  "MR",
+  "SAFE"
+ ],
+ "seed": 2,
+ "layers": 4,
+ "blocks": 156,
+ "rc": 0,
+ "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=10403 B_per_edge=83.11 steady_blocks=148 steady_cycles=9777 steady_B_per_edge=83.08 peak=104.17",
+ "pcs": [
+  "PC0 cols=8300 returns=8300 acts=624 refs=93 gaps>8=40 gap_cycles=1559 first=1 done=10403",
+  "PC1 cols=8300 returns=8300 acts=624 refs=93 gaps>8=43 gap_cycles=1563 first=1 done=10404",
+  "PC2 cols=8300 returns=8300 acts=624 refs=93 gaps>8=35 gap_cycles=1454 first=1 done=10217",
+  "PC3 cols=8300 returns=8300 acts=624 refs=93 gaps>8=35 gap_cycles=1458 first=1 done=10220"
+ ],
+ "fault": [],
+ "done": [
+  "DONE dram_reads=33200 refreshes=372"
+ ],
+ "B_per_edge": 83.11,
+ "steady_B_per_edge": 83.08,
+ "hbm_cycles": 10403
+}

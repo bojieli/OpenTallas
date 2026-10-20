@@ -1,0 +1,3132 @@
+{
+  "schema": "opentallas.bw_native_predicate_audit.v1",
+  "source_netlist_sha256": "6fe99811804c59a98db37f086d01fbe4bc7fbe08b389cd42f6d949089a83116d",
+  "pass_gate": false,
+  "errors": [
+    "u_kr_bridge.pop_regions[0]: missing named source net u_kr_bridge.valid_regions[0]",
+    "u_kr_bridge.pop_regions[1]: missing named source net u_kr_bridge.valid_regions[1]",
+    "u_kr_bridge.pop_regions[2]: missing named source net u_kr_bridge.valid_regions[2]",
+    "u_kr_bridge.pop_regions[3]: missing named source net u_kr_bridge.valid_regions[3]",
+    "u_kr_bridge.pop_regions[4]: missing named source net u_kr_bridge.valid_regions[4]",
+    "u_kr_bridge.pop_regions[5]: missing named source net u_kr_bridge.valid_regions[5]",
+    "u_kr_bridge.pop_regions[6]: missing named source net u_kr_bridge.valid_regions[6]",
+    "u_kr_bridge.pop_regions[7]: missing named source net u_kr_bridge.valid_regions[7]",
+    "u_kr_bridge.pop_regions[8]: missing named source net u_kr_bridge.valid_regions[8]",
+    "u_kr_bridge.pop_regions[9]: missing named source net u_kr_bridge.valid_regions[9]",
+    "u_kr_bridge.pop_regions[10]: missing named source net u_kr_bridge.valid_regions[10]",
+    "u_kr_bridge.pop_regions[11]: missing named source net u_kr_bridge.valid_regions[11]",
+    "u_kr_bridge.pop_regions[12]: missing named source net u_kr_bridge.valid_regions[12]",
+    "u_kr_bridge.pop_regions[13]: missing named source net u_kr_bridge.valid_regions[13]",
+    "u_kr_bridge.pop_regions[14]: missing named source net u_kr_bridge.valid_regions[14]",
+    "u_kr_bridge.pop_regions[15]: missing named source net u_kr_bridge.valid_regions[15]",
+    "u_kr_bridge.pop_regions[16]: missing named source net u_kr_bridge.valid_regions[16]",
+    "u_kr_bridge.pop_regions[17]: missing named source net u_kr_bridge.valid_regions[17]",
+    "u_native.controller.row_grant: missing named source net u_native.controller.slot_next",
+    "u_native.controller.REFRESH_BYTE[0].clear_byte: missing named source net u_native.controller.refresh_round_complete",
+    "u_native.controller.REFRESH_BYTE[1].clear_byte: missing named source net u_native.controller.refresh_round_complete",
+    "u_native.controller.REFRESH_BYTE[2].clear_byte: missing named source net u_native.controller.refresh_round_complete",
+    "u_native.controller.REFRESH_BYTE[3].clear_byte: missing named source net u_native.controller.refresh_round_complete",
+    "u_native.length_prefix[0]: missing named source net u_native.length[0]",
+    "u_native.length_prefix[1]: missing named source net u_native.length[0]",
+    "u_native.length_prefix[2]: missing named source net u_native.length[0]",
+    "global nonreset >32 roots 5"
+  ],
+  "predicates": [],
+  "unique_predicate_gates": 0,
+  "unique_gate_library_area_um2_rounded": 0,
+  "area_basis": "actual mapped library cells, synth_stat area/count rounded to report precision; not placement area or timing",
+  "retained_state": [
+    {
+      "source_net": "u_native.sticky_regions[0]",
+      "cell": "u_native.sticky_regions[0]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.sticky_next"
+        ],
+        "QN": [
+          "_07849_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.sticky_regions[1]",
+      "cell": "u_native.sticky_regions[1]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.sticky_next"
+        ],
+        "QN": [
+          "_07850_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.sticky_regions[2]",
+      "cell": "u_native.sticky_regions[2]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.sticky_next"
+        ],
+        "QN": [
+          "_07851_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.unposted_aq[0]",
+      "cell": "u_native.unposted_aq[0]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[0]"
+        ],
+        "QN": [
+          "_07852_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[1]",
+      "cell": "u_native.unposted_aq[1]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[1]"
+        ],
+        "QN": [
+          "_07853_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[2]",
+      "cell": "u_native.unposted_aq[2]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[2]"
+        ],
+        "QN": [
+          "_07854_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[3]",
+      "cell": "u_native.unposted_aq[3]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[3]"
+        ],
+        "QN": [
+          "_07855_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[4]",
+      "cell": "u_native.unposted_aq[4]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[4]"
+        ],
+        "QN": [
+          "_07856_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[5]",
+      "cell": "u_native.unposted_aq[5]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[5]"
+        ],
+        "QN": [
+          "_07857_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.unposted_aq[6]",
+      "cell": "u_native.unposted_aq[6]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.unposted_next[6]"
+        ],
+        "QN": [
+          "_07858_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][0]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.fault_regions_q[0]",
+      "cell": "u_native.controller.ref_fault_regions[0]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.controller.fault_next"
+        ],
+        "QN": [
+          "_09143_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][7]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.fault_regions_q[1]",
+      "cell": "u_native.controller.ref_fault_regions[1]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.controller.fault_next"
+        ],
+        "QN": [
+          "_09144_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][7]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.fault_regions_q[2]",
+      "cell": "u_native.controller.ref_fault_regions[2]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "u_native.controller.fault_next"
+        ],
+        "QN": [
+          "_09145_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][7]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open[0]",
+      "cell": "u_native.controller.open[0]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13477_"
+        ],
+        "QN": [
+          "_01578_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][8]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 15
+    },
+    {
+      "source_net": "u_native.controller.open[1]",
+      "cell": "u_native.controller.open[1]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13480_"
+        ],
+        "QN": [
+          "_01575_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][9]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 14
+    },
+    {
+      "source_net": "u_native.controller.open[2]",
+      "cell": "u_native.controller.open[2]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13615_"
+        ],
+        "QN": [
+          "_01431_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][10]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 12
+    },
+    {
+      "source_net": "u_native.controller.open[3]",
+      "cell": "u_native.controller.open[3]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13592_"
+        ],
+        "QN": [
+          "_01457_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][11]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 11
+    },
+    {
+      "source_net": "u_native.controller.open[4]",
+      "cell": "u_native.controller.open[4]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13688_"
+        ],
+        "QN": [
+          "_01348_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][12]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 13
+    },
+    {
+      "source_net": "u_native.controller.open[5]",
+      "cell": "u_native.controller.open[5]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13693_"
+        ],
+        "QN": [
+          "_01343_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][13]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 11
+    },
+    {
+      "source_net": "u_native.controller.open[6]",
+      "cell": "u_native.controller.open[6]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13452_"
+        ],
+        "QN": [
+          "_01603_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][14]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open[7]",
+      "cell": "u_native.controller.open[7]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13709_"
+        ],
+        "QN": [
+          "_01330_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][15]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open[8]",
+      "cell": "u_native.controller.open[8]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13680_"
+        ],
+        "QN": [
+          "_01361_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][16]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 13
+    },
+    {
+      "source_net": "u_native.controller.open[9]",
+      "cell": "u_native.controller.open[9]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13658_"
+        ],
+        "QN": [
+          "_01385_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][17]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 14
+    },
+    {
+      "source_net": "u_native.controller.open[10]",
+      "cell": "u_native.controller.open[10]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13641_"
+        ],
+        "QN": [
+          "_01402_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][18]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 10
+    },
+    {
+      "source_net": "u_native.controller.open[11]",
+      "cell": "u_native.controller.open[11]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13617_"
+        ],
+        "QN": [
+          "_01429_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][19]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 7
+    },
+    {
+      "source_net": "u_native.controller.open[12]",
+      "cell": "u_native.controller.open[12]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13594_"
+        ],
+        "QN": [
+          "_01454_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][20]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 8
+    },
+    {
+      "source_net": "u_native.controller.open[13]",
+      "cell": "u_native.controller.open[13]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13618_"
+        ],
+        "QN": [
+          "_01428_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][21]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 12
+    },
+    {
+      "source_net": "u_native.controller.open[14]",
+      "cell": "u_native.controller.open[14]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13689_"
+        ],
+        "QN": [
+          "_01347_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][22]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open[15]",
+      "cell": "u_native.controller.open[15]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13695_"
+        ],
+        "QN": [
+          "_01341_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][23]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open[16]",
+      "cell": "u_native.controller.open[16]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13627_"
+        ],
+        "QN": [
+          "_01417_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][24]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 11
+    },
+    {
+      "source_net": "u_native.controller.open[17]",
+      "cell": "u_native.controller.open[17]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13481_"
+        ],
+        "QN": [
+          "_01574_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][25]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 13
+    },
+    {
+      "source_net": "u_native.controller.open[18]",
+      "cell": "u_native.controller.open[18]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13275_"
+        ],
+        "QN": [
+          "_01768_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][26]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 16
+    },
+    {
+      "source_net": "u_native.controller.open[19]",
+      "cell": "u_native.controller.open[19]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13671_"
+        ],
+        "QN": [
+          "_01372_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][27]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 13
+    },
+    {
+      "source_net": "u_native.controller.open[20]",
+      "cell": "u_native.controller.open[20]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13636_"
+        ],
+        "QN": [
+          "_01406_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][28]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 11
+    },
+    {
+      "source_net": "u_native.controller.open[21]",
+      "cell": "u_native.controller.open[21]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13697_"
+        ],
+        "QN": [
+          "_01339_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][29]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 16
+    },
+    {
+      "source_net": "u_native.controller.open[22]",
+      "cell": "u_native.controller.open[22]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13679_"
+        ],
+        "QN": [
+          "_01362_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][30]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 15
+    },
+    {
+      "source_net": "u_native.controller.open[23]",
+      "cell": "u_native.controller.open[23]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13714_"
+        ],
+        "QN": [
+          "_01326_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][31]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open[24]",
+      "cell": "u_native.controller.open[24]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13626_"
+        ],
+        "QN": [
+          "_01419_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][32]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 15
+    },
+    {
+      "source_net": "u_native.controller.open[25]",
+      "cell": "u_native.controller.open[25]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13716_"
+        ],
+        "QN": [
+          "_01324_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][33]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 13
+    },
+    {
+      "source_net": "u_native.controller.open[26]",
+      "cell": "u_native.controller.open[26]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13424_"
+        ],
+        "QN": [
+          "_01628_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][34]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 12
+    },
+    {
+      "source_net": "u_native.controller.open[27]",
+      "cell": "u_native.controller.open[27]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13429_"
+        ],
+        "QN": [
+          "_01625_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][35]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 8
+    },
+    {
+      "source_net": "u_native.controller.open[28]",
+      "cell": "u_native.controller.open[28]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13677_"
+        ],
+        "QN": [
+          "_01366_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][36]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 11
+    },
+    {
+      "source_net": "u_native.controller.open[29]",
+      "cell": "u_native.controller.open[29]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13694_"
+        ],
+        "QN": [
+          "_01342_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][37]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 12
+    },
+    {
+      "source_net": "u_native.controller.open[30]",
+      "cell": "u_native.controller.open[30]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13448_"
+        ],
+        "QN": [
+          "_01606_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][38]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 10
+    },
+    {
+      "source_net": "u_native.controller.open[31]",
+      "cell": "u_native.controller.open[31]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13453_"
+        ],
+        "QN": [
+          "_01602_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][39]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 9
+    },
+    {
+      "source_net": "u_native.controller.open_column[0]",
+      "cell": "u_native.controller.open_column[0]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13463_"
+        ],
+        "QN": [
+          "_01592_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][8]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[1]",
+      "cell": "u_native.controller.open_column[1]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13698_"
+        ],
+        "QN": [
+          "_01338_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][9]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[2]",
+      "cell": "u_native.controller.open_column[2]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13715_"
+        ],
+        "QN": [
+          "_01325_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][10]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[3]",
+      "cell": "u_native.controller.open_column[3]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13603_"
+        ],
+        "QN": [
+          "_01445_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][11]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[4]",
+      "cell": "u_native.controller.open_column[4]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13479_"
+        ],
+        "QN": [
+          "_01576_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][12]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[5]",
+      "cell": "u_native.controller.open_column[5]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13700_"
+        ],
+        "QN": [
+          "_01336_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][13]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[6]",
+      "cell": "u_native.controller.open_column[6]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13721_"
+        ],
+        "QN": [
+          "_01321_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][14]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[7]",
+      "cell": "u_native.controller.open_column[7]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13696_"
+        ],
+        "QN": [
+          "_01340_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][15]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[8]",
+      "cell": "u_native.controller.open_column[8]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13666_"
+        ],
+        "QN": [
+          "_01377_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][16]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[9]",
+      "cell": "u_native.controller.open_column[9]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13650_"
+        ],
+        "QN": [
+          "_01393_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][17]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[10]",
+      "cell": "u_native.controller.open_column[10]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13632_"
+        ],
+        "QN": [
+          "_01411_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][18]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[11]",
+      "cell": "u_native.controller.open_column[11]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13607_"
+        ],
+        "QN": [
+          "_01440_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][19]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[12]",
+      "cell": "u_native.controller.open_column[12]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13478_"
+        ],
+        "QN": [
+          "_01577_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][20]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[13]",
+      "cell": "u_native.controller.open_column[13]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13459_"
+        ],
+        "QN": [
+          "_01596_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][21]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[14]",
+      "cell": "u_native.controller.open_column[14]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13423_"
+        ],
+        "QN": [
+          "_01629_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][22]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[15]",
+      "cell": "u_native.controller.open_column[15]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13657_"
+        ],
+        "QN": [
+          "_01386_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][23]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[16]",
+      "cell": "u_native.controller.open_column[16]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13591_"
+        ],
+        "QN": [
+          "_01458_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][24]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[17]",
+      "cell": "u_native.controller.open_column[17]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13683_"
+        ],
+        "QN": [
+          "_01355_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][25]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[18]",
+      "cell": "u_native.controller.open_column[18]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13702_"
+        ],
+        "QN": [
+          "_01335_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][26]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[19]",
+      "cell": "u_native.controller.open_column[19]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13425_"
+        ],
+        "QN": [
+          "_01627_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][27]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[20]",
+      "cell": "u_native.controller.open_column[20]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13651_"
+        ],
+        "QN": [
+          "_01392_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][28]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[21]",
+      "cell": "u_native.controller.open_column[21]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13670_"
+        ],
+        "QN": [
+          "_01373_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][29]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[22]",
+      "cell": "u_native.controller.open_column[22]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13724_"
+        ],
+        "QN": [
+          "_01320_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][30]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.open_column[23]",
+      "cell": "u_native.controller.open_column[23]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13699_"
+        ],
+        "QN": [
+          "_01337_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][31]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[24]",
+      "cell": "u_native.controller.open_column[24]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13662_"
+        ],
+        "QN": [
+          "_01381_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][32]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[25]",
+      "cell": "u_native.controller.open_column[25]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13582_"
+        ],
+        "QN": [
+          "_01467_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][33]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[26]",
+      "cell": "u_native.controller.open_column[26]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13428_"
+        ],
+        "QN": [
+          "_01626_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][34]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[27]",
+      "cell": "u_native.controller.open_column[27]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13430_"
+        ],
+        "QN": [
+          "_01624_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][35]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[28]",
+      "cell": "u_native.controller.open_column[28]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13645_"
+        ],
+        "QN": [
+          "_01398_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][36]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.open_column[29]",
+      "cell": "u_native.controller.open_column[29]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13706_"
+        ],
+        "QN": [
+          "_01331_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][37]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[30]",
+      "cell": "u_native.controller.open_column[30]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13450_"
+        ],
+        "QN": [
+          "_01604_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][38]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 2
+    },
+    {
+      "source_net": "u_native.controller.open_column[31]",
+      "cell": "u_native.controller.open_column[31]$_DFFE_PN0P_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_13454_"
+        ],
+        "QN": [
+          "_01601_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][39]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 1
+    },
+    {
+      "source_net": "u_native.controller.refresh_update_regions[0]",
+      "cell": "u_native.controller.refresh_update_regions[0]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_15133_"
+        ],
+        "QN": [
+          "_07887_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][40]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.refresh_update_regions[1]",
+      "cell": "u_native.controller.refresh_update_regions[1]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_15133_"
+        ],
+        "QN": [
+          "_07886_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][41]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    },
+    {
+      "source_net": "u_native.controller.refresh_update_regions[2]",
+      "cell": "u_native.controller.refresh_update_regions[2]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_15133_"
+        ],
+        "QN": [
+          "_07885_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][42]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 6
+    },
+    {
+      "source_net": "u_native.controller.refresh_update_regions[3]",
+      "cell": "u_native.controller.refresh_update_regions[3]$_DFF_PN0_",
+      "library": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": [
+          "clk"
+        ],
+        "D": [
+          "_15133_"
+        ],
+        "QN": [
+          "_07884_"
+        ],
+        "RESETN": [
+          "u_native.u_rst.relay_q[0][43]"
+        ],
+        "SETN": [
+          "_39353_"
+        ]
+      },
+      "output_inversions": 1,
+      "actual_nonbuffer_loads": 3
+    }
+  ],
+  "global_nonreset_over32": [
+    {
+      "label": "u_native.controller.head_bank_local[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 42,
+      "flop_loads": 0,
+      "root_type": "ff",
+      "driver_cell": "u_native.controller.head_bank_local[4]$_DFF_P_",
+      "driver_library": "DFFHQNx1_ASAP7_75t_R",
+      "net_name": "_09245_",
+      "reset": false,
+      "sinks": [
+        {
+          "kind": "comb",
+          "cell": "_41690_",
+          "pin": "C",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45229_",
+          "pin": "C",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_44818_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_44922_",
+          "pin": "C",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45027_",
+          "pin": "C",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45272_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45736_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45998_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46064_",
+          "pin": "C",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46177_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46231_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45166_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46113_",
+          "pin": "B",
+          "type": "AO21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47475_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47501_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47548_",
+          "pin": "B",
+          "type": "AOI21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47596_",
+          "pin": "A",
+          "type": "OR2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47932_",
+          "pin": "A",
+          "type": "OR3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47972_",
+          "pin": "A",
+          "type": "OR2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48009_",
+          "pin": "B",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_59803_",
+          "pin": "A",
+          "type": "NAND2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_44732_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45096_",
+          "pin": "C",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46268_",
+          "pin": "C",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_44775_",
+          "pin": "C",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45555_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45628_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45675_",
+          "pin": "E",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45701_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45968_",
+          "pin": "A",
+          "type": "NAND2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46052_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46150_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46166_",
+          "pin": "C",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_44874_",
+          "pin": "A",
+          "type": "NAND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45156_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45858_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_45894_",
+          "pin": "A",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_46017_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47502_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47977_",
+          "pin": "A",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51321_",
+          "pin": "C",
+          "type": "OA211x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51337_",
+          "pin": "A",
+          "type": "AND3x1_ASAP7_75t_R"
+        }
+      ]
+    },
+    {
+      "label": "_41619_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 37,
+      "flop_loads": 1,
+      "root_type": "comb",
+      "driver_cell": "_41619_",
+      "driver_library": "NAND2x1_ASAP7_75t_R",
+      "net_name": "_15880_",
+      "reset": false,
+      "sinks": [
+        {
+          "kind": "comb",
+          "cell": "_48673_",
+          "pin": "B",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_50308_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_55422_",
+          "pin": "D",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48108_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51118_",
+          "pin": "B",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51413_",
+          "pin": "C",
+          "type": "AND5x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51452_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52397_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52415_",
+          "pin": "B",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_54046_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_56589_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_59258_",
+          "pin": "B",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_60585_",
+          "pin": "B",
+          "type": "AND5x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_41732_",
+          "pin": "D",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47881_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53371_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47589_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53207_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53255_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53274_",
+          "pin": "B",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53533_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_55284_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_70656_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_70669_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_70675_",
+          "pin": "B",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "ff",
+          "cell": "u_native.controller.qfresh_data[27]$_DFF_P_",
+          "pin": "D",
+          "type": "DFFHQNx1_ASAP7_75t_R"
+        },
+        {
+          "kind": "macro",
+          "cell": "u_native.controller.u_queue",
+          "pin": "wd_in",
+          "type": "ot_sram_1r1w_128x256_m1_r2c2"
+        },
+        {
+          "kind": "comb",
+          "cell": "_41635_",
+          "pin": "C",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48051_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_49174_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51447_",
+          "pin": "B",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51638_",
+          "pin": "B2",
+          "type": "OAI22x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52390_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_56742_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_57228_",
+          "pin": "C",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_59807_",
+          "pin": "B",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_70662_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        }
+      ]
+    },
+    {
+      "label": "_41723_/Y (NAND2x2_ASAP7_75t_R)",
+      "loads": 35,
+      "flop_loads": 1,
+      "root_type": "comb",
+      "driver_cell": "_41723_",
+      "driver_library": "NAND2x2_ASAP7_75t_R",
+      "net_name": "_15981_",
+      "reset": false,
+      "sinks": [
+        {
+          "kind": "comb",
+          "cell": "_50308_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51118_",
+          "pin": "A",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_56742_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71805_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_73701_",
+          "pin": "B2",
+          "type": "OAI22x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48673_",
+          "pin": "A",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47881_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48108_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51452_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51583_",
+          "pin": "A",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52415_",
+          "pin": "A",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53371_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_55422_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_56589_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_47589_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53207_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53255_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53274_",
+          "pin": "A",
+          "type": "OR4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53533_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_55284_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_57228_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71099_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71799_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "ff",
+          "cell": "u_native.controller.qfresh_data[29]$_DFF_P_",
+          "pin": "D",
+          "type": "DFFHQNx1_ASAP7_75t_R"
+        },
+        {
+          "kind": "macro",
+          "cell": "u_native.controller.u_queue",
+          "pin": "wd_in",
+          "type": "ot_sram_1r1w_128x256_m1_r2c2"
+        },
+        {
+          "kind": "comb",
+          "cell": "_41732_",
+          "pin": "B",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_48051_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_49174_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51413_",
+          "pin": "B",
+          "type": "AND5x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51447_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52390_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_52425_",
+          "pin": "A",
+          "type": "AND4x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_54046_",
+          "pin": "A",
+          "type": "OR5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_59258_",
+          "pin": "A",
+          "type": "AND5x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_60585_",
+          "pin": "A",
+          "type": "AND5x2_ASAP7_75t_R"
+        }
+      ]
+    },
+    {
+      "label": "_51281_/Y (OR4x1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "root_type": "comb",
+      "driver_cell": "_51281_",
+      "driver_library": "OR4x1_ASAP7_75t_R",
+      "net_name": "_24019_",
+      "reset": false,
+      "sinks": [
+        {
+          "kind": "comb",
+          "cell": "_51299_",
+          "pin": "B",
+          "type": "AOI21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51371_",
+          "pin": "A",
+          "type": "NAND2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_62478_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71973_",
+          "pin": "A1",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71976_",
+          "pin": "A1",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71982_",
+          "pin": "A1",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_73474_",
+          "pin": "A1",
+          "type": "AO21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51286_",
+          "pin": "A",
+          "type": "NOR2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51305_",
+          "pin": "A",
+          "type": "OR2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64823_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65079_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65189_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65205_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65221_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65237_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64966_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64982_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65014_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65030_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65046_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65063_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65095_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65111_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65142_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65158_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64822_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64933_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64949_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64996_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65125_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65172_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65251_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71964_",
+          "pin": "A",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71979_",
+          "pin": "A1",
+          "type": "AOI21x1_ASAP7_75t_R"
+        }
+      ]
+    },
+    {
+      "label": "_51266_/Y (OR2x2_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "root_type": "comb",
+      "driver_cell": "_51266_",
+      "driver_library": "OR2x2_ASAP7_75t_R",
+      "net_name": "_24004_",
+      "reset": false,
+      "sinks": [
+        {
+          "kind": "comb",
+          "cell": "_51277_",
+          "pin": "A2",
+          "type": "OA211x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51386_",
+          "pin": "A2",
+          "type": "AO32x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51484_",
+          "pin": "B",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_62428_",
+          "pin": "B",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_56339_",
+          "pin": "A2",
+          "type": "AO21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64933_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64949_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64966_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64982_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65014_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65030_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65046_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65063_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65095_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51385_",
+          "pin": "A2",
+          "type": "AO21x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65079_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65111_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65142_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65158_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65189_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65205_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65221_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65237_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_51476_",
+          "pin": "B2",
+          "type": "AO32x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_53484_",
+          "pin": "A",
+          "type": "NAND2x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_62525_",
+          "pin": "B",
+          "type": "AND3x1_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64822_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_64996_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65125_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65172_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_65251_",
+          "pin": "A2",
+          "type": "OA21x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71974_",
+          "pin": "B",
+          "type": "AND2x2_ASAP7_75t_R"
+        },
+        {
+          "kind": "comb",
+          "cell": "_71980_",
+          "pin": "B",
+          "type": "AND2x2_ASAP7_75t_R"
+        }
+      ]
+    }
+  ]
+}

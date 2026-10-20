@@ -1,0 +1,1 @@
+Reused immutable source32477647e compiled production model with diagnostic driver override smb_unit.OP_GAP=384 before main; PNUM88,PADD0,FETCH88. Full66ops,154exactGO,4runs PASS END46724. JSON predates explicit static_schedule/source fields; it is separate old-source sensitivity, not current final source. No default cadence or RTL mutation.

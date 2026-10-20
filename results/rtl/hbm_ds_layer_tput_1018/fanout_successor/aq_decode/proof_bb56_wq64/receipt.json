@@ -1,0 +1,44 @@
+{
+  "source_base": "18bd3c0ef",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "38b75690ce7e7a9dc9ae3a0787e62d590d9030dd5acdbd83845da87f8bab33bb",
+    "rtl/test/hbm_accel/svg_rel/ref_ot_hbm_r14_aq_pc_safe_18bd.sv": "db6e0b6120a59d7e1337b960edfba9330d74345f806056c9edb602ccaefe5325",
+    "rtl/test/hbm_accel/svg_rel/tb_hbm_aq_fanout_equiv.sv": "e7b138e69af6fd8851ce9a6ecdb287cf7c704881cc0f15bad07ad4dcef534717",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "results": [
+    {
+      "case": "positive",
+      "pass_gate": true,
+      "returncode": 0,
+      "summary": [
+        "AQ_EQ_PASS checks=23968 pushes=2385 cols=1873 rows=1258"
+      ]
+    },
+    {
+      "case": "HEAD",
+      "pass_gate": true,
+      "returncode": 1,
+      "summary": [
+        "[8705000] %Fatal: tb_hbm_aq_fanout_equiv.sv:22: Assertion failed in tb: AQ_EQ_MISMATCH n=7 a=0000000016c00000000 b=0000000016c00000003"
+      ]
+    },
+    {
+      "case": "ACT",
+      "pass_gate": true,
+      "returncode": 1,
+      "summary": [
+        "[8705000] %Fatal: tb_hbm_aq_fanout_equiv.sv:22: Assertion failed in tb: AQ_EQ_MISMATCH n=7 a=0000000016c00000000 b=0000000016c00000003"
+      ]
+    },
+    {
+      "case": "REFRESH",
+      "pass_gate": true,
+      "returncode": 1,
+      "summary": [
+        "[975361000] %Fatal: tb_hbm_aq_fanout_equiv.sv:22: Assertion failed in tb: AQ_EQ_MISMATCH n=951 a=03045fe2444d0000000 b=03045fe2444d000001d"
+      ]
+    }
+  ]
+}

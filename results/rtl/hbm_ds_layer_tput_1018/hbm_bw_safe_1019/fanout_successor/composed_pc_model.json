@@ -1,0 +1,184 @@
+{
+  "schema": "opentallas.hbm_bw_composed_pc_model.v1",
+  "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+  "native_controller": "CurrentCFGmetadata4+64rowselectors, regionalK/KR and AQ625FF; actualcombinedcensus pending",
+  "macros": 13,
+  "external_ports": "SameCFGconfiguration/K/PHY/status,legacy same-edgeKR; native18valid wires internal",
+  "internal_additional_valid_wires": 17,
+  "bridge_absolute_mapped_ff_bits": 1114,
+  "bridge_payload_bits": 831,
+  "bridge_increment_vs_matched_baseline_ff_bits": 68,
+  "clock_period_ps": 1024,
+  "data_latency_hbm_edges_added_by_bridge": 1,
+  "reset": {
+    "explicit_face_landing_edges": 2,
+    "native_reset_relay_edges": 3,
+    "native_release_edges_total": 5,
+    "tool_reset_landing": "MUST disable duplicate automatic2edge insertion with exactRTLreason/sourceproof",
+    "diagnostic_RESET_LANDING0": "Only equivalence/history, not physicalcontract"
+  },
+  "pipeline_other_changes": "Zeroedges fromfanoutcopies; stockOREG/KREG/KRREG/RREG unchanged",
+  "outline_um": [
+    432,
+    475.2
+  ],
+  "estimated_bridge_ff_area_um2": 779.8,
+  "floorplan": "Priorcoreband9006.94um2 mayneedlarger band forfullcombinedstdarea; actualarea/placement/fanout/access/TTFF OPEN. Noarbitrary util squeeze.",
+  "all_eight": "Model beforebuild; sourcehardwareboundary/finiteoccupancy+reset/proof obligations retained; noCTS/adoption untilrootreview.",
+  "reset_refinement": {
+    "native_regions": 94,
+    "added_relay_ff_bits": 22,
+    "native_K_regions": 22,
+    "local_reset_groups": "22same-edge copies eachownringpointer/count +consumer-count +valid/priorready; moves154countresetloads off accountingregion0 andKpointerloads offregion2",
+    "face_landing_second_stage_copies": 2,
+    "added_face_ff_bits": 1,
+    "release_edges_unchanged": 5,
+    "reset_root_targets": "nativeface secondstage drives96asyncrelay/sync pins, bridgeface secondstage~165loads; localresetroots expected<64 and all<256, classify actualstaticrelease separately fromcriticaldata32.",
+    "no_data_edge_change": true
+  },
+  "measured4cc": {
+    "source": "4cc83303c",
+    "standard_area_um2": 6109.14992,
+    "macro_area_um2": 50620.0864,
+    "total_area_um2": 56729.23632,
+    "nonreset_roots_gt32": 38,
+    "max_nonreset_loads": 60,
+    "max_reset_loads": 234,
+    "status": "FAIL_OPEN"
+  },
+  "bounded_next_copies": {
+    "mf_row_bank_kept_bits": 60,
+    "old_mapped_row_bits": 15,
+    "mf_row_delta_bits": 45,
+    "metadata_wp_copies_bits": 12,
+    "head_bank_global_bits": 5,
+    "total_added_ff_bits": 62,
+    "data_edges_added": 0,
+    "estimated_added_ff_area_um2": 43.4,
+    "routing": "Same localmacrobank/post paths, noexternalpins/noports; kept rowbank words prevent actual4-bank FF merge, WPcopies split real writeaddress cones, globalheadcopy separates PHY/global from32bankdecode. Actualall-driver32 required."
+  },
+  "regional_bank_control_successor": {
+    "base": "f84b1ab35",
+    "measured_failure": "command_bank_local[1]37loads;blk_bank[1:2]35loads;4cc/f84mapped actual32 gate",
+    "extra_ff": 36,
+    "structure": "three additional6-bit command bank+valid and refresh bank+valid copies, existing command/state edge, canonical group0; each copy decodes only8banks",
+    "data_edges_added": 0,
+    "sram_ports_added": 0,
+    "reset": "existing same-edge bank reset_regions[32+g] for g1..3; no new release edge",
+    "physical_status": "model only; exact next-state proof and actual D/CLK/reset/fanout census required"
+  },
+  "lookrow_decode_successor": {
+    "base": "2985c904e",
+    "actual_failure": "f84map2lookbanklow2sharedpartialdecode58/56loads; q_n/nonzero partialdecode38",
+    "added_ff": 129,
+    "state": "21 additional5bit same-edge headbank identities for8four-bankregions\u00d73rowwords, reusing3 originals;24 real existing-queue-edge nonempty flags fromq_n_next!=0",
+    "added_data_edges": 0,
+    "source_root_target": "head_d bankbits <=28Dloads; nonempty-next24D; localfourbank8bit mux slices<=32loads",
+    "sram_ports_added": 0,
+    "reset": "24validFF use bank reset_regions[4*g], same release edge; head identities unreset as existing",
+    "status": "modeled before RTL; exact proof and actual mapped census pending"
+  },
+  "bridge_reset_pop_successor": {
+    "actual_f84_failure": "_53294 NAND2 root46 loads; upstream only PORTkr_rdy and rst_l1_bridge",
+    "change": "Internal pop qualifier omits redundant synchronous reset factor: reset dominates all canonical/local count and RP state updates. External out_v/in_rdy and push/reset behavior unchanged. Each out_rdy now directly feeds18localvalid gates pluscanonical.",
+    "added_ff": 0,
+    "added_data_edges": 0,
+    "reset_proof": "During !rst all pop consumers count/rp reset; no mem write depends on pop. Canonical fault reset dominates. Occupied-reset native producer exact proof+mutants required.",
+    "status": "model before RTL; actual combined census pending"
+  },
+  "act_invalid_capture_successor": {
+    "actual_f84_failure": "ACTgroup capture enable _40912_43 and _60645_39,24row/bank+valid bits into DFFEmuxes",
+    "change": "Capture deterministic zero bank/row when noACTcandidate; ac_v/ac_v_local remain0, so invalid fields unconsumed. Remove real wide feedback-enable cone without new stage/state. ExplicitACTrowcopy selectorb/16 for2 real copies instead invalidb/8 values2,3; copies share identical Dstate so intendedconsumedvalue unchanged.",
+    "added_ff": 0,
+    "added_data_edges": 0,
+    "status": "modelbeforeRTL, exactQD64+mutants and actualmappedcensus required"
+  },
+  "bridge_nonempty_state_successor": {
+    "base": "0a3f58ea2",
+    "actual_map3_failure": "portkr_rdy57 actualloads after reset-factor removal:18regional3-bit nonzero expressions factorready acrosscountbits",
+    "structure": "Bridge-only REGIONAL_NONEMPTY1:18 real onebit nonempty state capturesfromcanonicalcnt_next!=0 on original countedge. Replace54 regional3-bit counts by18usefulnonemptyFF, consumed bylocalpop. K ring defaultREGIONAL_NONEMPTY0 unchanged.",
+    "extra_ff": -36,
+    "data_edges_added": 0,
+    "reset": "same synchronous ring count reset, unchanged nativefiveedge release",
+    "critical_source_load_target": "canonicalnextnonempty18D; consumerkr_rdy18localAND pluscanonical <=24; eachliveQ<=8RPcontrol loads",
+    "status": "modelbeforeRTL; fullwidthoccupiedreset/II1/+1/mutants+actualcombinedcensus required"
+  },
+  "bounded_length_credit_successor": {
+    "actual_map3_failure": "CFGlengthbits305..308 fromKring readmux partialdecodes drive64/51/50/34roots,22localcount+length arithmetic and20metadataregions",
+    "change": "For legal length1..4 and invariantQD64 count, replace count+length<=QD by count<=QD-4 OR count==QD-3&&length<=3 OR count==QD-2&&length<=2 OR count==QD-1&&length==1. Length prefix predicates each feed22regional count comparisons instead perbit carry fanout. Keep legal qualification and canonical count checks; no retained-state fiction.",
+    "extra_ff": 0,
+    "data_edges_added": 0,
+    "proof_obligation": "Exhaustive count0..127,length0..15 under legal length1..4 plus existing6000transaction exact/mutant and actualmappedcensus",
+    "status": "modelbeforeRTL"
+  },
+  "bridge_pop32_successor": {
+    "actual_map4_failure": "kr_rdy port47:18pop decisions feeding4RPbits each stillfactorreadymultiple times",
+    "structure": "9 real nonempty captures each owns32payloadbits/four8b pointer slices;18independent16b pushvalid/ready regions unchanged. Popdecisionlocal fanout expected<=16, rawready expected<=32.",
+    "extra_ff": -9,
+    "data_edges_added": 0,
+    "ABI": "unchanged legacy same-edgeconsumer andnativepreviousreadyproducer, +1HBM collar unchanged",
+    "status": "model beforeRTL; actualcensus/occupiedreset/exact/mutants required"
+  },
+  "act_need_partition_successor": {
+    "actual_map4_failure": "ACTgroup40/34 shared eligibility with canonical bank_n/refreshkeys",
+    "structure": "Use existing real bank_n_word_local[0] retained same-edge counts forACTgroup need; canonicalbank_n remainsrefresh/generalaccounting. These copies already own lookrowwordnonempty andnowACTeligibility, no aliases or extraFF.",
+    "extra_ff": 0,
+    "data_edges_added": 0,
+    "status": "modelbeforeRTL; exact23968 andactualcensus required"
+  },
+  "fault_stop_regions_successor": {
+    "actual_map4_failure": "globalstickyORref_fault root36 actualnonbufferloads, mostly35KRskid8bvalid decisions",
+    "structure": "Two real existing-edge sticky captures plus two existing-edge AQref_fault captures, equal canonicalnextstate; eachlocalstop groupowns11Kcontrolregions and9KRcontrolregions, target<=29actualloads. Canonicalfault outputs unchanged.",
+    "extra_ff": 4,
+    "data_edges_added": 0,
+    "reset": "identical canonical sticky/AQfault reset signals/releaseedge, no newdomain",
+    "proof": "Simulation assertions check everyreplica againstcanonical on eachnegedge includingfaults andresets; mixed6000/identitymutant, AQ64+causalmutants andactualmappedD/CLK/reset/fanout required",
+    "status": "modelbeforeRTL"
+  },
+  "column_open_state_successor": {
+    "actual_map4_failure": "globalcolumnresult48 loads spansAQhead/counters andCFGmetadata/counters",
+    "structure": "32real per-bank open_column FF capture same existingcommandedge/D/reset askeptcanonicalopen. Separate complete bankparallelcolumneligibility forCFG usesopen_column; AQ usescanonicalopen. Same otherconditions, no newedge. Two equivalentoutputs asserted everynegedge; copies usedinactualseparatedecisioncones.",
+    "extra_ff": 32,
+    "data_edges_added": 0,
+    "sram_ports_added": 0,
+    "reset": "one additionalFF perexistingbankreset, same reset release; no newroot",
+    "critical_target": "partition48globalcolumnconsumers acrossAQ andCFG cones, actualall-driver census mandatory",
+    "status": "model beforeRTL; exact/copyidentity/timing required"
+  },
+  "enqueue_unposted_state_successor": {
+    "actual_map4_failure": "enqueue/post control36actualloads feedsAQcaptureandCFGmetadataep/accounting",
+    "structure": "7real unposted_aq FF sharecanonical next-count D/reset at existingedge. Canonicalunposted drivesCFGenqueue, copydrivesAQwr_v predicate, allother read-credit/faultterms unchanged. Bothcounts kept; exactidentityassert eachnegedge.",
+    "extra_ff": 7,
+    "data_edges_added": 0,
+    "critical_target": "partition36globalenqueue consumers acrossCFG andAQ, actualmappedfanout required",
+    "status": "modelbeforeRTL"
+  },
+  "map5_predicate_successor": {
+    "base": "0fdb742d0",
+    "actual_map5": "53roots43staticreset10nonreset max45, noFFroots; failure preserved",
+    "changes": {
+      "localpop": "Keep true nonempty-state ANDconsumerready functionaldecision,9gates(each32bgroup), nofakebuffer/alias. ROOTexplicitpermission2026-10-19 11:06. Expected<=16localpointermuxloads, rawready<=32;actualtruth/nonconstantpins+allupstreamaudit mandatory.",
+      "faultstop": "Three real sticky/ref_faultstate groups instead2, +2FF; <=8K+6KRregions pergroup.",
+      "ACTrow": "Three <=8b rowword selections use existing bankwordcount0/1/canonicalcount independently; bank+valid usecanonical count,0FF.",
+      "credit": "Keep actual shared lengthprefix predicates<=3/<=2/==1, SAT actualfunctiondecoder/harness allcountslegallen+mutant.",
+      "refresh": "Four existing-command-edge REFpb byteupdateFF +4FF; each8bitbitmapword uses genuine byteclear=updateFF ANDfullround. Fullrounddrives4actualANDgates instead32muxes.",
+      "rowgrant": "Keep genuine slot_next ANDr_v admission decision usedbyexistingopcode/validcaptures."
+    },
+    "extra_ff": 6,
+    "data_edges_added": 0,
+    "macro_ports_added": 0,
+    "kept_boolean_area": "Unknown untilactualmappedcellinventory; nozeroarea claim. CountactualAND/decoderarea,pins,inputs independentlylive,allrootcensus.",
+    "status": "modelbeforeRTL;sourceproof+actualtransparentmappingrequired"
+  },
+  "map6_field_successor": {
+    "actual_map6_failure": "5critical:head_bank_local[4]42,2incomingbankpartialdecodes37/35,2encodedlengthcontrols34/33",
+    "added_ff": 23,
+    "head": "5real head_bank_cfg FF sameheadcaptureedge, CFGonehotdecode isolatedfromcanonicalbankselector",
+    "bank": "8x5 regionalbankmux outputs usingexistingPOST_ROW_REGION.WORD0 onehot. MFbankfield3highbitsmerged across4banks: map6actual11 FF (58/59all4banks+60..62bank0), new20keptFF gives+9. ExistingforwardregionsM16..19 eachserves2bank5bwords+4bmetadata=14muxbits<=28pins. Regiononehotserves8row+5bankbits=13loads.40newinternaldatawires; noaddedports onmaster/noSRAMport.",
+    "length": "3prefixbits storedinexistingKringcaptureedge344bitpayloadvs341, 3slots=>+9FF, still43eightbitpayloadslices/22controlregions. Prefixstatesdrive22regionalcredits; encodedlengthonlymetadata. Invariantassertprefix==function(storedlength) wheneverheadvalid; noadditionaledge.",
+    "added_data_edges": 0,
+    "sram_ports_added": 0,
+    "audit_visibility": "Keep actual slot XOR, candidatevalid OR, roundcomplete reduction andkp_len4existingpurecaptureFF, notbufferaliases; semanticgates/inputs fullyaudited noexception.",
+    "status": "modelbeforeRTL;exact6000/AQ64regions8BANK8+WRBANKmutant/SAT/all-driverrequired"
+  }
+}

@@ -1,0 +1,6 @@
+BW_SAFE_TXN_COUNT beats 12944/2973 wcols 759/166 wdone 759/166
+BW_SAFE_TXN_VACUOUS beats12944 wcols759
+BW_SAFE_TXN_RATE h9b 88783 safe 0
+[409804800000] %Fatal: tb_hbm_pc_bw_safe_txn.sv:71: Assertion failed in tb: BW_SAFE_TXN FAIL errors=3 MUT_ID_TAG=0
+%Error: /srv/opentallas-scratch/claude/hbm-bw-txn-1019/rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv:71: Verilog $stop
+Aborting...

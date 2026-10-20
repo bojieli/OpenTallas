@@ -1,0 +1,1 @@
+Source019d7fcbc QD128 rejected: DSrate81.83/83.08/82.52 vs64-depth91.62..92.94; packed103.96. ExistingSRAMcapacity notthebottleneck; deeperqueue removesidlebankrefresh opportunities. RestoredQD64 commit6659b35b0.

@@ -1,0 +1,12 @@
+OT_IOFLOP fixed 615 output-port and 611 input-port flops at their pins (3 ports not single-flop)
+OT_SPINE iter 0 (coarse) leaves 805 sinks 6196 cells 1614 leaf arrival 346.8..536.6 ps (spread 189.8) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 805 sinks 6196 cells 3082 leaf arrival 463.8..537.9 ps (spread 74.1) pad 65.1 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 805 sinks 6196 cells 3854 leaf arrival 498.1..537.2 ps (spread 39.0) pad 65.1 / 3.0 ps
+OT_SPINE iter 3 (fine) leaves 805 sinks 6196 cells 6677 leaf arrival 518.7..637.2 ps (spread 118.6) pad 65.1 / 16.2 ps
+OT_SPINE iter 4 (fine) leaves 805 sinks 6196 cells 9105 leaf arrival 593.2..637.2 ps (spread 44.1) pad 65.1 / 16.2 ps
+OT_SPINE iter 5 (fine) leaves 805 sinks 6196 cells 9227 leaf arrival 608.5..637.2 ps (spread 28.7) pad 65.1 / 16.3 ps
+QDM PINFLOP reference: 611 input pin flops (0 hard-child clock pins at +insertion), median arrival 710.486267 (range 699.052856 .. 777.441589)
+QDM reference pin u_ot_pr_core.g_kreg.kp_data[84]$_DFF_P_/CLK clock arrival max 710.486267 min 351.210175 skew 90 hold 50
+QDM PINFLOP reference: 611 input pin flops (0 hard-child clock pins at +insertion), median arrival 563.4198 (range 552.9087 .. 635.6811)
+QDM reference pin u_ot_pr_core.g_phy_return.data[181]$_DFF_P_/CLK clock arrival max 563.4198 min 543.5858 skew 90 hold 50
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 1024.000000 -> 833.333008 (reference core_clk)

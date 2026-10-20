@@ -1,0 +1,4 @@
+BW_SAFE_TXN_RATE h9b 88783 safe 166919
+[171129856000] %Fatal: tb_hbm_pc_bw_safe_txn.sv:71: Assertion failed in tb: BW_SAFE_TXN FAIL errors=1 MUT_ID_TAG=0
+%Error: /srv/opentallas-scratch/claude/hbm-bw-txn-1019/rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv:71: Verilog $stop
+Aborting...

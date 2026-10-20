@@ -1,0 +1,284 @@
+{
+  "schema": "opentallas.hbm_bw_clock_contract.v1",
+  "receipt_source": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e/case_a_manifest.json",
+  "receipt_source_sha256": "a47934a5b49e77ab30a1028fd0955e4469a3b7a26a60ef4f815a8338d4cd555e",
+  "receipt_label": "NOT_A_DIE_RESULT (source contract has unknown exposed input ports / unknown b; SYNTH views are estimates; full native/physical qualification remains OPEN)",
+  "clock_domains": {
+    "stream": {
+      "period_ps": 833.333,
+      "sink_insts": 949,
+      "sink_pins": 3856
+    },
+    "serial": {
+      "period_ps": 1111.111,
+      "sink_insts": 227,
+      "sink_pins": 10375
+    },
+    "hbm": {
+      "period_ps": 1024.0,
+      "sink_insts": 110,
+      "sink_pins": 206
+    }
+  },
+  "controller_clock_entries": {
+    "ctl_NW_p00": [
+      "ctl_NW_p00",
+      "clk"
+    ],
+    "ctl_NW_p01": [
+      "ctl_NW_p01",
+      "clk"
+    ],
+    "ctl_NW_p02": [
+      "ctl_NW_p02",
+      "clk"
+    ],
+    "ctl_NW_p03": [
+      "ctl_NW_p03",
+      "clk"
+    ],
+    "ctl_NW_p04": [
+      "ctl_NW_p04",
+      "clk"
+    ],
+    "ctl_NW_p05": [
+      "ctl_NW_p05",
+      "clk"
+    ],
+    "ctl_NW_p06": [
+      "ctl_NW_p06",
+      "clk"
+    ],
+    "ctl_NW_p07": [
+      "ctl_NW_p07",
+      "clk"
+    ],
+    "ctl_NW_p08": [
+      "ctl_NW_p08",
+      "clk"
+    ],
+    "ctl_NW_p09": [
+      "ctl_NW_p09",
+      "clk"
+    ],
+    "ctl_NW_p10": [
+      "ctl_NW_p10",
+      "clk"
+    ],
+    "ctl_NW_p11": [
+      "ctl_NW_p11",
+      "clk"
+    ],
+    "ctl_NW_p12": [
+      "ctl_NW_p12",
+      "clk"
+    ],
+    "ctl_NW_p13": [
+      "ctl_NW_p13",
+      "clk"
+    ],
+    "ctl_NW_p14": [
+      "ctl_NW_p14",
+      "clk"
+    ],
+    "ctl_NW_p15": [
+      "ctl_NW_p15",
+      "clk"
+    ],
+    "ctl_NW_p16": [
+      "ctl_NW_p16",
+      "clk"
+    ],
+    "ctl_NW_p17": [
+      "ctl_NW_p17",
+      "clk"
+    ],
+    "ctl_NW_p18": [
+      "ctl_NW_p18",
+      "clk"
+    ],
+    "ctl_NW_p19": [
+      "ctl_NW_p19",
+      "clk"
+    ],
+    "ctl_NW_p20": [
+      "ctl_NW_p20",
+      "clk"
+    ],
+    "ctl_NW_p21": [
+      "ctl_NW_p21",
+      "clk"
+    ],
+    "ctl_NW_p22": [
+      "ctl_NW_p22",
+      "clk"
+    ],
+    "ctl_NW_p23": [
+      "ctl_NW_p23",
+      "clk"
+    ],
+    "ctl_NW_p24": [
+      "ctl_NW_p24",
+      "clk"
+    ],
+    "ctl_NW_p25": [
+      "ctl_NW_p25",
+      "clk"
+    ],
+    "ctl_NW_p26": [
+      "ctl_NW_p26",
+      "clk"
+    ],
+    "ctl_NW_p27": [
+      "ctl_NW_p27",
+      "clk"
+    ],
+    "ctl_NW_p28": [
+      "ctl_NW_p28",
+      "clk"
+    ],
+    "ctl_NW_p29": [
+      "ctl_NW_p29",
+      "clk"
+    ],
+    "ctl_NW_p30": [
+      "ctl_NW_p30",
+      "clk"
+    ],
+    "ctl_NW_p31": [
+      "ctl_NW_p31",
+      "clk"
+    ],
+    "ctl_SW_p00": [
+      "ctl_SW_p00",
+      "clk"
+    ],
+    "ctl_SW_p01": [
+      "ctl_SW_p01",
+      "clk"
+    ],
+    "ctl_SW_p02": [
+      "ctl_SW_p02",
+      "clk"
+    ],
+    "ctl_SW_p03": [
+      "ctl_SW_p03",
+      "clk"
+    ],
+    "ctl_SW_p04": [
+      "ctl_SW_p04",
+      "clk"
+    ],
+    "ctl_SW_p05": [
+      "ctl_SW_p05",
+      "clk"
+    ],
+    "ctl_SW_p06": [
+      "ctl_SW_p06",
+      "clk"
+    ],
+    "ctl_SW_p07": [
+      "ctl_SW_p07",
+      "clk"
+    ],
+    "ctl_SW_p08": [
+      "ctl_SW_p08",
+      "clk"
+    ],
+    "ctl_SW_p09": [
+      "ctl_SW_p09",
+      "clk"
+    ],
+    "ctl_SW_p10": [
+      "ctl_SW_p10",
+      "clk"
+    ],
+    "ctl_SW_p11": [
+      "ctl_SW_p11",
+      "clk"
+    ],
+    "ctl_SW_p12": [
+      "ctl_SW_p12",
+      "clk"
+    ],
+    "ctl_SW_p13": [
+      "ctl_SW_p13",
+      "clk"
+    ],
+    "ctl_SW_p14": [
+      "ctl_SW_p14",
+      "clk"
+    ],
+    "ctl_SW_p15": [
+      "ctl_SW_p15",
+      "clk"
+    ],
+    "ctl_SW_p16": [
+      "ctl_SW_p16",
+      "clk"
+    ],
+    "ctl_SW_p17": [
+      "ctl_SW_p17",
+      "clk"
+    ],
+    "ctl_SW_p18": [
+      "ctl_SW_p18",
+      "clk"
+    ],
+    "ctl_SW_p19": [
+      "ctl_SW_p19",
+      "clk"
+    ],
+    "ctl_SW_p20": [
+      "ctl_SW_p20",
+      "clk"
+    ],
+    "ctl_SW_p21": [
+      "ctl_SW_p21",
+      "clk"
+    ],
+    "ctl_SW_p22": [
+      "ctl_SW_p22",
+      "clk"
+    ],
+    "ctl_SW_p23": [
+      "ctl_SW_p23",
+      "clk"
+    ],
+    "ctl_SW_p24": [
+      "ctl_SW_p24",
+      "clk"
+    ],
+    "ctl_SW_p25": [
+      "ctl_SW_p25",
+      "clk"
+    ],
+    "ctl_SW_p26": [
+      "ctl_SW_p26",
+      "clk"
+    ],
+    "ctl_SW_p27": [
+      "ctl_SW_p27",
+      "clk"
+    ],
+    "ctl_SW_p28": [
+      "ctl_SW_p28",
+      "clk"
+    ],
+    "ctl_SW_p29": [
+      "ctl_SW_p29",
+      "clk"
+    ],
+    "ctl_SW_p30": [
+      "ctl_SW_p30",
+      "clk"
+    ],
+    "ctl_SW_p31": [
+      "ctl_SW_p31",
+      "clk"
+    ]
+  },
+  "controller_count": 64,
+  "clock_source": "REAL hfd_ckgen (hbm_ckgen_cl); create_clock at hb_ckgen/pll_<domain> (ETM has no pll arcs)",
+  "coordinator_confirmation": "Full coordinator verified actualGEN2e:all64cfg_h9bPCcontrollers domainhbm sourcehb_ckgen.pll_hbm; use1024ps, unchanged60pssetup25psholduncertainty and0.03nsholdmargin. Correct inherited833.333psoverconstraint; nofrequencypricechange."
+}

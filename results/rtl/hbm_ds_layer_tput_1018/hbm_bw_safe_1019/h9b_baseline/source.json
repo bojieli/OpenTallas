@@ -1,0 +1,20 @@
+{
+  "source_commit": "c2d89f4d2",
+  "scope": "Actual GEN2e cfg_h9b baseline, four PC instances, unchanged source pins; same delayed reset/sector-conservation benchmark as SAFE.",
+  "sha256": {
+    "rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv": "7bbb52b22c401cfebf3b3fbf9d9362c04b8f48e606aa7f16f545334545b5fae3",
+    "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv": "8d374db52a8788c2056fc8c4069775b4ce8041227fb8cc4ce2515e8b75721213",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "aaf5bfa2e5baf5b1db29ddaf42e858e75666a93785436b898ddd64ca1aa2c5d5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "results": {
+    "asbuilt_steady_B_per_edge": 45.03,
+    "packed_steady_B_per_edge": 59.08,
+    "ds_bankset_steady_B_per_edge": 45.89
+  },
+  "qualification": "All cases rc0, real native DRAM command checks, eachPC columns andreturns equal fullrequestedsectors; no lost startup requests."
+}

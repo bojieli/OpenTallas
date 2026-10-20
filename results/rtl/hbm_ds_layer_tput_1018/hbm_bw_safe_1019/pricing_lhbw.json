@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm_bw_pricing.lhbw.v1",
+ "owner": "LEAD-HBM/LH-BW 10-19",
+ "area": {
+  "baseline_h9c_um2_per_pc": 24186.47,
+  "pcs_per_die": 64,
+  "pc_count_source": "clock_contract.json controller_clock_entries (GEN2e) = 64",
+  "composed_432x475.2": {
+   "um2_per_pc": 205286.4,
+   "delta_mm2_per_die": 11.59,
+   "status": "physically rejected (macro faces 10 pins/um, map6 fanout)"
+  },
+  "n64_561.6x367.2": {
+   "um2_per_pc": 206219.52,
+   "delta_mm2_per_die": 11.65,
+   "status": "SAFE candidate, gate pending; 23 macros (21.4k um2, was 50.6k)"
+  }
+ },
+ "cycles": {
+  "price_B_per_edge_per_sm": 98.9,
+  "released_controller_B_per_edge": 45.03,
+  "safe_static96_cadence_B_per_edge": 90.67,
+  "controller_only_ds_seeds_B_per_edge": [
+   91.62,
+   92.74,
+   92.94
+  ],
+  "packed_B_per_edge": 103.89,
+  "hbm_stream_floor_factor_vs_price": 1.0908,
+  "warmup_extra_stream_edges_formula": "26*(G-256)+21*max(0,G-360) vs failing G256 compiled calendar",
+  "qualified_G": 320,
+  "warmup_extra_edges_66op_fixture": 1664,
+  "warmup_extra_us_66op_fixture": 1.3867,
+  "ds43_extrapolated_extra_edges": 24704,
+  "ds43_extrapolated_extra_us": 20.5867,
+  "ds43_label": "extrapolation from the 66-op fixture, not a full 43-layer compiler proof",
+  "qwen": "native calendar OPEN; no Qwen expert copies (0 extra bytes)",
+  "production_evidence": [
+   "final_full88 57c5 PASS END46724",
+   "gap320_full96 57c5 PASS END45260",
+   "local_control_full96 0fdb PASS END45260",
+   "kept_predicates_full96 0b823 PASS END45260",
+   "8 phase groups d848 PASS END45260"
+  ]
+ },
+ "capacity": {
+  "expert3x_reserved_GiB_per_sm": 2.015625,
+  "model_capacity_GiB_per_sm": 4.0,
+  "payload_3copy_GiB_per_sm": 0.8031,
+  "routed_rows": 16512,
+  "remaining_rows": 16256,
+  "source": "REPRICE3 9b66f8ccf expert3x_capacity.json",
+  "open": "full-model nonexpert/KV/attention allocation not measured"
+ },
+ "consumer": "LH-REPRICE3: apply hbm_bw stream floor 90.67 (factor 1.0908) + G320 warm-up term + area delta to d4g_reprice3 record and ledger"
+}

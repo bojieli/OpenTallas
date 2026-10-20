@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.bw_credit_source_sat.v1",
+  "rtl_sha256": "244038b56abff7f6194c8b8de8ea0f6043406edf102489835d76751d9ea95a55",
+  "function_sha256": "d7bb8f74652384bdf39f65828db0aa20a6191a3770d2bd6fc87b8c341fc73c3e",
+  "tool": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "cases": [
+    {
+      "depth": 32,
+      "mutant": false,
+      "returncode": 0,
+      "pass_gate": true,
+      "harness_sha256": "ce15bf4d24d09f315481a70d71b208e85fc348efd4bddb1f8669c38da20dc387"
+    },
+    {
+      "depth": 64,
+      "mutant": false,
+      "returncode": 0,
+      "pass_gate": true,
+      "harness_sha256": "665bb6639a1257f0197ca8b8e2f83efe46696fcf22c67fd49cee6b64e48075b3"
+    },
+    {
+      "depth": 128,
+      "mutant": false,
+      "returncode": 0,
+      "pass_gate": true,
+      "harness_sha256": "69713bde31b883d176bc793a358a1038be125f54bd4f926ed7442dda49dadaa3"
+    },
+    {
+      "depth": 64,
+      "mutant": true,
+      "returncode": 1,
+      "pass_gate": true,
+      "harness_sha256": "73a45b9688eefd40467a8aea3fc0752650896e0c7fa3fbcb5a2f634849080332"
+    }
+  ]
+}

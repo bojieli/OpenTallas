@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+ "enable": false,
+ "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages (as the legacy top); native relay adds 3; release 5 edges (production bench native_reset_release_edges=5). Tool landing would add a duplicate pair."
+}

@@ -1,0 +1,101 @@
+{
+  "scope": "Native exclusive fence membership/area preflight only; no GPL/CTS/route. FIRM hold seeds overlap until unchanged DPL release/legalization; all remain bound to explicit region.",
+  "source_native_sha256": "adcb38ea3f5ac9e6447ceebe1f4bc893f1964dc44b4e5f9d6781684f460aacf2",
+  "fenced_native_sha256": "e17ac66f8a38ad9a7868ea167f493deceb4927d8c98f3b54a3fd7fb575aa3c18",
+  "cells": 42194,
+  "macros": 23,
+  "grouped_std": 42171,
+  "missing": [],
+  "regions": {
+    "S0": {
+      "cell_area_um2": 74.64960000000059,
+      "fence_union_um2": 642.6863999999999,
+      "density": 0.11615245009074503,
+      "cells": 576
+    },
+    "BULK": {
+      "cell_area_um2": 3962.5961400000847,
+      "fence_union_um2": 9854.0,
+      "density": 0.40213072254922716,
+      "cells": 26942
+    },
+    "HEADER": {
+      "cell_area_um2": 717.627600000047,
+      "fence_union_um2": 3266.432000000003,
+      "density": 0.2196977007328015,
+      "cells": 5156
+    },
+    "S3": {
+      "cell_area_um2": 74.64960000000019,
+      "fence_union_um2": 642.6863999999998,
+      "density": 0.11615245009074443,
+      "cells": 576
+    },
+    "N3": {
+      "cell_area_um2": 235.14623999999492,
+      "fence_union_um2": 507.38399999999774,
+      "density": 0.463448275862061,
+      "cells": 1728
+    },
+    "N2": {
+      "cell_area_um2": 235.14623999999472,
+      "fence_union_um2": 507.38399999999797,
+      "density": 0.4634482758620604,
+      "cells": 1728
+    },
+    "N1": {
+      "cell_area_um2": 235.1462399999949,
+      "fence_union_um2": 507.38399999999785,
+      "density": 0.46344827586206083,
+      "cells": 1728
+    },
+    "N0": {
+      "cell_area_um2": 235.14623999999486,
+      "fence_union_um2": 507.3839999999978,
+      "density": 0.46344827586206083,
+      "cells": 1728
+    },
+    "S1": {
+      "cell_area_um2": 74.64960000000042,
+      "fence_union_um2": 642.6864,
+      "density": 0.11615245009074475,
+      "cells": 576
+    },
+    "S2": {
+      "cell_area_um2": 74.64960000000019,
+      "fence_union_um2": 642.6864000000002,
+      "density": 0.11615245009074437,
+      "cells": 576
+    },
+    "SCAP": {
+      "cell_area_um2": 43.57961999999966,
+      "fence_union_um2": 236.3904000000002,
+      "density": 0.18435444078947208,
+      "cells": 290
+    },
+    "WCAP": {
+      "cell_area_um2": 4.8843000000000005,
+      "fence_union_um2": 205.2,
+      "density": 0.023802631578947374,
+      "cells": 28
+    },
+    "ECAP": {
+      "cell_area_um2": 3.2804999999999995,
+      "fence_union_um2": 205.19999999999982,
+      "density": 0.01598684210526317,
+      "cells": 24
+    },
+    "NFACE": {
+      "cell_area_um2": 24.596460000000075,
+      "fence_union_um2": 226.53999999999968,
+      "density": 0.10857446808510687,
+      "cells": 254
+    },
+    "RESET": {
+      "cell_area_um2": 76.22424000000034,
+      "fence_union_um2": 400.0,
+      "density": 0.19056060000000083,
+      "cells": 261
+    }
+  }
+}

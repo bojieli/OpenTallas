@@ -1,0 +1,2318 @@
+{
+  "schema": "opentallas.hbm-mc3-lattice-planning.v1",
+  "source_commit": "272b37645",
+  "status": "PLANNING ONLY: no layout gate/adoption",
+  "outline_um": [
+    388.8,
+    388.8
+  ],
+  "lattice_um": 43.2,
+  "macro_size_um": [
+    33.696,
+    27.54
+  ],
+  "macros": [
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[0].P.u_m",
+      "at": [
+        43.2,
+        43.2
+      ],
+      "orient": "R0",
+      "role": "write_payload",
+      "bbox": [
+        43.2,
+        43.2,
+        76.896,
+        70.74000000000001
+      ]
+    },
+    {
+      "inst": "u_native.u_response_payload.M[0].P.u_m",
+      "at": [
+        43.2,
+        86.4
+      ],
+      "orient": "R0",
+      "role": "response_payload",
+      "bbox": [
+        43.2,
+        86.4,
+        76.896,
+        113.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[0].u_head.M[0].P.u_m",
+      "at": [
+        43.2,
+        129.6
+      ],
+      "orient": "R0",
+      "role": "head_metadata",
+      "bbox": [
+        43.2,
+        129.6,
+        76.896,
+        157.14
+      ]
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[1].P.u_m",
+      "at": [
+        129.6,
+        43.2
+      ],
+      "orient": "R0",
+      "role": "write_payload",
+      "bbox": [
+        129.6,
+        43.2,
+        163.296,
+        70.74000000000001
+      ]
+    },
+    {
+      "inst": "u_native.u_response_payload.M[1].P.u_m",
+      "at": [
+        129.6,
+        86.4
+      ],
+      "orient": "R0",
+      "role": "response_payload",
+      "bbox": [
+        129.6,
+        86.4,
+        163.296,
+        113.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[1].u_head.M[0].P.u_m",
+      "at": [
+        129.6,
+        129.6
+      ],
+      "orient": "R0",
+      "role": "head_metadata",
+      "bbox": [
+        129.6,
+        129.6,
+        163.296,
+        157.14
+      ]
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[2].P.u_m",
+      "at": [
+        216.0,
+        43.2
+      ],
+      "orient": "R0",
+      "role": "write_payload",
+      "bbox": [
+        216.0,
+        43.2,
+        249.696,
+        70.74000000000001
+      ]
+    },
+    {
+      "inst": "u_native.u_response_payload.M[2].P.u_m",
+      "at": [
+        216.0,
+        86.4
+      ],
+      "orient": "R0",
+      "role": "response_payload",
+      "bbox": [
+        216.0,
+        86.4,
+        249.696,
+        113.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[2].u_head.M[0].P.u_m",
+      "at": [
+        216.0,
+        129.6
+      ],
+      "orient": "R0",
+      "role": "head_metadata",
+      "bbox": [
+        216.0,
+        129.6,
+        249.696,
+        157.14
+      ]
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[3].P.u_m",
+      "at": [
+        302.4,
+        43.2
+      ],
+      "orient": "R0",
+      "role": "write_payload",
+      "bbox": [
+        302.4,
+        43.2,
+        336.096,
+        70.74000000000001
+      ]
+    },
+    {
+      "inst": "u_native.u_response_payload.M[3].P.u_m",
+      "at": [
+        302.4,
+        86.4
+      ],
+      "orient": "R0",
+      "role": "response_payload",
+      "bbox": [
+        302.4,
+        86.4,
+        336.096,
+        113.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[3].u_head.M[0].P.u_m",
+      "at": [
+        302.4,
+        129.6
+      ],
+      "orient": "R0",
+      "role": "head_metadata",
+      "bbox": [
+        302.4,
+        129.6,
+        336.096,
+        157.14
+      ]
+    },
+    {
+      "inst": "u_native.controller.u_queue.M[0].P.u_m",
+      "at": [
+        43.2,
+        259.2
+      ],
+      "orient": "R0",
+      "role": "queue",
+      "bbox": [
+        43.2,
+        259.2,
+        76.896,
+        286.74
+      ]
+    },
+    {
+      "inst": "u_native.u_pending_identity.M[0].P.u_m",
+      "at": [
+        129.6,
+        259.2
+      ],
+      "orient": "R0",
+      "role": "pending_identity",
+      "bbox": [
+        129.6,
+        259.2,
+        163.296,
+        286.74
+      ]
+    },
+    {
+      "inst": "u_native.u_response_identity.M[0].P.u_m",
+      "at": [
+        216.0,
+        259.2
+      ],
+      "orient": "R0",
+      "role": "response_identity",
+      "bbox": [
+        216.0,
+        259.2,
+        249.696,
+        286.74
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[0].u_post.M[0].P.u_m",
+      "at": [
+        302.4,
+        259.2
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        302.4,
+        259.2,
+        336.096,
+        286.74
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[0].u_post.M[1].P.u_m",
+      "at": [
+        43.2,
+        302.4
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        43.2,
+        302.4,
+        76.896,
+        329.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[1].u_post.M[0].P.u_m",
+      "at": [
+        129.6,
+        302.4
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        129.6,
+        302.4,
+        163.296,
+        329.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[1].u_post.M[1].P.u_m",
+      "at": [
+        216.0,
+        302.4
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        216.0,
+        302.4,
+        249.696,
+        329.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[2].u_post.M[0].P.u_m",
+      "at": [
+        302.4,
+        302.4
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        302.4,
+        302.4,
+        336.096,
+        329.94
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[2].u_post.M[1].P.u_m",
+      "at": [
+        43.2,
+        345.6
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        43.2,
+        345.6,
+        76.896,
+        373.14000000000004
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[3].u_post.M[0].P.u_m",
+      "at": [
+        129.6,
+        345.6
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        129.6,
+        345.6,
+        163.296,
+        373.14000000000004
+      ]
+    },
+    {
+      "inst": "u_native.METADATA[3].u_post.M[1].P.u_m",
+      "at": [
+        216.0,
+        345.6
+      ],
+      "orient": "R0",
+      "role": "post_metadata",
+      "bbox": [
+        216.0,
+        345.6,
+        249.696,
+        373.14000000000004
+      ]
+    }
+  ],
+  "macro_halo_xy_um": [
+    5.4,
+    5.4
+  ],
+  "pin_faces": {
+    "W": {
+      "pins": 105,
+      "length_um": 27.54,
+      "pins_per_um": 3.812636165577342
+    },
+    "E": {
+      "pins": 104,
+      "length_um": 27.54,
+      "pins_per_um": 3.776325344952796
+    }
+  },
+  "horizontal_pin_face_channel_um": 52.70400000000001,
+  "vertical_non_signal_face_gap_um": 15.660000000000004,
+  "macro_LEF_sha256": "5d86bdfc3a88e4078b9b7cf4289981ce9a253621d2693bf34fb902a7ff6a6de0",
+  "local_signal_clock_pin_rects": {
+    "clk": [
+      [
+        0.0,
+        0.768,
+        0.024,
+        0.792
+      ]
+    ],
+    "r_ce_in": [
+      [
+        0.0,
+        0.96,
+        0.024,
+        0.984
+      ]
+    ],
+    "r_addr_in[0]": [
+      [
+        0.0,
+        1.152,
+        0.024,
+        1.176
+      ]
+    ],
+    "r_addr_in[1]": [
+      [
+        0.0,
+        1.344,
+        0.024,
+        1.368
+      ]
+    ],
+    "r_addr_in[2]": [
+      [
+        0.0,
+        1.536,
+        0.024,
+        1.56
+      ]
+    ],
+    "r_addr_in[3]": [
+      [
+        0.0,
+        1.728,
+        0.024,
+        1.752
+      ]
+    ],
+    "r_addr_in[4]": [
+      [
+        0.0,
+        1.92,
+        0.024,
+        1.944
+      ]
+    ],
+    "r_addr_in[5]": [
+      [
+        0.0,
+        2.112,
+        0.024,
+        2.136
+      ]
+    ],
+    "r_addr_in[6]": [
+      [
+        0.0,
+        2.304,
+        0.024,
+        2.328
+      ]
+    ],
+    "rd_out[0]": [
+      [
+        0.0,
+        2.496,
+        0.024,
+        2.52
+      ]
+    ],
+    "rd_out[1]": [
+      [
+        0.0,
+        2.688,
+        0.024,
+        2.712
+      ]
+    ],
+    "rd_out[2]": [
+      [
+        0.0,
+        2.88,
+        0.024,
+        2.904
+      ]
+    ],
+    "rd_out[3]": [
+      [
+        0.0,
+        3.072,
+        0.024,
+        3.096
+      ]
+    ],
+    "rd_out[4]": [
+      [
+        0.0,
+        3.264,
+        0.024,
+        3.288
+      ]
+    ],
+    "rd_out[5]": [
+      [
+        0.0,
+        3.456,
+        0.024,
+        3.48
+      ]
+    ],
+    "rd_out[6]": [
+      [
+        0.0,
+        3.648,
+        0.024,
+        3.672
+      ]
+    ],
+    "rd_out[7]": [
+      [
+        0.0,
+        3.84,
+        0.024,
+        3.864
+      ]
+    ],
+    "rd_out[8]": [
+      [
+        0.0,
+        4.032,
+        0.024,
+        4.056
+      ]
+    ],
+    "rd_out[9]": [
+      [
+        0.0,
+        4.224,
+        0.024,
+        4.248
+      ]
+    ],
+    "rd_out[10]": [
+      [
+        0.0,
+        4.416,
+        0.024,
+        4.44
+      ]
+    ],
+    "rd_out[11]": [
+      [
+        0.0,
+        4.608,
+        0.024,
+        4.632
+      ]
+    ],
+    "rd_out[12]": [
+      [
+        0.0,
+        4.8,
+        0.024,
+        4.824
+      ]
+    ],
+    "rd_out[13]": [
+      [
+        0.0,
+        4.992,
+        0.024,
+        5.016
+      ]
+    ],
+    "rd_out[14]": [
+      [
+        0.0,
+        5.184,
+        0.024,
+        5.208
+      ]
+    ],
+    "rd_out[15]": [
+      [
+        0.0,
+        5.376,
+        0.024,
+        5.4
+      ]
+    ],
+    "rd_out[16]": [
+      [
+        0.0,
+        5.568,
+        0.024,
+        5.592
+      ]
+    ],
+    "rd_out[17]": [
+      [
+        0.0,
+        5.76,
+        0.024,
+        5.784
+      ]
+    ],
+    "rd_out[18]": [
+      [
+        0.0,
+        5.952,
+        0.024,
+        5.976
+      ]
+    ],
+    "rd_out[19]": [
+      [
+        0.0,
+        6.144,
+        0.024,
+        6.168
+      ]
+    ],
+    "rd_out[20]": [
+      [
+        0.0,
+        6.336,
+        0.024,
+        6.36
+      ]
+    ],
+    "rd_out[21]": [
+      [
+        0.0,
+        6.528,
+        0.024,
+        6.552
+      ]
+    ],
+    "rd_out[22]": [
+      [
+        0.0,
+        6.72,
+        0.024,
+        6.744
+      ]
+    ],
+    "rd_out[23]": [
+      [
+        0.0,
+        6.912,
+        0.024,
+        6.936
+      ]
+    ],
+    "rd_out[24]": [
+      [
+        0.0,
+        7.104,
+        0.024,
+        7.128
+      ]
+    ],
+    "rd_out[25]": [
+      [
+        0.0,
+        7.296,
+        0.024,
+        7.32
+      ]
+    ],
+    "rd_out[26]": [
+      [
+        0.0,
+        7.488,
+        0.024,
+        7.512
+      ]
+    ],
+    "rd_out[27]": [
+      [
+        0.0,
+        7.68,
+        0.024,
+        7.704
+      ]
+    ],
+    "rd_out[28]": [
+      [
+        0.0,
+        7.872,
+        0.024,
+        7.896
+      ]
+    ],
+    "rd_out[29]": [
+      [
+        0.0,
+        8.064,
+        0.024,
+        8.088
+      ]
+    ],
+    "rd_out[30]": [
+      [
+        0.0,
+        8.256,
+        0.024,
+        8.28
+      ]
+    ],
+    "rd_out[31]": [
+      [
+        0.0,
+        8.448,
+        0.024,
+        8.472
+      ]
+    ],
+    "rd_out[32]": [
+      [
+        0.0,
+        8.64,
+        0.024,
+        8.664
+      ]
+    ],
+    "rd_out[33]": [
+      [
+        0.0,
+        8.832,
+        0.024,
+        8.856
+      ]
+    ],
+    "rd_out[34]": [
+      [
+        0.0,
+        9.024,
+        0.024,
+        9.048
+      ]
+    ],
+    "rd_out[35]": [
+      [
+        0.0,
+        9.216,
+        0.024,
+        9.24
+      ]
+    ],
+    "rd_out[36]": [
+      [
+        0.0,
+        9.408,
+        0.024,
+        9.432
+      ]
+    ],
+    "rd_out[37]": [
+      [
+        0.0,
+        9.6,
+        0.024,
+        9.624
+      ]
+    ],
+    "rd_out[38]": [
+      [
+        0.0,
+        9.792,
+        0.024,
+        9.816
+      ]
+    ],
+    "rd_out[39]": [
+      [
+        0.0,
+        9.984,
+        0.024,
+        10.008
+      ]
+    ],
+    "rd_out[40]": [
+      [
+        0.0,
+        10.176,
+        0.024,
+        10.2
+      ]
+    ],
+    "rd_out[41]": [
+      [
+        0.0,
+        10.368,
+        0.024,
+        10.392
+      ]
+    ],
+    "rd_out[42]": [
+      [
+        0.0,
+        10.56,
+        0.024,
+        10.584
+      ]
+    ],
+    "rd_out[43]": [
+      [
+        0.0,
+        10.752,
+        0.024,
+        10.776
+      ]
+    ],
+    "rd_out[44]": [
+      [
+        0.0,
+        10.944,
+        0.024,
+        10.968
+      ]
+    ],
+    "rd_out[45]": [
+      [
+        0.0,
+        11.136,
+        0.024,
+        11.16
+      ]
+    ],
+    "rd_out[46]": [
+      [
+        0.0,
+        11.328,
+        0.024,
+        11.352
+      ]
+    ],
+    "rd_out[47]": [
+      [
+        0.0,
+        11.52,
+        0.024,
+        11.544
+      ]
+    ],
+    "rd_out[48]": [
+      [
+        0.0,
+        11.712,
+        0.024,
+        11.736
+      ]
+    ],
+    "rd_out[49]": [
+      [
+        0.0,
+        11.904,
+        0.024,
+        11.928
+      ]
+    ],
+    "rd_out[50]": [
+      [
+        0.0,
+        12.096,
+        0.024,
+        12.12
+      ]
+    ],
+    "rd_out[51]": [
+      [
+        0.0,
+        12.288,
+        0.024,
+        12.312
+      ]
+    ],
+    "rd_out[52]": [
+      [
+        0.0,
+        12.48,
+        0.024,
+        12.504
+      ]
+    ],
+    "rd_out[53]": [
+      [
+        0.0,
+        12.672,
+        0.024,
+        12.696
+      ]
+    ],
+    "rd_out[54]": [
+      [
+        0.0,
+        12.864,
+        0.024,
+        12.888
+      ]
+    ],
+    "rd_out[55]": [
+      [
+        0.0,
+        13.056,
+        0.024,
+        13.08
+      ]
+    ],
+    "rd_out[56]": [
+      [
+        0.0,
+        13.248,
+        0.024,
+        13.272
+      ]
+    ],
+    "rd_out[57]": [
+      [
+        0.0,
+        13.44,
+        0.024,
+        13.464
+      ]
+    ],
+    "rd_out[58]": [
+      [
+        0.0,
+        13.632,
+        0.024,
+        13.656
+      ]
+    ],
+    "rd_out[59]": [
+      [
+        0.0,
+        13.824,
+        0.024,
+        13.848
+      ]
+    ],
+    "rd_out[60]": [
+      [
+        0.0,
+        14.016,
+        0.024,
+        14.04
+      ]
+    ],
+    "rd_out[61]": [
+      [
+        0.0,
+        14.208,
+        0.024,
+        14.232
+      ]
+    ],
+    "rd_out[62]": [
+      [
+        0.0,
+        14.4,
+        0.024,
+        14.424
+      ]
+    ],
+    "rd_out[63]": [
+      [
+        0.0,
+        14.592,
+        0.024,
+        14.616
+      ]
+    ],
+    "w_ce_in": [
+      [
+        0.0,
+        14.784,
+        0.024,
+        14.808
+      ]
+    ],
+    "w_addr_in[0]": [
+      [
+        0.0,
+        14.976,
+        0.024,
+        15.0
+      ]
+    ],
+    "w_addr_in[1]": [
+      [
+        0.0,
+        15.168,
+        0.024,
+        15.192
+      ]
+    ],
+    "w_addr_in[2]": [
+      [
+        0.0,
+        15.36,
+        0.024,
+        15.384
+      ]
+    ],
+    "w_addr_in[3]": [
+      [
+        0.0,
+        15.552,
+        0.024,
+        15.576
+      ]
+    ],
+    "w_addr_in[4]": [
+      [
+        0.0,
+        15.744,
+        0.024,
+        15.768
+      ]
+    ],
+    "w_addr_in[5]": [
+      [
+        0.0,
+        15.936,
+        0.024,
+        15.96
+      ]
+    ],
+    "w_addr_in[6]": [
+      [
+        0.0,
+        16.128,
+        0.024,
+        16.152
+      ]
+    ],
+    "wd_in[0]": [
+      [
+        0.0,
+        16.32,
+        0.024,
+        16.344
+      ]
+    ],
+    "wd_in[1]": [
+      [
+        0.0,
+        16.512,
+        0.024,
+        16.536
+      ]
+    ],
+    "wd_in[2]": [
+      [
+        0.0,
+        16.704,
+        0.024,
+        16.728
+      ]
+    ],
+    "wd_in[3]": [
+      [
+        0.0,
+        16.896,
+        0.024,
+        16.92
+      ]
+    ],
+    "wd_in[4]": [
+      [
+        0.0,
+        17.088,
+        0.024,
+        17.112
+      ]
+    ],
+    "wd_in[5]": [
+      [
+        0.0,
+        17.28,
+        0.024,
+        17.304
+      ]
+    ],
+    "wd_in[6]": [
+      [
+        0.0,
+        17.472,
+        0.024,
+        17.496
+      ]
+    ],
+    "wd_in[7]": [
+      [
+        0.0,
+        17.664,
+        0.024,
+        17.688
+      ]
+    ],
+    "wd_in[8]": [
+      [
+        0.0,
+        17.856,
+        0.024,
+        17.88
+      ]
+    ],
+    "wd_in[9]": [
+      [
+        0.0,
+        18.048,
+        0.024,
+        18.072
+      ]
+    ],
+    "wd_in[10]": [
+      [
+        0.0,
+        18.24,
+        0.024,
+        18.264
+      ]
+    ],
+    "wd_in[11]": [
+      [
+        0.0,
+        18.432,
+        0.024,
+        18.456
+      ]
+    ],
+    "wd_in[12]": [
+      [
+        0.0,
+        18.624,
+        0.024,
+        18.648
+      ]
+    ],
+    "wd_in[13]": [
+      [
+        0.0,
+        18.816,
+        0.024,
+        18.84
+      ]
+    ],
+    "wd_in[14]": [
+      [
+        0.0,
+        19.008,
+        0.024,
+        19.032
+      ]
+    ],
+    "wd_in[15]": [
+      [
+        0.0,
+        19.2,
+        0.024,
+        19.224
+      ]
+    ],
+    "wd_in[16]": [
+      [
+        0.0,
+        19.392,
+        0.024,
+        19.416
+      ]
+    ],
+    "wd_in[17]": [
+      [
+        0.0,
+        19.584,
+        0.024,
+        19.608
+      ]
+    ],
+    "wd_in[18]": [
+      [
+        0.0,
+        19.776,
+        0.024,
+        19.8
+      ]
+    ],
+    "wd_in[19]": [
+      [
+        0.0,
+        19.968,
+        0.024,
+        19.992
+      ]
+    ],
+    "wd_in[20]": [
+      [
+        0.0,
+        20.16,
+        0.024,
+        20.184
+      ]
+    ],
+    "wd_in[21]": [
+      [
+        0.0,
+        20.352,
+        0.024,
+        20.376
+      ]
+    ],
+    "wd_in[22]": [
+      [
+        0.0,
+        20.544,
+        0.024,
+        20.568
+      ]
+    ],
+    "wd_in[23]": [
+      [
+        0.0,
+        20.736,
+        0.024,
+        20.76
+      ]
+    ],
+    "wd_in[24]": [
+      [
+        33.672,
+        0.768,
+        33.696,
+        0.792
+      ]
+    ],
+    "wd_in[25]": [
+      [
+        33.672,
+        0.96,
+        33.696,
+        0.984
+      ]
+    ],
+    "wd_in[26]": [
+      [
+        33.672,
+        1.152,
+        33.696,
+        1.176
+      ]
+    ],
+    "wd_in[27]": [
+      [
+        33.672,
+        1.344,
+        33.696,
+        1.368
+      ]
+    ],
+    "wd_in[28]": [
+      [
+        33.672,
+        1.536,
+        33.696,
+        1.56
+      ]
+    ],
+    "wd_in[29]": [
+      [
+        33.672,
+        1.728,
+        33.696,
+        1.752
+      ]
+    ],
+    "wd_in[30]": [
+      [
+        33.672,
+        1.92,
+        33.696,
+        1.944
+      ]
+    ],
+    "wd_in[31]": [
+      [
+        33.672,
+        2.112,
+        33.696,
+        2.136
+      ]
+    ],
+    "wd_in[32]": [
+      [
+        33.672,
+        2.304,
+        33.696,
+        2.328
+      ]
+    ],
+    "wd_in[33]": [
+      [
+        33.672,
+        2.496,
+        33.696,
+        2.52
+      ]
+    ],
+    "wd_in[34]": [
+      [
+        33.672,
+        2.688,
+        33.696,
+        2.712
+      ]
+    ],
+    "wd_in[35]": [
+      [
+        33.672,
+        2.88,
+        33.696,
+        2.904
+      ]
+    ],
+    "wd_in[36]": [
+      [
+        33.672,
+        3.072,
+        33.696,
+        3.096
+      ]
+    ],
+    "wd_in[37]": [
+      [
+        33.672,
+        3.264,
+        33.696,
+        3.288
+      ]
+    ],
+    "wd_in[38]": [
+      [
+        33.672,
+        3.456,
+        33.696,
+        3.48
+      ]
+    ],
+    "wd_in[39]": [
+      [
+        33.672,
+        3.648,
+        33.696,
+        3.672
+      ]
+    ],
+    "wd_in[40]": [
+      [
+        33.672,
+        3.84,
+        33.696,
+        3.864
+      ]
+    ],
+    "wd_in[41]": [
+      [
+        33.672,
+        4.032,
+        33.696,
+        4.056
+      ]
+    ],
+    "wd_in[42]": [
+      [
+        33.672,
+        4.224,
+        33.696,
+        4.248
+      ]
+    ],
+    "wd_in[43]": [
+      [
+        33.672,
+        4.416,
+        33.696,
+        4.44
+      ]
+    ],
+    "wd_in[44]": [
+      [
+        33.672,
+        4.608,
+        33.696,
+        4.632
+      ]
+    ],
+    "wd_in[45]": [
+      [
+        33.672,
+        4.8,
+        33.696,
+        4.824
+      ]
+    ],
+    "wd_in[46]": [
+      [
+        33.672,
+        4.992,
+        33.696,
+        5.016
+      ]
+    ],
+    "wd_in[47]": [
+      [
+        33.672,
+        5.184,
+        33.696,
+        5.208
+      ]
+    ],
+    "wd_in[48]": [
+      [
+        33.672,
+        5.376,
+        33.696,
+        5.4
+      ]
+    ],
+    "wd_in[49]": [
+      [
+        33.672,
+        5.568,
+        33.696,
+        5.592
+      ]
+    ],
+    "wd_in[50]": [
+      [
+        33.672,
+        5.76,
+        33.696,
+        5.784
+      ]
+    ],
+    "wd_in[51]": [
+      [
+        33.672,
+        5.952,
+        33.696,
+        5.976
+      ]
+    ],
+    "wd_in[52]": [
+      [
+        33.672,
+        6.144,
+        33.696,
+        6.168
+      ]
+    ],
+    "wd_in[53]": [
+      [
+        33.672,
+        6.336,
+        33.696,
+        6.36
+      ]
+    ],
+    "wd_in[54]": [
+      [
+        33.672,
+        6.528,
+        33.696,
+        6.552
+      ]
+    ],
+    "wd_in[55]": [
+      [
+        33.672,
+        6.72,
+        33.696,
+        6.744
+      ]
+    ],
+    "wd_in[56]": [
+      [
+        33.672,
+        6.912,
+        33.696,
+        6.936
+      ]
+    ],
+    "wd_in[57]": [
+      [
+        33.672,
+        7.104,
+        33.696,
+        7.128
+      ]
+    ],
+    "wd_in[58]": [
+      [
+        33.672,
+        7.296,
+        33.696,
+        7.32
+      ]
+    ],
+    "wd_in[59]": [
+      [
+        33.672,
+        7.488,
+        33.696,
+        7.512
+      ]
+    ],
+    "wd_in[60]": [
+      [
+        33.672,
+        7.68,
+        33.696,
+        7.704
+      ]
+    ],
+    "wd_in[61]": [
+      [
+        33.672,
+        7.872,
+        33.696,
+        7.896
+      ]
+    ],
+    "wd_in[62]": [
+      [
+        33.672,
+        8.064,
+        33.696,
+        8.088
+      ]
+    ],
+    "wd_in[63]": [
+      [
+        33.672,
+        8.256,
+        33.696,
+        8.28
+      ]
+    ],
+    "w_mask_in[0]": [
+      [
+        33.672,
+        8.448,
+        33.696,
+        8.472
+      ]
+    ],
+    "w_mask_in[1]": [
+      [
+        33.672,
+        8.64,
+        33.696,
+        8.664
+      ]
+    ],
+    "w_mask_in[2]": [
+      [
+        33.672,
+        8.832,
+        33.696,
+        8.856
+      ]
+    ],
+    "w_mask_in[3]": [
+      [
+        33.672,
+        9.024,
+        33.696,
+        9.048
+      ]
+    ],
+    "w_mask_in[4]": [
+      [
+        33.672,
+        9.216,
+        33.696,
+        9.24
+      ]
+    ],
+    "w_mask_in[5]": [
+      [
+        33.672,
+        9.408,
+        33.696,
+        9.432
+      ]
+    ],
+    "w_mask_in[6]": [
+      [
+        33.672,
+        9.6,
+        33.696,
+        9.624
+      ]
+    ],
+    "w_mask_in[7]": [
+      [
+        33.672,
+        9.792,
+        33.696,
+        9.816
+      ]
+    ],
+    "w_mask_in[8]": [
+      [
+        33.672,
+        9.984,
+        33.696,
+        10.008
+      ]
+    ],
+    "w_mask_in[9]": [
+      [
+        33.672,
+        10.176,
+        33.696,
+        10.2
+      ]
+    ],
+    "w_mask_in[10]": [
+      [
+        33.672,
+        10.368,
+        33.696,
+        10.392
+      ]
+    ],
+    "w_mask_in[11]": [
+      [
+        33.672,
+        10.56,
+        33.696,
+        10.584
+      ]
+    ],
+    "w_mask_in[12]": [
+      [
+        33.672,
+        10.752,
+        33.696,
+        10.776
+      ]
+    ],
+    "w_mask_in[13]": [
+      [
+        33.672,
+        10.944,
+        33.696,
+        10.968
+      ]
+    ],
+    "w_mask_in[14]": [
+      [
+        33.672,
+        11.136,
+        33.696,
+        11.16
+      ]
+    ],
+    "w_mask_in[15]": [
+      [
+        33.672,
+        11.328,
+        33.696,
+        11.352
+      ]
+    ],
+    "w_mask_in[16]": [
+      [
+        33.672,
+        11.52,
+        33.696,
+        11.544
+      ]
+    ],
+    "w_mask_in[17]": [
+      [
+        33.672,
+        11.712,
+        33.696,
+        11.736
+      ]
+    ],
+    "w_mask_in[18]": [
+      [
+        33.672,
+        11.904,
+        33.696,
+        11.928
+      ]
+    ],
+    "w_mask_in[19]": [
+      [
+        33.672,
+        12.096,
+        33.696,
+        12.12
+      ]
+    ],
+    "w_mask_in[20]": [
+      [
+        33.672,
+        12.288,
+        33.696,
+        12.312
+      ]
+    ],
+    "w_mask_in[21]": [
+      [
+        33.672,
+        12.48,
+        33.696,
+        12.504
+      ]
+    ],
+    "w_mask_in[22]": [
+      [
+        33.672,
+        12.672,
+        33.696,
+        12.696
+      ]
+    ],
+    "w_mask_in[23]": [
+      [
+        33.672,
+        12.864,
+        33.696,
+        12.888
+      ]
+    ],
+    "w_mask_in[24]": [
+      [
+        33.672,
+        13.056,
+        33.696,
+        13.08
+      ]
+    ],
+    "w_mask_in[25]": [
+      [
+        33.672,
+        13.248,
+        33.696,
+        13.272
+      ]
+    ],
+    "w_mask_in[26]": [
+      [
+        33.672,
+        13.44,
+        33.696,
+        13.464
+      ]
+    ],
+    "w_mask_in[27]": [
+      [
+        33.672,
+        13.632,
+        33.696,
+        13.656
+      ]
+    ],
+    "w_mask_in[28]": [
+      [
+        33.672,
+        13.824,
+        33.696,
+        13.848
+      ]
+    ],
+    "w_mask_in[29]": [
+      [
+        33.672,
+        14.016,
+        33.696,
+        14.04
+      ]
+    ],
+    "w_mask_in[30]": [
+      [
+        33.672,
+        14.208,
+        33.696,
+        14.232
+      ]
+    ],
+    "w_mask_in[31]": [
+      [
+        33.672,
+        14.4,
+        33.696,
+        14.424
+      ]
+    ],
+    "w_mask_in[32]": [
+      [
+        33.672,
+        14.592,
+        33.696,
+        14.616
+      ]
+    ],
+    "w_mask_in[33]": [
+      [
+        33.672,
+        14.784,
+        33.696,
+        14.808
+      ]
+    ],
+    "w_mask_in[34]": [
+      [
+        33.672,
+        14.976,
+        33.696,
+        15.0
+      ]
+    ],
+    "w_mask_in[35]": [
+      [
+        33.672,
+        15.168,
+        33.696,
+        15.192
+      ]
+    ],
+    "w_mask_in[36]": [
+      [
+        33.672,
+        15.36,
+        33.696,
+        15.384
+      ]
+    ],
+    "w_mask_in[37]": [
+      [
+        33.672,
+        15.552,
+        33.696,
+        15.576
+      ]
+    ],
+    "w_mask_in[38]": [
+      [
+        33.672,
+        15.744,
+        33.696,
+        15.768
+      ]
+    ],
+    "w_mask_in[39]": [
+      [
+        33.672,
+        15.936,
+        33.696,
+        15.96
+      ]
+    ],
+    "w_mask_in[40]": [
+      [
+        33.672,
+        16.128,
+        33.696,
+        16.152
+      ]
+    ],
+    "w_mask_in[41]": [
+      [
+        33.672,
+        16.32,
+        33.696,
+        16.344
+      ]
+    ],
+    "w_mask_in[42]": [
+      [
+        33.672,
+        16.512,
+        33.696,
+        16.536
+      ]
+    ],
+    "w_mask_in[43]": [
+      [
+        33.672,
+        16.704,
+        33.696,
+        16.728
+      ]
+    ],
+    "w_mask_in[44]": [
+      [
+        33.672,
+        16.896,
+        33.696,
+        16.92
+      ]
+    ],
+    "w_mask_in[45]": [
+      [
+        33.672,
+        17.088,
+        33.696,
+        17.112
+      ]
+    ],
+    "w_mask_in[46]": [
+      [
+        33.672,
+        17.28,
+        33.696,
+        17.304
+      ]
+    ],
+    "w_mask_in[47]": [
+      [
+        33.672,
+        17.472,
+        33.696,
+        17.496
+      ]
+    ],
+    "w_mask_in[48]": [
+      [
+        33.672,
+        17.664,
+        33.696,
+        17.688
+      ]
+    ],
+    "w_mask_in[49]": [
+      [
+        33.672,
+        17.856,
+        33.696,
+        17.88
+      ]
+    ],
+    "w_mask_in[50]": [
+      [
+        33.672,
+        18.048,
+        33.696,
+        18.072
+      ]
+    ],
+    "w_mask_in[51]": [
+      [
+        33.672,
+        18.24,
+        33.696,
+        18.264
+      ]
+    ],
+    "w_mask_in[52]": [
+      [
+        33.672,
+        18.432,
+        33.696,
+        18.456
+      ]
+    ],
+    "w_mask_in[53]": [
+      [
+        33.672,
+        18.624,
+        33.696,
+        18.648
+      ]
+    ],
+    "w_mask_in[54]": [
+      [
+        33.672,
+        18.816,
+        33.696,
+        18.84
+      ]
+    ],
+    "w_mask_in[55]": [
+      [
+        33.672,
+        19.008,
+        33.696,
+        19.032
+      ]
+    ],
+    "w_mask_in[56]": [
+      [
+        33.672,
+        19.2,
+        33.696,
+        19.224
+      ]
+    ],
+    "w_mask_in[57]": [
+      [
+        33.672,
+        19.392,
+        33.696,
+        19.416
+      ]
+    ],
+    "w_mask_in[58]": [
+      [
+        33.672,
+        19.584,
+        33.696,
+        19.608
+      ]
+    ],
+    "w_mask_in[59]": [
+      [
+        33.672,
+        19.776,
+        33.696,
+        19.8
+      ]
+    ],
+    "w_mask_in[60]": [
+      [
+        33.672,
+        19.968,
+        33.696,
+        19.992
+      ]
+    ],
+    "w_mask_in[61]": [
+      [
+        33.672,
+        20.16,
+        33.696,
+        20.184
+      ]
+    ],
+    "w_mask_in[62]": [
+      [
+        33.672,
+        20.352,
+        33.696,
+        20.376
+      ]
+    ],
+    "w_mask_in[63]": [
+      [
+        33.672,
+        20.544,
+        33.696,
+        20.568
+      ]
+    ]
+  },
+  "full_width_open_std_band": [
+    2.16,
+    157.14,
+    386.64,
+    259.2
+  ],
+  "bulk_region_rectangles": [
+    [
+      152.648,
+      162.67,
+      226.648,
+      253.67
+    ],
+    [
+      142.648,
+      171.17,
+      236.648,
+      245.17
+    ],
+    [
+      132.648,
+      181.17,
+      246.648,
+      235.17
+    ],
+    [
+      122.648,
+      191.17,
+      256.648,
+      225.17
+    ],
+    [
+      112.648,
+      201.17,
+      266.648,
+      215.17
+    ]
+  ],
+  "connected_bulk_area_um2": 10254.0,
+  "bulk_macro_bbox_L1_upper_um": 395.4180000000001,
+  "measured_synth_std_area_um2": 5871.6867600000005,
+  "measured_synth_macro_area_um2": 21343.719399999998,
+  "diagnostic_old_place_std_area_um2": 6767.0883,
+  "diagnostic_old_firm_area_um2": 939.91428,
+  "estimated_new_free_std_area_um2": 5934.162060000001,
+  "estimated_bulk_util": 0.578716799297835,
+  "clock": {
+    "face": "W",
+    "location_um": [
+      0,
+      208.17
+    ],
+    "logic_target_ps": 833.333,
+    "functional_JEDEC_period_ps": 1024,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "production_clock_and_PHY_phase_binding": "OPEN; no actual 1024 divider/phase claim"
+  },
+  "reset": {
+    "face": "W",
+    "location_um": [
+      0,
+      208.17
+    ],
+    "landing_edges": 2,
+    "forest_edges": 3,
+    "source_native_dynamic_reset_fanout_max": 32
+  },
+  "IO_data_faces": {
+    "N": [
+      "k_wdata",
+      "kr_data"
+    ],
+    "S": [
+      "dram_rdata",
+      "col_data"
+    ],
+    "quartet_model": "64-bit groups share corresponding macro-column span; two interleaved buses at 0.192um pitch,5.25pins/um",
+    "central_N_controls": {
+      "x_span_um": [
+        178.128,
+        201.168
+      ],
+      "bits": 115,
+      "pins_per_um": 4.991319444444445,
+      "capturing_FF_bbox": [
+        176.128,
+        354.8,
+        203.168,
+        374.8
+      ]
+    }
+  },
+  "paired_IO_macro_bbox_bounds": [
+    {
+      "role": "K data capture -> matched write macro",
+      "macro": "u_native.g_wpay.u_write_payload.M[0].P.u_m",
+      "L1_bbox_upper_um": 390.84
+    },
+    {
+      "role": "write macro -> matched PHY data launch",
+      "macro": "u_native.g_wpay.u_write_payload.M[0].P.u_m",
+      "L1_bbox_upper_um": 98.85600000000001
+    },
+    {
+      "role": "PHY return capture -> matched response macro",
+      "macro": "u_native.u_response_payload.M[0].P.u_m",
+      "L1_bbox_upper_um": 142.056
+    },
+    {
+      "role": "response macro -> matched KR data launch",
+      "macro": "u_native.u_response_payload.M[0].P.u_m",
+      "L1_bbox_upper_um": 347.64
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[0].u_head.M[0].P.u_m",
+      "L1_bbox_upper_um": 404.40000000000003
+    },
+    {
+      "role": "K data capture -> matched write macro",
+      "macro": "u_native.g_wpay.u_write_payload.M[1].P.u_m",
+      "L1_bbox_upper_um": 390.84
+    },
+    {
+      "role": "write macro -> matched PHY data launch",
+      "macro": "u_native.g_wpay.u_write_payload.M[1].P.u_m",
+      "L1_bbox_upper_um": 98.85600000000001
+    },
+    {
+      "role": "PHY return capture -> matched response macro",
+      "macro": "u_native.u_response_payload.M[1].P.u_m",
+      "L1_bbox_upper_um": 142.056
+    },
+    {
+      "role": "response macro -> matched KR data launch",
+      "macro": "u_native.u_response_payload.M[1].P.u_m",
+      "L1_bbox_upper_um": 347.64
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[1].u_head.M[0].P.u_m",
+      "L1_bbox_upper_um": 318.0
+    },
+    {
+      "role": "K data capture -> matched write macro",
+      "macro": "u_native.g_wpay.u_write_payload.M[2].P.u_m",
+      "L1_bbox_upper_um": 390.84
+    },
+    {
+      "role": "write macro -> matched PHY data launch",
+      "macro": "u_native.g_wpay.u_write_payload.M[2].P.u_m",
+      "L1_bbox_upper_um": 98.85600000000001
+    },
+    {
+      "role": "PHY return capture -> matched response macro",
+      "macro": "u_native.u_response_payload.M[2].P.u_m",
+      "L1_bbox_upper_um": 142.056
+    },
+    {
+      "role": "response macro -> matched KR data launch",
+      "macro": "u_native.u_response_payload.M[2].P.u_m",
+      "L1_bbox_upper_um": 347.64
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[2].u_head.M[0].P.u_m",
+      "L1_bbox_upper_um": 318.0
+    },
+    {
+      "role": "K data capture -> matched write macro",
+      "macro": "u_native.g_wpay.u_write_payload.M[3].P.u_m",
+      "L1_bbox_upper_um": 390.84
+    },
+    {
+      "role": "write macro -> matched PHY data launch",
+      "macro": "u_native.g_wpay.u_write_payload.M[3].P.u_m",
+      "L1_bbox_upper_um": 98.85600000000004
+    },
+    {
+      "role": "PHY return capture -> matched response macro",
+      "macro": "u_native.u_response_payload.M[3].P.u_m",
+      "L1_bbox_upper_um": 142.05600000000004
+    },
+    {
+      "role": "response macro -> matched KR data launch",
+      "macro": "u_native.u_response_payload.M[3].P.u_m",
+      "L1_bbox_upper_um": 347.64
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[3].u_head.M[0].P.u_m",
+      "L1_bbox_upper_um": 404.40000000000003
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[0].u_post.M[0].P.u_m",
+      "L1_bbox_upper_um": 274.80000000000007
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[0].u_post.M[1].P.u_m",
+      "L1_bbox_upper_um": 231.60000000000008
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[1].u_post.M[0].P.u_m",
+      "L1_bbox_upper_um": 145.20000000000007
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[1].u_post.M[1].P.u_m",
+      "L1_bbox_upper_um": 145.20000000000007
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[2].u_post.M[0].P.u_m",
+      "L1_bbox_upper_um": 231.60000000000008
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[2].u_post.M[1].P.u_m",
+      "L1_bbox_upper_um": 188.40000000000003
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[3].u_post.M[0].P.u_m",
+      "L1_bbox_upper_um": 102.00000000000003
+    },
+    {
+      "role": "central K control capture -> metadata macro",
+      "macro": "u_native.METADATA[3].u_post.M[1].P.u_m",
+      "L1_bbox_upper_um": 102.00000000000003
+    }
+  ],
+  "replicas": 64,
+  "macs_per_cycle": 0,
+  "HBM_PC_bytes_per_functional_edge": 32,
+  "production_four_PC_B_per_stream_edge": [
+    91.68,
+    92.76,
+    91.7
+  ],
+  "packed_B_per_stream_edge": 103.86,
+  "bandwidth_conversion": "4*32*833.333333/1024 peak; 1024 JEDEC edges preserved",
+  "extra_controller_edges_over_MC3c": 0,
+  "parent_model": {
+    "PC_pitch_um": 265.584,
+    "alternating_row_pitch_um": 531.168,
+    "two_controller_rows_plus_SVG_min_height_um": 1006.5600000000001,
+    "old_strip_height_um": 637.2,
+    "min_strip_growth_um": 369.36,
+    "phase_and_parent_relay_edges": "OPEN: actual die composition must price them"
+  },
+  "GPL_support_source": "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD/6cb3f2b704/src/gpl/src/placerBase.cpp",
+  "GPL_support_lines": "1227-1252: multiple boundary rectangles unblock actual union sites",
+  "remaining": [
+    "implement/verify exact matched IO and control capture zones",
+    "classify every FIRM macro/IO/hold cell and native endpoint; no uncovered outside-bulk role",
+    "validate mapped fanout at 833.333 before gate",
+    "ROOT review pin/lattice-bound low global fill; no exception enabled",
+    "actual native coordinates, PG access, clock spread, setup/hold after gate",
+    "production-domain/PHY phase/compiler budget proof before adoption"
+  ]
+}

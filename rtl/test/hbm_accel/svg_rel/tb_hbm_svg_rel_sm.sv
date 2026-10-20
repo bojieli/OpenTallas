@@ -17,7 +17,18 @@
 module tb_hbm_svg_rel_sm;
  parameter integer MAXI=8192, MAXX=65536, MAXD=64, NID=6;
  reg stream=0,hbm=0;initial forever begin #416.666 stream=1;#416.667 stream=0;end
- initial begin #173;forever #512 hbm=~hbm;end
+ integer hbm_clock_offset_ps=173,hbm_ref_base=0,hbm_reset_extra=0;
+ initial begin
+  if($value$plusargs("HBM_CLOCK_OFFSET_PS=%d",hbm_clock_offset_ps))begin end
+  if(hbm_clock_offset_ps<0||hbm_clock_offset_ps>1023)$fatal(1,"HBM clock phase");
+  #(hbm_clock_offset_ps);forever #512 hbm=~hbm;
+ end
+ initial begin
+  if($value$plusargs("HBM_REF_BASE=%d",hbm_ref_base))begin end
+  if($value$plusargs("HBM_RESET_EXTRA=%d",hbm_reset_extra))begin end
+  if(hbm_ref_base<0||hbm_ref_base>28||hbm_ref_base%4!=0||hbm_reset_extra<0||hbm_reset_extra>118)
+    $fatal(1,"HBM static phase configuration");
+ end
  reg srst=0,hrst=0;
  // ---------------- event lists
  reg[351:0]ing_m[0:MAXI-1];reg[2095:0]xw_m[0:MAXX-1];reg[95:0]ids_m[0:MAXD-1];
@@ -56,10 +67,91 @@ module tb_hbm_svg_rel_sm;
   .fault(xc_fault),.active(xc_active));
  // ---------------- HBM: real controller leaves + DRAM command fixture
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire native_fault;
- ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm),.rst_n(hrst),.pc_clk({32{hbm}}),
+`ifdef HBM_SAFE
+ // Minimum production component: this SM owns PCs0..3. Four complete real
+ // leaves retain all bank/refresh state; the remaining DRAM fixture lanes have
+ // no requesting SM and are outside the measurement. Released masters stay32PC.
+ wire[3:0]safe_pf,safe_of;
+ assign native_fault=|safe_pf || |safe_of || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
+ for(genvar p=0;p<4;p=p+1)begin:g_safe_pc
+`ifdef HBM_SAFE_COMPOSED
+  wire[5:0]owner_split;
+  wire[7:0]rp=8'((hbm_ref_base+p)*118/32%118);
+  wire[7:0]reload=8'(118+rp+((rp+118+hbm_ref_base+p)%2));
+  assign safe_of[p]=|owner_split;
+`ifdef HBM_SAFE_FACE
+  // L2H-BW SAFE face successor: every PC port is a flop; KR leaves on the RL1 ABI and the CONSUMER lands it in the
+  // 3-slot RL1 ring (same module as the legacy in-PC collar, here on the consumer side, reset by the consumer's own
+  // two landed stages).  Cycle-identical to the legacy top by construction.
+  wire face_v,face_rdy,face_pf,land_pf;wire[16:0]face_tag;wire[3:0]face_beat;wire[255:0]face_data;
+  reg land_r0,land_r1;always @(posedge hbm)begin land_r0<=hrst;land_r1<=land_r0;end
+  assign safe_pf[p]=face_pf|land_pf;
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(.RESET_LANDING(2)
+`ifdef FACE_MUT_P192_OFF
+   ,.SRAM_P192(0)
+`endif
+`ifdef FACE_MUT_ID
+   ,.BW_MUT_ID_TAG(1)
+`endif
+`ifdef FACE_MC3
+   ,.RST_FOREST(1),.PCID_LOCAL(1),.RST_LEAVES(256),.WROK_COPIES(1)   // HBM-MC3b: reset forest (256 leaves) + local pc_id + wr_ok copies (hdie_pc_ctrl_mc3b_* kits)
+`endif
+`ifdef FACE_MC3C
+   ,.POST_REG(1)   // HBM-MC3c: post SRAM read-data stage (+1 edge; hdie_pc_ctrl_mc3c_* kits; use with FACE_MC3)
+`endif
+  ) u(
+   .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
+   .k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(face_v),.kr_rdy(face_rdy),.kr_tag(face_tag),.kr_beat(face_beat),.kr_data(face_data),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(face_pf),.owner_fault_split(owner_split));
+  // FACE_MUT_SAMEEDGE: negative control -- the consumer ring treats kr_v as same-edge (pushes on its CURRENT ready,
+  // ignoring the RL1 contract): must FAIL (lost / duplicated beats or a ring fault).
+  ot_hbm_svc_kr_ready_bridge #(.REGIONAL_VALID(0)
+`ifdef FACE_MUT_SAMEEDGE
+   ,.MUT(1)
+`endif
+  ) u_land(.clk(hbm),.rst_n(land_r1),
+   .in_v(face_v),.in_v_regions({18{face_v}}),.in_rdy(face_rdy),.in_data({face_tag,face_beat,face_data}),
+   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(land_pf),.occupancy());
+`else
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy #(.RESET_LANDING(2)) u(
+   .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
+   .k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(rv_[p]),.kr_rdy(rrdy[p]),.kr_tag(rt[p*17+:17]),.kr_beat(rb[p*4+:4]),.kr_data(rd[p*256+:256]),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault_split(owner_split));
+`endif
+`else
+  wire native_v,native_rdy,native_pf,bridge_pf;wire[17:0]native_v_regions;
+  wire[16:0]native_tag;wire[3:0]native_beat;wire[255:0]native_data;
+  assign safe_pf[p]=native_pf|bridge_pf;
+  ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)) u(
+   .clk(hbm),.rst_n(hrst),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(native_v),.kr_v_regions(native_v_regions),.kr_rdy(native_rdy),.kr_tag(native_tag),.kr_beat(native_beat),.kr_data(native_data),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(native_pf),.owner_fault(safe_of[p]));
+  ot_hbm_svc_kr_ready_bridge #(.REGIONAL_VALID(1)) u_kr_bridge(.clk(hbm),.rst_n(hrst),
+   .in_v(native_v),.in_v_regions(native_v_regions),.in_rdy(native_rdy),.in_data({native_tag,native_beat,native_data}),
+   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(bridge_pf),.occupancy());
+`endif
+ end
+ assign row_v[31:4]=0;assign col_v[31:4]=0;assign col_we[31:4]=0;
+ assign krdy[31:4]=0;assign rv_[31:4]=0;
+`else
+`ifdef HBM_MR
+ // HBM-BW 2026-10-19: multi-row controller leaves (per-bank open rows, ACT ahead from a 64-entry queue, refresh key)
+ ot_hbm_svc_native_sector_pipeline_leaves_mr controller(.clk(hbm)
+`else
+ ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm)
+`endif,.rst_n(hrst),.pc_clk({32{hbm}}),
   .k_tag(kt),.k_wdata(kw),.k_addr(ka),.kr_rdy(rrdy),.k_wstrb(ks),.k_we(kwe),.k_len(kl),.k_rdy(krdy),.kr_v(rv_),.kr_data(rd),.kr_beat(rb),
   .k_wr_done(kdone),.kr_tag(rt),.k_v(kv),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),.col_we(col_we),
   .col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata),.fault(native_fault));
+`endif
  tb_svg_rel_dram_sparse dram(.clk(hbm),.rst_n(hrst),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),
   .col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata));
  // ---------------- the d4g die SM master
@@ -111,7 +203,7 @@ module tb_hbm_svg_rel_sm;
   f=$fopen(fm,"r");if(f==0)$fatal(1,"MEM");
   while(!$feof(f))begin code=$fscanf(f,"%h %h\n",sa,sd);if(code==2)begin dram.mem[sa]=sd;nm=nm+1;end end
   $fclose(f);$display("MEM sectors=%0d",nm);
-  repeat(4)@(negedge stream);srst=1;repeat(3)@(negedge hbm);hrst=1;
+  repeat(4)@(negedge stream);srst=1;repeat(3+hbm_reset_extra)@(negedge hbm);hrst=1;
   wait(cyc>=nend);
   $display("DONE cycles=%0d results=%0d gos=%0d runs=%0d ing=%0d/%0d xw=%0d/%0d ids=%0d/%0d dram_reads=%0d",cyc,nres,ngo,nrun,pi,ni,px,nx,pd,nd,dram.reads);
   $finish;

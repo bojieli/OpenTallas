@@ -1,0 +1,243 @@
+{
+ "name": "hdie_pc_ctrl_bw_safe",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    129.60000000000002
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    129.60000000000002
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    129.60000000000002
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    302.40000000000003
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    172.8,
+    302.40000000000003
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    302.4,
+    302.40000000000003
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    388.8
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Codex:HBM-BW",
+  "branch": "codex/hbm-bw-safe-1019",
+  "tag": "safe1",
+  "purpose": "Separate opt-in SRAM multi-row controller, functional DS94.22 B/edge; no release bind pending production and native closure.",
+  "extra_paths": [
+   "results/rtl/hbm_ds_layer_tput_1018/hbm_bw_safe_1019"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_safe",
+  "no_bench_reason": "Synthesis/floorplan diagnostic only; submit remains prohibited until production bench and committed mutant witnesses are bound."
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+ },
+ "structural_change": "Replace >2kb indexed metadata flops with 13 real macros/PC; registered per-bank summaries and two-stage ACT selection replace64-entry CAM scan. No data masks; two ACT lookahead stages absorbed by ahead-of-time static fetch, measured.",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "outline": {
+  "w": 432,
+  "h": 475.2
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Replace >2kb indexed metadata flops with 13 real macros/PC; registered per-bank summaries and two-stage ACT selection replace64-entry CAM scan. No data masks; two ACT lookahead stages absorbed by ahead-of-time static fetch, measured."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "pin_balance": true,
+ "util_waiver": "Coordinator explicit 10-19: low fill accepted from measured 13-macro face/lattice/channel bound; outline432x475.2. Measure std area before CTS gate."
+}

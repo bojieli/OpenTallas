@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.hbm_pc_bw_safe_txn.v1",
+  "verdict": "FAIL",
+  "mutant": false,
+  "mutant_parameter": "BW_MUT_ID_TAG",
+  "fail_regex": "BW_SAFE_TXN_BEAT_MISMATCH",
+  "returncode": 1,
+  "source_base_revision": "6659b35b0-without-live-cyclic-guard",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv": "84289c99c68e2f072e31dbb0d6f3d8b22bbdf2e197e258bed352d2ba96ad8744",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "aaf5bfa2e5baf5b1db29ddaf42e858e75666a93785436b898ddd64ca1aa2c5d5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv": "d7e31bc67365f408fea272eafd98d0eba953ddb0fa180527449f63c70bee31b2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "759724459676ced3d5a3f35f62973264dfecb335ee995889a1bcb75a84163401",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "d10a9a3cc5d2a2c27c2cf38a4ca7f30bf199201f7894950ef25a0e2838121954",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "c760b44612132399b4a6a635a0f7d4de1d962f91687b1c806b0c3b8d3f5c94df",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "tools/hbm_layer_vehicle/hbm_pc_bw_safe_txn.py": "dcdd0efa160f478a9da25951f9ebeee908906d11acc2458a2c506abc15bc0255"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "log": "txn_positive.log",
+  "summary": []
+}

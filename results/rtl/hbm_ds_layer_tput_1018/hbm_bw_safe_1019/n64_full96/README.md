@@ -1,0 +1,1 @@
+SAFE n64 source bc42f77a8 (cc723735d + 128x64 stores), ep5 lh-bw-n64-full-1019: PASS 66/66 ops, 154 exact GO, 301 results, END 45260 (= 0b823/0fdb), G320/PADD8/FETCH96 HBM_SAFE_COMPOSED reset 5. JSON checker verdict. First production proof of cc723735d.

@@ -1,0 +1,23 @@
+{
+  "case": "positive",
+  "verdict": "PASS",
+  "returncode": 0,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "275135b6510ea2f45d15bddd8b041db9348e992bd11df1e9dfb18dad16ca7c67",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "490b6e15b92d64e748b768f1040538cb869b73cc0ad9bc58056c147f4eebdbc0",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "a6ad9dc6243362b6db69337a8f32c2505983fd79bf420dcb670fa88939c77cba",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/test/hbm_accel/bw_ring_control/ref_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_80d.sv": "5d6e3052e5ea63d321b613a8bf292a7667ebaeb0bfea482909190e36784caeec",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv": "9f2c385499493641f714567ced8caeafdacd0a07a81b9801f7ca54d6b117fee4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv": "e0fa9447ce545a19fb36795de72000814c8c4035a243520b58dfb87b46fe5102",
+    "tools/hbm_layer_vehicle/hbm_pc_bw_safe_txn.py": "29223011020395df421edee9256c8447885c8102ec07424bfda1007568a327e8",
+    "tools/hbm_layer_vehicle/run_bw_ring_control_equiv.py": "2dfa04b5cb5a7f00b39d82295786f9de329606d8b949a831e30a8f6d4550e5fb"
+  },
+  "generated_cfg_sha256": "e0fa9447ce545a19fb36795de72000814c8c4035a243520b58dfb87b46fe5102",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "fail_regex": null
+}

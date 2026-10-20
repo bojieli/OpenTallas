@@ -1,0 +1,4 @@
+FAULT pc0 pc_fault 0 owner_fault 1 cyc 5
+[18944000] %Fatal: tb_hbm_bw_pc4.sv:110: Assertion failed in tb_hbm_bw_pc4.OWN.unnamedblk3: leaf fault
+%Error: /srv/opentallas-scratch/claude/hbm-bw-finalrate-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:110: Verilog $stop
+Aborting...

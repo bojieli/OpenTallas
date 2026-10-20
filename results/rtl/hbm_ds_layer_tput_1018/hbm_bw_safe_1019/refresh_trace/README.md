@@ -1,0 +1,5 @@
+# Production-derived stale refresh witness
+
+The old eff802c30 safe full96 run reached the L02 native command fault after the full L00 run. The native_diag.cpp diagnostic links unchanged generated model objects (original main symbol renamed), and native_trace.cpp captures accepted PC1 AQ transactions/reset edges. trace.hex contains9099 production HBM cycles. The five-stage refresh argmin selected bank2 again52cycles after its refresh while tRFCpb196 remained protected. Commit bcbbe0918 validates the selected bank against current refreshed/need/open/aok state and spends a stale pull-in slot as a skip.
+
+positive.json pins the fixed AQ source before the later72-reset port expansion: PASS9490 cycles,1630 pushes=1630 columns. mutant.json pins the same source with BW_MUT_REF_STALE, restoring stale acceptance, and fails the actual DRAM timing check `native command illegal REFpb p1 b2`. The port-only latest reset expansion replay is separately required before final qualification. This trace is a focused causal proof, not full SM qualification.

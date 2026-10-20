@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.hbm_bw_eight_pcgroups.v1",
+  "coverage": "All8globalfourPCgroups at varied legalphase samples; notCartesianphaseproof or universalreadinessbound",
+  "cases": [
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 0,
+        "hbm_clock_offset_ps": 173,
+        "hbm_reset_extra": 0
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 12,
+        "hbm_clock_offset_ps": 0,
+        "hbm_reset_extra": 59
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 16,
+        "hbm_clock_offset_ps": 512,
+        "hbm_reset_extra": 117
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 20,
+        "hbm_clock_offset_ps": 0,
+        "hbm_reset_extra": 59
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 24,
+        "hbm_clock_offset_ps": 1023,
+        "hbm_reset_extra": 0
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 28,
+        "hbm_clock_offset_ps": 1023,
+        "hbm_reset_extra": 117
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 4,
+        "hbm_clock_offset_ps": 0,
+        "hbm_reset_extra": 0
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    },
+    {
+      "source_revision": "d8480c8ef91494305b928405904aa5449c618c7a",
+      "phase": {
+        "hbm_ref_base": 8,
+        "hbm_clock_offset_ps": 1023,
+        "hbm_reset_extra": 59
+      },
+      "ops": 66,
+      "ops_pass": 66,
+      "gos": 154,
+      "go_slots_exact": true,
+      "verdict": "PASS",
+      "done": "DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372",
+      "end": 45260
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+ "map4": {
+  "source_netlist_sha256": "27efb5c7bb2b596d0a738cca6346ca6be5ce6329a86d128bc08541e8d19e9b76",
+  "roots_gt32": 49,
+  "reset_roots": 43,
+  "max_reset_loads": 234,
+  "nonreset": [
+   {
+    "label": "_41611_/Y (AO31x2_ASAP7_75t_R)",
+    "loads": 48,
+    "driver_cell": "_41611_",
+    "net": "_17056_"
+   },
+   {
+    "label": "port kr_rdy",
+    "loads": 47,
+    "driver_cell": null,
+    "net": "kr_rdy"
+   },
+   {
+    "label": "_43992_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "driver_cell": "_43992_",
+    "net": "_18378_"
+   },
+   {
+    "label": "_40396_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 36,
+    "driver_cell": "_40396_",
+    "net": "_15881_"
+   },
+   {
+    "label": "_42047_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 36,
+    "driver_cell": "_42047_",
+    "net": "_17207_"
+   },
+   {
+    "label": "_43722_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 34,
+    "driver_cell": "_43722_",
+    "net": "_18129_"
+   }
+  ]
+ },
+ "map5": {
+  "source_netlist_sha256": "a3f9ffd2f518e0ee75d9272f15134d778f6ef5921aa4986e626ed6c02b8db8a1",
+  "roots_gt32": 53,
+  "reset_roots": 43,
+  "max_reset_loads": 236,
+  "nonreset": [
+   {
+    "label": "port kr_rdy",
+    "loads": 45,
+    "driver_cell": null,
+    "net": "kr_rdy"
+   },
+   {
+    "label": "_44075_/Y (NAND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "driver_cell": "_44075_",
+    "net": "_18263_"
+   },
+   {
+    "label": "_44529_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "driver_cell": "_44529_",
+    "net": "_18647_"
+   },
+   {
+    "label": "_44748_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "driver_cell": "_44748_",
+    "net": "_18838_"
+   },
+   {
+    "label": "_57536_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 36,
+    "driver_cell": "_57536_",
+    "net": "_28347_"
+   },
+   {
+    "label": "_47946_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 35,
+    "driver_cell": "_47946_",
+    "net": "_21859_"
+   },
+   {
+    "label": "_42062_/Y (AND4x1_ASAP7_75t_R)",
+    "loads": 34,
+    "driver_cell": "_42062_",
+    "net": "_17257_"
+   },
+   {
+    "label": "_58287_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 34,
+    "driver_cell": "_58287_",
+    "net": "_28860_"
+   },
+   {
+    "label": "_46586_/Y (OA211x2_ASAP7_75t_R)",
+    "loads": 33,
+    "driver_cell": "_46586_",
+    "net": "_20557_"
+   },
+   {
+    "label": "_60373_/Y (AOI21x1_ASAP7_75t_R)",
+    "loads": 33,
+    "driver_cell": "_60373_",
+    "net": "_30372_"
+   }
+  ]
+ },
+ "map6": {
+  "source_netlist_sha256": "6fe99811804c59a98db37f086d01fbe4bc7fbe08b389cd42f6d949089a83116d",
+  "roots_gt32": 48,
+  "reset_roots": 43,
+  "max_reset_loads": 237,
+  "nonreset": [
+   {
+    "label": "u_native.controller.head_bank_local[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "driver_cell": "u_native.controller.head_bank_local[4]$_DFF_P_",
+    "net": "_09245_"
+   },
+   {
+    "label": "_41619_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 37,
+    "driver_cell": "_41619_",
+    "net": "_15880_"
+   },
+   {
+    "label": "_41723_/Y (NAND2x2_ASAP7_75t_R)",
+    "loads": 35,
+    "driver_cell": "_41723_",
+    "net": "_15981_"
+   },
+   {
+    "label": "_51281_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 34,
+    "driver_cell": "_51281_",
+    "net": "_24019_"
+   },
+   {
+    "label": "_51266_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 33,
+    "driver_cell": "_51266_",
+    "net": "_24004_"
+   }
+  ]
+ },
+ "verdict": "FAIL: SAFE checklist item 3 (no register/cone root >32 loads) not met in any actual mapped census; no CTS/gate admitted",
+ "remote": {
+  "map4": "ot-epyc8:/srv/opentallas-scratch/claude/hbm-bw-composed-map4-1019",
+  "map5": "ot-epyc8:/srv/opentallas-scratch/claude/hbm-bw-composed-map5-1019",
+  "map6": "ot-epyc8:/srv/opentallas-scratch/claude/hbm-bw-composed-map6-1019"
+ }
+}
