@@ -1,0 +1,104 @@
+[
+  {
+    "driver": "_146915_/Y",
+    "loads": 42,
+    "sequential_origins": [
+      {
+        "driver": "u_ot_pr_core.p_sb[0]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      {
+        "driver": "u_ot_pr_core.p_sb[3]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    ],
+    "combinational_cone": [
+      {
+        "master": "NOR2x1_ASAP7_75t_R",
+        "inst": "_146915_",
+        "out": "Y",
+        "function": "(!A * !B)"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_142871_",
+        "out": "Y",
+        "function": "A"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_146710_",
+        "out": "Y",
+        "function": "A"
+      }
+    ]
+  },
+  {
+    "driver": "_146930_/Y",
+    "loads": 37,
+    "sequential_origins": [
+      {
+        "driver": "u_ot_pr_core.p_sb[0]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      {
+        "driver": "u_ot_pr_core.p_sb[3]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    ],
+    "combinational_cone": [
+      {
+        "master": "AND2x2_ASAP7_75t_R",
+        "inst": "_146930_",
+        "out": "Y",
+        "function": "(A * B)"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_142871_",
+        "out": "Y",
+        "function": "A"
+      },
+      {
+        "master": "INVx1_ASAP7_75t_R",
+        "inst": "_146711_",
+        "out": "Y",
+        "function": "!A"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_146710_",
+        "out": "Y",
+        "function": "A"
+      }
+    ]
+  },
+  {
+    "driver": "_146931_/Y",
+    "loads": 36,
+    "sequential_origins": [
+      {
+        "driver": "u_ot_pr_core.p_sb[2]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      {
+        "driver": "u_ot_pr_core.p_sb[1]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    ],
+    "combinational_cone": [
+      {
+        "master": "AND2x2_ASAP7_75t_R",
+        "inst": "_146931_",
+        "out": "Y",
+        "function": "(A * B)"
+      },
+      {
+        "master": "INVx1_ASAP7_75t_R",
+        "inst": "_142864_",
+        "out": "Y",
+        "function": "!A"
+      }
+    ]
+  }
+]

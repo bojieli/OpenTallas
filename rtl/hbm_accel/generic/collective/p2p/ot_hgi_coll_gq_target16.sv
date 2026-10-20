@@ -41,7 +41,7 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     output wire [103:0] cfg_bank_addr,
     output wire [12:0] start_bank_v
 `ifdef OT_GQ_N32
-    ,output wire [15:0] start_base_bank
+    ,output wire [31:0] start_base_bank
 `endif
 );
     localparam integer ROWS=16;
@@ -112,14 +112,14 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `ifdef OT_GQ_N32
     // N32 (HBM-GQ7 10-20): the launch commit gate reached 34-38 loads (13 start-bank copies + the 29 start-field enables);
     // four kept copies: [0] start-bank copies, [1] start base, [2] start limit, [3] start loops. Same edge, same function.
-    wire[7:0]launch_c;
-    generate for(genvar g=0;g<8;g=g+1)begin:g_launch_gate
+    wire[11:0]launch_c;
+    generate for(genvar g=0;g<12;g=g+1)begin:g_launch_gate
         (* keep="true" *)ot_gq_t16_launch u_gate(.lv(lv),.armed(armed),.validated(validated),.scanning(scanning),
             .commit(commit),.active(program_active),.fault(fault),.cv(cv),.dv(dv),.q(launch_c[g]));
     end endgenerate
     wire launch_emit=launch_c[0];
-    // Existing launch edge, independent kept4-bit base copies per calendar read consumer.
-    generate for(genvar g=0;g<4;g=g+1)begin:g_base_copy
+    // Existing launch edge, independent kept4-bit base copies per calendar/period/fault/b0 consumer.
+    generate for(genvar g=0;g<8;g=g+1)begin:g_base_copy
       (* keep="true" *)ot_gq_t16_base_copy u_copy(.clk(clk),.en(launch_c[4+g]),
 `ifdef OT_GQ_MUT_BASE_SHADOW
         .d(stored_base[3:0]^((g==0)?4'd1:4'd0)),
