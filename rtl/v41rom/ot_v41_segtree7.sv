@@ -108,19 +108,24 @@ module ot_v41_segtree7 #(
     wire [QD-1:0] rpk [0:NQ-1];
     wire [QD-1:0] nxs [0:NQ-1];
     for (genvar g = 0; g < NQ; g = g + 1) begin : g_rp
-        ot_v41_kreg #(.W(QD), .AR(1), .RV({{(QD-1){1'b0}}, 1'b1})) u_r (.clk(clk), .arst_n(g == 0 ? r_p0 : r_p1), .d(uq[g] ? rotl(rpk[g]) : rpk[g]), .q(rpk[g]));
+        ot_v41_kreg #(.W(QD), .AR(1), .RV({{(QD-1){1'b0}}, 1'b1})) u_r (.clk(clk), .arst_n(r_p1), .d(uq[g] ? rotl(rpk[g]) : rpk[g]), .q(rpk[g]));
 `ifdef OT_NP_TREE_MUT_Q
         assign nxs[g] = rpk[g];                                                // negative control: the pop's advance ignored
 `else
         assign nxs[g] = uq[g] ? rotl(rpk[g]) : rpk[g];
 `endif
     end
+    // TILES-D q4_d2: per-entry write enables as kept ANDs (in_vk[3] had 80 loads through the per-bit enables)
+    wire [QD-1:0] wek [0:3];
+    for (genvar g = 0; g < 4; g = g + 1) begin : g_we
+        ot_v41_kand #(.W(QD)) u_k (.a({QD{in_vk[g]}}), .b(wpk[g]), .y(wek[g]));
+    end
     always @(posedge clk) begin
         for (int i = 0; i < QD; i++) begin
-            if (in_vk[0] && wpk[0][i]) qv[i][10:0] <= in_val[10:0];
-            if (in_vk[1] && wpk[1][i]) qv[i][21:11] <= in_val[21:11];
-            if (in_vk[2] && wpk[2][i]) qv[i][31:22] <= in_val[31:22];
-            if (in_vk[3] && wpk[3][i]) begin qt[i] <= in_tree; qf[i] <= in_final; qe[i] <= in_err; qp[i] <= in_pos; end
+            if (wek[0][i]) qv[i][10:0] <= in_val[10:0];
+            if (wek[1][i]) qv[i][21:11] <= in_val[21:11];
+            if (wek[2][i]) qv[i][31:22] <= in_val[31:22];
+            if (wek[3][i]) begin qt[i] <= in_tree; qf[i] <= in_final; qe[i] <= in_err; qp[i] <= in_pos; end
         end
     end
     reg [31:0] h_v; reg [PW-1:0] h_t; reg h_f, h_e; reg [2:0] h_p;
