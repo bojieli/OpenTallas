@@ -39,7 +39,8 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    dr=row['direction'];width=row['width']
    if dr not in ('input','output') or type(width) is not int or width<1:
     raise ValueError(f'{n}.{pin}: unsupported macro port contract')
-   if dr!=mp[pin]['direction'] or dr!=pd[pin] or width!=len(mp[pin]['bits']) or width!=len(con[pin]):
+   if dr!=mp[pin]['direction'] or dr!=pd[pin] or width!=len(mp[pin]['bits']) or not (
+       width==len(con[pin]) or (dr=='output' and not con[pin])):
     raise ValueError(f'{n}.{pin}: macro direction/width mismatch')
    if type(row.get('clock')) is not bool:raise ValueError(f'{n}.{pin}: explicit boolean clock role required')
    if row['clock'] and dr!='input':raise ValueError(f'{n}.{pin}: macro clock must be input')
@@ -76,8 +77,14 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    sub=design['modules'][c['type']];mapping={}
    assert not int(sub.get('attributes',{}).get('blackbox','0'),2),c['type']
    for p,v in sub['ports'].items():
-    assert len(v['bits'])==len(c['connections'][p])
-    for b,d in zip(v['bits'],c['connections'][p]):mapping[b]=d
+    if p not in c['connections']:raise ValueError(f'{n}.{p}: expanded child port missing from source connection metadata')
+    con=c['connections'].get(p,[])
+    if len(v['bits'])!=len(con) and not (v['direction']=='output' and not con):
+     raise ValueError(f'{n}.{p}: expanded child input/partial-output width mismatch')
+    for b,d in zip(v['bits'],con):
+     if b in mapping and mapping[b]!=d:
+      raise ValueError(f'{n}.{p}: conflicting aliased child port terminals')
+     mapping[b]=d
    for sc in sub['cells'].values():
     for bs in sc['connections'].values():
      for b in bs:
@@ -267,7 +274,7 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    def param_value(pin,value):
     return sv_string(value) if macro_contracts[typ].get('parameter_types',{}).get(pin)=='string' else str(len(value))+"'b"+value
    pars=','.join('.'+vid(p)+'('+param_value(p,v)+')' for p,v in c.get('parameters',{}).items())
-   con=','.join('.'+vid(p)+'('+bus(bs)+')' for p,bs in c['connections'].items())
+   con=','.join('.'+vid(p)+'('+(bus(bs) if bs else '')+')' for p,bs in c['connections'].items())
    lines.append(f'{vid(typ)} '+(f'#({pars}) ' if pars else '')+f'{vid(n)}({con});')
    continue
   if typ=='$_QFD_RING_':

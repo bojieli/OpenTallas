@@ -59,6 +59,28 @@ def main():
     assert terminal['original_connections']['CLK'] == terminal['emitted_connections']['CLK']
     assert terminal['original_connections']['Q'] == terminal['emitted_connections']['Q']
     assert len(set(terminal['emitted_connections']['D'])) == 5
+    unused,unused_contract=copy.deepcopy(design),copy.deepcopy(contracts)
+    unused['modules']['real_memory']['ports']['UNUSED']={'direction':'output','bits':[69]}
+    unused['modules']['top']['cells']['u_gi.u_mem']['connections']['UNUSED']=[]
+    unused['modules']['top']['cells']['u_gi.u_mem']['port_directions']['UNUSED']='output'
+    unused_contract['real_memory']['ports']['UNUSED']=dict(direction='output',width=1,clock=False)
+    ur,_,urc=run(unused,unused_contract)
+    assert '.UNUSED()' in ur
+    assert urc['retained_macro_terminals'][0]['emitted_connections']['UNUSED']==[]
+    partial=copy.deepcopy(unused);partial['modules']['top']['cells']['u_gi.u_mem']['connections']['D']=[]
+    rejects(partial,unused_contract,'direction/width mismatch')
+    # Logical children may also have explicitly unconnected outputs after
+    # synthesis. Expand their actual body and prune only unobserved logic.
+    nested=copy.deepcopy(design)
+    nested['modules']['logical']={'ports':{'C':{'direction':'input','bits':[1]},
+      'D':{'direction':'input','bits':[2]},'Q':{'direction':'output','bits':[3]},
+      'UNUSED':{'direction':'output','bits':[4]}},'cells':{
+      'q':{'type':'$_DFF_P_','connections':{'C':[1],'D':[2],'Q':[3]},'port_directions':{'C':'input','D':'input','Q':'output'}},
+      'unused':{'type':'$_DFF_P_','connections':{'C':[1],'D':[2],'Q':[4]},'port_directions':{'C':'input','D':'input','Q':'output'}}}}
+    nested['modules']['top']['cells']['data_root']={'type':'logical','connections':{'C':[2],'D':[3],'Q':[5],'UNUSED':[]},
+      'port_directions':{'C':'input','D':'input','Q':'output','UNUSED':'output'}}
+    _,_,nrc=run(nested,contracts)
+    assert nrc['unconsumed_cells_removed']==1
     strings, string_contracts = copy.deepcopy(design), copy.deepcopy(contracts)
     string_values={'VIAMAP':'', 'INSTANCE':'die/rom_"quoted"\\literal\nline', 'BINARY_TEXT':'0011'}
     strings['modules']['top']['cells']['u_gi.u_mem']['parameters'].update(string_values)
