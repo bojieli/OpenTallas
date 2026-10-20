@@ -1,0 +1,15 @@
+HEALTH_STALE_RELATCH src=-1 cyc=8140 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8141 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8142 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8143 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8144 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8145 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8146 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8147 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8148 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8149 lat=-1
+HEALTH_STALE_RELATCH src=-1 cyc=8150 lat=-1
+KV_HEALTH_PLANE_FAIL errors=27448 checks=112596
+[164502000] %Fatal: tb.sv:57: Assertion failed in tb
+%Error: tb.sv:57: Verilog $stop
+Aborting...

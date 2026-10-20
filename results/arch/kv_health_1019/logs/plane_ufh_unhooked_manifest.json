@@ -1,0 +1,26 @@
+{
+ "sources": 352,
+ "cells": 1342,
+ "transports": 85,
+ "dmax_plane": 183,
+ "hold_k": 273,
+ "mutant": "ufh_unhooked",
+ "ufh": "n_hf__f0__r34[0]",
+ "rtl": [
+  "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv"
+ ],
+ "clocks": [
+  "n_clk_core_EN[0]",
+  "n_clk_core_ES[0]",
+  "n_clk_core_WN[0]",
+  "n_clk_core_WS[0]",
+  "n_clk_core_c[0]"
+ ],
+ "resets": [
+  "n_rrs_n_rst_die_t0_0__g4_s15[0]"
+ ],
+ "sink_reset": "n_rrs_n_rst_die_t0_0__g4_s15[0]",
+ "qualification": "logical plane on the emitted netlist; lane transports abstract fixed delays"
+}
