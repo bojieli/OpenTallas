@@ -81,6 +81,35 @@ def matching(threshold):
             return None
     return {matrix[i]['instance']:points[j] for j,i in occupied.items()}
 
+def hall_witness(threshold):
+    occupied = {}
+    neighbors = {i:[j for j in range(len(points)) if matrix[i]['values'][j]['max_endpoint_upper_bound_um']<=threshold+1e-8]
+                 for i in range(len(matrix))}
+    def place(i,seen):
+        for j in neighbors[i]:
+            if j in seen:continue
+            seen.add(j)
+            if j not in occupied or place(occupied[j],seen):
+                occupied[j]=i
+                return True
+        return False
+    for i in range(len(matrix)):
+        place(i,set())
+    left=set(range(len(matrix)))-set(occupied.values())
+    right=set()
+    todo=list(left)
+    while todo:
+        i=todo.pop()
+        for j in neighbors[i]:
+            right.add(j)
+            if j in occupied and occupied[j] not in left:
+                left.add(occupied[j]);todo.append(occupied[j])
+    return {'threshold_um':threshold,'maximum_matching_cardinality':len(occupied),
+            'ring_subset':[matrix[i]['instance'] for i in sorted(left)],
+            'all_allowed_points_for_subset':[points[j] for j in sorted(right)],
+            'ring_subset_count':len(left),'allowed_point_count':len(right),'deficit':len(left)-len(right),
+            'meaning':'Hall deficiency proves no identity-preserving injective assignment under this fixed-endpoint matrix.'}
+
 assignment = None if coupled else matching(float('inf'))
 best = None
 if assignment:
@@ -121,6 +150,7 @@ result={'schema':'opentallas.grp_fixed_endpoint_full_cone_placement_model.v1',
         'original':projection({}), 'inter_ring_stage_pairs':coupled,'per_ring_grid_matrix':matrix,
         'identity_fixed_matching_status':'COUPLED_NOT_SOLVED' if coupled else ('FEASIBLE' if assignment and best<=405+1e-8 else 'INFEASIBLE'),
         'minimum_bottleneck_upper_bound_um':best,'minimum_bottleneck_assignment_lower_left_um':assignment,
+        'hall_witness_at405':None if coupled else hall_witness(405),
         'minimum_bottleneck_assignment_projection':projection(assignment) if assignment else None,
         'reach_safe_assignment_lower_left_um':assignment if assignment and best<=405+1e-8 else None,
         'parent_displacement_assignment_errors':candidate_errors,
