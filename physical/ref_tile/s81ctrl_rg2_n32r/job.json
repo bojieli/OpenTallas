@@ -1,5 +1,5 @@
 {
- "name": "s81ctrl_rg2_n32r-n32r-eefd80919",
+ "name": "s81ctrl_rg2_n32r-n32r-396b30d19",
  "block": "dsfd_ctrl_rg2",
  "ref_tile": true,
  "owner": "Claude:S81-LINK4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-link4-1020",
-  "commit": "eefd809193f07b6556155931b6857e228094db5b",
+  "commit": "396b30d193c2fb2f342f675570c92ef14dfa652a",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/chip",
@@ -133,7 +133,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81ctrl_rg2_n32r/s81ctrl_rg2_n32r-n32r-eefd80919"
+   "to": "results/rtl/ref_tile/s81ctrl_rg2_n32r/s81ctrl_rg2_n32r-n32r-396b30d19"
   }
  ],
  "cycles_added": 0,
