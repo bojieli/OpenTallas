@@ -5,7 +5,7 @@
 // the bank, 2..6 -> the service), QB_MUT = split-only bank mutants; both 0 in every kit.
 module qfd_native59_split_flat #(
  parameter integer SMUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,QB_MUT=0
+ parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,QB_MUT=0,SVC_RECV=0,SVC_RECV_MUT=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -32,7 +32,7 @@ module qfd_native59_split_flat #(
   .ck(ck),.rst_n(rst_n),.dd_i(dd_i),.layer_context_v(layer_context_v),.command_stage(command_stage),
   .q_slot(q_slot),.q_slot_beat(q_slot_beat),.dd_o(rl_dd),.lcv_o(rl_lcv),.stage_o(rl_stage),
   .qb_v(qb_v),.qb_beat(qb_beat),.qb_row(qb_row),.qb_full(qb_full),.qb_committed(qb_committed),.qb_bad(qb_bad));
- qfd_native59_svc #(.MUT((SMUT>=2&&SMUT<=6)?SMUT:0),.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE),.LAND_QUALIFIED(LAND_QUALIFIED),
+ qfd_native59_svc #(.RECV_INPUTS(SVC_RECV),.RECV_MUT(SVC_RECV_MUT),.MUT((SMUT>=2&&SMUT<=6)?SMUT:0),.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE),.LAND_QUALIFIED(LAND_QUALIFIED),
   .LAND_EDGES(LAND_EDGES),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMB_RELAY)) u_svc(
   .ck(ck),.rst_n(rst_n),
   .host_epoch_valid(host_epoch_valid),.host_fused_capability(host_fused_capability),.host_epoch(host_epoch),

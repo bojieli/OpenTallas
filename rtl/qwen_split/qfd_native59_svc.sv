@@ -7,6 +7,7 @@
 // svc3: tx payload too (TX_FREE, MCTX 1) and the DV fault as four sticky flops.
 module qfd_native59_svc #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
+ parameter integer RECV_INPUTS=0,RECV_MUT=0,
  parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
 )(
  input wire ck,rst_n,
@@ -28,6 +29,210 @@ module qfd_native59_svc #(
  input wire visibility_slot,complete_slot,output wire completed,output reg[94:0]native_ret,
  output reg fault
 );
+ // Opt-in v4: every functional receiving pin lands one edge before the legacy service graph.
+ // Uniform input shift preserves field alignment. No reset on payload flops; static reset idle window applies.
+ // Default RECV_INPUTS=0 is the original combinational alias, with no added edges.
+ wire  bnd_host_epoch_valid;
+ wire  bnd_host_fused_capability;
+ wire [15:0] bnd_host_epoch;
+ wire [58:0] bnd_host_tag;
+ wire [1:0] bnd_host_generation;
+ wire  bnd_layer_context_v;
+ wire [5:0] bnd_command_stage;
+ wire [17:0] bnd_native_token;
+ wire [17:0] bnd_native_position;
+ wire [379:0] bnd_native_cmd;
+ wire [547:0] bnd_dd_i;
+ wire  bnd_kv_word_slot;
+ wire [1:0] bnd_kv_word_index;
+ wire  bnd_kv_x3_slot;
+ wire  bnd_qb_v;
+ wire [4:0] bnd_qb_beat;
+ wire [511:0] bnd_qb_row;
+ wire  bnd_qb_full;
+ wire  bnd_qb_committed;
+ wire  bnd_qb_bad;
+ wire  bnd_tx_slot;
+ wire [3:0] bnd_tx_slot_kind;
+ wire [4:0] bnd_tx_slot_beat;
+ wire  bnd_native_rx_v;
+ wire [547:0] bnd_native_rx_payload;
+ wire  bnd_rx_slot;
+ wire [3:0] bnd_rx_slot_kind;
+ wire [4:0] bnd_rx_slot_beat;
+ wire [511:0] bnd_emb_code_q;
+ wire [15:0] bnd_emb_scale_q;
+ wire  bnd_visibility_slot;
+ wire  bnd_complete_slot;
+ generate if(RECV_INPUTS!=0)begin:g_recv
+  (* keep = "true" *) reg  p_host_epoch_valid;
+  always @(posedge ck) p_host_epoch_valid<=host_epoch_valid;
+  assign bnd_host_epoch_valid=p_host_epoch_valid;
+  (* keep = "true" *) reg  p_host_fused_capability;
+  always @(posedge ck) p_host_fused_capability<=host_fused_capability;
+  assign bnd_host_fused_capability=p_host_fused_capability;
+  (* keep = "true" *) reg [15:0] p_host_epoch;
+  always @(posedge ck) p_host_epoch<=host_epoch;
+  assign bnd_host_epoch=p_host_epoch;
+  (* keep = "true" *) reg [58:0] p_host_tag;
+  always @(posedge ck) p_host_tag<=host_tag;
+  assign bnd_host_tag=p_host_tag;
+  (* keep = "true" *) reg [1:0] p_host_generation;
+  always @(posedge ck) p_host_generation<=host_generation;
+  assign bnd_host_generation=p_host_generation;
+  (* keep = "true" *) reg  p_layer_context_v;
+  always @(posedge ck) p_layer_context_v<=layer_context_v;
+  assign bnd_layer_context_v=p_layer_context_v;
+  (* keep = "true" *) reg [5:0] p_command_stage;
+  always @(posedge ck) p_command_stage<=command_stage;
+  assign bnd_command_stage=p_command_stage;
+  (* keep = "true" *) reg [17:0] p_native_token;
+  always @(posedge ck) p_native_token<=native_token;
+  assign bnd_native_token=p_native_token;
+  (* keep = "true" *) reg [17:0] p_native_position;
+  always @(posedge ck) p_native_position<=native_position;
+  assign bnd_native_position=p_native_position;
+  (* keep = "true" *) reg [379:0] p_native_cmd;
+  always @(posedge ck) p_native_cmd<=native_cmd;
+  assign bnd_native_cmd=p_native_cmd;
+  (* keep = "true" *) reg [547:0] p_dd_i;
+  always @(posedge ck) p_dd_i<=dd_i;
+  assign bnd_dd_i=p_dd_i;
+  (* keep = "true" *) reg  p_kv_word_slot;
+  always @(posedge ck) p_kv_word_slot<=kv_word_slot;
+  assign bnd_kv_word_slot=p_kv_word_slot;
+  (* keep = "true" *) reg [1:0] p_kv_word_index;
+  always @(posedge ck) p_kv_word_index<=kv_word_index;
+  assign bnd_kv_word_index=p_kv_word_index;
+  (* keep = "true" *) reg  p_kv_x3_slot;
+  always @(posedge ck) p_kv_x3_slot<=kv_x3_slot;
+  assign bnd_kv_x3_slot=p_kv_x3_slot;
+  (* keep = "true" *) reg  p_qb_v;
+  always @(posedge ck) p_qb_v<=qb_v;
+  if(RECV_MUT==2)begin:g_late_qb_v
+   (* keep = "true" *) reg  late;
+   always @(posedge ck) late<=p_qb_v;
+   assign bnd_qb_v=late;
+  end else begin:g_main_qb_v
+   assign bnd_qb_v=(RECV_MUT==1)?qb_v:p_qb_v;
+  end
+  (* keep = "true" *) reg [4:0] p_qb_beat;
+  always @(posedge ck) p_qb_beat<=qb_beat;
+  if(RECV_MUT==2)begin:g_late_qb_beat
+   (* keep = "true" *) reg [4:0] late;
+   always @(posedge ck) late<=p_qb_beat;
+   assign bnd_qb_beat=late;
+  end else begin:g_main_qb_beat
+   assign bnd_qb_beat=(RECV_MUT==1)?qb_beat:p_qb_beat;
+  end
+  (* keep = "true" *) reg [511:0] p_qb_row;
+  always @(posedge ck) p_qb_row<=qb_row;
+  if(RECV_MUT==2)begin:g_late_qb_row
+   (* keep = "true" *) reg [511:0] late;
+   always @(posedge ck) late<=p_qb_row;
+   assign bnd_qb_row=late;
+  end else begin:g_main_qb_row
+   assign bnd_qb_row=(RECV_MUT==1)?qb_row:p_qb_row;
+  end
+  (* keep = "true" *) reg  p_qb_full;
+  always @(posedge ck) p_qb_full<=qb_full;
+  if(RECV_MUT==2)begin:g_late_qb_full
+   (* keep = "true" *) reg  late;
+   always @(posedge ck) late<=p_qb_full;
+   assign bnd_qb_full=late;
+  end else begin:g_main_qb_full
+   assign bnd_qb_full=(RECV_MUT==1)?qb_full:p_qb_full;
+  end
+  (* keep = "true" *) reg  p_qb_committed;
+  always @(posedge ck) p_qb_committed<=qb_committed;
+  if(RECV_MUT==2)begin:g_late_qb_committed
+   (* keep = "true" *) reg  late;
+   always @(posedge ck) late<=p_qb_committed;
+   assign bnd_qb_committed=late;
+  end else begin:g_main_qb_committed
+   assign bnd_qb_committed=(RECV_MUT==1)?qb_committed:p_qb_committed;
+  end
+  (* keep = "true" *) reg  p_qb_bad;
+  always @(posedge ck) p_qb_bad<=qb_bad;
+  if(RECV_MUT==2)begin:g_late_qb_bad
+   (* keep = "true" *) reg  late;
+   always @(posedge ck) late<=p_qb_bad;
+   assign bnd_qb_bad=late;
+  end else begin:g_main_qb_bad
+   assign bnd_qb_bad=(RECV_MUT==1)?qb_bad:p_qb_bad;
+  end
+  (* keep = "true" *) reg  p_tx_slot;
+  always @(posedge ck) p_tx_slot<=tx_slot;
+  assign bnd_tx_slot=p_tx_slot;
+  (* keep = "true" *) reg [3:0] p_tx_slot_kind;
+  always @(posedge ck) p_tx_slot_kind<=tx_slot_kind;
+  assign bnd_tx_slot_kind=p_tx_slot_kind;
+  (* keep = "true" *) reg [4:0] p_tx_slot_beat;
+  always @(posedge ck) p_tx_slot_beat<=tx_slot_beat;
+  assign bnd_tx_slot_beat=p_tx_slot_beat;
+  (* keep = "true" *) reg  p_native_rx_v;
+  always @(posedge ck) p_native_rx_v<=native_rx_v;
+  assign bnd_native_rx_v=p_native_rx_v;
+  (* keep = "true" *) reg [547:0] p_native_rx_payload;
+  always @(posedge ck) p_native_rx_payload<=native_rx_payload;
+  assign bnd_native_rx_payload=p_native_rx_payload;
+  (* keep = "true" *) reg  p_rx_slot;
+  always @(posedge ck) p_rx_slot<=rx_slot;
+  assign bnd_rx_slot=p_rx_slot;
+  (* keep = "true" *) reg [3:0] p_rx_slot_kind;
+  always @(posedge ck) p_rx_slot_kind<=rx_slot_kind;
+  assign bnd_rx_slot_kind=p_rx_slot_kind;
+  (* keep = "true" *) reg [4:0] p_rx_slot_beat;
+  always @(posedge ck) p_rx_slot_beat<=rx_slot_beat;
+  assign bnd_rx_slot_beat=p_rx_slot_beat;
+  (* keep = "true" *) reg [511:0] p_emb_code_q;
+  always @(posedge ck) p_emb_code_q<=emb_code_q;
+  assign bnd_emb_code_q=p_emb_code_q;
+  (* keep = "true" *) reg [15:0] p_emb_scale_q;
+  always @(posedge ck) p_emb_scale_q<=emb_scale_q;
+  assign bnd_emb_scale_q=p_emb_scale_q;
+  (* keep = "true" *) reg  p_visibility_slot;
+  always @(posedge ck) p_visibility_slot<=visibility_slot;
+  assign bnd_visibility_slot=p_visibility_slot;
+  (* keep = "true" *) reg  p_complete_slot;
+  always @(posedge ck) p_complete_slot<=complete_slot;
+  assign bnd_complete_slot=p_complete_slot;
+ end else begin:g_recv_off
+  assign bnd_host_epoch_valid=host_epoch_valid;
+  assign bnd_host_fused_capability=host_fused_capability;
+  assign bnd_host_epoch=host_epoch;
+  assign bnd_host_tag=host_tag;
+  assign bnd_host_generation=host_generation;
+  assign bnd_layer_context_v=layer_context_v;
+  assign bnd_command_stage=command_stage;
+  assign bnd_native_token=native_token;
+  assign bnd_native_position=native_position;
+  assign bnd_native_cmd=native_cmd;
+  assign bnd_dd_i=dd_i;
+  assign bnd_kv_word_slot=kv_word_slot;
+  assign bnd_kv_word_index=kv_word_index;
+  assign bnd_kv_x3_slot=kv_x3_slot;
+  assign bnd_qb_v=qb_v;
+  assign bnd_qb_beat=qb_beat;
+  assign bnd_qb_row=qb_row;
+  assign bnd_qb_full=qb_full;
+  assign bnd_qb_committed=qb_committed;
+  assign bnd_qb_bad=qb_bad;
+  assign bnd_tx_slot=tx_slot;
+  assign bnd_tx_slot_kind=tx_slot_kind;
+  assign bnd_tx_slot_beat=tx_slot_beat;
+  assign bnd_native_rx_v=native_rx_v;
+  assign bnd_native_rx_payload=native_rx_payload;
+  assign bnd_rx_slot=rx_slot;
+  assign bnd_rx_slot_kind=rx_slot_kind;
+  assign bnd_rx_slot_beat=rx_slot_beat;
+  assign bnd_emb_code_q=emb_code_q;
+  assign bnd_emb_scale_q=emb_scale_q;
+  assign bnd_visibility_slot=visibility_slot;
+  assign bnd_complete_slot=complete_slot;
+ end endgenerate
+ initial if(RECV_MUT<0||RECV_MUT>2||(RECV_MUT!=0&&RECV_INPUTS==0)) $fatal(1,"N59 RECV_MUT requires opt-in receiver (0 clean, 1 QB bypass, 2 QB extra edge)");
+
  localparam integer SAFE=2;
  integer l;
  // ---------------------------------------------------------------- reset distribution (ROOT-RST, QW-N59 10-19)
@@ -65,12 +270,12 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    p_kvs<=0;p_x3s<=0;p_kvi<=0;p_ts<=0;p_tk<=0;p_tb<=0;p_rv<=0;p_rp<=0;p_rs<=0;p_rk<=0;p_rb<=0;
    p_ecq<=0;p_esq<=0;p_vis<=0;p_cs<=0;
   end else begin
-   p_hev<=host_epoch_valid;p_hfc<=host_fused_capability;p_he<=host_epoch;p_ht<=host_tag;p_hg<=host_generation;
-   p_lcv<=layer_context_v;p_stage<=command_stage;p_tok<=native_token;p_pos<=native_position;p_cmd<=native_cmd;p_dd<=dd_i;
-   p_kvs<=kv_word_slot;p_x3s<=kv_x3_slot;p_kvi<=kv_word_index;
-   p_ts<=tx_slot;p_tk<=tx_slot_kind;p_tb<=tx_slot_beat;p_rv<=native_rx_v;p_rp<=native_rx_payload;
-   p_rs<=rx_slot;p_rk<=rx_slot_kind;p_rb<=rx_slot_beat;p_ecq<=emb_code_q;p_esq<=emb_scale_q;
-   p_vis<=visibility_slot;p_cs<=complete_slot;
+   p_hev<=bnd_host_epoch_valid;p_hfc<=bnd_host_fused_capability;p_he<=bnd_host_epoch;p_ht<=bnd_host_tag;p_hg<=bnd_host_generation;
+   p_lcv<=bnd_layer_context_v;p_stage<=bnd_command_stage;p_tok<=bnd_native_token;p_pos<=bnd_native_position;p_cmd<=bnd_native_cmd;p_dd<=bnd_dd_i;
+   p_kvs<=bnd_kv_word_slot;p_x3s<=bnd_kv_x3_slot;p_kvi<=bnd_kv_word_index;
+   p_ts<=bnd_tx_slot;p_tk<=bnd_tx_slot_kind;p_tb<=bnd_tx_slot_beat;p_rv<=bnd_native_rx_v;p_rp<=bnd_native_rx_payload;
+   p_rs<=bnd_rx_slot;p_rk<=bnd_rx_slot_kind;p_rb<=bnd_rx_slot_beat;p_ecq<=bnd_emb_code_q;p_esq<=bnd_emb_scale_q;
+   p_vis<=bnd_visibility_slot;p_cs<=bnd_complete_slot;
   end
  // ---------------------------------------------------------------- command context (unchanged child)
  wire[94:0]service_ret_raw;
@@ -112,7 +317,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .service_active(active),.ctx_user(c_user),.ctx_epoch(c_epoch),
   .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
  end endgenerate
- // ---------------------------------------------------------------- dd word decode (the bank relays dd_i one edge: see the header)
+ // ---------------------------------------------------------------- dd word decode (the bank relays bnd_dd_i one edge: see the header)
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
  wire dd_q=dd_v&&dd_kind==2'd0,dd_kv=dd_v&&(dd_kind==2'd1||dd_kind==2'd2);
  wire dd_form_bad=(!dd_v&&(|p_dd[546:0]))||(dd_v&&((|p_dd[88:0])||dd_mask==8'd0||dd_kind==2'd3));
@@ -121,14 +326,14 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire vm_q_epoch,vm_q_start;
  wire q_open=(MUT==4)?vm_q_start:request_slot;
  reg qctx,qlock;
- wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||qb_bad;
+ wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||bnd_qb_bad;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin qctx<=0;qlock<=0;end
   else if(begin_slot)begin qctx<=1;qlock<=0;end
   else begin if(q_open)qlock<=1;end
- wire q_committed=qb_committed;
- wire[511:0]qrow=qb_row;wire qrow_full=qb_full;
- wire q_emit=qb_v;wire[4:0]q_emit_beat=qb_beat;
+ wire q_committed=bnd_qb_committed;
+ wire[511:0]qrow=bnd_qb_row;wire qrow_full=bnd_qb_full;
+ wire q_emit=bnd_qb_v;wire[4:0]q_emit_beat=bnd_qb_beat;
  wire q_miss=q_emit&&!qrow_full;
  wire[523:0]q=q_emit?{1'b1,3'd1,3'd0,q_emit_beat,qrow}:524'd0;
  wire export_control_fault;

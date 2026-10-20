@@ -40,6 +40,7 @@ DV=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv" "$R/rtl/qwen_split/qf
  "$R/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 MU=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_mu.sv")
 RND=("$R/rtl/test/qwen_split/tb_n59_split_random.sv")
+BDEFS=(); if [[ ${N59_RECV:-0} == 1 ]]; then BDEFS=(-DN59_SVC_RECV -DN59_RECV_MUT=${N59_RECV_MUT:-0}); fi
 rc_all=0
 run() { # name expect(pass|fail) tb(dv|mu) -G...
   local n=$1 exp=$2 tb=$3; shift 3
@@ -49,7 +50,7 @@ run() { # name expect(pass|fail) tb(dv|mu) -G...
   elif [[ $tb == rnd ]]; then top=tb_n59_split_random; src=("${RND[@]}"); tag=N59RND
   else top=tb_qfd_native59_dv_mu; src=("${MU[@]}"); tag=N59MU; fi
   main="$R/rtl/test/qwen_split/${top}_main.cpp"
-  verilator --cc --exe --build -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module $top -GSAFE=2 -GEMBR=1 -DN59_R1 -DN59_SPLIT \
+  verilator --cc --exe --build -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module $top -GSAFE=2 -GEMBR=1 -DN59_R1 -DN59_SPLIT "${BDEFS[@]}" \
     ${N59_SPLIT_LP:+-DN59_SPLIT_LP} -GSPL_SOFF=$SO -GSPL_BOFF=$BO -GSPL_ROFF=$RO "$@" \
     -Mdir "$out/$n.obj" "${COMMON[@]}" "${src[@]}" "$main" > "$out/$n.build.log" 2>&1 \
     || { echo "$n BUILD_FAILED"; tail -30 "$out/$n.build.log"; rc_all=1; return; }

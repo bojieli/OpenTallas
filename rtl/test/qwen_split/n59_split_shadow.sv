@@ -58,7 +58,15 @@ module n59_split_shadow #(parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,
  qfd_native59_split_flat_lp #(.MUT(LP_MUT),.SMUT(MUT),.QB_MUT(QB_MUT),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMBR)) u_split(
   .ck_qb(ck),.ck_svc(ck),.rst_n(rst_n),
 `else
- qfd_native59_split_flat #(.SMUT(MUT),.QB_MUT(QB_MUT),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMBR)) u_split(
+`ifdef N59_SVC_RECV
+ localparam integer SVC_PIN=1;
+`else
+ localparam integer SVC_PIN=0;
+`endif
+`ifndef N59_RECV_MUT
+ `define N59_RECV_MUT 0
+`endif
+ qfd_native59_split_flat #(.SVC_RECV(SVC_PIN),.SVC_RECV_MUT(`N59_RECV_MUT),.SMUT(MUT),.QB_MUT(QB_MUT),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMBR)) u_split(
   .ck(ck),.rst_n(rst_n),
 `endif
   .host_epoch_valid(d_hev),.host_fused_capability(d_hfc),.host_epoch(d_he),.host_tag(d_ht),.host_generation(d_hg),
