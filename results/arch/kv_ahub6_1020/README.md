@@ -49,3 +49,26 @@ SAFE checklist: pins/reach/depth/storage/schedule inherit g3 only as hypotheses;
 fanout FAIL measured265, clock FAIL measured304.4 ps child-inclusive spread,
 floorplan ownership FAIL measured101 missing soft flops. Reset fanout FAIL.
 A full kit review and current measured evidence remain mandatory.
+
+## Partial source implementation (not admitted)
+
+`tools/qwen_kv_die/ahub6/mk_source.py` generates the opt-in
+`qkd_ahub_static_dw_g6_lp` parent. Its thirty landing writer/reader chunks
+are two bits. ALL associated valid-vector widths, reset-leaf counts and slices
+change together; D4/K2 and the data/command/reset schedule remain unchanged.
+
+The first synthesis-only probe rejected the enlarged aggregate reset-root fanout
+at elaboration. The corrected source uses seven uniquely parameterized kept
+same-edge root copies, one per region. `rst_n` drives seven D pins. Each root
+then drives only that region's forest branch count (core <=32). No depth was
+added and no shared helper was relaxed. This correction is an implemented source
+change, but command/export enables, core internal resets and combinational roots
+still require work. Do not submit this partial candidate or cite it as qualified.
+
+Fleet synth-only probe v2 uses the original source snapshot mounted read-only,
+with ONLY the generated parent file overlaid under its old module name for
+compatibility with the baseline synthesis config. The top rename is recorded
+in the scratch overlay. No live Claude file was modified. Output is ep9
+`/srv/opentallas-scratch/codex/kv-ahub6/chunk2_work_v2`. Collect the new mapped
+netlist, count every driver, and complete the remaining source fixes before any
+gate. Exactness benches and mutant witnesses remain owed on the changed source.
