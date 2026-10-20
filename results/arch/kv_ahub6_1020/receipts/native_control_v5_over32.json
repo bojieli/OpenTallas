@@ -1,0 +1,207 @@
+[
+ {
+  "driver": "_17681_/Y (AO21x1_ASAP7_75t_R)",
+  "loads": 133,
+  "flops": 0
+ },
+ {
+  "driver": "u_io.g_start_copy[25].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 110,
+  "flops": 1
+ },
+ {
+  "driver": "_12211_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14439_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14445_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14450_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14455_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14460_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14466_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14471_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14476_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14481_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14486_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_19604_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "u_io.cal_q[33]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 66,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.n_mh[1]",
+  "loads": 65,
+  "flops": 0
+ },
+ {
+  "driver": "_18622_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_18695_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_19458_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_19531_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_13719_/Y (OA21x2_ASAP7_75t_R)",
+  "loads": 62,
+  "flops": 0
+ },
+ {
+  "driver": "_14866_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 61,
+  "flops": 0
+ },
+ {
+  "driver": "_14864_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 53,
+  "flops": 0
+ },
+ {
+  "driver": "_14889_/Y (XNOR2x2_ASAP7_75t_R)",
+  "loads": 51,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.age[15]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 50,
+  "flops": 0
+ },
+ {
+  "driver": "u_io.cal_q[32]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 50,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.n_mh[0]",
+  "loads": 49,
+  "flops": 0
+ },
+ {
+  "driver": "_14915_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 47,
+  "flops": 0
+ },
+ {
+  "driver": "_14872_/Y (AND2x2_ASAP7_75t_R)",
+  "loads": 43,
+  "flops": 0
+ },
+ {
+  "driver": "_14878_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 43,
+  "flops": 0
+ },
+ {
+  "driver": "_13532_/Y (AOI21x1_ASAP7_75t_R)",
+  "loads": 42,
+  "flops": 0
+ },
+ {
+  "driver": "_14868_/Y (XNOR2x2_ASAP7_75t_R)",
+  "loads": 41,
+  "flops": 0
+ },
+ {
+  "driver": "_14901_/Y (XNOR2x2_ASAP7_75t_R)",
+  "loads": 41,
+  "flops": 0
+ },
+ {
+  "driver": "_14910_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 41,
+  "flops": 0
+ },
+ {
+  "driver": "u_io.g_start_copy[29].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 41,
+  "flops": 5
+ },
+ {
+  "driver": "u_core.age[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 40,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.age[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 38,
+  "flops": 0
+ },
+ {
+  "driver": "_13924_/Y (OA222x2_ASAP7_75t_R)",
+  "loads": 37,
+  "flops": 0
+ },
+ {
+  "driver": "_14843_/Y (XOR2x2_ASAP7_75t_R)",
+  "loads": 37,
+  "flops": 0
+ },
+ {
+  "driver": "_14925_/Y (XNOR2x2_ASAP7_75t_R)",
+  "loads": 34,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.active$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 33,
+  "flops": 1
+ }
+]
