@@ -31,7 +31,7 @@
 // (PW1017 [17:12]; as built every one of the 36 layers would read the weights of the one layer the image names).
 // Edges: stage_start / stage and h_start enter through the same pin registers, so loaded_stage is valid on the edge
 // h_start reaches u_head, exactly as the soft parent (HARD_HR 0) latch.  STAGE_ME = 0: the stage ports are ignored.
-module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1, parameter integer DPRE = 1,
+module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter integer RSTN = 2, parameter integer SREG = 1, parameter integer DPRE = 1,
     parameter integer RSTREP = 1, parameter integer DSEL = 1,
     // h15 (Q-TTH15 10-17): PWCP / FQWE / OINC / DTIL / SLATE / AMWC / RRH, see qfd_tt_ctlm_head_static_rk (all exact, 0 edges)
     parameter integer H15 = 1,
@@ -83,19 +83,23 @@ module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter
     output wire  me_clk_en,
     output wire  c_fault
 );
-    wire rsl, rsl_c0, rsl_c1;
-    generate if (RSTREP != 0 && RSTN != 0) begin : g_rrep
-      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r0;
-      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r1;
-      (* keep = "true", dont_touch = "true" *) reg [RSTN-1:0] r2;
-      always @(posedge ck_head or negedge rst_n) if (!rst_n) r0 <= {RSTN{1'b0}}; else r0 <= {r0, 1'b1};
-      always @(posedge ck_head or negedge rst_n) if (!rst_n) r1 <= {RSTN{1'b0}}; else r1 <= {r1, 1'b1};
-      always @(posedge ck_head or negedge rst_n) if (!rst_n) r2 <= {RSTN{1'b0}}; else r2 <= {r2, 1'b1};
-      assign rsl = r0[RSTN-1]; assign rsl_c0 = r1[RSTN-1]; assign rsl_c1 = r2[RSTN-1];
-    end else begin : g_rone
-      ot_qfd_rst_stn #(.D(RSTN)) u_rst_stn (.clk(ck_head), .rst_n(rst_n), .rst_q(rsl));
-      assign rsl_c0 = rsl; assign rsl_c1 = rsl;
+    // Two-stage face landing plus same-edge regional leaves. Reset release
+    // is three clocks at EVERY top region (+2 boot clocks vs old RSTN1);
+    // no recurring programme/issue edge changes after legal boot/config.
+    (* keep="true",dont_touch="true" *) reg [1:0] reset_face;
+    (* keep="true",dont_touch="true" *) reg [17:0] reset_region;
+    always @(posedge ck_head or negedge rst_n)
+        if(!rst_n)reset_face<=0;else reset_face<={reset_face[0],1'b1};
+    genvar rs;
+    generate for(rs=0;rs<18;rs=rs+1)begin:g_reset_region
+        always @(posedge ck_head or negedge reset_face[1])
+            if(!reset_face[1])reset_region[rs]<=0;else reset_region[rs]<=1;
     end endgenerate
+    wire rsl=reset_region[0];
+    wire [11:0] rst_cmd_n=reset_region[12:1];
+    wire [2:0] rst_obs_n=reset_region[15:13];
+    initial if(CMDREG!=1 || RSTN!=2 || RSTREP!=1)
+        $error("safe32 head supports CMDREG1 RSTN2 RSTREP1 only");
     wire [379:0] cmd;
     wire [94:0] ret,rom_ret;
     assign rom_ret=rom_ret_i;
@@ -115,29 +119,15 @@ module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter
     wire [379:0] rom_cmd_c;
     ot_qwen_tp8_rom_relocate u_resident_relocation(
       .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
-    generate if (CMDREG != 0) begin : g_cmdreg
-      reg [379:0] rom_cmd_q;
-      always @(posedge ck_head or negedge rsl_c0)
-        if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
-      always @(posedge ck_head or negedge rsl_c1)
-        if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
-      if (CMDREG >= 2) begin : g_cmdreg2
-        // h12 (Q-IO-1815 TTH 2026-10-17, CMDREG=2): a second command register. h11c gate: the relocation adder
-        // (kvd field -> code_sum) plus the E->W crossing to rom_cmd_q (237 ps of wire repeaters) is the worst path
-        // (-208.7 @770). rom_cmd_q now sits by the adder; rom_cmd_q2 is the W-face launch register. Exact function,
-        // +1 edge on every ROM-tree command (ledger TT.ROMCMD2, compiler-visible).
-        reg [379:0] rom_cmd_q2;
-        always @(posedge ck_head or negedge rsl_c0)
-          if (!rsl_c0) rom_cmd_q2[189:0] <= 190'd0; else rom_cmd_q2[189:0] <= rom_cmd_q[189:0];
-        always @(posedge ck_head or negedge rsl_c1)
-          if (!rsl_c1) rom_cmd_q2[379:190] <= 190'd0; else rom_cmd_q2[379:190] <= rom_cmd_q[379:190];
-        assign rom_cmd = rom_cmd_q2;
-      end else begin : g_cmdreg1
-        assign rom_cmd = rom_cmd_q;
-      end
-    end else begin : g_cmdwire
-      assign rom_cmd = rom_cmd_c;
+    reg [379:0] rom_cmd_q;
+    genvar cr;
+    generate for(cr=0;cr<12;cr=cr+1)begin:g_cmdreg
+        localparam integer LO=32*cr, HI=(32*(cr+1)>380)?380:32*(cr+1);
+        always @(posedge ck_head or negedge rst_cmd_n[cr])
+            if(!rst_cmd_n[cr])rom_cmd_q[HI-1:LO]<=0;
+            else rom_cmd_q[HI-1:LO]<=rom_cmd_c[HI-1:LO];
     end endgenerate
+    assign rom_cmd=rom_cmd_q;
     assign c_fault=head_fault|relocation_sticky;
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
@@ -151,7 +141,8 @@ module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter
         .clk(ck_head),
         .ck_pm({ck_pm1,ck_pm0}),
         .ck_sched(ck_head),   // h7: the static schedule store shares the ck_head root (die ties them)
-        .rst_n(rsl),
+        .rst_n(rsl),.rst_program_obs_n(rst_obs_n),
+        .rst_hfc_source_n(reset_region[16]),.rst_fifo_source_n(reset_region[17]),
         .h_start(h_start),
         .token(token),
         .pos(pos),

@@ -57,6 +57,8 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     output wire me_image_ready,
     output reg [75:0] program_obs,
     input wire  rst_n,
+    input wire [2:0] rst_program_obs_n,
+    input wire rst_hfc_source_n,rst_fifo_source_n,
     input wire  h_start,
     input wire [18-1:0] token,
     input wire [18-1:0] pos,
@@ -104,15 +106,16 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     end else begin : g_kvdir
         assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;
     end endgenerate
-    localparam integer RRN = (RRH != 0) ? 12 : 8;
+    localparam integer RRN = 36; // core8,HFC16,FIFO4,CE2,context3,observe1,CP2
     (* keep = "true" *) wire [RRN-1:0] rsv;   // RRG: reset copies (el1011-q-seq); h15 RRH: 4 more for the head-fill slices
     wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n
     generate if (RRG != 0 && IS > 0) begin : g_rrg
         genvar rk;
         for (rk = 0; rk < RRN; rk = rk + 1) begin : g_r
             (* keep = "true", dont_touch = "true" *) reg [IS-1:0] r;
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) r <= {IS{1'b0}};
+            wire raw_reset=(rk>=8 && rk<24)?rst_hfc_source_n:(rk>=24 && rk<28)?rst_fifo_source_n:rst_n;
+            always @(posedge clk or negedge raw_reset)
+                if (!raw_reset) r <= {IS{1'b0}};
                 else r <= {r, 1'b1};
             assign rsv[rk] = r[IS-1];
         end
@@ -130,13 +133,18 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .d({token, pos, prog_base, pw_addr, pw_data, x_oacc, x_oprog, x_orows}),
         .q({q_token, q_pos, q_prog_base, q_pw_addr, q_pw_data, q_x_oacc, q_x_oprog, q_x_orows}));
     // program-store copy (the sequencer master's semantics)
-    wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q;
+    wire prog_re; wire [1:0] prog_re_copy; wire [11:0] prog_addr; reg [1023:0] prog_q;
     wire [11:0] prog_a = q_prog_base + prog_addr;
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     localparam integer PRN = (FQWE != 0) ? 32 : 1;      // h15: prog_q capture enable / range as PRN kept slice copies
     (* keep *) reg [PRN-1:0] prog_re_c;
-    always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_c <= {PRN{1'b0}}; else prog_re_c <= {PRN{prog_re}};
+    genvar pcg;
+    generate for(pcg=0;pcg<2;pcg=pcg+1)begin:g_re_capture_reset
+        always @(posedge clk or negedge rsv[28+pcg])
+            if(!rsv[28+pcg])prog_re_c[(PRN/2)*pcg+:(PRN/2)]<=0;
+            else prog_re_c[(PRN/2)*pcg+:(PRN/2)]<={(PRN/2){prog_re_copy[pcg]}};
+    end endgenerate
     always @(posedge clk) prog_a_r <= prog_a;
     generate if (PSRAM != 0) begin : g_psram
         //: the program store as two 64 x 512 SRAM macros; every macro write pin from a register (no decode at the pins)
@@ -154,7 +162,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         always @(posedge clk) rng_c <= {PRN{(prog_a < 64)}};
 `endif
         wire [1023:0] p_rd;
-        wire p_rce = (PMUT != 0) ? prog_re_r : prog_re;
+        wire [1:0] p_rce = (PMUT != 0) ? {2{prog_re_r}} : prog_re_copy;
         wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
         wire [511:0] w_mask;
         genvar m, s;
@@ -171,11 +179,11 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
                 //: h15 PWCP: this macro's write pins from its own registers, one copy per LEF pin edge (W: w_addr, wd_in[265:0];
                 //: E: w_ce, wd_in[511:266], w_mask); same values as pw_v2 / pw_row2 / pw_sl2 / pw_d2 on every edge
                 (* keep *) reg [5:0] wl_row; (* keep *) reg [63:0] wl_d;
-                (* keep *) reg wr_ce; (* keep *) reg [7:0] wr_sl; (* keep *) reg [63:0] wr_d;
+                (* keep *) reg wr_ce; (* keep="true",dont_touch="true" *) reg [15:0] wr_sl; (* keep *) reg [63:0] wr_d;
                 always @(posedge clk or negedge rsv[7])
                     if (!rsv[7]) wr_ce <= 1'b0; else wr_ce <= q_pw_v && (q_pw_addr[3] == ((m != 0) ? 1'b1 : 1'b0));
                 always @(posedge clk) begin
-                    wl_row <= q_pw_addr[9:4]; wl_d <= q_pw_data; wr_sl <= 8'd1 << q_pw_addr[2:0];
+                    wl_row <= q_pw_addr[9:4]; wl_d <= q_pw_data; wr_sl <= 16'd3 << {q_pw_addr[2:0],1'b0};
                     wr_d <= q_pw_data;
 `ifdef OT_PWCP_MUT
                     if (m == 0) wl_d <= ~q_pw_data;
@@ -183,8 +191,8 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
                 end
                 wire [511:0] dl = {8{wl_d}}, dr = {8{wr_d}};
                 assign m_ce = wr_ce; assign m_row = wl_row; assign m_wd = {dr[511:266], dl[265:0]};
-                for (s = 0; s < 8; s = s + 1) begin : g_s
-                    assign m_mask[64*s +: 64] = {64{wr_sl[s]}};
+                for (s = 0; s < 16; s = s + 1) begin : g_s
+                    assign m_mask[32*s +: 32] = {32{wr_sl[s]}};
                 end
 `ifndef SYNTHESIS
 `ifndef OT_PWCP_MUT
@@ -196,14 +204,20 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
                 assign m_ce = program_raw_ce[m]; assign m_row = program_raw_row[6*m+:6];
                 assign m_wd = program_raw_data[512*m+:512]; assign m_mask = program_raw_mask[512*m+:512];
             end
-            ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck_pm[m]), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
+            ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck_pm[m]), .r_ce_in(p_rce[m]), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
                 .w_ce_in(m_ce), .w_addr_in(m_row), .wd_in(m_wd), .w_mask_in(m_mask),
                 .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         end
         wire observed_v,observed_full;wire [9:0]observed_addr;wire [63:0]observed_data;
         qkd_program_pw_observer u_program_observer(.macro_ce(program_raw_ce),.macro_row(program_raw_row),.macro_data(program_raw_data),.macro_mask(program_raw_mask),.consumed_v(observed_v),.consumed_addr(observed_addr),.consumed_data(observed_data),.full_word(observed_full));
-        always @(posedge clk or negedge rst_n)
-          if(!rst_n)program_obs<=0;else program_obs<={observed_v,observed_full,observed_addr,observed_data};
+        wire [75:0] obs_word={observed_v,observed_full,observed_addr,observed_data};
+        genvar po;
+        for(po=0;po<3;po=po+1)begin:g_obs_reset
+            localparam integer LO=32*po,HI=(32*(po+1)>76)?76:32*(po+1);
+            always @(posedge clk or negedge rst_program_obs_n[po])
+                if(!rst_program_obs_n[po])program_obs[HI-1:LO]<=0;
+                else program_obs[HI-1:LO]<=obs_word[HI-1:LO];
+        end
         if (PMUT != 0) begin : g_pmut
             reg pre_rr;
             always @(posedge clk or negedge rsv[7]) if (!rsv[7]) pre_rr <= 1'b0; else pre_rr <= prog_re_r;
@@ -290,12 +304,12 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     always @(posedge clk or negedge rst_n)
       if(!rst_n)program_load_fault<=0;
       else if(q_pw_v && q_pw_addr<976 && schedule_active)program_load_fault<=1;
-    always @(posedge clk or negedge rrv[6])
-      if(!rrv[6])begin layer_context_v<=0;native_tok<=0;native_pos<=0;end
-      else begin
-        layer_context_v<=accepted_start && q_prog_base==0;
-        if(accepted_start)begin native_tok<=q_token;native_pos<=q_pos;end
-      end
+    always @(posedge clk or negedge rsv[30])
+        if(!rsv[30])layer_context_v<=0;else layer_context_v<=accepted_start && q_prog_base==0;
+    always @(posedge clk or negedge rsv[31])
+        if(!rsv[31])native_tok<=0;else if(accepted_start)native_tok<=q_token;
+    always @(posedge clk or negedge rsv[32])
+        if(!rsv[32])native_pos<=0;else if(accepted_start)native_pos<=q_pos;
     reg [5:0] schedule_stage;
     always @(posedge ck_sched or negedge rst_n)
       if(!rst_n) schedule_stage<=0;
@@ -325,7 +339,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .next_val(),
         .cycles(),
         .fault(c_fault),
-        .prog_re(prog_re),
+        .prog_re(prog_re),.prog_re_copy(prog_re_copy),
         .prog_addr(prog_addr),
         .prog_q(prog_q),
         .wrom_re(),
@@ -501,8 +515,8 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .o_fin(m_fin),
         .o_fidx(m_fidx),
         .o_fval(m_fval),
-        .ck_pm0(ck_pm[0]),.ck_pm1(ck_pm[1]),.rst_fifo_n(rsv[RRN-1:RRN-4]),
-        .rst_hfc_n((RRH != 0) ? rsv[RRN-1:RRN-4] : {4{rsv[1]}}));
+        .ck_pm0(ck_pm[0]),.ck_pm1(ck_pm[1]),.rst_fifo_n(rsv[27:24]),
+        .rst_hfc_n(rsv[23:8]));
     ot_qfd_issue_shell #(.RT_ME(DCU_M + DUC_M), .RT_SU(0), .COMP(1)) u_shell_me (.clk(clk), .rst_n(rsv[5]),
         .me_go(c_me_go), .su_go(1'b0), .me_en(me_clk_en), .su_sfu(3'd0), .me_amax(c_me_i_amax),
         .d_me_ready(c_me_ready), .d_me_idle(c_me_idle), .d_me_progress(c_me_progress),
@@ -543,9 +557,12 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(u_me_am_any), .q(c_me_am_any));
     ot_tt_ce_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
-    always @(posedge clk or negedge rrv[6])
-      if(!rrv[6])begin me_observe<=0;cp<=0;end
-      else begin me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};cp<=cp_cmd;end
+    always @(posedge clk or negedge rsv[33])
+        if(!rsv[33])me_observe<=0;else me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};
+    always @(posedge clk or negedge rsv[34])
+        if(!rsv[34])cp[27:0]<=0;else cp[27:0]<=cp_cmd[27:0];
+    always @(posedge clk or negedge rsv[35])
+        if(!rsv[35])cp[55:28]<=0;else cp[55:28]<=cp_cmd[55:28];
     assign cmd = {u_me_i_mbase, u_me_i_rmax, u_me_i_amax, u_me_i_oen, u_me_i_mmode, u_me_i_ojs, u_me_i_ots, u_me_i_obase, u_me_i_round, u_me_i_wcs, u_me_i_split, u_me_i_jsh, u_me_i_xcs, u_me_i_xjs, u_me_i_xks, u_me_i_xbase, u_me_i_js, u_me_i_ks, u_me_i_ts, u_me_i_wbase, u_me_i_wsrc, u_me_i_k, u_me_i_tiles, u_me_i_nout, u_me_go};
     assign {u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready} = ret;
     ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));
