@@ -8,8 +8,10 @@ Structural fixes (both in q6):
 1. RTL r4 (rtl/rom/ot_coll_tp8_split_native32.sv, default; r3 under OT_COLL_Q_RST_FACE2): ONE 2-flop face leaf u_rsf
    (rst_n = 2 raw sinks) drives only two kept registered relay copies u_rs / u_rs2 (ID 208/209); every reset consumer
    releases exactly one edge later than r3, uniformly (equal depth; no data edge; static schedule unchanged).
-2. PRE_GLOBAL_PLACE native_size_release.tcl: dont_touch released on native COMBINATIONAL cells (flops kept), so
-   repair may size/buffer weak native drivers; graph function unchanged, census re-checked on the GRT ODB.
+2. PRE_GLOBAL_PLACE native_size_release.tcl (r2): dont_touch released on ALL native cells (r1 kept flops: RSZ-3006 on n1962 with
+   dont_touch flop loads), so repair may size/buffer and CTS may connect native flop clocks; census re-checked on the GRT ODB.
+
+Gate r1 (09:00): reset_landing PASS (rst_n 2 raw sinks); placement FAIL as above -> r2 hooks.
 
 ## SAFE-DESIGN checklist
 1 Pins: RTL registers every pin (q4 lineage); reset lands at the face in 2 registered stages (u_rsf) -- PASS (fixed)

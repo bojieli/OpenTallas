@@ -8,8 +8,10 @@ Structural fixes (both in q6w):
 1. RTL r4 (rtl/rom/ot_coll_tp8_split_native32.sv, default; r3 under OT_COLL_Q_RST_FACE2): ONE 2-flop face leaf u_rsf
    (rst_n = 2 raw sinks) drives only two kept registered relay copies u_rs / u_rs2 (ID 208/209); every reset consumer
    releases exactly one edge later than r3, uniformly (equal depth; no data edge; static schedule unchanged).
-2. PRE_GLOBAL_PLACE native_net_freeze.tcl: native graph kept exact; every all-native net marked dont_touch so the
-   resizer skips it (parallel fallback to q6).
+2. PRE_GLOBAL_PLACE native_net_freeze.tcl (r2): native cells released (r1 CTS ODB-0370 on a dont_touch native flop CLK);
+   every all-native net (driver + loads native, no port) dont_touch, so the comb graph stays exact (parallel fallback to q6).
+
+Gate r1 (09:00): reset_landing PASS (rst_n 2 raw sinks); placement FAIL as above -> r2 hooks.
 
 ## SAFE-DESIGN checklist
 1 Pins: RTL registers every pin (q4 lineage); reset lands at the face in 2 registered stages (u_rsf) -- PASS (fixed)
