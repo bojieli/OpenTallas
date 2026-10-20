@@ -61,13 +61,15 @@ module qkd_pv_fin_s32 #(
  genvar sl;
  generate for(sl=0;sl<16;sl=sl+1)begin:g_start_lane
   always @(posedge ck)start_lane[sl]<=start;
-  (* keep="true",dont_touch="true" *) reg [SKEW:0] select0,select1;
+  (* keep="true",dont_touch="true" *) reg [SKEW:0] select0[0:1],select1[0:1];
   localparam integer DELTA_MUT=(MUT==2)?1:0;
   wire [15:0] c_d0=c_lastp-c0;
   wire [15:0] c_d0m=(MUT==2&&c_d0<SKEW)?c_d0+1:c_d0;
-  for(genvar jt=0;jt<=SKEW;jt=jt+1)begin:g_select
-   always @(posedge ck)if(start_lane[sl])begin
-    select0[jt]<=c_d0m==jt;select1[jt]<=(c_lastp-c1)==jt;
+  for(genvar part=0;part<2;part=part+1)begin:g_select_part
+   for(genvar jt=0;jt<=SKEW;jt=jt+1)begin:g_select
+    always @(posedge ck)if(start_lane[sl])begin
+     select0[part][jt]<=c_d0m==jt;select1[part][jt]<=(c_lastp-c1)==jt;
+    end
    end
   end
   reg [31:0] a_sel,b_sel;
@@ -75,8 +77,10 @@ module qkd_pv_fin_s32 #(
   always @* begin
    a_sel=0;b_sel=0;
    for(jt=0;jt<=SKEW;jt=jt+1)begin
-    a_sel=a_sel|(t0[jt+1][32*sl+:32]&{32{select0[jt]}});
-    b_sel=b_sel|(t1[jt+1][32*sl+:32]&{32{select1[jt]}});
+    for(integer pt=0;pt<2;pt=pt+1)begin
+     a_sel[16*pt+:16]=a_sel[16*pt+:16]|(t0[jt+1][32*sl+16*pt+:16]&{16{select0[pt][jt]}});
+     b_sel[16*pt+:16]=b_sel[16*pt+:16]|(t1[jt+1][32*sl+16*pt+:16]&{16{select1[pt][jt]}});
+    end
    end
   end
   assign opa[32*sl+:32]=a_sel;assign opb[32*sl+:32]=b_sel;
@@ -91,19 +95,19 @@ module qkd_pv_fin_s32 #(
  wire [4:0] capture_addr=5'(n-(MUL_AGE-16'd1));
  wire [511:0] ram_sum;
  reg [511:0] forward_sum;
- (* keep="true",dont_touch="true" *) reg [15:0] early_hit,direct_hit;
+ (* keep="true",dont_touch="true" *) reg [31:0] early_hit,direct_hit;
  always @(posedge ck)forward_sum<=sum;
  genvar oc,ol;
  (* keep="true",dont_touch="true" *) reg [511:0] operand_sum[0:2];
- generate for(ol=0;ol<16;ol=ol+1)begin:g_operand_lane
+ generate for(ol=0;ol<32;ol=ol+1)begin:g_operand_lane
   always @(posedge ck)begin
    early_hit[ol]<=read_slot&&sum_slot&&(read_addr==wptr);
    direct_hit[ol]<=active&&win(n+16'd1,SUM_AGE)&&win(n+16'd1,MUL_AGE-16'd1)&&(SUM_AGE==MUL_AGE-16'd1);
   end
-  wire [31:0] read_sum=(early_hit[ol]&&MUT!=4)?forward_sum[32*ol+:32]:ram_sum[32*ol+:32];
-  wire [31:0] capture_sum=(direct_hit[ol]&&MUT!=5)?sum[32*ol+:32]:read_sum;
+  wire [15:0] read_sum=(early_hit[ol]&&MUT!=4)?forward_sum[16*ol+:16]:ram_sum[16*ol+:16];
+  wire [15:0] capture_sum=(direct_hit[ol]&&MUT!=5)?sum[16*ol+:16]:read_sum;
   for(oc=0;oc<3;oc=oc+1)begin:g_operand_copy
-   always @(posedge ck)operand_sum[oc][32*ol+:32]<=capture_sum;
+   always @(posedge ck)operand_sum[oc][16*ol+:16]<=capture_sum;
   end
  end endgenerate
  wire [511:0] saved_sum=operand_sum[0];
@@ -149,6 +153,24 @@ module qkd_pv_fin_s32 #(
  wire bad=(p0v_q!=p0_slot)||(p1v_q!=p1_slot)||(rzv_q!=r_slot)||
           (p0_slot&&(p0b_q!=b_p0||p0e_q!=ep))||(p1_slot&&(p1b_q!=b_p1||p1e_q!=ep))||(r_slot&&rze_q!=ep)||
           (av!={16{sum_slot}})||(mv!={16{product_slot}})||(sum_slot&&|ae)||(product_slot&&|me);
+ // Independent command pin images bound the 80-bit command-capture
+ // enable. Each local acceptance result controls only eight payload flops.
+ (* keep="true",dont_touch="true" *) reg [47:0] command_cal[0:9];
+ (* keep="true",dont_touch="true" *) reg [9:0] command_start,command_active;
+ wire [9:0] command_accept;
+ wire [15:0] command_mulage[0:9];
+ generate for(genvar cg=0;cg<10;cg=cg+1)begin:g_command
+  always @(posedge ck)begin
+   command_cal[cg]<=cal;command_start[cg]<=start;command_active[cg]<=active_d;
+  end
+  wire [15:0] x0=command_cal[cg][15:0],x1=command_cal[cg][31:16],xr=command_cal[cg][47:32];
+  wire [15:0] xp=(x0>x1)?x0:x1;
+  wire [15:0] xl=(MUT==3||xp>xr)?xp:xr;
+  wire [15:0] xs=(x0>x1)?(x0-x1):(x1-x0);
+  wire xb=(x0<1)||(x1<1)||(xr<1)||(xs>16'(SKEW))||({1'b0,xl}+17'd64+17'(ADD_LAT+MUL_LAT)>17'hffff);
+  assign command_accept[cg]=command_start[cg]&&!command_active[cg]&&!xb;
+  assign command_mulage[cg]=xl+16'(ADD_LAT+2);
+ end endgenerate
  reg active_d;
  reg [15:0] age_d;
  reg [15:0] ep_d;
@@ -193,25 +215,30 @@ module qkd_pv_fin_s32 #(
  end
  always @(posedge ck or negedge rr[449]) if(!rr[449]) active<=0;else active<=active_d;
  always @(posedge ck or negedge rr[450]) if(!rr[450]) age<=0;else age<=age_d;
- always @(posedge ck or negedge rr[451]) if(!rr[451]) ep<=0;else ep<=ep_d;
- always @(posedge ck or negedge rr[452]) if(!rr[452]) P0<=16'hffff;else P0<=P0_d;
- always @(posedge ck or negedge rr[453]) if(!rr[453]) P1<=16'hffff;else P1<=P1_d;
- always @(posedge ck or negedge rr[454]) if(!rr[454]) RA<=16'hffff;else RA<=RA_d;
- always @(posedge ck or negedge rr[455]) if(!rr[455]) MUL_AGE<=16'hffff;else MUL_AGE<=MUL_AGE_d;
+ always @(posedge ck or negedge rr[451]) if(!rr[451]) ep[0+:8]<=8'd0;else if(command_accept[0]) ep[0+:8]<=epoch_q[0+:8];
+ always @(posedge ck or negedge rr[451]) if(!rr[451]) ep[8+:8]<=8'd0;else if(command_accept[1]) ep[8+:8]<=epoch_q[8+:8];
+ always @(posedge ck or negedge rr[452]) if(!rr[452]) P0[0+:8]<=8'hff;else if(command_accept[2]) P0[0+:8]<=command_cal[2][0+:8];
+ always @(posedge ck or negedge rr[452]) if(!rr[452]) P0[8+:8]<=8'hff;else if(command_accept[3]) P0[8+:8]<=command_cal[3][8+:8];
+ always @(posedge ck or negedge rr[453]) if(!rr[453]) P1[0+:8]<=8'hff;else if(command_accept[4]) P1[0+:8]<=command_cal[4][16+:8];
+ always @(posedge ck or negedge rr[453]) if(!rr[453]) P1[8+:8]<=8'hff;else if(command_accept[5]) P1[8+:8]<=command_cal[5][24+:8];
+ always @(posedge ck or negedge rr[454]) if(!rr[454]) RA[0+:8]<=8'hff;else if(command_accept[6]) RA[0+:8]<=command_cal[6][32+:8];
+ always @(posedge ck or negedge rr[454]) if(!rr[454]) RA[8+:8]<=8'hff;else if(command_accept[7]) RA[8+:8]<=command_cal[7][40+:8];
+ always @(posedge ck or negedge rr[455]) if(!rr[455]) MUL_AGE[0+:8]<=8'hff;else if(command_accept[8]) MUL_AGE[0+:8]<=command_mulage[8][0+:8];
+ always @(posedge ck or negedge rr[455]) if(!rr[455]) MUL_AGE[8+:8]<=8'hff;else if(command_accept[9]) MUL_AGE[8+:8]<=command_mulage[9][8+:8];
  always @(posedge ck or negedge rr[456]) if(!rr[456]) fault<=0;else fault<=fault_d;
  always @(posedge ck or negedge rr[457]) if(!rr[457]) out_valid<=0;else out_valid<=out_valid_d;
  always @(posedge ck or negedge rr[458]) if(!rr[458]) out_beat<=0;else out_beat<=out_beat_d;
  always @(posedge ck or negedge rr[459]) if(!rr[459]) out_epoch<=0;else out_epoch<=out_epoch_d;
  always @(posedge ck or negedge rr[460]) if(!rr[460]) wptr<=0;else wptr<=wptr_d;
  always @(posedge ck or negedge rr[461]) if(!rr[461]) rptr<=0;else rptr<=rptr_d;
- (* keep="true",dont_touch="true" *) reg [15:0] product_land;
- (* keep="true",dont_touch="true" *) reg [3:0] reciprocal_land;
- generate for(genvar oi=0;oi<16;oi=oi+1)begin:g_output_lane
+ (* keep="true",dont_touch="true" *) reg [31:0] product_land;
+ (* keep="true",dont_touch="true" *) reg [7:0] reciprocal_land;
+ generate for(genvar oi=0;oi<32;oi=oi+1)begin:g_output_lane
   always @(posedge ck)product_land[oi]<=active&&win(n+16'd1,PRODUCT_AGE);
-  always @(posedge ck)if(product_land[oi]&&active)out_data[32*oi+:32]<=product[32*oi+:32];
+  always @(posedge ck)if(product_land[oi])out_data[16*oi+:16]<=product[16*oi+:16];
  end
- for(genvar ri=0;ri<4;ri=ri+1)begin:g_rz_capture
+ for(genvar ri=0;ri<8;ri=ri+1)begin:g_rz_capture
   always @(posedge ck)reciprocal_land[ri]<=start_q?(!active&&!cal_bad&&cr==16'd1):(active&&(n+16'd1==RA));
-  always @(posedge ck)if(reciprocal_land[ri]&&active)rzr[32*ri+:32]<=rz_q[32*ri+:32];
+  always @(posedge ck)if(reciprocal_land[ri])rzr[16*ri+:16]<=rz_q[16*ri+:16];
  end endgenerate
 endmodule
