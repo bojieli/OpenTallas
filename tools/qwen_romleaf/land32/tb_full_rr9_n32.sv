@@ -18,12 +18,27 @@ initial begin if ($value$plusargs("MUT=%d", MUT)) begin end end
 `define M7 d8.u_g.u_tile.u_tile.u_logic.u_me
 `define RT dut.u_g.u_tile.u_tile.u_logic
 initial begin #0.2;
- if (MUT==60) force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[0].roh = 4'b0001;
- if (MUT==61) force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[0].woh = 4'b0001;
- if (MUT==62) force `ME.g_hier.g_sl[6].g_hd.g_out9.u_qlr3.u_safe.g_c[0].g_a[0].warm = 1'b0;
- if (MUT==63) force `RT.g_xm9.u_xr.u_safe.g_ring.g_c[2].p = 1;
+ if (MUT==60) begin
+  force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[0].roh = 4'b0001;
+  force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[1].roh = 4'b0001;
+  force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[2].roh = 4'b0001;
+ end
+ if (MUT==61) begin
+  force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[0].woh = 4'b0001;
+  force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[1].woh = 4'b0001;
+  force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[2].woh = 4'b0001;
+ end
+ if (MUT==62) begin
+  force `ME.g_hier.g_sl[6].g_hd.g_out9.u_qlr3.u_safe.g_c[0].g_a[0].warm = 1'b0;
+  force `ME.g_hier.g_sl[6].g_hd.g_out9.u_qlr3.u_safe.g_c[0].g_a[1].warm = 1'b0;
+  force `ME.g_hier.g_sl[6].g_hd.g_out9.u_qlr3.u_safe.g_c[0].g_a[2].warm = 1'b0;
+ end
+ // MUT63 below corrupts the complete original16-bit delay chunk, now sixteen1-bit control copies.
  if (MUT==64) force `ME.g_hier.g_sl[1].g_hd.g_tx9.u_qlr2c.u_safe.g_c[6].g_a[0].warm = 1'b0;
 end
+genvar dm; generate for(dm=32;dm<48;dm=dm+1) begin:mut_delay_chunk
+ initial begin #0.2;if(MUT==63) force `RT.g_xm9.u_xr.u_safe.g_ring.g_c[dm].p=1;end
+end endgenerate
 reg ck=0,rs=0; always #0.5 ck=~ck;
 reg [15:0] tid=16'd0;   // phase B: a non-zero tile strap (dut and d8 only) so the per-group KV offsets / K limits are non-trivial
 reg [507:0] tap=0;
