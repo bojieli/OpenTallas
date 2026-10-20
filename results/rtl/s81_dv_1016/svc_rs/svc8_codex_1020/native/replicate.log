@@ -1,0 +1,25 @@
+SVC7_GRAPH BLOCKED {"reason": "unregistered port needs RTL distribution", "net": 13, "ports": ["ld_mode[0]"], "loads": 132, "limit": 32, "clones_so_far": 769, "cells_so_far": 508855, "original_cells": 603732}
+Command exited with non-zero status 2
+	Command being timed: "python3 tools/s81_dv/svc_rs/svc7_bound_graph.py /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_recovery_1020/map/flat.json --top ot_s81svc8_hgrp_s81 --name ot_s81svc8_hgrp_s81_bounded --out /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_recovery_1020/bound/bounded.v --limit 32 --incremental"
+	User time (seconds): 29.64
+	System time (seconds): 5.15
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:34.79
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3998088
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1497341
+	Voluntary context switches: 1
+	Involuntary context switches: 57
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2

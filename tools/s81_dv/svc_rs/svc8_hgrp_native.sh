@@ -53,7 +53,7 @@ YS
 }
 sha256sum $(for f in $RTL $BB; do echo ${f#/src/}; done) tools/s81_dv/svc_rs/svc7_bound_graph.py physical/common_flow/ot_keep_regs.tcl > "$OUT/source_identity.sha256"
 for s in $STAGES; do case $s in
-  map) synth "$OUT/map" "read_verilog -sv -DSYNTHESIS $RTL" $TOP ;;
+  map) synth "$OUT/map" "read_verilog -sv -DSYNTHESIS -DSVC8_WRITE_PREDECODE $RTL" $TOP ;;
   bound) mkdir -p "$OUT/bound"
      /usr/bin/time -v python3 tools/s81_dv/svc_rs/svc7_bound_graph.py "$OUT/map/flat.json" --top $TOP --name ${TOP}_bounded \
        --out "$OUT/bound/bounded.v" --limit 32 --incremental > "$OUT/bound/replicate.log" 2>&1 || { tail -20 "$OUT/bound/replicate.log"; echo "SVC8_NATIVE bound FAIL"; exit 1; }

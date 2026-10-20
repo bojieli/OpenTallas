@@ -1,0 +1,46 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc7       admits   784 GB (avail 632, growth 83, headroom 0, waiters 0/0 GB) load 39/96 running 22 disk 5605 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2975118-1792493941 after 0 s
+rtl/hdc/v41x/ot_s81svc8_hgrp_s81.sv: OK
+rtl/hdc/v41x/ot_s81svc8_ring.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_kreg.sv: OK
+rtl/hdc/ot_hdc_fastfp.sv: OK
+rtl/hdc/ot_hdc_fp32_add_lat.sv: OK
+rtl/hdc/ot_hdc_prefix.sv: OK
+rtl/hdc/ot_hdc_fp32_f12.sv: OK
+rtl/hdc/v41x/ot_dsrom_su_add6.sv: OK
+physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v: OK
+physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v: OK
+tools/s81_dv/svc_rs/svc7_bound_graph.py: OK
+physical/common_flow/ot_keep_regs.tcl: OK
+RECOVERED_MAP FAIL max 4244 violations 3424 role_errors []
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:34.79
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3998088
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1497341
+	Voluntary context switches: 1
+	Involuntary context switches: 57
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2
+SVC8_NATIVE bound FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2975118-1792493941): exit 1
