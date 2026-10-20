@@ -143,8 +143,8 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     // N32 (HBM-GQ7 10-20): the 2 -> 1 compare drove all 31 select bits (62 loads); three kept chunks, each with its own
     // compares, select <= 11 bits. Same value, same edge.
     wire [30:0] s2_amax_d;
-    generate for (genvar c = 0; c < 3; c = c + 1) begin : g_amax_chunk
-        localparam integer LO = (c == 0) ? 0 : 1 + 10 * c, W = (c == 0) ? 11 : 10;
+    generate for (genvar c = 0; c < 8; c = c + 1) begin : g_amax_chunk
+        localparam integer LO = 4*c, W = (c == 7) ? 3 : 4;
         (* keep="true" *) ot_hgi_coll_aq_amax_chunk #(.LO(LO), .W(W)) u_c(.a(s2a_m[0]), .b(s2a_m[1]), .fp4(s2a_fp4),
             .q(s2_amax_d[LO +: W]));
     end endgenerate

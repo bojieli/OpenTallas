@@ -243,15 +243,15 @@ module ot_hgi_coll_gq_issue #(
     // reached ~70 fire-edge loads through ONE row AND-OR (f_kn mux, qa init adders, gather / slot / flag holds). Six kept
     // row reads of the same bit (keep_hierarchy, on cur_ohc[3], the lightest copy; every cur_ohc copy == 1 << cur), one
     // per consumer group. Same row, same edge; without OT_GQ_N32 every copy is rc[1].
-    wire [5:0] rc1c;
+    wire [11:0] rc1c;
 `ifdef OT_GQ_N32
     wire [15:0] rf_b1;
     generate for (genvar j = 0; j < 16; j = j + 1) begin : g_rf_b1 assign rf_b1[j] = rf[j][1]; end
-    for (genvar g = 0; g < 6; g = g + 1) begin : g_rc1
+    for (genvar g = 0; g < 12; g = g + 1) begin : g_rc1
         (* keep = "true" *) ot_hgi_coll_gq_row_bit u_rb(.r(rf_b1), .oh(cur_ohc[3]), .q(rc1c[g]));
     end endgenerate
 `else
-    assign rc1c = {6{rc[1]}};
+    assign rc1c = {12{rc[1]}};
 `endif
 `ifdef OT_GQ_FAN32
     localparam integer NFP = (IA > 0) ? 4 : 3;      // ISSUE_AHEAD > 0: copy 3 loads the slot banks
@@ -708,16 +708,20 @@ module ot_hgi_coll_gq_issue #(
     generate for(genvar q=0;q<8;q=q+1)begin:g_qa_control
         localparam integer R=q/4,W=q%4;
         wire fire_local,ev_local;
+`ifdef OT_GQ_N32
+        wire fire_oh;
+        (* keep="true" *)ot_hgi_coll_gq_control_and u_fire_oh(.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.q(fire_oh));
+`endif
         (* keep="true" *)ot_hgi_coll_gq_control_and u_fire(.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.q(fire_local));
         (* keep="true" *)ot_hgi_coll_gq_issue_allow u_ev(.iss(iss),.iph(iph),.q(ev_local));
-        wire[10:0] i0=rc1c[4+(q>=6)]?11'(R):(R==0?11'd0:11'h7ff);
+        wire[10:0] i0=rc1c[4+q]?11'(R):(R==0?11'd0:11'h7ff);
         always @(posedge clk)
             if(fire_local)qa[q]<=rc[49:37]+13'({i0,2'b00}+W);
             else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
 `ifdef OT_GQ_N32
         wire[2:0] qb0=rc[39:37]+3'({i0[0],2'b00}+W);
         always @(posedge clk)
-            if(fire_local)qoh[q]<=oh8(qb0);
+            if(fire_oh)qoh[q]<=oh8(qb0);
             else if(ev_local&&!qa_r2[q])qoh[q]<={qoh[q][3:0],qoh[q][7:4]};
 `endif
     end endgenerate
@@ -766,23 +770,28 @@ module ot_hgi_coll_gq_issue #(
     // N32: per-bank request enables from 8 kept ot_hgi_coll_gq_rq_en (one per bank: the QBG issue gate qbg & iss & iph != 2
     // & sfv & scd and the plain gate !qbg & ev & pr_v reached 100-108 loads as ONE net each) and the registered one-hot
     // selects qoh / pr_oh. Same priority (QBG r, w ascending, then plain), same edge.
-    wire [1:0] rq_eq [0:7], rq_ep [0:7];
+    // Independent request muxes per <=6-bit output chunk bound each combined enable.
+    wire [1:0] rq_eq [0:7][0:2], rq_ep [0:7][0:2];
     generate for (genvar b = 0; b < 8; b = b + 1) begin : g_rq_en
+      for (genvar c = 0; c < 3; c = c + 1) begin : g_chunk
         (* keep = "true" *) ot_hgi_coll_gq_rq_en u_en(.qbg(g_qbg), .iss(iss), .iph(iph), .sfv(sfv), .scd(scd), .pq(qbg_pr14),
-            .pv(ev_v[S_PR-1]), .prv(pr_v), .eq(rq_eq[b]), .ep(rq_ep[b]));
+            .pv(ev_v[S_PR-1]), .prv(pr_v), .eq(rq_eq[b][c]), .ep(rq_ep[b][c]));
+      end
     end endgenerate
     always @(posedge clk or negedge rn2) begin
         if (!rn2) begin vm_rq <= '0; rd_exp <= 8'd0; rd_exp_q <= 8'd0; end
         else begin
             for (integer b = 0; b < 8; b = b + 1) begin : nb_rqb
+              for (integer c = 0; c < 3; c = c + 1) begin : nb_chunk
                 reg [16:0] nx;
                 nx = 17'd0;
                 for (integer r = 0; r < 2; r = r + 1)
                     for (integer w = 0; w < 4; w = w + 1)
-                        if (rq_eq[b][r] && qoh[r*4+w][b]) nx = {1'b1, g_src[15:13], qa[r*4+w]};
+                        if (rq_eq[b][c][r] && qoh[r*4+w][b]) nx = {1'b1, g_src[15:13], qa[r*4+w]};
                 for (integer r = 0; r < 2; r = r + 1)
-                    if (rq_ep[b][r] && pr_oh[r][b]) nx = {1'b1, pr_s[r]};
-                vm_rq[b*17 +: 17] <= nx;
+                    if (rq_ep[b][c][r] && pr_oh[r][b]) nx = {1'b1, pr_s[r]};
+                for (integer x = c*6; x < c*6+6 && x < 17; x = x+1) vm_rq[b*17+x] <= nx[x];
+              end
             end
             rd_exp <= 8'd0;
             for (integer b = 0; b < 8; b = b + 1) if (vm_rq[b*17+16]) rd_exp[b] <= 1'b1;
