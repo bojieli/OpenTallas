@@ -79,12 +79,21 @@ SPEC (JSON; paths relative to the repo root):
                  compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
+  entry_pins     optional exact own-entry declarations (default []):
+                 [{inst, pin, port, physical_child: {view, clock_pin, reference_file, sha256,
+                   reference_ps: {tt, ff, ss(optional)}}, effective_phase: {region,
+                   contract: "die_phi_minus_R", residual_ps: {tt, ff}}}]. Scalar clock inputs only;
+                 reference_file is repo-relative under view, SHA256 checked; TT/FF refs finite >=0,
+                 residual budgets 0..80ps. Requires landing_mcp false. Data/reset logical region stays
+                 unchanged. Die delivers phi-(entry wire+child R); export semantics/effective flop phase
+                 require downstream physical verification. SDC declares related clocks, no ideal latencies.
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
 """
 from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
 import json
 import math
 import re
@@ -448,12 +457,13 @@ class Parent:
         self.env = {k: v for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
         self.regional_bindings = regional_bindings(spec, self.insts, csrc)
-        self.cports, self.cwidth = {}, {}
+        self.cports, self.cwidth, self.cranges = {}, {}, {}
         for ins in self.insts:
             m = ins["module"]
             if m not in self.cports:
                 cm = parse_module(csrc, m)
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
+                self.cranges[m] = {p["name"]: p["range"] for p in cm["ports"]}
                 self.cwidth[m] = {p["name"]: eval_width(p["range"], dict(cm["params"])) for p in cm["ports"]}
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
@@ -498,6 +508,7 @@ class Parent:
             raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
         if self.direct_timing and (self.D != 4 or self.E != 2):
             raise SystemExit("landing_direct_timing requires the proven D4/E2 phase envelope")
+        self.entry_pins = self.entry_pin_bindings()
         self.A = self.E + 1
         self.lag = set()
         for g in spec.get("lag_pins") or []:
@@ -510,6 +521,68 @@ class Parent:
         self.AW = 1 if self.D <= 2 else math.ceil(math.log2(self.D))
         self.reference = spec.get("schedule", "offsets") == "reference"
         self.rx = int(spec.get("reset_extra", self.A + self.D)) if self.reference else 0
+
+    def entry_pin_bindings(self):
+        """Dedicated physical entries retain their child's LOGICAL data/reset region.
+
+        This source contract does not implement die compensation. The die compiler
+        must validate the exported references and deliver phi - (entry wire + R)
+        at each port so the child's effective flops meet the region phase budget.
+        """
+        rows = self.S.get('entry_pins', [])
+        if not isinstance(rows, list):
+            raise SystemExit('entry_pins must be a list of exact declarations')
+        out, ports = {}, set(self.ports) | {f'ck_{r}' for r in self.regions} | set(self.wires)
+        names = {i['inst']: i for i in self.insts}
+        ident = lambda x: isinstance(x, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', x)
+        for row in rows:
+            if not isinstance(row, dict) or set(row) != {'inst','pin','port','physical_child','effective_phase'}:
+                raise SystemExit('entry_pins requires exact inst/pin/port/physical_child/effective_phase fields')
+            i, pin, port = (row[k] for k in ('inst','pin','port'))
+            if not all(ident(x) for x in (i,pin,port)) or i not in names or port in ports or (i,pin) in out:
+                raise SystemExit('entry_pins unknown/duplicate instance, pin or dedicated port')
+            ins = names[i]
+            if (pin not in (self.S.get('clock_pins') or []) or pin not in ins['conns']
+                    or self.cports[ins['module']].get(pin) != 'in'
+                    or self.cwidth[ins['module']].get(pin) != 1
+                    or self.cranges[ins['module']].get(pin) is not None
+                    or ins['conns'][pin].strip() not in self.ck
+                    or self.ports.get(ins['conns'][pin].strip(), {}).get('dir') != 'in'
+                    or self.ports.get(ins['conns'][pin].strip(), {}).get('range') is not None
+                    or (i,pin) in self.regional_bindings):
+                raise SystemExit(f'entry_pins {i}.{pin}: requires a declared scalar clock input directly on a flat clock')
+            physical, phase = row['physical_child'], row['effective_phase']
+            if (not isinstance(physical, dict) or set(physical) != {'view','clock_pin','reference_file','sha256','reference_ps'}
+                    or physical['clock_pin'] != pin):
+                raise SystemExit('entry_pins physical_child requires view/clock_pin/reference_file/sha256/reference_ps')
+            view, ref = physical['view'], physical['reference_file']
+            if (not isinstance(view, str) or not isinstance(ref, str) or Path(view).is_absolute()
+                    or Path(ref).is_absolute() or '..' in Path(view).parts or '..' in Path(ref).parts
+                    or not view or not ref or not Path(ref).is_relative_to(Path(view)) or Path(ref) == Path(view)
+                    or not (ROOT/ref).resolve().is_relative_to((ROOT/view).resolve())
+                    or not (ROOT/view).resolve().is_relative_to(ROOT.resolve())):
+                raise SystemExit('entry_pins physical reference must be a repo-relative file under view')
+            digest = physical['sha256']
+            if (not isinstance(digest,str) or not re.fullmatch(r'[0-9a-f]{64}',digest)
+                    or not (ROOT/ref).is_file() or hashlib.sha256((ROOT/ref).read_bytes()).hexdigest() != digest):
+                raise SystemExit('entry_pins physical reference sha256 mismatch or missing file')
+            refs = physical['reference_ps']
+            if not isinstance(refs,dict) or not {'tt','ff'} <= set(refs) <= {'tt','ff','ss'}:
+                raise SystemExit('entry_pins reference_ps requires tt/ff (ss optional)')
+            if any(type(v) not in (int,float) or not math.isfinite(v) or v < 0 for v in refs.values()):
+                raise SystemExit('entry_pins reference_ps must be finite nonnegative ps')
+            if (not isinstance(phase,dict) or set(phase) != {'region','contract','residual_ps'}
+                    or phase['region'] != self.region[i] or phase['contract'] != 'die_phi_minus_R'):
+                raise SystemExit('entry_pins effective_phase must name the exact logical region and die_phi_minus_R contract')
+            residual = phase['residual_ps']
+            if (not isinstance(residual,dict) or set(residual) != {'tt','ff'} or any(
+                    type(v) not in (int,float) or not math.isfinite(v) or not 0 <= v <= 80 for v in residual.values())):
+                raise SystemExit('entry_pins residual_ps requires finite tt/ff budgets in 0..80 ps')
+            ports.add(port)
+            out[i,pin] = row
+        if rows and self.mcp:
+            raise SystemExit('entry_pins requires landing_mcp false: all datapaths remain fully timed')
+        return out
 
     def rng(self, n):
         if n in self.wires:
@@ -804,6 +877,7 @@ class Parent:
         # header
         items = [full_item(p) for p in self.mod["ports"] if p["name"] not in self.ck]
         items += [f"input wire ck_{r}" for r in self.regions]
+        items += [f"input wire {row['port']}" for row in self.entry_pins.values()]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
         w(f"// GENERATED by tools/landed_parent/lp.py from {S['top']} ({', '.join(S['sources'])}) -- do not edit.")
@@ -946,7 +1020,9 @@ class Parent:
             cs = []
             for pin, ex in ins["conns"].items():
                 binding = self.regional_bindings.get((i,pin))
-                if binding:
+                if (i,pin) in self.entry_pins:
+                    ex = self.entry_pins[i,pin]['port']
+                elif binding:
                     ex = ('{' + ', '.join('ck_'+r for r in reversed(binding['regions'])) + '}'
                           if binding['role']=='clocks' else brsub[i,pin])
                 elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
@@ -1052,6 +1128,33 @@ class Parent:
             o.append(f"set_{k}_delay [expr {{0.2 * $ot_lp_per}}] -clock ck_{r} [get_ports {{{n}{'[*]' if p['range'] else ''}}}]")
         if rest:
             o.append(f"if {{!$::ot_ref_pre_cts}} {{ set_propagated_clock [get_clocks {{{' '.join(f'ck_{r}' for r in rest)}}}] }}")
+        if self.entry_pins:
+            o.append('# Dedicated entries: RELATED same-period clocks; source-only phase obligation, no ideal latency applied.')
+            o.append('# Die must deliver phi - (parent entry wire + source-bound child R) relative to logical region flop phase.')
+            o.append('# TT/FF residual budgets require physical verification; equal-phase lockstep is logical evidence only.')
+            entries = list(self.entry_pins.values())
+            all_clocks = list(clk.values()) + [row['port'] for row in entries]
+            for row in entries:
+                port = row['port']
+                o.append(f'create_clock -name {port} -period $ot_lp_per [get_ports {port}]')
+            for row in entries:
+                port = row['port']
+                res_entry = max(row['effective_phase']['residual_ps'].values())
+                for other in all_clocks:
+                    if other == port:
+                        continue
+                    sibling = next((e for e in entries if e['port']==other), None)
+                    # Independent entry residuals add in the worst case.
+                    other_region = sibling['effective_phase']['region'] if sibling else next(r for r,c in clk.items() if c==other)
+                    cross_region = other_region != row['effective_phase']['region']
+                    budget = res_entry + (max(sibling['effective_phase']['residual_ps'].values()) if sibling else 0) + (res if cross_region else 0)
+                    for a,b in ((port,other),(other,port)):
+                        setup = f'[expr {{{float(60 + budget)} + 0.75 * $ot_lp_per}}]' if self.direct_timing and cross_region else f'{60 + budget:g}'
+                        o.append(f'set_clock_uncertainty -setup {setup} -from [get_clocks {a}] -to [get_clocks {b}]')
+                        o.append(f'set_clock_uncertainty -hold {25 + budget:g} -from [get_clocks {a}] -to [get_clocks {b}]')
+                o.append(f'set_clock_uncertainty -setup 60 [get_clocks {port}]')
+                o.append(f'set_clock_uncertainty -hold 25 [get_clocks {port}]')
+                o.append(f'if {{!$::ot_ref_pre_cts}} {{ set_propagated_clock [get_clocks {port}] }}')
         for n in sorted(self.static):
             if n in self.ports:
                 o.append(f"set_case_analysis 0 [get_ports {{{n}{'[*]' if self.ports[n]['range'] else ''}}}]   ;# identity strap")
@@ -1156,6 +1259,8 @@ class Parent:
                           for j,r in enumerate(b['regions'])])
                     for (i,p),b in sorted(self.regional_bindings.items())],
                 internal_crossing_obligation='Vector binding is clock/reset connectivity only. Every declared root must appear in native entry and internal crossing audits; no internal datapath coverage is implied.')),
+            **(dict(entry_pins=list(self.entry_pins.values()),
+                    entry_clock_scope='Source-only own-entry connectivity. Die compiler must verify source-bound exported references, parent entry wire and effective child flop phase at TT/FF. No physical phase qualification from equal-phase lockstep.') if self.entry_pins else {}),
             die_obligations=[
                 "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
                 "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
@@ -1206,6 +1311,7 @@ class Parent:
              [f".{p['name']}(fo_{p['name']})" for p in outs]
         lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
+        lc += [f".{row['port']}(clk)" for row in self.entry_pins.values()]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
         pr = ", ".join(f".{k}({v})" for k, v in ((S.get("ref_params") if self.reference else None) or S.get("params") or {}).items())
         ref = S["top"] + "_lagref" if P.get("lag") else S["top"]
@@ -1356,7 +1462,18 @@ def audit(spec: dict, rtl_text: str) -> dict:
     for i in insts:
         if i["module"] not in dirs:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
-    bindings = Parent(spec).regional_bindings if (spec.get('regional_child_clocks') or spec.get('regional_child_resets')) else {}
+    parent = Parent(spec) if (spec.get('regional_child_clocks') or spec.get('regional_child_resets') or spec.get('entry_pins')) else None
+    bindings = parent.regional_bindings if parent else {}
+    entries = parent.entry_pins if parent else {}
+    for (name,pin), row in entries.items():
+        child = next((i for i in insts if i['inst']==name), None)
+        declared = next((p for p in mod['ports'] if p['name']==row['port']), None)
+        uses = [(i['inst'],p) for i in insts for p,e in i['conns'].items() if row['port'] in idents(e)]
+        assigned = any(row['port'] in lhs | rhs for lhs,rhs in assigns)
+        if (child is None or child['conns'].get(pin,'').strip() != row['port']
+                or not declared or declared['dir'] != 'in' or declared['range'] is not None
+                or uses != [(name,pin)] or assigned):
+            return dict(ok=False, fails=[f'{name}.{pin}: dedicated entry connectivity differs from declared contract'])
     for (name,pin), binding in bindings.items():
         child = next((i for i in insts if i['inst']==name), None)
         expected = ('{' + ','.join('ck_'+r for r in reversed(binding['regions'])) + '}'
@@ -1368,6 +1485,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
     reg = {}
     for i in insts:
         cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks and (i['inst'],pin) not in bindings]
+        cks += [f'ck_{row["effective_phase"]["region"]}' for (name,pin),row in entries.items() if name==i['inst']]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
@@ -1392,7 +1510,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
     fails, landed, rst = [], 0, 0
     for i in insts:
         for pin, ex in i["conns"].items():
-            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks or (i['inst'],pin) in bindings:
+            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks or (i['inst'],pin) in bindings or (i['inst'],pin) in entries:
                 continue
             for n in idents(ex):
                 for d in drv.get(n, ()):
