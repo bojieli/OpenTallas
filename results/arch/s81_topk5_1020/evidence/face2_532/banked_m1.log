@@ -1,0 +1,4 @@
+HIST_BANKED FAIL MUT=1 cycle=47 sums=0 bin_values=1 busy=0
+[530000] %Fatal: tb_hist_banked.sv:28: Assertion failed in tb_hist_banked.scenario: HIST_BANKED_REJECT MUT=1
+%Error: results/arch/s81_topk5_1020/tb_hist_banked.sv:28: Verilog $stop
+Aborting...
