@@ -1,5 +1,7 @@
 # s3d scoped immutable view promotion
 
+Baseline clarification: dd875958b already contains ALL34 record/view files byte-identically. This commit adds evidence only; it does not rewrite views or imply parent adoption.
+
 34 view/closure/route record files are byte-identical to bae6465e5959de56b158fd4956b2caf52174fa18, projected onto main dd875958b. Includes6314d5b04 final audit; no shared helpers, RTL, kit definitions, defaults, or other child views changed.
 
 Exact source db0cdd31d. Frozen6_final ODB5612d74ede2a09f93dc81f91abc4f4b3e3d2e7d779b0a96a4e8ebe0d770bcc78: native max30/zero role errors/zero over32 including reset; all transformed native pin-box reach<=35.944um; PG12318/0unbound and fresh native receipt PASS. Original ODB/V/SPEF unchanged. TT+54.87ps/FF+26.04ps/DRC0;466/466 STA registers clocked,216positive-edge boundary flops. No macros, square29.16, full-face pins, original PNG review retained.

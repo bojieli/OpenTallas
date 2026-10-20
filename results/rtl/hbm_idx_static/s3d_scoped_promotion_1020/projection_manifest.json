@@ -838,5 +838,7 @@
   "functional_output_bits": 87,
   "data_input_bits": 128,
   "storage": "No SRAM, ROM, latch or private array in this ctl tile. Stateful source registers retained and checked by pinned behavioral/mutant receipts; parent quadrants not adopted.",
-  "qualification_scope": "Exact immutable child view; no parent bind, age model, rate or source-helper adoption."
+  "qualification_scope": "Exact immutable child view; no parent bind, age model, rate or source-helper adoption.",
+  "base_already_contains_all_record_paths_identically": true,
+  "delta_scope": "Evidence only. All34 immutable view/closure/route files already exist byte-identically on dd875958b; no view rewrite or parent adoption."
 }
