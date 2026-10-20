@@ -194,5 +194,8 @@
   "native32": "NOT RUN; masked writes, owner table, read selects, reset/pin landing all require actual mapped census",
   "density": "NOT RUN; actual std synthesis area determines one full-width band per hard leaf and exact exceptions, no lowfill waiver",
   "throughput": "Target issue everyedge; no measured service/10%qualification; all edge changes require compiler/data+metadata+fault/staticcalendar rewrite and golden proof",
-  "next": "Select a traffic-independent topology only after actual die recompose; bind exact transport stages in compiler, then RTL/native before any physical gate"
+  "next": "Select a traffic-independent topology only after actual die recompose; bind exact transport stages in compiler, then RTL/native before any physical gate",
+  "metadata_edge_obligation": "DATA deltas+5/+9 cannot transfer to directlycapturedE rf_bcmd. Derive each consumer port age separately in actual compiler/staticcalendar.",
+  "RF_bcmd_baseline_edge": 0,
+  "read_delta_scope": "DATA ONLY"
 }
