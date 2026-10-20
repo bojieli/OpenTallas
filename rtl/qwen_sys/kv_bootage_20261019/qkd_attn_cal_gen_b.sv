@@ -55,7 +55,9 @@ module qkd_attn_cal_gen_b #(
  parameter integer D_RL=255,   // bound
  parameter integer F_DLY=127,  // bound
  parameter integer SERVICE_END=1777,
- parameter integer MUT=0
+ parameter integer MUT=0,
+ // Opt-in compiler-priced STATUS tail; service/result calendar stays unchanged.
+ parameter integer STATUS_DELAY=0
 )(
  input wire ck,rst_n,
  input wire [23:0] cfg_cal,          // {F_DLY, D_RL, D_QK} boot-loaded (static after the seal)
@@ -163,7 +165,7 @@ module qkd_attn_cal_gen_b #(
   r9<={1'b0,k_rl-((MUT==4)?16'd1:16'd0)}-{1'b0,pv8};                          // stretched R (bit 16: does not fit)
   p09<=16'(po0_8);
   cal9<={STRETCH?k_rl-((MUT==4)?16'd1:16'd0)-pv8:16'(po0_8),16'(po1_8),16'(po0_8),pv8,hp8,hr8,hz8,hl8,z8,lmax8,exp8};
-  tx9<=STRETCH?16'(TXF):pv8+lk8;en9<=STRETCH?16'(TXF+34):pv8+le8;
+  tx9<=STRETCH?16'(TXF):pv8+lk8;en9<=STRETCH?16'(TXF+34+STATUS_DELAY):pv8+le8+16'(STATUS_DELAY);
  end
  // ---- S10: held result ----
  always @(posedge ck or negedge rst_n)begin

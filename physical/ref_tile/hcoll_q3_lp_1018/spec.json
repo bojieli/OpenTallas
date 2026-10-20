@@ -1,0 +1,866 @@
+{
+ "name": "hcoll_q3_lp_1018",
+ "top": "ot_hfd_coll_q3_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q3_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+  "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_sw",
+ "clock_ports": [
+  "ck_sw",
+  "ck_wr",
+  "ck_rg"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_sw"
+   ],
+   "inputs": [
+    "rst_n",
+    "qid",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v",
+    "inj_d",
+    "rc_v",
+    "rc_tag",
+    "rc_d",
+    "phy_up",
+    "rx_pin_v",
+    "rx_pin_flit",
+    "vm_rr",
+    "tkx_busy",
+    "tkx_done",
+    "tkx_fault"
+   ],
+   "outputs": [
+    "program_configured",
+    "program_init_busy",
+    "program_fault",
+    "hgi_busy",
+    "hgi_done",
+    "hgi_fault",
+    "inj_rd",
+    "inj_idx",
+    "hgi_inj_addr",
+    "del_valid",
+    "del_flit",
+    "hgi_del_obase",
+    "tx_pin_v",
+    "tx_pin_flit",
+    "retry_requested",
+    "isa_ring",
+    "isa_lp_data",
+    "vm_rq",
+    "tkx_start",
+    "tkx_arg_mode",
+    "tkx_cfg_n",
+    "tkx_cfg_k",
+    "tkx_cfg_nout",
+    "tkx_cfg_g",
+    "tkx_cfg_gbase",
+    "tkx_cfg_pf",
+    "tkx_cfg_obase",
+    "tkx_cfg_rbase",
+    "tkx_cfg_has_r",
+    "tkx_del_slot",
+    "tkx_del_valid",
+    "tkx_del_flit",
+    "fault",
+    "fault_cause",
+    "done",
+    "stat_cycles"
+   ]
+  },
+  "wr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_wr"
+   ],
+   "inputs": [
+    "qid_wr",
+    "tkx_w_v",
+    "tkx_w_addr",
+    "tkx_w_mask",
+    "tkx_w_data"
+   ],
+   "outputs": [
+    "vm_kq"
+   ]
+  },
+  "rg": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rg"
+   ],
+   "inputs": [
+    "qid_rg",
+    "pr_cw_i",
+    "pr_ccw_i",
+    "ra_lp_we",
+    "ra_lp_tag",
+    "ra_lp_data",
+    "ra_state_read_add",
+    "ra_state_read_tx",
+    "ra_state_read_rr",
+    "ra_state_add_tag",
+    "ra_state_tx_tag",
+    "ra_state_rr_tag",
+    "ra_state_add_src",
+    "ra_state_add_rhs_acc",
+    "ra_state_tx_acc",
+    "ra_add_v",
+    "ra_add_tag",
+    "ra_add_src",
+    "ra_add_rhs_acc",
+    "ra_tx_inject",
+    "ra_tx_forward",
+    "ra_tx_tag",
+    "ra_tx_dst",
+    "ra_tx_result",
+    "ra_tx_acc",
+    "ra_tx_gather",
+    "ra_tx_ttl",
+    "ra_rx_slot",
+    "ra_rx_kind",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_rr_local",
+    "ra_rr_local_tag"
+   ],
+   "outputs": [
+    "rr_v",
+    "rr_tag",
+    "rr_d",
+    "pr_cw_o",
+    "pr_ccw_o",
+    "ag_v",
+    "ag_src",
+    "ag_tag",
+    "ag_d"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/collq/ot_hfd_coll_q3_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_sw) -> u_lpr_<r> regional runs (depth 3) -> per-child u_lprc_* pads; the port net has ONE sink (TW2-COLLP 10-19, ROOT-RST rule satisfied in RTL)"
+ },
+ "outline": {
+  "w": 1296.0,
+  "h": 1036.8,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_issuer.u_issuer.g_mem[0].u_bank.u_sram",
+   "at": [
+    1080.0,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_issuer.u_issuer.g_mem[1].u_bank.u_sram",
+   "at": [
+    1080.0,
+    121.008
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_issuer.u_issuer.g_mem[2].u_bank.u_sram",
+   "at": [
+    1080.0,
+    198.816
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link0.g_bank[0].u_store.u_native.u_sram",
+   "at": [
+    561.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link0.g_bank[1].u_store.u_native.u_sram",
+   "at": [
+    561.6,
+    121.008
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link0.g_bank[2].u_store.u_native.u_sram",
+   "at": [
+    561.6,
+    198.816
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link0.g_bank[3].u_store.u_native.u_sram",
+   "at": [
+    561.6,
+    276.624
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link1.g_bank[0].u_store.u_native.u_sram",
+   "at": [
+    777.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link1.g_bank[1].u_store.u_native.u_sram",
+   "at": [
+    777.6,
+    121.008
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link1.g_bank[2].u_store.u_native.u_sram",
+   "at": [
+    777.6,
+    198.816
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_link1.g_bank[3].u_store.u_native.u_sram",
+   "at": [
+    777.6,
+    276.624
+   ],
+   "at_exact": true
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/hcoll_v5_ctl3/views/ot_hgi_coll_ctl_v5_n2s1",
+   "count": 1,
+   "inst": "u_control",
+   "at": [
+    172.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_fj3/views/ot_hgi_coll_fj_n2s1",
+   "count": 1,
+   "inst": "u_fj",
+   "at": [
+    345.6,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc0",
+   "at": [
+    172.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc1",
+   "at": [
+    259.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc2",
+   "at": [
+    345.6,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc3",
+   "at": [
+    432.0,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc4",
+   "at": [
+    518.4,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc5",
+   "at": [
+    604.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc6",
+   "at": [
+    691.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc7",
+   "at": [
+    777.6,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc8",
+   "at": [
+    864.0,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo0",
+   "at": [
+    172.8,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo1",
+   "at": [
+    259.2,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo2",
+   "at": [
+    345.6,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo3",
+   "at": [
+    432.0,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo4",
+   "at": [
+    518.4,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo5",
+   "at": [
+    604.8,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo6",
+   "at": [
+    691.2,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo7",
+   "at": [
+    777.6,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo8",
+   "at": [
+    864.0,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo9",
+   "at": [
+    950.4,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo10",
+   "at": [
+    1036.8,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo11",
+   "at": [
+    1123.2,
+    561.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo12",
+   "at": [
+    950.4,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo13",
+   "at": [
+    1036.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo14",
+   "at": [
+    1123.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo15",
+   "at": [
+    345.6,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "count": 1,
+   "inst": "u_qo16",
+   "at": [
+    432.0,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso3n/views/ot_hgi_coll_qso_n2s1_b1",
+   "count": 1,
+   "inst": "u_qo17",
+   "at": [
+    518.4,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmwrite_static_v6_roots_fsw/views/ot_hgi_coll_static_vmwrite_roots_v6_physical",
+   "count": 1,
+   "inst": "u_writer",
+   "at": [
+    43.2,
+    345.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst0",
+   "at": [
+    172.8,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst1",
+   "at": [
+    259.2,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst2",
+   "at": [
+    345.6,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst3",
+   "at": [
+    432.0,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst4",
+   "at": [
+    518.4,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst5",
+   "at": [
+    604.8,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst6",
+   "at": [
+    691.2,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst7",
+   "at": [
+    777.6,
+    777.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag_ctl",
+   "count": 1,
+   "inst": "u_rctl",
+   "at": [
+    561.6,
+    864.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_arg_tp192/views/ot_hgi_coll_argmax_m_tp192",
+   "count": 1,
+   "inst": "u_arg",
+   "at": [
+    1036.8,
+    691.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc9",
+   "at": [
+    1166.4,
+    691.2
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "vm_rq",
+   "vm_rr",
+   "ck_wr",
+   "qid_wr",
+   "vm_kq",
+   "tkx_w_v",
+   "tkx_w_addr",
+   "tkx_w_mask",
+   "tkx_w_data"
+  ],
+  "N": [
+   "pr_cw_i",
+   "pr_ccw_o",
+   "isa_ring",
+   "isa_lp_data",
+   "rc_d",
+   "ra_lp_we",
+   "ra_lp_tag",
+   "ra_lp_data",
+   "ra_state_read_add",
+   "ra_state_read_tx",
+   "ra_state_read_rr",
+   "ra_state_add_tag",
+   "ra_state_tx_tag",
+   "ra_state_rr_tag",
+   "ra_state_add_src",
+   "ra_state_add_rhs_acc",
+   "ra_state_tx_acc",
+   "ra_add_v",
+   "ra_add_tag",
+   "ra_add_src",
+   "ck_rg",
+   "qid_rg",
+   "ra_add_rhs_acc",
+   "ra_tx_inject",
+   "ra_tx_forward",
+   "ra_tx_tag",
+   "ra_tx_dst",
+   "ra_tx_result",
+   "ra_tx_acc",
+   "ra_tx_gather",
+   "ra_tx_ttl",
+   "ra_rx_slot",
+   "ra_rx_kind",
+   "ra_rx_src",
+   "ra_rx_tag",
+   "ra_rr_local",
+   "ra_rr_local_tag",
+   "rr_v",
+   "rr_tag",
+   "rr_d",
+   "ag_v",
+   "ag_src",
+   "ag_tag",
+   "ag_d",
+   "pr_ccw_i",
+   "pr_cw_o",
+   "tkx_start",
+   "tkx_arg_mode",
+   "tkx_cfg_n",
+   "tkx_cfg_k",
+   "tkx_cfg_nout",
+   "tkx_cfg_g",
+   "tkx_cfg_gbase",
+   "tkx_cfg_pf",
+   "tkx_cfg_obase",
+   "tkx_cfg_rbase",
+   "tkx_cfg_has_r",
+   "tkx_del_slot",
+   "tkx_del_valid",
+   "tkx_del_flit",
+   "tkx_busy",
+   "tkx_done",
+   "tkx_fault"
+  ],
+  "E": [
+   "inj_rd",
+   "inj_idx",
+   "hgi_inj_addr",
+   "inj_d",
+   "del_valid",
+   "del_flit",
+   "hgi_del_obase"
+  ],
+  "S": [
+   "rc_v",
+   "rc_tag",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "program_configured",
+   "program_init_busy",
+   "program_fault",
+   "rst_n",
+   "qid",
+   "ck_sw",
+   "hgi_busy",
+   "hgi_done",
+   "hgi_fault",
+   "fault",
+   "fault_cause",
+   "done",
+   "stat_cycles",
+   "phy_up",
+   "tx_pin_v",
+   "tx_pin_flit",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "retry_requested"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "PL-COLLQ (PARENTS-LANDED 10-18): the HBM COLL q3 (SW, NLINK 2, TP 192) quadrant parent as a LANDED-REGION cluster (lp.py): 3 local clock regions sw / wr / rg, 10 landed writer crossings (2,258 b) + 2 loose (sticky fault) landings, 1-bit reset runs only; replaces the never-kitted single-tree ot_hfd_coll_q3_hard_v8x die SYNTH binding",
+ "job": {
+  "owner": "Claude:PL-COLLQ",
+  "branch": "claude/pl-collq-1018",
+  "tag": "lpk2",
+  "purpose": "HBM COLL q3 quadrant engine parent (SW, TP 192) as landed regions; contains the critical ot_hgi_coll_ctl_v5_n2s1 leaf: coordinator PNG review before any submit",
+  "hold_merge": "critical (ot_hgi_coll_ctl_v5 prefix inside): gate + PNG review only; issuer / link_e / reduce views missing (soft here)",
+  "submit": false,
+  "benches": [
+   {
+    "name": "q3lp_lockstep",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/landed/run_q3_lp_all.sh {RUN}/bench/q3lp",
+    "expect": "pass",
+    "min_count_regex": "Q2_LP_ALL_EXIT (0)",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "results/arch/landed_parent_1018/collq",
+   "results/rtl/landed_parent_1018/collq/bench_witness"
+  ]
+ },
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

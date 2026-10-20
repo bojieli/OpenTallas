@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_d2d_static_ovl_sf",
+ "enable": false,
+ "reason": "the RTL lands it: ot_rst_pipe u_reset_regions / u_por_region s0 -> s1 (kept 2-flop capture, async assert / sync release, FIRM at the E-face rst_n / por_n pins by local_reset_capture.tcl; port net = 2 sinks), then 8 equal-depth regional copies (RC 1, each <= ~160 loads; r9j 300/325 on one flop). A kit landing would add 2 more stages and rename u_core (breaks the capture anchor)."
+}

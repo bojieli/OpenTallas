@@ -1,0 +1,27 @@
+{
+  "reviewed_source": "fabd76d984b39d7ee62e08c0aab4103ab9928c7e",
+  "harness_safety_fix": "0887ebada",
+  "baseline_main": "e5e69def3",
+  "scoped_changes": "75 ADD-only private source/harness/evidence paths; no existing main source modified",
+  "source_manifest_count": 18,
+  "private_module_names": 26,
+  "public_main_module_collisions": 0,
+  "reused_main_dependencies_byte_identical": true,
+  "private_RTL_define_undef_include_leakage": false,
+  "immutable_numeric_hop_evidence_hashes_verified": 31,
+  "latency_price": "+256 core edges per HC job; actual unit HOP ages1015N/1013S versus main759/757",
+  "qualification": "Source-only explicit private graph. No production compiler binding, native source-safe proof, physical or full SU/MU token adoption. Cold configuration validity and reset-first-use remain open.",
+  "numerical_proof_reuse": "All pinned RTL/macro dependencies and31 prior evidence files verified unchanged; no duplicate numerical/HOP simulation.",
+  "flow_validation": {
+    "baseline": "112 failed,1638 passed,41 skipped,396 subtests passed",
+    "candidate": "112 failed,1636 passed,41 skipped,396 subtests passed",
+    "new_failure_ids": 0,
+    "resolved_failure_ids": 0,
+    "full_flow_source_directories_byte_identical": true,
+    "collected_node_inventory_identical": true,
+    "collected_tests": 1762,
+    "note": "The two-pass summary-count difference is retained verbatim; identical complete collected node inventory and zero new failure IDs are the acceptance boundary.",
+    "fleet_unit": "oth-ubuntu-1747131-1792441761",
+    "targeted_tests": "4 passed; unit oth-ubuntu-1753637-1792441821"
+  }
+}

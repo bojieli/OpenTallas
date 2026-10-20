@@ -1,0 +1,171 @@
+{
+ "lints": {
+  "cdc_synchronizers": {
+   "components": {
+    "inputs": {
+     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "policy": "cdc_synchronizers",
+    "spec": {
+     "cdc_synchronizers": [
+      {
+       "chain": [
+        "g_rsync.rs[0]",
+        "g_rsync.rs[1]"
+       ],
+       "dst_domain": "core",
+       "name": "pg_reset",
+       "source": "g_rsync.rc",
+       "src_domain": "serial",
+       "sync_max_delay_ps": 250,
+       "why": "serial power-on reset rst_n (pin flop rc on clk_ctl) re-timed by two pg_clk flops into the taps reset (replaces the r8b single pg_clk flop of the raw serial rst_n; same pattern as col_su r3 stream_reset)"
+      }
+     ],
+     "children": [],
+     "clock": "multiple_cts_roots",
+     "clock_data_paths": "related_pll_ratio",
+     "clock_entry_domains": {
+      "core": {
+       "inputs": [
+        "local_rq",
+        "local_wq",
+        "far_rq",
+        "far_wq",
+        "local_read",
+        "local_write",
+        "near_rr",
+        "near_w_done"
+       ],
+       "outputs": [
+        "near_rq",
+        "near_wq",
+        "local_rr",
+        "far_rr",
+        "local_w_done",
+        "far_w_done",
+        "fault"
+       ],
+       "ports": [
+        "pg_clk"
+       ],
+       "ratio": [
+        1,
+        1
+       ]
+      },
+      "serial": {
+       "inputs": [
+        "rst_n"
+       ],
+       "outputs": [],
+       "ports": [
+        "clk_ctl"
+       ],
+       "ratio": [
+        4,
+        3
+       ]
+      }
+     },
+     "clock_relationship": {
+      "kind": "same_pll_fixed_phase",
+      "phase_ps": 0,
+      "ratio": [
+       4,
+       3
+      ]
+     },
+     "kind": "tile",
+     "macros": [],
+     "name": "hbm_su_pg_lgtap_rt18_1019",
+     "params": {
+      "READ_RETURN": 18,
+      "WRITE_RETURN": 15
+     },
+     "sources": [
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+      "rtl/hdc/ot_hdc_delay.sv"
+     ],
+     "top": "ot_hbm_su_static_pg_lg_tap"
+    },
+    "tool": {
+     "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
+     "clock_entry_constraints.py": "e72e8beda5521c2f504b8de5ca70f672da9a6d4538c0c828fef201031565735c",
+     "gray_fifo_cdc_constraints.py": "567e0e04231a4c9f88ee9eb144358340c9effd41cd4b925bd514680cf8b951c8"
+    },
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+   },
+   "created": "2026-10-19T02:30:30-0700",
+   "host": "ot-epyc7",
+   "key": "43ef07c2cec179d01738dff32773280f700443a5288b28f54e0e7dde0412f501",
+   "record": {
+    "counts": {
+     "capture": 0,
+     "payload": 0,
+     "source": 1,
+     "sync1": 1
+    },
+    "groups": {
+     "pg_reset": {
+      "dst_domain": "core",
+      "payload_bits": 0,
+      "payload_max_delay_ps": 0.0,
+      "src_domain": "serial",
+      "sync_max_delay_ps": 250.0,
+      "width": 1
+     }
+    },
+    "roles": {
+     "g_rsync.rc": [
+      "pg_reset",
+      "source",
+      0
+     ],
+     "g_rsync.rs[0]": [
+      "pg_reset",
+      "sync1",
+      0
+     ],
+     "g_rsync.rs[1]": [
+      "pg_reset",
+      "stage2",
+      0
+     ],
+     "tap_rst_n": [
+      "pg_reset",
+      "stage2",
+      0
+     ],
+     "u_tap.g_bank[0].u_tap.rst_n": [
+      "pg_reset",
+      "stage2",
+      0
+     ],
+     "u_tap.g_bank[1].u_tap.rst_n": [
+      "pg_reset",
+      "stage2",
+      0
+     ],
+     "u_tap.rst_n": [
+      "pg_reset",
+      "stage2",
+      0
+     ]
+    },
+    "source_sha256": {
+     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    }
+   },
+   "seconds": 3
+  }
+ },
+ "schema": "opentallas.ref_tile.lint_receipt.v1"
+}

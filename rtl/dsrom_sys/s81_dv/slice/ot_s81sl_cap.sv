@@ -61,7 +61,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap #(
     parameter integer WIN = 2,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // TOK.DS.BENCH.1 calendar fix (LEAD2-S81/TOK 10-19): E-column static delay in edges before n6 (0 = none, the
+    // pre-fix netlist).  The QF six-frame calendar needs EDLY = 23 (ot_s81sl_cap_ed header); the compiler owns it.
+    parameter integer EDLY = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -81,27 +84,44 @@ module ot_s81sl_cap #(
     localparam integer MUT_E = (MUT == 2 || MUT == 4) ? MUT : 0;
     localparam integer MUT_R = (MUT == 1 || MUT == 3) ? MUT : 0;
     wire w_v, w_e, w_f, e_v, e_e, e_f; wire [31:0] w_t, w_d, e_t, e_d;
+    wire ex_v, ex_e, ex_f; wire [31:0] ex_t, ex_d;            // E tree output before the static delay
+    generate if (EDLY != 0) begin : g_ed
+        ot_s81sl_cap_ed #(.D(EDLY)) u_ed (.clk(clk), .rst_n(rst_n), .i_v(ex_v), .i_t(ex_t), .i_d(ex_d), .i_e(ex_e),
+            .i_f(ex_f), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));
+    end else begin : g_noed
+        assign e_v = ex_v; assign e_t = ex_t; assign e_d = ex_d; assign e_e = ex_e; assign e_f = ex_f;
+    end endgenerate
     // the hardened leaves are instantiated WITHOUT parameter overrides (one master each; WIN = 2 is their default);
     // the bench mutants (MUT != 0) re-elaborate the RTL with the mutant parameter on the leaf that holds it
     generate if (MUT == 0) begin : g_hard
         ot_s81sl_cap_tr u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_w), .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
-        ot_s81sl_cap_tr u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .fault(e_f));
+        ot_s81sl_cap_tr u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e), .o_v(ex_v), .o_t(ex_t), .o_d(ex_d), .o_e(ex_e), .fault(ex_f));
         ot_s81sl_cap_rt u_rt (.clk(clk), .rst_n(rst_n),
             .w_v(w_v), .w_t(w_t), .w_d(w_d), .w_e(w_e), .w_f(w_f), .e_v(e_v), .e_t(e_t), .e_d(e_d), .e_e(e_e), .e_f(e_f),
             .cfg_v(cfg_v), .cfg_d(cfg_d),
             .cw_s_v(cw_s_v), .cw_s_a(cw_s_a), .cw_s_d(cw_s_d), .cw_n_v(cw_n_v), .cw_n_a(cw_n_a), .cw_n_d(cw_n_d),
             .fault(fault));
-    end else begin : g_mut
+    end
+`ifndef OT_HARD_CHILDREN
+    // bench mutants only (the hardened build defines OT_HARD_CHILDREN: hard views carry no parameters)
+    else begin : g_mut
         ot_s81sl_cap_tr #(.MUT(MUT_W)) u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_w),
             .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
         ot_s81sl_cap_tr #(.MUT(MUT_E)) u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e),
-            .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .fault(e_f));
+            .o_v(ex_v), .o_t(ex_t), .o_d(ex_d), .o_e(ex_e), .fault(ex_f));
         ot_s81sl_cap_rt #(.MUT(MUT_R)) u_rt (.clk(clk), .rst_n(rst_n),
             .w_v(w_v), .w_t(w_t), .w_d(w_d), .w_e(w_e), .w_f(w_f), .e_v(e_v), .e_t(e_t), .e_d(e_d), .e_e(e_e), .e_f(e_f),
             .cfg_v(cfg_v), .cfg_d(cfg_d),
             .cw_s_v(cw_s_v), .cw_s_a(cw_s_a), .cw_s_d(cw_s_d), .cw_n_v(cw_n_v), .cw_n_a(cw_n_a), .cw_n_d(cw_n_d),
             .fault(fault));
-    end endgenerate
+    end
+`endif
+    endgenerate
+`ifdef OT_HARD_CHILDREN
+`ifndef SYNTHESIS
+    initial if (MUT != 0) $fatal(1, "ot_s81sl_cap: OT_HARD_CHILDREN build is MUT = 0 only");
+`endif
+`endif
 `ifndef SYNTHESIS
     initial if (WIN != 2) $fatal(1, "ot_s81sl_cap: the hardened leaves are built at WIN = 2");
 `endif

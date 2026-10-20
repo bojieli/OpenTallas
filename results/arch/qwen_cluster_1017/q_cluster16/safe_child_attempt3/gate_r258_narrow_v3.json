@@ -1,0 +1,125 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: ring capture flops and registered read output are the landed bank endpoint; adding input stages changes the priced ring window",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_c_land_r258_narrow_20261019-080828.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_c_land_r258_narrow_20261019-080828.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_c_land_r258_narrow-20261019-080828",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 32 s (gate total 129 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1292, 'pin_rectangles': 1292, 'pin_track_checked': 1292, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0b26b62aee722a78a5a89164168e6aaa88c39fd34d8088a759fe5361aac5f681",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 241 um2 + macros 0 in core 7577: util 3%",
+   "fix": "set \"std_area_um2\": 241 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "REFUSE qfd_c_land_r258_narrow cells 1,682 flops 357 depth 91.7 ps util 0.0318 reach 96.5 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.reset_landing",
+   "message": "reset port rsi: 11 sinks (11 flops, 0 hard-child / macro pins, e.g. u.g_slice[0].u.r1$_DFF_P_/D) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile \"reset_landing\": {\"enable\": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth",
+   "fix": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit \"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 3.2% outside 45%-65% (std 241 + macro 0 um2 in 7577 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 144.4..172.0 ps (spread 27.6), boundary mean 156.3; tt insertion all 109.3..134.4 ps (spread 25.1), boundary mean 121.0; ff insertion all 88.0..112.6 ps (spread 24.6), boundary mean 100.0; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_c_land_r258_narrow/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       245 paths, worst slack 299.2 ps (e.g. u.g_slice[1].u/o[3]$_SDFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       55 paths, worst slack 329.4 ps (e.g. o[13])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.99155256122674e-10 hold WNS 5.08164760271157e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 357 sinks on the largest root; measured TT insertion 134.4 ps, FF insertion 112.6 ps, TT pin-flop spread 25.1 ps, FF pin-flop spread 24.6 ps (spread <= 80 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/safe-qw-cb16-1019/physical/ref_tile/qfd_c_land_r258_narrow/gate_layout/floorplan.png; density /home/ubuntu/wt/safe-qw-cb16-1019/physical/ref_tile/qfd_c_land_r258_narrow/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 21.41% used; GRT 20 s",
+   "fix": ""
+  }
+ ]
+}

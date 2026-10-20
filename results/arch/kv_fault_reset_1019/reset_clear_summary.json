@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.kv_fault_reset_clear_model.v1",
+ "qualified_release": false,
+ "status": "FULL_GRAPH_CYCLE_MODEL_PASS_CONDITIONAL_ON_ROOT_AND_SOURCE_CONTRACTS",
+ "reset_schedules": 12,
+ "roots": 18,
+ "source_pulses": 356,
+ "diagnostic_root_assert_skew_cycles": 64,
+ "mutants": [
+  {
+   "mode": "early_sink",
+   "schedule": 2,
+   "witness": "STALE_FAULT_RESURRECTION at 423"
+  },
+  {
+   "mode": "missing_sink_reset",
+   "schedule": 0,
+   "witness": "STALE_FAULT_RESURRECTION at 423"
+  },
+  {
+   "mode": "missing_presticky_reset",
+   "schedule": 0,
+   "witness": "STALE_FAULT_RESURRECTION at 423"
+  },
+  {
+   "mode": "missing_source_clear",
+   "schedule": 0,
+   "witness": "STALE_FAULT_RESURRECTION at 423"
+  }
+ ],
+ "input_hashes": {
+  "candidate.json": "eee971b8623e1ff1e7fb1bf23da3702145e9b1fa53516f75f07ab3afd7fadc99",
+  "reset_branch_candidate.json": "226399bead8c61de7e095d2f92286357e8fdd8912dd9d620a4048d05dc92b5d3",
+  "reset_loads.json": "788c24caa303103f91a6d0ff7172581ac916cad54efcdd479db248b041bc9e29"
+ },
+ "unqualified": [
+  "Common full-cycle clock model: no native phase/calendar receipt",
+  "Root assertion skew is a diagnostic hypothesis, not measured",
+  "All source clear-on-local-reset is assumed; old existing_ufh upstream reset graph still needs its own receipt",
+  "Transport delays are conservative candidate ages, not installed native lane proof",
+  "POR unknown startup, host reset hold/admission, branch clock/STA and whole STATUS path still required"
+ ]
+}

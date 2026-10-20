@@ -1,0 +1,8 @@
+2026-10-19 11:29:36 start
+2026-10-19 11:29:43 PDT QCLK QCLK_CLKRX die.v ports 767 lef pins 769 missing 0 [] 
+2026-10-19 11:29:53 PDT QCLK geom: 0 roots missing, 10880 entry pins, GEOM_DUMP_PAIRS 320896
+QCLK_PREP trees 766 sinks 10880 masters 146 assumed 126 varying_R 0
+QWEN LANDED PAIRS {"pairs": {"INTRA": 45799, "NEIGHBOUR": 186347, "FWD": 84534, "LANDED": 1734, "NO_ROOT": 8, "RESET_ROOT": 2474}, "gap": 0, "no_root": 8, "landed_lanes": 153, "measured_lanes": 0, "lanes_no_root": 0, "max_abs_drift_ps": null, "drift_over_T": 0, "drift_over_half_T": 0, "gap_buses": 446}
+QCLK v1 neighbours 57 families 710
+2026-10-19 11:29:54 PDT QCLK prep done
+2026-10-19 13:05:45 done rA=0 rB=0

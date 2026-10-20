@@ -1,0 +1,23 @@
+{
+  "scope": "new validation profiles only; canonical historical inputs/gold unchanged",
+  "source_anchor": "1e057b7bf",
+  "release_word": {
+    "waveform": "same four-low/four-release original reset edges; one malformed MWsel3 word during release stage1,2,3 or4",
+    "expectation": "stages1..3 ignored by inherited root/group/local release; stage4 earliest actual pin acceptance faults cfg",
+    "first_fault": "injected input capture cycle+2; no start/event date changes"
+  },
+  "idle_reconfiguration": {
+    "program": "before any first start, update selected last event D to originalprogramD+7 (within legal RL)",
+    "gold": "same N+D+2 with new explicitly programmed D; boot-only scenario, no hidden output latency shift"
+  },
+  "armed_reconfiguration": {
+    "program": "after firstacceptedstart N, attempt invalid D=RL-1 at N+5 while armed/outstanding",
+    "expectation": "write rejected, original eventgold unchanged; sticky configfault at injectedcapture+2"
+  },
+  "already_late": {
+    "program": "NS2/NEV1, D0 deliberately illegal; source record/gap/RL otherwise legal",
+    "expectation": "no event output, each unchanged N+D+2 gold reports missingoutput, cfgfault first N+2 and latefault first N+7",
+    "derivation": "N+2 recordvalid/writepipeline, N+3 headvalidfresh, N+4 registered latecompare, N+5 fq0, N+6 stickyfault update, N+7 pre-NBA monitor; sourcefault-negative only, not a legal positive"
+  },
+  "state": "model committed before execution; no runs yet"
+}

@@ -1,0 +1,10 @@
+SAFE_COMPILER warm164 reset76
+RS op 0 cycle 338 latency 122 (compiled 122) fault 0 match 1
+RS op 1 cycle 386 latency 122 (compiled 122) fault 0 match 1
+RS op 2 cycle 434 latency 122 (compiled 122) fault 0 match 1
+RS op 3 cycle 482 latency 122 (compiled 122) fault 0 match 1
+QCLUSTER_PASS MUT 0 FAR 0 ops 4 tap 3/10/17/24 bco 26 rs 122 ft 29 (307 compares)
+- /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe_fabric_group16/model/tb_safe_fabric_model.sv:268: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 542ns; walltime 0.103 s; speed 5.248 us/s
+- Verilator: cpu 0.103 s on 1 threads; allocated 19 MB

@@ -1,0 +1,285 @@
+{
+ "schema": "opentallas.s81_dv.compiler_bench.v1",
+ "family": "svc",
+ "layer": "L0",
+ "pass": true,
+ "ops_proven": [
+  "attn.own_row_write",
+  "attn.window_load",
+  "attn.scores",
+  "attn.pv (quarter ST 0 words)"
+ ],
+ "vehicle": "the 16 real dsdv_svc_rs slices (protect-lib, DIE 0, ST 0 = die.v), entry j / q pins driven only by lower_svc.py images at the compiled cycles; HBM = elastic per-PC model (DQ 8, latency 40..55 + queue, seeds 1 / 2)",
+ "checks": "all 128 x 16 root scores + 16 x 128 SE rows bit-exact (golden dots of fixture q / rows; x attn_scale = fixture attn.scores bitwise), 160 P.V words bit-exact vs fixture attn.pv (heads 0..15, dims 0..127) with the first word and both jd done pulses AT the compiled cycles, every q word on its cycle, no fault, HBM credits <= 8",
+ "base": [
+  {
+   "seed": 1,
+   "line": "SVCLOW die=0 st=0 T=128 root_beats=32 sc_checked=2048 sc_errors=0 order_errors=0 se_checked=2048 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_checked=2048 pv_errors=0 pv_words=160 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=2697 verdict=PASS",
+   "sched": "SVCLOW_SCHED go=1555 pv_frame=2056 first_score=1685 last_score=1716 pv_first=2236 exp_pv_first=2236 pv_last=2395 done_W=2230 exp_done_W=2230 done_E=2396 exp_done_E=2396 n_done=1/1 q_sent=346/346 late_q=0 pv_early=0 hbm_wr=32 hbm_rd=2112 sched_bad=0",
+   "verdict": "PASS",
+   "fields": {
+    "die": "0",
+    "st": "0",
+    "T": "128",
+    "root_beats": "32",
+    "sc_checked": "2048",
+    "sc_errors": "0",
+    "order_errors": "0",
+    "se_checked": "2048",
+    "se_errors": "0",
+    "se_bad_slices": "0",
+    "sm_rows_bad": "0",
+    "pv_checked": "2048",
+    "pv_errors": "0",
+    "pv_words": "160",
+    "pv_gaps": "0",
+    "pv_other_entry": "0",
+    "jd_fault": "0",
+    "root_fault": "0",
+    "slice_faults": "0000",
+    "first_fault_code": "00000000",
+    "cred_err": "0",
+    "sched_bad": "0",
+    "cycles": "2697",
+    "verdict": "PASS"
+   },
+   "sched_fields": {
+    "go": "1555",
+    "pv_frame": "2056",
+    "first_score": "1685",
+    "last_score": "1716",
+    "pv_first": "2236",
+    "exp_pv_first": "2236",
+    "pv_last": "2395",
+    "done_W": "2230",
+    "exp_done_W": "2230",
+    "done_E": "2396",
+    "exp_done_E": "2396",
+    "n_done": "1/1",
+    "q_sent": "346/346",
+    "late_q": "0",
+    "pv_early": "0",
+    "hbm_wr": "32",
+    "hbm_rd": "2112",
+    "sched_bad": "0"
+   }
+  },
+  {
+   "seed": 2,
+   "line": "SVCLOW die=0 st=0 T=128 root_beats=32 sc_checked=2048 sc_errors=0 order_errors=0 se_checked=2048 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_checked=2048 pv_errors=0 pv_words=160 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=2697 verdict=PASS",
+   "sched": "SVCLOW_SCHED go=1555 pv_frame=2056 first_score=1685 last_score=1716 pv_first=2236 exp_pv_first=2236 pv_last=2395 done_W=2230 exp_done_W=2230 done_E=2396 exp_done_E=2396 n_done=1/1 q_sent=346/346 late_q=0 pv_early=0 hbm_wr=32 hbm_rd=2112 sched_bad=0",
+   "verdict": "PASS",
+   "fields": {
+    "die": "0",
+    "st": "0",
+    "T": "128",
+    "root_beats": "32",
+    "sc_checked": "2048",
+    "sc_errors": "0",
+    "order_errors": "0",
+    "se_checked": "2048",
+    "se_errors": "0",
+    "se_bad_slices": "0",
+    "sm_rows_bad": "0",
+    "pv_checked": "2048",
+    "pv_errors": "0",
+    "pv_words": "160",
+    "pv_gaps": "0",
+    "pv_other_entry": "0",
+    "jd_fault": "0",
+    "root_fault": "0",
+    "slice_faults": "0000",
+    "first_fault_code": "00000000",
+    "cred_err": "0",
+    "sched_bad": "0",
+    "cycles": "2697",
+    "verdict": "PASS"
+   },
+   "sched_fields": {
+    "go": "1555",
+    "pv_frame": "2056",
+    "first_score": "1685",
+    "last_score": "1716",
+    "pv_first": "2236",
+    "exp_pv_first": "2236",
+    "pv_last": "2395",
+    "done_W": "2230",
+    "exp_done_W": "2230",
+    "done_E": "2396",
+    "exp_done_E": "2396",
+    "n_done": "1/1",
+    "q_sent": "346/346",
+    "late_q": "0",
+    "pv_early": "0",
+    "hbm_wr": "32",
+    "hbm_rd": "2112",
+    "sched_bad": "0"
+   }
+  }
+ ],
+ "mutants": [
+  {
+   "name": "slot",
+   "what": "OWN_ROW pos field = position - 1 (the own row lands in slot 126; slot 127 reads stale HBM)",
+   "regex": "SC MISMATCH|verdict=FAIL",
+   "verdict": "FAIL",
+   "failed": true,
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_svc/mut_slot_fail_witness.log",
+   "line": "SVCLOW die=0 st=0 T=128 root_beats=32 sc_checked=2048 sc_errors=32 order_errors=0 se_checked=2048 se_errors=32 se_bad_slices=0 sm_rows_bad=0 pv_checked=2048 pv_errors=2048 pv_words=160 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=2697 verdict=FAIL"
+  },
+  {
+   "name": "late",
+   "what": "PV frame driven 40 edges after the cycle the compiled PO / PVO assume (the static p feed takes words that have not landed: P.V wrong)",
+   "regex": "PV MISMATCH|first_fault_code=0*[1-9a-f]",
+   "verdict": "FAIL",
+   "failed": true,
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_svc/mut_late_fail_witness.log",
+   "line": "SVCLOW die=0 st=0 T=128 root_beats=32 sc_checked=2048 sc_errors=0 order_errors=0 se_checked=2048 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_checked=2048 pv_errors=2048 pv_words=160 pv_gaps=0 pv_other_entry=0 jd_fault=1 root_fault=1 slice_faults=ffff first_fault_code=00104000 cred_err=0 sched_bad=0 cycles=2697 verdict=FAIL"
+  }
+ ],
+ "images": {
+  "base": {
+   "schema": "opentallas.s81_dv.svc_bench_image.v1",
+   "tb_offset": -1707,
+   "mutant": null,
+   "tag": 0,
+   "j_arg": 1025,
+   "j_word": "100040100",
+   "frames": {
+    "CFG": 98,
+    "OWN_ROW": 99,
+    "WIN_LOAD": 116,
+    "ATTN_Q0": 1294,
+    "ATTN_Q1": 1423,
+    "SMJ": 1552,
+    "GO": 1555,
+    "PV": 2056
+   },
+   "go": 1555,
+   "pvs": 501,
+   "po": 538,
+   "pvo": 625,
+   "pv_first": 2236,
+   "pv_last": 2395,
+   "done_w": 2230,
+   "done_e": 2396,
+   "anchors": {
+    "scores": true,
+    "pv": true,
+    "window": true,
+    "q_bf16": true
+   },
+   "T": 128,
+   "heads": [
+    0,
+    16
+   ],
+   "st": 0,
+   "sha256": {
+    "meta.hex": "b3b459708590cb5f599d1de0826b800af87a8d57cad431bb78b53804bfc362fc",
+    "qcyc.hex": "94f6a06800122d3de02db9a2a1ed61633a3e2048823c2042caa3d96221de6275",
+    "qwd.hex": "ce56cdc621af1dec3a0bfffad31b3405b2400b469b64d5e83bcb539859a41f9c",
+    "hkey.hex": "b203ff08b9b8536d896499ddf420b07fd1acfd096cd9c011e27f70fb7fa87e56",
+    "hdat.hex": "e4d6f0b30d04cbd2433c1dff3ea97eaa687d8ba00796710c07e6025275f37114",
+    "sc.hex": "c0f9231dbd7dc26699b0627dc3760eeed7c112e0dc687c23a22437d8a504f927",
+    "pv.hex": "2ed8a599346d8d5cfb122819bab5a011e0e2a83659e64605b79bb35151e28bf2"
+   }
+  },
+  "late": {
+   "schema": "opentallas.s81_dv.svc_bench_image.v1",
+   "tb_offset": -1707,
+   "mutant": "late",
+   "tag": 0,
+   "j_arg": 1025,
+   "j_word": "100040100",
+   "frames": {
+    "CFG": 98,
+    "OWN_ROW": 99,
+    "WIN_LOAD": 116,
+    "ATTN_Q0": 1294,
+    "ATTN_Q1": 1423,
+    "SMJ": 1552,
+    "GO": 1555,
+    "PV": 2096
+   },
+   "go": 1555,
+   "pvs": 501,
+   "po": 538,
+   "pvo": 625,
+   "pv_first": 2236,
+   "pv_last": 2395,
+   "done_w": 2230,
+   "done_e": 2396,
+   "anchors": {
+    "scores": true,
+    "pv": true,
+    "window": true,
+    "q_bf16": true
+   },
+   "T": 128,
+   "heads": [
+    0,
+    16
+   ],
+   "st": 0,
+   "sha256": {
+    "meta.hex": "e839040492dcdf56743762493714b2eff3917d5397ec53acaed4123d9273383a",
+    "qcyc.hex": "507767ef8bd00cc38aac3de96c858c33ff22db5424b7d4a537e245097df97725",
+    "qwd.hex": "ce56cdc621af1dec3a0bfffad31b3405b2400b469b64d5e83bcb539859a41f9c",
+    "hkey.hex": "b203ff08b9b8536d896499ddf420b07fd1acfd096cd9c011e27f70fb7fa87e56",
+    "hdat.hex": "e4d6f0b30d04cbd2433c1dff3ea97eaa687d8ba00796710c07e6025275f37114",
+    "sc.hex": "c0f9231dbd7dc26699b0627dc3760eeed7c112e0dc687c23a22437d8a504f927",
+    "pv.hex": "2ed8a599346d8d5cfb122819bab5a011e0e2a83659e64605b79bb35151e28bf2"
+   }
+  },
+  "slot": {
+   "schema": "opentallas.s81_dv.svc_bench_image.v1",
+   "tb_offset": -1707,
+   "mutant": "slot",
+   "tag": 0,
+   "j_arg": 1025,
+   "j_word": "100040100",
+   "frames": {
+    "CFG": 98,
+    "OWN_ROW": 99,
+    "WIN_LOAD": 116,
+    "ATTN_Q0": 1294,
+    "ATTN_Q1": 1423,
+    "SMJ": 1552,
+    "GO": 1555,
+    "PV": 2056
+   },
+   "go": 1555,
+   "pvs": 501,
+   "po": 538,
+   "pvo": 625,
+   "pv_first": 2236,
+   "pv_last": 2395,
+   "done_w": 2230,
+   "done_e": 2396,
+   "anchors": {
+    "scores": true,
+    "pv": true,
+    "window": true,
+    "q_bf16": true
+   },
+   "T": 128,
+   "heads": [
+    0,
+    16
+   ],
+   "st": 0,
+   "sha256": {
+    "meta.hex": "b3b459708590cb5f599d1de0826b800af87a8d57cad431bb78b53804bfc362fc",
+    "qcyc.hex": "94f6a06800122d3de02db9a2a1ed61633a3e2048823c2042caa3d96221de6275",
+    "qwd.hex": "d66dd6b962d47e655e957db9f9cff1c209fff28d315f800c00316aa0fb38395f",
+    "hkey.hex": "b203ff08b9b8536d896499ddf420b07fd1acfd096cd9c011e27f70fb7fa87e56",
+    "hdat.hex": "e4d6f0b30d04cbd2433c1dff3ea97eaa687d8ba00796710c07e6025275f37114",
+    "sc.hex": "c0f9231dbd7dc26699b0627dc3760eeed7c112e0dc687c23a22437d8a504f927",
+    "pv.hex": "2ed8a599346d8d5cfb122819bab5a011e0e2a83659e64605b79bb35151e28bf2"
+   }
+  }
+ },
+ "bench": "tools/s81_dv/layer_prog/svc/{tb_svc_lower.sv,run_svc_bench.sh,check_svc.py}",
+ "lowering": "tools/s81_dv/layer_prog/lower_svc.py"
+}

@@ -1,0 +1,45 @@
+{
+  "interpretation": "Original controller process was marked failed/exit -1 when its worker ended. This is not an observed remote harness verdict. The remote immutable source job continued; its original outer OT_RUN_EXIT is unavailable through session6284. Do not infer a source-test failure or terminal PASS and do not rerun.",
+  "records": [
+    {
+      "source_record_sha256": "f745a31a5b5a79718335ae2c078327416dfc86b493f46d7e18e5669314afef98",
+      "record": {
+        "timestamp": "2026-10-19T22:34:29.222Z",
+        "ordinal": 1595,
+        "type": "event_msg",
+        "payload": {
+          "type": "item_completed",
+          "thread_id": "01a15606-18e7-7663-8c70-644e6149b70c",
+          "turn_id": "01a15606-18f0-7df1-aeab-f7f3eaa6e5c8",
+          "item": {
+            "type": "CommandExecution",
+            "id": "exec-fe25ed94-ab2b-4916-9085-4937eef26ef3",
+            "process_id": "6284",
+            "command": [
+              "/bin/bash",
+              "-lc",
+              "/home/ubuntu/bin/ot-run --mem 24 --threads 8 --dir /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06 -- env FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/run_four_state_fullshape_06 four_state"
+            ],
+            "cwd": "file:///home/ubuntu",
+            "parsed_cmd": [
+              {
+                "type": "unknown",
+                "cmd": "/home/ubuntu/bin/ot-run --mem 24 --threads 8 --dir /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06 -- env FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/run_four_state_fullshape_06 four_state"
+              }
+            ],
+            "source": "unified_exec_startup",
+            "status": "failed",
+            "aggregated_output": "ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06\not-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06\not-run: ot-epyc6       admits  1252 GB (avail 936, growth 59, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 5716 GB \not-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06\not-run: ot-epyc8       admits  1100 GB (avail 863, growth 93, headroom 0, waiters 0/0 GB) load 14/128 running 10 disk 101 GB \not-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06\not-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06\not-run: -> ot-epyc8\not-heavy: admitted on ot-epyc8 as oth-ubuntu-2036610-1792446395 after 1 s\n",
+            "exit_code": -1,
+            "duration": {
+              "secs": 2874,
+              "nanos": 16292807
+            }
+          },
+          "started_at_ms": 1792446395206,
+          "completed_at_ms": 1792449269222
+        }
+      }
+    }
+  ]
+}

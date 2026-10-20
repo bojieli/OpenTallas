@@ -1,0 +1,471 @@
+{
+  "scope": "diagnostic_only",
+  "qualifies_full_token": false,
+  "qualifies_native_layer": false,
+  "probes": [
+    {
+      "name": "input_early",
+      "cycle": 1,
+      "port": 32801,
+      "width": 256,
+      "first_rec": 0
+    },
+    {
+      "name": "input_before_commit",
+      "cycle": 2670,
+      "port": 32801,
+      "width": 256,
+      "first_rec": 256
+    },
+    {
+      "name": "output_late",
+      "cycle": 3300,
+      "port": 32803,
+      "width": 256,
+      "first_rec": 512
+    },
+    {
+      "name": "pgp_SW__busy@2600",
+      "cycle": 2600,
+      "port": 104,
+      "width": 1,
+      "first_rec": 768
+    },
+    {
+      "name": "pgp_SW__valid@2600",
+      "cycle": 2600,
+      "port": 107,
+      "width": 1,
+      "first_rec": 769
+    },
+    {
+      "name": "pgp_SW__fault@2600",
+      "cycle": 2600,
+      "port": 106,
+      "width": 1,
+      "first_rec": 770
+    },
+    {
+      "name": "pgp_SW__busy@2610",
+      "cycle": 2610,
+      "port": 104,
+      "width": 1,
+      "first_rec": 771
+    },
+    {
+      "name": "pgp_SW__valid@2610",
+      "cycle": 2610,
+      "port": 107,
+      "width": 1,
+      "first_rec": 772
+    },
+    {
+      "name": "pgp_SW__fault@2610",
+      "cycle": 2610,
+      "port": 106,
+      "width": 1,
+      "first_rec": 773
+    },
+    {
+      "name": "pgp_SW__busy@2620",
+      "cycle": 2620,
+      "port": 104,
+      "width": 1,
+      "first_rec": 774
+    },
+    {
+      "name": "pgp_SW__valid@2620",
+      "cycle": 2620,
+      "port": 107,
+      "width": 1,
+      "first_rec": 775
+    },
+    {
+      "name": "pgp_SW__fault@2620",
+      "cycle": 2620,
+      "port": 106,
+      "width": 1,
+      "first_rec": 776
+    },
+    {
+      "name": "pgp_SW__busy@2630",
+      "cycle": 2630,
+      "port": 104,
+      "width": 1,
+      "first_rec": 777
+    },
+    {
+      "name": "pgp_SW__valid@2630",
+      "cycle": 2630,
+      "port": 107,
+      "width": 1,
+      "first_rec": 778
+    },
+    {
+      "name": "pgp_SW__fault@2630",
+      "cycle": 2630,
+      "port": 106,
+      "width": 1,
+      "first_rec": 779
+    },
+    {
+      "name": "pgp_SW__busy@2640",
+      "cycle": 2640,
+      "port": 104,
+      "width": 1,
+      "first_rec": 780
+    },
+    {
+      "name": "pgp_SW__valid@2640",
+      "cycle": 2640,
+      "port": 107,
+      "width": 1,
+      "first_rec": 781
+    },
+    {
+      "name": "pgp_SW__fault@2640",
+      "cycle": 2640,
+      "port": 106,
+      "width": 1,
+      "first_rec": 782
+    },
+    {
+      "name": "pgp_SW__busy@2650",
+      "cycle": 2650,
+      "port": 104,
+      "width": 1,
+      "first_rec": 783
+    },
+    {
+      "name": "pgp_SW__valid@2650",
+      "cycle": 2650,
+      "port": 107,
+      "width": 1,
+      "first_rec": 784
+    },
+    {
+      "name": "pgp_SW__fault@2650",
+      "cycle": 2650,
+      "port": 106,
+      "width": 1,
+      "first_rec": 785
+    },
+    {
+      "name": "pgp_SW__busy@2660",
+      "cycle": 2660,
+      "port": 104,
+      "width": 1,
+      "first_rec": 786
+    },
+    {
+      "name": "pgp_SW__valid@2660",
+      "cycle": 2660,
+      "port": 107,
+      "width": 1,
+      "first_rec": 787
+    },
+    {
+      "name": "pgp_SW__fault@2660",
+      "cycle": 2660,
+      "port": 106,
+      "width": 1,
+      "first_rec": 788
+    },
+    {
+      "name": "pgp_SW__busy@2670",
+      "cycle": 2670,
+      "port": 104,
+      "width": 1,
+      "first_rec": 789
+    },
+    {
+      "name": "pgp_SW__valid@2670",
+      "cycle": 2670,
+      "port": 107,
+      "width": 1,
+      "first_rec": 790
+    },
+    {
+      "name": "pgp_SW__fault@2670",
+      "cycle": 2670,
+      "port": 106,
+      "width": 1,
+      "first_rec": 791
+    },
+    {
+      "name": "pgp_SW__busy@2680",
+      "cycle": 2680,
+      "port": 104,
+      "width": 1,
+      "first_rec": 792
+    },
+    {
+      "name": "pgp_SW__valid@2680",
+      "cycle": 2680,
+      "port": 107,
+      "width": 1,
+      "first_rec": 793
+    },
+    {
+      "name": "pgp_SW__fault@2680",
+      "cycle": 2680,
+      "port": 106,
+      "width": 1,
+      "first_rec": 794
+    },
+    {
+      "name": "pgp_SW__busy@2690",
+      "cycle": 2690,
+      "port": 104,
+      "width": 1,
+      "first_rec": 795
+    },
+    {
+      "name": "pgp_SW__valid@2690",
+      "cycle": 2690,
+      "port": 107,
+      "width": 1,
+      "first_rec": 796
+    },
+    {
+      "name": "pgp_SW__fault@2690",
+      "cycle": 2690,
+      "port": 106,
+      "width": 1,
+      "first_rec": 797
+    },
+    {
+      "name": "pgp_SW__busy@2700",
+      "cycle": 2700,
+      "port": 104,
+      "width": 1,
+      "first_rec": 798
+    },
+    {
+      "name": "pgp_SW__valid@2700",
+      "cycle": 2700,
+      "port": 107,
+      "width": 1,
+      "first_rec": 799
+    },
+    {
+      "name": "pgp_SW__fault@2700",
+      "cycle": 2700,
+      "port": 106,
+      "width": 1,
+      "first_rec": 800
+    },
+    {
+      "name": "pgp_SW__busy@2710",
+      "cycle": 2710,
+      "port": 104,
+      "width": 1,
+      "first_rec": 801
+    },
+    {
+      "name": "pgp_SW__valid@2710",
+      "cycle": 2710,
+      "port": 107,
+      "width": 1,
+      "first_rec": 802
+    },
+    {
+      "name": "pgp_SW__fault@2710",
+      "cycle": 2710,
+      "port": 106,
+      "width": 1,
+      "first_rec": 803
+    },
+    {
+      "name": "pgp_SW__busy@2720",
+      "cycle": 2720,
+      "port": 104,
+      "width": 1,
+      "first_rec": 804
+    },
+    {
+      "name": "pgp_SW__valid@2720",
+      "cycle": 2720,
+      "port": 107,
+      "width": 1,
+      "first_rec": 805
+    },
+    {
+      "name": "pgp_SW__fault@2720",
+      "cycle": 2720,
+      "port": 106,
+      "width": 1,
+      "first_rec": 806
+    },
+    {
+      "name": "pgp_SW__busy@2730",
+      "cycle": 2730,
+      "port": 104,
+      "width": 1,
+      "first_rec": 807
+    },
+    {
+      "name": "pgp_SW__valid@2730",
+      "cycle": 2730,
+      "port": 107,
+      "width": 1,
+      "first_rec": 808
+    },
+    {
+      "name": "pgp_SW__fault@2730",
+      "cycle": 2730,
+      "port": 106,
+      "width": 1,
+      "first_rec": 809
+    },
+    {
+      "name": "pgp_SW__busy@2740",
+      "cycle": 2740,
+      "port": 104,
+      "width": 1,
+      "first_rec": 810
+    },
+    {
+      "name": "pgp_SW__valid@2740",
+      "cycle": 2740,
+      "port": 107,
+      "width": 1,
+      "first_rec": 811
+    },
+    {
+      "name": "pgp_SW__fault@2740",
+      "cycle": 2740,
+      "port": 106,
+      "width": 1,
+      "first_rec": 812
+    },
+    {
+      "name": "pgp_SW__busy@2750",
+      "cycle": 2750,
+      "port": 104,
+      "width": 1,
+      "first_rec": 813
+    },
+    {
+      "name": "pgp_SW__valid@2750",
+      "cycle": 2750,
+      "port": 107,
+      "width": 1,
+      "first_rec": 814
+    },
+    {
+      "name": "pgp_SW__fault@2750",
+      "cycle": 2750,
+      "port": 106,
+      "width": 1,
+      "first_rec": 815
+    },
+    {
+      "name": "pgp_SW__busy@2760",
+      "cycle": 2760,
+      "port": 104,
+      "width": 1,
+      "first_rec": 816
+    },
+    {
+      "name": "pgp_SW__valid@2760",
+      "cycle": 2760,
+      "port": 107,
+      "width": 1,
+      "first_rec": 817
+    },
+    {
+      "name": "pgp_SW__fault@2760",
+      "cycle": 2760,
+      "port": 106,
+      "width": 1,
+      "first_rec": 818
+    },
+    {
+      "name": "pgp_SW__busy@2770",
+      "cycle": 2770,
+      "port": 104,
+      "width": 1,
+      "first_rec": 819
+    },
+    {
+      "name": "pgp_SW__valid@2770",
+      "cycle": 2770,
+      "port": 107,
+      "width": 1,
+      "first_rec": 820
+    },
+    {
+      "name": "pgp_SW__fault@2770",
+      "cycle": 2770,
+      "port": 106,
+      "width": 1,
+      "first_rec": 821
+    },
+    {
+      "name": "pgp_SW__busy@2780",
+      "cycle": 2780,
+      "port": 104,
+      "width": 1,
+      "first_rec": 822
+    },
+    {
+      "name": "pgp_SW__valid@2780",
+      "cycle": 2780,
+      "port": 107,
+      "width": 1,
+      "first_rec": 823
+    },
+    {
+      "name": "pgp_SW__fault@2780",
+      "cycle": 2780,
+      "port": 106,
+      "width": 1,
+      "first_rec": 824
+    },
+    {
+      "name": "pgp_SW__busy@2790",
+      "cycle": 2790,
+      "port": 104,
+      "width": 1,
+      "first_rec": 825
+    },
+    {
+      "name": "pgp_SW__valid@2790",
+      "cycle": 2790,
+      "port": 107,
+      "width": 1,
+      "first_rec": 826
+    },
+    {
+      "name": "pgp_SW__fault@2790",
+      "cycle": 2790,
+      "port": 106,
+      "width": 1,
+      "first_rec": 827
+    },
+    {
+      "name": "pgp_SW__busy@2800",
+      "cycle": 2800,
+      "port": 104,
+      "width": 1,
+      "first_rec": 828
+    },
+    {
+      "name": "pgp_SW__valid@2800",
+      "cycle": 2800,
+      "port": 107,
+      "width": 1,
+      "first_rec": 829
+    },
+    {
+      "name": "pgp_SW__fault@2800",
+      "cycle": 2800,
+      "port": 106,
+      "width": 1,
+      "first_rec": 830
+    }
+  ],
+  "bits": 831,
+  "drives": 4972
+}

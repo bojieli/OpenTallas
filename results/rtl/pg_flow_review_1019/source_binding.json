@@ -1,0 +1,35 @@
+{
+  "source_tip": "4a1f5a30f2caad00804400100c631bb562bdc720",
+  "source_dependencies": [
+    {
+      "path": "physical/common_flow/native_pg_binding.tcl",
+      "sha256": "5cd7df80b9ab3c3bfa039eeec4bb05ee2b2325c0cfbd4591f839895caf510a58"
+    },
+    {
+      "path": "physical/common_flow/clock_spine.tcl",
+      "sha256": "7c8629885fbdfbc74aa41965b7de09c58b8d653e4f63f44350911d3ee3c030ff"
+    },
+    {
+      "path": "physical/common_flow/landed_raw_tap.tcl",
+      "sha256": "51bb3492c807a795104763a5b45f8b938a4fbff450e98fbdd3dbfbd7f39e0565"
+    },
+    {
+      "path": "physical/common_flow/clk_net_protect.tcl",
+      "sha256": "94cc061d8ce0705457b239ea7422d233e8c06c9cddce7272be1ea3ca329cc902"
+    },
+    {
+      "path": "physical/common_flow/icg_dont_touch.tcl",
+      "sha256": "9326050ddee11cd3d661c5265ca9ce84c96ed596972022bddd7961d21f584270"
+    },
+    {
+      "path": "physical/common_flow/out_pin_driver.tcl",
+      "sha256": "90f31e96c9d93228660a55f24b7400b4b48f90165e1b07d951c674e536bdd08b"
+    },
+    {
+      "path": "tools/ref_tile/source_binding.py",
+      "sha256": "8ca888e22f70a72cd8361365f35e270b3c779d8938fff4606161af5ddb53ee70"
+    }
+  ],
+  "activation": false,
+  "scope": "source-only native binding mechanism; no independent physical PG/RC/timing qualification"
+}

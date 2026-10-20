@@ -1,0 +1,79 @@
+{
+  "verdict": "PASS bounded actual source path; no existing owned-reset bug established",
+  "fleet": "ot-epyc7 oth-ubuntu-126630-1792445702, ot-run exit0",
+  "verilator": "5.050 2026-07-01",
+  "trace": {
+    "reservation_excludes_CSR_edge": 102,
+    "queued_word_launch_edge": 149,
+    "accepted_SYS_CTRL_restart_edge": 156,
+    "matching_ID_response_edge": 158,
+    "boot_restart_edges": [
+      159,
+      175
+    ],
+    "host_rst_n": "remained1 afterboot; real SYS_CTRL restartslink/die without host-domain reset"
+  },
+  "mutant": {
+    "source": "original qkd_host_rx_class_admission MUT1",
+    "first_illegal_launch_edge": 85,
+    "causal_failure": "RESERVED_CSR_RESTART",
+    "failure_edge": 92
+  },
+  "conditional_fixture": [
+    "all6 link_up",
+    "all8 boot_done/ok",
+    "32groupdrain andupstreamquiet with noengine"
+  ],
+  "selected_PLL": "startup-only: no runtime low-lock stimulus exists",
+  "retained_owner_overlap": "NOT_ESTABLISHED; neither forced predicate nor guards bypassed inpositive",
+  "production_calendar": null,
+  "physical": "NOT_RUN",
+  "measured": {
+    "positive_runtime_RSS_KB": 4084,
+    "object_disk": "1.3MB",
+    "cached_final_build_driver_RSS_KB": 13336,
+    "full_compile_peak_RSS_KB": null
+  },
+  "files": [
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/actual_ingress_reset_tb.sv",
+      "sha256": "8a4d72da871265f40ba205311aa2e2a271f71e852d91004a15d4428fb480a59c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_run.sh",
+      "sha256": "b1b9f1410ced413fb48d694d0b504d31ef111206acfa3760767cf762c153a84c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_compile_manifest.json",
+      "sha256": "7d50b5981cbb5ae462e137a67b34100fdb3f843b4f33c474b048e358c6896f93"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/initial_positive_trace.log",
+      "sha256": "274a00a25e3c401baeed224502e53dafabbdf4f9ab11b0a6bf7d2b4a4023693e"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/mut_build.log",
+      "sha256": "4171abca400306eceffb8515accc92a382cc95f2c63b7c766f8592179164a704"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/attempt1_invalid_j_option.log",
+      "sha256": "bc113e19c94c1503eb0b7a5961fcbcfd7a258c528bfa0e148afad81352ab6569"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/trace.log",
+      "sha256": "0b5883e3dec4640bb2930dcf1510424794d4dad78dd1b8bb7a6e9c7204952576"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/build.log",
+      "sha256": "2bad3614d643a6d7ec889fb53401f37ce96190cbc37b63d87b6254b776239679"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/attempt2_mutant_witness.log",
+      "sha256": "b4e0b94a77424f5b939b08c2cf4478718b3af7bf50ffaee4db503980705382a4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/mut_ingress_bypass.log",
+      "sha256": "b4e0b94a77424f5b939b08c2cf4478718b3af7bf50ffaee4db503980705382a4"
+    }
+  ]
+}

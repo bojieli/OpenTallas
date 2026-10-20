@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits   990 GB (avail 781, growth 87, headroom 0, waiters 0/0 GB) load 114/128 running 31 disk 366 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4104396-1792431378 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_GROUP_MISMATCH n9 got2822 expected28a2
+RESET_GROUP_MISMATCH n98 got0080 expected0000
+RESET_GROUP_MISMATCH n104 got6516 expected6596
+RESET_GROUP_MISMATCH n195 got0080 expected0000
+[40960000] %Fatal: tb_qfd_c_reset_group16_safe.sv:22: Assertion failed in tb: SAFE_RESET_GROUP_FAIL MUT1 errors85
+%Error: rtl/test/tb_qfd_c_reset_group16_safe.sv:22: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4104396-1792431378): exit 1

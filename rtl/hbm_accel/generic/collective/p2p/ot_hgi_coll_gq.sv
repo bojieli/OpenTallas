@@ -42,9 +42,17 @@
 // merged with the gather fields in the ring-A merge register: +2 edges on every ISA ring-A command relative to the
 // v5 parent (the compiler adds 2 to every ring-A-relative constant: rr outputs, carry / result timing). A field driven
 // by both in one edge is a fault.
+// VM_RT (HBM-BANKLAT-COLL 2026-10-19, d4g bank latency class): edges the VM read answer arrives at the vm_rr pins
+// LATER than the n+8 capture above (faces bank pin flop +1, read share hcollrs_<q> BANK_RT excess, die lanes). Default 0 =
+// the timing above, byte-identical. VM_RT > 0: read REQUESTS keep their edges (@0 / @15); every stage from the rr capture
+// on moves VM_RT edges later (capture @8+V / @23+V, quantiser, P @24+V, ring B / ring A commands, publishes): the ring-A
+// inject edge is c = issue + 29 + V, every landing write +V. The landing leaf is unchanged: ld_ev / ld_fire / ld_desc
+// leave V edges later too (ld_desc from the held gather state), so its stage constants stay relative to ld_ev.
+// COMPILER: tools/hgi_sim/collq_gather_1018.py --vm-rt V (ISSUE_TO_INJECT 29+V, writes +V, span +V; reads unchanged).
 module ot_hgi_coll_gq_issue #(
-    parameter integer MUT = 0       // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
+    parameter integer MUT = 0,      // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
                                     // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late
+    parameter integer VM_RT = 0
 )(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
@@ -110,9 +118,10 @@ module ot_hgi_coll_gq_issue #(
     output wire [1:0]    ld_p_v,
     output wire [511:0]  ld_p_d
 );
-    localparam integer ND = 40;                      // event pipeline depth (last use: ev[36])
-    localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8, S_PCAP = 23, S_P = 24;
-    localparam integer S_BLP = 24, S_BRD = 25, S_BINJ = 27, S_BRX = 27;   // + 2h
+    localparam integer V = VM_RT;
+    localparam integer ND = 40 + V;                  // event pipeline depth (last use: ev[36+V])
+    localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8 + V, S_PCAP = 23 + V, S_P = 24 + V;
+    localparam integer S_BLP = 24 + V, S_BRD = 25 + V, S_BINJ = 27 + V, S_BRX = 27 + V;   // + 2h
     // ------------------------------------------------------------------ reset relay (3 edges) + straps
     wire [0:0] rl;
     ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
@@ -157,7 +166,7 @@ module ot_hgi_coll_gq_issue #(
     // gather state (held while busy)
     reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
     reg [9:0] g_kn;                                   // ring indices K = ceil(F / R)
-    reg iss; reg [9:0] ik; reg [1:0] iph; reg [5:0] drain;
+    reg iss; reg [9:0] ik; reg [1:0] iph; localparam integer DRW = $clog2(ND); reg [DRW-1:0] drain;   // 6 b at VM_RT 0 (as built)
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
     wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
@@ -165,7 +174,7 @@ module ot_hgi_coll_gq_issue #(
     wire ev_in_v = iss && iph != 2'd2;
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= 6'd0;
+            run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= '0;
             cur <= 4'd0; b0 <= 4'd0; lim <= 5'd0; tl <= 16'd0; per <= 16'd0; lps <= 16'd0; ik <= 10'd0; iph <= 2'd0;
         end else begin
             done <= 1'b0;
@@ -189,18 +198,27 @@ module ot_hgi_coll_gq_issue #(
             end else if (iss) begin
                 if (ev_in_v) begin
                     ik <= ik + 10'd1;
-                    if (ik == g_kn - 10'd1) begin iss <= 1'b0; drain <= 6'(ND - 1); end
+                    if (ik == g_kn - 10'd1) begin iss <= 1'b0; drain <= DRW'(ND - 1); end
                 end
                 iph <= (iph == 2'd2) ? 2'd0 : iph + 2'd1;
             end else if (busy) begin
-                if (drain == 6'd0) busy <= 1'b0; else drain <= drain - 6'd1;
+                if (drain == '0) busy <= 1'b0; else drain <= drain - 1'b1;
             end
             if (|(aq_fault_q & aq_vo_q)) fault <= 1'b1;
             if (flt_n) fault <= 1'b1;
         end
     end
-    always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
-    always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
+    generate if (V == 0) begin : g_ld0
+        always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+        always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
+    end else begin : g_ldv
+        // fire delayed V edges; the descriptor comes from the gather state loaded at fire (held: fires never overlap)
+        reg [V-1:0] fd;
+        always @(posedge clk or negedge rn)
+            if (!rn) begin fd <= '0; ld_fire <= 1'b0; end
+            else begin fd <= {fd, fire}; ld_fire <= fd[V-1]; end
+        always @(posedge clk) ld_desc <= {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str};
+    end endgenerate
     always @(posedge clk) if (fire) begin
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
         g_src <= rc[52:37]; g_dst <= rc[68:53]; g_str <= rc[84:69]; g_kn <= f_kn;
@@ -249,11 +267,11 @@ module ot_hgi_coll_gq_issue #(
             for (integer b = 0; b < 8; b = b + 1) if (vm_rq[b*17+16]) rd_exp[b] <= 1'b1;
         end
     end
-    // read latency: rq register @n -> bank samples n+1 -> registered response n+7 -> pin capture n+8.
-    reg [7:0] rdx [0:7];
+    // read latency: rq register @n -> bank samples n+1 -> registered response n+7 -> pin capture n+8 (+VM_RT).
+    reg [7:0] rdx [0:7+V];
     always @(posedge clk or negedge rn)
-        if (!rn) for (integer d = 0; d < 8; d = d + 1) rdx[d] <= 8'd0;
-        else begin rdx[0] <= rd_exp; for (integer d = 1; d < 8; d = d + 1) rdx[d] <= rdx[d-1]; end
+        if (!rn) for (integer d = 0; d < 8 + V; d = d + 1) rdx[d] <= 8'd0;
+        else begin rdx[0] <= rd_exp; for (integer d = 1; d < 8 + V; d = d + 1) rdx[d] <= rdx[d-1]; end
     reg [2055:0] rr_q; reg [7:0] rrv_q;
     function automatic [255:0] rdw(input [2:0] b);       // captured read word of bank b (8:1 select, no runtime part-select)
         rdw = 256'd0;
@@ -262,8 +280,8 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk) rr_q <= vm_rr;
     always @(posedge clk or negedge rn)
         if (!rn) rrv_q <= 8'd0; else for (integer b = 0; b < 8; b = b + 1) rrv_q[b] <= vm_rr[b*257+256];
-    // rdx[6] holds the expectation of the response captured in rr_q this edge
-    wire rd_bad = rrv_q != rdx[6];
+    // rdx[6+V] holds the expectation of the response captured in rr_q this edge
+    wire rd_bad = rrv_q != rdx[6+V];
     // ------------------------------------------------------------------ quantiser feed (@9) and capture (@23)
     always @(posedge clk or negedge rn)
         if (!rn) aq_v <= 2'd0;
@@ -341,7 +359,7 @@ module ot_hgi_coll_gq_issue #(
         if (!rn) begin a1 <= '0; b1 <= '0; end
         else begin a1 <= cb[0]; b1 <= cb[1]; end
     wire [255:0] a1_d = p_d[0], b1_d = p_d[1];
-    assign ld_ev_v = ev_v[0]; assign ld_ev_k = ev_k[0]; assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
+    assign ld_ev_v = ev_v[V]; assign ld_ev_k = ev_k[V]; assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
     reg [290:0] b2; reg [255:0] b2_d;
     always @(posedge clk or negedge rn) if (!rn) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;
@@ -524,7 +542,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
 endmodule
 // The gather master as placed per quadrant: issue leaf (F20 target, calendar, VM reads, quantisers, payload, ring-A merge
 // register, ring-B commands) + landing leaf (publish capture, VM writes). Wires only.
-module ot_hgi_coll_gq #(parameter integer MUT = 0)(
+module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
     input  wire clk_issue, clk_land, rst_n,
     input  wire [1:0] qid, input wire [7:0] tgt,
     input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
@@ -547,7 +565,7 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0)(
     output wire [135:0] vm_rq, input wire [2055:0] vm_rr, output wire [2247:0] vm_kq
 );
     wire ld_fire, ld_ev_v; wire [52:0] ld_desc; wire [9:0] ld_ev_k; wire [1:0] ld_p_v; wire [511:0] ld_p_d;
-    ot_hgi_coll_gq_issue #(.MUT(MUT)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
+    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .tgt_fault(tgt_fault),
         .active(active), .done(done), .fault(fault), .isa_ring(isa_ring), .isa_lp_data(isa_lp_data),

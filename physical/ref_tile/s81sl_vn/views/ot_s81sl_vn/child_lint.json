@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-fa3312cfc/record/views/ot_s81sl_vn/provenance/ot_s81sl_vn.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/record/views/ot_s81sl_vn/provenance/ot_s81sl_vn.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "ot_s81sl_vn 356.4 x 356.4: PG M5 VDD 66 stripes (98% spread, 100% cov) / VSS 66 stripes (98% spread, 100% cov); strap M6; face pins 1241 blocked-above 0 blocked-same 0; clock clk insertion 594 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81sl_vn 356.4 x 356.4: PG M5 VDD 66 stripes (98% spread, 100% cov) / VSS 66 stripes (98% spread, 100% cov); strap M6; face pins 1241 blocked-above 0 blocked-same 0; clock clk insertion 561 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81sl_vn",
   "W": 356.4,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 1241,
    "blocked_above": 0,
-   "covered_below": 61,
+   "covered_below": 1,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 593.98,
-    "min_ps": 390.12
+    "max_ps": 560.75,
+    "min_ps": 391.18
    }
   },
   "pockets": {
@@ -57,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 5683
+    "added": 5790
    },
    "count": 0,
    "area_um2": 0,

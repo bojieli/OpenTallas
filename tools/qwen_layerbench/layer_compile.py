@@ -2,7 +2,8 @@
 """LAYERBENCH-QWEN 2026-10-18 (TOK.QW.BENCH.1): layer-programme compiler for the Qwen3-8B ROM split dies
 (compute dv2f14bn + KV/system kvs14c), the pass the layer bench loads its images from.
 
-    layer_compile.py --out DIR --compute-stages C.json --kv-stages K.json [--token-path TP] [--link-handoff H]
+    layer_compile.py --out DIR --compute-stages C.json --kv-stages K.json --compute-die-v die.v [--compute-lanes fwd_lanes.json]
+                     [--token-path TP] [--link-handoff H]
                      [--compute-commit 0a9c93921] [--kv-commit f05f9338f] [--txl 6] [--phy 5]
 
 C.json / K.json are the die-RUN relay tables (opentallas.die_relay_stages.v1, role die_plan, coverage complete):
@@ -31,6 +32,12 @@ from) this pass emits, fail closed:
  + findings.json (bundle-age mismatches, RTL-baked constants that disagree with the compiled ones) and manifest.json
    (sha256 of every emitted file, the inputs and their sha256, source commits).
 
+Compute seam ages (QW-L1SEAM 10-19): ONE source with the strict bind -- tools/qwen_split/record_bundles.py seam_stages on
+the compute GEN die.v + fwd_lanes.json (lane cycles: forwarded E + 1, plain n, direct 0), the function DIE_PARAM_AUDIT (e)
+checks the bound TXDP with.  The compute bundle selectors and the CS_*/SC_* stage map are record_bundles' own; the die
+table's relay HOP counts (a one-frame landing = 1 hop, 2 edges) are never seam ages.  The compute die table is annotated
+with those ages (age_edges) before the relay check, so die_relay_check's torn-bundle check reads them too.
+
 Bundles: a static record crosses the die as one bundle (valid + slot + kind + beat + payload); its members must reach
 the consumer on ONE age or the record is torn (TOKEN-XDIE-QWEN F5 / F6).  The calendars are compiled at every
 bundle's MAX member age (the age the record is complete); a bundle whose members differ is a finding, and the compiled
@@ -46,29 +53,26 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
 import die_relay_stages as DRS   # noqa: E402
 import die_relay_check as DRC    # noqa: E402
 import d2d_link_calendar as L    # noqa: E402
+import record_bundles as RB      # noqa: E402
 
 CONSUMER = 'tools/qwen_layerbench/layer_compile.py'
-# compute end producer/consumer: qfd_native59_dv_service (TOKEN-XDIE-QWEN xdie_exchange_cal.py, measured on its vehicle)
-N59_TX = 2      # tx_slot pin -> native_tx_v (pin register + record register)
-N59_X3 = 2      # kv_x3_slot pin -> x3 (pin register + qfd_kvn_static_transport register)
-KV_CODEC = 1    # qkd_native_attention_static_ctl codec: age-slot event -> tx_valid register
-PINREG_EXT = {'C': [2, 2, 0, 2], 'K': [2, 2, 2, 2]}   # d2d_link_calendar --pinreg (PR = 1 die masters)
+# producer codec edges + PR = 1 pin flops: ONE definition, tools/qwen_split/d2d_link_calendar.py (QXF-LINK), the same the
+# strict-bind DIE_PARAM_AUDIT (e) derives the bound TXDP from (QW-L1SEAM 10-19)
+N59_TX, N59_X3, KV_CODEC, PINREG_EXT = L.N59_TX, L.N59_X3, L.KV_CODEC, L.PINREG_EXT
 
-# seam bundles: name -> (side, [(src_inst, src_port, dst_inst)]) ; selection by src pin + destination instance
+# seam bundles: name -> (side, [(src_inst, src_port, dst_inst)]) ; selection by src pin + destination instance.
+# QW-L1SEAM 10-19: the compute side is NOT listed here -- it is tools/qwen_split/record_bundles.py COMPILER_BUNDLES +
+# SEAM_SINGLE (the bundles the GEN lands whole and strict bind audits), so the compiler and the bind cannot diverge.
+COMPUTE_SEAM = tuple(RB.COMPILER_BUNDLES) + tuple(RB.SEAM_SINGLE)
 BUNDLES = {
-    'C.tx_slot':   ('qwen_compute', [('d2d_rom', p, 'native59') for p in ('native_tx_slot', 'native_tx_slot_kind', 'native_tx_slot_beat')]),
-    'C.rx_record': ('qwen_compute', [('d2d_rom', p, 'native59') for p in ('native_rx_v', 'native_rx_slot', 'native_rx_slot_kind',
-                                                                         'native_rx_slot_beat', 'rx_payload')]),
-    'C.x3_slot':   ('qwen_compute', [('d2d_rom', 'kv_x3_slot', 'native59')]),
-    'C.tx_record': ('qwen_compute', [('native59', p, 'd2d_rom') for p in ('native_tx_v', 'native_tx_payload')]),
-    'C.x3_record': ('qwen_compute', [('native59', p, 'd2d_rom') for p in ('x3', 'x3_identity', 'x3_generation')]),
+    **{b: ('qwen_compute', [(s, sp, d) for s, sp, d, _ in {**RB.BUNDLES, **RB.SEAM_SINGLE}[b]]) for b in COMPUTE_SEAM},
     'K.rx_record': ('qwen_kv', [('d2d_kv', p, 'kvs_attn') for p in ('att_rx_v', 'att_rx_kind', 'att_rx_beat', 'rx_payload')]),
     'K.tx_slot':   ('qwen_kv', [('d2d_kv', p, 'kvs_attn') for p in ('att_tx_slot', 'att_tx_kind', 'att_tx_beat')]),
     'K.tx_record': ('qwen_kv', [('kvs_attn', p, 'd2d_kv') for p in ('attn__tx_valid', 'attn__tx_payload')]),
 }
 # calendar stage names (xdie_exchange_cal.py --stages order) -> the bundle whose compiled age they take
-STAGE_OF = dict(CS_TXS='C.tx_slot', CS_RXV='C.rx_record', CS_RXP='C.rx_record', CS_X3S='C.x3_slot', SC_TX='C.tx_record',
-                SC_X3='C.x3_record', KS_RXV='K.rx_record', KS_RXP='K.rx_record', KS_TXS='K.tx_slot', KS_TXK='K.tx_slot',
+# (compute part = record_bundles.SEAM_STAGE_OF, the strict-bind TXDP audit's map)
+STAGE_OF = dict(RB.SEAM_STAGE_OF, KS_RXV='K.rx_record', KS_RXP='K.rx_record', KS_TXS='K.tx_slot', KS_TXK='K.tx_slot',
                 KS_TXB='K.tx_slot', SK_TXV='K.tx_record', SK_TXP='K.tx_record')
 
 
@@ -88,8 +92,47 @@ def bus_age(b):
     return a
 
 
-def bundle_ages(tables):
-    """-> {bundle: dict(members=[{bus, stages, age}], age=max, consistent)}; fail closed on a missing member"""
+def compute_seam(die_v, lanes=None):
+    """QW-L1SEAM 10-19: the compute D2D seam ages AS BUILT, from the SAME source the strict bind's DIE_PARAM_AUDIT (e)
+    and RECORD_BUNDLE_AUDIT use: record_bundles.seam_stages(die.v, fwd_lanes.json) (lane cycles per member: forwarded
+    lane E + 1, plain relay n, direct 0).  The relay table's 'stages' are HOP counts (a one-frame landing is 1 hop but
+    2 edges), so they are never used as compute seam ages.  -> (stages {CS_TXS..SC_X3}, {(src_inst, src_port, dst_inst):
+    cycles}, record).  Fail closed on any problem (missing member, unreadable lane, torn bundle)."""
+    die_v = Path(die_v)
+    if lanes is None and (die_v.parent / 'fwd_lanes.json').exists():
+        lanes = die_v.parent / 'fwd_lanes.json'
+    st, rec, problems = RB.seam_stages(die_v, lanes)
+    if problems or st is None:
+        raise SystemExit('layer_compile: compute seam (record_bundles.seam_stages) of ' f'{die_v}: ' + '; '.join(problems))
+    bset = {b: {**RB.BUNDLES, **RB.SEAM_SINGLE}[b] for b in COMPUTE_SEAM}
+    _, info, _ = RB.netlist_members(die_v.read_text(), bset)
+    per_key = {}
+    for b in rec['bundles'].values():
+        for bid, c in b['members'].items():
+            (s, sp), d = info[bid]['key'].split('->')[0].split('.'), info[bid]['key'].split('->')[1].split('.')[0]
+            per_key[(s, sp, d)] = c
+    return st, per_key, rec
+
+
+def annotate_seam_ages(doc, seam):
+    """the compute die-run table with every seam member's age_edges set to its record_bundles lane cycles (age_edges is
+    not part of the table digest), so die_relay_check's torn-bundle check (tools/die_record_bundles.py) reads the same
+    ages as the strict bind.  -> (doc copy, [(bus, table age, seam age)] where the exporter's age differed)."""
+    d = json.loads(json.dumps(doc))
+    diff = []
+    for b in d['buses']:
+        k = (b['src']['inst'], b['src']['port'], b['dst']['inst'])
+        if k in seam:
+            old = b.get('age_edges', b['stages'])
+            if old != seam[k]:
+                diff.append((b['id'], old, seam[k]))
+            b['age_edges'], b['age_basis'] = seam[k], 'record_bundles.seam_stages lane cycles (strict-bind source)'
+    return d, diff
+
+
+def bundle_ages(tables, seam=None):
+    """-> {bundle: dict(members=[{bus, stages, age}], age=max, consistent)}; fail closed on a missing member.
+    seam: {bid: lane cycles} of the compute die (compute_seam): REQUIRED for the compute bundles (one source of truth)."""
     out = {}
     for name, (design, sel) in BUNDLES.items():
         T = tables[design]
@@ -99,6 +142,17 @@ def bundle_ages(tables):
             if not bs:
                 raise SystemExit(f'layer_compile: bundle {name}: no die bus {si}.{sp} -> {di}.* in the {design} table')
             for b in bs:
+                if design == 'qwen_compute':
+                    if seam is None:
+                        raise SystemExit('layer_compile: compute seam ages come only from record_bundles.seam_stages '
+                                         '(--compute-die-v): never from relay hop counts')
+                    k = (b['src']['inst'], b['src']['port'], b['dst']['inst'])
+                    if k not in seam:
+                        raise SystemExit(f'layer_compile: bundle {name}: {b["id"]} is not a seam member of the compute '
+                                         f'die.v (record_bundles): table and netlist disagree')
+                    mem.append(dict(bus=b['id'], stages=b['stages'], age=seam[k], width=b['width'],
+                                    age_source='record_bundles.seam_stages'))
+                    continue
                 a = bus_age(b)
                 if a is None:
                     raise SystemExit(f'layer_compile: bundle {name}: {b["id"]} is a landed lane without a land-plan age '
@@ -194,7 +248,7 @@ def compile_stages(ba):
 
 
 def txd_of(S, kv_codec=KV_CODEC):
-    raw_c = [S['CS_TXS'] + N59_TX + S['SC_TX'], 1, 1, S['CS_X3S'] + N59_X3 + 1 + S['SC_X3']]
+    raw_c = L.producer_txd_c(S)              # the same function DIE_PARAM_AUDIT (e) checks the bound TXDP with
     raw_k = [S['KS_TXS'] + kv_codec + S['SK_TXP'], 2, 1, 1]
     return dict(C=raw_c, K=raw_k), {e: [x + p for x, p in zip(v, PINREG_EXT[e])] for e, v in (('C', raw_c), ('K', raw_k))}
 
@@ -276,6 +330,9 @@ def main(argv=None):
     ap.add_argument('--token-path', default='results/arch/token_path_20261009/qwen_rom.json')
     ap.add_argument('--link-handoff', default='results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json')
     ap.add_argument('--compute-params', help='compute die.v.params.json (TXDP as the die elaborates it)')
+    ap.add_argument('--compute-die-v', required=True,
+                    help='compute GEN die.v (the strict-bind input): the compute seam ages are record_bundles.seam_stages of it')
+    ap.add_argument('--compute-lanes', help='compute fwd_lanes.json (default: next to --compute-die-v)')
     ap.add_argument('--compute-commit', default='0a9c93921'); ap.add_argument('--kv-commit', default='f05f9338f')
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
@@ -295,7 +352,16 @@ def main(argv=None):
         if d['role'] != 'die_plan' or d['coverage'] != 'complete':
             raise SystemExit(f'layer_compile: {k} table must be a complete die_plan export')
     tables = {k: DRS.Table(d) for k, d in docs.items()}
-    ba = bundle_ages(tables)
+    seam_st, seam_key, seam_rec = compute_seam(a.compute_die_v, a.compute_lanes)
+    docs['qwen_compute'], seam_diff = annotate_seam_ages(docs['qwen_compute'], seam_key)
+    tables['qwen_compute'] = DRS.Table(docs['qwen_compute'])
+    if seam_diff:
+        findings.append(dict(id='SEAM_AGE_SOURCE', severity='INFO', owner='QW-L1SEAM',
+                             what=f'{len(seam_diff)} compute seam buses: the die table age (relay hops / exporter age_fields) '
+                                  'differs from the as-built lane cycles; compiled with record_bundles.seam_stages (the '
+                                  'strict-bind DIE_PARAM_AUDIT / RECORD_BUNDLE_AUDIT source)',
+                             lanes=[f'{i}: table {o} -> seam {n}' for i, o, n in seam_diff]))
+    ba = bundle_ages(tables, seam_key)
     for n, b in ba.items():
         if not b['consistent']:
             findings.append(dict(id=f'BUNDLE_AGE {n}', severity='FAIL', owner='die lead (LAND_CROSS / KV seam)',
@@ -303,6 +369,8 @@ def main(argv=None):
                                  lanes=[f"{m['bus']}: stages {m['stages']} age {m['age']}" for m in b['members']],
                                  fix=f'land the whole bundle at age {b["age"]} (pad the shorter members) or re-plan the seam'))
     S = compile_stages(ba)
+    if {k: S[k] for k in seam_st} != seam_st:          # cannot happen unless STAGE_OF and record_bundles diverge
+        raise SystemExit(f'layer_compile: compiled compute stages {S} != record_bundles.seam_stages {seam_st}')
     kvp = kv_programme_constants(a.kv_commit)
     raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
     hard, hard_src = rtl_txdp(a.compute_commit, a.kv_commit, a.compute_params)
@@ -415,7 +483,7 @@ def main(argv=None):
         txt = json.dumps(cdoc, separators=(',', ':'))
         p = rs / (f'{short}_compiled.json.gz' if len(txt) > a.gz_over else f'{short}_compiled.json')
         DRS.write(p, cdoc)
-        rep = DRC.check(DRS.load(a.compute_stages if short == 'compute' else a.kv_stages), DRS.load(p))
+        rep = DRC.check(docs[design], DRS.load(p))     # compute: the seam-annotated die table (record_bundles ages)
         write_json(rs / f'relay_check_{short}.json', rep)
         checks[short] = dict(verdict=rep['verdict'], fails=rep['fails'], stage_diffs=rep['stage_diffs'], schedule=p.name)
     ksp = None
@@ -437,7 +505,10 @@ def main(argv=None):
                tool_sha256=sha(__file__), source_commits=dict(compute=a.compute_commit, kv=a.kv_commit),
                inputs={k: dict(path=str(v), sha256=sha(ROOT / v if not Path(v).is_absolute() else v))
                        for k, v in (('compute_stages', a.compute_stages), ('kv_stages', a.kv_stages),
-                                    ('token_path', a.token_path), ('link_handoff', a.link_handoff))},
+                                    ('token_path', a.token_path), ('link_handoff', a.link_handoff),
+                                    ('compute_die_v', a.compute_die_v))
+                       + ((('compute_lanes', seam_rec['source'].split(' + ')[1]),) if ' + ' in seam_rec['source'] else ())},
+               compute_seam=dict(stages=seam_st, source='record_bundles.seam_stages', rule=seam_rec['rule']),
                die_table_digests={k: d['digest'] for k, d in docs.items()},
                layers=dict(L1=dict(X=X['L1'], period_compiled=next(l['cycles'] for l in pc['program']['layers'] if l['id'] == 'L1')),
                            L0=dict(X=X['L0'], start=pc['program']['layers'][0]['start']),

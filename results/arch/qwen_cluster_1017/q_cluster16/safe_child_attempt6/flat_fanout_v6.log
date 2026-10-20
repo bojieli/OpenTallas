@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: ot-epyc7       admits   845 GB (avail 693, growth 101, headroom 0, waiters 0/0 GB) load 48/96 running 21 disk 6437 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/audit
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2900903-1792425139 after 0 s
+FLAT_FANOUT qfd_c_land_w258_narrow flops 1132 maxreg 5 flagports 44 maxflag 0 violations 0
+FLAT_FANOUT qfd_c_land_r258_narrow flops 347 maxreg 4 flagports 44 maxflag 9 violations 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2900903-1792425139): exit 0

@@ -267,7 +267,11 @@ def form(lines, dirs, slots):
                     conn = f'.ckf(n_{prev}__cko[0]), .ea(n_{prev}__eb[0]), .a({A}), {tail}'
             new[c] = (mst, conn)
             rep['per_master'][mst] += 1
-        rep['lanes'].append(dict(stations=ch, S=S, n=n, src=ln_['src'], src_kind=ln_['src_kind'], src_tree=X, dst=ln_['dst'],
+        rep['lanes'].append(dict(stations=ch, landing=ch[-1], bid=ch[-1], S=S, n=n,
+                                 E=E, cal=hop0_en_reg(n), cal_basis='G-R0+h0', reset_cal=0,
+                                 age_contract='KVR-FWDAGE: G=R0; source-to-landing-output age E+1; post_stages are plain flops',
+                                 age_witness='results/rtl/kvr_fwdage_1019/record.json',
+                                 src=ln_['src'], src_kind=ln_['src_kind'], src_tree=X, dst=ln_['dst'],
                                  dsts=ln_['dsts'], dst_port=ln_['dst_port'],
                                  dst_tree=Y, en=en, rs=rs, E_planned=E, K=K, h0=hop0_en_reg(n), **cost))
         rep['totals']['lanes'] += 1
@@ -523,6 +527,16 @@ def main(argv=None):
     if pf.exists():
         pj = json.loads(pf.read_text())
         pads = pj.setdefault('pads', {})
+        # Pin source masters before render() replaces the original relay lines.
+        source_masters = {m.group(3): m.group(2) for ln in lines0 if (m := INST.match(ln))}
+        # Instance-exact relay pads retain their payload bit indexes when a standard becomes a lane station/landing.
+        for inst, (mst, _conn) in new.items():
+            ent = pj.get('instances', {}).get(inst)
+            if ent is not None:
+                if ent.get('master') != source_masters.get(inst):
+                    raise ValueError(f'{inst}: pad declaration master does not match the replaced standard')
+                ent['master'] = mst
+                ent['reason'] = 'Forwarded lane preserves this replica payload bit indexes: ' + ent['reason']
         for mst in masters:
             mm = re.match(r'^qkd_(?:rlysh0?|landsh0?)_(\d+)$', mst)
             src = pads.get(f'qkd_rlys_{mm.group(1)}') if mm else None

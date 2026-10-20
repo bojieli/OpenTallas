@@ -1,0 +1,82 @@
+{
+  "source_commit": "9463564f4",
+  "qualification": "Frozen artifact dependencies only; not production imports or installation",
+  "files": [
+    {
+      "path": "expected_xq.mem",
+      "sha256": "0633f6f7faff6b0e8a2b375c115555bd9dc8cbe0636e8348df089a7c567a339b"
+    },
+    {
+      "path": "sid6_fixture/files.json",
+      "sha256": "528904b75d19c03948bb35e190903caf8d2a90fa049b3b1990570e670c102bed"
+    },
+    {
+      "path": "sid6_fixture/meta.json",
+      "sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28"
+    },
+    {
+      "path": "sid6_fixture/ops/attn.q_norm.scale.bin",
+      "sha256": "d4daf9681c2490e1a152d7ced0a31cd40a5c2e46125b7f4b6147734f66de8377"
+    },
+    {
+      "path": "source_ctl.txt",
+      "sha256": "a6531c2c6c73d5abb06c3067f087631d76f0727828737eebab889ac8771230a4"
+    },
+    {
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+    },
+    {
+      "path": "tools/hdc_golden_v41.py",
+      "sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+    },
+    {
+      "path": "tools/rtl_hdc_v41_blockdot_campaign.py",
+      "sha256": "e7cb86b9eeea0aae2ca46ba19d11bebef814415a7a5da70f73576860e0188955"
+    },
+    {
+      "path": "tools/s81/static_return_calendar.py",
+      "sha256": "00dd7c27bbf9469235b9b7ad64d1fde04aa2dc094541ed01e4934064f235274f"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/lower_vpx.py",
+      "sha256": "8188e3614a2bdd264cefdbba135752ba4a97b201e2beac94bbf091a99ef19953"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/lower_vs.py",
+      "sha256": "ae8bf08bba8bfe22c584784270f14c60a9ccb98d7cd74d135245f55446c8b9ca"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/qf_producer/check_qnorm_scorefix.sh",
+      "sha256": "6329c1b08c71db4d86df50183de4e52cc823f952859138234c2a1571210efff9"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/qf_producer/head_local_contract.py",
+      "sha256": "6b5d751adbbd46ea2d9e5190cb9b44f0fdf0e31b380da3216ec5521646592708"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/qf_producer/qnorm_program_model.py",
+      "sha256": "541d63553afe78c70f9771dc13f0c6796881f7e7aa1379fad4d073314f54bd6a"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/qf_producer/run_qnorm_source.sh",
+      "sha256": "a1139b39c5d266d9138b281432c2ecb85857b19ecf3ea4a297aa7df7cad2acdd"
+    },
+    {
+      "path": "tools/s81_dv/layer_prog/qf_producer/tb_qnorm_source.sv",
+      "sha256": "807089aa237f1f63167bdce77088f4cf1b296cdcba92b73c2bf705717df3150d"
+    },
+    {
+      "path": "tools/s81_slice/cap_model.py",
+      "sha256": "8c0b0acf544adf222a7a202f466d352d1796db8d865adc1cdd045b786a09e659"
+    },
+    {
+      "path": "tools/s81_static_control/pq_calendar.py",
+      "sha256": "97dc4da15d65414f2c89db50e74e1cf288eccdb5d4993394ce5119d548175790"
+    },
+    {
+      "path": "tools/s81_suhc/hc_gate.py",
+      "sha256": "fb75ae871652986052f0d3576ca17bc7ad4cd8995d6970437713514df8cbaea1"
+    }
+  ]
+}

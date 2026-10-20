@@ -1,0 +1,17 @@
+{
+  "name": "early_post",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "baseline/rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv"
+  ],
+  "baseline_log_sha256": "2b13f722296f674094ed37142ce7659414f4bcd53897da4408ee573178716c2d",
+  "mutant_log_sha256": "bcfb1b8f0f0d8e5b9421e2ee02c3f75d067077ed58c7e6e999ca9bd0b1443d9e",
+  "required_regex": "POST_BEFORE_REAL_CQB",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}
