@@ -1,0 +1,20 @@
+GATE WARN clock_span: 734.4 x 734.4 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE INFO pin_regs: pin registers opted out: ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register directly and xb_v*/xb_beat* leave a pe
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN rtl: runtime_partselect: 1 runtime-indexed part-select(s), 2,048 bits (1 >= 64 b; e.g. ot_hnx_hgi_hc_residual_vm: assembly[cap_beat*2048+:2048] (2048 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)
+GATE INFO remote: ot-run selected ot-epyc5 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hnx_hcq_hub_safe3_1020_20261020-090610.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hnx_hcq_hub_safe3_1020_20261020-090610.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hnx_hcq_hub_safe3_1020-20261020-090610
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 261 s (gate total 767 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 9903, 'pin_rectangles': 9903, 'pin_track_checked': 9903, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 3b92851ece85e97a15724e31159d4e2c2b28dfc494ee250ac1edbfbcdb4773ae
+GATE INFO util: synthesized std area 31842 um2 + macros 12317 in core 533017: util 6% (std-cell density 6.1% of placeable 517934 um2; total fill 8.3%)
+GATE INFO textbook: WARN ot_hnx_hc_qhub cells 270,173 flops 55,575 depth 591.8 ps util 0.0828 reach 13.0 um (5.5 s)
+GATE WARN textbook.clock_domain: clock root port clk: 55,575 flops > 15,000 on one root (+0 ICGs, 1 macro clock pins; e.g. configured$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:clk: 55,576 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 55,576 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE WARN clock_rule: root port:clk: 55,576 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 55,576 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hnx-hub-safe2-1020/physical/ref_tile/hnx_hcq_hub_safe3_1020/gate_layout/floorplan.png
+GATE FAIL trial_route: trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow None; GRT 102 s  -> FIX: read the remote grt.log; preserve this failed run
+PRE_ROUTE_GATE: FAIL (2 fail, 5 warn)
+GATE: hnx_hcq_hub_safe3_1020/gate_result.json written (exact staged source binding; commit it with the kit)

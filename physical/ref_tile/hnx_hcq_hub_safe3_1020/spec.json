@@ -291,7 +291,8 @@
   "PRE_GLOBAL_PLACE_TCL": "physical/hbm_next/hc/hub_band_gpl.tcl",
   "PRE_DETAIL_PLACE_TCL": "physical/hbm_next/hc/hub_band_dpl.tcl",
   "OT_HNX_BAND": "172.8,172.8,561.6,561.6",
-  "OT_CKKM_K": "32"
+  "OT_CKKM_K": "32",
+  "OT_NATIVE_UNTOUCH": ".u_native."
  },
  "fill_reason": {
   "pin_bound": "10.1k literal face pins (N 2,854 / E 2,658 / W 2,354 / S 2,240) need faces >= 476 um at 6 pins/um and the die slot is the 734.4 um hole of the 3x3 HC bank ring (pins abut the banks); the ~50k um2 of logic + SRAM sits in ONE central 388.8 um standard-cell band at ~39% band utilisation, the collar carries only pin wires + repeaters"

@@ -30,3 +30,19 @@ foreach hb_i [$hb_blk getInsts] {
 }
 if {$hb_in < 1000} { error "hub_band_gpl: only $hb_in cells in the band" }
 puts "HNX_HUB_BAND gpl region ($hb_x0,$hb_y0)-($hb_x1,$hb_y1) um: $hb_in cells in the band, $hb_out tie cells outside"
+# HUB-SAFE3 10-20 (opt-in OT_NATIVE_UNTOUCH = an instance-name substring, e.g. ".u_native."): the native fan-32 fp32 adder
+# graph (rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v) marks every cell (* keep, dont_touch *) so SYNTHESIS keeps the
+# cloned <= 32-load structure; in placement that dont_touch stops the resizer buffering any net with such a load
+# (gate @13f93e333: timing-driven GPL RSZ-3006 "Failed to insert buffer before loads" on a native net).  The structure is
+# fixed once mapped, and sizing / buffering preserve the function, so the flag is cleared here, before GPL.
+if {[info exists ::env(OT_NATIVE_UNTOUCH)] && $::env(OT_NATIVE_UNTOUCH) ne ""} {
+    set nu_s $::env(OT_NATIVE_UNTOUCH); set nu_i 0; set nu_n 0
+    foreach i [$hb_blk getInsts] {
+        if {[$i isDoNotTouch] && [string first $nu_s [$i getName]] >= 0} { $i setDoNotTouch 0; incr nu_i }
+    }
+    foreach n [$hb_blk getNets] {
+        if {[$n isDoNotTouch] && [string first $nu_s [$n getName]] >= 0} { $n setDoNotTouch 0; incr nu_n }
+    }
+    if {$nu_i < 1} { error "OT_NATIVE_UNTOUCH: no dont_touch instance matches '$nu_s'" }
+    puts "OT_NATIVE_UNTOUCH: dont_touch cleared on $nu_i instances and $nu_n nets matching '$nu_s'"
+}

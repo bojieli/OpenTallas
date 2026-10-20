@@ -61,4 +61,19 @@ Fault timing: the three deferred checks raise the sticky fault one edge later on
 
 ## Pre-gate census
 
-(filled by the census run; see results/arch/hbm_next_1019/units/hc/census_safe3/)
+Native census (tools/ref_tile/native_census.py, limit 32, no waivers, in the floorplan step), evidence
+results/arch/hbm_next_1019/units/hc/census_safe3/ (native_census + trace per round):
+
+| round | commit | drivers > 32 | max | what was left |
+|---|---|---|---|---|
+| safe2 | a8b354d73 | 984 | 136 | qcen adders 828, hc_q 156 |
+| r1 | d46478db7 | 32 | 79 | deferred-check multipliers, scan copies per 2 rows, ingest copies, merged relay synchronisers |
+| r2 | 4d6c23d83 | 6 | 45 | s0 cone, descriptor accept, q_n mux, row walk, streaming copies |
+| r3 | d7b1740d9 | 3 | 45 | q_n mux replicated per j, launch group 3, captured folded into cap_k |
+| r4 | b33e577b5 | 3 | 36 | header-cone position bits, gather active |
+| r5 | 13f93e333 | **0 (PASS)** | 32 | - |
+
+The r5 synthesis gate then stopped in timing-driven GPL: RSZ-3006 (a native-adder net whose load cell is dont_touch).
+The native graph marks its cells keep + dont_touch for synthesis; the kit now clears that flag before GPL
+(OT_NATIVE_UNTOUCH ".u_native.", physical/hbm_next/hc/hub_band_gpl.tcl): sizing / buffering keep the function, the
+<= 32-load structure is fixed once mapped.
