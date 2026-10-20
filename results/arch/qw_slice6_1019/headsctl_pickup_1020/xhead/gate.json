@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: the RTL registers every input at its pin (ot_qfd_xhead g_pin / ib_pin / f_q / tid_q / fi_q / lqp; ot_qfd_xs_tap E1 pin registers) and drives every output from a flop; flow pin registers would add unpriced cycles",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_s5_xhead_20261020-001537.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_s5_xhead_20261020-001537.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_xhead-20261020-001537",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 256 s (gate total 1080 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 5726, 'pin_rectangles': 5726, 'pin_track_checked': 5726, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 f1e08f74596ab3e734ebbc5fe85758656d6d49d383dd6bfe44a147fa1945cd33",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 5724 um2 + macros 0 in core 90531: util 6%",
+   "fix": "set \"std_area_um2\": 5724 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_dv_s5_xhead cells 46,252 flops 7,916 depth 481.8 ps util 0.0635 reach 148.6 um (1.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 6.3% outside 45%-65% (std 5744 + macro 0 um2 in 90531 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 473.2..532.0 ps (spread 58.8), boundary mean 498.0; tt insertion all 364.8..418.8 ps (spread 54.0), boundary mean 387.1; ff insertion all 298.3..349.2 ps (spread 50.9), boundary mean 319.3; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_dv_s5_xhead/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       76 paths, worst slack -944.8 ps (e.g. s_d[82])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      294 paths, worst slack -22.4 ps (e.g. u_head.lw_ctl[132]$_SDFF_PP0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 461.7 ps (e.g. u_rl.rst$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -9.44827105442414e-10 hold WNS 3.378158863753811e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 7,916 sinks on the largest root; measured TT insertion 418.8 ps, FF insertion 349.2 ps, TT pin-flop spread 52.0 ps, FF pin-flop spread 48.8 ps; WARN: insertion 418.8 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-slice6-heads-1019/physical/ref_tile/qfd_dv_s5_xhead/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-slice6-heads-1019/physical/ref_tile/qfd_dv_s5_xhead/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 24.12% used; GRT 175 s",
+   "fix": ""
+  }
+ ]
+}
