@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       admits  1159 GB (avail 925, growth 113, headroom 0, waiters 0/0 GB) load 93/128 running 35 disk 776 GB 
+ot-run: ot-epyc8       admits   855 GB (avail 712, growth 113, headroom 0, waiters 0/0 GB) load 160/128 running 29 disk 1 GB disk 1 GB < 20
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-419541-1792454344 after 0 s
+FACE stim_auth_drop_active EXACT TWC_RESULT_FAULT
+FACE stim_auth_drop_idle EXACT TWC_RESULT_FAULT
+FACE stim_bad_stage EXACT TWC_RESULT_FAULT
+FACE stim_digest EXACT TWC_RESULT_FAULT
+FACE stim_double_start EXACT TWC_RESULT_FAULT
+FACE stim_dup_pw EXACT TWC_RESULT_FAULT
+FACE stim_duplicate EXACT TWC_RESULT_FAULT
+FACE stim_early EXACT TWC_RESULT_FAULT
+FACE stim_early_auth EXACT TWC_RESULT_FAULT
+FACE stim_header EXACT TWC_RESULT_FAULT
+FACE stim_late EXACT TWC_RESULT_FAULT
+FACE stim_missing EXACT TWC_RESULT_FAULT
+FACE stim_nominal EXACT TWC_RESULT_CLEAN
+FACE stim_nonzero_pad EXACT TWC_RESULT_FAULT
+FACE stim_observer_slice EXACT TWC_RESULT_FAULT
+FACE stim_profile_epoch EXACT TWC_RESULT_FAULT
+FACE stim_pw_while_active EXACT TWC_RESULT_FAULT
+FACE stim_retire_early EXACT TWC_RESULT_FAULT
+FACE stim_retire_no_mexpf EXACT TWC_RESULT_FAULT
+FACE stim_skip_pw EXACT TWC_RESULT_FAULT
+FACE stim_start_before_seal EXACT TWC_RESULT_FAULT
+FACE stim_stray_after_complete EXACT TWC_RESULT_FAULT
+FACE stim_wrong_epoch EXACT TWC_RESULT_FAULT
+FACE stim_wrong_pidx EXACT TWC_RESULT_FAULT
+FACE stim_wrong_slice EXACT TWC_RESULT_FAULT
+FACE stim_wrong_stage EXACT TWC_RESULT_FAULT
+FACE stim_wrong_user EXACT TWC_RESULT_FAULT
+FACE stim_zero_mask EXACT TWC_RESULT_FAULT
+BEGIN_WITHDRAW_PASS
+FMUT 1 FAIL_AS_EXPECTED
+FMUT 2 FAIL_AS_EXPECTED
+FMUT 3 FAIL_AS_EXPECTED
+CTLM_F16_CALR_ELAB_PASS
+CTLM_DEFAULT_ELAB_PASS
+F16_CTLM_FACE_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-419541-1792454344): exit 0

@@ -8,7 +8,11 @@
 // PHYS=1 selects SAFE_PHYS (pin + output face registers: every output is the
 // legacy output delayed by exactly LAG=2 edges; reset lands in 2+1 stages, so
 // stimulus starts RGAP edges after release for every instance in the run).
-module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELECT=0,PHYS=0);
+// FACE=1 (QW-F16PROG4): also instantiates the CTLM face qfd_tt_ctlm_dv_wtn #(MUT FMUT) on the same stimulus and
+// checks its 17-bit status equals the standalone SAFE_PHYS controller on EVERY edge (F16_FACE_EDGE_MISMATCH);
+// +BEGIN pulses the face's SYSFACE BEGIN for 3 edges at stimulus edge 1060 (sealed, idle): the face must withdraw the
+// seal so the later start faults (F16_FACE_BEGIN_WITHDRAW_PASS / F16_FACE_BEGIN_NOT_WITHDRAWN).
+module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELECT=0,PHYS=0,FACE=0,FMUT=0);
  localparam integer LAG=PHYS?2:0,RGAP=PHYS?4:0;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg pw_v=0;reg[9:0]pw_addr=0;reg[63:0]pw_data=0;reg auth=0,fusedcap=0;reg[63:0]dig=0;reg[15:0]pep=0;
@@ -17,6 +21,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
  reg su_issue=0;reg[1:0]cmd_user=0;reg[8:0]su_pidx=0;reg[3:0]cmd_slice=0;
  reg[5:0]ev_stage=0,ev_stage_n=0;reg[15:0]ev_epoch=0,ev_epoch_n=0;
  wire[15:0]observation;wire obs_fault;
+ reg face_begin=0;integer face_mism=0,face_fault_seen=0;
  wire template_ready;wire[3:0]context_active,all_complete;wire group_complete;wire[1:0]complete_user;wire[3:0]complete_group;wire fault;
  qfd_dv_typed_su_observer #(.ENABLE(EN)) obs(.ck(ck),.rst_n(rst_n),.su_issue(su_issue),.cmd_user(cmd_user),.su_pidx(su_pidx),.cmd_slice(cmd_slice),.observation(observation),.fault(obs_fault));
  qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE),.SAFE_SELECT(SELECT),.SAFE_PHYS(PHYS)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
@@ -26,6 +31,19 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   .observation(observation),.event_stage(ev_stage),.event_epoch(ev_epoch),
   .template_ready(template_ready),.context_active(context_active),.all_witnesses_complete(all_complete),
   .group_complete(group_complete),.complete_user(complete_user),.complete_group(complete_group),.fault(fault));
+ generate if(FACE)begin:facecheck
+  wire[16:0] fst;
+  qfd_tt_ctlm_dv_wtn #(.MUT(FMUT)) face(.ck(ck),.rst_n(rst_n),.pw({pw_v,pw_addr,pw_data}),
+   .auth({face_begin,auth,fusedcap,dig,pep}),.start({start_v,start_user,start_stage,start_epoch}),
+   .retire({retire_v,retire_user,mexpf}),.obs({observation,ev_stage,ev_epoch}),.st(fst));
+  wire[16:0] dst={fault,complete_group,complete_user,group_complete,all_complete,context_active,template_ready};
+  always@(negedge ck)if(rst_n)begin
+   if(fst[16])face_fault_seen=1;
+   if(!$test$plusargs("BEGIN")&&fst!==dst)begin
+    if(face_mism==0)$display("F16_FACE_EDGE_MISMATCH t=%0t face=%h ctl=%h",$time,fst,dst);face_mism++;
+   end
+  end
+ end endgenerate
  generate if(PAIR)begin:refcheck
  wire rready,rgroup,rfault;wire[3:0]ractive,rall;wire[1:0]ru;wire[3:0]rg;
  qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(0)) reference_dut(
@@ -161,6 +179,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   while(!done)begin
    // drive inputs for this edge
    pw_v=0;start_v=0;retire_v=0;su_issue=0;ev_stage=ev_stage_n;ev_epoch=ev_epoch_n;ev_stage_n=0;ev_epoch_n=0;
+   face_begin=FACE&&$test$plusargs("BEGIN")&&edge_i>=1060&&edge_i<1063;
    forever begin
     if(!have)begin r=$fscanf(fd,"%d %d %h %h %h %h %h\n",t,kind,a,b,c,d,e);if(r!=7)$fatal(1,"bad stim line");have=1;end
     if(t>edge_i)break;
@@ -201,6 +220,12 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELE
   $display("TWC_SUMMARY en=%0d fault=%0d obs_fault=%0d ready_seen=%0d ready_end=%0d completions=%0d retired=%0d starts=%0d max_live=%0d active_end=%b first_fault=%0d edges=%0d",
    EN,fault,obs_fault,ready_seen,template_ready,completions,retired,starts,maxlive,context_active,first_fault,edge_i);
   if(EN!=0&&(fault||obs_fault))$display("TWC_RESULT_FAULT");else $display("TWC_RESULT_CLEAN");
+  if(FACE)begin
+   $display("F16_FACE_SUMMARY fmut=%0d mismatched_edges=%0d face_fault_seen=%0d",FMUT,face_mism,face_fault_seen);
+   if($test$plusargs("BEGIN"))begin
+    if(face_fault_seen&&!fault)$display("F16_FACE_BEGIN_WITHDRAW_PASS");else $display("F16_FACE_BEGIN_NOT_WITHDRAWN");
+   end else if(face_mism==0)$display("F16_FACE_EXACT_PASS");
+  end
   $finish;
  end
 endmodule

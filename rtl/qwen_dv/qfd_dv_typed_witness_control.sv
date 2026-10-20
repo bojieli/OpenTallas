@@ -241,7 +241,7 @@ module qfd_dv_typed_witness_control #(
   for(pb=0;pb<8;pb=pb+1)begin:bk
    reg[11:0] ns;reg m,f;integer l;reg[12:0] cy;
    always@*begin
-    ns=seen[pb];m=0;f=0;
+    ns=seen[pb];m=0;f=0;cy=0; // cy: temporary (no latch)
     for(l=0;l<12;l=l+1)if(cache_mask[pb][l])begin
      cy=cycle[pb/2][(pb%2)*3+l/4];
      if(cy==cache_due[pb][l])begin

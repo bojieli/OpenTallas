@@ -720,5 +720,751 @@
     "face": "S"
    }
   ]
+ },
+ "qfd_dv_slice2_wc": {
+  "dir": 0,
+  "dn_face": "W",
+  "placement": "R0",
+  "ports": [
+   {
+    "port": "ck",
+    "dir": "input",
+    "bits": 1,
+    "face": "N"
+   },
+   {
+    "port": "rst_n",
+    "dir": "input",
+    "bits": 1,
+    "face": "N"
+   },
+   {
+    "port": "cmd_wi",
+    "dir": "input",
+    "bits": 116,
+    "face": "W"
+   },
+   {
+    "port": "cmd_eo",
+    "dir": "output",
+    "bits": 116,
+    "face": "E"
+   },
+   {
+    "port": "hr_wi",
+    "dir": "input",
+    "bits": 453,
+    "face": "W"
+   },
+   {
+    "port": "hr_eo",
+    "dir": "output",
+    "bits": 453,
+    "face": "E"
+   },
+   {
+    "port": "st_wo",
+    "dir": "output",
+    "bits": 1088,
+    "face": "W"
+   },
+   {
+    "port": "st_wi",
+    "dir": "input",
+    "bits": 1088,
+    "face": "W"
+   },
+   {
+    "port": "st_eo",
+    "dir": "output",
+    "bits": 1088,
+    "face": "E"
+   },
+   {
+    "port": "st_ei",
+    "dir": "input",
+    "bits": 1088,
+    "face": "E"
+   },
+   {
+    "port": "sc_wo",
+    "dir": "output",
+    "bits": 48,
+    "face": "W"
+   },
+   {
+    "port": "sc_wi",
+    "dir": "input",
+    "bits": 48,
+    "face": "W"
+   },
+   {
+    "port": "sc_eo",
+    "dir": "output",
+    "bits": 48,
+    "face": "E"
+   },
+   {
+    "port": "sc_ei",
+    "dir": "input",
+    "bits": 48,
+    "face": "E"
+   },
+   {
+    "port": "arv_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "arv_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "art_wo",
+    "dir": "output",
+    "bits": 32,
+    "face": "W"
+   },
+   {
+    "port": "art_ei",
+    "dir": "input",
+    "bits": 32,
+    "face": "E"
+   },
+   {
+    "port": "arm_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "arm_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "arl_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "arl_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "ard_wo",
+    "dir": "output",
+    "bits": 512,
+    "face": "W"
+   },
+   {
+    "port": "ard_ei",
+    "dir": "input",
+    "bits": 512,
+    "face": "E"
+   },
+   {
+    "port": "dd_wo",
+    "dir": "output",
+    "bits": 548,
+    "face": "W"
+   },
+   {
+    "port": "dd_ei",
+    "dir": "input",
+    "bits": 548,
+    "face": "E"
+   },
+   {
+    "port": "rv_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "rv_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "re_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "re_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "rr_wi",
+    "dir": "input",
+    "bits": 3,
+    "face": "W"
+   },
+   {
+    "port": "rr_eo",
+    "dir": "output",
+    "bits": 3,
+    "face": "E"
+   },
+   {
+    "port": "rl_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "rl_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "rd_wi",
+    "dir": "input",
+    "bits": 512,
+    "face": "W"
+   },
+   {
+    "port": "rd_eo",
+    "dir": "output",
+    "bits": 512,
+    "face": "E"
+   },
+   {
+    "port": "dr_wi",
+    "dir": "input",
+    "bits": 520,
+    "face": "W"
+   },
+   {
+    "port": "dr_eo",
+    "dir": "output",
+    "bits": 520,
+    "face": "E"
+   },
+   {
+    "port": "ag_wo",
+    "dir": "output",
+    "bits": 10,
+    "face": "W"
+   },
+   {
+    "port": "ag_ei",
+    "dir": "input",
+    "bits": 10,
+    "face": "E"
+   },
+   {
+    "port": "ss_wo",
+    "dir": "output",
+    "bits": 107,
+    "face": "W"
+   },
+   {
+    "port": "ccv_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "ccm_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "ccw_wo",
+    "dir": "output",
+    "bits": 16,
+    "face": "W"
+   },
+   {
+    "port": "cct_wo",
+    "dir": "output",
+    "bits": 32,
+    "face": "W"
+   },
+   {
+    "port": "l9_wi",
+    "dir": "input",
+    "bits": 514,
+    "face": "W"
+   },
+   {
+    "port": "l9_eo",
+    "dir": "output",
+    "bits": 514,
+    "face": "E"
+   },
+   {
+    "port": "rs_n0",
+    "dir": "input",
+    "bits": 514,
+    "face": "N"
+   },
+   {
+    "port": "rs_n1",
+    "dir": "input",
+    "bits": 514,
+    "face": "N"
+   },
+   {
+    "port": "cw_n0",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n1",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n2",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n3",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "rs_s0",
+    "dir": "input",
+    "bits": 514,
+    "face": "S"
+   },
+   {
+    "port": "rs_s1",
+    "dir": "input",
+    "bits": 514,
+    "face": "S"
+   },
+   {
+    "port": "cw_s0",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s1",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s2",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s3",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "tq_wi",
+    "dir": "input",
+    "bits": 9,
+    "face": "W"
+   },
+   {
+    "port": "tq_eo",
+    "dir": "output",
+    "bits": 9,
+    "face": "E"
+   }
+  ]
+ },
+ "qfd_dv_slice2_ec": {
+  "dir": 1,
+  "dn_face": "E",
+  "placement": "MY",
+  "ports": [
+   {
+    "port": "ck",
+    "dir": "input",
+    "bits": 1,
+    "face": "N"
+   },
+   {
+    "port": "rst_n",
+    "dir": "input",
+    "bits": 1,
+    "face": "N"
+   },
+   {
+    "port": "cmd_ei",
+    "dir": "input",
+    "bits": 116,
+    "face": "E"
+   },
+   {
+    "port": "cmd_wo",
+    "dir": "output",
+    "bits": 116,
+    "face": "W"
+   },
+   {
+    "port": "hr_ei",
+    "dir": "input",
+    "bits": 453,
+    "face": "E"
+   },
+   {
+    "port": "hr_wo",
+    "dir": "output",
+    "bits": 453,
+    "face": "W"
+   },
+   {
+    "port": "st_eo",
+    "dir": "output",
+    "bits": 1088,
+    "face": "E"
+   },
+   {
+    "port": "st_ei",
+    "dir": "input",
+    "bits": 1088,
+    "face": "E"
+   },
+   {
+    "port": "st_wo",
+    "dir": "output",
+    "bits": 1088,
+    "face": "W"
+   },
+   {
+    "port": "st_wi",
+    "dir": "input",
+    "bits": 1088,
+    "face": "W"
+   },
+   {
+    "port": "sc_eo",
+    "dir": "output",
+    "bits": 48,
+    "face": "E"
+   },
+   {
+    "port": "sc_ei",
+    "dir": "input",
+    "bits": 48,
+    "face": "E"
+   },
+   {
+    "port": "sc_wo",
+    "dir": "output",
+    "bits": 48,
+    "face": "W"
+   },
+   {
+    "port": "sc_wi",
+    "dir": "input",
+    "bits": 48,
+    "face": "W"
+   },
+   {
+    "port": "arv_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "arv_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "art_eo",
+    "dir": "output",
+    "bits": 32,
+    "face": "E"
+   },
+   {
+    "port": "art_wi",
+    "dir": "input",
+    "bits": 32,
+    "face": "W"
+   },
+   {
+    "port": "arm_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "arm_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "arl_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "arl_wi",
+    "dir": "input",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "ard_eo",
+    "dir": "output",
+    "bits": 512,
+    "face": "E"
+   },
+   {
+    "port": "ard_wi",
+    "dir": "input",
+    "bits": 512,
+    "face": "W"
+   },
+   {
+    "port": "dd_eo",
+    "dir": "output",
+    "bits": 548,
+    "face": "E"
+   },
+   {
+    "port": "dd_wi",
+    "dir": "input",
+    "bits": 548,
+    "face": "W"
+   },
+   {
+    "port": "rv_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "rv_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "re_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "re_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "rr_ei",
+    "dir": "input",
+    "bits": 3,
+    "face": "E"
+   },
+   {
+    "port": "rr_wo",
+    "dir": "output",
+    "bits": 3,
+    "face": "W"
+   },
+   {
+    "port": "rl_ei",
+    "dir": "input",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "rl_wo",
+    "dir": "output",
+    "bits": 1,
+    "face": "W"
+   },
+   {
+    "port": "rd_ei",
+    "dir": "input",
+    "bits": 512,
+    "face": "E"
+   },
+   {
+    "port": "rd_wo",
+    "dir": "output",
+    "bits": 512,
+    "face": "W"
+   },
+   {
+    "port": "dr_ei",
+    "dir": "input",
+    "bits": 520,
+    "face": "E"
+   },
+   {
+    "port": "dr_wo",
+    "dir": "output",
+    "bits": 520,
+    "face": "W"
+   },
+   {
+    "port": "ag_eo",
+    "dir": "output",
+    "bits": 10,
+    "face": "E"
+   },
+   {
+    "port": "ag_wi",
+    "dir": "input",
+    "bits": 10,
+    "face": "W"
+   },
+   {
+    "port": "ss_eo",
+    "dir": "output",
+    "bits": 107,
+    "face": "E"
+   },
+   {
+    "port": "ccv_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "ccm_eo",
+    "dir": "output",
+    "bits": 1,
+    "face": "E"
+   },
+   {
+    "port": "ccw_eo",
+    "dir": "output",
+    "bits": 16,
+    "face": "E"
+   },
+   {
+    "port": "cct_eo",
+    "dir": "output",
+    "bits": 32,
+    "face": "E"
+   },
+   {
+    "port": "l9_wi",
+    "dir": "input",
+    "bits": 514,
+    "face": "W"
+   },
+   {
+    "port": "l9_eo",
+    "dir": "output",
+    "bits": 514,
+    "face": "E"
+   },
+   {
+    "port": "rs_n0",
+    "dir": "input",
+    "bits": 514,
+    "face": "N"
+   },
+   {
+    "port": "rs_n1",
+    "dir": "input",
+    "bits": 514,
+    "face": "N"
+   },
+   {
+    "port": "cw_n0",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n1",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n2",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "cw_n3",
+    "dir": "output",
+    "bits": 516,
+    "face": "N"
+   },
+   {
+    "port": "rs_s0",
+    "dir": "input",
+    "bits": 514,
+    "face": "S"
+   },
+   {
+    "port": "rs_s1",
+    "dir": "input",
+    "bits": 514,
+    "face": "S"
+   },
+   {
+    "port": "cw_s0",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s1",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s2",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "cw_s3",
+    "dir": "output",
+    "bits": 516,
+    "face": "S"
+   },
+   {
+    "port": "tq_ei",
+    "dir": "input",
+    "bits": 9,
+    "face": "E"
+   },
+   {
+    "port": "tq_wo",
+    "dir": "output",
+    "bits": 9,
+    "face": "W"
+   }
+  ]
  }
 }

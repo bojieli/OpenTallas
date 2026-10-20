@@ -1,0 +1,200 @@
+%Warning-PINMISSING: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:242:711: Instance has missing pin: 'rst_hfc_n'
+                     src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:327:26: ... Location of port declaration
+  327 |     input  wire [3:0]    rst_hfc_n     
+      |                          ^~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dv'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:323:30: ... Location of port declaration
+  323 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dc'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:324:30: ... Location of port declaration
+  324 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dcs'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:325:30: ... Location of port declaration
+  325 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dsp'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:326:30: ... Location of port declaration
+  326 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'ck_mul'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:1441:23: ... Location of port declaration
+ 1441 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'o_ov'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     src/rtl/hdc/ot_qwen_me_spine_h_w12.sv:1453:30: ... Location of port declaration
+ 1453 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_lsl'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     src/rtl/hdc/ot_qwen_w12_matvec.sv:243:22: ... Location of port declaration
+  243 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_tx'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     src/rtl/hdc/ot_qwen_w12_matvec.sv:244:22: ... Location of port declaration
+  244 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: src/rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_reg'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     src/rtl/hdc/ot_qwen_w12_matvec.sv:245:22: ... Location of port declaration
+  245 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fin_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:50:18: ... Location of port declaration
+   50 |     output wire  m_fin_o,
+      |                  ^~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fidx_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:51:26: ... Location of port declaration
+   51 |     output wire [18-1:0] m_fidx_o,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fval_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:52:24: ... Location of port declaration
+   52 |     output wire [31:0] m_fval_o,
+      |                        ^~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'c_fault'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:54:18: ... Location of port declaration
+   54 |     output wire  c_fault,
+      |                  ^~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_v'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:55:18: ... Location of port declaration
+   55 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wbase'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:56:26: ... Location of port declaration
+   56 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ts'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:57:26: ... Location of port declaration
+   57 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ks'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:58:26: ... Location of port declaration
+   58 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_js'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:59:26: ... Location of port declaration
+   59 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wcs'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_split'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:61:23: ... Location of port declaration
+   61 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_jsh'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:62:23: ... Location of port declaration
+   62 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_tiles'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:63:26: ... Location of port declaration
+   63 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_k'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:64:26: ... Location of port declaration
+   64 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_nout'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:65:26: ... Location of port declaration
+   65 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_kindk'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:66:18: ... Location of port declaration
+   66 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: src/rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_pos'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     src/rtl/physical/ot_qfd_tt_ctlm_split.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1275:22: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1275 |     assign vx_addr = '0;    
+      |                      ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1278:19: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1278 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1283:25: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1283 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:329:17: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  329 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:398:15: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  398 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:402:16: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                       : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  402 |         .t_lvl('0),
+      |                ^~
+%Warning-MULTIDRIVEN: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:119:19: Signal has multiple driving blocks with different clocking: 'qfd_tt_ctlm_dv_lpf.u_hr.g_cmdreg.rom_cmd_q'
+                      src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:121:55: ... Location of first driving block
+  121 |         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
+      |                                                       ^~~~~~~~~
+                      src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:123:57: ... Location of other driving block
+  123 |         if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
+      |                                                         ^~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 11.143 MB sources in 87 modules, into 5.632 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 2.128 s (elab=0.297, cvt=1.646, bld=0.000); cpu 2.084 s on 1 threads; allocated 140.391 MB

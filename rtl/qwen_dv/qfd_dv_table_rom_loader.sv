@@ -6,7 +6,8 @@
 module qfd_dv_table_rom_loader #(
     parameter integer SLICE=0,
     parameter integer MUT=0,
-    parameter integer BTAB_COMPACT=0
+    parameter integer BTAB_COMPACT=0,
+    parameter integer WE_COPIES=1       // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
 ) (
     input wire ck, rst_n,
     input wire start,
@@ -14,6 +15,7 @@ module qfd_dv_table_rom_loader #(
     input wire [1:0] user_id,
     input wire other_table_write,
     output reg tw_we,
+    output wire [WE_COPIES-1:0] tw_we_k, // = {WE_COPIES{tw_we}} on every edge (kept, unique-ID registers when > 1)
     output reg [1:0] tw_kind,
     output reg [23:0] tw_addr,
     output reg [1023:0] tw_data,
@@ -71,6 +73,16 @@ module qfd_dv_table_rom_loader #(
         tw_data<=(MUT==3)?{data[511:0],data[1023:512]}:data[1023:0];
         tw_kind<=kind;tw_addr<=uaddr;
     end
+    // tw_we copies: same D, same reset/r2 clear as tw_we (one hierarchy-kept register per copy, so Yosys keeps them).
+    wire we_d = cap_v&&data[1024]&&!invalid;
+    genvar wc;
+    generate if(WE_COPIES<=1)begin:g_we1
+        assign tw_we_k = tw_we;
+    end else begin:g_wek
+        for(wc=0;wc<WE_COPIES;wc=wc+1)begin:cp
+            (* keep=1, keep_hierarchy=1 *) qfd_tload_kept_bit #(.ID(wc)) ff(.ck(ck),.rst_n(rst_n),.clr(!r2),.d(we_d),.q(tw_we_k[wc]));
+        end
+    end endgenerate
     reg [11:0] go_base;
     always @* go_base=106*((MUT==1 && p_stage==36)?34:(p_stage-1));
     always @(posedge ck or negedge rst_n)begin
@@ -81,7 +93,7 @@ module qfd_dv_table_rom_loader #(
             active<=0;cap_v<=0;cap_last<=0;tw_we<=0;done<=0;fault<=0;
         end else begin
             done<=cap_v&&cap_last;
-            tw_we<=cap_v&&data[1024]&&!invalid;
+            tw_we<=we_d;
             cap_v<=active;cap_last<=active&&slot==87;
             if(cap_v&&data[1024]&&(invalid||p_other))fault<=1;
             if(active)begin
@@ -97,4 +109,14 @@ module qfd_dv_table_rom_loader #(
             end
         end
     end
+endmodule
+
+// QW-F16PROG4: one kept copy register (unique ID so no two copies are the same paramod; Yosys keeps all)
+(* keep_hierarchy=1 *)
+module qfd_tload_kept_bit #(parameter integer ID=0) (input wire ck, rst_n, clr, d, output reg q);
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) q<=1'b0;
+        else if(clr) q<=1'b0;
+        else q<=d;
+    wire unused_id = ID[0];
 endmodule
