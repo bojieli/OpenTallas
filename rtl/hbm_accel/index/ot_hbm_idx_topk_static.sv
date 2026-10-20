@@ -38,6 +38,11 @@ module ot_hbm_idx_topk_static #(
     parameter integer IDW = 20,
     parameter integer PIN_IN = 0,   // VEH-TOPKFIX: 1 = pin-registered VM banks (see header)
     parameter integer ACK = 12 + PIN_IN, // PIN_IN 0 measured: cq at W, hub W+1, bank W+3, echo W+9, response W+10, cr pin W+12
+    parameter integer RSPLIT = 0,   // L2H-IDX g2d 10-19: 1 = the sequencer's NON-reset datapath registers (c_row, c_rb, c_le,
+                                    // o_rb, r_rb, i_sec, i_left, i_first) live in their own plain always block, so no reset
+                                    // net enters data logic (inside the reset block they were 'hold while rst_n low' enables
+                                    // and the landed reset copies drove 7 logic gates; textbook balanced reset proof). Same
+                                    // function: during reset st = E_IDLE, where neither form assigns them. 0 = as built.
     parameter integer RT_EXTRA = 0  // fixed extra VM round-trip edges outside this engine (the hardened IDX root's vm_rr
                                     // pin register = 1): capture n+8+RT_EXTRA, every row +RT_EXTRA. Default 0 = as built.
                                     // Total capture shift XRT = PIN_IN + RT_EXTRA (both are fixed round-trip edges).
@@ -273,19 +278,22 @@ module ot_hbm_idx_topk_static #(
             case (st)
                 E_IDLE: if (go) begin busy <= 1'b1; st <= E_CHK; end
                 E_CHK: begin                                              // G+1: row-0 setup (= E_NEXT for row 0)
-                    flt <= 1'b0; f_nan <= 1'b0; s_inv <= 1'b0; c_row <= 20'd0;
-                    c_rb <= a_base_q; c_le <= a_base_q + n_q[17:0] - 18'd1; o_rb <= o_base_q; r_rb <= r_base_q;
+                    flt <= 1'b0; f_nan <= 1'b0; s_inv <= 1'b0;
+                    if (RSPLIT == 0) begin
+                        c_row <= 20'd0; c_rb <= a_base_q; c_le <= a_base_q + n_q[17:0] - 18'd1; o_rb <= o_base_q; r_rb <= r_base_q;
+                    end
                     if (!legal_q) begin fault <= 1'b1; busy <= 1'b0; st <= E_IDLE; end
                     else st <= E_ROW;
                 end
                 E_ROW: begin
-                    i_sec <= c_rb[17:3]; i_left <= c_le[17:3] - c_rb[17:3]; i_tgl <= 1'b0; i_first <= 1'b1;
+                    if (RSPLIT == 0) begin i_sec <= c_rb[17:3]; i_left <= c_le[17:3] - c_rb[17:3]; i_first <= 1'b1; end
+                    i_tgl <= 1'b0;
                     st <= E_RD;
                 end
                 E_RD: begin
                     i_tgl <= !i_tgl;
                     if (rd_now) begin
-                        i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0;
+                        if (RSPLIT == 0) begin i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0; end
                         if (rd_last) begin cnt <= CW'(8 + XRT); st <= E_DR; end
                     end
                 end
@@ -317,8 +325,11 @@ module ot_hbm_idx_topk_static #(
                 E_NEXT: begin                                             // W_last+1
                     if (c_row + 20'd1 == m_q) begin cnt <= CW'(ACK - 1); st <= E_END; end
                     else begin
-                        c_row <= c_row + 20'd1; c_rb <= c_rb + a_str_q; c_le <= c_le + a_str_q;
-                        o_rb <= o_rb + o_str_q; r_rb <= r_rb + r_str_q; st <= E_ROW;
+                        if (RSPLIT == 0) begin
+                            c_row <= c_row + 20'd1; c_rb <= c_rb + a_str_q; c_le <= c_le + a_str_q;
+                            o_rb <= o_rb + o_str_q; r_rb <= r_rb + r_str_q;
+                        end
+                        st <= E_ROW;
                     end
                 end
                 E_END: if (cnt == CW'(0)) begin                             // W_last + ACK + 1
@@ -328,6 +339,22 @@ module ot_hbm_idx_topk_static #(
                 default: st <= E_IDLE;
             endcase
         end
+    end
+    // RSPLIT 1: the same assignments, by the same state conditions, in a plain block (no reset in their logic)
+    if (RSPLIT != 0) begin : g_rsplit
+        always @(posedge clk)
+            case (st)
+                E_CHK: begin
+                    c_row <= 20'd0; c_rb <= a_base_q; c_le <= a_base_q + n_q[17:0] - 18'd1; o_rb <= o_base_q; r_rb <= r_base_q;
+                end
+                E_ROW: begin i_sec <= c_rb[17:3]; i_left <= c_le[17:3] - c_rb[17:3]; i_first <= 1'b1; end
+                E_RD: if (rd_now) begin i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0; end
+                E_NEXT: if (c_row + 20'd1 != m_q) begin
+                    c_row <= c_row + 20'd1; c_rb <= c_rb + a_str_q; c_le <= c_le + a_str_q;
+                    o_rb <= o_rb + o_str_q; r_rb <= r_rb + r_str_q;
+                end
+                default: ;
+            endcase
     end
 endmodule
 `default_nettype wire

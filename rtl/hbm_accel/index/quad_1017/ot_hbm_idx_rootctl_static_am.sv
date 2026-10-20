@@ -46,7 +46,8 @@
 // ot_rst_copies.tcl reset_relay_split max_loads 32), and every reset flop of the three regions hangs off rst_n directly,
 // so the flow re-points them over the N regional copies (<= 32 loads each, cut by hierarchical name = by region). Release
 // is the landing's 2 edges after the die reset (was landing 2 + relay 3): transaction-level, no client counts from reset
-// (same rule as before). 0 (default) = the ot_rst_relay 3-region form, bit-identical to r3 / g2c / am_pin.
+// (same rule as before); the TOPK engine runs RSPLIT 1 (its non-reset sequencer registers out of the reset block, so the
+// reset copies drive only asynchronous clears). 0 (default) = the ot_rst_relay 3-region form, bit-identical to r3 / g2c / am_pin.
 module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4,
  parameter integer VM_RT = 0, parameter integer CR_RT = 0, parameter integer RSTL = 0)(
  input wire clk,input wire rst_n,
@@ -120,7 +121,7 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   tk_rb_r<=topk_r_base;tk_rs_r<=topk_r_str;
  end
  wire[135:0]topk_rq;wire[2055:0]topk_rr;wire[337:0]tk_cq;wire[1:0]tk_cqs;wire tk_busy,tk_done,tk_fault;
- ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
+ ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.RSPLIT((RSTL != 0) ? 1 : 0)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
   .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
   .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
