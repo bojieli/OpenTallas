@@ -3,15 +3,19 @@ set -euo pipefail
 G=$(cd "${1:?graph output directory}" && pwd)
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
 KIND=${2:-rtl}
-MODELS=${3:-$G/verify_canonical/coupon/library_model_pdk.v}
+MODELS=${3:-$G/verify_canonical/formal_prep/library_model_formal.v}
 python3 - "$MODELS" <<'PY'
 import hashlib,json,sys
 from pathlib import Path
 p=Path(sys.argv[1]);j=json.loads((p.parent/'canonical_model_identity.json').read_text())
 assert j['checks']==544 and j['plain_dff_checks']==128,'canonical truth coupons missing'
-assert hashlib.sha256(p.read_bytes()).hexdigest()==j['normalized_library_sha256'],'model identity changed'
+h=hashlib.sha256(p.read_bytes()).hexdigest()
+if h==j.get('imported_model_sha256'):
+    assert all(v.get('pass_canonical_coupon') for v in j['imported_results'].values()),'exact imported model fails PDK coupon'
+else:
+    assert h==j['normalized_library_sha256'],'model identity changed'
 PY
-O=$G/formal_$KIND
+O=$G/formal_${4:-$KIND}
 mkdir -p "$O"
 cat > "$O/miter.sv" <<'SV'
 module svc7_graph_miter(input clk,rst_n,v,input [31:0] a,b,output bad);
