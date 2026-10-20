@@ -1,0 +1,39 @@
+{
+  "status": "READ_ONLY_PROVENANCE_CHECK",
+  "historical_odb_sha256": "bf3f62e97d0c205104f978aec0c3a9730ed384f938f40ee1850309028be636fd",
+  "fake_libraries": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+      "cell_names": [
+        "DFFHQNH2V2Xx1_ASAP7_75t_R",
+        "DFFHQNH2V2Xx2_ASAP7_75t_R",
+        "DFFHQNH2V2Xx3_ASAP7_75t_R"
+      ],
+      "actual_used_intersection": []
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+      "cell_names": [
+        "DFFHQNV4Xx1_ASAP7_75t_R",
+        "DFFHQNV4Xx2_ASAP7_75t_R",
+        "DFFHQNV4Xx3_ASAP7_75t_R"
+      ],
+      "actual_used_intersection": []
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+      "cell_names": [
+        "DFFHQNV2Xx1_ASAP7_75t_R",
+        "DFFHQNV2Xx2_ASAP7_75t_R",
+        "DFFHQNV2Xx3_ASAP7_75t_R"
+      ],
+      "actual_used_intersection": []
+    }
+  ],
+  "actual_masters": 71,
+  "native_admission": false,
+  "note": "Only exact library-byte hashes and used-master intersections checked; no standard PDK alias or fake clock authority granted."
+}

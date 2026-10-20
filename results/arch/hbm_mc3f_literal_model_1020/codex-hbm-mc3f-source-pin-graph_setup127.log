@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-mc3f-model-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-mc3f-model-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-mc3f-model-1020
+ot-run: ot-epyc9       admits  1018 GB (avail 787, growth 74, headroom 0, waiters 0/0 GB) load 35/128 running 25 disk 105 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-mc3f-model-1020
+ot-run: ot-agidock128  admits    74 GB (avail 65, growth 13, headroom 0, waiters 0/0 GB) load 17/64 running 10 disk 239 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3877806-1792508738 after 0 s
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "openroad": executable file not found in $PATH
+
+Run 'docker run --help' for more information
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3877806-1792508738): exit 127

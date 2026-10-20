@@ -1,0 +1,29 @@
+{
+  "source_commit": "e6dfdb4e2",
+  "analysis_base": "6586b0856e98d05b893e5a46d13a90a84ea12ee5",
+  "files": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.json": "7f2587d84ea5b68fb69cea88bcbfa73428531c199b0f73acbe8778dcef18e640",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.lef": "5d86bdfc3a88e4078b9b7cf4289981ce9a253621d2693bf34fb902a7ff6a6de0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v": "cf9d3ba1b30c0665fcec3957b162aeec38e5db00fa6a97a1f4b178dad54da139",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v": "3089a47a4049e594a4442228b841d15c3cc002777d69afdf9a6d1d7fd051fb10",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_ff.lib": "c851d278b94ec87388b0728b65ec1b104e69be3bebdc2eccab1eaf088c3797a5",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_ss.lib": "53ff5a84bb5152bdb27d01441d56254d18713520e1781e805f9d4bfd9a2b00e8",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_tt.lib": "377809475797959b18e910d6c8a1e83dec27faf9de9eb7ee98bef9d96a9510e9",
+    "physical/ref_tile/hdie_pc_ctrl_mc3c6_l358/pin_plan.json": "456a5879b9a69fba593bdc5fc70eaa2c15c59778be759bdc24aaa77b25f07cab",
+    "physical/ref_tile/hdie_pc_ctrl_mc3c6_l358/spec.json": "bbc07ea0a77d0a33e974611fac4e7052d35344a6eda9c3cbf0d3a72514c0775b",
+    "physical/ref_tile/hdie_pc_ctrl_mc3c6_l531/pin_plan.json": "29e08cccbcc2612d67410131a032252b6f9b774589a05a152dad45027dc7911f",
+    "physical/ref_tile/hdie_pc_ctrl_mc3c6_l531/spec.json": "96a6ff712f095e19f2918add9bbb4616d47a1563f3efb26fa9be9bfeb5722efa",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv": "c2b46b4eec116be86ac2e896ccea4307d9039307184c459cd30c7ab572dc1264",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv": "b8e137f4ca3c50024a0335ee60c3621889ab176241f3dcf536f0deac321db1bc",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "2a5aab1c788838b33ca49129a1d66c6551167cbacdb32aec478d940a277e8caa",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "8239ea01bf31fc2bef634ebc6217e1aacfbfa4563608ff49fc1297cf4b96238e",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv": "9df2dbfca812dee51e8202b0bd900b64478a356fc5836529f919a69f34852a64",
+    "rtl/lib/ot_rst_forest.sv": "b90f4911ebc3c7ca13a0e29825fe89e0f7cddd666158fa3b9a3e1ecbe2a10d4e",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "874e344687486e7cd2ed86a56f10cb5fab9f6647b55e453280f23277e18a9d0d",
+    "tools/hbm_layer_vehicle/mc3f_lattice_kit.py": "44a5d6f0ea0368fd963c577af6b555eb91816bf0923020a5fb4ff80c917ee267"
+  },
+  "status": "FROZEN MODEL INPUTS ONLY, no kit publication"
+}

@@ -1,0 +1,1101 @@
+{
+  "schema": "opentallas.hbm.mc3f-literal-source-model.v1",
+  "status": "MODEL_ONLY_HOLD",
+  "source_commit": "e6dfdb4e2",
+  "analysis_base": "6586b0856",
+  "macro": {
+    "size_um": [
+      33.696,
+      27.54
+    ],
+    "nonPG_pins": 209,
+    "faces": {
+      "W": 105,
+      "E": 104,
+      "N": 0,
+      "S": 0
+    },
+    "minimum_face_pin_pitch_um": {
+      "W": 0.19199999999999662,
+      "E": 0.19199999999999662,
+      "N": null,
+      "S": null
+    },
+    "local_pin_density_per_um": 5.208333333333425,
+    "literal_pitch_um": 86.4,
+    "rejected43_2_gaps_um": [
+      9.504000000000005,
+      15.660000000000004
+    ],
+    "legal86_4_gaps_um": [
+      52.70400000000001,
+      58.86000000000001
+    ],
+    "note": "R0 literal43.2origins; W/E are not bare. Off-lattice27.552 abutment is not admitted."
+  },
+  "layouts": [
+    {
+      "name": "l531",
+      "geometry_status": "PASS_GEOMETRY_ONLY",
+      "approval_errors": [
+        "missing coordinator approval/reason"
+      ],
+      "outline_um": [
+        531.36,
+        354.24
+      ],
+      "area_um2": 188228.9664,
+      "macro_count": 23,
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            388.8,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            388.8,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            475.2,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            475.2,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            388.8,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            475.2,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.controller.u_queue.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_pending_identity.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            388.8,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_identity.M[0].P.u_m"
+        }
+      ],
+      "macro_pin_track_checks": 4807,
+      "macro_offtrack": 0,
+      "planned_boundary_pins": 1229,
+      "planned_boundary_point_offtrack": [],
+      "fullwidth_band_um": [
+        2.16,
+        175.23,
+        529.2,
+        198.18
+      ],
+      "band_area_um2": 12095.568000000008,
+      "source_std_area_inherited_um2": 5871.6867600000005,
+      "inherited_source_density": 0.48544117647058793,
+      "max_source_pin_clock_exception_area_before_density40_um2": 1033.4595599999966,
+      "source_ordinary_area_from_native": 5397.1806599988,
+      "source_ordinary_density": 0.44621142719372886,
+      "ordinary_FF_to_FF_endpoint_rectangle_bound_um": 549.99,
+      "source_family_anchor_model": {
+        "RESPread_to_KRhead_N14": {
+          "edges": 256,
+          "max_bbox_L1_um": 311.887,
+          "over405": 0
+        },
+        "WPAYread_to_PHYcolFF_S14": {
+          "edges": 256,
+          "max_bbox_L1_um": 332.455,
+          "over405": 0
+        },
+        "RREG_S14_to_RESPwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 63.847000000000016,
+          "over405": 0
+        },
+        "Kcapture_N14_to_regionalKring_band": {
+          "edges": 256,
+          "max_bbox_L1_um": 166.63300000000004,
+          "over405": 0
+        },
+        "regionalKring_band_to_WPAYwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 153.738,
+          "over405": 0
+        },
+        "HEADtag_to_PENDINGwrite": {
+          "edges": 84,
+          "max_bbox_L1_um": 266.928,
+          "over405": 0
+        },
+        "HEADstrb_to_PHYstrbFF_S14": {
+          "edges": 128,
+          "max_bbox_L1_um": 401.95900000000006,
+          "over405": 0
+        },
+        "POSTread_to_centralPostREG_band": {
+          "edges": 316,
+          "max_bbox_L1_um": 277.524,
+          "over405": 0
+        },
+        "PENDINGread_to_RIDwrite": {
+          "edges": 21,
+          "max_bbox_L1_um": 100.27200000000005,
+          "over405": 0
+        },
+        "RIDread_to_KRidentityhead_N14": {
+          "edges": 21,
+          "max_bbox_L1_um": 271.759,
+          "over405": 0
+        }
+      },
+      "anchor_scope": "Logical stage endpoint bboxes using actual macro pin RECTs and candidate14um face landing centres/role-specific band anchors. Not actual FF placement, full transitive graph or area packing.",
+      "actual_native_bboxes": null,
+      "actual_region_group_membership": null,
+      "actual_GPL_consumption": null,
+      "actual_full_source405": "NOT RUN",
+      "nativePG": "NOT RUN",
+      "clockspread": "NOT RUN",
+      "source_pin_placement_exceptions_approved": []
+    },
+    {
+      "name": "l358",
+      "geometry_status": "PASS_GEOMETRY_ONLY",
+      "approval_errors": [
+        "missing coordinator approval/reason"
+      ],
+      "outline_um": [
+        358.56,
+        527.04
+      ],
+      "area_um2": 188975.4624,
+      "macro_count": 23,
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            129.6
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.4,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.controller.u_queue.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.6,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_pending_identity.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            302.4
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_identity.M[0].P.u_m"
+        }
+      ],
+      "macro_pin_track_checks": 4807,
+      "macro_offtrack": 0,
+      "planned_boundary_pins": 1229,
+      "planned_boundary_point_offtrack": [],
+      "fullwidth_band_um": [
+        2.16,
+        255.15,
+        356.4,
+        289.17
+      ],
+      "band_area_um2": 12051.244800000004,
+      "source_std_area_inherited_um2": 5871.6867600000005,
+      "inherited_source_density": 0.487226577622919,
+      "max_source_pin_clock_exception_area_before_density40_um2": 1051.188839999999,
+      "source_ordinary_area_from_native": 5397.1806599988,
+      "source_ordinary_density": 0.44785254548964093,
+      "ordinary_FF_to_FF_endpoint_rectangle_bound_um": 388.26,
+      "source_family_anchor_model": {
+        "RESPread_to_KRhead_N14": {
+          "edges": 256,
+          "max_bbox_L1_um": 484.68699999999995,
+          "over405": 256
+        },
+        "WPAYread_to_PHYcolFF_S14": {
+          "edges": 256,
+          "max_bbox_L1_um": 505.255,
+          "over405": 256
+        },
+        "RREG_S14_to_RESPwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 63.847000000000016,
+          "over405": 0
+        },
+        "Kcapture_N14_to_regionalKring_band": {
+          "edges": 256,
+          "max_bbox_L1_um": 253.97799999999995,
+          "over405": 0
+        },
+        "regionalKring_band_to_WPAYwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 241.08299999999997,
+          "over405": 0
+        },
+        "HEADtag_to_PENDINGwrite": {
+          "edges": 84,
+          "max_bbox_L1_um": 251.56800000000007,
+          "over405": 0
+        },
+        "HEADstrb_to_PHYstrbFF_S14": {
+          "edges": 128,
+          "max_bbox_L1_um": 514.471,
+          "over405": 128
+        },
+        "POSTread_to_centralPostREG_band": {
+          "edges": 316,
+          "max_bbox_L1_um": 276.579,
+          "over405": 0
+        },
+        "PENDINGread_to_RIDwrite": {
+          "edges": 21,
+          "max_bbox_L1_um": 100.27200000000002,
+          "over405": 0
+        },
+        "RIDread_to_KRidentityhead_N14": {
+          "edges": 21,
+          "max_bbox_L1_um": 245.647,
+          "over405": 0
+        }
+      },
+      "anchor_scope": "Logical stage endpoint bboxes using actual macro pin RECTs and candidate14um face landing centres/role-specific band anchors. Not actual FF placement, full transitive graph or area packing.",
+      "actual_native_bboxes": null,
+      "actual_region_group_membership": null,
+      "actual_GPL_consumption": null,
+      "actual_full_source405": "NOT RUN",
+      "nativePG": "NOT RUN",
+      "clockspread": "NOT RUN",
+      "source_pin_placement_exceptions_approved": []
+    },
+    {
+      "name": "l358_rolefix_MODEL",
+      "geometry_status": "PASS_GEOMETRY_ONLY",
+      "approval_errors": [
+        "missing coordinator approval/reason"
+      ],
+      "outline_um": [
+        358.56,
+        527.04
+      ],
+      "area_um2": 188975.4624,
+      "macro_count": 23,
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            129.60000000000002
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            302.40000000000003
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[0].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            129.60000000000002
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            302.40000000000003
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[1].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            129.60000000000002
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            302.40000000000003
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[2].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[2].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.40000000000003,
+            129.60000000000002
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.40000000000003,
+            43.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.40000000000003,
+            475.2
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_post.M[1].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.40000000000003,
+            302.40000000000003
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.g_wpay.u_write_payload.M[3].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            302.40000000000003,
+            216.0
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.METADATA[3].u_head.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            43.2,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.controller.u_queue.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            129.60000000000002,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_pending_identity.M[0].P.u_m"
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+          "count": 1,
+          "at": [
+            216.0,
+            388.8
+          ],
+          "at_exact": true,
+          "orient": "R0",
+          "inst": "u_native.u_response_identity.M[0].P.u_m"
+        }
+      ],
+      "macro_pin_track_checks": 4807,
+      "macro_offtrack": 0,
+      "planned_boundary_pins": 1229,
+      "planned_boundary_point_offtrack": [],
+      "fullwidth_band_um": [
+        2.16,
+        255.15,
+        356.4,
+        289.17
+      ],
+      "band_area_um2": 12051.244800000004,
+      "source_std_area_inherited_um2": 5871.6867600000005,
+      "inherited_source_density": 0.487226577622919,
+      "max_source_pin_clock_exception_area_before_density40_um2": 1051.188839999999,
+      "source_ordinary_area_from_native": 5397.1806599988,
+      "source_ordinary_density": 0.44785254548964093,
+      "ordinary_FF_to_FF_endpoint_rectangle_bound_um": 388.26,
+      "source_family_anchor_model": {
+        "RESPread_to_KRhead_N14": {
+          "edges": 256,
+          "max_bbox_L1_um": 398.2869999999999,
+          "over405": 0
+        },
+        "WPAYread_to_PHYcolFF_S14": {
+          "edges": 256,
+          "max_bbox_L1_um": 332.45500000000004,
+          "over405": 0
+        },
+        "RREG_S14_to_RESPwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 150.247,
+          "over405": 0
+        },
+        "Kcapture_N14_to_regionalKring_band": {
+          "edges": 256,
+          "max_bbox_L1_um": 253.978,
+          "over405": 0
+        },
+        "regionalKring_band_to_WPAYwrite": {
+          "edges": 256,
+          "max_bbox_L1_um": 68.28300000000002,
+          "over405": 0
+        },
+        "HEADtag_to_PENDINGwrite": {
+          "edges": 84,
+          "max_bbox_L1_um": 353.3280000000001,
+          "over405": 0
+        },
+        "HEADstrb_to_PHYstrbFF_S14": {
+          "edges": 128,
+          "max_bbox_L1_um": 341.67100000000005,
+          "over405": 0
+        },
+        "POSTread_to_centralPostREG_band": {
+          "edges": 316,
+          "max_bbox_L1_um": 362.97900000000004,
+          "over405": 0
+        },
+        "PENDINGread_to_RIDwrite": {
+          "edges": 21,
+          "max_bbox_L1_um": 100.27199999999999,
+          "over405": 0
+        },
+        "RIDread_to_KRidentityhead_N14": {
+          "edges": 21,
+          "max_bbox_L1_um": 159.24699999999996,
+          "over405": 0
+        }
+      },
+      "anchor_scope": "Logical stage endpoint bboxes using actual macro pin RECTs and candidate14um face landing centres/role-specific band anchors. Not actual FF placement, full transitive graph or area packing.",
+      "actual_native_bboxes": null,
+      "actual_region_group_membership": null,
+      "actual_GPL_consumption": null,
+      "actual_full_source405": "NOT RUN",
+      "nativePG": "NOT RUN",
+      "clockspread": "NOT RUN",
+      "source_pin_placement_exceptions_approved": []
+    }
+  ],
+  "macro_inventory": {
+    "raw_source_instances": 27,
+    "expected_live_after_optimization": 23,
+    "eliminated_candidates": [
+      "u_native.METADATA[0].u_head.M[1].P.u_m",
+      "u_native.METADATA[1].u_head.M[1].P.u_m",
+      "u_native.METADATA[2].u_head.M[1].P.u_m",
+      "u_native.METADATA[3].u_head.M[1].P.u_m"
+    ],
+    "source_reason": "u_headW79 but only mh[63:0]/queue_head consumed; post uses all79. Require actual mapped23inventory, not silent sourceW64 reinterpretation."
+  },
+  "band_consumption": {
+    "status": "NOT RUN",
+    "current_hook": "physical/hbm_bw_face_1019/pre_gpl.tcl has pin split/iohold/ioflop hooks and explicitly no fence",
+    "mechanism": "One INCLUSIVE dbRegion full-width band plus dbGroup constructed FROM that region; ordinary instances in BOTH exact objects",
+    "primary_repo_example": "physical/hbm_accel_die_views/stations/bench/stn_meso_fence.tcl:157",
+    "members": "ALL actual standard cells incl generated/repair/data reset cells minus explicitly approved exact native clock/pin inventory; never instance-prefix classification",
+    "births": "Resync/revalidate after IO, GPL repair, CTS and GRT; unknown/mixed clock-data cell remains ordinary or fails. PG binding before DNT required.",
+    "needed_receipts": [
+      "native cell/group/region names and source SHA inventory",
+      "actual GPL log named group consumed and all native bboxes inband",
+      "all ITerm/BTerm/net/DNT/PG graph identity",
+      "exact actual legal-row union covers fullband",
+      "placed40..60%density after subtracting exact exceptions",
+      "full transitive source405 incl macros/primarypins/reset and transparent cells",
+      "real PDK clock and actual macro clock role/phase binding; no clock-data name exclusion"
+    ]
+  }
+}
