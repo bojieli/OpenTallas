@@ -142,14 +142,19 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
     wire retire_wrap=(|(rp&lm)) || rp[NSLOT-1];
-    wire [SI-1:0] rpb_next=!rr[RPTR_BASE+6*SLOT_RG] ? SI'(0) :
-        !radv ? rpb : retire_wrap ? SI'(0) : rpb+1'b1;
+    // HWIN21cb: SRAM read address after the next edge = inc(next pointer) under the NEXT limit (lm <= decode(lw)),
+    // built from registered state; the advance compare only selects between two precomputed candidates.
+    wire [SI-1:0] rpb_inc1=rpb+1'b1;   // wraps only where rra_* select 0
+    wire [SI-1:0] rra_hold=(rpb==lw || rpb==SI'(NSLOT-1)) ? SI'(0) : rpb_inc1;
+    wire [SI-1:0] rra_zero=(lw==SI'(0)) ? SI'(0) : SI'(1);
+    wire [SI-1:0] rra_adv=retire_wrap ? rra_zero : (rpb_inc1==lw || rpb_inc1==SI'(NSLOT-1)) ? SI'(0) : rpb_inc1+1'b1;
+    wire [SI-1:0] rra_d=!rr[RPTR_BASE+6*SLOT_RG] ? rra_zero : radv ? rra_adv : rra_hold;
     generate if(EARLY_HEAD_CAPTURE==0) begin:g_retire_legacy
     dsdv_mu_hwin_capture_1019_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
     end else begin:g_retire_early
-    dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
-        .we(rec_q),.wa(ssqb),.wd(tsq),.ra_current(rpb),.ra_next(rpb_next),.q(h_rts));
+    dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(32),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
+        .we(rec_q),.wa(ssqb),.wd(tsq),.ra_current(rpb),.ra_d(rra_d),.load_d(radv),.q(h_rts));
     end endgenerate
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
@@ -412,8 +417,13 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         wire [62:0] head;
         wire [31:0] due_at_start=ts_event[se]+{11'd0,eD[se]};
         wire event_wrap=(|(pe_r&lm_event[se])) || pe_r[NSLOT-1];
-        wire [SI-1:0] pb_next=!rr[se+1] ? SI'(0) : !adv[se] ? pb_r :
-            event_wrap ? SI'(0) : pb_r+1'b1;
+        // HWIN21cb: registered read address precompute (see retire): inc(next pointer) under the next limit
+        // lm_event <= decode(lw_event); adv only selects between two candidates computed from registers.
+        wire [SI-1:0] pb_inc1=pb_r+1'b1;   // wraps only where ra_* select 0
+        wire [SI-1:0] ra_hold=(pb_r==lw_event[se] || pb_r==SI'(NSLOT-1)) ? SI'(0) : pb_inc1;
+        wire [SI-1:0] ra_zero=(lw_event[se]==SI'(0)) ? SI'(0) : SI'(1);
+        wire [SI-1:0] ra_adv=event_wrap ? ra_zero : (pb_inc1==lw_event[se] || pb_inc1==SI'(NSLOT-1)) ? SI'(0) : pb_inc1+1'b1;
+        wire [SI-1:0] ra_after=!rr[se+1] ? ra_zero : adv[se] ? ra_adv : ra_hold;
         if(EARLY_HEAD_CAPTURE==0) begin:g_legacy
         dsdv_mu_hwin_capture_1019_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
@@ -421,10 +431,10 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             .we(attr_boot[se]),
             .wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra(pbi[se]),.q(h_at[se]));
         end else begin:g_early
-        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
-            .wa(ssqb),.wd({due_at_start,spq,suq}),.ra_current(pbi[se]),.ra_next(pb_next),.q(head));
-        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
-            .we(attr_boot[se]),.wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra_current(pbi[se]),.ra_next(pb_next),.q(h_at[se]));
+        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(63),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
+            .wa(ssqb),.wd({due_at_start,spq,suq}),.ra_current(pbi[se]),.ra_d(ra_after),.load_d(adv[se]),.q(head));
+        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(2),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
+            .we(attr_boot[se]),.wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra_current(pbi[se]),.ra_d(ra_after),.load_d(adv[se]),.q(h_at[se]));
         end
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
