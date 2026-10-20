@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_reduce_lane",
+ "enable": false,
+ "reason": "every lane input lands on a lane flop within <= 3 levels (state[t] write enable decode of load_tag / wb_tag, acc / operand / pub read registers, add-lane ap/bp/vp pin registers) and every output is flop Q (pub_a / pub_b registers, add valid pipe); a synthesis pin stage would shift the lane against the control's 8-edge writeback pipe (unbenched)"
+}

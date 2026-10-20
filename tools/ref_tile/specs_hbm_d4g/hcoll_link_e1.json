@@ -1,0 +1,167 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "children": [],
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "name": "hcoll_link_e1",
+ "top": "ot_hgi_coll_link_e1",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 345.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[0].u_store.u_native.u_sram",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[1].u_store.u_native.u_sram",
+   "at": [
+    259.2,
+    86.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[2].u_store.u_native.u_sram",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[3].u_store.u_native.u_sram",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "S": [
+   "phy_up",
+   "tx_pin_v",
+   "tx_pin_flit",
+   "clk",
+   "rst_n",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "retry_requested"
+  ],
+  "W": [
+   "epoch_begin",
+   "epoch_new",
+   "held_epoch",
+   "wr_v",
+   "wr_observed_v",
+   "wr_seq",
+   "wr_flit",
+   "rd_v",
+   "rd_seq",
+   "rx_expect_v",
+   "rx_expect_seq"
+  ],
+  "E": [
+   "rx_v",
+   "rx_flit",
+   "epoch_abort",
+   "fault_cause"
+  ],
+  "N": []
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "peak_ram_gb": 48
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_static_pinreg_ctl registers every published pin (controller register Q) and lands every input on a controller face flop before any check (rail header); a synthesis pin stage would add an unbenched edge to the static link calendar"
+ },
+ "structural_change": "COLLQ3 10-19 NEW hard leaf: the q2/q3 COLL parents' soft link_e x2 (13.3k soft flops + 8 raw SRAMs on the sw root; 5-bit {5{ck_sw}} clock pin read as 'no region' by the gate link graph) -> ot_hgi_coll_link_e1 (one clock pin, its 4 retry-store SRAMs inside)",
+ "job": {
+  "owner": "Claude:HBM-ELEMOWN3/COLLQ3",
+  "branch": "claude/collq3-safe-1019",
+  "tag": "safe",
+  "purpose": "HBM COLL rail leaf for the SAFE q2/q3 COLL quadrant parents (lp_ars); gate first, route after checklist review",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/landed_parent_1018/collq"
+  ],
+  "benches": [
+   {
+    "name": "q3_lpf_ars_eq",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/eq eq",
+    "expect": "pass",
+    "pass_regex": "EQ PASS",
+    "min_count_regex": "LPF_EQ PASS compared=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_link_e1/views",
+  "record_to": "results/rtl/ref_tile/hcoll_link_e1"
+ }
+}

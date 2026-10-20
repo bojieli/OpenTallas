@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_link_e1",
+ "enable": false,
+ "reason": "ot_hgi_coll_static_pinreg_ctl registers every published pin (controller register Q) and lands every input on a controller face flop before any check (rail header); a synthesis pin stage would add an unbenched edge to the static link calendar"
+}
