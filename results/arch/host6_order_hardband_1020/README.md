@@ -42,17 +42,34 @@ Neither metric is a connected-stage result. The signed coordinator approval
 remains MODEL/fill only. Updated own geometry fields explicitly separate the
 metrics and retain actual full-combinational-stage L1<=405 as OPEN.
 
-Existing n32a/b use the ignored ORFS POST_FLOORPLAN_TCL mechanism; their free
-placement is a separate diagnostic. a completed CTS with pin-flop TT/FF
-spread23.8/23.1ps, but failed GRT after hold repair with DRT-9419 and20273 illegal
-cells despite zero reported overflow. c/d failed before GPL. Their raw gate
-JSONs are retained. b was still live at collection. No existing job is duplicated
-or relabelled as a hard-band success.
+Completed-log correction07:44: a/b **did execute** the original row-band
+hook. The earlier observation was made before the floorplan script completed;
+inferring that ORFS ignored the variable was incorrect. Completed b floorplan
+log lines900-901 explicitly source std_band.tcl and report312 retained rows,
+792 removed, area28749.4272um2. The existing a/b audits are therefore actual
+row-pruned band diagnostics, not free-placement experiments. This corrects the
+historical lane note and the earlier text in this packet; raw history remains
+preserved. New e/f strict-fence proofs remain valid but those gates stay on HOLD
+and may be unnecessary if the original b finishes the required final audits.
+
+a completed CTS with pin-flop TT/FFspread23.8/23.1ps but failed GRT after hold
+repair with DRT-9419 and20273 illegal cells despite zero reported overflow.
+b completed WARN/0FAIL with GRT0overflow, TT/FFpinspread20.6/19.8ps, measured
+band area15115.509um2/density52.58%/outside0. Its diagnostic TTsetupWNS is-64.6ps
+and hold+32.8ps. Full-source final-stage reach, final-native, PG and registered
+boundary audits remain OPEN, so no submit/physical qualification is claimed.
+c/d failed before GPL as described above. Raw gate JSONs are retained.
 
 `full_stage/` stages a private reuse of PEER/GRP guarded full sequential-stage
-identity traversal on immutable actual a/b4_1CTS snapshots. It binds actual
+identity traversal on immutable actual row-pruned-band a/b4_1CTS snapshots. It binds actual
 source, spec, Liberty, parser and macro behavioral identities, including six
 registered-read SRAMs. Standard-cell endpoint coordinates use cell centers;
 macro pins use actual pin XY. That approximation remains a limitation near the
 405um threshold. Those audits are still running; no result is inferred here.
 No n32e/f gate or physical qualification is claimed by this packet.
+
+The in-progress extractor's descriptive scope string still says FREE-PLACEMENT;
+that string predates the completed-log correction. Its exact executed source is
+preserved unchanged for hash correspondence. The completed row-hook log and
+this erratum correct the description; graph, coordinates and reach arithmetic
+are unaffected.
