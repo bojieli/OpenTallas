@@ -151,6 +151,7 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     reg              s9_fp4;
     reg signed [10:0] s9_ev [0:31];
     reg [31:0]       s9_fp4e;
+    (* keep = "true" *) reg [31:0] s9_fp4r;   // s4 r2: rs_of reads its own fp4 copy (census r2: s9_fp4e 34)
     reg [23:0]       s9_sig [0:31];
     reg [31:0]       s9_sgn;
     always @(posedge clk or negedge rst_n) if (!rst_n) s9_v <= 1'b0; else s9_v <= s8_v;
@@ -161,7 +162,7 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
             fld = x8[32*i + 23 +: 8];
             //: a subnormal element has exponent -126 and no leading one
             s9_ev[i] <= ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_ec[i];
-            s9_fp4e[i] <= s8_fp4c[i];
+            s9_fp4e[i] <= s8_fp4c[i]; s9_fp4r[i] <= s8_fp4c[i];
             s9_sig[i] <= {(fld != 8'd0), x8[32*i +: 23]};
             s9_sgn[i] <= x8[32*i + 31] && (x8[32*i +: 31] != 31'd0);
         end
@@ -184,7 +185,7 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
         end
     endfunction
     generate for (g = 0; g < 32; g = g + 1) begin : g_s10
-        wire [4:0] rsd = rs_of(s9_ev[g], s9_fp4e[g]);
+        wire [4:0] rsd = rs_of(s9_ev[g], s9_fp4r[g]);
 `ifdef OT_HNX_AQ_MUT_RS
         wire [4:0] rsm = rsd ^ 5'd1;
         wire [6:0] ohm = (rsm >= 5'd20 && rsm <= 5'd26) ? 7'(7'd1 << (rsm - 5'd20)) : 7'd0;
