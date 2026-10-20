@@ -1,0 +1,6 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{'schema': 'opentallas.placed_sequential_reach.v1', 'scope': 'conservative source to capture Manhattan displacement through all combinational pins, buffers transparent; SRAM and DFF are sequential cuts; PG/CLOCK excluded', 'odb_sha256': '5cbbd59fef6597dff085ea026d2745a01363ade482eddcb13ccfdd629be4e0ab', 'sequential_masters': {'DFFASRHQNx1_ASAP7_75t_R': 226, 'DFFHQNx1_ASAP7_75t_R': 3680, 'DFFHQNx2_ASAP7_75t_R': 86, 'DFFHQNx3_ASAP7_75t_R': 8, 'ot_sram_1r1w_32x128_m1_p192_rc': 2, 'ot_sram_1r1w_128x256_m1_r2c2_p192_mir': 2}, 'checked_capture_pins': 5544, 'max_um': 468.538, 'over405_count': 69, 'updates': 45621}
