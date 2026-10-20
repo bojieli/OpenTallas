@@ -1,0 +1,12 @@
+XSL_MISMATCH xs edge 451 ref edge 130 valid 1/1 cc 0035/0035
+XSL_MISMATCH xs edge 452 ref edge 131 valid 1/0 cc 0034/0034
+XSL_MISMATCH xs edge 453 ref edge 132 valid 1/0 cc 0034/0034
+XSL_MISMATCH xs edge 454 ref edge 133 valid 1/0 cc 0034/0034
+XSL_MISMATCH xs edge 455 ref edge 134 valid 1/0 cc 0034/0034
+XSL_MISMATCH xs edge 456 ref edge 135 valid 1/0 cc 0034/0034
+RET 726 078e0de7000004009
+RET 729 179761b1400000009
+RET 734 07695f6000000c009
+RET 736 0784b93a000008009
+XSL_LOCKSTEP D=321 compared=1014 mismatch=884 valid_ref=2 valid_xs=885 first_ref=67 first_xs=388 xs_fault_at=-1
+END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0

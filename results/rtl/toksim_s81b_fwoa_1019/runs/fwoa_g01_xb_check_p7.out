@@ -1,0 +1,9 @@
+COVERAGE row 0 segments [2] of 4
+COVERAGE row 1 segments [2] of 4
+COVERAGE row 2 segments [2] of 4
+COVERAGE row 3 segments [2] of 4
+COVERAGE row 4 segments [2] of 4
+COVERAGE row 5 segments [2] of 4
+LOCKSTEP D=321 compared=1013 mismatch=883 valid_ref=2 valid_xs=884 first_ref=67 first_xs=388 xs_fault_at=-1
+XSL_MISMATCH xs edge 451 ref edge 130 valid 1/1 cc 001d/001d
+XS_CAL_CHECK FAIL p7 attn.wo_a phase 7 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11

@@ -1,0 +1,99 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: ot-epyc9       admits  1267 GB (avail 937, growth 28, headroom 0, waiters 0/0 GB) load 22/128 running 11 disk 662 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fwoa
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1067944-1792470434 after 0 s
+TOPO_RELEASE_VS_MAIN col_h9 differs_in []
+TOPO_RELEASE_VS_MAIN col_h10 differs_in []
+XS_FRAME u_f_0L00 phases 17 max fill 768/8192 faults 0
+MASTER col_h9_l4 lk 2925
+PHASES 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+XS_PLACE_GEN u_f_0L00 op attn.wo_b phase 1/17 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 981 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_b phase 2/17 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 981 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_b phase 3/17 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 981 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_b phase 4/17 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 981 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 5/17 mat wo_a BF16 rows 6 seg 0/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 6/17 mat wo_a BF16 rows 6 seg 1/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 7/17 mat wo_a BF16 rows 6 seg 2/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 8/17 mat wo_a BF16 rows 6 seg 3/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 9/17 mat wo_a BF16 rows 6 seg 0/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 10/17 mat wo_a BF16 rows 6 seg 1/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 11/17 mat wo_a BF16 rows 6 seg 2/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 12/17 mat wo_a BF16 rows 6 seg 3/4 pairs [4, 8, 13] faults 0 ret_words 6 calendar measured_shape shape col_h9|E5|bseg1024 T 1021 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 13/17 mat wo_a BF16 rows 4 seg 0/4 pairs [4, 8] faults 0 ret_words 4 calendar measured_shape shape col_h9|E5|bseg1024 T 1015 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 14/17 mat wo_a BF16 rows 4 seg 1/4 pairs [4, 8] faults 0 ret_words 4 calendar measured_shape shape col_h9|E5|bseg1024 T 1015 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 15/17 mat wo_a BF16 rows 4 seg 2/4 pairs [4, 8] faults 0 ret_words 4 calendar measured_shape shape col_h9|E5|bseg1024 T 1015 mutant None
+XS_PLACE_GEN u_f_0L00 op attn.wo_a phase 16/17 mat wo_a BF16 rows 4 seg 3/4 pairs [4, 8] faults 0 ret_words 4 calendar measured_shape shape col_h9|E5|bseg1024 T 1015 mutant None
+tie rc=1 KeyError: 'attn.wo_a'
+XS_RUN p1 rc=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0
+XS_RUN p2 rc=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0
+XS_RUN p3 rc=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0
+XS_RUN p4 rc=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0
+XS_RUN p5 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p6 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p7 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p8 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p9 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p10 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p11 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p12 rc=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0
+XS_RUN p13 rc=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0
+XS_RUN p14 rc=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0
+XS_RUN p15 rc=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0
+XS_RUN p16 rc=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0
+XS_BENCH_DONE
+FB_CHECK p1 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 1 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0
+FB_CHECK p2 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 2 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0
+FB_CHECK p3 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0
+FB_CHECK p4 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0
+FB_CHECK p5 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 5 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p6 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 6 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p7 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 7 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p8 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 8 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p9 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 9 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p10 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 10 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p11 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 11 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p12 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 12 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0
+FB_CHECK p13 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0
+FB_CHECK p14 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0
+FB_CHECK p15 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 15 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0
+FB_CHECK p16 rc=0 XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0
+XSL_RUN p1 rc=0 XSL_LOCKSTEP D=321 compared=980 mismatch=0 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p2 rc=0 XSL_LOCKSTEP D=321 compared=980 mismatch=0 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p3 rc=0 XSL_LOCKSTEP D=321 compared=980 mismatch=0 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p4 rc=0 XSL_LOCKSTEP D=321 compared=980 mismatch=0 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p5 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p6 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p7 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p8 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p9 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p10 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p11 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p12 rc=0 XSL_LOCKSTEP D=321 compared=1020 mismatch=890 valid_ref=2 valid_xs=891 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p13 rc=0 XSL_LOCKSTEP D=321 compared=1014 mismatch=884 valid_ref=2 valid_xs=885 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p14 rc=0 XSL_LOCKSTEP D=321 compared=1014 mismatch=884 valid_ref=2 valid_xs=885 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p15 rc=0 XSL_LOCKSTEP D=321 compared=1014 mismatch=884 valid_ref=2 valid_xs=885 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0
+XSL_RUN p16 rc=0 XSL_LOCKSTEP D=321 compared=1014 mismatch=884 valid_ref=2 valid_xs=885 first_ref=67 first_xs=388 xs_fault_at=-1 END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0
+XSL_BENCH_DONE
+XB_CHECK p1 rc=0 XS_CAL_CHECK PASS p1 attn.wo_b phase 1 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0
+XB_CHECK p2 rc=0 XS_CAL_CHECK PASS p2 attn.wo_b phase 2 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0
+XB_CHECK p3 rc=0 XS_CAL_CHECK PASS p3 attn.wo_b phase 3 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0
+XB_CHECK p4 rc=0 XS_CAL_CHECK PASS p4 attn.wo_b phase 4 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0
+XB_CHECK p5 rc=1 XS_CAL_CHECK FAIL p5 attn.wo_a phase 5 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p6 rc=1 XS_CAL_CHECK FAIL p6 attn.wo_a phase 6 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p7 rc=1 XS_CAL_CHECK FAIL p7 attn.wo_a phase 7 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p8 rc=1 XS_CAL_CHECK FAIL p8 attn.wo_a phase 8 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p9 rc=1 XS_CAL_CHECK FAIL p9 attn.wo_a phase 9 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p10 rc=1 XS_CAL_CHECK FAIL p10 attn.wo_a phase 10 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p11 rc=1 XS_CAL_CHECK FAIL p11 attn.wo_a phase 11 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p12 rc=1 XS_CAL_CHECK FAIL p12 attn.wo_a phase 12 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11
+XB_CHECK p13 rc=1 XS_CAL_CHECK FAIL p13 attn.wo_a phase 13 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9
+XB_CHECK p14 rc=1 XS_CAL_CHECK FAIL p14 attn.wo_a phase 14 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9
+XB_CHECK p15 rc=1 XS_CAL_CHECK FAIL p15 attn.wo_a phase 15 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9
+XB_CHECK p16 rc=1 XS_CAL_CHECK FAIL p16 attn.wo_a phase 16 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9
+FWOA_DONE g00
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1067944-1792470434): exit 0

@@ -1,0 +1,788 @@
+{
+ "g00": {
+  "frame": "u_f_0L00",
+  "master": "col_h9_l4",
+  "lk": 2925,
+  "phases": [
+   {
+    "phase": 1,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 368,
+     "last_ret": 381,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 1 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0",
+     "end": "END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0"
+    },
+    "start_retire": 314,
+    "xb": {
+     "words": 10,
+     "first_ret": 689,
+     "last_ret": 702,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p1 attn.wo_b phase 1 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 2,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 368,
+     "last_ret": 381,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 2 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0",
+     "end": "END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0"
+    },
+    "start_retire": 314,
+    "xb": {
+     "words": 10,
+     "first_ret": 689,
+     "last_ret": 702,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p2 attn.wo_b phase 2 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 3,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 368,
+     "last_ret": 381,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0",
+     "end": "END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0"
+    },
+    "start_retire": 314,
+    "xb": {
+     "words": 10,
+     "first_ret": 689,
+     "last_ret": 702,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p3 attn.wo_b phase 3 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 4,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 368,
+     "last_ret": 381,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1044 ret_words=10 xo_checked=1042 fault=0",
+     "end": "END edges=1044 ret_words=10 xo_checked=1042 fault=0 spine_fault=0"
+    },
+    "start_retire": 314,
+    "xb": {
+     "words": 10,
+     "first_ret": 689,
+     "last_ret": 702,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p4 attn.wo_b phase 4 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 980, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1302 ret_words=10 xo_checked=1300 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 5,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 5 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p5 attn.wo_a phase 5 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 6,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 6 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p6 attn.wo_a phase 6 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 7,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 7 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p7 attn.wo_a phase 7 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 8,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 8 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p8 attn.wo_a phase 8 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 9,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 9 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p9 attn.wo_a phase 9 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 10,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 10 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p10 attn.wo_a phase 10 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 11,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 11 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p11 attn.wo_a phase 11 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 12,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 405,
+     "last_ret": 421,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 12 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1084 ret_words=6 xo_checked=1082 fault=0",
+     "end": "END edges=1084 ret_words=6 xo_checked=1082 fault=0 spine_fault=0"
+    },
+    "start_retire": 354,
+    "xb": {
+     "words": 6,
+     "first_ret": 726,
+     "last_ret": 742,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p12 attn.wo_a phase 12 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1020, 'mismatch': 890, 'valid_ref': 2, 'valid_xs': 891, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1342 ret_words=6 xo_checked=1340 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 13,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 405,
+     "last_ret": 415,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0",
+     "end": "END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0"
+    },
+    "start_retire": 348,
+    "xb": {
+     "words": 4,
+     "first_ret": 726,
+     "last_ret": 736,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p13 attn.wo_a phase 13 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 14,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 405,
+     "last_ret": 415,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0",
+     "end": "END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0"
+    },
+    "start_retire": 348,
+    "xb": {
+     "words": 4,
+     "first_ret": 726,
+     "last_ret": 736,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p14 attn.wo_a phase 14 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 15,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 405,
+     "last_ret": 415,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 15 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0",
+     "end": "END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0"
+    },
+    "start_retire": 348,
+    "xb": {
+     "words": 4,
+     "first_ret": 726,
+     "last_ret": 736,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p15 attn.wo_a phase 15 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 16,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 405,
+     "last_ret": 415,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L00 attn.wo_a phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1078 ret_words=4 xo_checked=1076 fault=0",
+     "end": "END edges=1078 ret_words=4 xo_checked=1076 fault=0 spine_fault=0"
+    },
+    "start_retire": 348,
+    "xb": {
+     "words": 4,
+     "first_ret": 726,
+     "last_ret": 736,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p16 attn.wo_a phase 16 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1014, 'mismatch': 884, 'valid_ref': 2, 'valid_xs': 885, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1336 ret_words=4 xo_checked=1334 fault=0 spine_fault=0 xs_fault=0"
+    }
+   }
+  ],
+  "attn.wo_b": {
+   "nphases": 4,
+   "rows": 40,
+   "serial_sum": 1256,
+   "per_phase": [
+    314,
+    314,
+    314,
+    314
+   ],
+   "all_fb_pass": true,
+   "all_xb_pass": true
+  },
+  "attn.wo_a": {
+   "nphases": 12,
+   "rows": 64,
+   "serial_sum": 4224,
+   "per_phase": [
+    354,
+    354,
+    354,
+    354,
+    354,
+    354,
+    354,
+    354,
+    348,
+    348,
+    348,
+    348
+   ],
+   "all_fb_pass": true,
+   "all_xb_pass": false
+  }
+ },
+ "g01": {
+  "frame": "u_f_0L01",
+  "master": "col_h10_l4",
+  "lk": 1170,
+  "phases": [
+   {
+    "phase": 1,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 366,
+     "last_ret": 383,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_b phase 1 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1046 ret_words=10 xo_checked=1044 fault=0",
+     "end": "END edges=1046 ret_words=10 xo_checked=1044 fault=0 spine_fault=0"
+    },
+    "start_retire": 316,
+    "xb": {
+     "words": 10,
+     "first_ret": 687,
+     "last_ret": 704,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p1 attn.wo_b phase 1 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 982, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1304 ret_words=10 xo_checked=1302 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 2,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 366,
+     "last_ret": 383,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_b phase 2 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1046 ret_words=10 xo_checked=1044 fault=0",
+     "end": "END edges=1046 ret_words=10 xo_checked=1044 fault=0 spine_fault=0"
+    },
+    "start_retire": 316,
+    "xb": {
+     "words": 10,
+     "first_ret": 687,
+     "last_ret": 704,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p2 attn.wo_b phase 2 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 982, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1304 ret_words=10 xo_checked=1302 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 3,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 366,
+     "last_ret": 383,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1046 ret_words=10 xo_checked=1044 fault=0",
+     "end": "END edges=1046 ret_words=10 xo_checked=1044 fault=0 spine_fault=0"
+    },
+    "start_retire": 316,
+    "xb": {
+     "words": 10,
+     "first_ret": 687,
+     "last_ret": 704,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p3 attn.wo_b phase 3 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 982, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1304 ret_words=10 xo_checked=1302 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 4,
+    "op": "attn.wo_b",
+    "rows": 10,
+    "fb": {
+     "words": 10,
+     "first_ret": 366,
+     "last_ret": 383,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=0 END edges=1046 ret_words=10 xo_checked=1044 fault=0",
+     "end": "END edges=1046 ret_words=10 xo_checked=1044 fault=0 spine_fault=0"
+    },
+    "start_retire": 316,
+    "xb": {
+     "words": 10,
+     "first_ret": 687,
+     "last_ret": 704,
+     "pass_": true,
+     "check": "XS_CAL_CHECK PASS p4 attn.wo_b phase 4 mutant=None tags=phase D=321 words=10 lockstep={'D': 321, 'compared': 982, 'mismatch': 0, 'valid_ref': 34, 'valid_xs': 34, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=0",
+     "end": "END edges=1304 ret_words=10 xo_checked=1302 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 5,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 5 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p5 attn.wo_a phase 5 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 6,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 6 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p6 attn.wo_a phase 6 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 7,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 7 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p7 attn.wo_a phase 7 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 8,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 8 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p8 attn.wo_a phase 8 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 9,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 9 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p9 attn.wo_a phase 9 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 10,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 10 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p10 attn.wo_a phase 10 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 11,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 11 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p11 attn.wo_a phase 11 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 12,
+    "op": "attn.wo_a",
+    "rows": 6,
+    "fb": {
+     "words": 6,
+     "first_ret": 401,
+     "last_ret": 414,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 12 mutant=None rows=6 fixture_rows=6 errors=0 END edges=1077 ret_words=6 xo_checked=1075 fault=0",
+     "end": "END edges=1077 ret_words=6 xo_checked=1075 fault=0 spine_fault=0"
+    },
+    "start_retire": 347,
+    "xb": {
+     "words": 6,
+     "first_ret": 722,
+     "last_ret": 735,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p12 attn.wo_a phase 12 mutant=None tags=phase D=321 words=6 lockstep={'D': 321, 'compared': 1013, 'mismatch': 883, 'valid_ref': 2, 'valid_xs': 884, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=11",
+     "end": "END edges=1335 ret_words=6 xo_checked=1333 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 13,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 401,
+     "last_ret": 408,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1071 ret_words=4 xo_checked=1069 fault=0",
+     "end": "END edges=1071 ret_words=4 xo_checked=1069 fault=0 spine_fault=0"
+    },
+    "start_retire": 341,
+    "xb": {
+     "words": 4,
+     "first_ret": 722,
+     "last_ret": 729,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p13 attn.wo_a phase 13 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1007, 'mismatch': 877, 'valid_ref': 2, 'valid_xs': 878, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1329 ret_words=4 xo_checked=1327 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 14,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 401,
+     "last_ret": 408,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1071 ret_words=4 xo_checked=1069 fault=0",
+     "end": "END edges=1071 ret_words=4 xo_checked=1069 fault=0 spine_fault=0"
+    },
+    "start_retire": 341,
+    "xb": {
+     "words": 4,
+     "first_ret": 722,
+     "last_ret": 729,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p14 attn.wo_a phase 14 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1007, 'mismatch': 877, 'valid_ref': 2, 'valid_xs': 878, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1329 ret_words=4 xo_checked=1327 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 15,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 401,
+     "last_ret": 408,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 15 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1071 ret_words=4 xo_checked=1069 fault=0",
+     "end": "END edges=1071 ret_words=4 xo_checked=1069 fault=0 spine_fault=0"
+    },
+    "start_retire": 341,
+    "xb": {
+     "words": 4,
+     "first_ret": 722,
+     "last_ret": 729,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p15 attn.wo_a phase 15 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1007, 'mismatch': 877, 'valid_ref': 2, 'valid_xs': 878, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1329 ret_words=4 xo_checked=1327 fault=0 spine_fault=0 xs_fault=0"
+    }
+   },
+   {
+    "phase": 16,
+    "op": "attn.wo_a",
+    "rows": 4,
+    "fb": {
+     "words": 4,
+     "first_ret": 401,
+     "last_ret": 408,
+     "pass_": true,
+     "check": "XS_PLACE_CHECK PASS u_f_0L01 attn.wo_a phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1071 ret_words=4 xo_checked=1069 fault=0",
+     "end": "END edges=1071 ret_words=4 xo_checked=1069 fault=0 spine_fault=0"
+    },
+    "start_retire": 341,
+    "xb": {
+     "words": 4,
+     "first_ret": 722,
+     "last_ret": 729,
+     "pass_": false,
+     "check": "XS_CAL_CHECK FAIL p16 attn.wo_a phase 16 mutant=None tags=phase D=321 words=4 lockstep={'D': 321, 'compared': 1007, 'mismatch': 877, 'valid_ref': 2, 'valid_xs': 878, 'first_ref': 67, 'first_xs': 388, 'xs_fault_at': -1} errors=9",
+     "end": "END edges=1329 ret_words=4 xo_checked=1327 fault=0 spine_fault=0 xs_fault=0"
+    }
+   }
+  ],
+  "attn.wo_b": {
+   "nphases": 4,
+   "rows": 40,
+   "serial_sum": 1264,
+   "per_phase": [
+    316,
+    316,
+    316,
+    316
+   ],
+   "all_fb_pass": true,
+   "all_xb_pass": true
+  },
+  "attn.wo_a": {
+   "nphases": 12,
+   "rows": 64,
+   "serial_sum": 4140,
+   "per_phase": [
+    347,
+    347,
+    347,
+    347,
+    347,
+    347,
+    347,
+    347,
+    341,
+    341,
+    341,
+    341
+   ],
+   "all_fb_pass": true,
+   "all_xb_pass": false
+  }
+ }
+}
