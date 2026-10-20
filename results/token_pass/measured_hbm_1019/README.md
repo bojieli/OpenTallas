@@ -12,7 +12,8 @@ gets its measured start->retire cycles, and the SAME static schedule is re-run
 |---|---:|---:|
 | price of record (H9b 45.03 B/edge/SM) | 1,206.3 | 407.0 |
 | price, successor 98 B/edge (HBM-ROTLAYOUT) | 1,421.9 | 795.0 |
-| **MEASURED release**: successor PC + rotated layout, multi-block attention, Qwen 1 KV head/die, **Qwen SM.MATVEC measured on packed INT8** (HBM-QINT8, 10-20) | **1,162.5** | **776.3** |
+| **MEASURED release (TOKEN-LEAD 10-20, combined)**: the row below + **SU.VOP measured** (HBM-SUFIX, as-built SU, no pre-tree) | **1,109.7** | **372.2** |
+| measured, SU.VOP still model: successor PC + rotated layout, multi-block attention, Qwen 1 KV head/die, **Qwen SM.MATVEC measured on packed INT8** (HBM-QINT8, 10-20) | 1,162.5 | 776.3 |
 | same, but Qwen SM.MATVEC from the BF16w affine law (superseded) | 1,162.5 | 1,002.9 |
 | measured, same but serial attention calendar | 1,129.2 | 966.5 |
 | measured, successor at the old 96-edge cadence, serial attention | 1,105.9 | 885.7 |
@@ -60,6 +61,15 @@ ATT.PV 61k vs 189k, ATT.QK 45k vs 96k, SFU.GLU 17k vs 4k (3.8x).
 - DMA.LOAD needs a chain bench. DMA.FENCE and COLL.ROW_GATHER are unmeasured.
 - SU.VOP compiler fix (item 7).
 - VMEARLY x-load/COLL early issue: re-measure SM.MATVEC with a double-buffered x-store once the compiler rule lands.
+
+## TOKEN-LEAD combined row (10-20)
+
+`combined_1020/`: `measured_rel_i8_su.json` = `measured_rel_int8.json` (HBM-QINT8) with SU.VOP from `units/su.json` (HBM-SUFIX);
+census `--measured --bw 98 --bridge 1` on ot-epyc6 (`rel98_i8_su.json`), row info_banklat_all: **DS 1,109.7 / Qwen 372.2 tok/s**.
+Grades (`cycles_rel98_i8_su.json`, units = coll/idxdma/su + att_mb + smhbm_int8), share of used unit cycles:
+DS measured-on-bound 31.3% + measured-not-bound 58.7% = 90.0% measured, model 10.0%;
+Qwen 57.8% + 41.0% = 98.8% measured, model 1.2% (the Qwen crit attribution is still broken, see HBM-SUFIX coll note).
+Qwen is SU-reduction bound as built (softmax ~1.6M of 3.22M cycles): the pre-tree bind (HBM-PRETREE2) is the lever.
 
 ## Files
 
