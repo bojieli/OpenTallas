@@ -1,0 +1,4 @@
+daemon submit check at b3ae801a7: REFUSE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (gate-executed daemon overlay changed: tools/ref_tile/native_census.py, tools/ref_tile/native_census.tcl, tools/ref_tile/ref_route.sh (gate-consumed; 1 unconsumed difference(s) not counted) [blob unknown]) (fix: preserve original as unqualified; regenerate the gate for this exact source)
+exact gate-binding differences:
+  (no per-file difference found; read the daemon message above)
+REFUSED LOCALLY: nothing was submitted (re-gate: add --regate)

@@ -14,14 +14,14 @@
    "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
   }
  },
- "verdict": "CHANGES",
+ "verdict": "APPROVED",
  "checklist": {
   "lattice": "No hard macros; full standard-cell rows; lattice not applicable.",
   "std_cell_band": "Centre 80x80 or90x90 cluster visible in density, with IO register faces at north/south. cts.log HROOT_CENTER central7306 cells area1206.101um2 util18.85% or14.89%; global2.3% is pin-limited.",
   "pin_spread": "Full N/S/E faces, maximum N5.29/S5.06 pins/um <6; clock root W.",
   "clock_entry": "W-face clock root; measured TT/FF insertion 425.4/357.0 ps, boundary spreads 50.7/49.8 ps; parent compensation or landed boundary required.",
   "shape": "Square300.2x300.2, no macros, density central fence visible, GRT0.",
-  "reach": "Pending exact CTS BUF/INV endpoint audit result before approval.",
+  "reach": "Actual exact CTS ODB audit PASS max344.277um/0>405,9254 roots,22360 transparent BUF/INV instances,0Liberty role errors; evidence results/rtl/kv_gate_takeover_1020/reach_s32v4b.json.",
   "protocol": "Synchronous sampled reset 4 assert/release edges (2 landing+2core), HROOT_LAND_EDGES2 each4chains; +3 release edges vs k1 once boot. Exact/mutant/offphase receipts remain pinned."
  }
 }

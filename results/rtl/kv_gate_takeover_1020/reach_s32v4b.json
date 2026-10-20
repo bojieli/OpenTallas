@@ -1,0 +1,234 @@
+{
+  "clock_exclusion": "Declared spec clock port ck plus ODB CLOCK nets; Liberty clock pins excluded at terminals.",
+  "method": "Truth-functional unary BUF/INV traversal using ten actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Instance-centre/BPin-centre coordinate proxy.",
+  "odb_sha256": "ec4f48566e093ee82ff36751f87646844857c65b7107e13d11e61791ef96fe26",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "role_errors": [],
+  "transparent_instances": 22360,
+  "roots_with_endpoints": 9254,
+  "max_endpoint_manhattan_um": 344.277,
+  "over405": [],
+  "top30": [
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[0\\]\\[0\\]$_DFF_P_/QN",
+      "net": "_04077_",
+      "terminal_count": 30,
+      "max_endpoint_manhattan_um": 344.277
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[1\\]\\[3\\]$_DFF_P_/QN",
+      "net": "_04064_",
+      "terminal_count": 9,
+      "max_endpoint_manhattan_um": 343.953
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[0\\]\\[1\\]$_DFF_P_/QN",
+      "net": "_04078_",
+      "terminal_count": 30,
+      "max_endpoint_manhattan_um": 343.467
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[0\\]\\[4\\]$_DFF_P_/QN",
+      "net": "_04081_",
+      "terminal_count": 30,
+      "max_endpoint_manhattan_um": 342.495
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[1\\]\\[6\\]$_DFF_P_/QN",
+      "net": "_04067_",
+      "terminal_count": 9,
+      "max_endpoint_manhattan_um": 341.253
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[1\\]\\[7\\]$_DFF_P_/QN",
+      "net": "_04068_",
+      "terminal_count": 9,
+      "max_endpoint_manhattan_um": 341.145
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[0\\]\\[5\\]$_DFF_P_/QN",
+      "net": "_04082_",
+      "terminal_count": 30,
+      "max_endpoint_manhattan_um": 340.767
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.ctl_root\\[1\\]\\[2\\]$_DFF_P_/QN",
+      "net": "_04063_",
+      "terminal_count": 9,
+      "max_endpoint_manhattan_um": 339.849
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[297\\]$_DFF_P_/QN",
+      "net": "_01879_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 337.878
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[286\\]$_DFF_P_/QN",
+      "net": "_01890_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 335.016
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[285\\]$_DFF_P_/QN",
+      "net": "_01891_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 334.8
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[292\\]$_DFF_P_/QN",
+      "net": "_01884_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 334.746
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[294\\]$_DFF_P_/QN",
+      "net": "_01882_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 334.422
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[19\\].dat.q0$_DFF_P_/QN",
+      "net": "_05610_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 334.233
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[289\\]$_DFF_P_/QN",
+      "net": "_01887_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 334.206
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[291\\]$_DFF_P_/QN",
+      "net": "_01885_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 333.936
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[20\\].dat.q0$_DFF_P_/QN",
+      "net": "_05608_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 333.315
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[22\\].dat.q0$_DFF_P_/QN",
+      "net": "_05604_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 333.261
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[284\\]$_DFF_P_/QN",
+      "net": "_01892_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 332.856
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[18\\].dat.q0$_DFF_P_/QN",
+      "net": "_05612_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 332.721
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[24\\].dat.q0$_DFF_P_/QN",
+      "net": "_05600_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 332.667
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[295\\]$_DFF_P_/QN",
+      "net": "_01881_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 332.1
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[287\\]$_DFF_P_/QN",
+      "net": "_01889_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.884
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[21\\].dat.q0$_DFF_P_/QN",
+      "net": "_05606_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.803
+    },
+    {
+      "driver": "u_ot_pr_core.u_esh.cap\\[23\\].dat.q0$_DFF_P_/QN",
+      "net": "_05602_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.479
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[290\\]$_DFF_P_/QN",
+      "net": "_01886_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.344
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[298\\]$_DFF_P_/QN",
+      "net": "_05642_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.344
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[293\\]$_DFF_P_/QN",
+      "net": "_01883_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 331.074
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[288\\]$_DFF_P_/QN",
+      "net": "_01888_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 330.372
+    },
+    {
+      "driver": "u_ot_pr_core.u_rly.r_mid\\[296\\]$_DFF_P_/QN",
+      "net": "_01880_",
+      "terminal_count": 1,
+      "max_endpoint_manhattan_um": 330.156
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       admits   647 GB (avail 566, growth 113, headroom 0, waiters 0/0 GB) load 85/128 running 29 disk 598 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-kv-gates-takeover-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-gates-takeover-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-gates-takeover-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-gates-takeover-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-gates-takeover-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-163567-1792493907 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{'clock_exclusion': 'Declared spec clock port ck plus ODB CLOCK nets; Liberty clock pins excluded at terminals.', 'method': 'Truth-functional unary BUF/INV traversal using ten actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Instance-centre/BPin-centre coordinate proxy.', 'odb_sha256': '9f8ee21bf9c2bab3050f459b37489e29ff3d8f3c8c5b5fa9471f46f468d3a21d', 'role_errors': [], 'transparent_instances': 22240, 'roots_with_endpoints': 9254, 'max_endpoint_manhattan_um': 340.335}
+over405 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{'clock_exclusion': 'Declared spec clock port ck plus ODB CLOCK nets; Liberty clock pins excluded at terminals.', 'method': 'Truth-functional unary BUF/INV traversal using ten actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Instance-centre/BPin-centre coordinate proxy.', 'odb_sha256': 'ec4f48566e093ee82ff36751f87646844857c65b7107e13d11e61791ef96fe26', 'role_errors': [], 'transparent_instances': 22360, 'roots_with_endpoints': 9254, 'max_endpoint_manhattan_um': 344.277}
+over405 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-163567-1792493907): exit 0
