@@ -1,0 +1,67 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_WS max 5.649949397223963e-10 min 2.4688175115361588e-11
+OT_FC_LIB BUFx2_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 A
+OT_FC_ROLE BUFx2_ASAP7_75t_R b1 A Y A 0
+OT_FC_CHAIN BUFx2_ASAP7_75t_R b1
+OT_FC_LIB INVx3_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 !A
+OT_FC_ROLE INVx3_ASAP7_75t_R inv A Y !A 1
+OT_FC_CHAIN INVx3_ASAP7_75t_R inv
+OT_FC_LIB BUFx4_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 A
+OT_FC_ROLE BUFx4_ASAP7_75t_R b0 A Y A 0
+OT_FC_CHAIN BUFx4_ASAP7_75t_R b0
+OT_FC_SENSE negative_unate
+OT_FC_DRIVER BUFx2_ASAP7_75t_R b1
+OT_FC_WAVE 22.99999956631913 376.9999882906165
+OT_FC_CLOCK input_clk
+OT_FC_OUTPUT_CLOCK ck_o_fwd
+OT_FC_INPUT_METRIC arrival_max_rise 40.000000
+OT_FC_ABSOLUTE_METRIC arrival_max_rise 601.288879
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_rise 583.581116
+OT_FC_PHASE arrival_max_rise 1 376.9999882906165
+OT_FC_METRIC arrival_max_rise 224.28889070938345
+OT_FC_DRIVER_METRIC arrival_max_rise 206.58112770938345
+OT_FC_INPUT_METRIC arrival_min_rise 40.000000
+OT_FC_ABSOLUTE_METRIC arrival_min_rise 599.205383
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_rise 581.497620
+OT_FC_PHASE arrival_min_rise 1 376.9999882906165
+OT_FC_METRIC arrival_min_rise 222.20539470938348
+OT_FC_DRIVER_METRIC arrival_min_rise 204.49763170938348
+OT_FC_INPUT_METRIC arrival_max_fall 394.000000
+OT_FC_ABSOLUTE_METRIC arrival_max_fall 213.304886
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_fall 195.776138
+OT_FC_PHASE arrival_max_fall 0 22.99999956631913
+OT_FC_METRIC arrival_max_fall 190.30488643368088
+OT_FC_DRIVER_METRIC arrival_max_fall 172.77613843368087
+OT_FC_INPUT_METRIC arrival_min_fall 394.000000
+OT_FC_ABSOLUTE_METRIC arrival_min_fall 211.210861
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_fall 193.682068
+OT_FC_PHASE arrival_min_fall 0 22.99999956631913
+OT_FC_METRIC arrival_min_fall 188.21086143368086
+OT_FC_DRIVER_METRIC arrival_min_fall 170.68206843368085
+OT_FC_INPUT_METRIC slew_max_rise 20.000000
+OT_FC_ABSOLUTE_METRIC slew_max_rise 305.739349
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_rise 302.536407
+OT_FC_METRIC slew_max_rise 305.739349
+OT_FC_DRIVER_METRIC slew_max_rise 302.536407
+OT_FC_INPUT_METRIC slew_max_fall 20.000000
+OT_FC_ABSOLUTE_METRIC slew_max_fall 226.664276
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_fall 222.242554
+OT_FC_METRIC slew_max_fall 226.664276
+OT_FC_DRIVER_METRIC slew_max_fall 222.242554
+OT_FC_ROOT ck
+OT_EXPORT_DONE
