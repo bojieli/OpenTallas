@@ -48,7 +48,12 @@
     "dut_initial_state": "unconstrained",
     "harness_only_initialization": "past-observation age=0, not DUT state",
     "result": "PASS bothwidths",
-    "scope": "source RTL async2sync clock-sampled contract only; not imported-cell model proof or analog asynchronous phase qualification"
+    "scope": "source RTL async2sync clock-sampled contract only; not imported-cell model proof or analog asynchronous phase qualification",
+    "reset_first_use": "PASS: stale outputs/readyzero afterresetandfirsttwofaceedges, firstpayloadexactlythirdreleaseedge",
+    "first_use_harness_commit": "156beac9b",
+    "log": "/home/ubuntu/artifacts/codex-hbm-parent-station-1020/formal_firstuse.otrun",
+    "log_sha256": "2b06fc021e87377d47be6d2f4376ed296d60a0a2f2ddd5cbc590457b848bd530",
+    "remote_proof_dir": "/srv/opentallas-scratch/claude/codex-hbm-parent-station-1020/proofs/formal_9e2690f73a4c"
   },
   "preserved_failures": [
     "mapped.otrun/map_328: omittedkeep hook merged copies; numericdonttouch string causedstoi; correctedsource/normalhook acc1802b3",
@@ -65,5 +70,6 @@
   "mapped_FF": {
     "328": 357,
     "257": 280
-  }
+  },
+  "handback_pending": "Unbound source option only; physicaloutline/actualpins/hold/clockphase/resetproducers/lowerrowTDMcalendarOPEN; no gate/fullGEN launched"
 }
