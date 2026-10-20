@@ -1,0 +1,3 @@
+bench MUT=0: PASS ve_fp add=3499587 mul=3499586 
+bench MUT=1: MUTANT 1 REJECTED mismatches=69957 
+bench MUT=2: MUTANT 2 REJECTED mismatches=14324 

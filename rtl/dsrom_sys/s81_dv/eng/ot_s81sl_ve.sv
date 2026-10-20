@@ -185,7 +185,8 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
 );
     // ---- level 1: leaf pairs
     reg  [2:0]  li;                        // leaf index within the copy
-    reg  [31:0] h1, m1, a1, b1;
+    (* keep *) reg [31:0] h1, a1, b1;      // r4b: both copies kept (a non-kept twin folds into the kept one)
+    reg  [31:0] m1;
     (* keep *) reg [31:0] h1c, a1c, b1c;      // VE4: kept second operand copies (the adder's alignment operands)
     reg         i1;
     wire hold1  = (MUT == 2) ? (li == 3'd0 || li == 3'd4 || li == 3'd6) : !li[0];
@@ -197,9 +198,17 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
             i1 <= v && !hold1 && !stash1;
             if (v) li <= li + 3'd1;
         end
+    // r4b: the hold enable is 4 kept AND copies, one per 16 bits of h1 / h1c (r4a one enable net: 64 loads)
+    wire [3:0] e1;
+    genvar ge;
+    generate for (ge = 0; ge < 4; ge = ge + 1) begin : g_e1
+        ot_s81sl_ve_kand u (.a(v), .b(hold1), .y(e1[ge]));
+    end endgenerate
     always @(posedge clk) begin
-        if (v && hold1) h1 <= s;
-        if (v && hold1) h1c <= s;
+        if (e1[0]) h1[15:0] <= s[15:0];
+        if (e1[1]) h1[31:16] <= s[31:16];
+        if (e1[2]) h1c[15:0] <= s[15:0];
+        if (e1[3]) h1c[31:16] <= s[31:16];
         if (v && stash1) m1 <= s;
         a1 <= pa1;                         // MUT 2 only (the MUT 0 build drops it)
         a1c <= pa1;
@@ -211,7 +220,7 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
     ot_s81sl_ve_qadd #(.LAT(LA)) add1 (clk, rn, i1, (MUT == 2) ? a1 : h1, (MUT == 2) ? a1c : h1c, b1, b1c, s1, s1c, r1, f1);
     // ---- level 2: pairs of level-1 sums (n0,n1) -> n4, (n2,n3) -> n5
     reg         p2, i2;
-    reg  [31:0] h2, b2;
+    (* keep *) reg [31:0] h2, b2;
     (* keep *) reg [31:0] h2c, b2c;
     always @(posedge clk or negedge rn)
         if (!rn) begin p2 <= 1'b0; i2 <= 1'b0; end
@@ -219,9 +228,15 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
             i2 <= r1 && p2;
             if (r1) p2 <= ~p2;
         end
+    wire [3:0] e2;
+    generate for (ge = 0; ge < 4; ge = ge + 1) begin : g_e2
+        ot_s81sl_ve_kand u (.a(r1), .b(!p2), .y(e2[ge]));
+    end endgenerate
     always @(posedge clk) begin
-        if (r1 && !p2) h2 <= s1;
-        if (r1 && !p2) h2c <= s1c;
+        if (e2[0]) h2[15:0] <= s1[15:0];
+        if (e2[1]) h2[31:16] <= s1[31:16];
+        if (e2[2]) h2c[15:0] <= s1c[15:0];
+        if (e2[3]) h2c[31:16] <= s1c[31:16];
         b2 <= s1;
         b2c <= s1c;
     end
@@ -230,7 +245,7 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
     ot_s81sl_ve_qadd #(.LAT(LA)) add2 (clk, rn, i2, h2, h2c, b2, b2c, s2, s2c, r2, f2);
     // ---- level 3: (n4, n5) -> n6 = the beat partial
     reg         p3, i3;
-    reg  [31:0] h3, b3;
+    (* keep *) reg [31:0] h3, b3;
     (* keep *) reg [31:0] h3c, b3c;
     always @(posedge clk or negedge rn)
         if (!rn) begin p3 <= 1'b0; i3 <= 1'b0; end
@@ -238,9 +253,15 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
             i3 <= r2 && p3;
             if (r2) p3 <= ~p3;
         end
+    wire [3:0] e3;
+    generate for (ge = 0; ge < 4; ge = ge + 1) begin : g_e3
+        ot_s81sl_ve_kand u (.a(r2), .b(!p3), .y(e3[ge]));
+    end endgenerate
     always @(posedge clk) begin
-        if (r2 && !p3) h3 <= s2;
-        if (r2 && !p3) h3c <= s2c;
+        if (e3[0]) h3[15:0] <= s2[15:0];
+        if (e3[1]) h3[31:16] <= s2[31:16];
+        if (e3[2]) h3c[15:0] <= s2c[15:0];
+        if (e3[3]) h3c[31:16] <= s2c[31:16];
         b3 <= s2;
         b3c <= s2c;
     end
@@ -278,13 +299,16 @@ module ot_s81sl_ve_dly #(parameter integer W = 32, D = 1, MUT = 0) (
         assign q = d;
         assign q2 = d2;
     end else begin : g_sh
-        ot_hdc_delay #(.W(W), .D(D)) u (clk, 1'b1, d, q);
+        // r4b: both chains are kept registers (ot_hdc_delay's unkept flops folded into the kept copy chain)
+        (* keep *) reg [W-1:0] p [0:D-1];
         (* keep *) reg [W-1:0] c [0:D-1];
         integer i;
         always @(posedge clk) begin
+            p[0] <= d;
             c[0] <= d2;
-            for (i = 1; i < D; i = i + 1) c[i] <= c[i - 1];
+            for (i = 1; i < D; i = i + 1) begin p[i] <= p[i - 1]; c[i] <= c[i - 1]; end
         end
+        assign q = p[D - 1];
         assign q2 = c[D - 1];
     end endgenerate
 endmodule
@@ -295,7 +319,8 @@ module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
     localparam integer K = (N <= 2) ? 1 : $clog2(N);
     localparam [K-1:0] LAST = N - 1;
     localparam integer S = (W + 7) / 8;
-    reg [W-1:0] din, dout;
+    reg [W-1:0] din;
+    (* keep *) reg [W-1:0] dout;                 // r4b: kept like dout2
     (* keep *) reg [W-1:0] dout2;                // VE4: kept copy of the output register (same D)
     reg [K-1:0] wptr;
     wire [K-1:0] wnext = (wptr >= LAST) ? {K{1'b0}} : wptr + 1'b1;
@@ -382,7 +407,7 @@ module ot_s81sl_ve_chunk8 #(parameter integer LA=4,MUT=0)(
  input wire clk,input wire [1:0] rq,input wire v,input wire [255:0] x,
  output wire vo,output wire [31:0] sum,output reg fault);
  wire rn=rq[0];
- reg [255:0] xr;reg vr;
+ (* keep = "true" *) reg [255:0] xr;reg vr;   // r4b: kept (xr[31:0] folded into xr0c)
  always @(posedge clk or negedge rn)if(!rn)vr<=0;else vr<=v;
  always @(posedge clk)xr<=x;
  // VE4: acc2 = the kept second copy of each adder's output (the next adder's alignment operand); xr0c a kept copy
@@ -404,18 +429,18 @@ module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4)(
  input wire clk,input wire [3:0] rq,input wire v,phase,input wire [255:0] h,value,input wire [31:0] gate,input wire [1:0] copy,
  output reg vo,output reg [255:0] y,output reg fault,output wire [1:0] copy_out);
  wire rn=rq[0];
- reg vr;reg [255:0] hr,valr;
+ reg vr;reg [255:0] hr;
  always @(posedge clk or negedge rn)if(!rn)vr<=0;else vr<=v&&phase;
- always @(posedge clk)begin hr<=h;valr<=value;end
+ always @(posedge clk)hr<=h;
  wire [15:0] f;wire [7:0] av;
  genvar l;
  generate for(l=0;l<8;l=l+1)begin:lane
   // one kept gate copy per lane (r2: one gr register -> 8 lane multipliers -> their b decodes merged, 264 loads);
   // VE4: kept second copies of the multiplier operands, the h line's output and the product (alignment operands)
-  (* keep = "true" *) reg [31:0] gl,gl2,vl2;
-  always @(posedge clk)begin gl<=gate;gl2<=gate;vl2<=value[32*l+:32];end
+  (* keep = "true" *) reg [31:0] gl,gl2,vl1,vl2;   // r4b: vl1 (was the non-kept valr slice) kept too
+  always @(posedge clk)begin gl<=gate;gl2<=gate;vl1<=value[32*l+:32];vl2<=value[32*l+:32];end
   wire [31:0] prod,prod2,hd,hd2,ys,nc;wire mvo;
-  ot_s81sl_ve_qmul #(LM) mul(clk,rq[l/2],vr,valr[32*l+:32],vl2,gl,gl2,prod,prod2,mvo,f[2*l]);
+  ot_s81sl_ve_qmul #(LM) mul(clk,rq[l/2],vr,vl1,vl2,gl,gl2,prod,prod2,mvo,f[2*l]);
   ot_s81sl_ve_dly #(.W(32),.D(LM)) hline(clk,hr[32*l+:32],hr[32*l+:32],hd,hd2);
   ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[l/2],mvo,hd,hd2,prod,prod2,ys,nc,av[l],f[2*l+1]);
   wire [31:0] rounded=ys+32'h7fff+ys[16];

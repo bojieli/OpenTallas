@@ -23,6 +23,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 // prefix OR, LSB first: o[i] = |x[i:0]; log levels kept (no long OR chain, every node <= 3 loads)
+// r4b: keep_hierarchy (a kept WIRE is not an ABC cut: r4a showed ABC re-deriving consumers straight from the cone inputs)
+(* keep_hierarchy *)
 module ot_s81sl_ve_por #(parameter integer W = 28) (input wire [W-1:0] x, output wire [W-1:0] o);
     localparam integer L = (W <= 1) ? 1 : $clog2(W);
     (* keep *) wire [W-1:0] t [0:L];
@@ -40,7 +42,8 @@ module ot_s81sl_ve_por #(parameter integer W = 28) (input wire [W-1:0] x, output
     assign o = t[L];
 endmodule
 
-// one-hot decode of a small value through a kept two-level predecode: oh[s] = (v == s), s < N
+// one-hot decode of a small value through a kept two-level predecode: oh[s] = (v == s), s < N (r4b: hard boundary)
+(* keep_hierarchy *)
 module ot_s81sl_ve_ohdec #(parameter integer VW = 8, parameter integer N = 28) (
     input wire [VW-1:0] v, output wire [N-1:0] oh);
     localparam integer NH = (N + 3) / 4;
@@ -64,7 +67,11 @@ endmodule
 
 // jam alignment (= jam28f of the f12 adder, one-hot): r = far ? {27'd0, |val} : (val >> d) | {27'd0, |lost},
 // val = {1'b0, man, 3'b000}; oh = one-hot of d (no line set when far: d >= 28)
-module ot_s81sl_ve_jam (input wire [23:0] man, input wire [27:0] oh, input wire far, output wire [27:0] r);
+// r4b: the shift is two one-hot stages in hard-boundary modules (by 4 * d[4:2], 7 lines, then by d[1:0], 4 lines): an
+// operand bit drives <= 7 + 1 select terms (r4a single 28-line AND-OR: 33-36 loads on every operand copy), a select line
+// <= 28; oh (the full one-hot) now only feeds the sticky terms.  far (d >= 28) clears the first stage's lines.
+module ot_s81sl_ve_jam (input wire [23:0] man, input wire [27:0] oh, input wire [4:0] d, input wire far,
+                        output wire [27:0] r);
     wire [27:0] val = {1'b0, man, 3'b000};
     wire [27:0] pv;                             // pv[i] = |val[i:0]
     ot_s81sl_ve_por #(.W(28)) u_p (.x(val), .o(pv));
@@ -76,12 +83,13 @@ module ot_s81sl_ve_jam (input wire [23:0] man, input wire [27:0] oh, input wire 
     generate for (g = 1; g < 28; g = g + 1) begin : g_st
         assign stk[g] = oh[g] & pv[g - 1];
     end endgenerate
-    always @* begin
-        sh = 28'd0;
-        for (j = 0; j < 28; j = j + 1)
-            for (s = 0; s <= 27 - j; s = s + 1)
-                sh[j] = sh[j] | (oh[s] & val[j + s]);
-    end
+    wire [6:0] s4;
+    wire [3:0] s1;
+    wire [27:0] sh4, sh1;
+    ot_s81sl_ve_sdec u_sd (.d(d), .far(far), .s4(s4), .s1(s1));
+    ot_s81sl_ve_ohsh #(.W(28), .N(7), .STEP(4)) u_s4 (.x(val), .sel(s4), .y(sh4));
+    ot_s81sl_ve_ohsh #(.W(28), .N(4), .STEP(1)) u_s1 (.x(sh4), .sel(s1), .y(sh1));
+    always @* sh = sh1;
     assign r = {sh[27:1], sh[0] | (|stk) | (far & pv[27])};
 endmodule
 
@@ -95,8 +103,8 @@ module ot_s81sl_ve_fadd (
     input  wire        valid_in,
     input  wire [31:0] a, a2,                   // a2, b2: kept copies of a, b (the alignment operands)
     input  wire [31:0] b, b2,
-    output reg  [31:0] y,
-    output reg  [31:0] y2,                      // kept copy of y
+    (* keep *) output reg [31:0] y,            // r4b: BOTH copies kept (opt_merge folds a non-kept twin into the kept one)
+    (* keep *) output reg [31:0] y2,           // kept copy of y
     output reg  [1:0]  err,
     output reg         valid_out
 );
@@ -130,8 +138,8 @@ module ot_s81sl_ve_fadd (
     wire [23:0] a2_man = {(a2[30:23] != 8'd0), a2[22:0]};
     wire [23:0] b2_man = {(b2[30:23] != 8'd0), b2[22:0]};
     wire [27:0] small_a, small_b;
-    ot_s81sl_ve_jam u_ja (.man(a2_man), .oh(oh_ba), .far(dba >= 8'd28), .r(small_a));
-    ot_s81sl_ve_jam u_jb (.man(b2_man), .oh(oh_ab), .far(dab >= 8'd28), .r(small_b));
+    ot_s81sl_ve_jam u_ja (.man(a2_man), .oh(oh_ba), .d(dba[4:0]), .far(dba >= 8'd28), .r(small_a));
+    ot_s81sl_ve_jam u_jb (.man(b2_man), .oh(oh_ab), .d(dab[4:0]), .far(dab >= 8'd28), .r(small_b));
     // ---- R1 ---------------------------------------------------------------------------------------------------------
     reg x_v;
     always @(posedge clk or negedge rst_n)
@@ -154,10 +162,11 @@ module ot_s81sl_ve_fadd (
     // ---- B ----------------------------------------------------------------------------------------------------------
     (* keep *) wire [23:0] big;                // kept: the swap pick stays a mux in front of the adders (copy loads bounded)
     (* keep *) wire [27:0] sml;
-    assign big[11:0]    = x_sw[0] ? x_bman[11:0]  : x_aman[11:0];
-    assign big[23:12]   = x_sw[1] ? x_bman[23:12] : x_aman[23:12];
-    assign sml[13:0]  = x_sw[2] ? x_sa[13:0]    : x_sb[13:0];
-    assign sml[27:14] = x_sw[3] ? x_sa[27:14]   : x_sb[27:14];
+    // r4b: each slice's pick is a hard-boundary mux (r4a: ABC folded the pick into both adders, x_sw 49-55 loads)
+    ot_s81sl_ve_kmux #(.W(12)) u_bg0 (.s(x_sw[0]), .a(x_bman[11:0]),  .b(x_aman[11:0]),  .y(big[11:0]));
+    ot_s81sl_ve_kmux #(.W(12)) u_bg1 (.s(x_sw[1]), .a(x_bman[23:12]), .b(x_aman[23:12]), .y(big[23:12]));
+    ot_s81sl_ve_kmux #(.W(14)) u_sm0 (.s(x_sw[2]), .a(x_sa[13:0]),    .b(x_sb[13:0]),    .y(sml[13:0]));
+    ot_s81sl_ve_kmux #(.W(14)) u_sm1 (.s(x_sw[3]), .a(x_sa[27:14]),   .b(x_sb[27:14]),   .y(sml[27:14]));
     (* keep *) wire [7:0] t_exp = x_sw[4] ? x_bexp : x_aexp;
     wire       t_sign = x_sw[4] ? x_bs : x_as;
     wire [31:0] code_a = {x_as, x_af, x_aman[22:0]}, code_b = {x_bs, x_bf, x_bman[22:0]};
@@ -313,8 +322,8 @@ module ot_s81sl_ve_fmul (
     input  wire        valid_in,
     input  wire [31:0] a, a2,                   // a2, b2: kept copies of a, b (the normalise operands)
     input  wire [31:0] b, b2,
-    output reg  [31:0] y,
-    output reg  [31:0] y2,                      // kept copy of y
+    (* keep *) output reg [31:0] y,            // r4b: BOTH copies kept (opt_merge folds a non-kept twin into the kept one)
+    (* keep *) output reg [31:0] y2,           // kept copy of y
     output reg  [1:0]  err,
     output reg         valid_out
 );
@@ -343,8 +352,15 @@ module ot_s81sl_ve_fmul (
     // normalise (second copies): the significand with its hidden bit (!subnormal), shifted so its leading one sits at
     // bit 23 (= {frac, 0} << clz23 for a subnormal, {1, frac} for a normal number); leading one as a kept one-hot
     wire [23:0] a_n, b_n;
-    ot_s81sl_ve_norm u_na (.x({a2[30:23] != 8'd0, a2[22:0]}), .hp(!a_s), .y(a_n));
-    ot_s81sl_ve_norm u_nb (.x({b2[30:23] != 8'd0, b2[22:0]}), .hp(!b_s), .y(b_n));
+    // r4b: the hidden bit of the second copy twice, in hard-boundary instances (x[23] for the prefix chain and the low
+    // 12 shift terms, hp for the high 12); !a_s (first copy) stays with the powers only
+    wire a_h1, a_h2, b_h1, b_h2;
+    ot_s81sl_ve_nz8 u_ah1 (.f(a2[30:23]), .y(a_h1));
+    ot_s81sl_ve_nz8 u_ah2 (.f(a2[30:23]), .y(a_h2));
+    ot_s81sl_ve_nz8 u_bh1 (.f(b2[30:23]), .y(b_h1));
+    ot_s81sl_ve_nz8 u_bh2 (.f(b2[30:23]), .y(b_h2));
+    ot_s81sl_ve_norm u_na (.x({a_h1, a2[22:0]}), .hp(a_h2), .y(a_n));
+    ot_s81sl_ve_norm u_nb (.x({b_h1, b2[22:0]}), .hp(b_h2), .y(b_n));
     // ---- R1 ---------------------------------------------------------------------------------------------------------
     reg p_v;
     always @(posedge clk or negedge rst_n)
@@ -408,9 +424,9 @@ module ot_s81sl_ve_fmul (
     reg        r3_byp, r3_sign;
     reg [1:0]  r3_err;
     reg [48*4-1:0] r3_l5;
-    reg signed [11:0] r3_power;
+    (* keep *) reg signed [11:0] r3_power, r3_pws;   // r4b: kept copies: floors (fl47 / fl46) | subnormal shift amount
     always @(posedge clk) begin
-        r3_byp <= p_byp; r3_err <= p_err; r3_sign <= p_sign; r3_l5 <= l5; r3_power <= power;
+        r3_byp <= p_byp; r3_err <= p_err; r3_sign <= p_sign; r3_l5 <= l5; r3_power <= power; r3_pws <= power;
     end
     // ---- C: two carry-save levels, the 48-bit add; floors, subnormal shift amount and its masks (kept one-hot) -----
     wire [48*3-1:0] l6;
@@ -423,20 +439,14 @@ module ot_s81sl_ve_fmul (
     ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(l7[47:0]), .b(l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
     wire signed [11:0] fl47 = r3_power + 12'sd47;
     wire signed [11:0] fl46 = r3_power + 12'sd46;
-    wire signed [11:0] sh_sub = -(r3_power + 12'sd149);
+    wire signed [11:0] sh_sub = -(r3_pws + 12'sd149);
     wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
     // E[s] = (shc == s), Gt[s] = (shc > s): m_round[k] = E[k + 1], m_sticky[k] = E[0] | Gt[k + 1] (the f12 masks:
     // k == shc - 1 and k < shc - 1 in 12 bits, i.e. every k when shc == 0)
-    (* keep *) wire [7:0] HE, HG, LE, LG;
-    generate for (g = 0; g < 8; g = g + 1) begin : g_pd
-        assign HE[g] = (shc[5:3] == g); assign HG[g] = (shc[5:3] > g);
-        assign LE[g] = (shc[2:0] == g); assign LG[g] = (shc[2:0] > g);
-    end endgenerate
-    (* keep *) wire [48:0] EQ, GT;
-    generate for (g = 0; g < 49; g = g + 1) begin : g_eg
-        assign EQ[g] = HE[g / 8] & LE[g % 8];
-        assign GT[g] = HG[g / 8] | (HE[g / 8] & LG[g % 8]);
-    end endgenerate
+    // r4b: the mask decode is a hard-boundary module from shc (r4a: ABC folded the clamp into the 49 GT terms, 36-43 loads)
+    wire [48:0] EQ, GT;
+    wire [47:0] MS;                             // m_sticky = E[0] | Gt[k + 1], formed inside u_md from two E[0] copies
+    ot_s81sl_ve_mdec u_md (.shc(shc), .eq(EQ), .gt(GT), .ms(MS));
     // ---- R5 ---------------------------------------------------------------------------------------------------------
     reg s2_v;
     always @(posedge clk or negedge rst_n)
@@ -453,7 +463,7 @@ module ot_s81sl_ve_fmul (
         s2_pa <= prod; s2_pb <= prod; s2_top <= {4{prod[47]}};
         s2_s47 <= {4{fl47 < -12'sd126}}; s2_s46 <= {4{fl46 < -12'sd126}};
         s2_byp <= r3_byp; s2_err <= r3_err; s2_sign <= r3_sign; s2_fl47 <= fl47; s2_fl46 <= fl46;
-        s2_mr <= EQ[48:1]; s2_ms <= {48{EQ[0]}} | GT[48:1]; s2_e0 <= EQ[0];
+        s2_mr <= EQ[48:1]; s2_ms <= MS; s2_e0 <= EQ[0];
     end
     // ---- D: select, subnormal shift (one-hot = the round mask, + shc == 0), round / sticky, both encode exponents ---
     // s_main[j] = prod[j + shc] = (shc == 0 & prod[j]) | OR_k (m_round[k] & prod[j + k + 1])
@@ -538,13 +548,15 @@ endmodule
 module ot_s81sl_ve_norm (input wire [23:0] x, input wire hp, output wire [23:0] y);
     wire [23:0] xr, pr;                         // xr = bit-reversed x; pr[i] = |xr[i:0] = |x[23:23-i]
     genvar i;
-    assign xr[0] = hp;
+    assign xr[0] = x[23];
     generate for (i = 1; i < 24; i = i + 1) begin : g_r
         assign xr[i] = x[23 - i];
     end endgenerate
     ot_s81sl_ve_por #(.W(24)) u_p (.x(xr), .o(pr));
     (* keep *) wire [23:0] lead;                // lead[i]: the leading one is x[i]
     assign lead[23] = x[23];
+    // r4b: the normal-number term (lead[23]) of output bits 12..23 reads hp (= x[23] from the other copy): r4a x[23] 33-39
+    wire lead23_hi = hp;
     generate for (i = 0; i < 23; i = i + 1) begin : g_l
         assign lead[i] = x[i] & !pr[22 - i];    // pr[22 - i] = |x[23:i+1]
     end endgenerate
@@ -554,7 +566,7 @@ module ot_s81sl_ve_norm (input wire [23:0] x, input wire hp, output wire [23:0] 
         for (j = 0; j < 24; j = j + 1) begin
             yr[j] = 1'b0;
             for (k = 23 - j; k < 24; k = k + 1)   // leading one at k: y[j] = x[k - 23 + j]
-                yr[j] = yr[j] | (lead[k] & x[k - 23 + j]);
+                yr[j] = yr[j] | (((k == 23 && j >= 12) ? lead23_hi : lead[k]) & x[k - 23 + j]);
         end
     end
     assign y = yr;
@@ -582,4 +594,90 @@ module ot_s81sl_ve_qmul #(parameter integer LAT = 5) (
 `ifndef SYNTHESIS
     initial if (LAT != 5) $error("ot_s81sl_ve_qmul: only LAT 5 (the ve calendar's multiplier)");
 `endif
+endmodule
+
+// =====================================================================================================================
+// r4b hard-boundary helpers (keep_hierarchy: ABC / opt_merge cannot fold logic across them, and a module attribute is
+// copied to every $paramod derivative)
+// =====================================================================================================================
+// one-hot shift stage: y[j] = OR_g sel[g] & x[j + g * STEP] (x beyond W = 0)
+(* keep_hierarchy *)
+module ot_s81sl_ve_ohsh #(parameter integer W = 28, N = 7, STEP = 4) (
+    input wire [W-1:0] x, input wire [N-1:0] sel, output reg [W-1:0] y);
+    integer j, g;
+    always @* begin
+        y = {W{1'b0}};
+        for (j = 0; j < W; j = j + 1)
+            for (g = 0; g < N; g = g + 1)
+                if (j + g * STEP < W) y[j] = y[j] | (sel[g] & x[j + g * STEP]);
+    end
+endmodule
+
+// the jam's stage selects: s4[g] = !far & d[4:2] == g (g < 7: d < 28 when !far), s1[m] = d[1:0] == m
+(* keep_hierarchy *)
+module ot_s81sl_ve_sdec (input wire [4:0] d, input wire far, output wire [6:0] s4, output wire [3:0] s1);
+    genvar g;
+    generate
+        for (g = 0; g < 7; g = g + 1) begin : g_4
+            assign s4[g] = !far && (d[4:2] == g);
+        end
+        for (g = 0; g < 4; g = g + 1) begin : g_1
+            assign s1[g] = (d[1:0] == g);
+        end
+    endgenerate
+endmodule
+
+// 2:1 pick (s ? a : b)
+(* keep_hierarchy *)
+module ot_s81sl_ve_kmux #(parameter integer W = 12) (input wire s, input wire [W-1:0] a, b, output wire [W-1:0] y);
+    assign y = s ? a : b;
+endmodule
+
+// one 2-input AND (an enable copy: each instance is its own cell, so copies are never merged)
+(* keep_hierarchy *)
+module ot_s81sl_ve_kand (input wire a, b, output wire y);
+    assign y = a & b;
+endmodule
+
+// subnormal masks: E[s] = (shc == s), Gt[s] = (shc > s) for s < 49, through the H / L predecode (each line <= 14 loads)
+// (r4b: predecode and combine are separate hard-boundary modules: in one module ABC re-derived the 49 terms straight from
+// shc, 49 loads per shc literal)
+(* keep_hierarchy *)
+module ot_s81sl_ve_mdec (input wire [5:0] shc, output wire [48:0] eq, gt, output wire [47:0] ms);
+    wire [7:0] HE, HG, LE, LG;
+    ot_s81sl_ve_mpre u_p (.shc(shc), .he(HE), .hg(HG), .le(LE), .lg(LG));
+    ot_s81sl_ve_mcomb u_c (.he(HE), .hg(HG), .le(LE), .lg(LG), .eq(eq), .gt(gt));
+    // ms[k] = E[0] | Gt[k + 1]: E[0] from two separate AND instances, one per half (r4c unit census: E[0] 49 loads)
+    wire e0a, e0b;
+    ot_s81sl_ve_kand u_e0a (.a(HE[0]), .b(LE[0]), .y(e0a));
+    ot_s81sl_ve_kand u_e0b (.a(HE[0]), .b(LE[0]), .y(e0b));
+    genvar k;
+    generate for (k = 0; k < 48; k = k + 1) begin : g_ms
+        assign ms[k] = (k < 24 ? e0a : e0b) | gt[k + 1];
+    end endgenerate
+endmodule
+
+(* keep_hierarchy *)
+module ot_s81sl_ve_mpre (input wire [5:0] shc, output wire [7:0] he, hg, le, lg);
+    genvar g;
+    generate for (g = 0; g < 8; g = g + 1) begin : g_pd
+        assign he[g] = (shc[5:3] == g); assign hg[g] = (shc[5:3] > g);
+        assign le[g] = (shc[2:0] == g); assign lg[g] = (shc[2:0] > g);
+    end endgenerate
+endmodule
+
+(* keep_hierarchy *)
+module ot_s81sl_ve_mcomb (input wire [7:0] he, hg, le, lg, output wire [48:0] eq, gt);
+    wire [7:0] HE = he, HG = hg, LE = le, LG = lg;
+    genvar g;
+    generate for (g = 0; g < 49; g = g + 1) begin : g_eg
+        assign eq[g] = HE[g / 8] & LE[g % 8];
+        assign gt[g] = HG[g / 8] | (HE[g / 8] & LG[g % 8]);
+    end endgenerate
+endmodule
+
+// |f (a hidden bit); separate instances stay separate cells
+(* keep_hierarchy *)
+module ot_s81sl_ve_nz8 (input wire [7:0] f, output wire y);
+    assign y = |f;
 endmodule
