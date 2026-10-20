@@ -1,0 +1,5 @@
+OPEN c=4 bank=0 epoch=70 count=64 ok=1 running=0 emitted=0 rows=0 received=0 total=0
+LAST_SECTOR c=84 rows=64 busy=1 emitted=63 received=272
+OPEN c=85 bank=1 epoch=71 count=64 ok=0 running=1 emitted=63 rows=64 received=272 total=272
+FATAL: tools/hbm_layer_vehicle/cache_tail/tb_cache_tail.sv:62: OPEN_REJECT running tail (baseline causal witness)
+       Time: 846000  Scope: tb_cache_tail
