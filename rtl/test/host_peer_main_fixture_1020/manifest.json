@@ -658,6 +658,24 @@
       "onehot_max_loads": 8,
       "scope": "Read pointer/select producer fixed; component and fullleaf not qualified.",
       "unit": "oth-ubuntu-3207652-1792486708"
+    },
+    "full_native": {
+      "source": "42d9f0ad9",
+      "status": "FAIL_REMAINING_FAMILIES",
+      "roots": 63893,
+      "offenders": 381,
+      "max": 731,
+      "cr_bit_loads": [
+        2,
+        3
+      ],
+      "kept_onehot_FFs": 92,
+      "onehot_max_loads": 8,
+      "peer_subtree_max": 32,
+      "area_um2": 69435.45124,
+      "sequential_area_um2": 6882.60564,
+      "unit": "oth-ubuntu-2980712-1792486444",
+      "full_failure_artifact": "witnesses/cmd32/full_leaf/native_main7.json.gz"
     }
   },
   "constant_roles": {
