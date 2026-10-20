@@ -288,7 +288,7 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "pass_regex": "IDX_SELECTOR_STATIC SHELL1 MUT0 frame2 checked512 errors0 fault0",
-    "pass_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m0.log"
+    "pass_witness": "results/rtl/hbm_idx_static/selector_safe_1019/s2/vl_m0.log"
    },
    {
     "name": "selector_safe_mut1_ties",
@@ -297,7 +297,7 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "fail_regex": "fullshape exact selector mismatch",
-    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m1.log"
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/s2/vl_m1.log"
    },
    {
     "name": "selector_safe_mut2_id",
@@ -306,7 +306,7 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "fail_regex": "fullshape exact selector mismatch",
-    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m2.log"
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/s2/vl_m2.log"
    },
    {
     "name": "selector_safe_mut3_wd_copy_late",
@@ -315,7 +315,7 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "fail_regex": "fullshape exact selector mismatch",
-    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m3.log"
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/s2/vl_m3.log"
    },
    {
     "name": "selector_safe_mut4_emit_copy_early",
@@ -324,7 +324,7 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "fail_regex": "fullshape exact selector mismatch",
-    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/vl_m4.log"
+    "fail_witness": "results/rtl/hbm_idx_static/selector_safe_1019/s2/vl_m4.log"
    }
   ]
  },
