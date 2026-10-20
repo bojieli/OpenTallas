@@ -32,6 +32,8 @@ module ot_hbm_accel_smh_attn #(
                                         // row_scale_*).  One packed line per two edges (the converter's fixed rate);
                                         // an overlap, a raw packet colliding with a converted beat, a mark without a
                                         // packet or a mark on an attention word is a sticky schedule_fault (no stall).
+                                        // 1 = hard SAFE tile ot_smh_int8_tile (kit smh_int8_t1, LH-SMATT/INT8 10-19),
+                                        // 2 = the soft reference glue ot_smh_static_int8 (cycle-exact, benches only).
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -90,10 +92,24 @@ module ot_hbm_accel_smh_attn #(
     generate if (ENABLE_INT8) begin : g_int8
         wire          i8_mark = command[116];
         wire [1098:0] i8_out;
-        ot_smh_static_int8 u_int8 (.clk(clk), .rst_n(rst_n), .packet_in({packet[1098] & i8_mark, packet[1097:0]}),
-            .packet_out(i8_out));
+        wire [34:0]   i8_sel;                                // kept copies of i8_out[1098]: bit b selects with copy b/32
+        if (ENABLE_INT8 == 2) begin : g_soft                 // reference form (SMB-INT8 e592ae5d0): soft converter glue
+            ot_smh_static_int8 u_int8 (.clk(clk), .rst_n(rst_n), .packet_in({packet[1098] & i8_mark, packet[1097:0]}),
+                .packet_out(i8_out));
+            assign i8_sel = {35{i8_out[1098]}};
+        end else begin : g_hard                              // LH-SMATT/INT8 10-19: hard SAFE tile (kit smh_int8_t1),
+            wire          t_v;                               // cycle-exact with g_soft; reset release +2 (face landing)
+            wire [9:0]    t_tag;
+            wire [1023:0] t_data;
+            ot_smh_int8_tile u_int8 (.clk(clk), .rst_n(rst_n), .i_v(packet[1098] & i8_mark), .i_tag(packet[1097:1088]),
+                .i_codes(packet[1023:0]), .o_v(t_v), .o_tag(t_tag), .o_data(t_data), .o_sel(i8_sel));
+            assign i8_out = {t_v, t_tag, 64'd0, t_data};
+        end
         assign f_command = {command[191:117], 1'b0, command[115:0]};
-        assign f_packet  = i8_out[1098] ? i8_out : (i8_mark ? 1099'd0 : packet);
+        genvar i8b;
+        for (i8b = 0; i8b < 1099; i8b = i8b + 1) begin : g_i8mux
+            assign f_packet[i8b] = i8_sel[i8b / 32] ? i8_out[i8b] : (!i8_mark && packet[i8b]);
+        end
         reg i8_fault, i8_busy;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin i8_fault <= 1'b0; i8_busy <= 1'b0; end
