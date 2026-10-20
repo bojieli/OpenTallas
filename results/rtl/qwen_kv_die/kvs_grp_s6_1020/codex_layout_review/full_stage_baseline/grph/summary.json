@@ -1,0 +1,343 @@
+{
+  "scope": "READONLY ORIGINAL CTS complete sequential-stage data endpoint L1 comparison from completed source/Lib identity receipt. Full combinational cones can include multiple native nets; this is stage endpoint reach, distinct from individual native driver/load reach. No macro move, pin move, free-FF assumption, timing or new-layout claim.",
+  "input_sha256": "fcd32e5175db60917fc9bfd95e0d04cc92c97337257b495c900432bc28d7cede",
+  "input_branch": "codex/kv-grp-full-cones-1020",
+  "input_commit": "3268d1abd",
+  "odb_sha256": "4e673388ea7a5fb676a057a560be83f05248614d10618f4258eca7657d5ddea2",
+  "pairs": 99883,
+  "over405_pairs": 1467,
+  "max_stage_endpoint_L1_um": 582.822,
+  "over405_by_boundary_class": {
+    "interior_or_multistage_landing_unresolved -> direct_port_data_output": 229,
+    "direct_port_data_input -> interior_or_multistage_landing_unresolved": 1232,
+    "interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 6
+  },
+  "all_pairs_by_boundary_class": {
+    "interior_or_multistage_landing_unresolved -> direct_port_data_output": 11541,
+    "input_port -> direct_port_data_input": 1553,
+    "direct_port_data_input -> direct_port_data_output": 8,
+    "input_port -> direct_port_data_input_and_output": 3,
+    "interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 75727,
+    "direct_port_data_input -> interior_or_multistage_landing_unresolved": 11051
+  },
+  "max_endpoint_L1_by_boundary_class_um": {
+    "interior_or_multistage_landing_unresolved -> direct_port_data_output": 582.822,
+    "input_port -> direct_port_data_input": 374.253,
+    "direct_port_data_input -> direct_port_data_output": 331.7219999999999,
+    "input_port -> direct_port_data_input_and_output": 5.967000000000009,
+    "interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 420.66900000000004,
+    "direct_port_data_input -> interior_or_multistage_landing_unresolved": 462.942
+  },
+  "worst10": [
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35249_c0/u_cell/D",
+        "instance": "u35249_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          367.038,
+          385.425
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 582.822,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35235_c0/u_cell/D",
+        "instance": "u35235_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          346.734,
+          384.885
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 561.978,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35324_c0/u_cell/D",
+        "instance": "u35324_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          326.322,
+          384.885
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 541.566,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35310_c0/u_cell/D",
+        "instance": "u35310_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          306.99,
+          385.155
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 522.5039999999999,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35296_c0/u_cell/D",
+        "instance": "u35296_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          285.876,
+          385.695
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 501.92999999999995,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u40748_c0/u_cell/QN",
+        "instance": "u40748_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          8.208,
+          262.845
+        ],
+        "net": "n4296_c0",
+        "net_id": 39273
+      },
+      "endpoint": {
+        "name": "u35262_c0/u_cell/D",
+        "instance": "u35262_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          384.426,
+          384.885
+        ],
+        "net": "net20546",
+        "net_id": 58628
+      },
+      "endpoint_L1_um": 498.2579999999999,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u40747_c0/u_cell/QN",
+        "instance": "u40747_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          8.478,
+          273.375
+        ],
+        "net": "n42309_c0",
+        "net_id": 38833
+      },
+      "endpoint": {
+        "name": "u35261_c0/u_cell/D",
+        "instance": "u35261_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          384.048,
+          385.155
+        ],
+        "net": "net20675",
+        "net_id": 58908
+      },
+      "endpoint_L1_um": 487.34999999999997,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u41140_c0/u_cell/QN",
+        "instance": "u41140_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          207.306,
+          355.185
+        ],
+        "net": "n41059_c0",
+        "net_id": 37970
+      },
+      "endpoint": {
+        "name": "ot_prs_00013_ff/D",
+        "instance": "ot_prs_00013_ff",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          5.454,
+          71.685
+        ],
+        "net": "net24081",
+        "net_id": 66771
+      },
+      "endpoint_L1_um": 485.352,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u41139_c0/u_cell/QN",
+        "instance": "u41139_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          206.712,
+          355.455
+        ],
+        "net": "n34082_c0",
+        "net_id": 31879
+      },
+      "endpoint": {
+        "name": "ot_prs_00012_ff/D",
+        "instance": "ot_prs_00012_ff",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          6.534,
+          71.685
+        ],
+        "net": "net24076",
+        "net_id": 66775
+      },
+      "endpoint_L1_um": 483.948,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    },
+    {
+      "root": {
+        "name": "u35333_c0/u_cell/QN",
+        "instance": "u35333_c0/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          27.216,
+          142.425
+        ],
+        "net": "n4272_c0",
+        "net_id": 39139
+      },
+      "endpoint": {
+        "name": "u35281_c0/u_cell/D",
+        "instance": "u35281_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          265.788,
+          384.885
+        ],
+        "net": "net20557",
+        "net_id": 58649
+      },
+      "endpoint_L1_um": 481.032,
+      "root_boundary": "interior_or_multistage_landing_unresolved",
+      "endpoint_boundary": "direct_port_data_output"
+    }
+  ]
+}
