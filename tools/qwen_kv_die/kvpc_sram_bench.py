@@ -16,6 +16,8 @@ the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their 
 chain fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
 KV-PC3 sr6: the DUT lands the fault-chain input fi (pc__fi) in a face register (+1 hclk edge, fault-only): REF is fed fi one
 hclk edge late (ref_delay); mutant 5 (sched / ctrl / path / tile, OT_KVPC_LAND_MUT) bypasses the landing and must FAIL.
+KV-PC7 sr9: mutant 7 (sched / ctrl / path / tile, OT_KVPC7_MUT) registers the static-row match without its lookahead;
+mutant 8 (tile, OT_KVPC7_RST_MUT) lets the reset landing's second stage skip the first (release one edge early).
 KV-PC2 10-19: front / return banks write on pll_hbm (no storage-root clocks); unit benches unchanged (roots = pll_hbm).
     python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit U [--tile pc|pc_h] [--mut N] [--edges E] [--seed S] --out DIR
 One verdict line 'KVPC_<UNIT> PASS|FAIL ...'; exit 0 only on PASS."""
@@ -236,7 +238,7 @@ def main():
                          {'pll_hbm': 512}, {'hrst': 'pll_hbm'}, edges, a.mut, tag='SCHED', strap={},
                          ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'})
         (out / 'tb.sv').write_text(tb)
-        defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
+        defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 5: ['OT_KVPC_LAND_MUT'], 7: ['OT_KVPC7_MUT']}.get(a.mut, [])
         return build_run(out, 'tb_kvpc_sched', [str(out / 'tb.sv')] + base, defs, a.threads, 'SCHED', plus)
     if a.unit in ('port', 'chain', 'esm', 'rhop', 'rhead'):
         # KV-PC5-C native32 rewrites: original vs clone, random lockstep, every output every edge; mutant 6 =
@@ -303,7 +305,7 @@ def main():
                          ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'}, extra=erk)
         (out / 'tb.sv').write_text(tb)
         defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_CDC_UP_MUT'], 3: ['OT_KVPC_FRONT_MUT4'],
-                5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
+                5: ['OT_KVPC_LAND_MUT'], 7: ['OT_KVPC7_MUT']}.get(a.mut, [])
         return build_run(out, f'tb_kvpc_{a.unit}', [str(out / 'tb.sv')] + base, defs, a.threads, tag, plus)
     # tile: DUT = the OT_KV_PC_SRAM tile, REF = the _rl tile; storage roots driven by hck in both
     nm = f'qkd_kvs_{a.tile}'
@@ -333,7 +335,7 @@ def main():
     (out / 'tb.sv').write_text(tb)
     files = [str(out / 'tb.sv'), str(out / 'tiles.sv')] + base
     defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT'],
-            4: ['OT_KVPC_HFX_MUT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
+            4: ['OT_KVPC_HFX_MUT'], 5: ['OT_KVPC_LAND_MUT'], 7: ['OT_KVPC7_MUT'], 8: ['OT_KVPC7_RST_MUT']}.get(a.mut, [])
     return build_run(out, 'tb_kvpc_tile', files, defs, a.threads, 'TILE', plus)
 
 

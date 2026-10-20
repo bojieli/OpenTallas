@@ -722,6 +722,32 @@
     "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_h_m4.log"
    },
    {
+    "name": "kvpc_sched_mut7",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 7 --threads 4 --out {RUN}/bench/kvpc_sched_m7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_SCHED PASS ",
+    "fail_regex": "^KVPC_SCHED FAIL .* mut=7",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/sched_m7.log"
+   },
+   {
+    "name": "kvpc_tile_pc_h_mut8",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc_h --mut 8 --threads 4 --out {RUN}/bench/kvpc_tile_pc_h_m8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TILE PASS ",
+    "fail_regex": "^KVPC_TILE FAIL .* mut=8",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_h_m8.log"
+   },
+   {
     "name": "kvpc_tile_pc_h_mut5",
     "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc_h --mut 5 --threads 4 --out {RUN}/bench/kvpc_tile_pc_h_m5",
     "expect": "fail",

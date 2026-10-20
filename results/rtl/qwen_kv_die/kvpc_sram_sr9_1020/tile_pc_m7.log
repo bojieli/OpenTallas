@@ -1,0 +1,18 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=19978  ck out pc__po
+MISMATCH t=19978 hck out pc__po
+MISMATCH t=19983  ck out pc__er
+MISMATCH t=19983 hck out pc__er
+MISMATCH t=19984  ck out pc__her
+MISMATCH t=19984 hck out pc__her
+MISMATCH t=19989  ck out pc__po
+OUT pc__er mismatches=2
+OUT pc__po mismatches=11
+OUT pc__her mismatches=2
+KVPC_TILE FAIL edges=20000 checks=528046 errors=15 active_out=193218 mut=7
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9c/out/tile_pc_m7/tb.sv:136: Verilog $finish
+HFX active_edges=19987 final=011
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.687 s; speed 24.287 us/s
+- Verilator: cpu 0.685 s on 1 threads; allocated 8 MB
+

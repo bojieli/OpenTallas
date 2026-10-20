@@ -2610,7 +2610,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
                        : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) so_m_q <= 1'b0; else so_m_q <= so_vn && so_eb && so_el && so_eh;
+      if (!rst_n) so_m_q <= 1'b0;
+`ifdef OT_KVPC7_MUT
+      else so_m_q <= so_v && so_b == sb && so_row == srw;     // mutant 7: the match registered without the lookahead
+`else
+      else so_m_q <= so_vn && so_eb && so_el && so_eh;
+`endif
     // ---- KV-PC5 write queue lookahead ---------------------------------------------------------------------------
     // KV-PC7 (5): the two wr_ok cases of the write-queue lookahead, selected last (wq_n_nx == wq_n + push - wr_ok)
     wire [WQW:0] wq_n_p = wq_n + (wr_v && wr_r ? 1'b1 : 1'b0);

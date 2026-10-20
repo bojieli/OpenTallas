@@ -137,6 +137,15 @@ def benches(tile, hfx=False, wit=None, fi=False):
                       .replace('kvpc_tile_m4', f'kvpc_tile_{tile}_m4'), expect='fail', threads=4, peak_ram_gb=16,
                       needs=['verilator'], pass_regex=r'^KVPC_TILE PASS ', fail_regex=r'^KVPC_TILE FAIL .* mut=4',
                       fail_witness=f'{WIT}/tile_{tile}_m4.log'))
+    if wit and 'sr9' in wit:    # KV-PC7: the static-row match lookahead (sched / tile) and the reset landing (tile)
+        b.append(dict(name='kvpc_sched_mut7', cmd=sh.format(u='sched', m=7), expect='fail', threads=4, peak_ram_gb=8,
+                      needs=['verilator'], pass_regex=r'^KVPC_SCHED PASS ', fail_regex=r'^KVPC_SCHED FAIL .* mut=7',
+                      fail_witness=f'{WIT}/sched_m7.log'))
+        for m in ((7, 8) if tile == 'pc' else (8,)):    # random pc_h stimulus never reaches mutant 7 (sched m7 does)
+            b.append(dict(name=f'kvpc_tile_{tile}_mut{m}', cmd=sh.format(u='tile', m=m).replace('--unit tile', f'--unit tile --tile {tile}')
+                          .replace(f'kvpc_tile_m{m}', f'kvpc_tile_{tile}_m{m}'), expect='fail', threads=4, peak_ram_gb=16,
+                          needs=['verilator'], pass_regex=r'^KVPC_TILE PASS ', fail_regex=rf'^KVPC_TILE FAIL .* mut={m}',
+                          fail_witness=f'{WIT}/tile_{tile}_m{m}.log'))
     if fi:
         b.append(dict(name=f'kvpc_tile_{tile}_mut5', cmd=sh.format(u='tile', m=5).replace('--unit tile', f'--unit tile --tile {tile}')
                       .replace('kvpc_tile_m5', f'kvpc_tile_{tile}_m5'), expect='fail', threads=4, peak_ram_gb=16,

@@ -721,7 +721,12 @@ TIM_PC7 = [
     wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
                        : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) so_m_q <= 1'b0; else so_m_q <= so_vn && so_eb && so_el && so_eh;'''),
+      if (!rst_n) so_m_q <= 1'b0;
+`ifdef OT_KVPC7_MUT
+      else so_m_q <= so_v && so_b == sb && so_row == srw;     // mutant 7: the match registered without the lookahead
+`else
+      else so_m_q <= so_vn && so_eb && so_el && so_eh;
+`endif'''),
     ('''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? sb_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);''',
      '''    // KV-PC7 (3): r_v && r_sp == the static-PRE branch of the priority above taken (no earlier branch fires)
     wire r_sp_x = !(REF_MODE && ref_due_n && ref_pend) && !(!REF_MODE && ref_due_n) && !preall_ok && !ep_rdy && !forced_pre &&
@@ -1679,9 +1684,13 @@ def sr_tile():
             f'    always @(posedge {clk} or negedge {n})\n'
             f"        if (!{n}) begin rland_{clk}_s1 <= 1'b0; rland_{clk}_s1r <= 1'b0; end\n"
             f"        else begin rland_{clk}_s1 <= 1'b1; rland_{clk}_s1r <= 1'b1; end\n"
+            f"`ifdef OT_KVPC7_RST_MUT\n"
+            f'    always @(posedge {clk} or negedge {n})       // mutant 8: a one-stage landing (release one edge early)\n'
+            f"        if (!{n}) rland_{clk}_s2__qv <= {k}'d0; else rland_{clk}_s2__qv <= {{{k}{{1'b1}}}};\n"
+            f"`else\n"
             f'    always @(posedge {clk} or negedge rland_{clk}_s1r)\n'
             f"        if (!rland_{clk}_s1r) rland_{clk}_s2__qv <= {k}'d0;\n"
-            f"        else rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}};\n"
+            f"        else rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}};\n`endif\n"
             f'    assign {w} = rland_{clk}_s2__qv[0];   // KV-PC5: {k} kept copies of the landed reset (ot_rst_copies)\n')
     return t.replace('// KVJ-G2 2026-10-17:', '// KV-PC 2026-10-19 OT_KV_PC_SRAM=1 (pc / pc_h: kv_static_die.pc_sram_text; kv_pc_sram_gen.py).\n'
                      '// KVJ-G2 2026-10-17:', 1)
