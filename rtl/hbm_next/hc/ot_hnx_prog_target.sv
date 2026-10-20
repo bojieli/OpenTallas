@@ -78,24 +78,24 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
         program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;
     end
     (* keep = "true", dont_touch = "true" *) reg [1:0] cv_c;   // = cv
-    (* keep = "true", dont_touch = "true" *) reg [4:0] dv_c;   // = dv: [0] scan ptr, [1] img clear hi, [2] loops, [3] base+limit, [4] scan_limit
+    (* keep = "true", dont_touch = "true" *) reg [5:0] dv_c;   // = dv: [0] scan ptr, [1] img clear hi, [2] loops, [3] limit, [4] scan_limit, [5] base
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin cv<=0;dv<=0;lv<=0;cv_c<=0;dv_c<=0;end
-        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;cv_c<={2{cfg_v}};dv_c<={5{desc_v}};end
+        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;cv_c<={2{cfg_v}};dv_c<={6{desc_v}};end
     // ---- next-state of the write strobe and of install_open (exactly the assignments of the control block below)
     wire t_hit=target==tid;
     wire cfg_hit=cv && t_hit;
     wire dsc_hit=dv && t_hit;
     wire [1:0] cfg_hit_c={cv_c[1] && t_hit,cv_c[0] && t_hit};
-    wire [4:0] dsc_hit_c;
-    for(genvar k=0;k<5;k=k+1)begin:g_dh assign dsc_hit_c[k]=dv_c[k] && t_hit; end
+    wire [5:0] dsc_hit_c;
+    for(genvar k=0;k<6;k=k+1)begin:g_dh assign dsc_hit_c[k]=dv_c[k] && t_hit; end
     wire cfg_bad=program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                  data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address};
     wire [1:0] we_n={cfg_hit_c[1] && !cfg_bad,cfg_hit_c[0] && !cfg_bad};   // rows 0..NR/2-1 | NR/2..
     wire dsc_bad=program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
     wire [1:0] io_n={dsc_hit_c[1] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open),
                      dsc_hit_c[0] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open)};
-    wire dsc_ok_a=dsc_hit_c[2] && !dsc_bad, dsc_ok_b=dsc_hit_c[3] && !dsc_bad;   // stored_loops | stored_base/limit
+    wire dsc_ok_a=dsc_hit_c[2] && !dsc_bad, dsc_ok_b=dsc_hit_c[3] && !dsc_bad, dsc_ok_c=dsc_hit_c[5] && !dsc_bad;   // loops | limit | base
     // scan pointer next-state
     wire reuse=validated && base==stored_base && limit==stored_limit;
     wire scan_start=dsc_hit_c[0] && !dsc_bad && !reuse;           // scan pointer (srow_n)
@@ -103,7 +103,8 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
     wire scan_last={1'b0,scan_row}+1'b1==scan_limit;
     always @(posedge clk)begin
         if(dsc_ok_a)stored_loops<=loops;
-        if(dsc_ok_b)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];end
+        if(dsc_ok_b)stored_limit<=limit[PCW:0];
+        if(dsc_ok_c)stored_base<=base[PCW-1:0];
         if(scan_start_l)scan_limit<=limit[PCW:0];
     end
     wire [PCW-1:0] srow_n=scan_start ? base[PCW-1:0] : ((sissue && !scan_last) ? scan_row+1'b1 : scan_row);

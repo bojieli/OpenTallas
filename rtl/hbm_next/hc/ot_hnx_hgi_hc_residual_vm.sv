@@ -67,7 +67,8 @@ module ot_hnx_hgi_hc_residual_vm #(
     //    operands (the 32-b bound multiplier hung on the calendar npos bits: c[1] 70 loads);
     //  * launch drives the row walk through its kept copy launch_c[1] (c[0] 53 loads).
     (* keep = "true", dont_touch = "true" *) reg act_o;     // = active: request valid / read
-    (* keep = "true", dont_touch = "true" *) reg act_w;     // = active: the row walk (rbase / rslot / rstep)
+    (* keep = "true", dont_touch = "true" *) reg act_w;     // = active: the row walk (rslot, rbase[7:0])
+    (* keep = "true", dont_touch = "true" *) reg act_v;     // = active: the row walk (rbase[15:8], rbl)
     (* keep = "true", dont_touch = "true" *) reg [2:0] rbl; // = rbase[2:0]: the 8 bank-address low adders
     assign local_read={8{act_o}};
     // sector of bank b = rbase + 8 rslot + b = {rbase[15:3] + rslot + carry(rbase[2:0] + b), (rbase[2:0] + b)[2:0]}
@@ -77,13 +78,14 @@ module ot_hnx_hgi_hc_residual_vm #(
         assign local_rq[b*17+:17]={act_o,rq_hi+13'(lo[3]),lo[2:0]};
     end
     wire fire_w=act_w;
+    wire [15:0] rb_n=rbase+rstep;
     reg ck_v,ck_busy; reg [3:0] ck_np; reg [15:0] ck_b; reg [16:0] ck_st;
     // (npos - 1) * stride as a 3-term shifted sum: exact whenever npos is 1..8, and npos outside 1..8 faults anyway
     wire [3:0] ck_m=ck_np-4'd1;
     wire [19:0] ck_span=({20{ck_m[0]}}&{3'd0,ck_st})|({20{ck_m[1]}}&{2'd0,ck_st,1'b0})|({20{ck_m[2]}}&{1'd0,ck_st,2'b0});
     always @(posedge clk)begin ck_np<=npos;ck_b<=base_sector;ck_st<=eff_stride;end
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin active<=0;act_o<=0;act_w<=0;rbl<=0;issue<=0;total<=0;base<=0;rbase<=0;rstep<=0;rslot<=0;valid<=0;done<=0;fault<=0;
+        if(!rst_n)begin active<=0;act_o<=0;act_w<=0;act_v<=0;rbl<=0;issue<=0;total<=0;base<=0;rbase<=0;rstep<=0;rslot<=0;valid<=0;done<=0;fault<=0;
             ck_v<=0;ck_busy<=0;end
         else begin
             valid<=(valid<<1)|fire;
@@ -91,17 +93,18 @@ module ot_hnx_hgi_hc_residual_vm #(
             ck_v<=launch;ck_busy<=active||(|valid);
             if(ck_v&&(ck_busy||ck_np<1||ck_np>8||ck_b[4:0]!=0||ck_st[4:0]!=0||ck_st<17'(SPR*8)||
                (32'(ck_b)+32'(ck_span)+32'(SPR*8))>32768))fault<=1;
-            if(launch_c[0])begin active<=1;act_o<=1;act_w<=1;issue<=0;total<=12'(npos*SPR);base<=base_sector;end
+            if(launch_c[0])begin active<=1;act_o<=1;act_w<=1;act_v<=1;issue<=0;total<=12'(npos*SPR);base<=base_sector;end
             if(launch_c[1])rstep<=16'(eff_stride);
             if(launch_c[2])begin rbase<=base_sector;rbl<=base_sector[2:0];end
             if(launch_c[3])rslot<=0;
             if(fire)begin
                 issue<=issue+1;
-                if(issue==total-1)begin active<=0;act_o<=0;act_w<=0;end
+                if(issue==total-1)begin active<=0;act_o<=0;act_w<=0;act_v<=0;end
             end
             if(fire_w)begin
-                if(rslot==12'(SPR-1))begin rslot<=0;rbase<=rbase+rstep;rbl<=rbl+rstep[2:0];end else rslot<=rslot+1;
+                if(rslot==12'(SPR-1))begin rslot<=0;rbase[7:0]<=rb_n[7:0];end else rslot<=rslot+1;
             end
+            if(act_v && rslot==12'(SPR-1))begin rbase[15:8]<=rb_n[15:8];rbl<=rbl+rstep[2:0];end
             for(integer b=0;b<8;b=b+1)
                 if(local_rr[b*257+256]!=valid[CAPTURE_LAT-1])fault<=1;
             if(valid[CAPTURE_LAT-1]&&order[CAPTURE_LAT-1]==total-1)done<=1;

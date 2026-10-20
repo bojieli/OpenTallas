@@ -38,8 +38,8 @@ module ot_hnx_hc_cal #(
     output wire [3*8*8-1:0] st_sel,      // [(j*8+b)*8+g]: sector j -> bank b, copy for data lane group g (gated)
     output wire [15:0] gp_c,             // KEPT copies of calendar[21] (gather_phase): [b] lg_rq address select of bank b,
                                          // [8+b] its request-valid select + return-valid gates (HUB-SAFE3: was 8, 37 loads)
-    output wire [8:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
-                                         // [3:0] residual_launch (calendar[0]), [8:4] gather_launch (calendar[22])
+    output wire [9:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
+                                         // [3:0] residual_launch (calendar[0]), [9:4] gather_launch (calendar[22])
 );
 // HUB-SAFE3 2026-10-20 (census safe2, zero added edges): valid1 has 3 kept copies (the gate fans out per consumer group:
 // st routing / gp+lc copies / calendar action bits; word_ok drove 47), start_v_q 3 kept copies (start acceptance per
@@ -88,17 +88,28 @@ module ot_hnx_hc_cal #(
     localparam [W-1:0] ACT=(W'(1)<<0)|(W'(1)<<21)|(W'(1)<<22)|(W'(1)<<59);
     // ---- (b) store routing, decoded from the capture register
     wire slot=gate_s && captured[59];
-    wire [15:0] sbase=captured[75:60]+16'(MUT_SBASE);
-    wire [2:0] spos=captured[78:76];
-    wire [15:0] srs=(captured[110:95]==16'd0||MUT_STRIDE!=0)?16'd3:captured[110:95];
-    wire [15:0] s0=sbase+16'(spos)*srs;
+    // HUB-SAFE3 r3: the bank decode (v_n, sel copies) reads a KEPT second capture of the store fields (cap_k), the sector
+    // headers (h_n) read captured: two separate s0 cones (one drove 45).  s0 = sbase + spos * srs as a 3-term shifted sum.
+    (* keep = "true", dont_touch = "true" *) reg [34:0] cap_k;   // = {captured[110:95], captured[78:60]}
+    always @(posedge clk)cap_k<={macro_data[110:95],macro_data[78:60]};
+    function automatic [15:0] f_s0(input [15:0] base, input [2:0] pos, input [15:0] rsf);
+        reg [15:0] rs;
+        begin
+            rs=(rsf==16'd0||MUT_STRIDE!=0)?16'd3:rsf;
+            f_s0=base+16'(MUT_SBASE)+({16{pos[0]}}&rs)+({16{pos[1]}}&{rs[14:0],1'b0})+({16{pos[2]}}&{rs[13:0],2'b0});
+        end
+    endfunction
+    wire [15:0] s0=f_s0(captured[75:60],captured[78:76],captured[110:95]);
+    wire [15:0] s0k=f_s0(cap_k[15:0],cap_k[18:16],cap_k[34:19]);
     wire [15:0] sj[0:2];
     assign sj[0]=s0; assign sj[1]=s0+16'd1; assign sj[2]=s0+16'd2;
+    wire [2:0] sk[0:2];
+    assign sk[0]=s0k[2:0]; assign sk[1]=s0k[2:0]+3'd1; assign sk[2]=s0k[2:0]+3'd2;
     reg [7:0] v_n; reg [8*16-1:0] h_n;
     always @*begin
         v_n=0;h_n=0;
         for(integer j=0;j<3;j=j+1)begin
-            v_n[sj[j][2:0]]=slot;
+            v_n[sk[j]]=slot;
             h_n[sj[j][2:0]*16+:16]=sj[j];
         end
     end
@@ -114,7 +125,7 @@ module ot_hnx_hc_cal #(
     // sector's bank == b), so they are identical registers that synthesis must not fold (ot_keep_regs.tcl).
     for(genvar j=0;j<3;j=j+1)begin:g_sj
         for(genvar b=0;b<8;b=b+1)begin:g_sb
-            wire d_sel=slot && sj[j][2:0]==3'(b);
+            wire d_sel=slot && sk[j]==3'(b);
             (* keep = "true", dont_touch = "true" *) reg [7:0] sel_c;
             always @(posedge clk)sel_c<={8{d_sel}};
             assign st_sel[(j*8+b)*8+:8]=sel_c;
@@ -123,8 +134,8 @@ module ot_hnx_hc_cal #(
     (* keep = "true", dont_touch = "true" *) reg [15:0] gp_r;
     always @(posedge clk)gp_r<={16{gate_c && captured[21]}};
     assign gp_c=gp_r;
-    (* keep = "true", dont_touch = "true" *) reg [8:0] lc_r;
-    always @(posedge clk)lc_r<={{5{gate_c && captured[22]}},{4{gate_c && captured[0]}}};
+    (* keep = "true", dont_touch = "true" *) reg [9:0] lc_r;
+    always @(posedge clk)lc_r<={{6{gate_c && captured[22]}},{4{gate_c && captured[0]}}};
     assign lc_c=lc_r;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
