@@ -988,8 +988,10 @@ def main():
                 break
             if l1 != l2 and r1[1] < r2[3] - 0.01 and r2[1] < r1[3] - 0.01 and (l1, l2) not in seen_:
                 seen_.add((l1, l2)); bad.append(('overlap', l1, l2))
-    in_channel = sorted(n for n, v in pl.items() for m, u in pl.items() if m != n and channels(m) and
-                        u['x'] <= v['x'] and v['x'] + v['w'] <= u['x'] + u['w'] and u['y'] <= v['y'] and v['y'] + v['h'] <= u['y'] + u['h'])
+    # Pure channels() reads fixed cell/view/slot metadata only. Avoid billions
+    # of repeated negative lookups while retaining the legacy bbox diagnostic.
+    from channel_containment import channel_containment
+    in_channel = channel_containment(pl, channels)
     print('placement problems', len(bad), bad[:10])
 
     # ---------------- nets ----------------
