@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   751 GB (avail 639, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 17 disk 509 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2936744-1792506620 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PASS [('VSS', 122482, 91134), ('VDD', 122259, 90968)]
+Traceback (most recent call last):
+  File "/audit/pg_grids.py", line 16, in <module>
+    out.write_text(json.dumps({'status':status,'scope':'Actual final ODB both POWER/GROUND special-wire grids and net-terminal membership. This is metadata/shape existence, not electrical resistance/short/via-connectivity qualification.','odb_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'grids':rows},indent=2)+'\n');print(status,[(r['net'],r['shape_count'],r['via_shape_count']) for r in rows]);sys.exit(0 if status=='PASS' else 3)
+SystemExit: 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2936744-1792506620): exit 1

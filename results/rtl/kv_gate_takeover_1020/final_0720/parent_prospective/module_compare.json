@@ -1,0 +1,23 @@
+{
+  "scope": "Prospective generator replay only. Actual live d11s selected _hs_mu_ba source is absent, so current parent sourcebind INVALID; no parent qualification. Compare source lexical modules after only top module renaming and removing comments/whitespace; not new behavioural equivalence proof.",
+  "parent_prospective_sha256": "6323c7df88060cc83b84f4078667bd696a0b260e76255e2338956c7f7d9e197c",
+  "generator_source": "04b625135 with copied d11s flags; siblingbind_chain owns replay receipts",
+  "gate_source": "295504c93",
+  "modules": {
+    "qkd_kvs_hroot": {
+      "present_prospective": true,
+      "present_gate": true,
+      "normalized_equal": true
+    },
+    "qkd_kv_es_fan_stack_safe32": {
+      "present_prospective": false,
+      "present_gate": true,
+      "normalized_equal": false
+    },
+    "qkd_kv_stack_relays_s32": {
+      "present_prospective": false,
+      "present_gate": true,
+      "normalized_equal": false
+    }
+  }
+}

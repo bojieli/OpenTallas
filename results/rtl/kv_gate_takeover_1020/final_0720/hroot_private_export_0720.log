@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   751 GB (avail 639, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 17 disk 508 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-private-export-0720
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2938203-1792506650 after 0 s
+{"name": "qkd_kvs_hroot_safe32", "ok": true, "checked": true, "files": {"qkd_kvs_hroot_safe32.lef": "45bda17f6289efbf81065153ff6dd05dca86e24d5dc2280496a07c3300fef5cd", "qkd_kvs_hroot_safe32_ff.lib": "fc8a8475f8c4e2835f9f20076fdd107125ec01aedcea793dfe7735a661ff7382", "qkd_kvs_hroot_safe32_ss.lib": "0c680479f0c1529cf80d41c81e601435a7ecf4726da688b798d5af40a054eddf", "qkd_kvs_hroot_safe32_tt.lib": "157261723b12fa544014a08cedd8f8879f2e530da3f912265d4124cd76d88dcd"}}
+CK_SS_MEAN=454 CK_SS_ALL_MEAN=454 CK_SS_MIN=438 CK_SS_ALL_MIN=438 CK_SS_MAX=493 CK_SS_ALL_MAX=493 CK_TT_MEAN=353 CK_TT_ALL_MEAN=353 CK_TT_MIN=338 CK_TT_ALL_MIN=338 CK_TT_MAX=392 CK_TT_ALL_MAX=392 CK_FF_MEAN=292 CK_FF_ALL_MEAN=291 CK_FF_MIN=276 CK_FF_ALL_MIN=276 CK_FF_MAX=332 CK_FF_ALL_MAX=332 CK_ROUTE_REF=SS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2938203-1792506650): exit 0

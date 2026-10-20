@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "scope": "Actual final ODB both POWER/GROUND special-wire grids and net-terminal membership. This is metadata/shape existence, not electrical resistance/short/via-connectivity qualification.",
+  "odb_sha256": "1a870796af134276fc70bc3a0ec8dea5352bef4a8d5ef5616f9b81d611bf8ac6",
+  "grids": [
+    {
+      "net": "VSS",
+      "sigtype": "GROUND",
+      "native_iterms": 329845,
+      "special_wires": 1,
+      "shape_count": 122482,
+      "via_shape_count": 91134,
+      "metal_shapes_by_layer": {
+        "M5": 55,
+        "M2": 549,
+        "M1": 549,
+        "M3": 30195
+      },
+      "bterms": [
+        {
+          "name": "VSS",
+          "sigtype": "GROUND",
+          "pins": 1
+        }
+      ]
+    },
+    {
+      "net": "VDD",
+      "sigtype": "POWER",
+      "native_iterms": 329845,
+      "special_wires": 1,
+      "shape_count": 122259,
+      "via_shape_count": 90968,
+      "metal_shapes_by_layer": {
+        "M5": 55,
+        "M2": 548,
+        "M1": 548,
+        "M3": 30140
+      },
+      "bterms": [
+        {
+          "name": "VDD",
+          "sigtype": "POWER",
+          "pins": 1
+        }
+      ]
+    }
+  ]
+}
