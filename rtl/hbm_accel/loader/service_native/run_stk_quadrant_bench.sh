@@ -3,6 +3,9 @@
 # Run from the repo root (fleet, via ot-run):  run_stk_quadrant_bench.sh <out> <case>
 #   wbq_e | wbq_w | wbq_e_wopen   ot_hbm_svc_wb_kport_q quadrant WB path + lockstep vs ot_hbm_svc_wb_kport (PASS expected)
 #   wbq_mut_quad | wbq_mut_span | wbq_mut_premature | wbq_mut_ksaddr     mutants (must FAIL with WB_INTEGRITY)
+#   wbq_mut_slice | wbq_mut_commit | wbq_mut_credit   HBM-WBK2 kq2 core mutants (slice select / watermark / FIFO credit)
+#   price_e | price_e_f2 | price_e_g   pricing: blocks one at a time (+SERIAL; +GN=0 = no group traffic), fence per block
+#   wbq_e_f2 | wbq_w_f2 | wbq_e_wopen_f2   the same benches with FAW=2 (depth-4 crossing FIFOs)
 #   wb_default    GEN0 regressions on the parameterised cutthrough: run_wb_kshare_bench.sh (baseline + 3 mutants) and
 #                 run_wb_cutthrough_cdc_bench.sh (PASS expected)
 #   sf_q | sf_mut_pair | sf_mut_share   per-quadrant stack fault lockstep vs the NPC 32 master (+ mutants)
@@ -18,7 +21,7 @@ command -v "$ys" >/dev/null 2>&1 || ys=yosys
 n=rtl/hbm_accel/loader/service_native
 ref=results/rtl/rbh_stk_1018/ref
 wbsrc=("$n/tb_hbm_svc_wb_kshare_qh.sv" "$n/ot_hbm_svc_wb_kport_q.sv" "$n/ot_hbm_svc_wb_kport.sv" "$n/ot_hbm_svc_vm_kshare.sv"
- "$n/ot_hbm_svc_wb_cutthrough_cdc.sv" "$n/ot_hbm_svc_async_fifo.sv"
+ "$n/ot_hbm_svc_wb_cutthrough_cdc.sv" "$n/ot_hbm_svc_wb_kq2.sv" rtl/link/ot_link_afifo.sv "$n/ot_hbm_svc_async_fifo.sv"
  "$n/ot_hbm_svc_native_sector_pipeline_leaves.sv" "$n/ot_hbm_svc_pc_ctrl_leaf.sv" "$n/ot_hbm_svc_pc_ctrl_leaf_cfg.sv"
  "$n/tb_hbm_svc_command_dram_pipeline_fixture.sv" rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv
  rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv
@@ -28,7 +31,7 @@ wbq() {   # wbq <label> <expect pass|fail> <verilator -G args...>
  sha256sum "${wbsrc[@]}" > "$out/source.sha256"
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_svc_wb_kshare_qh --Mdir "$out/obj-$L" -o sim "$@" "${wbsrc[@]}" > "$out/build-$L.log" 2>&1
- local rc=0; "$out/obj-$L/sim" > "$out/$L.log" 2>&1 || rc=$?
+ local rc=0; "$out/obj-$L/sim" ${SIMARGS:-} > "$out/$L.log" 2>&1 || rc=$?
  rm -rf "$out/obj-$L"
  cat "$out/$L.log" | tail -20
  if [[ $E == pass ]]; then test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_qh' "$out/$L.log" && echo "STK_WBQ PASS $L"
@@ -50,6 +53,15 @@ case "$c" in
  wbq_mut_span)      wbq "$c" fail -GQE=1 -GWBMUT=3 ;;
  wbq_mut_premature) wbq "$c" fail -GQE=1 -GWBMUT=1 ;;
  wbq_mut_ksaddr)    wbq "$c" fail -GQE=1 -GKSMUT=4 ;;
+ wbq_mut_slice)     wbq "$c" fail -GQE=1 -GWBMUT=5 ;;
+ wbq_mut_commit)    wbq "$c" fail -GQE=1 -GWBMUT=6 ;;
+ wbq_mut_credit)    wbq "$c" fail -GQE=1 -GWBMUT=8 ;;
+ price_e)           SIMARGS="+SERIAL +GN=0" wbq "$c" pass -GQE=1 ;;
+ price_e_f2)        SIMARGS="+SERIAL +GN=0" wbq "$c" pass -GQE=1 -GFAW=2 ;;
+ price_e_g)         SIMARGS="+SERIAL" wbq "$c" pass -GQE=1 ;;
+ wbq_e_f2)          wbq "$c" pass -GQE=1 -GFAW=2 ;;
+ wbq_w_f2)          wbq "$c" pass -GQE=0 -GFAW=2 ;;
+ wbq_e_wopen_f2)    wbq "$c" pass -GQE=1 -GWOPEN=1 -GFAW=2 ;;
  wb_default)
   bash "$n/run_wb_kshare_bench.sh" "$out/kshare_q" | tee "$out/wb_default.log"
   test "$(grep -c '^QUALIFIED' "$out/wb_default.log")" = 4

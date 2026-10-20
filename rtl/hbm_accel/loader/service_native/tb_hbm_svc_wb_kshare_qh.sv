@@ -15,7 +15,7 @@
 // (c) group reads/writes and VM fills on the quadrant's 16 PCs exact, no fault anywhere.
 // Params: QE, KSMUT (kshare MUT), WBMUT (wb_kport_q MUT), WOPEN.  Exit: "PASS" line, else WB_INTEGRITY / FAIL.
 module tb_hbm_svc_wb_kshare_qh;
- parameter integer QE=1, KSMUT=0, WBMUT=0, WOPEN=0;
+ parameter integer QE=1, KSMUT=0, WBMUT=0, WOPEN=0, FAW=3;   // FAW: HBM-WBK2 crossing FIFO depth log2
  localparam [31:0] K_BASE=32'h28800000;localparam [31:0] O_BASE=K_BASE>>1;localparam integer K_MEM=65536;localparam [1:0] STK=2'd2;
  localparam integer P0=16*QE;
  integer errors=0,cur_cycle=0;
@@ -27,7 +27,7 @@ module tb_hbm_svc_wb_kshare_qh;
  reg rv=0,rb=0,fb=0,fs=0;reg[15:0]re=0,fe=0;reg[11:0]rt=0;reg[31:0]rbase=0;reg[2311:0]wd=0;
  wire wb_ready,fault_wb;wire[11:0]wa;wire wbw_v;wire[29:0]wbw_base;wire[11:0]wbw_total;
  wire[15:0]w_k_v,w_k_rdy,w_k_wr_done;wire[479:0]w_k_addr;wire[4095:0]w_k_wdata;
- ot_hbm_svc_wb_kport_q #(.WOPEN(WOPEN),.MUT(WBMUT)) u_wbp(.stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),
+ ot_hbm_svc_wb_kport_q #(.WOPEN(WOPEN),.MUT(WBMUT),.FAW(FAW)) u_wbp(.stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),
   .stream_fifo_clk({4{stream}}),.stk(STK),.quad(1'(QE)),
   .wb_reserve_v(rv),.wb_reserve_bank(rb),.wb_fill_bank(fb),.wb_reserve_epoch(re),.wb_fill_epoch(fe),.wb_reserve_sectors(rt),
   .wb_reserve_base(rbase),.wb_fill_start(fs),.wd(wd),.wb_ready(wb_ready),.wa(wa),
@@ -128,7 +128,7 @@ module tb_hbm_svc_wb_kshare_qh;
  function automatic [4:0] hsh(input [29:0] a);hsh=a[6:2]^a[11:7]^a[16:12];endfunction
  function automatic bit inq(input integer p);inq=(p/16)==QE;endfunction
  // ---------------------------------------------------------------- group model (quadrant PCs: reads in [0,0x8000), writes in [0xC000,0x10000))
- integer GN=120,NOWB=0,NOVM=0,NOGW=0;
+ integer GN=120,NOWB=0,NOVM=0,NOGW=0,SERIAL=0;   // SERIAL (HBM-WBK2 pricing): each block starts after the previous completed
  integer gi[0:31],grd_done[0:31],gw_iss[0:31],gw_done[0:31],grd_iss[0:31];
  reg[29:0]ga[0:31][0:511];reg[3:0]gl[0:31][0:511];reg[3:0]gs[0:31][0:511];
  logic[255:0]gexp[int];
@@ -231,7 +231,7 @@ module tb_hbm_svc_wb_kshare_qh;
   boff[5]=32'h5500;btot[5]=640;
   boff[6]=32'h57bf;btot[6]=300;
   boff[7]=32'h5a01;btot[7]=1;
-  if($value$plusargs("GN=%d",GN));if($test$plusargs("NOWB"))NOWB=1;if($test$plusargs("NOVM"))NOVM=1;if($test$plusargs("NOGW"))NOGW=1;
+  if($value$plusargs("GN=%d",GN));if($test$plusargs("SERIAL"))SERIAL=1;if($test$plusargs("NOWB"))NOWB=1;if($test$plusargs("NOVM"))NOVM=1;if($test$plusargs("NOGW"))NOGW=1;
   for(p=0;p<32;p=p+1)begin gi[p]=inq(p)?0:GN;grd_done[p]=0;gw_iss[p]=0;gw_done[p]=0;grd_iss[p]=0;fills[p]=0;seen[p]=inq(p)?0:'1;end
   for(i=0;i<K_MEM;i=i+1)dram.mem[i]=fimg(30'(K_BASE)+30'(i));
   #(20ns);hrst=1;srst=1;
@@ -239,7 +239,7 @@ module tb_hbm_svc_wb_kshare_qh;
   fork
    begin
     for(b=0;b<NB&&!NOWB;b=b+1)begin
-     t=0;while(blk_done<b-1&&t<200000)begin @(posedge stream);t=t+1;end
+     t=0;while(blk_done<(SERIAL?b:b-1)&&t<200000)begin @(posedge stream);t=t+1;end
      run_block(b);
      repeat(5+$urandom%40)@(posedge stream);
     end
