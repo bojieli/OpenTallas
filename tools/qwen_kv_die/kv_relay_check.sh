@@ -33,8 +33,15 @@ python3 "$SRC/tools/qwen_layerbench/netlist_relay_stages.py" --die-v "$B/die_bou
 # fault latencies, the seq KVN bundle) recomputed on THIS netlist table (post lanes / pads / stations) and checked
 KSM=; [ -s "$C/static_model.json" ] && KSM=$C/static_model.json
 if [ -z "$SCHED" ]; then
-  CST=${OT_COMPUTE_RELAY_STAGES:-$SRC/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json}
+  # KV-BIND7 10-20: layer_compile now REQUIRES --compute-die-v (QW-L1SEAM c46e9dd70: compute seam ages only from
+  # record_bundles.seam_stages of the compute GEN die.v).  Default compute side = the committed dv2f18dh2 seam fixture
+  # (die.v + fwd_lanes.json + its netlist relay table + params, one source); override with OT_COMPUTE_DIE_V (+ stages).
+  FXS=$SRC/results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam
+  CDV=${OT_COMPUTE_DIE_V:-$FXS/die.v}
+  CST=${OT_COMPUTE_RELAY_STAGES:-$( [ -z "${OT_COMPUTE_DIE_V:-}" ] && echo $FXS/relay_stages.json || echo $SRC/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json)}
+  CPR=; [ -s "${CDV}.params.json" ] && CPR=${CDV}.params.json
   (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" \
+     --compute-die-v "$CDV" ${CPR:+--compute-params "$CPR"} \
      --kv-stages "$RUNT" --kv-commit "$COMMIT" ${KSM:+--kv-static-model "$KSM" --kv-die-v "$B/die_bound.v" --kv-case-die-v "$C/die.v"} ${FWDL:+--kv-fwd-lanes "$FWDL"}) || { echo "RELAY_CHECK FAIL calendar compiler (layer_compile.py) failed on this die"; exit 1; }
   SCHED=$(ls "$R"/layer_compile/relay_schedule/kv_compiled.json* | head -1)
 fi
