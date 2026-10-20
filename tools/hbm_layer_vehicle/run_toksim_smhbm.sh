@@ -2,6 +2,7 @@
 # TOKSIM-HBM-smhbm (10-19): fleet driver of toksim_smhbm.py (SM.MATVEC + HBM stream on the GEN2e3 die composition).
 #   run_toksim_smhbm.sh sync REV                 archive REV's sources into $SRC (ot-epyc5; smw copied in $L/smw)
 #   run_toksim_smhbm.sh run NAME LAYERS [ENV...] one ot-run job: build (cached per REV) + run; out/NAME.{json,log}
+# BDEF=D1,D2 = extra build defines of the locked pre-build (= the run's --define; HBM-QINT8B).
 # ENV = smb_unit knobs, e.g. SMB_PACE_NUM=200 SMB_PACE_DEN=64 SMB_PACE_ADD=8 SMB_FETCH=200 SMB_OP_GAP=256 SMB_CENSUS_R=1
 set -uo pipefail
 L=${L:-/srv/opentallas-scratch/claude/toksim-smhbm-1019}; HOST=${HOST:-ot-epyc5}; SRC=${SRC:-$L/src}
@@ -21,6 +22,6 @@ if [ "$MODE" = sync ]; then
 fi
 NAME=$1; LAYERS=$2; shift 2; ENVS="$*"
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
-J="cd $SRC && export $VL HDC_V41_ARITH=chunk8 $ENVS && flock $L/work/build.lock python3 -c 'import sys;sys.argv=[\"x\"];sys.path.insert(0,\"tools/hbm_layer_vehicle\");import toksim_smhbm as T;from pathlib import Path;T.build(Path(\"$L/work\"),None,[])' > $L/out/build_$NAME.log 2>&1; python3 tools/hbm_layer_vehicle/toksim_smhbm.py run --fix $SRC/results/rtl/hbm_ds_layer_tput_1018/fixtures --smw $L/smw --work $L/work --layers $LAYERS --name $NAME --out $L/out/$NAME.json ${EXTRA:-} > $L/out/$NAME.log 2>&1; echo ${NAME}_RC \$?; tail -n 2 $L/out/$NAME.log"
+J="cd $SRC && export $VL HDC_V41_ARITH=chunk8 $ENVS && flock $L/work/build.lock python3 -c 'import sys;sys.argv=[\"x\"];sys.path.insert(0,\"tools/hbm_layer_vehicle\");import toksim_smhbm as T;from pathlib import Path;T.build(Path(\"$L/work\"),None,[d for d in \"${BDEF:-}\".split(\",\") if d])' > $L/out/build_$NAME.log 2>&1; python3 tools/hbm_layer_vehicle/toksim_smhbm.py run --fix $SRC/results/rtl/hbm_ds_layer_tput_1018/fixtures --smw $L/smw --work $L/work --layers $LAYERS --name $NAME --out $L/out/$NAME.json ${EXTRA:-} > $L/out/$NAME.log 2>&1; echo ${NAME}_RC \$?; tail -n 2 $L/out/$NAME.log"
 /home/ubuntu/bin/ot-run --mem ${MEM:-48} --threads 16 --dir "$L" -- bash -c "$J"
 echo "TOKSIM_SMHBM_DONE $NAME"
