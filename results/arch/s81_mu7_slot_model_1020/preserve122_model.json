@@ -1,0 +1,2503 @@
+{
+  "status": "UNQUALIFIED_PRESERVE_ALL122_COMPOSITION_COST_ONLY",
+  "source": "1b7b9d5d772008559e1b2467bc12de0fc067e2bd",
+  "preferred_source_counts": {
+    "frames": 122,
+    "rom_slots": 1130,
+    "drops": 0
+  },
+  "reserved_added_svc_and_quarter_area_mm2": 19.443482640640006,
+  "area_only_outline_payment": {
+    "assumption": "pay all incremental reserved rectangle area through outline only, no internalwhitespace reuse; no placement bound",
+    "fixed_H_um": 25000.0,
+    "width_growth_um": 777.7393056256002,
+    "required_W_um": 32746.2393056256,
+    "fixed_W_um": 31968.5,
+    "height_growth_um": 608.2075368140515,
+    "required_H_um": 25608.20753681405,
+    "source_reticle_margins_um": [
+      515.7,
+      500.0
+    ],
+    "status": "conditional cost only, not proof outline growth necessary or sufficient"
+  },
+  "rigid_existing_array_translation_option": {
+    "array_shift_um": 4363.200000000001,
+    "frames": 122,
+    "rom_slots": 1130,
+    "translated_boxes": [
+      {
+        "name": "f_0L00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 300.0,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 300.0,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_0L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 300.0,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 300.0,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 300.0,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 300.0,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_0L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 300.0,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 300.0,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 2754.232,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 2754.232,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_0R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 2754.232,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0S",
+        "x": 2754.232,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 2754.232,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 2754.232,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_0R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 2754.232,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_0R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl0N",
+        "x": 2754.232,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 4191.064,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 4191.064,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_1L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 4191.064,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 4191.064,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 4191.064,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 4191.064,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_1L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 4191.064,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 4191.064,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 6645.296,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 6645.296,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_1R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 6645.296,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1S",
+        "x": 6645.296,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 6645.296,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 6645.296,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_1R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 6645.296,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_1R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl1N",
+        "x": 6645.296,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 8082.128000000001,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 8082.128000000001,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_2L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 8082.128000000001,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 8082.128000000001,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 8082.128000000001,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 8082.128000000001,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_2L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 8082.128000000001,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 8082.128000000001,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 10536.36,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_2R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 10536.36,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2S",
+        "x": 10536.36,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 10536.36,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 10536.36,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_2R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 10536.36,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_2R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl2N",
+        "x": 10536.36,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 11973.192000000001,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_3L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 11973.192000000001,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 11973.192000000001,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 11973.192000000001,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 11973.192000000001,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_3L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 11973.192000000001,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 11973.192000000001,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 14547.424000000003,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_3R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 14547.424000000003,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3S",
+        "x": 14547.424000000003,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 14547.424000000003,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 14547.424000000003,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_3R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 14547.424000000003,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_3R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl3N",
+        "x": 14547.424000000003,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 15984.256000000001,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_4L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 15984.256000000001,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 15984.256000000001,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 15984.256000000001,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 15984.256000000001,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_4L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 15984.256000000001,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 15984.256000000001,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 18558.488,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_4R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 18558.488,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4S",
+        "x": 18558.488,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 18558.488,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 18558.488,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_4R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 18558.488,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_4R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl4N",
+        "x": 18558.488,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 19995.32,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_5L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 19995.32,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 19995.32,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 19995.32,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 19995.32,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_5L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 19995.32,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 19995.32,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 22449.552,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 22449.552,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_5R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 22449.552,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5S",
+        "x": 22449.552,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 22449.552,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 22449.552,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_5R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 22449.552,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_5R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl5N",
+        "x": 22449.552,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 23886.384000000002,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 23886.384000000002,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_6L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 23886.384000000002,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 23886.384000000002,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 23886.384000000002,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 23886.384000000002,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_6L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 23886.384000000002,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 23886.384000000002,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 26340.616,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 26340.616,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_6R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 26340.616,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6S",
+        "x": 26340.616,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 26340.616,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 26340.616,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_6R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 26340.616,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_6R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl6N",
+        "x": 26340.616,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 27777.448000000004,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 27777.448000000004,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_7L02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 27777.448000000004,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 27777.448000000004,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 27777.448000000004,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 27777.448000000004,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_7L12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 27777.448000000004,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7L13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 27777.448000000004,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R00",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 30231.680000000004,
+        "y": 6149.6,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R01",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 30231.680000000004,
+        "y": 8845.28,
+        "w": 1436.832,
+        "h": 3000.24,
+        "reg": false
+      },
+      {
+        "name": "f_7R02",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 30231.680000000004,
+        "y": 12225.52,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R03",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7S",
+        "x": 30231.680000000004,
+        "y": 14921.2,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R10",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 30231.680000000004,
+        "y": 17616.88,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R11",
+        "master": "col_h10",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 30231.680000000004,
+        "y": 20312.56,
+        "w": 1436.832,
+        "h": 2985.12,
+        "reg": false
+      },
+      {
+        "name": "f_7R12",
+        "master": "col_h9_MX",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 30231.680000000004,
+        "y": 23677.68,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "f_7R13",
+        "master": "col_h9",
+        "kind": "frame",
+        "group": "cl7N",
+        "x": 30231.680000000004,
+        "y": 26373.36,
+        "w": 1436.832,
+        "h": 2695.68,
+        "reg": false
+      },
+      {
+        "name": "s_0S",
+        "master": "dsdv_slice_lepw_mus",
+        "kind": "slice",
+        "group": "cl0S",
+        "x": 1770.5320000000002,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_0N",
+        "master": "dsdv_slice_lepw_mu",
+        "kind": "slice",
+        "group": "cl0N",
+        "x": 1770.5320000000002,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_1S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl1S",
+        "x": 5661.5960000000005,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_1N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl1N",
+        "x": 5661.5960000000005,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_2S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl2S",
+        "x": 9552.66,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_2N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl2N",
+        "x": 9552.66,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_3S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl3S",
+        "x": 13443.724000000002,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_3N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl3N",
+        "x": 13443.724000000002,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_4S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl4S",
+        "x": 17574.788,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_4N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl4N",
+        "x": 17574.788,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_5S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl5S",
+        "x": 21465.852,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_5N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl5N",
+        "x": 21465.852,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_6S",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl6S",
+        "x": 25356.916,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_6N",
+        "master": "dsdv_slice",
+        "kind": "slice",
+        "group": "cl6N",
+        "x": 25356.916,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_7S",
+        "master": "dsdv_slice_lepe_nh_mus",
+        "kind": "slice",
+        "group": "cl7S",
+        "x": 29247.980000000003,
+        "y": 9735.52,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "s_7N",
+        "master": "dsdv_slice_lepe_mu",
+        "kind": "slice",
+        "group": "cl7N",
+        "x": 29247.980000000003,
+        "y": 21187.68,
+        "w": 950.0,
+        "h": 4600.0,
+        "reg": false
+      },
+      {
+        "name": "phy_hbm",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "kind": "phy",
+        "group": "south",
+        "x": 11734.256000000001,
+        "y": 20,
+        "w": 8500,
+        "h": 1177,
+        "reg": false
+      },
+      {
+        "name": "ctrl_00",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 11805.481000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_01",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 12336.731000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_02",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 12867.981000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_03",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 13399.231000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_04",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 13930.481000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_05",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 14461.731000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_06",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 14992.981000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_07",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 15524.231000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_08",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 16055.481000000002,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_09",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 16586.731,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_10",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 17117.981,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_11",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 17649.231,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_12",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 18180.481,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_13",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 18711.731,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_14",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 19242.981,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "ctrl_15",
+        "master": "dsfd_ctrl_rg2",
+        "kind": "ctrl",
+        "group": "south",
+        "x": 19774.231,
+        "y": 1200,
+        "w": 388.8,
+        "h": 324.0,
+        "reg": false
+      },
+      {
+        "name": "bk_col",
+        "master": "dsfd_bk_collector",
+        "kind": "unit",
+        "group": "void",
+        "x": 5796.5960000000005,
+        "y": 14485.52,
+        "w": 680.0,
+        "h": 4179.411764705882,
+        "reg": false
+      },
+      {
+        "name": "gunit",
+        "master": "dsdv_gunit",
+        "kind": "unit",
+        "group": "void",
+        "x": 13578.724000000002,
+        "y": 16361.6,
+        "w": 680.0,
+        "h": 4035.294117647059,
+        "reg": false
+      },
+      {
+        "name": "bk_sel",
+        "master": "dsfd_bk_selector",
+        "kind": "unit",
+        "group": "void",
+        "x": 17709.788,
+        "y": 14485.52,
+        "w": 680.0,
+        "h": 2882.3529411764707,
+        "reg": false
+      },
+      {
+        "name": "seqhost",
+        "master": "dsdv_seq_host_mux",
+        "kind": "unit",
+        "group": "void",
+        "x": 17709.788,
+        "y": 17867.09176470588,
+        "w": 680.0,
+        "h": 3170.5882352941176,
+        "reg": false
+      },
+      {
+        "name": "lk_WS0",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 0.0,
+        "y": 8302.720000000001,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_WS1",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 0.0,
+        "y": 11999.12,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_WN0",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 0.0,
+        "y": 19754.879999999997,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_WN1",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 0.0,
+        "y": 23451.28,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_ES0",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 31709.312,
+        "y": 8302.720000000001,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_ES1",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 31709.312,
+        "y": 11999.12,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_EN0",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 31709.312,
+        "y": 19754.879999999997,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      },
+      {
+        "name": "lk_EN1",
+        "master": "ot_pdie_serdes",
+        "kind": "link",
+        "group": "edge",
+        "x": 31709.312,
+        "y": 23451.28,
+        "w": 259.2,
+        "h": 3596.4,
+        "reg": false
+      }
+    ],
+    "new_svc_and_reader_boxes": [
+      {
+        "name": "rsv_00",
+        "kind": "svc",
+        "x": 8632.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_01",
+        "kind": "svc",
+        "x": 8632.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_02",
+        "kind": "svc",
+        "x": 10470.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_03",
+        "kind": "svc",
+        "x": 10470.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_04",
+        "kind": "svc",
+        "x": 12308.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_05",
+        "kind": "svc",
+        "x": 12308.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_06",
+        "kind": "svc",
+        "x": 14146.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_07",
+        "kind": "svc",
+        "x": 14146.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_08",
+        "kind": "svc",
+        "x": 15984.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_09",
+        "kind": "svc",
+        "x": 15984.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_10",
+        "kind": "svc",
+        "x": 17932.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_11",
+        "kind": "svc",
+        "x": 17932.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_12",
+        "kind": "svc",
+        "x": 19770.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_13",
+        "kind": "svc",
+        "x": 19770.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_14",
+        "kind": "svc",
+        "x": 21608.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_15",
+        "kind": "svc",
+        "x": 21608.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "irg_00",
+        "kind": "idx",
+        "x": 11747.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_01",
+        "kind": "idx",
+        "x": 12809.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_02",
+        "kind": "idx",
+        "x": 13872.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_03",
+        "kind": "idx",
+        "x": 14934.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_04",
+        "kind": "idx",
+        "x": 15997.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_05",
+        "kind": "idx",
+        "x": 17059.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_06",
+        "kind": "idx",
+        "x": 18122.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_07",
+        "kind": "idx",
+        "x": 19184.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "iqf",
+        "kind": "idx",
+        "x": 11435.05,
+        "y": 1564,
+        "w": 259.2,
+        "h": 432
+      }
+    ],
+    "max_body_y_um": 29069.04,
+    "scope": "rigid move of all non-south array blocks only; oldarray internalgeometry unchanged; no allnet route/reach/clock proof",
+    "required_outline_height_preserving_source294_16_topclearance_um": 29363.2,
+    "effective_height_limit_preserving_source_reticle_margin_um": 25000.0,
+    "rigid_option_fits_existing_outline": false
+  },
+  "trials": [
+    {
+      "array_shift_um": 0.0,
+      "collisions": 20
+    },
+    {
+      "array_shift_um": 43.2,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 86.4,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 129.60000000000002,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 172.8,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 216.0,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 259.20000000000005,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 302.40000000000003,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 345.6,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 388.8,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 432.0,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 475.20000000000005,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 518.4000000000001,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 561.6,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 604.8000000000001,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 648.0,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 691.2,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 734.4000000000001,
+      "collisions": 22
+    },
+    {
+      "array_shift_um": 777.6,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 820.8000000000001,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 864.0,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 907.2,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 950.4000000000001,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 993.6,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1036.8000000000002,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1080.0,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1123.2,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1166.4,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1209.6000000000001,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1252.8000000000002,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1296.0,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1339.2,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1382.4,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1425.6000000000001,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1468.8000000000002,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1512.0,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1555.2,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1598.4,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1641.6000000000001,
+      "collisions": 14
+    },
+    {
+      "array_shift_um": 1684.8000000000002,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1728.0,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1771.2,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1814.4,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1857.6000000000001,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1900.8000000000002,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1944.0000000000002,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 1987.2,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2030.4,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2073.6000000000004,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2116.8,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2160.0,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2203.2000000000003,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2246.4,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2289.6000000000004,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2332.8,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2376.0,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2419.2000000000003,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2462.4,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2505.6000000000004,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2548.8,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2592.0,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2635.2000000000003,
+      "collisions": 4
+    },
+    {
+      "array_shift_um": 2678.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2721.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2764.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2808.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2851.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2894.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2937.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 2980.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3024.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3067.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3110.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3153.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3196.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3240.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3283.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3326.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3369.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3412.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3456.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3499.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3542.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3585.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3628.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3672.0000000000005,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3715.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3758.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3801.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3844.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3888.0000000000005,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3931.2000000000003,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 3974.4,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4017.6000000000004,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4060.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4104.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4147.200000000001,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4190.400000000001,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4233.6,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4276.8,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4320.0,
+      "collisions": 2
+    },
+    {
+      "array_shift_um": 4363.200000000001,
+      "collisions": 0
+    }
+  ],
+  "boot_ledger": {
+    "source": "collector7c75d2807",
+    "quarter_outer_reset_landing_edges": 2,
+    "hist_rst_l0_l1_edges": 2,
+    "hist_ot_rst_relay_SYNC2_TREE1_edges": 3,
+    "bank_leaf_release_edge": 7,
+    "reset_held_first_possible_capture_edge": 8,
+    "relative_to_HQ3_delta_target": 0,
+    "status": "MODEL_ONLY no end-to-end boot/firstvalid/coldSRAM qualification"
+  },
+  "obligations": [
+    "coherent repack of actualsource122frames/SVC/idx3/TOPK withinreticle withallactualpinfaces, no implicitframe drops",
+    "actualselectorCTRL+glue quarters stronglyconnected onecoreclock/SLAT4; no automaticnewedges",
+    "actualnewSVC rowpacking, 74oldrelaycollisions and allnewdata/reset/boot edges explicitly priced",
+    "readerimmutablepairedsource/productionthroughput; current source idxrd0 remains baseline",
+    "fullperbitclock/data stagegraph and trueforwardedallfamily natives plus guardedconsumer",
+    "nativeactualPHY129.6 latticeescape envelope, M6pinface/via/M7crossing tracks and electricalslew/cap independentfail"
+  ]
+}
