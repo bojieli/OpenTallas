@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_parent;
  reg ck=0;always #1 ck=~ck;
- reg rst_n=0;reg [98:0] ctx=0;reg slot=0;reg[72:0] ctl=0;
+ reg rst_n=1;reg [98:0] ctx=0;reg slot=0;reg[72:0] ctl=0;
  reg[298:0] a=0,b=0,c=0,d=0;
  wire nv,ov,ns,os,nf,of;wire[547:0] np,op;wire[17:0] nt,ot;wire[15:0] ne,oe;
  qkd_kvs_emb_ctx_n32child dut(.ck(ck),.rst_n(rst_n),.i_ctx(ctx),.d2d__emb_tx_slot(slot),.i_ctl(ctl),.i_hroot_WS(a),.i_hroot_WN(b),.i_hroot_ES(c),.i_hroot_EN(d),.rowtx__emb_tx_v(nv),.rowtx__emb_tx_payload(np),.px_st(ns),.px_tok(nt),.px_tep(ne),.emb_fault(nf));
@@ -13,6 +13,8 @@ module tb_parent;
    checks++;
    if({nv,np,ns,nt,ne,nf}!=={ov,op,os,ot,oe,of})begin errors++;if(errors<8)$display("DIFF parent t=%0t n=%b/%b o=%b/%b",$time,nv,nf,ov,of);end
    if(nv)beats++;if(ns)starts++;if(dut.w_v)words++;
+   if(dut.u_ctx.pending_valid[4] !== dut.u_ctx.pending_valid[0])
+    $fatal(1,"FAIL parent selector copy not mature before use");
   end
  end
  task tick;begin @(negedge ck);#0.01;end endtask
@@ -48,6 +50,8 @@ module tb_parent;
   end
  endtask
  initial begin
+  // Permit independent random power-up state before a real reset assertion.
+  repeat(3)tick();
   reset();row(17,41,0);row(19,42,3);
   reset();row(221,7,2);
   // Repeated held owner, unrelated kind, malformed owner, and cold reset.
@@ -60,6 +64,9 @@ module tb_parent;
   // No return words: row stays open after the 66-edge minimum gap.
   ctx=record(778,124);repeat(30)tick();
   if(!nf)$fatal(1,"FAIL parent missing open-row overlap fault");
+  // Abort an armed row, holding the valid owner through reset and first use.
+  ctx=record(881,127);rst_n=0;repeat(7)tick();rst_n=1;repeat(100)tick();
+  if(nf)$fatal(1,"FAIL parent held-context cold first-use fault");
   quiet();repeat(15)tick();
   if(checks<900||beats<260||starts<4||words<260)$fatal(1,"FAIL parent coverage checks=%0d beats=%0d starts=%0d words=%0d",checks,beats,starts,words);
   if(errors)$fatal(1,"FAIL parent mismatches=%0d",errors);

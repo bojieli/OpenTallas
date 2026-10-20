@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-out=${1:?OUT};mut=${2:-0};mkdir -p "$out";out=$(cd "$out" && pwd)
+out=${1:?OUT};mut=${2:-0};seed=${3:-1};mkdir -p "$out";out=$(cd "$out" && pwd)
 v=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 e=rtl/qwen_sys/static_embedding_20261014
 python3 - "$out" "$mut" <<'PY'
@@ -19,10 +19,10 @@ if m==5:s=s.replace('.row_open(row_open), .ctx_v', ".row_open(1'b0), .ctx_v")
 assert m==0 or s!=(e/'qkd_kvs_emb_ctx_n32child.sv').read_text()
 (o/'dut.sv').write_text(s)
 PY
-"$v" --binary --timing -O2 -j 4 -Wno-fatal --top-module tb_parent --Mdir "$out/obj" \
+"$v" --binary --timing --x-initial unique --x-assign unique -O2 -j 4 -Wno-fatal --top-module tb_parent --Mdir "$out/obj" \
  rtl/lib/ot_rst_relay.sv "$e/qkd_embedding_ctx_start.sv" "$e/qkd_embedding_ctx_start_n32child.sv" "$e/qkd_embedding_static_join.sv" \
  "$e/qkd_embedding_static_join_fan32.sv" "$e/qkd_embedding_static_join4.sv" "$e/qkd_embedding_static_join4_cal.sv" \
  "$e/qkd_embedding_row_tx_ctx_native32.sv" "$out/old_core.sv" "$out/old_view.v" "$out/reference.sv" "$out/dut.sv" \
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v \
  results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv > "$out/build.log" 2>&1
-"$out/obj/Vtb_parent" 2>&1 | tee "$out/run.log"
+"$out/obj/Vtb_parent" +verilator+rand+reset+2 +verilator+seed+"$seed" 2>&1 | tee "$out/run.log"
