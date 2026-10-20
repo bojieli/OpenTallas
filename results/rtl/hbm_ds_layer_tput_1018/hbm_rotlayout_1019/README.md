@@ -114,3 +114,47 @@ With R4 the smb kinds L00/L02 get new set sequences: the old ones re-opened a se
 - **Qwen compiler**: done on branch `claude/toksim-hbm-smhbm-rotchk-1019` (bf2cea8c0, on claude/toksim-hbm-smhbm-1019). compile_qwen now lays the blocks out with `BL.static_run` and calls `BL.check_addrs`; the result goes in `budget.rotlayout`.
 - **Integration (LEAD2-HBM compiler mainline)**: the DS / Qwen program compilers must place embedding lookups as tokens of the first layer's stream (`hbm_table_images.layout_stream`). Engram rows stay indexed-DMA sector rows.
 - **KV and other streams.** The KV write-back / DMA linear byte streams follow the kport law (the set changes every 128 words per PC), so they are rotated by construction. They are single-row writes per token, not block streams.
+
+## ML (10-19 23:00-23:40, HBM-ROTLAYOUT-ML): embedding + Engram placed by the mainline compilers
+
+Branches: `claude/hbm-rotlayout-ml-1019` (on `claude/hbm-rotlayout-tbl-1019` 865daf0c4) for DS, and
+`claude/toksim-hbm-smhbm-rotchk-ml-1019` (on rotchk bf2cea8c0) for Qwen `compile_qwen`. Evidence is in `ml/`.
+
+- **Lookup slots.** The home SM of a lookup (entry e on SM e mod 32) is a runtime value. So EVERY SM's first-layer
+  stream has a fixed number of embedding lookup SLOTS at its head, sized for the most lookups any mode issues:
+  - DS: 2 slots (MTP), 2 phase copies.
+  - Qwen: 16 slots (DFlash b16), 4 phase copies.
+
+  A slot with no real lookup on that SM reads entry 0 through that slot's copy. This is a static dummy read, so the
+  schedule never depends on the ids. The cost per SM per token is DS 20,480 B and Qwen 66,048 B, at about 100 B/edge:
+  roughly 200 / 650 edges, under 0.1 % of a token. The copy a slot reads depends only on the slot POSITION.
+- `hbm_bank_layout.assign_sets` takes `('t', table)` tokens (copy options checked with R1..R4, inside HEAD the copy
+  must equal HEAD). `layout_bw` lays the slots out together with the weights and routed experts (`kd.lookups`).
+  `kind_order` puts the slots into every per-kind and kind->kind check.
+- **smb_unit (d4g DS image compiler).**
+  - L00 gets the 2 slots: copies 0, 1 on sets (0,1), (2,3). The L00 weights now start at set 4.
+  - The embedding table sits at base_row 7400, 4,040 entries per SM.
+  - Result: `rotlayout.all_rotated` true, 24 checks (classes embed_head / experts / tables / weights). Anything that
+    fails is REFUSED (`ml/smb_compile.{txt,json}`).
+- **Engram (L1/L14).** Rows are 264 B, ONE copy, packed in the home SM's sector space, and read by indexed DMA a token
+  ahead (the ids hash the last 4 tokens).
+  - Their sets are runtime, so the stream cannot be rotated. The new `check_runtime_spaced` refuses it unless every
+    read is isolated by >= max(T_HIDE, REF_WIN, R4_GAP) = 160 idle word-times; then R1/R2/R4a hold for ANY set
+    sequence. Spacing them 40 apart (inside a weight stream) is REFUSED.
+  - Worst-case window: 24 reads on one SM = 4,072 word-times, placed in an inter-layer gap.
+  - This is a compile-time law, not yet measured on MC3b.
+- **Qwen `compile_qwen`.**
+  - Without slots (rotchk bf2cea8c0), on the real Qwen3-8B L0 per-die SM.MATVEC shapes qkv 48 / o 32 / gu 192 /
+    down 96 descriptors: ROTATED, 0 phase steps.
+  - With slots (33e9dd089, `hbm_table_images.layout_with_lookups` behind the LM-head tail): slot copies
+    0,1,2,3,1,2,3,..., weights from set 4, 5 phase steps. Both `check_addrs` (weights) and the combined check give
+    ROTATED.
+  - The whole L0 (368 blocks) passes the layout check (selftest), but one compile of it overflows the bench's
+    256-row descriptor table (a bench limit, not a layout one).
+  - Output: `ml/qwen_compile_qwen.json`.
+- **RTL runs (Verilator 5.050, ot-epyc5).** See pending_results "HBM-ROTLAYOUT-ML":
+  - full96 bwsafe_face with the new L00 images (`face_ml_pos`);
+  - toksim_smhbm Qwen qkv+o INT8 on MC3, rotchk (`qw_l0_qkv_o_rot`) and with slots (`qw_l0_qkv_o_ml`).
+- **Not changed:** the HGI-level byte compilers (`hgi_sim/qwen_compiler`, `ds_native`: EMBED base + TOKEN x emb_row).
+  The d4g placement above is what the die's HBM image uses. Their DMA descriptors still need the slot/copy address
+  law when the G-DMA dispatcher image compiler exists.

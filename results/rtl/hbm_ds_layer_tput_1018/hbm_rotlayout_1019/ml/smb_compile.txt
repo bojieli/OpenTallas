@@ -1,0 +1,391 @@
+{
+ "budget": {
+  "descriptors": 154,
+  "table_rows": 256,
+  "programme_words_matvec": 152,
+  "attention_reserved": 1019,
+  "store_top": 1171,
+  "store_words": 2048,
+  "distinct_programmes": 19,
+  "per_kind": [
+   {
+    "name": "L00",
+    "layer": 0,
+    "descriptors": 29,
+    "nonexpert_blocks": 17,
+    "routed_expert_descriptors": 12,
+    "lstride": 48,
+    "kbase": 0,
+    "estride": 8,
+    "expert_ids": {
+     "0": 61,
+     "1": 69,
+     "2": 112,
+     "3": 170,
+     "4": 299,
+     "5": 357
+    },
+    "ids_at_rc": 5813,
+    "rc_end": 11323
+   },
+   {
+    "name": "L02",
+    "layer": 2,
+    "descriptors": 32,
+    "nonexpert_blocks": 20,
+    "routed_expert_descriptors": 12,
+    "lstride": 40,
+    "kbase": 3120,
+    "estride": 8,
+    "expert_ids": {
+     "0": 33,
+     "1": 36,
+     "2": 59,
+     "3": 182,
+     "4": 279,
+     "5": 352
+    },
+    "ids_at_rc": 7487,
+    "rc_end": 12997
+   },
+   {
+    "name": "L14",
+    "layer": 14,
+    "descriptors": 39,
+    "nonexpert_blocks": 27,
+    "routed_expert_descriptors": 12,
+    "lstride": 40,
+    "kbase": 12456,
+    "estride": 8,
+    "expert_ids": {
+     "0": 26,
+     "1": 29,
+     "2": 114,
+     "3": 155,
+     "4": 334,
+     "5": 352
+    },
+    "ids_at_rc": 9446,
+    "rc_end": 14956
+   },
+   {
+    "name": "head",
+    "layer": 0,
+    "descriptors": 54,
+    "nonexpert_blocks": 54,
+    "routed_expert_descriptors": 0,
+    "lstride": 64,
+    "kbase": 59136,
+    "estride": 0,
+    "expert_ids": {},
+    "ids_at_rc": null,
+    "rc_end": 11950
+   }
+  ],
+  "install_ingress_edges": 612,
+  "per_layer_ingress_edges_this_sm": 3,
+  "blocks_addressed": 91520,
+  "rotlayout": {
+   "classes_checked": [
+    "embed_head",
+    "experts",
+    "tables",
+    "weights"
+   ],
+   "all_rotated": true,
+   "checks": 24,
+   "per_kind": {
+    "L00": {
+     "sets": [
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      5,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      7,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       7,
+       0,
+       1
+      ]
+     },
+     "phase_steps": 3,
+     "lookup_slots": [
+      {
+       "table": "embedding",
+       "slot": 0,
+       "copy": 0,
+       "sets": [
+        0,
+        1
+       ]
+      },
+      {
+       "table": "embedding",
+       "slot": 1,
+       "copy": 1,
+       "sets": [
+        2,
+        3
+       ]
+      }
+     ]
+    },
+    "L02": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       0,
+       1,
+       2
+      ]
+     },
+     "phase_steps": 3,
+     "lookup_slots": []
+    },
+    "L14": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       0,
+       1,
+       2
+      ]
+     },
+     "phase_steps": 2,
+     "lookup_slots": []
+    },
+    "head": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      1,
+      2
+     ],
+     "triples": {},
+     "phase_steps": 1,
+     "lookup_slots": []
+    }
+   },
+   "tables": {
+    "embedding": {
+     "plan": {
+      "row_bytes": 10240,
+      "lines": [
+       38,
+       38
+      ],
+      "nb": 2,
+      "law": "phase",
+      "copies": 2,
+      "slots": 4,
+      "family": "packed",
+      "bytes_per_entry": 34816,
+      "read_bytes_per_lookup": 10240,
+      "copy_sets": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ]
+      ]
+     },
+     "base_row": 7400,
+     "entries_per_sm": 4040,
+     "slots": 2,
+     "copies": 2,
+     "dummy_entry": 0,
+     "src": "DS V4.1 vocab 129,280 x hidden 5,120 BF16 (configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json); lookups AR 1 / MTP 2; copies = min_copies (census_tbl DS x2 101.69)",
+     "slot_law": "slot p reads copy kind.rotlayout.lookup_slots[p].copy of entry id // 32 on SM id mod 32; block address (base_row + entry) << 3 | copy_sets[copy][k]",
+     "dummy_bytes_per_sm_token": 20480
+    }
+   },
+   "engram": {
+    "L14": {
+     "law": "packed_sector_rows",
+     "copies": 1,
+     "row_bytes": 264,
+     "max_sectors_per_read": 10,
+     "words_per_pc_per_read": 3,
+     "reads_worst_one_sm": 24,
+     "gap_words": 160,
+     "window_words_worst": 4072,
+     "issue": "token ahead (ids = hash of the last 4 token ids), in an inter-layer gap of the home SM's PC stream",
+     "src": "DS V4.1 Engram (hbm_resident_regions; layers 1 and 14): 24 hashed ids a token; rows owned by id mod 96; ids from the last 4 token ids, so the reads are issued a token ahead of the layer"
+    }
+   }
+  }
+ },
+ "events": {
+  "NI": 624,
+  "NX": 25688,
+  "ND": 3,
+  "END": 53100
+ }
+}

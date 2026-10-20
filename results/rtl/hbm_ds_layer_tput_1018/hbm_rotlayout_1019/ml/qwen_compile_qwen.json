@@ -1,0 +1,990 @@
+{
+ "schema": "opentallas.hbm_rotlayout_ml.qwen_compile.v1",
+ "branch": "claude/toksim-hbm-smhbm-rotchk-ml-1019 33e9dd089",
+ "shapes": {
+  "qkv": [
+   4096,
+   1536
+  ],
+  "o": [
+   1024,
+   4096
+  ],
+  "gu": [
+   4096,
+   6144
+  ],
+  "down": [
+   3072,
+   4096
+  ],
+  "head": [
+   4096,
+   37984
+  ]
+ },
+ "note": "real Qwen3-8B L0 SM.MATVEC shapes per die (census_shapes); weights random INT8 (layout only depends on shapes)",
+ "compiles": {
+  "qkv": {
+   "descriptors": 48,
+   "verdict": "ROTATED",
+   "all_rotated": true,
+   "phase_steps": 5,
+   "sets": [
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    1
+   ],
+   "lookups": {
+    "table": "embedding",
+    "slots": 16,
+    "copies": [
+     0,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3
+    ],
+    "lookup_sets": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ]
+    ],
+    "base_row": 8,
+    "entries_per_sm": 4748,
+    "dummy_entry": 0,
+    "dummy_bytes_per_sm_token": 66048,
+    "combined_check": {
+     "cls": "tables",
+     "what": "HBM-Qwen qwen compile_qwen",
+     "blocks": 64,
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "t_hide": 35,
+     "verdict": "ROTATED"
+    },
+    "src": "Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8 / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"
+   }
+  },
+  "o": {
+   "descriptors": 32,
+   "verdict": "ROTATED",
+   "all_rotated": true,
+   "phase_steps": 5,
+   "sets": [
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    1
+   ],
+   "lookups": {
+    "table": "embedding",
+    "slots": 16,
+    "copies": [
+     0,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3
+    ],
+    "lookup_sets": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ]
+    ],
+    "base_row": 6,
+    "entries_per_sm": 4748,
+    "dummy_entry": 0,
+    "dummy_bytes_per_sm_token": 66048,
+    "combined_check": {
+     "cls": "tables",
+     "what": "HBM-Qwen qwen compile_qwen",
+     "blocks": 48,
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "t_hide": 35,
+     "verdict": "ROTATED"
+    },
+    "src": "Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8 / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"
+   }
+  },
+  "gu": {
+   "descriptors": 192,
+   "verdict": "ROTATED",
+   "all_rotated": true,
+   "phase_steps": 5,
+   "sets": [
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    1
+   ],
+   "lookups": {
+    "table": "embedding",
+    "slots": 16,
+    "copies": [
+     0,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3
+    ],
+    "lookup_sets": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ]
+    ],
+    "base_row": 26,
+    "entries_per_sm": 4748,
+    "dummy_entry": 0,
+    "dummy_bytes_per_sm_token": 66048,
+    "combined_check": {
+     "cls": "tables",
+     "what": "HBM-Qwen qwen compile_qwen",
+     "blocks": 208,
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "t_hide": 35,
+     "verdict": "ROTATED"
+    },
+    "src": "Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8 / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"
+   }
+  },
+  "down": {
+   "descriptors": 96,
+   "verdict": "ROTATED",
+   "all_rotated": true,
+   "phase_steps": 5,
+   "sets": [
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    1
+   ],
+   "lookups": {
+    "table": "embedding",
+    "slots": 16,
+    "copies": [
+     0,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3
+    ],
+    "lookup_sets": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ]
+    ],
+    "base_row": 14,
+    "entries_per_sm": 4748,
+    "dummy_entry": 0,
+    "dummy_bytes_per_sm_token": 66048,
+    "combined_check": {
+     "cls": "tables",
+     "what": "HBM-Qwen qwen compile_qwen",
+     "blocks": 112,
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "t_hide": 35,
+     "verdict": "ROTATED"
+    },
+    "src": "Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8 / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"
+   }
+  },
+  "qkv+o": {
+   "descriptors": 80,
+   "verdict": "ROTATED",
+   "all_rotated": true,
+   "phase_steps": 5,
+   "sets": [
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    0,
+    1,
+    2,
+    1
+   ],
+   "lookups": {
+    "table": "embedding",
+    "slots": 16,
+    "copies": [
+     0,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3,
+     1,
+     2,
+     3
+    ],
+    "lookup_sets": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ],
+     [
+      3
+     ]
+    ],
+    "base_row": 12,
+    "entries_per_sm": 4748,
+    "dummy_entry": 0,
+    "dummy_bytes_per_sm_token": 66048,
+    "combined_check": {
+     "cls": "tables",
+     "what": "HBM-Qwen qwen compile_qwen",
+     "blocks": 96,
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "t_hide": 35,
+     "verdict": "ROTATED"
+    },
+    "src": "Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8 / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"
+   }
+  },
+  "qkv+o+gu+down": {
+   "exit": "descriptor table overflow: 368 > 256"
+  }
+ }
+}
