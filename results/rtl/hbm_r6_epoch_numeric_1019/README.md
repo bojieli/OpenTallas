@@ -1,0 +1,11 @@
+# R6 observer successor: actual D6 numerical launch
+
+The source-pinned build f3cd6b6cc completed successfully in1:07:10 with maximum RSS132,231,712KiB. Its consumed-source comparison passes47 actual inputs within53allowed, with only generated_clockfix/tb.sv changed. Executable SHA25640a6ac8398307a843d8332dd49d366cc2d5fb7a823ee507fdf3179712d1b5bc4,656,086,592bytes. These are build receipts, not numerical qualification. STATUS and executable receipts retain their original build-time NOT_AUTHORIZED/NOT_INVOKED wording; Claude LEAD2-HBM D6 subsequently authorized one numerical execution after this audit.
+
+The original chain reported ot-run exit0 twice at17:23/17:24 PT, but remote inspection found no EPOCH_numeric.STARTED, exit, time or positive log. Therefore those were empty bash executions, not simulator passes. The exact stdin transport failure is not established. No simulator had to be killed, duplicated or rebuilt. The preserved chain verdict NUMERIC_rc=0 is explicitly invalid as a numerical verdict.
+
+The same unchanged run_numeric.sh was staged on ep5 as run_numeric.D6.sh and invoked by file through unpinned ot-run16GB/1thread/5GB. Actual unit oth-ubuntu-662367-1792456541, nativePID662392, controller739526; EPOCH_numeric.STARTED2026-10-20T00:35:41Z proves real invocation. Before invocation the approved executable and bench hashes were rechecked exactly. The old source, objects, binary and original CP_FIXED_STARTUP_PHASE failure remain immutable.
+
+At this receipt the real numerical job is LIVE with stdout buffering, approximately667,444KiB RSS and one CPU. There is no numerical verdict. Collect positive-EPOCH.log, EPOCH_numeric.exit/time/STARTED/ENDED/result.sha256 only after terminal exit; collect_terminal.py refuses before exit. The current pending_results line names this actual unit. A subsequent first failure must be classified without relaxing assertions, dates, arithmetic order or generated C++. A future PASS would qualify this component only; full token SU/MU, production-shape throughput and physical closure remain separate obligations.
+
+VEH.4 still needs the current GEN2e die.v and multi-group numerical proof; GEN2e2 is currently terminal at S5 LAND_BIND_FAIL. No duplicate cutter was started. XDIE component steps are historical measured passes, while production die ROWS256/AR_ITER binding remains pending.
