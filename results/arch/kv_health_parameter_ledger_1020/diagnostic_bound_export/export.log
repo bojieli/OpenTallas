@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-epyc6       admits   213 GB (avail 263, growth 113, headroom 0, waiters 0/0 GB) load 109/128 running 38 disk 4751 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3020980-1792486512 after 0 s
+{"qualified": false, "bind_verdict": "FAIL", "table": "/srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run/relay_stages_diagnostic.json.gz", "table_sha256": "c4c3d2ca791df75b23dc7f6d3cacf465b0acf0db67b0ed4ddd149f6e3e5a7429", "bus_count": 52234, "problem_count": 0, "digest": "sha256:afdb5a227787fe18f0f1c81724a437e5c569485aba0496a792c0fc08c1e96a0c"}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3020980-1792486512): exit 0

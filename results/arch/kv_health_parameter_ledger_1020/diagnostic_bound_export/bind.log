@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-epyc6       admits   215 GB (avail 264, growth 113, headroom 0, waiters 0/0 GB) load 131/128 running 41 disk 4739 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run
+ot-run: -> ot-epyc6
+ot-heavy: request 16G is charged 9G (class 'bind.sh' measured peak 0.6G, n=1+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2951671-1792485856 after 0 s
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/tools/qwen_kv_die/kv_output_pads.py", line 115, in derive
+    raise ValueError(f'{inst}: private spare output has a dynamic/nonzero input')
+ValueError: rly_pvin_WS_0_0__s1: private spare output has a dynamic/nonzero input
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2951671-1792485856): exit 3

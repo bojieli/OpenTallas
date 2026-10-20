@@ -1,0 +1,30 @@
+{
+  "qualified": false,
+  "native_qualified": false,
+  "bind_verdict": "FAIL",
+  "purpose": "Actual bound graph/source origin witness only; NO unused output pad claims; original guard refused dynamic private-spare output",
+  "source_commit": "54e9d9c39",
+  "health_ledger_producer": "17b71c479",
+  "index_exit": 1,
+  "source_files": {
+    "/srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run/case_kv/qkd_kv_relays.sv": "003be6329bd52e403ab4653fe5b9e51e07cd3395882d7a626f1a6383af40a7c4",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv": "b0e5cc4418116dcc4edf6890cf6f2b497b67abca0b18f5e09e670c6cb6b4ad68",
+    "/srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run/port_bind_v2/kv_hard_models.sv": "871d85a23104c45639dca344dd7a1a3de6530b71bfa2492aea661d4ff51e969c",
+    "/srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run/port_bind_v2/kv_relays_dir.sv": "a8e786f60d5b93fd5e98d1140672f0a561524a07c807576581eacd0648765a38",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v": "0ec87e980393de6942b05e4e1e2d5805223b1c4ad99630e28b272857d739dfd4",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p/rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75"
+  },
+  "artifacts": {
+    "die_bound.v": "a0d53d0c0685a0e66802445f820ae169a8aa34e3e0b941e44cccb9bc618d37fc",
+    "diagnostic_source_index.json": "f882e4ea1144410b7253abbea9a1bf079c99a1f5685563dd2fcfbb35a52a3920",
+    "diagnostic_source_index.log": "8ad681edf490e58e16145a7c5a4ba0f71b1c74ea5df86cfbfaa820d1f1f4b6e3",
+    "output_pads.log": "52dcb5dbbeea83f42ec95bcdef4090170ef2684283c0dbf4ebf8e0f7107beb01"
+  }
+}
