@@ -6,7 +6,7 @@ for v in G.K_VARIANTS:
  drv,sinks,resolve,widths=G.netlist(txt);halves={};unknown=[]
  for m in re.finditer(r'qfd_c_land_([wr])1k #\([^;]*?\)\s+(u_\w+)\s+\(([^;]*?)\);',txt):
   side,name,ps=m[1],m[2],dict(G.PORT_RE.findall(m[3]));name='u_fab.'+name
-  halves[name]={'side':side,'ports':ps,'anchor_points':[],'size_um':G.BAY[side]}
+  halves[name]={'side':side,'ports':ps,'anchor_points':[],'anchor_refs':[],'size_um':G.BAY[side]}
  rnet={z['ports']['o']:n for n,z in halves.items() if z['side']=='r'};soft_edges=set()
  def bits(e):
   out=[]
@@ -16,13 +16,16 @@ for v in G.K_VARIANTS:
   if z['side']=='w':
    for bit in bits(z['ports']['i']):
     d,base=resolve(bit)
-    if d:z['anchor_points'].append(G.pin_at(P,*d))
-    elif base[0] in ranges:z['anchor_points'].append(G.port_xy(env,ranges,faces,base[0],base[1],widths.get(base[0],1)))
+    if d:
+     z['anchor_points'].append(G.pin_at(P,*d));xx,yy=G.pin_at(P,*d);z['anchor_refs'].append({'node':d[0],'offset':[xx-P[d[0]]['x'],yy-P[d[0]]['y']]})
+    elif base[0] in ranges:
+     xy=G.port_xy(env,ranges,faces,base[0],base[1],widths.get(base[0],1));z['anchor_points'].append(xy);z['anchor_refs'].append({'fixed':xy})
     elif base[0] in rnet:soft_edges.add((rnet[base[0]],n))
     else:unknown.append({'half':n,'bit':bit,'base':base})
   else:
    for dst,bit in sinks:
-    if resolve(bit)[1][0]==z['ports']['o']:z['anchor_points'].append(G.pin_at(P,*dst))
+    if resolve(bit)[1][0]==z['ports']['o']:
+     z['anchor_points'].append(G.pin_at(P,*dst));xx,yy=G.pin_at(P,*dst);z['anchor_refs'].append({'node':dst[0],'offset':[xx-P[dst[0]]['x'],yy-P[dst[0]]['y']]})
  for n,z in halves.items():
   pts=z.pop('anchor_points');z['point_count']=len(pts);z['projection_min_nm']={str((sx,sy)):round(min((sx*x+sy*y for x,y in pts),default=0)*1000) for sx in [-1,1] for sy in [-1,1]} if pts else None
   del z['ports']

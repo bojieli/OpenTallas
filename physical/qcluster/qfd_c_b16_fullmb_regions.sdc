@@ -125,17 +125,7 @@ set_clock_uncertainty -setup 120 -from [get_clocks ck_c3r2] -to [get_clocks ck_c
 set_clock_uncertainty -hold 85 -from [get_clocks ck_c3r2] -to [get_clocks ck_c3r3]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_c3r3] -to [get_clocks ck_c3r2]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_c3r3] -to [get_clocks ck_c3r2]
-# Q-CLUSTER-LANDALL: 54 landed crossings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_qc_lands {dn0_rly3 dn0_rly6 dn0_rly9 dn1_rly3 dn1_rly6 dn1_rly9 dn2_rly3 dn2_rly6 dn2_rly9 dn3_rly3 dn3_rly6 dn3_rly9 leg_1_0a_y leg_1_1b_y leg_1_2b_y leg_1_3a_y leg_1_4b_y leg_1_5b_y leg_1_6a_y leg_1_7a_y leg_2_0a_3 leg_2_0b_y leg_2_1a_0 leg_2_1a_3 leg_2_1a_y leg_2_1b_y leg_2_2a_0 leg_2_2a_3 leg_2_2b_y leg_2_3a_3 leg_2_3a_y leg_2_3b_y leg_3_0a_4 leg_3_0a_y leg_3_0b_0 leg_3_0b_5 leg_3_0b_y leg_3_1a_2 leg_3_1b_0 leg_3_1b_1 leg_3_1b_3 leg_4_0a_0 leg_4_0a_2 leg_4_0a_7 leg_4_0a_9 leg_4_0a_y leg_4_0b_1 leg_4_0b_5 leg_4_0b_y rs_0 ft_2 ft_6 ft_9 ft_13}
-set ot_qc_land_miss 0
-foreach ot_ln $ot_qc_lands {
-  set ot_lf [get_cells -quiet u_fab.u_land_${ot_ln}_w.*]
-  set ot_lt [get_cells -quiet u_fab.u_land_${ot_ln}_r.*]
-  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_qc_land_miss; continue }
-  set_multicycle_path -setup 2 -from $ot_lf -to $ot_lt
-  set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
-}
-puts "OT_QC_LAND_SDC [expr {[llength $ot_qc_lands] - $ot_qc_land_miss}] of [llength $ot_qc_lands] landings constrained"
+# Bank half wires are ordinary-cycle paths; no data multicycle masks.
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r1 [get_ports {rst_c0r1}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r2 [get_ports {rst_c0r2}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r3 [get_ports {rst_c0r3}]
