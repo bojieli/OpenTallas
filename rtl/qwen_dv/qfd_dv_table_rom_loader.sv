@@ -7,6 +7,7 @@ module qfd_dv_table_rom_loader #(
     parameter integer SLICE=0,
     parameter integer MUT=0,
     parameter integer BTAB_COMPACT=0,
+    parameter integer LOCAL_CTRL=0, // opt-in kept stage copies per address nibble, edge-identical
     parameter integer CAPTURE_MUT=0, // bench causal: 1 metadata bypass;2 early done
     parameter integer CAPTURE_STAGE=0, // private structural ROM-capture successor (+1 write edge)
     parameter integer WE_COPIES=1       // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
@@ -149,8 +150,22 @@ module qfd_dv_table_rom_loader #(
             (* keep=1, keep_hierarchy=1 *) qfd_tload_kept_bit #(.ID(wc)) ff(.ck(ck),.rst_n(local_reset[(CAPTURE_STAGE!=0)?(wc%4):0]),.clr((CAPTURE_STAGE!=0)?1'b0:!r2),.d(we_group[wc%4]),.q(tw_we_k[wc]));
         end
     end endgenerate
-    reg [11:0] go_base;
-    always @* go_base=106*((MUT==1 && p_stage==36)?34:(p_stage-1));
+    wire [11:0] go_base;
+    function automatic [11:0] stage_base(input [5:0] s);
+        stage_base=106*((MUT==1 && s==36)?34:(s-1));
+    endfunction
+    generate if(LOCAL_CTRL)begin:g_stage_local
+        for(genvar sg=0;sg<4;sg=sg+1)begin:g_nibble
+            wire [5:0] stage_q;
+            wire [11:0] value;
+            (* keep=1, keep_hierarchy=1 *) qfd_tload_stage_copy #(.ID(sg)) ff
+                (.ck(ck),.d(stage),.q(stage_q));
+            assign value=stage_base(stage_q);
+            assign go_base[3*sg+:3]=value[3*sg+:3];
+        end
+    end else begin:g_stage_legacy
+        assign go_base=stage_base(p_stage);
+    end endgenerate
     always @(posedge ck or negedge ctrl_reset)begin
         if(!ctrl_reset)begin
             active<=0;cap_v<=0;cap_last<=0;slot<=0;tw_we<=0;done<=0;fault<=0;
@@ -204,5 +219,13 @@ module qfd_tload_metadata_capture #(parameter integer ID=0)(
     always @(posedge ck or negedge rst_n)
         if(!rst_n)begin valid_q<=0;last_q<=0;end
         else begin valid_q<=valid_d;last_q<=last_d;end
+    wire unused_id=ID[0];
+endmodule
+
+// Each address nibble uses its own producer register bank; no new edge.
+(* keep_hierarchy=1 *)
+module qfd_tload_stage_copy #(parameter integer ID=0)(input wire ck,input wire[5:0]d,output reg[5:0]q);
+    (* keep=1 *) wire[5:0] source_word=d;
+    always @(posedge ck) q<=source_word;
     wire unused_id=ID[0];
 endmodule

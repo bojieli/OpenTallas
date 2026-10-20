@@ -1,0 +1,100 @@
+ot-run: ot-epyc5       admits   845 GB (avail 705, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 36 disk 167 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1491277-1792482262 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[1026000] %Fatal: tb_qfd_dv_slice_tload.sv:100: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_COLLISION_WRITE_NOT_SUPPRESSED
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:100: Verilog $stop
+Aborting...
+MUT1 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[676000] %Fatal: tb_qfd_dv_slice_tload.sv:45: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_UNEXPECTED_FAULT join=1 vm=0 cycle=68
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:45: Verilog $stop
+Aborting...
+MUT2 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[1036000] %Fatal: tb_qfd_dv_slice_tload.sv:103: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_COLLISION_FAULT_AGE
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:103: Verilog $stop
+Aborting...
+MUT3 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[696000] %Fatal: tb_qfd_dv_slice_tload.sv:51: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_EDGE_MISMATCH stage=1 user=0 slot=0 cycle=70
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:51: Verilog $stop
+Aborting...
+MUT4 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[106000] %Fatal: tb_qfd_dv_slice_tload.sv:45: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_UNEXPECTED_FAULT join=0 vm=1 cycle=11
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:45: Verilog $stop
+Aborting...
+MUT5 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[696000] %Fatal: tb_qfd_dv_slice_tload.sv:51: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_EDGE_MISMATCH stage=1 user=0 slot=0 cycle=70
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:51: Verilog $stop
+Aborting...
+CMUT1 rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[1556000] %Fatal: tb_qfd_dv_slice_tload.sv:52: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_DONE_AGE slot=86
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:52: Verilog $stop
+Aborting...
+CMUT2 rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1491277-1792482262): exit 1

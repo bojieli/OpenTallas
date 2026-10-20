@@ -26,7 +26,7 @@ SRCS="$M/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v $M/ot_sram_1r1w_1024x256_m2_r2c
  $R/rtl/qwen_dv/qfd_dv_vm.sv $R/rtl/qwen_dv/qfd_dv_table_rom_loader.sv $R/rtl/qwen_dv/qfd_dv_slice_tload.sv
  $R/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv"
 sha256sum $SRCS
-B="--binary --timing -j 4 -Wno-fatal --top-module tb_qfd_dv_slice_tload"
+B="-GLOCAL_JOIN=${TLOAD_LOCAL_JOIN:-0} --binary --timing -j 4 -Wno-fatal --top-module tb_qfd_dv_slice_tload"
 build() { verilator $B "$@" $SRCS > "$OUT/logs/build_$1_$2.log" 2>&1 || { tail -30 "$OUT/logs/build_$1_$2.log"; echo F16_TLOAD_BUILD_FAIL; exit 3; }; }
 run() { "$1/Vtb_qfd_dv_slice_tload" +OT_ROM_DIR="$FX" +EXPECTED="$FX/expected.hex" "${@:2}" 2>&1; }
 case $MODE in

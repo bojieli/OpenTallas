@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       admits   888 GB (avail 735, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 36 disk 168 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-local-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1474954-1792482198 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f043db3bf28f991e4897990f2acb6e55e9b362aaf3c58882469ab3c7cadbd314  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+DEFAULT0 edge_checks=12672 reads=149640 cycles=462663 first_age=5 all36 all4 retention head_guard=1
+CAPTURE1 edge_checks=12672 reads=149640 cycles=462807 first_age=6 all36 all4 retention head_guard=1
+COLLISION_REJECT_PASS
+F16_TLOAD_CAPTURE_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1474954-1792482198): exit 0

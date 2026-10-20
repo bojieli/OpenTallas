@@ -21,6 +21,7 @@ module qfd_dv_slice_tload #(
     parameter integer SLICE = 0,
     parameter integer CAPTURE_MUT = 0,
     parameter integer CAPTURE_STAGE = 0,
+    parameter integer LOCAL_JOIN = 0,            // opt-in: 16-bit data / 12-bit address select groups (<=32 gate loads)
     parameter integer NWC = 34,                  // 32 data copies (32 bits each) + kind + addr
     parameter integer MUT = 0
 ) (
@@ -61,21 +62,29 @@ module qfd_dv_slice_tload #(
     wire [1:0] l_user  = (MUT == 4) ? treq[1:0] : rq_user;
     // ---- the real loader (four ROM macros)
     wire          l_we, l_fault;
-    wire [NWC-1:0] l_we_k;
+    localparam integer JOIN_DATA_GROUPS = LOCAL_JOIN ? 64 : 32;
+    localparam integer JOIN_DATA_BITS = LOCAL_JOIN ? 16 : 32;
+    localparam integer JOIN_COPIES = LOCAL_JOIN ? 67 : NWC;
+    wire [JOIN_COPIES-1:0] l_we_k;
     wire [1:0]    l_kind;
     wire [23:0]   l_addr;
     wire [1023:0] l_data;
-    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .WE_COPIES(NWC)) u_ld (.ck(ck), .rst_n(rst_n),
+    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .LOCAL_CTRL(LOCAL_JOIN), .WE_COPIES(JOIN_COPIES)) u_ld (.ck(ck), .rst_n(rst_n),
         .start(l_start), .stage(l_stage), .user_id(l_user), .other_table_write(s_we),
         .tw_we(l_we), .tw_we_k(l_we_k), .tw_kind(l_kind), .tw_addr(l_addr), .tw_data(l_data),
         .busy(busy), .done(done), .fault(l_fault));
     // ---- VM join: loader bundle iff loader write (kept copy select), else stream bundle; same edge = collision
     genvar gi;
-    generate for (gi = 0; gi < 32; gi = gi + 1) begin : g_dsel
-        assign tw_data[32*gi +: 32] = l_we_k[gi] ? l_data[32*gi +: 32] : s_data[32*gi +: 32];
+    generate for (gi = 0; gi < JOIN_DATA_GROUPS; gi = gi + 1) begin : g_dsel
+        assign tw_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS] = l_we_k[gi] ? l_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS] : s_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS];
     end endgenerate
-    assign tw_kind = (l_we_k[32] ^ (MUT == 5)) ? l_kind : s_kind;
-    assign tw_addr = l_we_k[33] ? l_addr : s_addr;
+    assign tw_kind = (l_we_k[JOIN_DATA_GROUPS] ^ (MUT == 5)) ? l_kind : s_kind;
+    generate if (LOCAL_JOIN) begin : g_addr_local
+        assign tw_addr[11:0] = l_we_k[65] ? l_addr[11:0] : s_addr[11:0];
+        assign tw_addr[23:12] = l_we_k[66] ? l_addr[23:12] : s_addr[23:12];
+    end else begin : g_addr_legacy
+        assign tw_addr = l_we_k[33] ? l_addr : s_addr;
+    end endgenerate
     wire coll = l_we && s_we;
     assign tw_we = (MUT == 1) ? (l_we || s_we) : (l_we ^ s_we);   // collision: both suppressed
     always @(posedge ck or negedge rst_n)

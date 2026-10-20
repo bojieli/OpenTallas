@@ -1,0 +1,14 @@
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_vm.sv
+3b9b054e042bc9004acb106fceabeaa2078d1c9741a1d2d589b2d3969bfa0d72  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/qwen_dv/qfd_dv_slice_tload.sv
+c8945b980e09bad8da9639e22bda0a845e84adf4ffee3ae9157f2dad2e9da582  /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+[696000] %Fatal: tb_qfd_dv_slice_tload.sv:51: Assertion failed in tb_qfd_dv_slice_tload: TLOAD_EDGE_MISMATCH stage=1 user=0 slot=0 cycle=70
+%Error: /srv/opentallas-scratch/claude/codex-qw-tload-local-1020/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:51: Verilog $stop
+Aborting...
+CMUT1 rc=1
+V2_MUTANT cmut1 EXIT=1
