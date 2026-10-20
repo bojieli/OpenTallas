@@ -29,8 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COMP = ROOT / 'results/arch/token_path_1018'
 OUT = ROOT / 'results/token_pass'
-STATUS_ASOF = '2026-10-20 02:45 PDT'
-TAG = '1020_0245'
+STATUS_ASOF = '2026-10-20 05:05 PDT'
+TAG = '1020_0505'
 
 RELEASE_DIES = {
     'ds_rom': 'S81 p4l-MU (520 dies; die gates est. 10-22..24)',
@@ -43,7 +43,7 @@ RELEASE_DIES = {
 E = lambda el, g, ev, own, tid: dict(element=el, grade=g, evidence=ev, owner=own, tree=tid)
 ELEMENTS = {
     ('ds_rom', '1u'): [
-        E('Per-family component benches composed (p4l release RTL)', 'REL', 'partial: measured_s81_1019 (main): AR 834.0 at 80.25% measured / MTP 2,649.1 at 71.64%; GL24 64/64 owner views PASS d5fcf23d5; PHY 12.0% modelled', 'TOKEN-LEAD2', 'TOK.DS'),
+        E('Per-family component benches composed (p4l release RTL)', 'REL', 'partial: toksim-s81e 1fd2cdf8f (sparse a_proj front L8/14/28/32/36 measured): AR 836.0 at 81.02% measured / MTP 2,653.9 at 72.21%; GL24 64/64 owner views PASS d5fcf23d5; PHY 12.0% modelled; S81-WQBP P126/P231 candidate 901.8/2,832 (36163250c) awaits COORD adoption', 'TOKEN-LEAD2', 'TOK.DS'),
         E('L0 dense attention (die)', 'REL', 'partial: cut_7 L0 MU-A slice 564/564 + hop 480/480 PASS, 3 mutants CAUGHT (S81-TOK4 63b8a0d5e); full layer open', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.1'),
         E('L2 sparse attention + indexer (die)', 'DIAG', 'old 10-13 record; p4l index reader/helper transport missing', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.2'),
         E('L14 Engram layer (die)', 'DIAG', 'old 10-13 record; CAP L2/L14 512CW+512VP capture PASS (component); row-read integration open', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.3'),
@@ -62,17 +62,17 @@ ELEMENTS = {
         E('lep tag + second landing + A/B select', 'MISS', 'lepmu{a,h}_dr gates; hier v2 d7cb08cb2 unrun', 'LEAD4-S81/MUBUF3', 'MU.TOK.DS3'),
     ],
     ('qwen_rom', '1u'): [
-        E('L0 + chained layer x35 (compute die, GEN3 rel)', 'REL', 'partial: toksim-qw 4d2842541 XT1 tiles + STG gen3 DV ages: 233,497 cyc/token, 67.5% REL', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.2'),
+        E('L0 + chained layer x35 (compute die, GEN3 rel)', 'REL', 'partial: toksim-qw2 4eeeaf287 gen3 DV ages + priced die edges folded: 254,125 cyc/token, 62.8% REL / 26.9% DIAG / 9.8% PRICED', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.2'),
         E('Attention return (dr words + o_proj stream)', 'DIAG', 'no gen3 attn bench mode (compiled 119 vs measured 98)', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.1'),
         E('LM head', 'PRICE', 'priced 3,101 cyc; head span RTL owed (QW-SEGCAL head WIP)', 'LEAD4-QW', 'TOK.QW.LAYER.3'),
-        E('KV attention 1u (KV die GEN9)', 'MISS', 'tb_kvattn_rel job2 try2 exit 143 at 23:43 (build terminated); relaunch; KV service 1,779 on kvs14c stand-in = DIAG', 'TOKEN-LEAD2/TOK-KVATT', 'TOK.QW.KV'),
+        E('KV attention 1u (KV die GEN9)', 'MISS', 'tb_kvattn_rel job3 (src fafc28231, ep5 out_fafc28231) still in Verilator build at 05:01 (live since 02:20); KV service 1,779 on kvs14c stand-in = DIAG', 'TOKEN-LEAD2/TOK-KVATT', 'TOK.QW.KV'),
         E('Layer-programme compiler (tt_ctlm deployment)', 'MISS', 'tt_ctlm deployment programme (G-C3) missing; STORE BLOCKED', 'LEAD4-QW', 'TOK.QW.BENCH.1'),
         E('36-layer TP4 golden', 'MISS', 'canonical driver done 21:13; gold4 ISA golds generated (not RTL), provenance FAIL retained', 'LEAD4-QW', 'TOK.QW.BENCH.2'),
         E('Compute <-> KV D2D (1u)', 'DIAG', 'dh2 1u PASS; shared D2D transport native proof c92c2be9d; release pair owed', 'LEAD4-QW', 'TOK.QW.XDIE'),
         E('TP8 all-reduce windows', 'REL', 'TP8 AR E 286 per window measured (composer REL)', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.SCHED'),
     ],
     ('qwen_rom', 'mu'): [
-        E('4-user link schedule (OVL D2D pair full frame)', 'DIAG', '13,708.2 agg (users 4,768/4,470/2,384/2,086); OVL not in gen3 -> NEWEST, not release', 'TOKEN-LEAD2/TOK-QW', 'MU.TOK.QW'),
+        E('4-user link schedule (OVL D2D pair full frame)', 'DIAG', '12,601.2 agg scheduled (users 4,383/4,109/2,192/1,918; die edges folded, toksim-qw2 4eeeaf287); OVL not in gen3 -> NEWEST, not release', 'TOKEN-LEAD2/TOK-QW', 'MU.TOK.QW'),
         E('NU4 stage cuts', 'REL', 'partial: NU4 stage cuts PASS on dv2f18dh2', 'LEAD4-QW', 'MU.TOK.QW'),
         E('4-user KV attention', 'MISS', 'u4 T1k/4k/8k in tb_kvattn_rel job2 (terminated); KV-TOK3 controlled_n identity FAIL', 'TOKEN-LEAD2/TOK-KVATT', 'MU.QW.KVATT'),
         E('4-user compute <-> KV pair (serial MU calendar)', 'MISS', 'release uses serial MU calendar; paired 4u TB absent', 'LEAD4-QW', 'TOK.QW.XDIE'),
@@ -101,11 +101,11 @@ ELEMENTS = {
 
 # Composition of record per design (TOKEN-LEAD2 10-20): latest measured records, not the 10-18 compose index.
 RECORDS = {
-    'ds_rom': dict(src='results/token_pass/measured_s81_1019/cycles.json (main; Codex GL24 d5fcf23d5)',
-                   ar=834.0, ar_pct=80.25, mtp=2649.1, mtp_pct=71.64, mu_ar=(46, 834.0, 38365.0), mu_mtp=(10, 2649.1, 26491.0),
-                   prev='1,212.6 AR / 3,611.7 MTP (10-19 compose at 11% cur-RTL)'),
-    'qwen_rom': dict(src='claude/toksim-qw-1019 4d2842541 results/token_pass/measured_qwen_1019', ar=5141.3, ar_pct=67.5,
-                     mu=(4, 2086.0, 13708.2, '4,768 / 4,470 / 2,384 / 2,086'), prev='4,766.5 (10-19 compose, old RTL)'),
+    'ds_rom': dict(src='claude/toksim-s81e-1020 1fd2cdf8f results/token_pass/measured_s81_1019/cycles.json (on Codex GL24 d5fcf23d5)',
+                   ar=836.0, ar_pct=81.02, mtp=2653.9, mtp_pct=72.21, mu_ar=(46, 836.0, 38456.0), mu_mtp=(10, 2653.9, 26539.0),
+                   prev='834.0 AR / 2,649.1 MTP (10-20 02:45 status)'),
+    'qwen_rom': dict(src='claude/toksim-qw2-1020 4eeeaf287 results/token_pass/measured_qwen_1019', ar=4724.0, ar_pct=62.8,
+                     mu=(4, 1917.6, 12601.2, '4,383 / 4,109 / 2,192 / 1,918'), prev='5,141.3 (10-20 02:45 status, die edges not folded)'),
     'hbm_gen_ds': dict(src='claude/toksim-hbm-1019 20c323c47 measured_hbm_1019/combined_1020', ar=1109.7, ar_pct=12.3, pct_label='bound-measured; 76.1% incl. measured-not-bound',
                        prev='1,233.4 (10-19 compose incl. LH-REPRICE3)'),
     'hbm_gen_qwen': dict(src='claude/toksim-hbm-1019 20c323c47 measured_hbm_1019/combined_1020', ar=372.2, ar_pct=10.6, pct_label='bound-measured; 91.4% incl. measured-not-bound',
@@ -113,9 +113,9 @@ RECORDS = {
 }
 
 FLAGS = [
-    'S81 MTP 2,649.1 accepted tok/s is BELOW the owner floor (DS ROM MTP > ~3,000, owner 10-15); AR 834.0 is -31% vs the 1,212.6 compose (owner ledger: <= 15% total/design). Coordinator/owner decision needed.',
+    'S81 MTP 2,653.9 accepted tok/s is BELOW the owner floor (DS ROM MTP > ~3,000, owner 10-15); AR 836.0 is -31% vs the 1,212.6 compose (owner ledger: <= 15% total/design); S81-WQBP candidate 901.8/2,832 still below the floor. Coordinator/owner decision needed.',
     'HBM-Qwen 372.2 tok/s as-built (softmax reductions ingress-bound); HH-6 pre-tree + MAX bind is the release lever (est ~990, unmeasured).',
-    'Qwen KV attention on GEN9 has NO measurement: tb_kvattn_rel build was terminated (exit 143) at 23:43; relaunched by TOKEN-LEAD2/TOK-KVATT.',
+    'Qwen KV attention on GEN9 has NO measurement yet: tb_kvattn_rel job3 still building on ep5 (05:01); Qwen 1u falls 5,141.3 -> 4,724.0 once priced die edges are folded (toksim-qw2).',
 ]
 
 # A100 80GB baseline (owner compare-against-a100-same-node-1018; HANDOFF section 2): Qwen3-8B measured on Vast.
