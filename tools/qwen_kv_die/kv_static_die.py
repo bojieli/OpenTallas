@@ -75,6 +75,15 @@ if GRP_PRIVATE0 and not (ON and HROOT and FANFOLD and KITS and
         os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
         os.environ.get('OT_KV_DOMSPLIT', '0') != '1'):
     raise ValueError('GRP_PRIVATE0 requires selected static HROOT/FANFOLD/KITS/MU/BOOT_AGES without DOMSPLIT')
+# KV-GRP2 10-19 (OT_KV_GRP_SAFE2=1; default off): the 32 groups bind the structurally safe tiles qkd_kvs_grp_s2 /
+# qkd_kvs_grp_h_s2 (tools/qwen_kv_die/kv_grp_safe2.py: Stage 1 private ABI + registered faces + landed resets + p192 rows
+# + LD ring on the DOMSPLIT MU/BOOT_AGES point).  Added ages (die schedule): control fan word +1 core edge per group hop,
+# gather +1 per hop, EST +1, boot cfg +1, reset release +2 / +2 (lanes/KV-GEN9.md KV-GRP2 inbox).
+GRP_SAFE2 = os.environ.get('OT_KV_GRP_SAFE2', '0') == '1'
+if GRP_SAFE2 and (GRP_PRIVATE0 or not (ON and HROOT and FANFOLD and KITS and os.environ.get('OT_KV_MU', '0') == '1' and
+                                        os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
+                                        os.environ.get('OT_KV_DOMSPLIT', '0') == '1')):
+    raise ValueError('GRP_SAFE2 requires static HROOT/FANFOLD/KITS/MU/BOOT_AGES WITH DOMSPLIT (and not GRP_PRIVATE0)')
 KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
@@ -114,8 +123,9 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
-RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') + '.sv'
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
+GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -159,6 +169,8 @@ KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', 
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 if GRP_PRIVATE0:
     KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
+if GRP_SAFE2:
+    KIND_MASTER.update(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1526,6 +1538,9 @@ def all_tiles():
         if GRP_PRIVATE0:
             import kv_grp_private0
             kv_grp_private0.apply_tiles(t_, module_text)
+        if GRP_SAFE2:
+            import kv_grp_safe2
+            kv_grp_safe2.apply_tiles(t_, module_text)
         _G['tiles'] = t_
     return _G['tiles']
 
@@ -1584,6 +1599,8 @@ def bindings():
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
         source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
+            source_file = GRP_SAFE2_RTL
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
