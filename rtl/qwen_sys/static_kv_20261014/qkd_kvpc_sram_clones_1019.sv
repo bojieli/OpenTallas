@@ -1215,7 +1215,7 @@ module qkd_kvpc_s_cdc_child #(
          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault);
 endmodule
 
-// ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 3 substitution(s); kept copy families hr_q[1]x16(1) ----
+// ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 3 substitution(s); kept copy families hr_q[1]x20(1) ----
 module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -1230,10 +1230,10 @@ module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
     output wire         fault
 );
     wire hclk = pll_hbm;
-    (* keep, ot_rst_split *) reg [15:0] hr_q__qv;   // KV-PC SAFE: 16 kept copies of hr_q
+    (* keep, ot_rst_split *) reg [19:0] hr_q__qv;   // KV-PC SAFE: 20 kept copies of hr_q
     function hr_q__f; input v; hr_q__f = v; endfunction
     wire hr_q = hr_q__qv[0:0];
-    always @(posedge hclk) hr_q__qv <= {16{hr_q__f(hrst)}};
+    always @(posedge hclk) hr_q__qv <= {20{hr_q__f(hrst)}};
     wire h_rn = hr_q;
     // KV-PC SAFE: po_q[34:30] (col_bank: the observer's bank-indexed open-row reads, 641..43 loads) as 27 kept copies
     (* keep *) reg [327:0] po_q_d;
@@ -1700,7 +1700,8 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  wire sealed_nx = sealed | (seal_q && allseen && !live_any);
  wire pre_nx = sealed_nx && !(|live_nx) && !cfg_we;
  wire gok_a = go && pre_nx && rnx[0], gok_b = go && pre_nx && rnx[1];
- wire ng_f = !go && rnx[2], ng_l = !go && rnx[3];
+ // MUT 3 (bench only): the lookahead update copies ignore a go that is refused (state must hold on a faulting go)
+ wire ng_f = (MUT==3 ? 1'b1 : !go) && rnx[2], ng_l = (MUT==3 ? 1'b1 : !go) && rnx[3];
  wire wv_g = cfg_we && !sealed_nx && !(|live_nx);
  wire raw,unused_put;wire [15:0] unused_epoch;
  // Compiler accounts original controller pin-to-raw offset exactly. This leaf

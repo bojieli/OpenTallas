@@ -81,7 +81,8 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  wire sealed_nx = sealed | (seal_q && allseen && !live_any);
  wire pre_nx = sealed_nx && !(|live_nx) && !cfg_we;
  wire gok_a = go && pre_nx && rnx[0], gok_b = go && pre_nx && rnx[1];
- wire ng_f = !go && rnx[2], ng_l = !go && rnx[3];
+ // MUT 3 (bench only): the lookahead update copies ignore a go that is refused (state must hold on a faulting go)
+ wire ng_f = (MUT==3 ? 1'b1 : !go) && rnx[2], ng_l = (MUT==3 ? 1'b1 : !go) && rnx[3];
  wire wv_g = cfg_we && !sealed_nx && !(|live_nx);
  wire raw,unused_put;wire [15:0] unused_epoch;
  // Compiler accounts original controller pin-to-raw offset exactly. This leaf
