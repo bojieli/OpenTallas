@@ -43,4 +43,23 @@ class HostSramTests(unittest.TestCase):
   with self.assertRaisesRegex(G.GrayFifoError,'exactly one Liberty clock'):
    G._macro_clock_pins(spec,ROOT)
 
+ def test_actual_top_proof_and_wrong_writer_clock(self):
+  import ref_tile
+  spec=ref_tile.load_spec(ROOT/'rtl/test/host_cdc_safe_1020/pc_sram1.json')
+  proof=G.lint(spec,ROOT)
+  self.assertEqual(len(proof['fifos']),2)
+  self.assertEqual(len(proof['macros']),4)
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp)
+   files=set(spec['sources'])|{'physical/common_flow/ot_keep_regs.tcl'}
+   for item in spec['macros']:
+    files.update(str(p.relative_to(ROOT)) for p in (ROOT/item['view']).iterdir() if p.suffix in ('.v','.lib'))
+   for f in files:
+    dest=root/f;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(ROOT/f,dest)
+   p=root/'rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v'
+   text=p.read_text();assert text.count('.wclk(ck_phy_fam)')==1
+   p.write_text(text.replace('.wclk(ck_phy_fam)','.wclk(ck_core)'))
+   with self.assertRaisesRegex(G.GrayFifoError,'wrong family|one family|writer and reader'):
+    G.lint(spec,root)
+
 if __name__=='__main__':unittest.main()

@@ -642,6 +642,10 @@ def _extension_leaves(spec, ext, net, module, port_domain):
                     elif net.driver.get(leaf,('',))[0]=='macro':ldom=_macro_output_domain(net,net.driver[leaf][1])
                     else:ldom=port_domain.get(leaf)
                     if ldom!=fam:
+                        if not dual:
+                            what=net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('',str(leaf)))[1]
+                            raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
+                                                f'({ldom}); a macro must sit in one clock family')
                         raise GrayFifoError(f'reviewed_gray_fifos macro {name} input {pin} reads wrong family {ldom}; expected {fam}')
     straps = {}
     for p in ext.get('die_constant_inputs', []):
