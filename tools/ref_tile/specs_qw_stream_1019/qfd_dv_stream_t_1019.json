@@ -1,0 +1,337 @@
+{
+ "name": "qfd_dv_stream_t_1019",
+ "top": "qfd_dv_stream_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_stream_tile.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 16
+  },
+  "why": "2 registered face stages, last stage 16 kept copies (~470 control reset loads, <=32 each); payload registers carry no reset"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) per-32-bit-group copies decoded from the pins), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap output registers after the interior tap relay, fault).  A flow pin stage would add a second edge and fold the kept select copies into one flop per pin (1,088-load relay select)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 302.4,
+  "h": 380.16
+ },
+ "std_area_um2": 7000,
+ "fill_reason": {
+  "pin_bound": "6,946 external pins: W/E 2,176 each (1,088-bit relay in + out), S 1,482 (low tap halves + SU write ports), N 1,113; <= 6 pins/um needs >= 371 um on W/E, so a 40-60 % outline (~120 x 120 um) cannot carry them. 302.4 x 380.16 (aspect 1.26): W/E 5.85 pins/um, S 5.0, N 3.8; relay W->E 302 um, every tap / packer hop <= ~345 um. Pin-bound, waived (low util costs wire only)."
+ },
+ "pins": {
+  "W": [
+   "sw_lo",
+   "sw_v",
+   "sw_hi",
+   "so_w"
+  ],
+  "E": [
+   "so_e",
+   "se_lo",
+   "se_v",
+   "se_hi"
+  ],
+  "S": [
+   "tw_data_lo",
+   "xw_we",
+   "xw_addr",
+   "ck",
+   "rst_n",
+   "xw_data",
+   "xt_d_lo"
+  ],
+  "N": [
+   "tw_data_hi",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "sid",
+   "cfg_v",
+   "cfg_dir",
+   "cfg_tag",
+   "fault",
+   "xt_v",
+   "xt_a",
+   "xt_bad",
+   "xt_d_hi"
+  ]
+ },
+ "pin_ranges": {
+  "sw_lo": [
+   4.0,
+   96.827
+  ],
+  "sw_v": [
+   96.827,
+   97.851
+  ],
+  "sw_hi": [
+   97.851,
+   190.507
+  ],
+  "so_w": [
+   190.507,
+   376.16
+  ],
+  "so_e": [
+   4.0,
+   189.653
+  ],
+  "se_lo": [
+   189.653,
+   282.48
+  ],
+  "se_v": [
+   282.48,
+   283.504
+  ],
+  "se_hi": [
+   283.504,
+   376.16
+  ],
+  "tw_data_lo": [
+   4.0,
+   105.027
+  ],
+  "xw_we": [
+   105.027,
+   106.606
+  ],
+  "xw_addr": [
+   106.606,
+   144.491
+  ],
+  "ck": [
+   144.491,
+   145.675
+  ],
+  "rst_n": [
+   145.675,
+   146.859
+  ],
+  "xw_data": [
+   146.859,
+   197.373
+  ],
+  "xt_d_lo": [
+   197.373,
+   298.4
+  ],
+  "tw_data_hi": [
+   4.0,
+   135.3
+  ],
+  "tw_we": [
+   135.3,
+   136.839
+  ],
+  "tw_kind": [
+   136.839,
+   138.378
+  ],
+  "tw_addr": [
+   138.378,
+   144.532
+  ],
+  "sid": [
+   144.532,
+   146.071
+  ],
+  "cfg_v": [
+   146.071,
+   147.61
+  ],
+  "cfg_dir": [
+   147.61,
+   149.148
+  ],
+  "cfg_tag": [
+   149.148,
+   156.329
+  ],
+  "fault": [
+   156.329,
+   157.868
+  ],
+  "xt_v": [
+   157.868,
+   159.406
+  ],
+  "xt_a": [
+   159.406,
+   165.561
+  ],
+  "xt_bad": [
+   165.561,
+   167.1
+  ],
+  "xt_d_hi": [
+   167.1,
+   298.4
+  ]
+ },
+ "layer_cap": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "structural_change": "QW-CLUSTER3/STREAM 10-19: Q-DV stream face (qfd_dv_stream / static packer 9587da800) as a safe hard tile: face-registered inputs with kept per-32-bit select copies decoded at the face (closes the cfg2/SU-we/addr copy demand of the 1195cd50b consumer inside the tile), interior tap relay (+1 edge on tw/xt), control-only reset with 2-stage landing, static schedule, no backpressure.",
+ "job": {
+  "owner": "Claude:LEAD2-QW/QW-CLUSTER3-STREAM",
+  "branch": "claude/qw-cluster3-stream-1019",
+  "tag": "s1",
+  "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
+  "record_to": "results/rtl/ref_tile/qfd_dv_stream_t_1019",
+  "views_to": "physical/ref_tile/qfd_dv_stream_t_1019/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "rtl/qwen_dv/qfd_dv_stream.sv",
+   "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
+   "rtl/test/qwen_dv/static_stream/run_tile.sh",
+   "results/rtl/qw_stream_tile_1019/bench"
+  ],
+  "benches": [
+   {
+    "name": "stream_tile_m0",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m0 0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "STREAM_TILE_EQ PASS edges10000",
+    "min_count_regex": "emits(\\d+)",
+    "pass_witness": "results/rtl/qw_stream_tile_1019/bench/m0.log"
+   },
+   {
+    "name": "stream_tile_m2",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m2 2",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m2.log",
+    "why": "BF16 truncation instead of RNE"
+   },
+   {
+    "name": "stream_tile_m21",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m21 21",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m21.log",
+    "why": "no highest-lane priority"
+   },
+   {
+    "name": "stream_tile_m22",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m22 22",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m22.log",
+    "why": "no duplicate-address fault"
+   },
+   {
+    "name": "stream_tile_m31",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m31 31",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m31.log",
+    "why": "relay group 17 selects on the E valid copy"
+   },
+   {
+    "name": "stream_tile_m32",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m32 32",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m32.log",
+    "why": "table-tap group 5 drops the SID match"
+   },
+   {
+    "name": "stream_tile_m33",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m33 33",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m33.log",
+    "why": "emit copy of relay group 9 stuck 0"
+   },
+   {
+    "name": "stream_tile_m34",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m34 34",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream_tile_1019/bench/m34.log",
+    "why": "write-any copy of xb group 3 stuck 0"
+   }
+  ]
+ }
+}

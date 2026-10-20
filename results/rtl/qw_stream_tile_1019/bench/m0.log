@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+6f2fc6c27e824feb4838460c8a1feed507ca37ee7cea70253ae75bdbfd65036b  rtl/test/qwen_dv/static_stream/tb_stream_tile.sv
+83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69  rtl/qwen_dv/qfd_dv_stream.sv
+93f01d6daff6827c4ce35b80e393caef09d44b15e316bbbddf50fae3c6e09869  rtl/qwen_dv/qfd_dv_stream_tile.sv
+STREAM_TILE_EQ PASS edges10000 resets2 sids2 emits946 tw2511 xt1993 relay4298 badedges3691 fault1 xtbad1
+- rtl/test/qwen_dv/static_stream/tb_stream_tile.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.131 s; speed 761.677 us/s
+- Verilator: cpu 0.123 s on 1 threads; allocated 7 MB
+MUT0 sim exit 0
