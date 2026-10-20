@@ -7,15 +7,26 @@ module tb_svc7_add;
     wire [31:0] y,ref_y;
     wire [1:0] err,ref_err;
     wire vo,ref_vo;
+`ifdef SVC7_GRAPH_PROBE
+    ot_s81svc7_add_native dut(.clk(clk),.rst_n(rst_n),.valid_in(valid_in),
+`else
     ot_s81svc7_add dut(.clk(clk),.rst_n(rst_n),.valid_in(valid_in),
+`endif
         .a(a),.b(b),.y(y),.err(err),.valid_out(vo));
     ot_hdc_fp32_add_f12_l4 ref_add(.clk(clk),.rst_n(rst_n),.valid_in(valid_in),
         .a(a),.b(b),.y(ref_y),.err(ref_err),.valid_out(ref_vo));
     reg [34:0] h0=0,h1=0;
+`ifdef SVC7_GRAPH_PROBE
+    wire [34:0] expected=h0;
+    localparam integer LAT=5;
+`else
+    wire [34:0] expected=h1;
+    localparam integer LAT=6;
+`endif
     integer cyc=0,checked=0,errors=0;
     always @(negedge clk) begin
-        if (cyc>40 && {vo,err,y} !== h1) begin
-            $display("SVC7_ADD_MISMATCH cyc=%0d got=%h expected=%h",cyc,{vo,err,y},h1);
+        if (cyc>40 && {vo,err,y} !== expected) begin
+            $display("SVC7_ADD_MISMATCH cyc=%0d got=%h expected=%h",cyc,{vo,err,y},expected);
             errors=errors+1;
         end
         if (cyc>40) checked=checked+1;
@@ -35,7 +46,7 @@ module tb_svc7_add;
         endcase
         cyc=cyc+1;
         if(cyc==12000) begin
-            $display("SVC7_ADD checked=%0d errors=%0d latency=6 verdict=%s",checked,errors,errors==0?"PASS":"FAIL");
+            $display("SVC7_ADD checked=%0d errors=%0d latency=%0d verdict=%s",checked,errors,LAT,errors==0?"PASS":"FAIL");
             if(errors!=0) $fatal(1,"SVC7_ADD_FAIL");
             $finish;
         end
