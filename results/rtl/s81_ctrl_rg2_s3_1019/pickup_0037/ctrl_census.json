@@ -1,0 +1,170 @@
+{
+ "top": "dsfd_ctrl_rg2",
+ "sha256": "99c2ad07c90526be98b4144086bd259acdbbf1f1674997e0ebd7719f365a568d",
+ "nonclock_roots_over32": 23,
+ "over32": [
+  {
+   "net": "u_ot_pr_core.g_pc[0].u_pc.u_hrs.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 159,
+   "flop_loads": 155,
+   "driver": "u_ot_pr_core.g_pc[0].u_pc.u_hrs.q$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 116,
+   "flop_loads": 112,
+   "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "_7293_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7293_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7364_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7364_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7435_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7435_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7511_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7511_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7625_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7625_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7696_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7696_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7772_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7772_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7886_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7886_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7957_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_7957_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8028_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8028_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8099_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8099_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8170_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8170_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8241_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8241_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8312_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8312_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8393_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8393_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8464_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8464_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8535_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8535_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8606_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8606_",
+   "kind": "comb"
+  },
+  {
+   "net": "_8677_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 64,
+   "flop_loads": 0,
+   "driver": "_8677_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7581_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 40,
+   "flop_loads": 0,
+   "driver": "_7581_",
+   "kind": "comb"
+  },
+  {
+   "net": "_7842_/Y (OA21x2_ASAP7_75t_R)",
+   "loads": 40,
+   "flop_loads": 0,
+   "driver": "_7842_",
+   "kind": "comb"
+  }
+ ],
+ "macro_cells_direction_inferred": 4,
+ "scope": "mapped native standard-cell roots, BUF/INV collapsed; no physical reach or complete macro-direction claim"
+}

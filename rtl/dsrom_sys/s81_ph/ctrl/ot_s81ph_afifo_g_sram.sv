@@ -19,6 +19,11 @@ module ot_s81ph_afifo_g_sram #(
     input wire [(W+G-1)/G-1:0] r_pop_g,
     output wire [W-1:0] r_d
 );
+`ifdef S81CTRL_NATIVE32
+    wire [7:0] wrl, rrl;
+    ot_s81ph_reset_leafbank u_wrbank (.clk(wclk), .rst_n(wrst_n), .q(wrl));
+    ot_s81ph_reset_leafbank u_rrbank (.clk(rclk), .rst_n(rrst_n), .q(rrl));
+`endif
     localparam integer AW=$clog2(DEPTH), PW=AW+1;
     initial begin
         if (W<1 || W>546 || DEPTH<2 || DEPTH>16 || (DEPTH&(DEPTH-1))!=0)
@@ -39,6 +44,15 @@ module ot_s81ph_afifo_g_sram #(
     wire wfire=w_v&&!full;
     wire [PW-1:0] wbin_n=wbin+{{(PW-1){1'b0}},wfire};
     wire [PW-1:0] used_n=wbin_n-rbin_w;
+`ifdef S81CTRL_NATIVE32
+    always @(posedge wclk or negedge wrl[0]) if(!wrl[0]) wbin<=0; else wbin<=wbin_n;
+    always @(posedge wclk or negedge wrl[1]) if(!wrl[1]) wgray<=0; else wgray<=(wbin_n>>1)^wbin_n;
+    always @(posedge wclk or negedge wrl[2]) if(!wrl[2]) rg_w1<=0; else rg_w1<=rgray;
+    always @(posedge wclk or negedge wrl[3]) if(!wrl[3]) rg_w2<=0; else rg_w2<=rg_w1;
+    always @(posedge wclk or negedge wrl[4]) if(!wrl[4]) cbin<=0; else if(cbin!=rbin_w) cbin<=cbin+1'b1;
+    always @(posedge wclk or negedge wrl[5]) if(!wrl[5]) begin w_rdy<=0; w_credit<=0; w_ovf<=0; end
+        else begin w_rdy<=(DEPTH-32'(used_n))>=AF; w_credit<=cbin!=rbin_w; if(w_v&&full) w_ovf<=1'b1; end
+`else
     always @(posedge wclk or negedge wrst_n)
         if(!wrst_n) begin
             wbin<=0; wgray<=0; rg_w1<=0; rg_w2<=0; cbin<=0;
@@ -51,11 +65,19 @@ module ot_s81ph_afifo_g_sram #(
             if(cbin!=rbin_w) cbin<=cbin+1'b1;
             if(w_v&&full) w_ovf<=1'b1;
         end
+`endif
     reg empty;
     wire rfire=r_pop&&!empty;
     wire [PW-1:0] rbin_n=rbin+{{(PW-1){1'b0}},rfire};
     wire [PW-1:0] rgray_n=(rbin_n>>1)^rbin_n;
     wire have_next=rgray_n!=wg_r2;
+`ifdef S81CTRL_NATIVE32
+    always @(posedge rclk or negedge rrl[0]) if(!rrl[0]) rbin<=0; else rbin<=rbin_n;
+    always @(posedge rclk or negedge rrl[1]) if(!rrl[1]) rgray<=0; else rgray<=rgray_n;
+    always @(posedge rclk or negedge rrl[2]) if(!rrl[2]) wg_r1<=0; else wg_r1<=wgray;
+    always @(posedge rclk or negedge rrl[3]) if(!rrl[3]) wg_r2<=0; else wg_r2<=wg_r1;
+    always @(posedge rclk or negedge rrl[4]) if(!rrl[4]) empty<=1; else empty<=!have_next;
+`else
     always @(posedge rclk or negedge rrst_n)
         if(!rrst_n) begin
             rbin<=0; rgray<=0; wg_r1<=0; wg_r2<=0; empty<=1;
@@ -63,6 +85,7 @@ module ot_s81ph_afifo_g_sram #(
             rbin<=rbin_n; rgray<=rgray_n;
             wg_r1<=wgray; wg_r2<=wg_r1; empty<=!have_next;
         end
+`endif
     assign r_v=!empty;
 `ifdef S81CTRL_SRAM_MUT_CURRENT
     wire [3:0] ra={{(4-AW){1'b0}},rbin[AW-1:0]};

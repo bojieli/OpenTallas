@@ -53,20 +53,33 @@ module ot_s81ph_ctrl_pcr #(
     input  wire [3:0]    kr_beat,
     input  wire [255:0]  kr_data
 );
+    `ifdef S81CTRL_NATIVE32
+    localparam integer QW = 340, RW = 256 + TW + 4, G = 12;
+`else
     localparam integer QW = 340, RW = 256 + TW + 4, G = 32;
+`endif
     localparam integer NGQ = (QW + G - 1) / G, NGR = (RW + G - 1) / G;
     wire srst_n, hrst_n;
     ot_s81ph_sync u_srs (.clk(cks), .rst_n(rst), .d(1'b1), .q(srst_n));
     ot_s81ph_sync u_hrs (.clk(ckh), .rst_n(rst), .d(1'b1), .q(hrst_n));
+`ifdef S81CTRL_NATIVE32
+    // Two-stage reset landing is above; one release edge distributes it to
+    // native kept regional leaves. Assertion remains asynchronous.
+    wire [7:0] srl, hrl;
+    ot_s81ph_reset_leafbank u_srbank (.clk(cks), .rst_n(srst_n), .q(srl));
+    ot_s81ph_reset_leafbank u_hrbank (.clk(ckh), .rst_n(hrst_n), .q(hrl));
+`else
+    wire [7:0] srl = {8{srst_n}}, hrl = {8{hrst_n}};
+`endif
     wire h_live;
-    ot_s81ph_sync u_hl (.clk(cks), .rst_n(srst_n), .d(hrst_n), .q(h_live));
-    always @(posedge cks or negedge srst_n)
-        if (!srst_n) co <= 2'b00; else co <= {ci[1] | s_ovf, ci[0] & h_live};
+    ot_s81ph_sync u_hl (.clk(cks), .rst_n(srl[0]), .d(hrl[0]), .q(h_live));
+    always @(posedge cks or negedge srl[0])
+        if (!srl[0]) co <= 2'b00; else co <= {ci[1] | s_ovf, ci[0] & h_live};
     // ---- stream side: request pin register -> request FIFO (unchanged)
     reg         rq_v_q;
     reg [339:0] rq_d_q;
-    always @(posedge cks or negedge srst_n)
-        if (!srst_n) rq_v_q <= 1'b0; else rq_v_q <= rq[0];
+    always @(posedge cks or negedge srl[0])
+        if (!srl[0]) rq_v_q <= 1'b0; else rq_v_q <= rq[0];
     always @(posedge cks) rq_d_q <= rq[340:1];
     wire          q_v;
     wire [QW-1:0] q_d;
@@ -79,15 +92,15 @@ module ot_s81ph_ctrl_pcr #(
     ot_s81ph_afifo_g #(
 `endif
         .W(QW), .DEPTH(DQ), .AF(1), .G(G)) u_q (
-        .wclk(cks), .wrst_n(srst_n), .w_v(rq_v_q), .w_d(rq_d_q), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
-        .rclk(ckh), .rrst_n(hrst_n), .r_v(q_v), .r_pop(h_pop), .r_pop_g(h_pop_g), .r_d(q_d));
+        .wclk(cks), .wrst_n(srl[1]), .w_v(rq_v_q), .w_d(rq_d_q), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
+        .rclk(ckh), .rrst_n(hrl[1]), .r_v(q_v), .r_pop(h_pop), .r_pop_g(h_pop_g), .r_d(q_d));
     // ---- HBM side: registered k_rdy, present-then-decide issue (master state)
     reg pend;                 // the previous cycle presented a word (k_v was 1)
     reg krq;                  // k_rdy at the PHY face, registered: the word presented last cycle was taken
     wire ld = !k_v && !(pend && !krq);          // hold register free: idle, or the last presentation was taken
     assign h_pop = ld;                          // the FIFO ignores a pop while empty
-    always @(posedge ckh or negedge hrst_n)
-        if (!hrst_n) begin k_v <= 1'b0; pend <= 1'b0; krq <= 1'b0; end
+    always @(posedge ckh or negedge hrl[0])
+        if (!hrl[0]) begin k_v <= 1'b0; pend <= 1'b0; krq <= 1'b0; end
         else begin
             pend <= k_v;
             krq  <= k_rdy;
@@ -104,8 +117,8 @@ module ot_s81ph_ctrl_pcr #(
         localparam integer LO = gq * G;
         localparam integer WG = (gq == NGQ - 1) ? QW - LO : G;
         (* keep *) reg kv_c, pv_c, krq_c;
-        always @(posedge ckh or negedge hrst_n)
-            if (!hrst_n) begin kv_c <= 1'b0; pv_c <= 1'b0; krq_c <= 1'b0; end
+        always @(posedge ckh or negedge hrl[2 + gq%6])
+            if (!hrl[2 + gq%6]) begin kv_c <= 1'b0; pv_c <= 1'b0; krq_c <= 1'b0; end
             else begin
                 pv_c  <= kv_c;
                 krq_c <= k_rdy;
@@ -132,8 +145,8 @@ module ot_s81ph_ctrl_pcr #(
     reg [RW-1:0]  krd_q;
     wire          l_rdy;
     assign kr_rdy = l_rdy;                       // registered (ot_s81ph_afifo_g.w_rdy)
-    always @(posedge ckh or negedge hrst_n)
-        if (!hrst_n) begin kr_vq <= 1'b0; kr_rq <= 1'b0; end else begin kr_vq <= kr_v; kr_rq <= l_rdy; end
+    always @(posedge ckh or negedge hrl[0])
+        if (!hrl[0]) begin kr_vq <= 1'b0; kr_rq <= 1'b0; end else begin kr_vq <= kr_v; kr_rq <= l_rdy; end
     wire          kr_q = kr_vq && kr_rq;
     always @(posedge ckh) krd_q <= {kr_data, kr_tag, kr_beat};
     wire          l_v;
@@ -145,11 +158,11 @@ module ot_s81ph_ctrl_pcr #(
     ot_s81ph_afifo_g #(
 `endif
         .W(RW), .DEPTH(DR), .AF(2), .G(G)) u_r (
-        .wclk(ckh), .wrst_n(hrst_n), .w_v(kr_q), .w_d(krd_q), .w_rdy(l_rdy), .w_credit(l_cr), .w_ovf(l_ovf),
-        .rclk(cks), .rrst_n(srst_n), .r_v(l_v), .r_pop(1'b1), .r_pop_g({NGR{1'b1}}), .r_d(l_d));
+        .wclk(ckh), .wrst_n(hrl[1]), .w_v(kr_q), .w_d(krd_q), .w_rdy(l_rdy), .w_credit(l_cr), .w_ovf(l_ovf),
+        .rclk(cks), .rrst_n(srl[2]), .r_v(l_v), .r_pop(1'b1), .r_pop_g({NGR{1'b1}}), .r_d(l_d));
     // response output register: data loads every cycle (rv qualifies it; no enable fan-out on the FIFO's empty flop)
-    always @(posedge cks or negedge srst_n)
-        if (!srst_n) rv <= 1'b0; else rv <= l_v;
+    always @(posedge cks or negedge srl[0])
+        if (!srl[0]) rv <= 1'b0; else rv <= l_v;
     always @(posedge cks)
 `ifdef S81PH_MUT_BEAT
         {r_data, r_tag, r_beat} <= {l_d[RW-1:4], l_d[2:0], l_d[3]};
@@ -158,7 +171,18 @@ module ot_s81ph_ctrl_pcr #(
 `endif
     // ---- write done: HBM pin register -> pulse crossing (unchanged)
     reg wd_q;
-    always @(posedge ckh or negedge hrst_n) if (!hrst_n) wd_q <= 1'b0; else wd_q <= k_wr_done;
-    ot_s81ph_pulse_x #(.CW(4)) u_wd (.sclk(ckh), .srst_n(hrst_n), .s_p(wd_q), .dclk(cks), .drst_n(srst_n), .d_p(wd));
+    always @(posedge ckh or negedge hrl[0]) if (!hrl[0]) wd_q <= 1'b0; else wd_q <= k_wr_done;
+    ot_s81ph_pulse_x #(.CW(4)) u_wd (.sclk(ckh), .srst_n(hrl[0]), .s_p(wd_q), .dclk(cks), .drst_n(srl[0]), .d_p(wd));
+endmodule
+// Separate kept outputs remain distinct after synth; the native census is
+// required to prove that the mapper retained them and each consumer stays <=32.
+module ot_s81ph_reset_leafbank #(parameter integer N=8)(
+    input wire clk, rst_n, output wire [N-1:0] q
+);
+    (* keep *) reg [N-1:0] leaf_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) leaf_q <= {N{1'b0}};
+        else leaf_q <= {N{1'b1}};
+    assign q = leaf_q;
 endmodule
 `default_nettype wire

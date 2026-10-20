@@ -1,0 +1,40 @@
+{
+ "candidate": "S81CTRL_NATIVE32",
+ "replica_count": 16,
+ "outline_um": [
+  531.25,
+  324
+ ],
+ "macros_per_replica": 4,
+ "macro": "ot_sram_1r1w2c_16x340_p192",
+ "payload_bits": {
+  "request_per_pc": 340,
+  "response_per_pc": 277,
+  "pcs_per_tile": 2
+ },
+ "mapped_flops_baseline": 2740,
+ "mapped_flops_candidate": 2956,
+ "added_flops_per_tile": 216,
+ "added_flops_die": 3456,
+ "fifo_depth_unchanged": 8,
+ "max_request_rate_per_pc_per_hclk": 0.5,
+ "steady_data_edges_added": 0,
+ "reset_release_edges_added": {
+  "pcr_local_clock": 1,
+  "fifo_local_clock": 1
+ },
+ "status_live_delay": "PCR reset1 + h_live synchronization: initialization only; production exact warm reset qualification pending",
+ "pinout_outline_storage_unchanged": true,
+ "native_max_nonclock_loads": 31,
+ "native_roots_over32": 0,
+ "clock_core_k8_boundary_spread_ps": [
+  18.9,
+  14.9
+ ],
+ "clock_hclk_prior_boundary_spread_ps": [
+  99.8,
+  92.9
+ ],
+ "candidate_layout_gate_launched": false,
+ "qualification": "opt-in unfinished candidate; do not bind or quote physical closure"
+}

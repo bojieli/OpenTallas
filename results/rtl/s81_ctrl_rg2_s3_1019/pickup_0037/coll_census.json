@@ -1,0 +1,65 @@
+{
+ "top": "dsfd_coll_lane_w_safe4",
+ "sha256": "cd809310b27cd25ac51c3e69f9adb17b0bbc5197910c7c59888349879f5c978d",
+ "nonclock_roots_over32": 8,
+ "over32": [
+  {
+   "net": "u.u_rr.g_local[10].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 45,
+   "flop_loads": 45,
+   "driver": "u.u_rr.g_local[10].local_r$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "u.u_ep.nxt[6]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 38,
+   "flop_loads": 0,
+   "driver": "u.u_ep.nxt[6]$_DFFE_PN0P_",
+   "kind": "ff"
+  },
+  {
+   "net": "_48270_/Y (OR3x1_ASAP7_75t_R)",
+   "loads": 37,
+   "flop_loads": 0,
+   "driver": "_48270_",
+   "kind": "comb"
+  },
+  {
+   "net": "u.u_ep.una[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 37,
+   "flop_loads": 0,
+   "driver": "u.u_ep.una[2]$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "u.u_ep.nxt[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 36,
+   "flop_loads": 0,
+   "driver": "u.u_ep.nxt[3]$_DFFE_PN0P_",
+   "kind": "ff"
+  },
+  {
+   "net": "u.u_ep.nxt[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 34,
+   "flop_loads": 0,
+   "driver": "u.u_ep.nxt[1]$_DFFE_PN0P_",
+   "kind": "ff"
+  },
+  {
+   "net": "u.u_ep.nxt[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 33,
+   "flop_loads": 0,
+   "driver": "u.u_ep.nxt[2]$_DFFE_PN0P_",
+   "kind": "ff"
+  },
+  {
+   "net": "u.u_ep.nxt[5]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 33,
+   "flop_loads": 0,
+   "driver": "u.u_ep.nxt[5]$_DFFE_PN0P_",
+   "kind": "ff"
+  }
+ ],
+ "macro_cells_direction_inferred": 55,
+ "scope": "mapped native standard-cell roots, BUF/INV collapsed; no physical reach or complete macro-direction claim"
+}

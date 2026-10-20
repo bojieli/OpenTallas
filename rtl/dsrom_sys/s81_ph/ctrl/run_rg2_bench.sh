@@ -14,7 +14,7 @@ set -u
 command -v verilator >/dev/null || { echo "NO_VERILATOR on $(hostname)"; exit 3; }
 O=$1; M=$2; H=$3; SEED=$4; N=${5:-48}; T=${6:-4}
 mkdir -p $O
-D="+define+S81CTRL_RG2"; [ "$M" != none ] && D="$D +define+$M"
+D="+define+S81CTRL_RG2"; [ "${S81CTRL_NATIVE32:-0}" != 1 ] || D="$D +define+S81CTRL_NATIVE32"; [ "$M" != none ] && D="$D +define+$M"
 [ "${S81CTRL_FIFO_IMPL:-flop}" != sram ] || D="$D +define+S81CTRL_SRAM_FIFO"
 [ "${S81CTRL_FIFO_IMPL:-flop}" != sram_p192 ] || D="$D +define+S81CTRL_SRAM_FIFO +define+S81CTRL_SRAM_P192"
 verilator --binary --timing -j $T --top-module tb_dsfd_ctrl -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -O2 $D -GCKH_PS=$H \
@@ -27,7 +27,7 @@ verilator --binary --timing -j $T --top-module tb_dsfd_ctrl -Wno-fatal -Wno-WIDT
   if grep -qE "signal terminated program|Killed signal|Terminated|Cannot allocate memory|virtual memory exhausted" $O/build.log; then
     echo BUILD_CRASHED; tail -5 $O/build.log; exit 137; fi
   echo BUILD_FAILED; tail -5 $O/build.log; exit 2; }
-$O/obj/Vtb_dsfd_ctrl +seed=$SEED +n=$N > $O/run.log 2>&1
+$O/obj/Vtb_dsfd_ctrl +seed=$SEED +n=$N +stall=${S81CTRL_STALL:-20000} > $O/run.log 2>&1
 rc=$?
 [ $rc -ge 124 ] && { echo "SIM_CRASHED rc=$rc"; tail -3 $O/run.log; exit $rc; }
 grep -E "TB_DSFD_CTRL|latency" $O/run.log | tail -4

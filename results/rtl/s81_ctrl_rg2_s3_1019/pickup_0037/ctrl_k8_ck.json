@@ -1,0 +1,967 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_s3k8-20261019-225611/routes/gate/work/orfs/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 1352
+  },
+  "boundary": {
+   "n": 1245,
+   "mean": 486.8,
+   "min": 470.1,
+   "max": 511.6
+  },
+  "all": {
+   "n": 1352,
+   "mean": 486.9,
+   "min": 462.2,
+   "max": 511.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 486.9,
+   "max_slew": 37.4,
+   "max_late": 6.4,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+     "arr": 479.3,
+     "slew": 32.7,
+     "late": -7.6,
+     "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+     "arr": 480.9,
+     "slew": 37.4,
+     "late": -6.0,
+     "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+     "arr": 491.5,
+     "slew": 31.2,
+     "late": 4.6,
+     "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+     "arr": 493.3,
+     "slew": 37.2,
+     "late": 6.4,
+     "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 1245,
+    "mean": 486.8,
+    "min": 470.1,
+    "max": 511.6
+   },
+   "all": {
+    "n": 1352,
+    "mean": 486.9,
+    "min": 462.2,
+    "max": 511.6
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x340_p192": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 1245,
+     "mean": 486.8,
+     "min": 470.1,
+     "max": 511.6
+    },
+    "all": {
+     "n": 1350,
+     "mean": 486.9,
+     "min": 462.2,
+     "max": 511.6
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 1352
+  },
+  "boundary": {
+   "n": 1245,
+   "mean": 372.3,
+   "min": 365.5,
+   "max": 384.4
+  },
+  "all": {
+   "n": 1352,
+   "mean": 372.7,
+   "min": 355.7,
+   "max": 386.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 372.7,
+   "max_slew": 34.4,
+   "max_late": 2.6,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+     "arr": 373.6,
+     "slew": 29.3,
+     "late": 0.9,
+     "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+     "arr": 375.3,
+     "slew": 34.4,
+     "late": 2.6,
+     "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+     "arr": 373.3,
+     "slew": 27.7,
+     "late": 0.6,
+     "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+     "arr": 375.3,
+     "slew": 34.2,
+     "late": 2.6,
+     "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 1245,
+    "mean": 372.3,
+    "min": 365.5,
+    "max": 384.4
+   },
+   "all": {
+    "n": 1352,
+    "mean": 372.7,
+    "min": 355.7,
+    "max": 386.9
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x340_p192": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 1245,
+     "mean": 372.3,
+     "min": 365.5,
+     "max": 384.4
+    },
+    "all": {
+     "n": 1350,
+     "mean": 372.7,
+     "min": 355.7,
+     "max": 386.9
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 1352
+  },
+  "boundary": {
+   "n": 1245,
+   "mean": 302.5,
+   "min": 296.4,
+   "max": 311.3
+  },
+  "all": {
+   "n": 1352,
+   "mean": 303.0,
+   "min": 290.4,
+   "max": 319.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 303.0,
+   "max_slew": 34.7,
+   "max_late": 6.8,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+     "arr": 308.0,
+     "slew": 29.1,
+     "late": 5.0,
+     "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+     "arr": 309.8,
+     "slew": 34.7,
+     "late": 6.8,
+     "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+     "arr": 302.1,
+     "slew": 27.3,
+     "late": -0.9,
+     "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+     "arr": 304.3,
+     "slew": 34.5,
+     "late": 1.3,
+     "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 1245,
+    "mean": 302.5,
+    "min": 296.4,
+    "max": 311.3
+   },
+   "all": {
+    "n": 1352,
+    "mean": 303.0,
+    "min": 290.4,
+    "max": 319.0
+   },
+   "refs": {
+    "ot_sram_1r1w2c_16x340_p192": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 1245,
+     "mean": 302.5,
+     "min": 296.4,
+     "max": 311.3
+    },
+    "all": {
+     "n": 1350,
+     "mean": 303.0,
+     "min": 290.4,
+     "max": 319.0
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 4,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 487,
+  "CK_SS_ALL_MEAN": 487,
+  "CK_SS_MIN": 470,
+  "CK_SS_ALL_MIN": 462,
+  "CK_SS_MAX": 512,
+  "CK_SS_ALL_MAX": 512,
+  "CK_TT_MEAN": 372,
+  "CK_TT_ALL_MEAN": 373,
+  "CK_TT_MIN": 366,
+  "CK_TT_ALL_MIN": 356,
+  "CK_TT_MAX": 384,
+  "CK_TT_ALL_MAX": 387,
+  "CK_FF_MEAN": 302,
+  "CK_FF_ALL_MEAN": 303,
+  "CK_FF_MIN": 296,
+  "CK_FF_ALL_MIN": 290,
+  "CK_FF_MAX": 311,
+  "CK_FF_ALL_MAX": 319,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_s3k8-20261019-225611/routes/gate/work/orfs/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 1352
+    },
+    "boundary": {
+     "n": 1245,
+     "mean": 486.8,
+     "min": 470.1,
+     "max": 511.6
+    },
+    "all": {
+     "n": 1352,
+     "mean": 486.9,
+     "min": 462.2,
+     "max": 511.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 486.9,
+     "max_slew": 37.4,
+     "max_late": 6.4,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+       "arr": 479.3,
+       "slew": 32.7,
+       "late": -7.6,
+       "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+       "arr": 480.9,
+       "slew": 37.4,
+       "late": -6.0,
+       "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+       "arr": 491.5,
+       "slew": 31.2,
+       "late": 4.6,
+       "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+       "arr": 493.3,
+       "slew": 37.2,
+       "late": 6.4,
+       "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1245,
+      "mean": 486.8,
+      "min": 470.1,
+      "max": 511.6
+     },
+     "all": {
+      "n": 1352,
+      "mean": 486.9,
+      "min": 462.2,
+      "max": 511.6
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1245,
+       "mean": 486.8,
+       "min": 470.1,
+       "max": 511.6
+      },
+      "all": {
+       "n": 1350,
+       "mean": 486.9,
+       "min": 462.2,
+       "max": 511.6
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 1352
+    },
+    "boundary": {
+     "n": 1245,
+     "mean": 372.3,
+     "min": 365.5,
+     "max": 384.4
+    },
+    "all": {
+     "n": 1352,
+     "mean": 372.7,
+     "min": 355.7,
+     "max": 386.9
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 372.7,
+     "max_slew": 34.4,
+     "max_late": 2.6,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+       "arr": 373.6,
+       "slew": 29.3,
+       "late": 0.9,
+       "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+       "arr": 375.3,
+       "slew": 34.4,
+       "late": 2.6,
+       "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+       "arr": 373.3,
+       "slew": 27.7,
+       "late": 0.6,
+       "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+       "arr": 375.3,
+       "slew": 34.2,
+       "late": 2.6,
+       "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1245,
+      "mean": 372.3,
+      "min": 365.5,
+      "max": 384.4
+     },
+     "all": {
+      "n": 1352,
+      "mean": 372.7,
+      "min": 355.7,
+      "max": 386.9
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1245,
+       "mean": 372.3,
+       "min": 365.5,
+       "max": 384.4
+      },
+      "all": {
+       "n": 1350,
+       "mean": 372.7,
+       "min": 355.7,
+       "max": 386.9
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 1352
+    },
+    "boundary": {
+     "n": 1245,
+     "mean": 302.5,
+     "min": 296.4,
+     "max": 311.3
+    },
+    "all": {
+     "n": 1352,
+     "mean": 303.0,
+     "min": 290.4,
+     "max": 319.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 303.0,
+     "max_slew": 34.7,
+     "max_late": 6.8,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/wclk",
+       "arr": 308.0,
+       "slew": 29.1,
+       "late": 5.0,
+       "net": "clknet_1_1__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/rclk",
+       "arr": 309.8,
+       "slew": 34.7,
+       "late": 6.8,
+       "net": "clknet_1_0__leaf_ot_ckkm_6_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/wclk",
+       "arr": 302.1,
+       "slew": 27.3,
+       "late": -0.9,
+       "net": "clknet_1_1__leaf_ot_ckkm_0_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/rclk",
+       "arr": 304.3,
+       "slew": 34.5,
+       "late": 1.3,
+       "net": "clknet_1_0__leaf_ot_ckkm_0_clk"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1245,
+      "mean": 302.5,
+      "min": 296.4,
+      "max": 311.3
+     },
+     "all": {
+      "n": 1352,
+      "mean": 303.0,
+      "min": 290.4,
+      "max": 319.0
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1245,
+       "mean": 302.5,
+       "min": 296.4,
+       "max": 311.3
+      },
+      "all": {
+       "n": 1350,
+       "mean": 303.0,
+       "min": 290.4,
+       "max": 319.0
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 4,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 487,
+    "CK_SS_ALL_MEAN": 487,
+    "CK_SS_MIN": 470,
+    "CK_SS_ALL_MIN": 462,
+    "CK_SS_MAX": 512,
+    "CK_SS_ALL_MAX": 512,
+    "CK_TT_MEAN": 372,
+    "CK_TT_ALL_MEAN": 373,
+    "CK_TT_MIN": 366,
+    "CK_TT_ALL_MIN": 356,
+    "CK_TT_MAX": 384,
+    "CK_TT_ALL_MAX": 387,
+    "CK_FF_MEAN": 302,
+    "CK_FF_ALL_MEAN": 303,
+    "CK_FF_MIN": 296,
+    "CK_FF_ALL_MIN": 290,
+    "CK_FF_MAX": 311,
+    "CK_FF_ALL_MAX": 319,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]"
+  },
+  "ckh": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_s3k8-20261019-225611/routes/gate/work/orfs/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "hclk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "hclk": 2076
+    },
+    "boundary": {
+     "n": 1264,
+     "mean": 494.5,
+     "min": 471.1,
+     "max": 578.6
+    },
+    "all": {
+     "n": 2076,
+     "mean": 495.8,
+     "min": 427.1,
+     "max": 578.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 495.8,
+     "max_slew": 332.1,
+     "max_late": -3.1,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rclk",
+       "arr": 492.7,
+       "slew": 298.7,
+       "late": -3.1,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/wclk",
+       "arr": 443.8,
+       "slew": 154.4,
+       "late": -52.0,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rclk",
+       "arr": 427.1,
+       "slew": 332.0,
+       "late": -68.7,
+       "net": "clknet_1_1_0_ckh"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wclk",
+       "arr": 427.2,
+       "slew": 332.1,
+       "late": -68.6,
+       "net": "clknet_1_1_0_ckh"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1264,
+      "mean": 494.5,
+      "min": 471.1,
+      "max": 578.6
+     },
+     "all": {
+      "n": 2076,
+      "mean": 495.8,
+      "min": 427.1,
+      "max": 578.6
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1264,
+       "mean": 494.5,
+       "min": 471.1,
+       "max": 578.6
+      },
+      "all": {
+       "n": 2074,
+       "mean": 495.9,
+       "min": 462.7,
+       "max": 578.6
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "hclk": 2076
+    },
+    "boundary": {
+     "n": 1264,
+     "mean": 381.0,
+     "min": 358.9,
+     "max": 458.7
+    },
+    "all": {
+     "n": 2076,
+     "mean": 382.2,
+     "min": 344.1,
+     "max": 458.7
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 382.2,
+     "max_slew": 335.2,
+     "max_late": 13.9,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rclk",
+       "arr": 396.1,
+       "slew": 302.6,
+       "late": 13.9,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/wclk",
+       "arr": 346.3,
+       "slew": 151.6,
+       "late": -35.9,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rclk",
+       "arr": 344.1,
+       "slew": 335.0,
+       "late": -38.1,
+       "net": "clknet_1_1_0_ckh"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wclk",
+       "arr": 344.1,
+       "slew": 335.2,
+       "late": -38.1,
+       "net": "clknet_1_1_0_ckh"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1264,
+      "mean": 381.0,
+      "min": 358.9,
+      "max": 458.7
+     },
+     "all": {
+      "n": 2076,
+      "mean": 382.2,
+      "min": 344.1,
+      "max": 458.7
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1264,
+       "mean": 381.0,
+       "min": 358.9,
+       "max": 458.7
+      },
+      "all": {
+       "n": 2074,
+       "mean": 382.2,
+       "min": 351.7,
+       "max": 458.7
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "hclk": 2076
+    },
+    "boundary": {
+     "n": 1264,
+     "mean": 311.5,
+     "min": 290.6,
+     "max": 383.5
+    },
+    "all": {
+     "n": 2076,
+     "mean": 312.6,
+     "min": 284.1,
+     "max": 383.5
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 312.6,
+     "max_slew": 347.2,
+     "max_late": 28.5,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rclk",
+       "arr": 341.1,
+       "slew": 314.2,
+       "late": 28.5,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/wclk",
+       "arr": 289.1,
+       "slew": 155.0,
+       "late": -23.5,
+       "net": "net15666"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rclk",
+       "arr": 298.4,
+       "slew": 347.0,
+       "late": -14.2,
+       "net": "clknet_1_1_0_ckh"
+      },
+      {
+       "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wclk",
+       "arr": 298.5,
+       "slew": 347.2,
+       "late": -14.1,
+       "net": "clknet_1_1_0_ckh"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 1264,
+      "mean": 311.5,
+      "min": 290.6,
+      "max": 383.5
+     },
+     "all": {
+      "n": 2076,
+      "mean": 312.6,
+      "min": 284.1,
+      "max": 383.5
+     },
+     "refs": {
+      "ot_sram_1r1w2c_16x340_p192": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 1264,
+       "mean": 311.5,
+       "min": 290.6,
+       "max": 383.5
+      },
+      "all": {
+       "n": 2074,
+       "mean": 312.6,
+       "min": 284.1,
+       "max": 383.5
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 4,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": true,
+    "outliers": [
+     {
+      "pin": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rclk",
+      "why": "ss slew 299 ps > 120; tt slew 303 ps > 120; ff slew 314 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/wclk",
+      "why": "ss slew 154 ps > 120; tt slew 152 ps > 120; ff slew 155 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rclk",
+      "why": "ss slew 332 ps > 120; tt slew 335 ps > 120; ff slew 347 ps > 120"
+     },
+     {
+      "pin": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wclk",
+      "why": "ss slew 332 ps > 120; tt slew 335 ps > 120; ff slew 347 ps > 120"
+     }
+    ]
+   },
+   "env": {
+    "CK_SS_MEAN": 494,
+    "CK_SS_ALL_MEAN": 496,
+    "CK_SS_MIN": 471,
+    "CK_SS_ALL_MIN": 427,
+    "CK_SS_MAX": 579,
+    "CK_SS_ALL_MAX": 579,
+    "CK_TT_MEAN": 381,
+    "CK_TT_ALL_MEAN": 382,
+    "CK_TT_MIN": 359,
+    "CK_TT_ALL_MIN": 344,
+    "CK_TT_MAX": 459,
+    "CK_TT_ALL_MAX": 459,
+    "CK_FF_MEAN": 312,
+    "CK_FF_ALL_MEAN": 313,
+    "CK_FF_MIN": 291,
+    "CK_FF_ALL_MIN": 284,
+    "CK_FF_MAX": 384,
+    "CK_FF_ALL_MAX": 384,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ckh",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name hclk [get_ports {ckh}]"
+  }
+ }
+}
