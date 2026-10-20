@@ -1062,6 +1062,162 @@ def d2d_fit_outline():
     return up(w + SHAVE, GX), up(h + SHAVE, GY)
 
 
+# KV-BIND11 10-20 (OT_KV_D2D_PINS=1, needs OT_KV_D2D_FIT=1; default off = unchanged).  The planner drew the d2d_kv
+# frame's words on its own abstract faces, but kv_expand binds the REAL d2ds view whose pins sit elsewhere (srx on the
+# W + S faces, svc on the E face, rec_tx / rec_rx / rx_payload spread 300-400 um along the S face): every tile -> first
+# relay hop was measured to the abstract pin, realized 643-1115 um (d13r).  With the frame = the view outline (same R0
+# origin) every d2ds word is drawn at its VIEW pin centroid on its dominant face (de-overlapped), and the word's
+# worst-bit SPREAD (Manhattan from that anchor to its farthest view pin) is added to every distance the relay planner,
+# pin_reach and kv_pin_repair measure at the d2d end, so the first / last station sits within reach of EVERY bit.
+D2D_PINS = os.environ.get('OT_KV_D2D_PINS', '0') == '1'
+_D2D_VIEW = {}
+
+
+def d2d_view_ports():
+    """die port -> (face, c, spread_um, layer) of the bound d2ds view (frame-local, R0), cached."""
+    if _D2D_VIEW or not D2D_PINS:
+        return _D2D_VIEW
+    from collections import Counter
+    if not D2D_FIT:
+        raise SystemExit('kv_die: OT_KV_D2D_PINS=1 needs OT_KV_D2D_FIT=1 (frame = the bound view outline)')
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top')
+    txt = (ROOT / 'physical/ref_tile' / kit / 'views' / top / f'{top}.lef').read_text()
+    blk = re.search(r'MACRO\s+' + re.escape(top) + r'\b(.*?)\nEND\s+' + re.escape(top) + r'\b', txt, re.S).group(1)
+    W, H = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', blk).groups())
+    pins = {}
+    for pm in re.finditer(r'\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1(?=\s)', blk, re.S):
+        base = re.sub(r'\[\d+\]$', '', pm.group(1))
+        lay = None
+        for ln in pm.group(2).split('\n'):
+            t = ln.split()
+            if t[:1] == ['LAYER']:
+                lay = t[1]
+            elif t[:1] == ['RECT'] and len(t) >= 5:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins.setdefault(base, []).append(((x0 + x1) / 2, (y0 + y1) / 2, lay))
+                break                          # one shape a bit
+    rows = []
+    for p, rtl in BINDINGS['qkd_d2ds']['ports'].items():
+        pts = [q for r in rtl for q in pins.get(r, [])]
+        if not pts:
+            continue
+        fc = Counter(min((('W', x), ('E', W - x), ('S', y), ('N', H - y)), key=lambda t: t[1])[0] for x, y, _ in pts)
+        face = fc.most_common(1)[0][0]
+        on = [q for q in pts if min((('W', q[0]), ('E', W - q[0]), ('S', q[1]), ('N', H - q[1])), key=lambda t: t[1])[0] == face]
+        c = sum((q[1] if face in 'EW' else q[0]) for q in on) / len(on)
+        lay = Counter(q[2] for q in on).most_common(1)[0][0] or ('M4' if face in 'EW' else 'M5')
+        rows.append((face, c, p, len(pts), pts, lay))
+    occ = {}
+    for face, c, p, n, pts, lay in sorted(rows, key=lambda r: (r[0], r[1], r[2])):
+        L, span = (H if face in 'EW' else W), n * 0.048
+        o_ = occ.setdefault(face, [])
+        best = None
+        for k in range(0, 40000):
+            for cand in ((c + 0.5 * k, c - 0.5 * k) if k else (c,)):
+                lo, hi = cand - span / 2 - 1.0, cand + span / 2 + 1.0
+                if lo >= 1.0 and hi <= L - 1.0 and all(hi <= a or lo >= b for a, b in o_):
+                    best = cand
+                    break
+            if best is not None:
+                break
+        if best is None:
+            raise SystemExit(f'kv_die OT_KV_D2D_PINS: no {face} face slot for d2d word {p}')
+        o_.append((best - span / 2 - 1.0, best + span / 2 + 1.0))
+        ax, ay = dict(W=(0.0, best), E=(W, best), S=(best, 0.0), N=(best, H))[face]
+        spread = max(abs(x - ax) + abs(y - ay) for x, y, _ in pts)
+        _D2D_VIEW[p] = (face, round(best, 3), round(spread, 1), lay, [(x, y) for x, y, _ in pts])
+    return _D2D_VIEW
+
+
+_D2D_INST = {}
+
+
+def ep_far(inst, port, pt):
+    """KV-BIND11: Manhattan distance from pt to the FARTHEST realized view pin of d2d word port (the hop every bit of
+    the word makes), or None for any other end (callers keep their point distance)."""
+    if not D2D_PINS or inst != 'd2d_kv' or 'd2d_kv' not in _D2D_INST:
+        return None
+    v = d2d_view_ports().get(port.lstrip('*').split('[')[0])
+    if v is None:
+        return None
+    it = _D2D_INST['d2d_kv']
+    fx = (lambda x: it.w - x) if it.orient in ('MY', 'R180') else (lambda x: x)
+    fy = (lambda y: it.h - y) if it.orient in ('MX', 'R180') else (lambda y: y)
+    return max(abs(pt[0] - it.x - fx(x)) + abs(pt[1] - it.y - fy(y)) for x, y in v[4])
+
+
+def _d2d_pin(it, port):
+    """KV-BIND11: die xy of a d2ds word's anchor (OT_KV_D2D_PINS), else None."""
+    if not D2D_PINS or it.name != 'd2d_kv':
+        return None
+    _D2D_INST['d2d_kv'] = it            # the planned instance (ep_far measures against its current frame)
+    v = d2d_view_ports().get(port.lstrip('*').split('[')[0])
+    if v is None:
+        return None
+    face, c = v[0], v[1]
+    x, y = dict(W=(0.0, c), E=(it.w, c), S=(c, 0.0), N=(c, it.h))[face]
+    if it.orient in ('MY', 'R180'):
+        x = it.w - x
+    if it.orient in ('MX', 'R180'):
+        y = it.h - y
+    return it.x + x, it.y + y
+
+
+def _d2d_view_pins(m, M):
+    """KV-BIND11: draw the d2ds frame's words at their view anchors, and the HOST stand-in words of every host <-> d2d
+    bus on the HOST face toward the d2d end, level with the d2d word's anchor (de-overlapped; was the even face spread:
+    host rec_tx 662 um from its d2d pins, svc on the far W face 947-1115 um)."""
+    V = d2d_view_ports()
+    dm = M.get('qkd_d2ds')
+    if dm is None or not V:
+        return
+    for p, (face, c, _s, lay, _pts) in V.items():
+        if p in dm.ports and dm.ports[p][0] == 'face':
+            dm.ports[p] = ('face', dm.ports[p][1], face, lay, c, 1)
+    by = {i.name: i for i in m['insts']}
+    h, d = by.get('host'), by.get('d2d_kv')
+    hm = M.get(h.master) if h is not None else None
+    if hm is None or d is None or h.orient != 'R0':
+        return
+    hf = 'N' if d.y >= h.y + h.h - 1.0 else 'S' if d.y + d.h <= h.y + 1.0 else ('E' if d.x > h.x else 'W')
+    L = hm.w if hf in 'NS' else hm.h
+    want = []
+    for bid, cl, bits, eps in m['buses']:
+        if len(eps) != 2 or {e[0] for e in eps} != {'host', 'd2d_kv'}:
+            continue
+        hp = next(e[1] for e in eps if e[0] == 'host').lstrip('*')
+        dp = next(e[1] for e in eps if e[0] == 'd2d_kv').lstrip('*')
+        if hp not in hm.ports or hm.ports[hp][0] != 'face' or dp not in V:
+            continue
+        ax, ay = _d2d_pin(d, dp)
+        c = (ax - h.x) if hf in 'NS' else (ay - h.y)
+        want.append((c, hp))
+    moving = {p for _, p in want}
+    occ = []
+    for p, sp in hm.ports.items():
+        if sp[0] == 'face' and sp[2] == hf and p not in moving:
+            s_ = sp[1] * 0.048 * sp[5]
+            occ.append((sp[4] - s_ / 2 - 1.0, sp[4] + s_ / 2 + 1.0))
+    for c, p in sorted(want):
+        sp = hm.ports[p]
+        s_ = sp[1] * 0.048
+        c = min(max(c, s_ / 2 + 2.0), L - s_ / 2 - 2.0)
+        for k in range(0, 80000):
+            hit = None
+            for cand in ((c + 0.5 * k, c - 0.5 * k) if k else (c,)):
+                lo, hi = cand - s_ / 2 - 1.0, cand + s_ / 2 + 1.0
+                if lo >= 1.0 and hi <= L - 1.0 and all(hi <= a or lo >= b for a, b in occ):
+                    hit = cand
+                    break
+            if hit is not None:
+                break
+        else:
+            raise ValueError(f'kv die OT_KV_D2D_PINS: no host {hf} face slot for {p}')
+        occ.append((hit - s_ / 2 - 1.0, hit + s_ / 2 + 1.0))
+        hm.ports[p] = ('face', sp[1], hf, 'M5' if hf in 'NS' else 'M4', round(hit, 3), 1)
+
+
 def d2ds_binding():
     mod, fil, extra = d2ds_kit()
     return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
@@ -1753,6 +1909,9 @@ def _seq_fan_pin(it, port):
 
 def _leaf_pin(it, port):
     """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    dp_ = _d2d_pin(it, port)
+    if dp_ is not None:
+        return dp_
     sp_ = _seq_fan_pin(it, port)
     if sp_ is not None:
         return sp_
@@ -3269,7 +3428,8 @@ def _relays(m):
         def d_ep(pt, inst, port):
             fp = fixed_pin(inst, port)
             if fp is not None:
-                return abs(pt[0] - fp[0]) + abs(pt[1] - fp[1])
+                far_ = ep_far(inst, port, pt)               # KV-BIND11: a d2d word's farthest view pin
+                return far_ if far_ is not None else abs(pt[0] - fp[0]) + abs(pt[1] - fp[1])
             it_ = by[inst]
             return near_d((pt[0], pt[1], pt[0], pt[1]), rect(it_))
         prev_pt, prev_ep, k, idx0 = None, (a, pa), 0, 0
@@ -3966,6 +4126,8 @@ def masters(m, k=1, port_bits=None):
             _reach_fix_slide(mst, mm)
     if m['geo'].get('split'):
         _split_pins(M, m)
+    if D2D_PINS:
+        _d2d_view_pins(m, M)      # KV-BIND11: d2ds words at the bound view's pins; HOST words level with them
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
@@ -4642,6 +4804,9 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
         except (TypeError, KeyError):
             continue
         d = abs(xa - xb) + abs(ya - yb)
+        _ = _d2d_pin(ia, pa), _d2d_pin(ib, pb)                 # KV-BIND11: record the d2d frame for ep_far
+        fa_, fb_ = ep_far(a, pa, (xb, yb)), ep_far(b, pb, (xa, ya))
+        d = max(d, fa_ or 0.0, fb_ or 0.0)                     # a d2d word: its farthest view pin
         if d > reach:
             bad.append(dict(bus=bid, cls=cl, bits=bits, um=round(d, 1), a=f'{a}.{pa}', b=f'{b}.{pb}'))
     bad.sort(key=lambda r: -r['um'])
