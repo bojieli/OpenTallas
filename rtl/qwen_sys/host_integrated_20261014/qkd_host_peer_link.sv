@@ -4,7 +4,7 @@
 // uses a held valid/ready mailbox. The physical CDC owns four independent
 // credits. Returning a normal credit means its packet left this queue, not
 // that the remote lifecycle action completed; action ACK is a class9 event.
-module qkd_host_peer_link #(parameter integer MUT=0)(
+module qkd_host_peer_link #(parameter integer MUT=0, parameter integer SAFE_SRAM=0)(
  input wire ck,rst_n,
  input wire rx_v,input wire[527:0]rx_d,output reg rx_cr,
  output reg normal_rx_v,output reg[527:0]normal_rx_d,input wire normal_rx_cr,
@@ -13,12 +13,24 @@ module qkd_host_peer_link #(parameter integer MUT=0)(
  input wire peer_tx_valid,input wire[511:0]peer_tx_data,output wire peer_tx_ready,
  output reg tx_v,output reg[527:0]tx_d,input wire tx_cr,
  output wire drained,output reg fault);
- reg[527:0]nq[0:3];reg[511:0]pq[0:3];reg[1:0]nw,nr,pw,pr;
+ reg[1:0]nw,nr,pw,pr;
+ wire[527:0]nhead;wire[511:0]phead;
+ generate if(SAFE_SRAM)begin:g_sram
+  qkd_host_peer_sram_head #(.W(528)) u_n(.ck(ck),.rst_n(rst_n),.put(normal_tx_v),.pop(normal_pop),.head(nhead),.data(normal_tx_d));
+  qkd_host_peer_sram_head #(.W(512)) u_p(.ck(ck),.rst_n(rst_n),.put(rx_v&&peer_frame&&rx_d[523:512]==0),.pop(peer_pop),.head(phead),.data(rx_d[511:0]));
+ end else begin:g_flops
+  reg[527:0]nq[0:3];reg[511:0]pq[0:3];
+  always @(posedge ck)if(rst_n)begin
+   if(normal_tx_v&&nn<4)nq[nw]<=normal_tx_d;
+   if(rx_v&&peer_frame&&rx_d[523:512]==0&&pn<4)pq[pw]<=rx_d[511:0];
+  end
+  assign nhead=nq[nr];assign phead=pq[pr];
+ end endgenerate
  reg[2:0]nn,pn;reg[2:0]physical;reg peer_pending,rr;
  reg[511:0]peer_word;reg[3:0]returns;
  wire peer_frame=rx_d[527:524]==9;
  wire peer_pop=peer_rx_valid&&peer_rx_ready;
- assign peer_rx_valid=pn!=0&&!fault;assign peer_rx_data=pq[pr];
+ assign peer_rx_valid=pn!=0&&!fault;assign peer_rx_data=phead;
  assign peer_tx_ready=!peer_pending&&!fault;
  wire take_peer=peer_tx_valid&&peer_tx_ready;
  wire emit=physical!=0&&!fault&&(nn!=0||peer_pending);
@@ -35,14 +47,14 @@ module qkd_host_peer_link #(parameter integer MUT=0)(
    normal_tx_cr<=normal_pop;tx_v<=emit;
    if(rx_v&&peer_frame)begin
     if(rx_d[523:512]!=0||pn==4)fault<=1;
-    else begin pq[pw]<=rx_d[511:0];pw<=pw+1'b1;end
+    else begin pw<=pw+1'b1;end
    end
    if(peer_pop)pr<=pr+1'b1;
    case({rx_v&&peer_frame&&rx_d[523:512]==0&&pn<4,peer_pop})
     2'b10:pn<=pn+1'b1;2'b01:pn<=pn-1'b1;default:;
    endcase
    if(normal_tx_v)begin
-    if(nn==4)fault<=1;else begin nq[nw]<=normal_tx_d;nw<=nw+1'b1;end
+    if(nn==4)fault<=1;else begin nw<=nw+1'b1;end
    end
    if(normal_pop)nr<=nr+1'b1;
    case({normal_tx_v&&nn<4,normal_pop})2'b10:nn<=nn+1'b1;2'b01:nn<=nn-1'b1;default:;endcase
@@ -50,7 +62,7 @@ module qkd_host_peer_link #(parameter integer MUT=0)(
    if(emit)begin
     rr<=!choose_peer;
     if(choose_peer)begin tx_d<={4'd9,12'd0,peer_word ^ 512'(MUT==1)};peer_pending<=0;end
-    else tx_d<=nq[nr];
+    else tx_d<=nhead;
    end
    if(tx_cr&&physical==4&&!emit)fault<=1;
    else physical<=physical+3'(tx_cr)-3'(emit);
