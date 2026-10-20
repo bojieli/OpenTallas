@@ -17,6 +17,7 @@ import json
 import hashlib
 import re
 from pathlib import Path
+from qualification import carry_unqualified
 
 LAT = re.compile(r'set_clock_latency -source -clock \[get_clocks (\S+)\] (-?[0-9.]+) \[get_pins \{([^}]+)\}\]')
 PIN = re.compile(r'get_pins -quiet \{([^}]+)\}')
@@ -124,9 +125,11 @@ def main():
                 'must be LANDED (qwen_landed_pairs.py).', rc_layer='M8', leaf_um=60, leaf_max=12, trees=trees)
     (a.out / 'spec.json').write_text(json.dumps(spec, indent=1) + '\n')
     (a.out / 'families.json').write_text(json.dumps(fam, indent=1) + '\n')
-    (a.out / 'targets.json').write_text(json.dumps(dict(
+    targets = dict(
         schema='opentallas.die_clock.targets.v1', masters=masters, assumed=sorted(m for m in masters if m not in real),
-        varying_R_across_instances=varying), indent=1) + '\n')
+        varying_R_across_instances=varying)
+    targets.update(carry_unqualified(views, targets))
+    (a.out / 'targets.json').write_text(json.dumps(targets, indent=1) + '\n')
     print('QCLK_PREP trees', len(trees), 'sinks', sum(t['sinks'] for t in trees), 'masters', len(masters),
           'assumed', sum(m not in real for m in masters), 'varying_R', len(varying))
 

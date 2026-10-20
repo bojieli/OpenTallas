@@ -283,11 +283,10 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
         regions=regions, inter_region=inter_summary,
         tiles=tiles, pairs=prs, unmatched_pairs=missing[:200])
     if targets:
-        modeled = {k: v for k, v in json.load(open(targets))["masters"].items()
-                   if v.get("physical_qualification_eligible") is False or v.get("view") == "MODEL_PASS_THROUGH_R0"}
-        if modeled:
-            out["physical_qualification_eligible"] = False
-            out["qualification"] = dict(scope="MODEL_ONLY", modeled_masters=modeled)
+        from die_clock.qualification import carry_unqualified
+        qualification = carry_unqualified(json.load(open(targets)))
+        if qualification:
+            out.update(qualification)
             if neighbour and neighbour["verdict"] == "PASS":
                 neighbour["verdict"] = "MODEL_ONLY"
     return out
