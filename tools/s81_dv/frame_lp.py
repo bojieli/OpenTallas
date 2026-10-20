@@ -62,7 +62,10 @@ def emit(master):
     rec = 'results/arch/s81_dv_1016/frame_l4_cluster/compiler'
     spec = dict(top=f'{master}_l4', sources=[f'rtl/dsrom_sys/s81_dv/frame_l4/{master}_l4.sv'],
                 child_sources=ch, clock_ports=['clk', 'cr', 'cr_s'], preserve_clock_ports=['xk'],
-                clock_pins=['ck', 'clk', 'cr', 'cr_s', 'xk'],
+                # bf_front_roots has four regional clock inputs in addition to clk.
+                # Treating them as data makes lp.gen tie them low in the physical kit.
+                clock_pins=['ck', 'clk', 'cr', 'cr_s', 'xk',
+                            'io_clk', 'io_n', 'io_w', 'io_e'],
                 reset_port='rst_n', reset_net='n257', reset_pins=['rs', 'rst_n', 'rst'],
                 static=['lk'], reschedule=True, D=4, E=2,
                 # TW3-S81/FRAME 10-19: the default MUT-4 child (first reset kid = u_bn0, a qbank pipeline) forgets a late

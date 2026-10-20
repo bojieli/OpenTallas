@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import frame_wrap as FW  # noqa: E402
 
-CLOCK_PINS = {'ck', 'clk', 'cr', 'cr_s'}
+CLOCK_PINS = {'ck', 'clk', 'cr', 'cr_s', 'io_clk', 'io_n', 'io_w', 'io_e'}
 D, E = 4, 2
 
 
