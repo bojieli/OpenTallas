@@ -175,7 +175,7 @@ def main():
     # the pre-CTS (ideal clock) form only: post-CTS it left the region clock's insertion L (1.1-2.1 ns) out of the input
     # min / output max, so diag16at stopped in hold repair at -1,531 ps on u_fab.u_ft_0/d[496] (rs_i -> its pin register,
     # region c1r3: input min 154 ps vs capture L ~1.7 ns) and the bco / rs / rs_o outputs failed setup by ~L.  Reference =
-    # the bus's own pin register(s) (port -> <= 3 buffers -> the first register's clock pin; outputs: the driving register).
+    # the bus's own pin register(s), traversing transparent cells to a fixed point (outputs: the driving register).
     sdc += [
         "if {!$::ot_ref_pre_cts} {",
         "  proc ot_qc_pinreg_cks {bus dir} {",
@@ -184,9 +184,13 @@ def main():
         "    if {![llength $pl]} { set pl [get_ports -quiet $bus] }",
         "    foreach port $pl {",
         "      set nets [get_nets -quiet [get_full_name $port]]",
-        "      for {set hop 0} {$hop < 4 && [llength $nets]} {incr hop} {",
+        "      set visited_nets [dict create]",
+        "      while {[llength $nets]} {",
         "        set next {}",
         "        foreach n $nets {",
+        "          set nn [get_full_name $n]",
+        "          if {[dict exists $visited_nets $nn]} { continue }",
+        "          dict set visited_nets $nn 1",
         "          foreach pin [get_pins -quiet -of_objects $n] {",
         "            if {[string first / [get_full_name $pin]] < 0} { continue }",
         "            set pd [get_property $pin direction]",

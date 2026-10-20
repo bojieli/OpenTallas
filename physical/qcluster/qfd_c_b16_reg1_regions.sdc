@@ -61,9 +61,13 @@ if {!$::ot_ref_pre_cts} {
     if {![llength $pl]} { set pl [get_ports -quiet $bus] }
     foreach port $pl {
       set nets [get_nets -quiet [get_full_name $port]]
-      for {set hop 0} {$hop < 4 && [llength $nets]} {incr hop} {
+      set visited_nets [dict create]
+      while {[llength $nets]} {
         set next {}
         foreach n $nets {
+          set nn [get_full_name $n]
+          if {[dict exists $visited_nets $nn]} { continue }
+          dict set visited_nets $nn 1
           foreach pin [get_pins -quiet -of_objects $n] {
             if {[string first / [get_full_name $pin]] < 0} { continue }
             set pd [get_property $pin direction]
