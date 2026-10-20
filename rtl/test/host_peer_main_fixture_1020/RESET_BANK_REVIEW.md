@@ -1,0 +1,11 @@
+# Reset bank proof review packet (not deployable)
+
+Canonical physical/common_flow helpers are unchanged. Source banked successor maps but native FAIL60681roots/322offenders/max5229. The unchanged literal-D reset-copy helper refuses coordinator/token/rank family signatures because independent synchronizer D sources differ. Refusal is retained in witnesses/resetbank_native/ot_rst_copies.tsv and full report. This source is not qualified for layout/adoption.
+
+The proposed proof mechanism/mechanism/reset_bank_proof.py is review-only, emits no Yosys rewrites and does not modify canonical helper behavior. It only recognizes exactly three same-clock, same-active-low-reset, positive-edge, asynchronous-zero scalar flops terminating at constant1. Unknown cells, enables, latency, mixed clock/reset, initial1, cycles and other roots refuse. Eleven causal/unit checks pass. It is a graph prototype, not yet applied to the actual canonical RTLIL/netlist.
+
+Cold state matters: all64 pairs of arbitrary three-bit bank states include32 output mismatches. No proof is issued before an actual asynchronous reset assertion. The exhaustive state check witnesses that assertion, sets all three stages to zero and checks384 subsequent state/event relations across releases and clocks. The maturity Boolean in this prototype is an assumed witnessed event supplied by its test, NOT a verified production-source fact. Hence it cannot authorize reset rewiring. A production integration must establish reset dominance/maturity from actual source and arbitrary cold state, or implement a ready policy whose cycles and pins are priced. Failure to establish that contract remains a refusal, not a waiver.
+
+Source-local explicit per-region reset connectivity avoids extending a helper but needs partitioning the monolithic sibling consumers; no such rewrite is claimed here. The existing single synchronizer driving hundreds of final copies is also disallowed by native32.
+
+RX SRAM exactness is separately established by TOKEN0/1 fullpd2 benches and negative witnesses; it does not qualify these resets or the whole leaf. Native RX-only source remains separate live job46410 in /srv/opentallas-scratch/claude/codex-kv-host6-peer-1020.
