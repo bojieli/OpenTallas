@@ -1,0 +1,1050 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "qkd_kvs_ctl",
+ "top": "qkd_kvs_ctl_s32",
+ "source_sha256": "c69dce340b87b1ba00e58fc3467d6892d3dafccc7b6cba0292c8668344c494a4",
+ "parser_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+ "generated_sha256": "00edd2ab38f9d3893b8b5573d7d6862a8af646371d330ec995b7c23098b26433",
+ "fixedpoint_history": [
+  39250,
+  39266,
+  39266
+ ],
+ "original_cells": 38859,
+ "generated_cells": 39266,
+ "max_terminal_loads": 32,
+ "copied_cells": [
+  {
+   "cell": 2300,
+   "original": "_44180_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 74
+  },
+  {
+   "cell": 2768,
+   "original": "_44648_",
+   "type": "AND2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 2769,
+   "original": "_44649_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 2778,
+   "original": "_44658_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 9
+  },
+  {
+   "cell": 2883,
+   "original": "_44763_",
+   "type": "OA21x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 2887,
+   "original": "_44767_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 4072,
+   "original": "_45952_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 4073,
+   "original": "_45953_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 18
+  },
+  {
+   "cell": 5708,
+   "original": "_47588_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5731,
+   "original": "_47611_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5747,
+   "original": "_47627_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5749,
+   "original": "_47629_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5767,
+   "original": "_47647_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5811,
+   "original": "_47691_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5813,
+   "original": "_47693_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5814,
+   "original": "_47694_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5829,
+   "original": "_47709_",
+   "type": "AND4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 5832,
+   "original": "_47712_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6423,
+   "original": "_48303_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6611,
+   "original": "_48491_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6618,
+   "original": "_48498_",
+   "type": "AND2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 6714,
+   "original": "_48594_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6817,
+   "original": "_48697_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6903,
+   "original": "_48783_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 7006,
+   "original": "_48886_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 7081,
+   "original": "_48961_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 7157,
+   "original": "_49037_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 8
+  },
+  {
+   "cell": 7233,
+   "original": "_49113_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 8
+  },
+  {
+   "cell": 8261,
+   "original": "_50141_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 12
+  },
+  {
+   "cell": 8335,
+   "original": "_50215_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 12
+  },
+  {
+   "cell": 8409,
+   "original": "_50289_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 8483,
+   "original": "_50363_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 9804,
+   "original": "_51684_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 9931,
+   "original": "_51811_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10002,
+   "original": "_51882_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10073,
+   "original": "_51953_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10153,
+   "original": "_52033_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10255,
+   "original": "_52135_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10361,
+   "original": "_52241_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10458,
+   "original": "_52338_",
+   "type": "AND4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10572,
+   "original": "_52452_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10696,
+   "original": "_52576_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10769,
+   "original": "_52649_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 10849,
+   "original": "_52729_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 19454,
+   "original": "_61334_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 33
+  },
+  {
+   "cell": 19712,
+   "original": "_61592_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 19821,
+   "original": "_61701_",
+   "type": "OAI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 20504,
+   "original": "_62384_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 20540,
+   "original": "_62420_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 20642,
+   "original": "_62522_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 20665,
+   "original": "_62545_",
+   "type": "AND4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 20675,
+   "original": "_62555_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 20832,
+   "original": "_62712_",
+   "type": "AND2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 20834,
+   "original": "_62714_",
+   "type": "AND2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 20924,
+   "original": "_62804_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 20932,
+   "original": "_62812_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 21243,
+   "original": "_63123_",
+   "type": "OR4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 21387,
+   "original": "_63267_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 21693,
+   "original": "_63573_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 22317,
+   "original": "_64197_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 22398,
+   "original": "_64278_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 22406,
+   "original": "_64286_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 22417,
+   "original": "_64297_",
+   "type": "OAI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 22424,
+   "original": "_64304_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 6
+  },
+  {
+   "cell": 22428,
+   "original": "_64308_",
+   "type": "AOI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 22431,
+   "original": "_64311_",
+   "type": "NOR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 22434,
+   "original": "_64314_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 22439,
+   "original": "_64319_",
+   "type": "AOI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 22452,
+   "original": "_64332_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 22534,
+   "original": "_64414_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 23238,
+   "original": "_65118_",
+   "type": "AND2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 23239,
+   "original": "_65119_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 23439,
+   "original": "_65319_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 23464,
+   "original": "_65344_",
+   "type": "OR4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 26239,
+   "original": "_68119_",
+   "type": "AND4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 6
+  },
+  {
+   "cell": 26460,
+   "original": "_68340_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 26539,
+   "original": "_68419_",
+   "type": "AND4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 26651,
+   "original": "_68531_",
+   "type": "OR4x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 27708,
+   "original": "_69588_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 4
+  },
+  {
+   "cell": 35577,
+   "original": "_77457_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 41474,
+   "original": "boot__boot_image_target__ot_q[1]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 41587,
+   "original": "boot__boot_pr__ot_q[70]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 49177,
+   "original": "ot_rrs__u_ot_pr_core_u_dcfg_g_pc_prv__c1$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 49203,
+   "original": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c27$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 49224,
+   "original": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c20$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 49233,
+   "original": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c29$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 49235,
+   "original": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c30$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 51241,
+   "original": "u_ot_pr_core.u_boot.g_mu.g_we$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 5
+  },
+  {
+   "cell": 54143,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[0]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 4
+  },
+  {
+   "cell": 54144,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[10]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54145,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[11]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54146,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[12]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54147,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[13]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54148,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[14]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54149,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[15]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54150,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[1]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54151,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[2]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54152,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[3]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54153,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[4]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54154,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[5]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54155,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[6]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54156,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[7]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54157,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[8]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54158,
+   "original": "u_ot_pr_core.u_fanr.g_ph1.ph1c[9]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54934,
+   "original": "u_ot_pr_core.u_lprg.c_wait[0]$_DFFE_PN0N_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54935,
+   "original": "u_ot_pr_core.u_lprg.c_wait[1]$_DFFE_PN0N_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54936,
+   "original": "u_ot_pr_core.u_lprg.c_wait[2]$_DFFE_PN0N_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54937,
+   "original": "u_ot_pr_core.u_lprg.c_wait[3]$_DFFE_PN0N_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54957,
+   "original": "u_ot_pr_core.u_lprg.data_q[10]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54959,
+   "original": "u_ot_pr_core.u_lprg.data_q[12]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54962,
+   "original": "u_ot_pr_core.u_lprg.data_q[15]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54963,
+   "original": "u_ot_pr_core.u_lprg.data_q[16]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54964,
+   "original": "u_ot_pr_core.u_lprg.data_q[17]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54965,
+   "original": "u_ot_pr_core.u_lprg.data_q[18]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54966,
+   "original": "u_ot_pr_core.u_lprg.data_q[19]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54967,
+   "original": "u_ot_pr_core.u_lprg.data_q[1]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54968,
+   "original": "u_ot_pr_core.u_lprg.data_q[20]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54969,
+   "original": "u_ot_pr_core.u_lprg.data_q[21]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54970,
+   "original": "u_ot_pr_core.u_lprg.data_q[22]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54971,
+   "original": "u_ot_pr_core.u_lprg.data_q[23]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54972,
+   "original": "u_ot_pr_core.u_lprg.data_q[24]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54973,
+   "original": "u_ot_pr_core.u_lprg.data_q[25]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54974,
+   "original": "u_ot_pr_core.u_lprg.data_q[26]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54975,
+   "original": "u_ot_pr_core.u_lprg.data_q[27]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54976,
+   "original": "u_ot_pr_core.u_lprg.data_q[28]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 54977,
+   "original": "u_ot_pr_core.u_lprg.data_q[29]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55000,
+   "original": "u_ot_pr_core.u_lprg.data_q[4]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55016,
+   "original": "u_ot_pr_core.u_lprg.data_q[6]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55017,
+   "original": "u_ot_pr_core.u_lprg.data_q[7]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55018,
+   "original": "u_ot_pr_core.u_lprg.data_q[8]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55019,
+   "original": "u_ot_pr_core.u_lprg.data_q[9]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55095,
+   "original": "u_ot_pr_core.u_lprg.epoch_q[0]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 55102,
+   "original": "u_ot_pr_core.u_lprg.epoch_q[1]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 3
+  },
+  {
+   "cell": 56912,
+   "original": "u_ot_pr_core.u_lprg.wq$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 57492,
+   "original": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 11
+  },
+  {
+   "cell": 58635,
+   "original": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q[1]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 5
+  },
+  {
+   "cell": 58700,
+   "original": "u_ot_pr_core.u_wrn.u_wrn.u_writer.ix[0]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 4
+  },
+  {
+   "cell": 58704,
+   "original": "u_ot_pr_core.u_wrn.u_wrn.u_writer.slot$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 4
+  },
+  {
+   "cell": 59311,
+   "original": "u_ot_pr_core.w_lprg__fault$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 9
+  }
+ ],
+ "macros": [
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b0",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55261_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b1",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55262_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b2",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55263_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b3",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55264_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b0",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55265_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b1",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55266_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b2",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u55267_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b0",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u57480_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b1",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u57481_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b2",
+   "type": "ctl_sram_1r1w_64x64_p192",
+   "instance": "u57482_c0.u_cell"
+  }
+ ],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "netlist": {
+    "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/qkd_kvs_ctl_s32.mapped.v",
+    "sha256": "f2b6f634616365d5265b5ade7e4c5cd1fd32e202e89fc40be358fb620285bc6f"
+  },
+  "top": "qkd_kvs_ctl_s32",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 41915,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "liberty": [
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/AO.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/INVBUF.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/OA.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/SEQ.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/SIMPLE.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6c-20261019-230301/src/physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192_tt.lib",
+      "sha256": "a6d160d614296869bd66216bdcdaa4f942a8cf9f521c0b6ac06788616e3dc481"
+    }
+  ],
+  "full_report_sha256": "51379a8b4d81766ab8ec8a70c2e4a57a65304c912d66d5cbc244e9d30f30211e"
+}
