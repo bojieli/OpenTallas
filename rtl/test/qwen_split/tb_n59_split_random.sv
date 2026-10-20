@@ -8,13 +8,14 @@
 // absolute edge as its bank: one service edge earlier, unobservable under the static calendar's idle window).
 // Pass line N59RND_PASS; any mismatch N59RND_FAIL (+ $fatal).
 module tb_n59_split_random #(parameter integer SAFE=2,EMBR=1,SEED=1,CYCLES=40000,NU=4,MCTX=1,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,
-                              SPL_SOFF=1,SPL_BOFF=0,SPL_ROFF=1,RST_EVERY=400,QUIET=12)(input wire clk);
+                              SPL_SOFF=2,SPL_BOFF=0,SPL_ROFF=2,RST_EVERY=400,QUIET=12)(input wire clk);
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  reg[31:0]cyc=0;
  always @(posedge clk)cyc<=cyc+1;
  wire[31:0]ph=cyc%RST_EVERY;
  wire rst_n=!(ph<4);
- wire quiet=ph<4+QUIET;
+ wire quiet=ph<4+QUIET||ph>=RST_EVERY-QUIET;   // idle on both sides of every reset (the split's bank runs one edge behind
+                                                 // its face registers: traffic on the edge before an async reset would be cut one edge earlier)
  wire cmp_en=!(ph<4+QUIET+8||ph>=RST_EVERY-4);
  reg hev,hfc;reg[15:0]he;reg[58:0]ht;reg[1:0]hg;reg lcv;reg[5:0]stage;reg[17:0]tok,pos;reg[379:0]cmd;reg[547:0]dd;
  reg kvs,x3s,qs,ts,rv,rs,vis,cs;reg[1:0]kvi;reg[4:0]qb,tb,rb;reg[3:0]tk,rk;reg[547:0]rp;reg[511:0]ecq;reg[15:0]esq;
@@ -86,26 +87,26 @@ module tb_n59_split_random #(parameter integer SAFE=2,EMBR=1,SEED=1,CYCLES=40000
  localparam integer PW=1+1+1+1+1+524+64+1536+2048+1+1+1+1+512+1+512;
  wire[PW-1:0]pr_ref={ref0.u_core.dd_form_bad,ref0.u_core.q_in_bad,ref0.u_core.kv_in_bad,ref0.u_core.q_miss,ref0.u_core.q_committed,
   ref0.u_core.q,ref0.u_core.kv_we,ref0.u_core.kv_waddr,ref0.u_core.kv_wdata,ref0.u_core.begin_slot,ref0.u_core.request_slot,
-  ref0.u_core.src_fault,ref0.u_core.vm_write_v,ref0.u_core.vm_write_data,ref0.u_core.kvn_v,ref0.u_core.kvn_data};
+  ref0.u_core.src_fault,ref0.u_core.vm_write_v,ref0.u_core.vm_write_v?ref0.u_core.vm_write_data:512'd0,ref0.u_core.kvn_v,ref0.u_core.kvn_data};
  wire[PW-1:0]pr_spl={`N59_SH.u_svc.dd_form_bad,`N59_SH.u_svc.q_in_bad,`N59_SH.u_svc.kv_in_bad,`N59_SH.u_svc.q_miss,`N59_SH.u_svc.q_committed,
   `N59_SH.u_svc.q,`N59_SH.u_svc.kv_we,`N59_SH.u_svc.kv_waddr,`N59_SH.u_svc.kv_wdata,`N59_SH.u_svc.begin_slot,`N59_SH.u_svc.request_slot,
-  `N59_SH.u_svc.src_fault,`N59_SH.u_svc.vm_write_v,`N59_SH.u_svc.vm_write_data,`N59_SH.u_svc.kvn_v,`N59_SH.u_svc.kvn_data};
- localparam integer BW_=512+1+512;
- wire[BW_-1:0]pb_ref={ref0.u_core.qseen,ref0.u_core.qctx,ref0.u_core.qrow};
- wire[BW_-1:0]pb_spl={`N59_SH.u_qb.qseen,`N59_SH.u_qb.qctx,`N59_SH.u_qb.qrow};
+  `N59_SH.u_svc.src_fault,`N59_SH.u_svc.vm_write_v,`N59_SH.u_svc.vm_write_v?`N59_SH.u_svc.vm_write_data:512'd0,`N59_SH.u_svc.kvn_v,`N59_SH.u_svc.kvn_data};
+ // bank v2: no flat qseen vector (per lane slice); probe qctx and the q row (bank internal = r1 + 1 edge: face stage)
+ localparam integer BW_=1+512;
+ wire[BW_-1:0]pb_ref={ref0.u_core.qctx,ref0.u_core.qrow};
+ wire[BW_-1:0]pb_spl={`N59_SH.u_qb.qctx,`N59_SH.u_qb.qrow};
  reg[PW-1:0]pr_d[1:SPL_ROFF];
  always @(posedge clk)begin pr_d[1]<=pr_ref;for(integer j=2;j<=SPL_ROFF;j=j+1)pr_d[j]<=pr_d[j-1];end
- wire[BW_-1:0]pb_dl;
- generate if(SPL_BOFF==0)begin:g_pb0 assign pb_dl=pb_ref; end else begin:g_pbd
-  reg[BW_-1:0]pb_d[1:SPL_BOFF];
-  always @(posedge clk)begin pb_d[1]<=pb_ref;for(integer j=2;j<=SPL_BOFF;j=j+1)pb_d[j]<=pb_d[j-1];end
-  assign pb_dl=pb_d[SPL_BOFF];
- end endgenerate
+ localparam integer PBO=SPL_BOFF+1;
+ reg[BW_-1:0]pb_d[1:PBO];
+ always @(posedge clk)begin pb_d[1]<=pb_ref;for(integer j=2;j<=PBO;j=j+1)pb_d[j]<=pb_d[j-1];end
+ wire[BW_-1:0]pb_dl=pb_d[PBO];
  integer pmis=0,bmis=0,pcmp=0,n_qw=0,n_kv=0,n_bad=0;
+ function automatic integer fdb(input [PW-1:0] v);integer i;begin fdb=-1;for(i=PW-1;i>=0;i=i-1)if(v[i]&&fdb<0)fdb=i;end endfunction
  always @(posedge clk)if(cmp_en)begin
   pcmp<=pcmp+1;
-  if(pr_spl!==pr_d[SPL_ROFF])begin pmis<=pmis+1;if(pmis<6)$display("N59RND_PROBE_ERR cycle %0d: service internals != r1 %0d edges earlier",cyc,SPL_ROFF);end
-  if(pb_spl!==pb_dl)begin bmis<=bmis+1;if(bmis<6)$display("N59RND_PROBE_ERR cycle %0d: bank internals != r1 %0d edges earlier",cyc,SPL_BOFF);end
+  if(pr_spl!==pr_d[SPL_ROFF])begin pmis<=pmis+1;if(pmis<6)$display("N59RND_PROBE_ERR cycle %0d (ph %0d): service internals != r1 %0d edges earlier; diff bits %0d, first diff bit %0d of %0d",cyc,ph,SPL_ROFF,$countones(pr_spl^pr_d[SPL_ROFF]),fdb(pr_spl^pr_d[SPL_ROFF]),PW);end
+  if(pb_spl!==pb_dl)begin bmis<=bmis+1;if(bmis<6)$display("N59RND_PROBE_ERR cycle %0d (ph %0d): bank internals != r1 %0d edges earlier; qctx %0d/%0d qrow diff bits %0d",cyc,ph,PBO,pb_spl[512],pb_dl[512],$countones(pb_spl[511:0]^pb_dl[511:0]));end
   n_qw<=n_qw+ref0.u_core.q[523];n_kv<=n_kv+(|ref0.u_core.kv_we);n_bad<=n_bad+(ref0.u_core.q_in_bad||ref0.u_core.dd_form_bad||ref0.u_core.kv_in_bad);
  end
  // activity (the comparison means something only if the reference does things)

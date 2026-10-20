@@ -9,18 +9,18 @@
 #     m1_q_lane (Q lane packing) m2_kv_addr m3_emb_word m5_mu_tag (ovl) m7_owner (bank owner select)
 #     qb1_unreg (bank q row unregistered: one edge early)  qb2_norelay (dd relay skipped; random stimulus)
 #   random-stimulus lockstep (tb_n59_split_random): rnd_s1 rnd_s2 rnd_nu1 (pass), rnd_m1_q_lane rnd_qb1_unreg (must FAIL)
-#   landed form (N59_SPLIT_LP=1, SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6): + lp_m1_land_bypass lp_m2_land_late lp_rnd_m1_land_bypass
+#   landed form (N59_SPLIT_LP=1, SPL_SOFF=7 SPL_BOFF=2 SPL_ROFF=7): + lp_m1_land_bypass lp_m2_land_late lp_rnd_m1_land_bypass
 #     (lp.py MUT 1 / 2 inside the landed parent; must FAIL).  lp.py MUT 4 (the service reset run one stage long) is NOT a
 #     mutant here: a reset-release offset is unobservable under the static calendar's idle window after reset (the split
 #     itself releases its service one service-edge early for the same reason; see qfd_native59_qbank.sv).
-#   SPL_SOFF / SPL_BOFF / SPL_ROFF (env): edge offsets (flat 1/0/1; the landed form: from its lp record)
+#   SPL_SOFF / SPL_BOFF / SPL_ROFF (env): edge offsets (flat 2/0/2; the landed form 7/2/7: + lp svc 3, reset 2)
 set -uo pipefail
 out=${1:?fresh output directory}; mkdir -p "$out"
 R=$(cd "$(dirname "$0")/../../.." && pwd)
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 export PATH=$(dirname "$VL"):$PATH
 verilator --version
-SO=${SPL_SOFF:-1};BO=${SPL_BOFF:-0};RO=${SPL_ROFF:-1}
+SO=${SPL_SOFF:-2};BO=${SPL_BOFF:-0};RO=${SPL_ROFF:-2}
 COMMON=("$R/rtl/qwen_split/qfd_native59_qseat_sram.sv"
  "$R/physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v"
  "$R/rtl/qwen_split/qfd_native59_dv_service.sv"

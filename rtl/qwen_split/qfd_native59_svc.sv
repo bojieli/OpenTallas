@@ -2,8 +2,8 @@
 // QW-N59-4 (10-19): service child of the hardened native59 split; edge contract and rationale in qfd_native59_qbank.sv.
 // ----------------------------------------------------------------------------------------------------------------------
 // Service child: qfd_native59_dv_service (SAFE 2, ROOTS 1, RST_FOREST 1) with the Q-seat section replaced by the bank's
-// registered qb_* words.  dd_i / layer_context_v / command_stage are the bank's one-edge relays (so this child's pin
-// registers see them one edge later, like every other port of this child: see the file header).
+// registered qb_* words.  dd_i / layer_context_v / command_stage are the bank's two-edge relays (this child runs two edges
+// behind the bank ports: see qfd_native59_qbank.sv).  svc2: the record codec captures rx data on every edge (RX_FREE 1).
 module qfd_native59_svc #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
@@ -245,7 +245,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
   .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
   .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
-  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
+  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1))u_record(   // QW-N59-4 svc2: free rx capture (output-exact)
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),

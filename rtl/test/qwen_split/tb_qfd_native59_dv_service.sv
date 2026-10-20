@@ -16,7 +16,7 @@
 //   command pin: beat k = code word k (k 0..63), then beat 0 = {496'd0, scale}; provider and DUT fault-free.
 // BAD_Q=1: one Q dd word is never sent -> NEW must fault and never complete (schedule violation, no stall).
 // Pass line: N59DV_PASS ...; any failure prints N59DV_FAIL and $fatal.
-module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=1,SPL_BOFF=0,SPL_ROFF=1)(input wire clk);
+module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=2,SPL_BOFF=0,SPL_ROFF=2)(input wire clk);
  // EMBR (QW-N59-3 safe4): DUT EMB_RELAY; the embedding words land one edge later (cmd+7..+71), group 0 unchanged
  localparam integer HEADS=1;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;

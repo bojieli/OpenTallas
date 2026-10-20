@@ -21,7 +21,7 @@
 //   outputs of op k inside op k+1's window).  OVLP=1 MCTX=0 = the as-built single-context service: must FAIL.
 //   COLL=1 (OVLP): op 3's completion slot is never driven, so op 5's begin takes op 3's still-active slot -> fault.
 // Pass line N59MU_PASS ...; failure N59MU_FAIL ... and exit != 0.
-module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=1,SPL_BOFF=0,SPL_ROFF=1)(input wire clk);
+module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=2,SPL_BOFF=0,SPL_ROFF=2)(input wire clk);
  localparam integer NOP=14,P=OVLP?170:240,B0=10,BK=OVLP?60:0;
  localparam[13:0]SEQ0=14'd9;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
