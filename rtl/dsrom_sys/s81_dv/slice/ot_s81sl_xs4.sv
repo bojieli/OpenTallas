@@ -28,7 +28,7 @@
 //   issuer   8-entry delay line with registered one-hot write enables (2 copies / entry) and 5 one-hot read pointer
 //            copies each with its own pop compare; 8 window-open copies.
 //   read     stream head copies in the controller (4 lookup copies + 1 + BF); arrival-table lookups by registered
-//            factorised one-hot indices (hi x lo lines); registered one-hot read-mux lines (12 / 24 per 32-b slice)
+//            full one-hot index lines (192 q / 80 BF per copy); registered one-hot read-mux lines (12 / 24 per 32-b slice)
 //            -> stage-3 AND-OR; bank one-hot copies for the 4 stream ROMs.
 //   calendar native copy of ot_s81_pq_calendar_reader (PINREG): one-hot row pointers, 6 due copies (own pointer,
 //            age, active), registered row write enables.
@@ -38,7 +38,7 @@
 //            chain -> 39 controller regions; release = main's edge + 1 everywhere; payload reset-free.
 // Mutants (negative controls; DUT only): OT_S81SL_XS_MUT_BANK / _OFF / _QSWAP (as main), OT_S81SL_XS4_MUT_WCOPY (one
 // rotation-select copy of write leaf (1, 3) one column off), OT_S81SL_XS4_MUT_TPAR (q table group 5 parity replica
-// misses the window open), OT_S81SL_XS4_MUT_EXP (exponent SRAM read row of group 1 from beat0).
+// misses the window open), OT_S81SL_XS4_MUT_EXP (q1 exponent half select swapped).
 // ---------------------------------------------------------------------------------------------------------------------
 `ifdef SYNTHESIS
 `define OT_S81SL_XS4_ROM(n) ot_rom_4096x72_m8
@@ -139,7 +139,7 @@ module ot_s81sl_xs4_cal (
     wire [74:0] act_nx;
     generate for (gk = 0; gk < 6; gk = gk + 1) begin : g_due
         (* keep = "true" *) reg [3:0] rpt;
-        (* keep = "true" *) reg [3:0] rpa;
+        (* keep = "true" *) reg [3:0] rpa;   // action pointer (used by k < 4)
         (* keep = "true" *) reg [23:0] age;
         (* keep = "true" *) reg act;
         wire pk = gk < 3 ? pok[0] : pok[1];
@@ -162,7 +162,7 @@ module ot_s81sl_xs4_cal (
             if (!rg[11 + gk / 3]) begin rpt <= 4'b0001; rpa <= 4'b0001; end
             else begin
                 rpt <= due[gk] ? {rpt[2:0], rpt[3]} : (pk ? 4'b0001 : rpt);
-                rpa <= due[gk] ? {rpa[2:0], rpa[3]} : (pk ? 4'b0001 : rpa);
+                if (gk < 4) rpa <= due[gk] ? {rpa[2:0], rpa[3]} : (pk ? 4'b0001 : rpa);
             end
         end
         // action chunks (k < 4): action <= due ? rows[rp] : 0
@@ -743,7 +743,7 @@ module ot_s81sl_xs4 (
     generate for (gc = 0; gc < 22; gc = gc + 1) begin : g_tg
         localparam integer FB = gc >= 12 ? 1 : 0, G = gc >= 12 ? gc - 12 : gc;
         wire gwx = o_gw[gc % NG], gwf = o_gwf[gc % NG], gwp = o_gwp[gc % NG];
-        (* keep = "true" *) reg wp;   // main wpar_q (FB 0) / wpar_b (FB 1)
+        (* keep = "true" *) reg wp, wpv;   // main wpar_q (FB 0) / wpar_b (FB 1): wpv for the valid sets, wp the rest
 `ifdef OT_S81SL_XS4_MUT_TPAR
         wire open_f = (gc == 5) ? 1'b0 : (gwx && gwf == FB[0]);
 `else
@@ -757,11 +757,11 @@ module ot_s81sl_xs4 (
         wire [7:0] vc = wp ? v1 : v0;
         wire cl0 = open_f && !gwp, cl1 = open_f && gwp;
         always @(posedge clk or negedge rst_l[6 + gc]) begin
-            if (!rst_l[6 + gc]) begin wp <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
+            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
             else begin
-                if (open_f) wp <= gwp;
-                v0 <= cl0 ? (any & {8{!wp}} & ~v0) : (v0 | (any & {8{!wp}}));
-                v1 <= cl1 ? (any & {8{wp}} & ~v1) : (v1 | (any & {8{wp}}));
+                if (open_f) begin wp <= gwp; wpv <= gwp; end
+                v0 <= cl0 ? (any & {8{!wpv}} & ~v0) : (v0 | (any & {8{!wpv}}));
+                v1 <= cl1 ? (any & {8{wpv}} & ~v1) : (v1 | (any & {8{wpv}}));
             end
         end
         integer i;
@@ -821,13 +821,13 @@ module ot_s81sl_xs4 (
 
     // ================================================================== read side
     // ---- stage 1 (stream head + 1): q from head copies 0-3 (lookups q0 c0 / q0 c1 / q1 c0 / q1 c1), 4 (rest);
-    //      BF from the BF head copy.  Lookup index = factorised one-hot: hi (parity x beat[6:3]), lo (beat[2:0]).
+    //      BF from the BF head copy.  Lookup index = registered full one-hot line per (parity, beat).
     wire [15:0] hb0 [0:4], hb1 [0:4]; wire [1:0] hg [0:4];
     generate for (gc = 0; gc < 5; gc = gc + 1) begin : g_hqs
         assign {hb0[gc], hb1[gc], hg[gc]} = hq[34*gc +: 34];
     end endgenerate
     // q lookup copies: L = 0 q0 c0, 1 q0 c1, 2 q1 c0, 3 q1 c1 (q1 is looked up with q0's parity, as main)
-    wire [23:0] qlh [0:3]; wire [7:0] qll [0:3]; wire [3:0] qms [0:3];
+    wire [191:0] qln [0:3]; wire [3:0] qms [0:3];
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_ql
         wire p0 = hb0[gc] >= 16'd192;
         wire [7:0] k0 = 8'(hb0[gc] - (p0 ? 16'd192 : 16'd0));
@@ -835,14 +835,13 @@ module ot_s81sl_xs4 (
         wire [7:0] k1 = 8'(hb1[gc] - (p1 ? 16'd192 : 16'd0));
         wire [7:0] k = gc < 2 ? k0 : k1;
         wire gate = (gc < 2 ? hg[gc][0] : hg[gc][1]) && qc[gc];
-        (* keep = "true" *) reg [23:0] h; (* keep = "true" *) reg [7:0] l; (* keep = "true" *) reg [3:0] m;
+        (* keep = "true" *) reg [191:0] ln; (* keep = "true" *) reg [3:0] m;   // ln[96 parity + beat]
         integer x;
         always @(posedge clk) begin
-            for (x = 0; x < 24; x = x + 1) h[x] <= (p0 == (x >= 12)) && k[7:4] == 4'(x % 12);
-            for (x = 0; x < 8; x = x + 1) l[x] <= k[3:1] == 3'(x);
+            for (x = 0; x < 192; x = x + 1) ln[x] <= (p0 == (x >= 96)) && k[7:1] == 7'(x % 96);
             for (x = 0; x < 4; x = x + 1) m[x] <= gate && {k[0], k[1]} == 2'(x);
         end
-        assign qlh[gc] = h; assign qll[gc] = l; assign qms[gc] = m;
+        assign qln[gc] = ln; assign qms[gc] = m;
     end endgenerate
     // rest copy (4): read-port rows / enables, exponent rows / halves, fault gates
     wire p0r = hb0[4] >= 16'd192, p1r = hb1[4] >= 16'd192;
@@ -858,21 +857,21 @@ module ot_s81sl_xs4 (
             mq1r[x4] <= g1r && {k1r[0], k1r[1]} == 2'(x4);
         end
         er0a <= {p0r, k0r[7:4], k0r[2:1]};
-`ifdef OT_S81SL_XS4_MUT_EXP
-        er1a <= {p1r, k0r[7:4], k0r[2:1]};
-`else
         er1a <= {p1r, k1r[7:4], k1r[2:1]};
-`endif
         er0ce <= g0r; er1ce <= g1r;
         eg0 <= {g0r && k0r[0], g0r && !k0r[0]};
+`ifdef OT_S81SL_XS4_MUT_EXP
+        eg1 <= {g1r && !k1r[0], g1r && k1r[0]};
+`else
         eg1 <= {g1r && k1r[0], g1r && !k1r[0]};
+`endif
         qg0f <= g0r; qg1f <= g1r;
         qbad <= (qc[4] && hg[4][0] && hb0[4] >= 16'd384) || (qc[4] && hg[4][1] && hb1[4] >= 16'd384) ||
                 (qc[4] && hg[4][0] && hg[4][1] && p0r != p1r);
     end
     // BF groups k: lookup copies c (hi: parity x bu[5:3], lo: bu[2:0]), mac one-hots (sel c0 / c1, read port)
     wire [35:0] hhi = hb[42:7]; wire [3:0] hwb = hb[6:3]; wire [2:0] hwm = hb[2:0];
-    wire [9:0] blh [0:3][0:1]; wire [7:0] bll [0:3][0:1]; wire [7:0] bms [0:3][0:1]; wire [7:0] bmr [0:3];
+    wire [79:0] bln1 [0:3][0:1]; wire [7:0] bms [0:3][0:1]; wire [7:0] bmr [0:3];
     wire [6:0] brw [0:3]; wire [3:0] bbad_k, bgf;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_bl
         wire [8:0] h = hhi[9*gc +: 9];
@@ -880,24 +879,23 @@ module ot_s81sl_xs4 (
         wire [5:0] bu = 6'(h - (par ? 9'd48 : 9'd0));
         wire [2:0] mac = 3'(hwm + 3'(bu));
         wire gate = hwb[gc] && bcs;
-        (* keep = "true" *) reg [9:0] lh0, lh1; (* keep = "true" *) reg [7:0] ll0, ll1;
+        (* keep = "true" *) reg [79:0] ln0, ln1;   // [40 parity + bu]
         (* keep = "true" *) reg [7:0] ms0, ms1, mr;
         reg [6:0] rw; reg bb, gf;
         integer x;
         always @(posedge clk) begin
-            for (x = 0; x < 10; x = x + 1) begin
-                lh0[x] <= (par == (x >= 5)) && bu[5:3] == 3'(x % 5);
-                lh1[x] <= (par == (x >= 5)) && bu[5:3] == 3'(x % 5);
+            for (x = 0; x < 80; x = x + 1) begin
+                ln0[x] <= (par == (x >= 40)) && bu == 6'(x % 40);
+                ln1[x] <= (par == (x >= 40)) && bu == 6'(x % 40);
             end
             for (x = 0; x < 8; x = x + 1) begin
-                ll0[x] <= bu[2:0] == 3'(x); ll1[x] <= bu[2:0] == 3'(x);
                 ms0[x] <= gate && mac == 3'(x); ms1[x] <= gate && mac == 3'(x); mr[x] <= gate && mac == 3'(x);
             end
             rw <= {par, bu};
             bb <= gate && (h >= 9'd96 || (par ? h - 9'd48 : h) >= 9'd40);
             gf <= gate;
         end
-        assign blh[gc][0] = lh0; assign blh[gc][1] = lh1; assign bll[gc][0] = ll0; assign bll[gc][1] = ll1;
+        assign bln1[gc][0] = ln0; assign bln1[gc][1] = ln1;
         assign bms[gc][0] = ms0; assign bms[gc][1] = ms1; assign bmr[gc] = mr;
         assign brw[gc] = rw; assign bbad_k[gc] = bb; assign bgf[gc] = gf;
     end endgenerate
@@ -928,17 +926,15 @@ module ot_s81sl_xs4 (
                 .w_mask_in({44'd0, 20'hfffff}));
         end
     end endgenerate
-    // ---- stage 2: table lookups (factorised one-hot lines) -> registered one-hot read-mux lines
+    // ---- stage 2: table lookups (one-hot index lines) -> registered one-hot read-mux lines
     // q lookups L: v, s
     wire qv [0:3]; wire [1:0] qs [0:3];
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_qk
-        reg v; reg [1:0] s; integer p, b, lo;
+        reg v; reg [1:0] s; integer x;
         always @* begin
             v = 1'b0; s = 2'd0;
-            for (p = 0; p < 2; p = p + 1) for (b = 0; b < 12; b = b + 1) for (lo = 0; lo < 8; lo = lo + 1)
-                if (qlh[gc][12 * p + b] && qll[gc][lo]) begin
-                    v = v | tqv[p][8 * b + lo]; s = s | tqs[p][2 * (8 * b + lo) +: 2];
-                end
+            for (x = 0; x < 192; x = x + 1)
+                if (qln[gc][x]) begin v = v | tqv[x / 96][x % 96]; s = s | tqs[x / 96][2 * (x % 96) +: 2]; end
         end
         assign qv[gc] = v; assign qs[gc] = s;
     end endgenerate
@@ -946,13 +942,13 @@ module ot_s81sl_xs4 (
     wire bvl [0:3][0:1], bvh [0:3][0:1]; wire [1:0] bsl [0:3][0:1], bsh [0:3][0:1];
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_bk
         for (gj = 0; gj < 2; gj = gj + 1) begin : g_c
-            reg vl, vh; reg [1:0] sl, sh; integer p, b, lo;
+            reg vl, vh; reg [1:0] sl, sh; integer x;
             always @* begin
                 vl = 1'b0; vh = 1'b0; sl = 2'd0; sh = 2'd0;
-                for (p = 0; p < 2; p = p + 1) for (b = 0; b < 5; b = b + 1) for (lo = 0; lo < 8; lo = lo + 1)
-                    if (blh[gc][gj][5 * p + b] && bll[gc][gj][lo]) begin
-                        vl = vl | tbv[p][2 * (8 * b + lo)];     vh = vh | tbv[p][2 * (8 * b + lo) + 1];
-                        sl = sl | tbs[p][4 * (8 * b + lo) +: 2]; sh = sh | tbs[p][4 * (8 * b + lo) + 2 +: 2];
+                for (x = 0; x < 80; x = x + 1)
+                    if (bln1[gc][gj][x]) begin
+                        vl = vl | tbv[x / 40][2 * (x % 40)];     vh = vh | tbv[x / 40][2 * (x % 40) + 1];
+                        sl = sl | tbs[x / 40][4 * (x % 40) +: 2]; sh = sh | tbs[x / 40][4 * (x % 40) + 2 +: 2];
                     end
             end
             assign bvl[gc][gj] = vl; assign bvh[gc][gj] = vh; assign bsl[gc][gj] = sl; assign bsh[gc][gj] = sh;
