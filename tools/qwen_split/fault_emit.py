@@ -440,6 +440,7 @@ def post(v, m, G):
     # 1. leaves beside the sources (one clock root per leaf)
     leaves = collections.defaultdict(list)       # clock bus -> leaf names
     orphans = []
+    dead = collections.defaultdict(set)   # clock bus -> grid keys of free components with no node of that root
     worst_src = 0.0
     for inst, port, real, bit, cj, rj, xy in sorted(src, key=lambda t: (t[4], t[6][0], t[6][1])):
         if cj not in root_ck:
@@ -519,6 +520,8 @@ def post(v, m, G):
                 tie += 1
                 heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, hd(cc) - REACH_UM) / S_), g_ + 1, tie, cc, s_, key))
         stats.update(expanded=n_exp, open_left=len(heap), slack=slack)
+        if not heap:
+            stats['_seen'] = seen      # whole free component exhausted: dead for this clock root (occupancy only grows)
         return None, None
 
     # 2. each leaf joins the nearest attached node of its clock root (roots first), hops every <= REACH_UM
@@ -540,9 +543,16 @@ def post(v, m, G):
                 if os.environ.get('OT_SPLIT_FAULT_ASTAR', '1') == '1':
                     tl_ = [(a, _ctr(by[a])) for a in okp]
                     st1, st2 = {}, {}
-                    route, tgt2 = _hop_route(c0, tl_, stats=st1)
-                    if route is None:   # wider snap (box still checked <= REACH_UM centre to centre)
-                        route, tgt2 = _hop_route(c0, tl_, slack=150.0, stats=st2)
+                    k0 = (round(c0[0] / 43.2), round(c0[1] / 43.2))
+                    if k0 in dead[cj]:
+                        route, st1 = None, dict(dead_component=True)
+                    else:
+                        route, tgt2 = _hop_route(c0, tl_, stats=st1)
+                        if route is None:   # wider snap (box still checked <= REACH_UM centre to centre)
+                            route, tgt2 = _hop_route(c0, tl_, slack=150.0, stats=st2)
+                        s1_, s2_ = st1.pop('_seen', None), st2.pop('_seen', None)
+                        if route is None and s1_ is not None and s2_ is not None:
+                            dead[cj] |= s1_ & s2_
                     if route is None and cur == lf and os.environ.get('OT_SPLIT_FAULT_ORPHAN', 'fail') == 'record':
                         # QW-G5F3: the leaf's free component holds no node of its clock root (dv2f20g5f8: flt_leaf229 in
                         # the y 18697 row gap, its clock root's nodes in the y 13409 gap; 31k boxes searched).  Recorded
