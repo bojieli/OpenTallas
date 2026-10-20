@@ -83,6 +83,7 @@ run qb1_unreg fail mu -GOVLP=1 -GMCTX=1 -GQB_MUT=1
 run qb2_norelay fail rnd -GQB_MUT=2
 # random-stimulus lockstep (tb_n59_split_random): production NU 4 / MCTX 1 (2 seeds) and the NU 1 single-context block
 run rnd_s1 pass rnd -GSEED=1
+run rnd_reset8 pass rnd -GSEED=1 -GQUIET=8
 run rnd_s2 pass rnd -GSEED=2
 run rnd_nu1 pass rnd -GSEED=3 -GNU=1 -GMCTX=0
 run rnd_m1_q_lane fail rnd -GSPLIT_MUT=1

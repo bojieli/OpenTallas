@@ -12,6 +12,7 @@ case "$case" in
  base_mu) N59_RECV=0;SPL_ROFF=3;SPLIT_ONLY=mu_ovl_positive;;
  base_dv) N59_RECV=0;SPL_ROFF=3;SPLIT_ONLY=dv_positive;;
  recv_rnd) :;;
+ recv_reset8) SPLIT_ONLY=rnd_reset8;;
  recv_mu) SPLIT_ONLY=mu_ovl_positive;;
  recv_dv) SPLIT_ONLY=dv_positive;;
  mut_bypass) N59_RECV_MUT=1;expect=1;;
