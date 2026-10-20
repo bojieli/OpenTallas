@@ -437,7 +437,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 lo = rc
                 if prev_go is not None:
                     lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
-                    if XMODE != "bench13":
+                    if XMODE != "bench13" and os.environ.get("SMB_DRAINRULE") == "1":   # superseded by RTL OPEN_IL
                         # HBM-SMXL drain rule: the issuer opens block n+1 when block n-1 retires (its cache bank frees),
                         # and an open while the previous block's copy still drains is a cdc fault (measured xr_dsA r1,
                         # S 976 after S 897).  So go(n) - go(n-1) >= the drain (= the pace) of block n+1.
