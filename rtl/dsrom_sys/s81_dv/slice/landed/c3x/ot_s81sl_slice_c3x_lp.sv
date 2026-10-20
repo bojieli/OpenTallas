@@ -23,7 +23,7 @@ module ot_s81sl_slice_c3x_lp #(
     input wire [275:0] vi,
     output wire [275:0] vo,
     input wire [1103:0] bi,
-    output wire [1103:0] bo,
+    output wire [512:0] bo,
     output wire [4415:0] xc,
     input wire [559:0] rt,
     output wire [15:0] ck_line,

@@ -16,7 +16,7 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
     reg [1023:0] dir;
     reg rst_n = 1'b0;
     reg [1103:0] ri_w = 0;
-    wire [1103:0] ro_e, ro_w, bo; wire [275:0] vo; wire [4*1104-1:0] xc; wire [15:0] ck_line, ck_xc; wire [1:0] ck_v;
+    wire [1103:0] ro_e, ro_w; wire [512:0] bo; wire [275:0] vo; wire [4*1104-1:0] xc; wire [15:0] ck_line, ck_xc; wire [1:0] ck_v;
     wire [7:0] ck_rt; wire fault;
     ot_s81sl_slice #(.HB(0), .VS_MUT(VS_MUT)) u_dut (.clk(clk), .rst_n(rst_n), .sid(SID[3:0]), .ri_w(ri_w), .ri_e(1104'd0), .ro_e(ro_e),
         .ro_w(ro_w), .vi(276'd0), .vo(vo), .bi(1104'd0), .bo(bo), .xc(xc), .rt(560'd0), .ck_line(ck_line), .ck_v(ck_v),

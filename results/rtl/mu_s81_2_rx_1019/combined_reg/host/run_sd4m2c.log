@@ -1,0 +1,8 @@
+ERR 1173 t_a valid 1 expected 0
+ERR 2843 user 0 round 0 beat 0: read state != own write
+ERR 3643 user 1 round 0 beat 100: read state != own write
+MUSEED COLLIDE NU 4 FAIL (no fault) t_mf 000
+- /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_seed.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.004 s; speed 2.844 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

@@ -22,7 +22,7 @@
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
   "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
   "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
   "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "b3e9ee193f05c981baf3e38fdc4163ea60119fbc7992b761831f4d465a93ac27",
   "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "66c7dac657cc3f060671a74cbf08d293c9c5644f99144a12ff91bfffcc191d25",
@@ -178,6 +178,7 @@
      "QW": 0,
      "QM": 5,
      "QS": 5,
+     "RSTP": 1,
      "INSTANCE": "{INSTANCE, \"_e0\"}"
     },
     "ot_s81_cfg7_seq": {
@@ -243,7 +244,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-    "sha256": "89ee9d7eea2f769256db3e1511e52065072f69d76acfe10f84a4b636ebd6a3f1"
+    "sha256": "2c72ec5e69943e8b031accc9cc963edb4e798b305de2aca88853ea7c0fbba0d9"
    }
   },
   "col_h10": {
@@ -322,6 +323,7 @@
      "QW": 0,
      "QM": 5,
      "QS": 5,
+     "RSTP": 1,
      "INSTANCE": "{INSTANCE, \"_e0\"}"
     },
     "ot_s81_cfg7_seq": {
@@ -385,7 +387,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
-    "sha256": "578bb949520d91568eeffdddaed7a5fb418001811ceb7396f2ba90c60e7229f8"
+    "sha256": "545607e877553c15791fc86528fe0f8ef55be6e0114576943d5c3863ab5ccab3"
    }
   },
   "col_h9_MX": {
@@ -398,6 +400,6 @@
    "placement": "MX (mirrored); one child instance of the base master, ports pass through"
   }
  },
- "rstp": false,
+ "rstp": true,
  "bf_front": "roots"
 }
