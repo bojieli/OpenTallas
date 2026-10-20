@@ -16,6 +16,11 @@ What changes against the serial calendars ("base"):
       and only its CHUNK-LAST beats (the merge events) wait for block k's publication to clear (release = publish +
       chain_gap, calibrated).  One SM programme per kind instead of a re-launched op per block.
   (4) DS: one op per SM (the 2,048-word SM programme store, HBM-SMBUDGET 0jx) instead of 32-row sub-runs.
+  (5) EARLY REQUEST (MB2, 10-19): block k+1's descriptor is loaded in REQUEST time, one cycle after block k's last line
+      REQUEST (= last packet - req_lead), not after block k's last packet; its requests then follow back to back, so
+      the HBM request lead is paid once per SM programme, not at every block boundary.  Law (ot_hbm_sm_kv_desc_static):
+      load only when the previous run has no line left and never in a request slot (else sticky descriptor fault ->
+      FAULT schedule); mutant `descearly` loads in block k's last request slot.  `--late-req` = the c34aee688 rule.
 NOT done (and why): QK of block k+1 overlapped with PV of block k needs an online-softmax rescale (exp(s - m_partial)
 then x exp(m_partial - m)); the golden takes the global max first (attend.max over all T before exp), so any rescale
 changes rounding (class C) -- excluded by the owner (no numerics change).  The exact equivalent kept here is (1)+(3):
@@ -140,7 +145,7 @@ class Seg:
         return f, tk, tk, lst
 
 
-def engine(segs, lat, t0=8, smut=""):
+def engine(segs, lat, t0=8, smut="", early_req=True):
     """play the segments (KV blocks of one SM and kind) through ONE converter model and one xw port; returns the calendar
     (the result tails are placed by each segment's tail_hook at its last consume)."""
     cal = E.Calendar()
@@ -162,7 +167,7 @@ def engine(segs, lat, t0=8, smut=""):
             xi_next += 1
         nxt = cur + 1
         # descriptor load of the next segment: as soon as the previous segment's last line request is out
-        if nxt < len(segs) and nxt not in dl:
+        if nxt < len(segs) and nxt not in dl and (nxt == 0 or not early_req):
             if nxt == 0 or (li >= len(segs[cur].lines) and last_req is not None and c > last_req):
                 s = segs[nxt]
                 cal.kvd[c] = base | (len(s.lines) << 32)
@@ -227,6 +232,16 @@ def engine(segs, lat, t0=8, smut=""):
                 cal.set(rq, req=1, req_addr=base + li, req_tag=tag, **s.hold)
                 last_req = rq if last_req is None else max(last_req, rq)
                 li += 1
+                if early_req and li == len(s.lines) and cur + 1 < len(segs):
+                    # (5) next block's descriptor one cycle after this block's LAST REQUEST (request time); the
+                    # descearly mutant loads it in that request slot (load over an unfinished run + load in a request)
+                    dc = rq if smut == "descearly" else rq + 1
+                    assert dc not in cal.kvd and not cal.at(dc).get("dload") and dc > dl[cur], f"descriptor slot {dc}"
+                    if smut != "descearly":
+                        assert not cal.at(dc).get("req"), f"descriptor {dc} in a request slot"
+                    cal.kvd[dc] = base | (len(segs[cur + 1].lines) << 32)
+                    cal.set(dc, dload=1, **segs[cur + 1].hold)
+                    dl[cur + 1] = dc
             if take:
                 f, key, pa, chunk_last = s.fields(popped, len(s.beats))
                 cal.set(c, **f, **s.hold)
@@ -379,10 +394,10 @@ def qw_tail(cal, s, lat, smut=""):
         s.release = pub + gap
 
 
-def compile_chain(segs, lat, mb, tail, smut=""):
+def compile_chain(segs, lat, mb, tail, smut="", early_req=True):
     for s in segs:
         s.tail_hook = (lambda cal, s_, lat_: tail(cal, s_, lat_, smut))
-    cal = engine(segs, lat, smut=smut)
+    cal = engine(segs, lat, smut=smut, early_req=early_req)
     end = max(s.end for s in segs)
     t_first = min(min(cal.kvd), min(cal.xw) if cal.xw else 10 ** 9)
     mode = segs[0].mode
@@ -463,7 +478,7 @@ def cmd_ds(a):
         s, kind, sops = job
         segs = [ds_segs(rec, o) for o in sops]
         tag = f"L{a.layer:02d}_{AI.SM_NAMES[s]}_{kind}_{a.mode}{('_s%d' % sub) if sub else ''}_d{a.dmut}" \
-              f"{('_' + a.smut) if a.smut else ''}_{lat_tag(lat)}"
+              f"{('_' + a.smut) if a.smut else ''}{'_late' if a.late_req else ''}_{lat_tag(lat)}"
         if not mb:
             # base = the serial calendars exactly as att_images.py unit (one op per sim, spans summed + go bubble 5)
             res_ops, ok, words_all = [], True, []
@@ -484,7 +499,7 @@ def cmd_ds(a):
             nodes = {k: AI.node_from_words(w).astype(np.uint32).view(F) for k, w in words_all}
             return dict(sm=AI.SM_NAMES[s], kind=kind, mode="base", pass_=ok, span=tot, ops=res_ops,
                         words_resident=max(r["words"] for r in res_ops), nodes=nodes, nsub=len(sops))
-        cal, end, t_first = compile_chain(segs, lat, True, ds_tail, a.smut)
+        cal, end, t_first = compile_chain(segs, lat, True, ds_tail, a.smut, not a.late_req)
         rc, out = hexdump_run(exe, cal, work / tag, end + 4)
         words = r_words(out)
         sg = segs[0]
@@ -559,7 +574,7 @@ def cmd_qwen(a):
         sops = [o for o in ops if o["sm"] == s and o["kind"] == kind and
                 (kind == "qk" or blocks_f is None or o["block"] in blocks_f)]
         tag = f"{a.stage}_L{a.L}_{QU.SM_NAMES[s]}_{kind}_{a.mode}_d{a.dmut}{('_' + a.smut) if a.smut else ''}" \
-              f"_{lat_tag(lat)}"
+              f"{'_late' if a.late_req else ''}_{lat_tag(lat)}"
         nodes = {}
         if not mb:
             res_ops, tot, ok = [], 0, True
@@ -579,7 +594,7 @@ def cmd_qwen(a):
             return dict(sm=QU.SM_NAMES[s], kind=kind, mode="base", pass_=ok, span=tot, ops=res_ops, nodes=nodes,
                         words_resident=max(r["words"] for r in res_ops), nblocks=len(sops))
         segs = [qw_seg(rec, o) for o in sops]
-        cal, end, t_first = compile_chain(segs, lat, True, qw_tail, a.smut)
+        cal, end, t_first = compile_chain(segs, lat, True, qw_tail, a.smut, not a.late_req)
         rc, out = hexdump_run(exe, cal, work / tag, end + 4)
         words = r_words(out)
         ok = rc == 0 and "FAULT" not in out
@@ -604,7 +619,8 @@ def cmd_qwen(a):
                     span=(lr - first_x(cal)) if lr is not None else None,
                     span_first_word=(lr - first_word(cal)) if lr is not None else None,
                     prefetch=first_x(cal) - first_word(cal), words_resident=end + 1 - first_word(cal),
-                    nblocks=len(sops), per_block=per, nodes=nodes,
+                    nblocks=len(sops), per_block=per, nodes=nodes, early_req=not a.late_req,
+                    desc_loads=[cc for cc, f in enumerate(cal.cyc) if f.get("dload")],
                     block_periods=[segs[k + 1].beats[0][0] - segs[k].beats[0][0] for k in range(len(segs) - 1)])
 
     results = []
@@ -629,6 +645,7 @@ def cmd_qwen(a):
         if r["span"] is not None:
             busiest[r["kind"]] = max(busiest.get(r["kind"], 0), r["span"])
     summ = dict(lane="HBM-ATTN-MB", design="Qwen", stage=a.stage, L=a.L, mode=a.mode, lat=lat, dmut=a.dmut, smut=a.smut,
+                early_req=not a.late_req,
                 sms=[QU.SM_NAMES[s] for s in sms], busiest_span=busiest, cross_block_merge=merged,
                 passed=sum(r["pass_"] for r in results), runs=len(results), source=src,
                 kv_heads_per_die=1, q_heads_per_die=QU.HEADS,
@@ -717,8 +734,11 @@ def cmd_campaign(a):
         ds_mb=(dsc, ["--mode", "mb"], ds_lat),
         qw_base=(qwc, ["--mode", "base"], {}),
         qw_mb=(qwc, ["--mode", "mb"], qw_lat),
-        ds_mb_rl300=(dsc, ["--mode", "mb", "--sms", "0", "--req-lead", "300"], dict(ds_lat, pre=380)),
-        qw_mb_rl300=(qwc, ["--mode", "mb", "--sms", "0", "--req-lead", "300"], dict(qw_lat, pre=380)),
+        ds_mb_rl300=(dsc, ["--mode", "mb", "--req-lead", "300"], dict(ds_lat, pre=380)),
+        qw_mb_rl300=(qwc, ["--mode", "mb", "--req-lead", "300"], dict(qw_lat, pre=380)),
+        qw_mb_rl300_late=(qwc, ["--mode", "mb", "--req-lead", "300", "--late-req"], dict(qw_lat, pre=380)),
+        mut_qw_descearly=(qwc, ["--mode", "mb", "--sms", "0", "--kinds", "pv", "--req-lead", "300", "--smut",
+                                "descearly"], dict(qw_lat, pre=380)),
         mut_ds_xearly=(dsc, ["--mode", "mb", "--sms", "0", "--kinds", "qk", "--smut", "xearly"], ds_lat),
         mut_ds_early=(dsc, ["--mode", "mb", "--sms", "0", "--kinds", "qk", "--smut", "early"], ds_lat),
         mut_ds_kv2=(dsc, ["--mode", "mb", "--sms", "0", "--kinds", "pv", "--dmut", "2"], ds_lat),
@@ -760,7 +780,8 @@ def main(argv=None):
         p.add_argument("--sms", default="")
         p.add_argument("--kinds", default="")
         p.add_argument("--dmut", type=int, default=0)
-        p.add_argument("--smut", default="", choices=["", "early", "xearly", "chainearly", "pwar"])
+        p.add_argument("--smut", default="", choices=["", "early", "xearly", "chainearly", "pwar", "descearly"])
+        p.add_argument("--late-req", action="store_true", help="c34aee688 rule: next descriptor after the last packet")
         p.add_argument("--lat", default="")
         p.add_argument("--req-lead", type=int, default=0)
         p.add_argument("--jobs", type=int, default=8)
