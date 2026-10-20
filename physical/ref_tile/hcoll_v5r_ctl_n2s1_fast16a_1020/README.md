@@ -1,0 +1,7 @@
+# FAST16 n2s1 source successor
+
+Opt-in FAST16=1, VM_RT74, MUL_PIPE1, FANCOPY2. Default source behavior unchanged. Zero extra cycles. Both-shape carry equivalence72,186 cycles and production/dense1,792/8,192 pairs,4 causal mutants passed expected results on Verilator5.050 (committed fast16_proofs_r1).
+
+SAFE checklist before gate:1 registered pins/reset2stages inherited;2 planning outline302.4x345.6 but buffer-transparent full source-to-capture reach MUST be audited from actual gate ODB before submit;3actual mapped native32 runs mandatory before floorplan (previoussource max32 does not qualify this source);4KS16 replaces ripple sector/index adds and16kept8-input fault reduction groups replace sticky priority chain; multiplier8x8 estimated652ps18levels remains pathfindingwarning, exact timing decides;5realSRAM inventory unchanged;6macros lattice43.2, fullcontinuous channels, W face fullheight<=4.97pins/um,22%pin-boundfill exception inherited subject to actualPNGreview;7priori TT/FFpinspread36.9/35.9 but newsource MUST remeasure, io_hold_margin0.03, parentboundarycompensation required;8zeroedgesadded versusFANCOPY2, inheritedv74p+1issue edge pricedDS+474cycles/token.
+
+Mandatory after gate: original protectedPG census then in-memory existingruleglobalconnect audit; fullbuffertransparent sequentialreachincludingmacrodatapins<=405um. Do not waive based on directnetreach/oldgeometry. Critical prefix:noREVIEW/no submit by lane. TTplacement RC is pathfinding only, SS/FF closure still required.
