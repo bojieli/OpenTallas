@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc6       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 157/128 running 48 disk 5405 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3121469-1792458300 after 1 s
+BUILDS_DONE
+[keyline] QSPLIT_BAD cyc227 new{ev1 last0 f0 idx0 01e3f val0 0000} old_d1{ev1 last0 f0 idx0 01e3f val0 0000}
+[keyline] QSPLIT_BAD cyc231 new{ev1 last0 f0 idx0 04e3f val0 0000} old_d1{ev1 last0 f0 idx0 04e3f val0 0000}
+[keyline] QSPLIT_BAD cyc237 new{ev1 last0 f0 idx0 0963f val0 0000} old_d1{ev1 last0 f0 idx0 0963f val0 0000}
+[keyline] QSPLIT_BAD cyc240 new{ev1 last0 f0 idx0 0ba3f val0 0000} old_d1{ev1 last0 f0 idx0 0ba3f val0 0000}
+[keyline] QSPLIT_BAD cyc1177 new{ev1 last0 f0 idx0 0744f val0 4582} old_d1{ev1 last0 f0 idx0 0744f val0 4548}
+[keyline] FAILED (expected PASS)
+IDX_QUARTER_SPLIT_GATE_FAIL
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3121469-1792458300): exit 1

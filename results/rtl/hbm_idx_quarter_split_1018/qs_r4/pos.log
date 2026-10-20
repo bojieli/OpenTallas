@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc6       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 157/128 running 48 disk 5405 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-idxscore/src1
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3122212-1792458301 after 1 s
+BUILDS_DONE
+[pos0] IDX_QUARTER_SPLIT half0 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos0] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events20 lane_fault_events0
+[pos0] IDX_QUARTER_SPLIT PASS
+[pos1] IDX_QUARTER_SPLIT half1 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos1] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events19 lane_fault_events0
+[pos1] IDX_QUARTER_SPLIT PASS
+[pos0_poison] IDX_QUARTER_SPLIT payload_poison_released
+[pos0_poison] IDX_QUARTER_SPLIT half0 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos0_poison] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events20 lane_fault_events0
+[pos0_poison] IDX_QUARTER_SPLIT PASS
+[pos1_poison] IDX_QUARTER_SPLIT payload_poison_released
+[pos1_poison] IDX_QUARTER_SPLIT half1 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos1_poison] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events19 lane_fault_events0
+[pos1_poison] IDX_QUARTER_SPLIT PASS
+IDX_QUARTER_SPLIT_GATE_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3122212-1792458301): exit 0

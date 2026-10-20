@@ -1,0 +1,6 @@
+L2H-IDXSCORE 2026-10-19: r4 wires-only quarter ot_hbm_idx_score_quarter_wo2 (qw_r4 + 8 x leaf_c1 + qe_r4) vs the flat
+ot_hbm_idx_score_quarter_static (old leaves / relays), every edge at +2, Verilator 5.050 on ot-epyc6, source ba06b9c96:
+pos0 / pos1 / pos0_poison / pos1_poison PASS errors0 (49 events, both rows nonzero, no lane faults) -> IDX_QUARTER_SPLIT_GATE_PASS;
+mutants keyline / auxearly / rowswap rejected (QSPLIT_BAD, QS_BENCH=1 exit 1) = the qw4*/qe4* kits' fail witnesses.
+The one-root tops ot_hbm_idx_score_q{w,e}_r4s (6e1cac505) are wrappers tying both row clocks to clk: the bench drives both
+row clocks from one clock, so it covers them.
