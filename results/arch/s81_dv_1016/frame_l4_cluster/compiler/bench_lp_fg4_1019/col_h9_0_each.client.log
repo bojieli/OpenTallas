@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits  1071 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 144/128 running 74 disk 165 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_2285c8f2b
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_2285c8f2b
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_2285c8f2b
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_2285c8f2b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_2285c8f2b
+ot-run: -> ot-epyc5
+ot-heavy: request 64G is charged 20G (class 'frame_bench.sh:col_h#' measured peak 11.8G, n=21+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1123553-1792479205 after 1 s
+  [0] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [1] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [2] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [3] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [5] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [6] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [7] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [9] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [10] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [11] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [12] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [14] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+FRAME_SET col_h9 MUT=0 set=each pass=12 fail=0
+PASS frame col_h9
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1123553-1792479205): exit 0
