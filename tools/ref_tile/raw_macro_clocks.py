@@ -6,6 +6,9 @@ TOKEN = re.compile(r'"(?:\\.|[^"\\])*"|(?P<kind>[A-Za-z_]\w*)\s*\((?P<args>[^()]
 BRACES = re.compile(r'"(?:\\.|[^"\\])*"|[{}]')
 SAFE = re.compile(r'[A-Za-z_]\w*')
 INSTANCE = re.compile(r'[A-Za-z_][A-Za-z0-9_.$\[\]\\/]*')
+# HBM-SU6 10-20: a region root may be a literal bus bit of a declared clock port (k9 store roots clk_st[0..4]); the
+# grant check (root in clock_cts_roots / clock_ports) is unchanged, so only exact declared ports pass.
+ROOTNAME = re.compile(r'[A-Za-z_]\w*(?:\[\d+\])?')
 
 
 def groups(text):
@@ -112,7 +115,8 @@ def contract(spec, root):
                                              or v not in roots for k, v in pins.items())):
                 raise ValueError(f'raw memory binding is not one exact master/clock-pin/source-root map: {inst}')
         elif (not isinstance(b, dict) or set(b) != {'master', 'clock_pin', 'root'} or b['master'] != master
-                or any(not isinstance(b[k], str) or not SAFE.fullmatch(b[k]) for k in b) or b['root'] not in roots):
+                or any(not isinstance(b[k], str) or not (ROOTNAME if k == 'root' else SAFE).fullmatch(b[k]) for k in b)
+                or b['root'] not in roots):
             raise ValueError(f'raw memory binding is not one exact master/clock/source root: {inst}')
         directory = root / view
         if any((directory / name).exists() for name in ('insertion.json', 'abstract.json', 'export.json')):

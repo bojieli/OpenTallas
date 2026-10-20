@@ -27,6 +27,15 @@ class Contract(unittest.TestCase):
         self.assertEqual(paths, [f'{VIEW}/{MASTER}_ff.lib', f'{VIEW}/{MASTER}_tt.lib'])
         self.assertIn('{u_rom} {master '+MASTER+' clock_pin clk root ck}', R.tcl(bindings)[0])
 
+    def test_bus_bit_root_exact_grant(self):
+        # HBM-SU6 10-20: a literal bus bit of a declared CTS root (clk_st[0]) binds; an undeclared bit or a range does not
+        s=spec(); s['clock_ports']=['ck','clk_st[0]','child']; s['clock_cts_roots']=['ck','clk_st[0]']
+        s['soft_root_macro_bindings']['u_rom']['root']='clk_st[0]'
+        self.assertEqual(R.contract(s,ROOT)[0]['u_rom']['root'],'clk_st[0]')
+        for bad in ('clk_st[1]','clk_st[0:1]','clk_st'):
+            s['soft_root_macro_bindings']['u_rom']['root']=bad
+            with self.subTest(root=bad), self.assertRaises(ValueError): R.contract(s,ROOT)
+
     def test_default_remains_closed(self):
         self.assertEqual(R.contract({}, ROOT), ({}, []))
         for key in ('soft_root_macro_masters','soft_root_macro_bindings'):
