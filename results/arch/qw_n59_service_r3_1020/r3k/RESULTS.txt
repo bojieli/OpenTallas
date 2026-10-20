@@ -1,0 +1,16 @@
+R3k 107de9c40 (QW-N59-6 10-20) on R3j: fourth tx_valid copy (native_tx header bits).
+Six V5.050 legs PASS (default_rnd, local_rnd, local_reset8, local_mu, local_dv, component).  Causal mutants (local_dv, fail
+regex 'N59(DV|MU)_FAIL' in out/wrapper.log), all REJECTED:
+ ht0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+ cq0_zero: N59DV_FAIL SPLIT lockstep: 251 of 360 edges differ (split vs reference)
+ bpub0_zero: N59DV_FAIL SPLIT lockstep: 243 of 360 edges differ (split vs reference)
+ optag0_zero: N59DV_FAIL SPLIT lockstep: 242 of 360 edges differ (split vs reference)
+ emc0_zero: N59DV_FAIL SPLIT lockstep: 155 of 360 edges differ (split vs reference)
+ ddc0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+ qo0_zero: N59DV_FAIL SPLIT lockstep: 239 of 360 edges differ (split vs reference)
+ eba_zero: N59DV_FAIL SPLIT lockstep: 354 of 360 edges differ (split vs reference)
+ wac0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+(txvb / native_tx header copy: REJECTED by local_mu in R3j, receipts r3j/receipts/txvb_zero_local_mu.)
+STRICT MAPPED NATIVE CENSUS PASS (ep9 synth_recv, textbook_lint refuse mode hf 32 data/port/reset): 0 drivers > 32
+(refusing checks none), 21,950 FF, 94,014 cells, 0 macros, lint depth 393.4 ps, tied output bits 0, flop families > 2048 0,
+KVN target audit 1523 nets max 26 / 0 offenders.  Mapped netlist SHA ed914b2bd64177bfc64f5e51ee644993aaabbe3a7378b05a330ee7833dfa5806.

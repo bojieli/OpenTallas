@@ -1,0 +1,5 @@
+textbook_lint: WARN qfd_native59_svc cells 94,014 flops 21,950 depth 393.4 ps util None reach None um (3.2 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=21950 root=port:ck rule=PASS: 21,950 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 21,950 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port ck: 21,950 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. dr_o[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: WARN clock_guidance: clock root port:ck: 21,950 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 21,950 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate

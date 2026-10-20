@@ -1,0 +1,16 @@
+{
+  "schema": "codex.n59.native_mapped_census.v1",
+  "netlist_sha256": "ed914b2bd64177bfc64f5e51ee644993aaabbe3a7378b05a330ee7833dfa5806",
+  "top": "qfd_native59_svc",
+  "flops": 21950,
+  "macros": 0,
+  "drivers_over32": [],
+  "tied_output_bits": [],
+  "flop_families_over2048": [],
+  "limitations": [
+    "No physical reach from synthesis-only netlist",
+    "Tied output bits require functional field classification; no blanket waiver",
+    "Storage family grouping is diagnostic; RTL inventory also required",
+    "Pins: use strict textbook boundary levels and inspect actual cones; no full independent pin-clearance claim"
+  ]
+}
