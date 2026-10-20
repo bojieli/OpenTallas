@@ -61,6 +61,52 @@ def cdc(s):
     b = s.index('  end else begin:seq\n')
     e = s.index('  assign issue_done[pc]=1\'b1;\n  end\n', b)
     s = s[:b] + '  end\n' + s[e + len('  assign issue_done[pc]=1\'b1;\n  end\n'):]
+    # ELEM-GAPS/HBMB 2026-10-18: the fault crossings use the reset-synchronised copy (ot_hbm_svc_fault_cdc_rs.sv): the
+    # original releases its flops from the other family's reset (cross-family asynchronous control).
+    s = sub(s, ' ot_hbm_svc_fault_cdc u_hbm_fault_cdc(', ' ot_hbm_svc_fault_cdc_rs u_hbm_fault_cdc(')
+    s = sub(s, ' ot_hbm_svc_fault_cdc u_stream_fault_cdc(', ' ot_hbm_svc_fault_cdc_rs u_stream_fault_cdc(')
+    # ELEM-GAPS/HBMB 2026-10-18: registered K pins (native pin rule; tools/ref_tile reviewed_gray_fifos refused k_v as
+    # combinational from the descriptor FIFO storage).  Per PC one 2-entry pin skid on the request (k_v/k_addr/k_len/
+    # k_tag out of flops, k_rdy into the skid) and one on the response (kr_rdy = !tail_valid, kr_* land in flops); the
+    # owner and the response arbitration see the skid faces.  The HBM K boundary stays elastic (ready/valid); latency
+    # +1 hbm edge request and +1 response per beat (absorbed: go stays on its compiler slot).  k_wr_done is registered.
+    s = sub(s, ' output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,\n'
+               ' input wire [3:0] kr_v,output reg [3:0] kr_rdy,',
+            ' output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,\n'
+            ' input wire [3:0] kr_v,output wire [3:0] kr_rdy,')
+    s = sub(s, ' assign k_we=0;assign k_wdata=0;assign k_wstrb=0;\n',
+            ' assign k_we=0;assign k_wdata=0;assign k_wstrb=0;\n'
+            ' // K pin skids (ELEM-GAPS/HBMB): ko_* = owner request face, ri_* = response face behind the pin flops\n'
+            ' wire [3:0] ko_v,ko_r,ri_v;reg [3:0] ri_r;wire [119:0] ko_addr;wire [15:0] ko_len,ri_beat;\n'
+            ' wire [67:0] ko_tag,ri_tag;wire [1023:0] ri_data;reg [3:0] k_wr_done_q;\n'
+            ' always @(posedge hbm_clk or negedge hrst)if(!hrst)k_wr_done_q<=0;else k_wr_done_q<=k_wr_done;\n')
+    s = sub(s, '.k_ready(k_rdy[pc]),.kr_v(kr_v[pc]),.kr_tag(kr_tag[17*pc+:17]),\n   .kr_beat(kr_beat[4*pc+:4]),',
+            '.k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),\n   .kr_beat(ri_beat[4*pc+:4]),')
+    s = sub(s, '.k_v(k_v[pc]),.k_addr(k_addr[30*pc+:30]),.k_len(k_len[4*pc+:4]),.k_tag(k_tag[17*pc+:17]),',
+            '.k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),')
+    s = sub(s, '.fault(pc_fault[pc]),.issue_done(issue_done[pc]));\n  end\n end endgenerate\n',
+            '.fault(pc_fault[pc]),.issue_done(issue_done[pc]));\n  end\n'
+            '  ot_hbm_svc_pin_skid2 #(.WIDTH(51)) u_kq(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.in_v(ko_v[pc]),.in_r(ko_r[pc]),\n'
+            '   .in_data({ko_tag[17*pc+:17],ko_len[4*pc+:4],ko_addr[30*pc+:30]}),.out_v(k_v[pc]),.out_r(k_rdy[pc]),\n'
+            '   .out_data({k_tag[17*pc+:17],k_len[4*pc+:4],k_addr[30*pc+:30]}));\n'
+            '  ot_hbm_svc_pin_skid2 #(.WIDTH(277)) u_kr(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),\n'
+            '   .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_r[pc]),\n'
+            '   .out_data({ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));\n'
+            ' end endgenerate\n')
+    s = sub(s, '  kr_rdy=0;fifo_wr_valid=0;', '  ri_r=0;fifo_wr_valid=0;')
+    s = sub(s, '     kr_rdy[p]=1;fifo_wr_valid[l]=1;', '     ri_r[p]=1;fifo_wr_valid[l]=1;')
+    s = sub(s, 'response_epoch[p],kr_data[256*p+:256]};', 'response_epoch[p],ri_data[256*p+:256]};')
+    s = sub(s, '(|k_wr_done)', '(|k_wr_done_q)')
+    s = sub(s, 'end else if(|kr_v)hbm_fault<=1;', 'end else if(|ri_v)hbm_fault<=1;')
+    s = sub(s, 'if(|kr_v&&!descriptor_fire&&!rx_any)hbm_fault<=1;', 'if(|ri_v&&!descriptor_fire&&!rx_any)hbm_fault<=1;')
+    # ELEM-GAPS/HBMB 2026-10-18: landing-bank SRAM write port from stream flops (WREG 1; landing -> resident +1 stream edge)
+    s = sub(s, 'ot_hbm_svc_sm8_landing_bank #(.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(',
+            'ot_hbm_svc_sm8_landing_bank #(.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS),.WREG(1)) u_bank(')
+    # L2H-IDXSCORE/SVG 2026-10-19 (SAFE-DESIGN item 5): response + descriptor FIFO storage in dual-clock SRAM macros
+    # (ot_hbm_svc_async_fifo_sram; +1 read-side edge each: landing -> resident +1 stream, descriptor -> issue +1 hbm)
+    s = sub(s, '.LBANKS(LBANKS),.WREG(1)) u_bank(', '.LBANKS(LBANKS),.WREG(1),.FIFO_SRAM(1)) u_bank(')
+    s = sub(s, ' ot_hbm_svc_async_fifo #(.WIDTH(DW),.DEPTH(4)) u_descriptor(',
+            ' ot_hbm_svc_async_fifo_sram #(.WIDTH(DW),.DEPTH(4)) u_descriptor(')
     if 'mapped4_owner' in s or 'STACK' in s or 'PC_BASE' in s:
         raise SystemExit('gen_svc_sm_group_id: residual parameter identity in sm4pc_cdc_id')
     return s

@@ -31,7 +31,7 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
  output wire [3:0] k_v,input wire [3:0] k_rdy,output wire [119:0] k_addr,
  output wire [15:0] k_len,output wire [67:0] k_tag,output wire [3:0] k_we,
  output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,
- input wire [3:0] kr_v,output reg [3:0] kr_rdy,input wire [67:0] kr_tag,
+ input wire [3:0] kr_v,output wire [3:0] kr_rdy,input wire [67:0] kr_tag,
  input wire [15:0] kr_beat,input wire [1023:0] kr_data
 );
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
@@ -58,15 +58,15 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
  wire [7:0] bank_complete,bank_fault;wire [LB-1:0] bank_complete_bank[0:7];
  reg [7:0] complete_event[0:LBANKS-1];
  wire hbf2,stf2;
- ot_hbm_svc_fault_cdc u_hbm_fault_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst),
+ ot_hbm_svc_fault_cdc_rs u_hbm_fault_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst),
   .rd_clk(stream_clk),.rd_rst_n(srst),.src_fault(hbm_fault),.dst_fault(hbf2),.wr_overflow(),.rd_underflow());
- ot_hbm_svc_fault_cdc u_stream_fault_cdc(.wr_clk(stream_clk),.wr_rst_n(srst),
+ ot_hbm_svc_fault_cdc_rs u_stream_fault_cdc(.wr_clk(stream_clk),.wr_rst_n(srst),
   .rd_clk(hbm_clk),.rd_rst_n(hrst),.src_fault(stream_fault),.dst_fault(stf2),.wr_overflow(),.rd_underflow());
  wire desc_wr_ready,desc_rd_valid,desc_rd_ready,desc_ov,desc_un;
  wire [DW-1:0] desc_data;
  assign reserve_ready=srst&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
- ot_hbm_svc_async_fifo #(.WIDTH(DW),.DEPTH(4)) u_descriptor(
+ ot_hbm_svc_async_fifo_sram #(.WIDTH(DW),.DEPTH(4)) u_descriptor(
  .wr_clk(stream_clk),.wr_rst_n(srst),.wr_valid(reserve_fire),.wr_ready(desc_wr_ready),
  .wr_data({reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch}),.wr_overflow(desc_ov),
  .rd_clk(hbm_clk),.rd_rst_n(hrst),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
@@ -82,6 +82,10 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
  reg rx_any;always @*begin rx_any=0;for(rb=0;rb<LBANKS;rb=rb+1)if(rx_left[rb]!=0)rx_any=1;end
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid&&(OVERLAP==0||rx_left[desc_data[T0-1:16]]==0);
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
+ // K pin skids (ELEM-GAPS/HBMB): ko_* = owner request face, ri_* = response face behind the pin flops
+ wire [3:0] ko_v,ko_r,ri_v;reg [3:0] ri_r;wire [119:0] ko_addr;wire [15:0] ko_len,ri_beat;
+ wire [67:0] ko_tag,ri_tag;wire [1023:0] ri_data;reg [3:0] k_wr_done_q;
+ always @(posedge hbm_clk or negedge hrst)if(!hrst)k_wr_done_q<=0;else k_wr_done_q<=k_wr_done;
  wire [7:0] fifo_wr_ready,fifo_ov;
  reg [7:0] fifo_wr_valid;reg [IW-1:0] fifo_wr_data[0:7];
  genvar pc,g;
@@ -93,12 +97,18 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
    .descriptor_bank(desc_data[T0-1:16]),.descriptor_epoch(desc_data[15:0]),
    .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
-   .k_ready(k_rdy[pc]),.kr_v(kr_v[pc]),.kr_tag(kr_tag[17*pc+:17]),
-   .kr_beat(kr_beat[4*pc+:4]),.response_take(response_accepted[pc]),
-   .k_v(k_v[pc]),.k_addr(k_addr[30*pc+:30]),.k_len(k_len[4*pc+:4]),.k_tag(k_tag[17*pc+:17]),
+   .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
+   .kr_beat(ri_beat[4*pc+:4]),.response_take(response_accepted[pc]),
+   .k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),
    .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
    .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
   end
+  ot_hbm_svc_pin_skid2 #(.WIDTH(51)) u_kq(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.in_v(ko_v[pc]),.in_r(ko_r[pc]),
+   .in_data({ko_tag[17*pc+:17],ko_len[4*pc+:4],ko_addr[30*pc+:30]}),.out_v(k_v[pc]),.out_r(k_rdy[pc]),
+   .out_data({k_tag[17*pc+:17],k_len[4*pc+:4],k_addr[30*pc+:30]}));
+  ot_hbm_svc_pin_skid2 #(.WIDTH(277)) u_kr(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
+   .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_r[pc]),
+   .out_data({ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));
  end endgenerate
  reg [1:0] arb_cursor[0:7];
  reg [1:0] arb_selected[0:7];
@@ -110,15 +120,15 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
  end endgenerate
  integer h_take,p,l,offset;integer h_take_b[0:LBANKS-1];
  always @*begin
-  kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;for(rb=0;rb<LBANKS;rb=rb+1)h_take_b[rb]=0;
+  ri_r=0;fifo_wr_valid=0;response_accepted=0;h_take=0;for(rb=0;rb<LBANKS;rb=rb+1)h_take_b[rb]=0;
   for(l=0;l<8;l=l+1)begin
    fifo_wr_data[l]=0;arb_selected[l]=0;
    for(offset=0;offset<4;offset=offset+1)begin
     p=(arb_cursor[l]+offset)&3;
     if(response_ok[p]&&response_ordinal[p][2:0]==l&&!fifo_wr_valid[l]&&fifo_wr_ready[l])begin
-     kr_rdy[p]=1;fifo_wr_valid[l]=1;arb_selected[l]=p;response_accepted[p]=1;h_take=h_take+1;
+     ri_r[p]=1;fifo_wr_valid[l]=1;arb_selected[l]=p;response_accepted[p]=1;h_take=h_take+1;
      h_take_b[response_bank[p]]=h_take_b[response_bank[p]]+1;
-     fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],kr_data[256*p+:256]};
+     fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],ri_data[256*p+:256]};
     end
    end
   end
@@ -130,7 +140,7 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
    hbm_fault<=0;
   end else begin
    
-   if(stf2||desc_un||(|fifo_ov)||(|k_wr_done)||(|pc_fault))hbm_fault<=1;
+   if(stf2||desc_un||(|fifo_ov)||(|k_wr_done_q)||(|pc_fault))hbm_fault<=1;
    if(descriptor_fire)begin
     if(desc_data[S0+1:S0]!=stack_h||desc_data[T0+11:T0]==0||desc_data[T0+11:T0]>512||
        {3'b0,desc_data[A0+29:A0]}+desc_data[T0+11:T0]>33'h040000000)hbm_fault<=1;
@@ -141,7 +151,7 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
     if(h_active)begin
      h_received<=h_received+h_take;
      if(h_received+h_take==h_total)h_active<=0;
-    end else if(|kr_v)hbm_fault<=1;
+    end else if(|ri_v)hbm_fault<=1;
    end else begin
     // issue phase ends when every owner has issued the block; returns are counted per landing bank
     h_fresh<=descriptor_fire;
@@ -151,7 +161,7 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
      rx_left[rb]<=((descriptor_fire&&desc_data[T0-1:16]==rb)?desc_data[T0+11:T0]:rx_left[rb])-12'(h_take_b[rb]);
      if(h_take_b[rb]!=0&&rx_left[rb]==0)hbm_fault<=1;
     end
-    if(|kr_v&&!descriptor_fire&&!rx_any)hbm_fault<=1;
+    if(|ri_v&&!descriptor_fire&&!rx_any)hbm_fault<=1;
    end
   end
  end
@@ -160,7 +170,7 @@ module ot_hbm_svc_sm4pc_cdc_id #(parameter integer OWNER_AW=5, parameter integer
  wire [255:0] macro_data[0:7];
  generate for(g=0;g<8;g=g+1)begin:ordinal_bank
   wire [11:0] candidate={3'b0,drain_ordinal[8:3],3'(g)}+((g<drain_ordinal[2:0])?12'd8:12'd0);
-  ot_hbm_svc_sm8_landing_bank #(.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
+  ot_hbm_svc_sm8_landing_bank #(.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS),.WREG(1),.FIFO_SRAM(1)) u_bank(
    .hbm_clk(hbm_fifo_clk[g/4]),.hbm_rst_n(hrst),.stream_clk(stream_bank_clk[g/4]),.stream_rst_n(srst),
    .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
    .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),

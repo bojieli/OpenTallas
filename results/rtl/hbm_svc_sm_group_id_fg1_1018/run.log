@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits    52 GB (avail 289, growth 253, headroom 0, waiters 0/0 GB) load 77/128 running 35 disk 108 GB 
+ot-run: ot-epyc5       admits    41 GB (avail 257, growth 228, headroom 0, waiters 0/0 GB) load 68/128 running 24 disk 2570 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/eg-hbmb-svg/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/eg-hbmb-svg/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-313731-1792330777 after 0 s
+SVG_FG1 GOGAP=100
+SVG_FG1 REPORT_IDENTICAL lines=9
+SM_GROUPS_ISSUED PASS fixed_go=1 go0=400 gogap=100 stack=0 rows=64 epochs=8 lbanks=4 first_done_ps=391251.843000 last_done_ps=974584.943000 steady_epoch_ps=83333.300000 bytes_per_epoch_per_SM=8704 tb_issue=0
+SVG_FG1 MUTANT_REJECTED msm1: SM_STACK actualPC mapping
+SVG_FG1 MUTANT_REJECTED msm4: SM_STACK actualPC mapping
+SVG_FG1 MUTANT_REJECTED mst: SM_STACK DUT fault cycle173 maskff
+SVG_FG1 MUTANT_REJECTED skew: SM_STACK go skew sm3 cycle576
+SVG_FG1 MUTANT_REJECTED earlygo: SM_STACK DUT fault cycle343 maskf9
+SVG_FG1_GATE PASS stack=0 gogap=100
+RC=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-313731-1792330777): exit 0
