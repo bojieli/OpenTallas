@@ -429,6 +429,46 @@ def parameter_ledger(root, plan, profiles=None, diagnostic=False):
     return rows, sidecar
 
 
+def name_functional_transport(die, edits, padfree, sig):
+    """Give consumed private-spare bits real functional net identities.
+
+    A health bit is no longer an unused zero pad. Rewrite EVERY connected
+    port (including sliced/concatenated buses) by parsed bit identity, never
+    merely suppress the output-pad guard for a dynamic private-spare net.
+    """
+    rename = {}
+    for inst, ports in sorted(padfree.items()):
+        bits = die.bits(die.cells[inst][2]['b'])
+        for k in sorted(ports['b']):
+            old = bits[len(bits) - 1 - k]
+            if old[0] != f'n_{inst}__spare':
+                continue
+            if not re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*', inst):
+                raise ValueError(f'{inst}: unsupported functional transport identifier')
+            new = (f'n_hp_transport_{inst}_b{k}', 0)
+            if new[0] in die.nets or old in rename:
+                raise ValueError(f'{inst}.b[{k}]: functional transport name collision')
+            rename[old] = new
+    for inst, (_master, _params, conns) in die.cells.items():
+        for port, expr in conns.items():
+            bits = edits.get(inst, {}).get(port)
+            if bits is None:
+                bits = die.bits(expr)
+            if bits is None:
+                if any(re.search(r'(?<![A-Za-z_0-9])' + re.escape(n) + r'(?![A-Za-z_0-9])', expr)
+                       for n, _k in rename):
+                    raise ValueError(f'{inst}.{port}: unparsed functional transport consumer')
+                continue
+            if any(b in rename for b in bits):
+                edits[inst][port] = [rename.get(b, b) for b in bits]
+    for key, expr in list(sig.items()):
+        m = re.fullmatch(r'(\S+)\[(\d+)\]', expr)
+        if m and (m[1], int(m[2])) in rename:
+            n, k = rename[(m[1], int(m[2]))]
+            sig[key] = f'{n}[{k}]'
+    return rename
+
+
 def emit(die, inv, plan, profiles=None, diagnostic=False):
     case, run = die.case, die.run
     rows, sidecar = parameter_ledger(ROOT, plan, profiles, diagnostic)
@@ -475,6 +515,7 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
             padfree[i]['b'].add(k)
         last = cur(chain[-1], 'b')[w - 1 - k]
         sig[t['id']] = f'{last[0]}[{last[1]}]'
+    functional_names = name_functional_transport(die, edits, padfree, sig)
     # the sink drives kvs_attn.ufh; the old ufh net is the existing_ufh leaf
     sink_net = sig[plan['sink']]
     out_lines, seen = [], set()
@@ -500,7 +541,7 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
     clock, reset = {}, {}
     for s in inv['sources']:
         clock[s['id']], reset[s['id']] = s['clock'], s['reset']
-    new, wires, place = [], [], []
+    new, wires, place = [], [f'  wire [0:0] {n};' for n, _k in functional_names.values()], []
     for n in plan['nodes']:
         ck = n['clock']
         a, b = sig[n['a']], sig[n['b']]
@@ -603,7 +644,9 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         (case / 'HEALTH_NETLIST_ONLY').write_text('kv_health_plane --netlist-only: masters without closed views: '
                                                   + ' '.join(missing_views) + '\n')
     return dict(cells=len(new), wires=len(wires), rewired_instances=len(edits), pad_bits_freed=removed,
-                masters=sorted(views), missing_views=missing_views, sink_net=sink_net)
+                masters=sorted(views), missing_views=missing_views, sink_net=sink_net,
+                functional_transport_names=[dict(old=f'{n}[{k}]', new=f'{nn}[{kk}]')
+                                            for (n, k), (nn, kk) in functional_names.items()])
 
 
 def audit(run):

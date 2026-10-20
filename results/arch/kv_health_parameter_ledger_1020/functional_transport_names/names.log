@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/functional_name_replay
+ot-run: ot-epyc6       admits   875 GB (avail 726, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 33 disk 4760 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/functional_name_replay
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/functional_name_replay
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/functional_name_replay
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/functional_name_replay
+ot-run: -> ot-epyc6
+ot-heavy: request 12G is charged 9G (class 'replay.py' measured peak 0.9G, n=1+0 proved); the cap stays 12G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3238332-1792487430 after 0 s
+{"original_guard_error": "rly_pvin_WS_0_0__s1: private spare output has a dynamic/nonzero input", "unchanged_guard_after": "PASS", "renamed_bits": 2420, "edited_instances": 1293, "identical_instances": 46290, "compared_ports": 244511, "compared_bit_connections": 14734907, "no_functional_pad_claims": true}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3238332-1792487430): exit 0
