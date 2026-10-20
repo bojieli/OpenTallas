@@ -16,3 +16,5 @@ Images: proposed_child_floorplan.png, proposed_parent_floorplan.png, proposed_de
 ## Actual n32a gate — FAIL, retained immutable evidence
 
 Source-bound gate n32a on ot-epyc9 20261020-014446: native mapped PASS32; source exact stream/reset+mutants unchanged. Physical pin geometry1144/1144 accessible; one macro R0@(43.2,43.2), continuous standard-cell bands personally viewed in both actual PNGs. Actual std1114um², total core fill42.1%; depth231.7ps; TTsetup+100.1ps, hold+42.7ps; GRT0/M2max21.01%. Clock item7 FAIL: TT/FF pin-flop spread97.8/87.9ps exceeds80; insertion319.1/266.1ps. No submission/adoption. Every other eight-item conclusion remains scoped to measured/source proof in pre-gate packet. Next design requires structural clock topology, not thresholds. Parent MY allocation is conceptual only pending exported LEF symmetry/lattice and actual timing legality.
+
+Native PG independent snapshot FAIL5312 unboundVDD/VSS contacts on2656 hold buffers in bothCTS/GRT ODBs; root/infra notified. No repair/mutation; timing diagnostics do not constitute acceptance. ActualPG receipts in results/rtl/kv_rowctx_native32_1020/gate_n32a.
