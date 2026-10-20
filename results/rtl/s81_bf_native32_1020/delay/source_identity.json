@@ -1,0 +1,11 @@
+{
+  "source_commit": "85f89cf24",
+  "data_edges": 0,
+  "positive_coupon": "PASS D3/7/8/16 >300 compares each; first use age>=D after every reset",
+  "mutant": "wrong read address, real DELAY DIFF D3 age3",
+  "file_sha256": {
+    "rtl/v41rom/ot_v41_bf_col.sv": "f4ad99246a30ea1ed7d87e9352601b50fd4e70d483a7cdc1c2d53e7b367eeb0c",
+    "rtl/v41rom/ot_v41_segtree5_rp.sv": "e520b87b71ebd2cc70f13d52e68bebbef2d5c457c4d27dffa21a8aa27b21c1f8",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  }
+}
