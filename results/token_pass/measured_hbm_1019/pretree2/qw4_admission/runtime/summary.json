@@ -1,0 +1,18 @@
+{
+  "record": "qw_softmax_max_r4",
+  "verdict": "PASS",
+  "shape": {
+    "N": 8192,
+    "rows": 4
+  },
+  "last_lg_write_edge": 372,
+  "last_scalar_edge": 333,
+  "dispatch_edge": 4,
+  "write_return_edges": 10,
+  "measured_serial_edges": 378,
+  "compiled_serial_edges": 378,
+  "bench_source": "a5cc6f083, direct RTL PRETREE1 Verilator5.050",
+  "scope": "component benchmark only; not die-bound or physical timing; SU_TOP printed edges65536 is build capacity not measured record latency",
+  "causal_MAX_mode_witness": "pending session58785",
+  "log_sha256": "1b4c8bb531688aea1870fa920a56ed3ea47966837f0a49548ecae810215ffde5"
+}
