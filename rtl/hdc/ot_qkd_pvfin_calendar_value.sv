@@ -17,3 +17,17 @@ endmodule
 module ot_qkd_pvfin_calendar_plus #(parameter integer C=9)(input wire [15:0] a,output wire [15:0] y);
  assign y=a+16'(C);
 endmodule
+// Calendar acceptance without a wide absolute-value/max-word selection.
+// Seventeen-bit distance equality prevents cross-zero wrap acceptance.
+module ot_qkd_pvfin_calendar_check #(
+ parameter integer SKEW=2,ADD_LAT=7,MUL_LAT=6,IGNORE_R=0)(
+ input wire [15:0] p0,p1,r,output wire bad);
+ localparam integer MAX_AGE=65535-64-ADD_LAT-MUL_LAT;
+ wire [SKEW:0] near0,near1;
+ generate for(genvar d=0;d<=SKEW;d=d+1)begin:g_distance
+  assign near0[d]=({1'b0,p0}+17'(d))=={1'b0,p1};
+  assign near1[d]=({1'b0,p1}+17'(d))=={1'b0,p0};
+ end endgenerate
+ assign bad=(p0==0)||(p1==0)||(r==0)||!(|(near0|near1))||
+  (p0>16'(MAX_AGE))||(p1>16'(MAX_AGE))||((IGNORE_R==0)&&(r>16'(MAX_AGE)));
+endmodule

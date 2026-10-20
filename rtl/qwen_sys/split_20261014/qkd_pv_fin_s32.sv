@@ -46,8 +46,9 @@ module qkd_pv_fin_s32 #(
  wire [15:0] c0=cal_q[15:0],c1=cal_q[31:16],cr=cal_q[47:32];
  wire [15:0] c_lastp=(c0>c1)?c0:c1;
  wire [15:0] c_last=(MUT==3||c_lastp>cr)?c_lastp:cr;          // max(P0, P1, R)
- wire [15:0] c_skew=(c0>c1)?(c0-c1):(c1-c0);
- wire cal_bad=(c0<16'd1)||(c1<16'd1)||(cr<16'd1)||(c_skew>16'(SKEW))||({1'b0,c_last}+17'd64+17'(ADD_LAT+MUL_LAT)>17'hffff);
+ wire cal_bad;
+ (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_check #(.SKEW(SKEW),.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.IGNORE_R(MUT==3)) u_cal_check(
+  .p0(c0),.p1(c1),.r(cr),.bad(cal_bad));
  // operand tap lines: tap 0 = the pin register (= this cycle's registered input), tap k = the beat k edges older
  reg [511:0] t0[0:SKEW+1],t1[0:SKEW+1];
  integer k;
@@ -137,6 +138,7 @@ module qkd_pv_fin_s32 #(
   end
  end endgenerate
  wire [511:0] sum,product;wire [15:0] av,mv;wire [31:0] ae,me;
+ wire [15:0] lane_active_vec;
  genvar l;
  generate for(l=0;l<16;l=l+1)begin:g_lane
   (* keep="true",dont_touch="true" *) reg add_land,mul_land,lane_active;
@@ -144,6 +146,7 @@ module qkd_pv_fin_s32 #(
    add_land<=active&&!fault&&win(n+16'd1,ADD_AGE);
    mul_land<=active&&!fault&&win(n+16'd1,MUL_AGE);
   end
+  assign lane_active_vec[l]=lane_active;
   always @(posedge ck or negedge rr[462+l])if(!rr[462+l])lane_active<=0;else lane_active<=active_d;
   ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rr[28*l]),.rst_y(rr[28*l+1]),.rst_y2(2'b11),.y2(),.valid_in(add_land&&lane_active),
    .a(opa[32*l+:32]),.b(opb[32*l+:32]),.y(sum[32*l+:32]),.err(ae[2*l+:2]),.valid_out(av[l]));
@@ -168,10 +171,9 @@ module qkd_pv_fin_s32 #(
    command_cal[cg]<=cal;command_start[cg]<=start;command_active[cg]<=active_d;
   end
   wire [15:0] x0=command_cal[cg][15:0],x1=command_cal[cg][31:16],xr=command_cal[cg][47:32];
-  wire [15:0] xp=(x0>x1)?x0:x1;
-  wire [15:0] xl=(MUT==3||xp>xr)?xp:xr;
-  wire [15:0] xs=(x0>x1)?(x0-x1):(x1-x0);
-  wire xb=(x0<1)||(x1<1)||(xr<1)||(xs>16'(SKEW))||({1'b0,xl}+17'd64+17'(ADD_LAT+MUL_LAT)>17'hffff);
+  wire xb;
+  (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_check #(.SKEW(SKEW),.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.IGNORE_R(MUT==3)) u_check(
+   .p0(x0),.p1(x1),.r(xr),.bad(xb));
   assign command_accept[cg]=command_start[cg]&&!command_active[cg]&&!xb;
   if(cg>=8)begin:g_value
    (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(ADD_LAT+2),.IGNORE_R(MUT==3)) u_value(
@@ -191,7 +193,6 @@ module qkd_pv_fin_s32 #(
  reg fault_d;
  reg out_valid_d;
  reg [4:0] out_beat_d;
- reg [15:0] out_epoch_d;
  reg [4:0] wptr_d;
  reg [4:0] rptr_d;
  always @* begin
@@ -205,7 +206,6 @@ module qkd_pv_fin_s32 #(
   fault_d=fault;
   out_valid_d=out_valid;
   out_beat_d=out_beat;
-  out_epoch_d=out_epoch;
   wptr_d=wptr;
   rptr_d=rptr;
    out_valid_d=0;
@@ -218,7 +218,7 @@ module qkd_pv_fin_s32 #(
     else begin
      if(sum_slot)wptr_d=wptr+5'd1;
      if(mul_slot)rptr_d=rptr+5'd1;
-     if(product_slot)begin out_valid_d=1;out_beat_d=b_prod;out_epoch_d=ep;end
+     if(product_slot)begin out_valid_d=1;out_beat_d=b_prod;end
      if(n==PRODUCT_AGE+16'd31)active_d=0;
     end
    end else if(!active&&(p0v_q||p1v_q||rzv_q))fault_d=1;
@@ -238,7 +238,14 @@ module qkd_pv_fin_s32 #(
  always @(posedge ck or negedge rr[456]) if(!rr[456]) fault<=0;else fault<=fault_d;
  always @(posedge ck or negedge rr[457]) if(!rr[457]) out_valid<=0;else out_valid<=out_valid_d;
  always @(posedge ck or negedge rr[458]) if(!rr[458]) out_beat<=0;else out_beat<=out_beat_d;
- always @(posedge ck or negedge rr[459]) if(!rr[459]) out_epoch<=0;else out_epoch<=out_epoch_d;
+ // Epoch payload uses bounded, predicted slot captures; out_valid still
+ // observes the original fault-qualified product edge.
+ (* keep="true",dont_touch="true" *) reg [1:0] epoch_land;
+ generate for(genvar eh=0;eh<2;eh=eh+1)begin:g_epoch_capture
+  always @(posedge ck)epoch_land[eh]<=lane_active_vec[0]&&win(n+16'd1,PRODUCT_AGE);
+  always @(posedge ck or negedge rr[459])if(!rr[459])out_epoch[8*eh+:8]<=0;
+   else if(epoch_land[eh])out_epoch[8*eh+:8]<=ep[8*eh+:8];
+ end endgenerate
  always @(posedge ck or negedge rr[460]) if(!rr[460]) wptr<=0;else wptr<=wptr_d;
  always @(posedge ck or negedge rr[461]) if(!rr[461]) rptr<=0;else rptr<=rptr_d;
  (* keep="true",dont_touch="true" *) reg [31:0] product_land;
