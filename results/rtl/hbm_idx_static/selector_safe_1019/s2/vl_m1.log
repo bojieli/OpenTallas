@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   987 GB (avail 804, growth 113, headroom 0, waiters 0/0 GB) load 110/128 running 45 disk 344 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src2
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src2
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2773292-1792476310 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+bad id5769 frame0
+bad id5772 frame0
+bad id4432 frame0
+IDX_SELECTOR_STATIC SHELL1 MUT1 frame0 checked515 errors7 fault0 edges878 firstemit845 thresholdc0d6 selected01fc0800210080
+IDX_SELECTOR_STATIC SHELL1 MUT1 frame1 checked2048 errors4616 fault1 edges878 firstemit845 thresholdbf80 selected2a80ab02ac0ab0
+IDX_SELECTOR_STATIC SHELL1 MUT1 frame2 checked513 errors4619 fault1 edges878 firstemit845 thresholdc098 selected000000002bc152
+[26420000] %Fatal: tb_selector_static.sv:66: Assertion failed in tb_selector_static: fullshape exact selector mismatch
+%Error: rtl/test/hbm_idx_static/tb_selector_static.sv:66: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2773292-1792476310): exit 1
