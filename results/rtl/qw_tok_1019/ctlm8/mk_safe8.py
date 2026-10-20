@@ -17,7 +17,11 @@ SRC = W / "physical/ref_tile/qfd_tt_ctlm_dv_safe7"
 STD = float(sys.argv[1]) if len(sys.argv) > 1 else 11500.37
 HARD = 223021.2
 VAR = {"qfd_tt_ctlm_dv_safe8": dict(h=648.0, ys=[43.2, 237.6, 432.0], tag="safe8", note="Main: all macro origins on the 43.2 lattice, 40.5 um SRAM row channels."),
-       "qfd_tt_ctlm_dv_safe8b": dict(h=604.8, ys=[43.2, 217.728, 392.256], tag="safe8b", note="Parallel fallback: minimum slot growth (+43.2), 20.6 um row channels on the 8.64 track lattice.")}
+       "qfd_tt_ctlm_dv_safe8b": dict(h=604.8, ys=[43.2, 217.728, 392.256], tag="safe8b", note="Parallel fallback: minimum slot growth (+43.2), 20.6 um row channels on the 8.64 track lattice."),
+       # r2 (safe8/safe8b GPL-0307 again with >= 20 um channels): the divergence is the TOP-LEVEL group (pin flops + the
+       # timing-driven repair_design's +2455 um2 buffers, overflow stuck at 0.97 outside the core/hr regions), not the rows
+       "qfd_tt_ctlm_dv_safe8t": dict(h=648.0, ys=[43.2, 237.6, 432.0], tag="safe8t", gtd=False, note="safe8 + GPL_TIMING_DRIVEN=0 (no unowned repair buffers during global placement)."),
+       "qfd_tt_ctlm_dv_safe8bt": dict(h=604.8, ys=[43.2, 217.728, 392.256], tag="safe8bt", gtd=False, note="safe8b + GPL_TIMING_DRIVEN=0.")}
 SRAM_ROWS = {"u_gi.u_cal.g_m[0].u_pm.u_p192": (43.2, 0), "u_gi.u_cal.g_fifo[0].u_fifo.u_p192": (259.2, 0),
              "u_gi.u_cal.g_m[1].u_pm.u_p192": (43.2, 1), "u_gi.u_cal.g_fifo[1].u_fifo.u_p192": (259.2, 1),
              "u_gi.u_cal.g_fifo[2].u_fifo.u_p192": (43.2, 2), "u_gi.u_cal.g_fifo[3].u_fifo.u_p192": (259.2, 2)}
@@ -51,6 +55,8 @@ for name, v in VAR.items():
     j["extra_paths"] = [p for p in j.get("extra_paths", []) if "ctlm7_cand7" not in p and "lp7_np" not in p] + \
                        ["rtl/qwen_dv/lp8_np", "results/rtl/qw_tok_1019/ctlm8", "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv"]
     s["std_area_um2"] = STD
+    if v.get("gtd") is False:
+        s["orfs_vars"] = dict(s.get("orfs_vars") or {}, GPL_TIMING_DRIVEN="0")
     (dst / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
     t = (dst / "lp_cone_regions.tcl").read_text()
     old = "set ry0 43.2; set ry1 518.4\nset boxes [dict create 1 {{2.16 43.2 453.6 518.4} {453.6 280.8 775.44 388.8}} 2 {{453.6 43.2 775.44 280.8} {453.6 388.8 775.44 518.4}}]"
