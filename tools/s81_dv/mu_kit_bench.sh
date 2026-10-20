@@ -45,7 +45,7 @@ hslot)
   D="+define+NS=$NS +define+NP=$NS"; [ "$M" != none ] && [ "$M" != 0 ] && D="$D +define+MUT=$M"; [ "$C" = 1 ] && D="$D +define+COLLIDE=1"
   R=hslot_${M}_${NS}_$C
   $V --binary --timing -j ${J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hslot $D \
-    rtl/lib/ot_rst_relay.sv $U/dsdv_mu_hslot.sv $U/test/tb_dsdv_mu_hslot.sv --Mdir $O/obj_$R -o tb > $O/build_$R.log 2>&1 \
+    rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv $U/test/tb_dsdv_mu_hslot.sv --Mdir $O/obj_$R -o tb > $O/build_$R.log 2>&1 \
     || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
   $O/obj_$R/tb > $O/run_$R.log 2>&1
   grep -E "^(MUHSLOT|ERR)" $O/run_$R.log | head -12
