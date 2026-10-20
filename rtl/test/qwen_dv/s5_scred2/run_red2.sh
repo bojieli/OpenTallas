@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # QW-SLICE7-LEAVES red2 benches (fleet, Verilator 5.050). Usage: run_red2.sh OUT [DUT_SV...]
 # eq44: red2 LA4/LM4 vs original qfd_dv_s5_red, OFF 14 (2 face + 1 + 11); eq45: LA4/LM5 OFF 15;
+# eq66: LA6/LM6 OFF 38; eq76: LA7/LM6 (station ADD7/MUL6) OFF 49 (2 + 3 + 44); mut76 must FAIL.
 # mut44: red2 LA4/LM4 with OT_S5_RED2_MUT (SUM taken as MAX) must FAIL.
 set -euo pipefail
 O=$1; mkdir -p "$O"
@@ -30,6 +31,9 @@ W
 st=0
 run eq44 4 4 14 0 || st=1
 run eq45 4 5 15 0 || st=1
+run eq66 6 6 38 0 || st=1
+run eq76 7 6 49 0 || st=1
+run mut76 7 6 49 1 || st=1
 run mut44 4 4 14 1 || st=1
 echo "RED2_BENCH_DONE status=$st"
 exit $st

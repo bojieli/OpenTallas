@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # QW-SLICE7-LEAVES sc2 benches (fleet, Verilator 5.050). Usage: run_sc2.sh OUT
 # eq44: sc2 LA4/LM4 vs original qfd_dv_s5_sc (MU_NU 4): OFF0 2 (face regs), merge +1, total DT 5, rsqrt DR 19.
+# eq66: DT 15 DR 57; eq76 (station ADD7/MUL6): DT 20, DR 66 = 5*4 + 3 + 4 + 3*(9+4).
 # mut44: OT_S5_SC2_MUT (broadcast tap reads VM window 10) must FAIL.
 set -euo pipefail
 O=$1; mkdir -p "$O"
@@ -34,5 +35,9 @@ st=0
 run eq44 4 4 5 19 0 7 || st=1
 run eq44s2 4 4 5 19 0 11 || st=1
 run mut44 4 4 5 19 1 7 || st=1
+run eq66 6 6 15 57 0 7 || st=1
+run eq76 7 6 20 66 0 7 || st=1
+run eq76s2 7 6 20 66 0 11 || st=1
+run mut76 7 6 20 66 1 7 || st=1
 echo "SC2_BENCH_DONE status=$st"
 exit $st
