@@ -59,6 +59,21 @@ def main():
     assert terminal['original_connections']['CLK'] == terminal['emitted_connections']['CLK']
     assert terminal['original_connections']['Q'] == terminal['emitted_connections']['Q']
     assert len(set(terminal['emitted_connections']['D'])) == 5
+    strings, string_contracts = copy.deepcopy(design), copy.deepcopy(contracts)
+    string_values={'VIAMAP':'', 'INSTANCE':'die/rom_"quoted"\\literal\nline', 'BINARY_TEXT':'0011'}
+    strings['modules']['top']['cells']['u_gi.u_mem']['parameters'].update(string_values)
+    string_contracts['real_memory']['parameter_types']={key:'string' for key in string_values}
+    sr,_,srecord=run(strings,string_contracts)
+    assert '.VIAMAP("")' in sr
+    assert '.INSTANCE("die/rom_\\"quoted\\"\\\\literal\\nline")' in sr
+    assert '.BINARY_TEXT("0011")' in sr
+    assert all(srecord['retained_macro_terminals'][0]['parameters'][key]==value for key,value in string_values.items())
+    bad=copy.deepcopy(string_contracts);bad['real_memory']['parameter_types']['INSTANCE']='unknown'
+    rejects(strings,bad,'parameter type must be')
+    bad=copy.deepcopy(string_contracts);del bad['real_memory']['parameter_types']['VIAMAP']
+    rejects(strings,bad,'requires explicit string type')
+    bad=copy.deepcopy(string_contracts);bad['real_memory']['parameter_types']['UNDECLARED']='string'
+    rejects(strings,bad,'undeclared parameter')
     # A child input connected to16 actual FFs consumes16 terminal loads,
     # even though it is one pin in the abstract. Never count it as one.
     soft = copy.deepcopy(contracts)
