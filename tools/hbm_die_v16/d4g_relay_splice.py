@@ -75,8 +75,10 @@ def apply_remaster(c, layer, rtl, problems):
             continue
         new = rtl.ports(x['master'], x['source'], v.get('params') or {})
         old = v['ports']
+        # LH-RSTHOP: a reset layer may declare added inputs (hosted forest hop rfi); main() checks they are driven
+        added = set(x.get('added_inputs') or [])
         bad = [p for p, d in old.items() if new.get(p) != d] + [p for p, d in new.items()
-                                                                if p not in old and d['direction'] != 'output']
+                                                                if p not in old and d['direction'] != 'output' and p not in added]
         if bad:
             problems.append(f'remaster {n} {x["old"]} -> {x["master"]}: incompatible ports {bad[:5]}')
             continue
@@ -150,6 +152,11 @@ def main():
         n = x['name']
         for p, d in ports[n].items():
             if d['direction'] == 'input' and any((n, p, b) not in drv for b in range(d['bits'])):
+                und.append(f'{n}.{p}')
+    for x in L.get('remaster', []):   # LH-RSTHOP: declared added inputs of remastered stations
+        n = x['inst']
+        for p in x.get('added_inputs') or []:
+            if n in ports and p in ports[n] and any((n, p, b) not in drv for b in range(ports[n][p]['bits'])):
                 und.append(f'{n}.{p}')
     if und:
         problems.append(f'{len(und)} relay input ports not fully driven, e.g. {und[:5]}')

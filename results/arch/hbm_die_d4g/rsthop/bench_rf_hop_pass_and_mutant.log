@@ -1,0 +1,7 @@
+RF_HOP_BENCH PASS release 1 edge per hosted hop (r1=4 r2=5)
+RF_ASSERT PASS
+tb.sv:16: $finish called at 91000 (1ps)
+---MUT
+FAIL release ages r1=3 r2=3 (expected 4 5: one edge per hosted hop)
+RF_ASSERT PASS
+tb.sv:16: $finish called at 91000 (1ps)

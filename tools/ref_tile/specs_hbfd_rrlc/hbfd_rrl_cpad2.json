@@ -1,0 +1,90 @@
+{
+ "name": "hbfd_rrl_cpad2",
+ "top": "hbfd_rrl_cpad2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/die_glue/hbfd_rrl_c.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n_in"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 6.48,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "rst_n_in"
+  ],
+  "W": [],
+  "E": []
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 6,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "m5_pg_pitch": 2.7,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "L2H-RRL 10-19 (H.RST): hard view of the compact HBM reset carrier tile hbfd_rrl_cpad2 (face landing, release age 2: 2 flops); asynchronous assertion of every flop, synchronous release on the tile clk; no flop delay line >= 3 (counted padding); outline = planning body 8.64 x 2.16 core + the 2.16 flow margin.",
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-RRL",
+  "branch": "claude/hbfd-rrlc-kits-1019",
+  "tag": "r1",
+  "purpose": "HBM d4g dedicated reset carrier tile hbfd_rrl_cpad2: face landing, release age 2: 2 flops",
+  "extra_paths": [
+   "tools/hbm_die_v16",
+   "results/arch/hbm_die_d4g/rstcarrier"
+  ],
+  "benches": [
+   {
+    "name": "reset_carrier_exact",
+    "cmd": "python3 tools/hbm_die_v16/reset_carrier_bench.py",
+    "expect": "pass",
+    "pass_regex": "RESET_CARRIER PASS checks=",
+    "min_count_regex": "checks=([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "reset_carrier_mutant",
+    "cmd": "python3 tools/hbm_die_v16/reset_carrier_bench.py --mutant",
+    "expect": "fail",
+    "fail_regex": "RELEASE age pad",
+    "fail_witness": "results/arch/hbm_die_d4g/rstcarrier/fail_witness_mut_counter_early.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Reset-only tile (as the closed hbfd_rrl_sync/hop): rst_n_in is the asynchronous clear of every flop and rst_n is flop-driven; the tile IS the 2-stage registered face landing. A flow pin register would add a release edge the die schedule does not price and delay assertion."
+ }
+}
