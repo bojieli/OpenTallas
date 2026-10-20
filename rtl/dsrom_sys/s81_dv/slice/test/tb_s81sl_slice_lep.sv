@@ -8,7 +8,14 @@
 // S81-LEPV (10-18): +define+TB_SLEP_NH -> die B = ot_s81sl_slice_lepe_nh (s_7S master, no host ports); default die B =
 // ot_s81sl_slice_lepe (s_7N master, host plane present, host inputs idle in this bench).
 // S81-LBGAP G2 (10-18): sid = 2 * col + tier, the die straps (was 4'd7 under the old {tier, col} ring-stop decode).
-`ifdef TB_SLEP_NH
+// S81-SLICE3-LEPENH (10-19): +define+TB_SLEP_NH_LP -> die B = the LANDED parent ot_s81sl_slice_lepe_nh_x_lp (regions S / K,
+// clocks ck_S / ck_K driven from the bench clock; +3 edges on the slice <-> lep line crossings, RESCHEDULE record).
+`ifdef TB_SLEP_NH_LP
+`define TB_SLEP_E ot_s81sl_slice_lepe_nh_x_lp
+`define TB_SLEP_BSID 4'd14
+`define TB_SLEP_EHOST
+`define TB_SLEP_ECLK .ck_S(clk), .ck_K(clk)
+`elsif TB_SLEP_NH
 `define TB_SLEP_E ot_s81sl_slice_lepe_nh
 `define TB_SLEP_BSID 4'd14
 `define TB_SLEP_EHOST
@@ -16,6 +23,9 @@
 `define TB_SLEP_E ot_s81sl_slice_lepe
 `define TB_SLEP_BSID 4'd15
 `define TB_SLEP_EHOST .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+`endif
+`ifndef TB_SLEP_ECLK
+`define TB_SLEP_ECLK .clk(clk)
 `endif
 module tb_s81sl_slice_lep #(parameter integer N = 200, parameter integer WAIT = 8000);
     reg clk = 0; always #0.4167 clk = ~clk;
@@ -28,7 +38,7 @@ module tb_s81sl_slice_lep #(parameter integer N = 200, parameter integer WAIT = 
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(atx0), .tx1(atx1),
         .rx0({ast0, arx0}), .rx1({ast1, arx1}), .tf(),
         .fault(a_f));                                       // S81-LEPV: lepw has no host plane (HOST_EN 0)
-    `TB_SLEP_E B (.clk(clk), .rst_n(rst_n), .sid(`TB_SLEP_BSID), .ri_w(b_in), .ro_w(b_out), .vi(276'd0), .vo(), .bi(1104'd0),
+    `TB_SLEP_E B (`TB_SLEP_ECLK, .rst_n(rst_n), .sid(`TB_SLEP_BSID), .ri_w(b_in), .ro_w(b_out), .vi(276'd0), .vo(), .bi(1104'd0),
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(btx0), .tx1(btx1),
         .rx0({bst0, brx0}), .rx1({bst1, brx1}), .tf(),
         `TB_SLEP_EHOST .fault(b_f));

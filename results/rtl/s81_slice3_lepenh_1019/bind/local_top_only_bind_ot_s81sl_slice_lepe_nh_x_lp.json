@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "results/rtl/s81_slice3_lepenh_1019/bind/ot_s81sl_slice_lepe_nh_x_lp.v",
+ "top": "ot_s81sl_slice_lepe_nh_x_lp",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 6,
+  "instances": 17,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 0,
+  "spare_out_bits": 0
+ },
+ "masters": {
+  "dsfd_coll_lane_e": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ln0",
+    "u_ln1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_land_r": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "rtl/common/landed_parent/ot_pl_land.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpl_0_r",
+    "u_lpl_1_r",
+    "u_lpl_2_r"
+   ],
+   "param_sets": {
+    "{\"D\": \"4\", \"K\": \"2\", \"W\": \"1104\"}": 2,
+    "{\"D\": \"4\", \"K\": \"2\", \"W\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_land_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "rtl/common/landed_parent/ot_pl_land.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpl_0_w",
+    "u_lpl_1_w",
+    "u_lpl_2_w"
+   ],
+   "param_sets": {
+    "{\"D\": \"4\", \"W\": \"1104\"}": 2,
+    "{\"D\": \"4\", \"W\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_pad": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "rtl/common/landed_parent/ot_pl_land.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpr_root",
+    "u_lpr_S",
+    "u_lpr_K"
+   ],
+   "param_sets": {
+    "{\"N\": \"1\", \"W\": \"1\"}": 1,
+    "{\"N\": \"3\", \"W\": \"1\"}": 2,
+    "{\"N\": \"0\", \"W\": \"1\"}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_lep_nh": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lep"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_sl"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "pads_declared": [],
+ "die_sha256": "07ea3d53c7a5535294747dd5b73dd91ddfec5964470b11f88a18735ea2a53ba7",
+ "straps_declared": [],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl/dsrom_sys/s81_dv/slice",
+  "rtl/dsrom_sys/s81_ph",
+  "rtl/common/landed_parent"
+ ],
+ "rtl_files": [],
+ "defines": [
+  "OT_S81PH_LANE_CR"
+ ]
+}

@@ -1,0 +1,287 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/srv/opentallas-scratch/claude/s81lepenh/out_bind/ot_s81sl_slice_lepe_nh_x.v",
+ "top": "ot_s81sl_slice_lepe_nh_x",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 3,
+  "instances": 4,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 0,
+  "spare_out_bits": 0,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 9
+ },
+ "masters": {
+  "dsfd_coll_lane_e": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ln0",
+    "u_ln1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_lep_nh": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lep"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_sl"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 123,
+  "unresolved_children": {},
+  "model_children": {},
+  "variant_children": {
+   "dsfd_coll_lane_e": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ]
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ]
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ]
+   },
+   "ot_hdc_qadd_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_qmul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_fdiv": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_s81ph_coll_lane": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ]
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ]
+   },
+   "ot_sram_1r1w_512x128_m4_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/s81lepenh/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv"
+    ]
+   }
+  },
+  "ambiguous_children": {},
+  "elab_traps": {
+   "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_add_lat"
+   ],
+   "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_mul_lat"
+   ]
+  },
+  "prefer_lists": [
+   "tools/s81_slice/slice_lep_bench.sh"
+  ],
+  "ref_tile_specs_used": []
+ },
+ "pads_declared": [],
+ "die_sha256": "1dd81a974fca01da2adc76819daa53006ed439c38e2d26c18cc41542d8e3eceb",
+ "straps_declared": [],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl",
+  "physical/asap7_memory_macros_v2",
+  "physical/asap7_memory_macros"
+ ],
+ "rtl_files": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/ot_hdc_delay_rf.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/v41rom/ot_v41_kreg.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/common/ot_prefix.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/link/ot_link_crc32.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/common/ot_link_credit.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "/srv/opentallas-scratch/claude/s81lepenh/src/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81PH_LANE_CR"
+ ]
+}

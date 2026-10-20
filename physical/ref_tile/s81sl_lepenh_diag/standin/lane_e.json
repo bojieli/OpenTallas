@@ -1,0 +1,35 @@
+{
+ "name": "standin_dsfd_coll_lane_e",
+ "top": "dsfd_coll_lane_e",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv"
+ ],
+ "clock_port": "ck",
+ "outline": {
+  "w": 432.0,
+  "h": 336.96
+ },
+ "pins": {
+  "E": [
+   "rx",
+   "tx",
+   "tf"
+  ],
+  "W": [
+   "lo_v",
+   "lo_r",
+   "lo_d",
+   "li_v",
+   "li_r",
+   "li_d",
+   "flt"
+  ],
+  "N": [
+   "ck",
+   "rs",
+   "chb"
+  ]
+ },
+ "pin_ranges": {},
+ "_note": "DIAGNOSTIC stand-in: the closed dsfd_coll_lane_w (dscoll_lane_w_cxea) pin plan mirrored W<->E (core face W, PHY face E); insertion = the w view's measured TT/FF/SS boundary means. No closed _e view on main."
+}
