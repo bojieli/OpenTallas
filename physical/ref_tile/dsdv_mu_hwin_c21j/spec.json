@@ -70,7 +70,12 @@
    "dsdv_mu_hwin_capture_1019_phase_action",
    "dsdv_mu_hwin_capture_1019_early_current_hit",
    "dsdv_mu_hwin_capture_1019_cfg_accept"
-  ]
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "structural_change": "HWIN21j native-safe domains: kept local write data/current-hit hierarchy, 12-pointer and 4-event gn/lw state copies, four due copies; +0 edges; r2 bounded cfg accept and per-event lower decoder pointer",
  "pin_regs": {
@@ -937,39 +942,39 @@
  "pin_ranges": {
   "f_ks": [
    238.4,
-   323.2
+   258.4
   ],
   "f_mc": [
-   238.4,
-   323.2
+   258.8,
+   270.8
+  ],
+  "ck": [
+   271.2,
+   273.2
+  ],
+  "rst_n": [
+   273.6,
+   275.6
   ],
   "f_mw": [
-   238.4,
-   323.2
+   276.0,
+   288.0
   ],
   "mu_rt": [
-   238.4,
+   288.4,
    323.2
   ],
   "mu_c": [
    238.4,
-   323.2
+   298.4
   ],
   "mu_rc": [
-   238.4,
-   323.2
+   299.0,
+   320.0
   ],
   "t_wf": [
-   238.4,
+   320.4,
    323.2
-  ],
-  "ck": [
-   278.0,
-   280.0
-  ],
-  "rst_n": [
-   280.0,
-   282.0
   ]
  },
  "orfs_vars": {
