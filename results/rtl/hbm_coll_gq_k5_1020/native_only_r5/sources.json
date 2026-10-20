@@ -1,0 +1,10 @@
+{
+  "source_commit": "90921b889",
+  "qualification": "native mapped synthesis ONLY, no floorplan/layout; old k5 geometry remains rejected",
+  "config_source_run": "ot-epyc6:hcoll_gq_issue_k5_1020-20261020-041909",
+  "rtl_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv": "cd535531fd72c1ab62208c210832bbb0e2e595eaaa13b41881540f813da3bdfa",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv": "c7fb5962ecef302f786f0345e5fe860f050da0795583ed38d3456c1851901967",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv": "bc0482885144e55b0a7b77dd0d4b5c05b0ff67d492dca5e62ef77dd70f10d5e4"
+  }
+}
