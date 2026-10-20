@@ -51,3 +51,30 @@ Checklist R14: 1 Pins PASS (kit landing + pin flops; outputs registered) 2 Reach
 max32 4 Depth unchanged (LAT-7 add, LAT-6 mul) 5 Storage PASS 4x32x128 SRAM 6 Floorplan PASS lattice macros, band, 55.8%,
 square 7 Clock single centre root, gate --cts measures spread 8 Schedule static, token delta 0, boot +5 edges (die boot
 calendar owner KV-BIND8).
+
+## R15a status (KV-PVFIN15 10-20, claude/kv-pvfin15-1020) -- supersedes R14 where they differ
+R14 gate 084503 (ep7) FAILED at CTS: OT_HOLD_STALL NEEDS_RTL after 3 h of hold repair (25,810 hold buffers, +4.6% area,
+util 65.6%; 23,931 endpoints inside the 30 ps margin; FF hold -50.3 ps/1345 -> -27.2/78). Worst R2R = zero-logic copies
+u_mul.u_c2.q -> s2_shoh/s2_ms/s2_mr/s2_err (launch leaf 262.5 ps vs capture leaf 322.9 ps at FF, adjacent flops).
+Classification: copy-hop + clock-structure hold problem, not logic depth: (i) the mul carried 144 mask bits + 24 fl bits
+per lane through two flop ranks with no logic between them (c2 -> s2); (ii) default max-cap sink clustering made 1,959
+leaves of 3..29 sinks (8 levels), insertion 250..390 ps, report_clock_skew 136-140 ps, ~60 ps between neighbour leaves.
+R15a structural fix (both):
+ (a) RTL rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv: S2a only clamps the subnormal shift amount (6 b per group of 8 indexes, own
+     kept s1_power copy) into c2; the round / sticky / one-hot masks are decoded in S2b from the registered amount straight
+     into s2_mr / s2_ms / s2_shoh; c2 carries fl46 only, S2b registers fl47 = fl46 + 1, S3a forms fl46 = fl47 - 1.
+     Same expressions, same values, same cycle: MUL_LAT 6, token-age delta 0, no schedule change. c2 271 -> 151 bits
+     (-1,920 reset flops over 16 lanes). Remaining copy hops are single control bits (v/byp/err/sign), hold-buffer sized.
+ (b) clock: balanced register-sink clustering route.cts_sink size 20 / 40 um / 2 levels / buffer every 60 um /
+     unbalance 0.5 (measured on dsdv_sh_lk, one root over 25k sinks: pin-flop spread TT 21.7 / FF 21.3 vs 84 default).
+R15a proof (V5.050, ep7, r15_proof): shipping m0 PASS (40 + 48 stretched commands bit-exact, NEG1-3), MUT1-5 detected,
+cold seeds 1/29/53 PASS; mul unit corner bench vs ot_hdc_fp32_mul_lat (LAT 6) 3 seeds x 11,997 checked, 0 errors.
+Parallel fallback R15b (claude/kv-pvfin15b-1020) = R14 RTL + (b) only; bind whichever closes first.
+R15a native census (shipping config, ep7 native_a, r15_proof/native_census.json.gz): PASS max 32 / 0 violations /
+180,725 roots; mapped area 40,291.1 um2 incl. 8,217 SRAM -> 32,074 um2 cells = 54.4% of the 58,968 um2 free silicon.
+Safe-design checklist R15a: 1 Pins PASS (kit landing + RTL pin flops; outputs registered) 2 Reach: 259.2 square,
+post-route registered-stage audit owed 3 Fanout PASS census max32/0 4 Depth FIXED: mul stage-2 zero-logic copy hops
+removed (masks/fl now have logic on both hops); arithmetic cuts unchanged (LAT-7 add, LAT-6 mul) 5 Storage PASS 4x32x128
+SRAM 6 Floorplan PASS (lattice macros, central band, 54.4% synthesis util, square) 7 Clock FIXED: single centre root,
+balanced 20-sink / 40 um leaves; spread measured by --cts gate (<=80 within the region); io_hold_margin 0.03
+8 Schedule static, token delta 0 (MUL_LAT 6 unchanged), boot +5 command edges (KV-BIND8 die boot calendar).

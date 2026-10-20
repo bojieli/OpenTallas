@@ -1,13 +1,13 @@
 {
- "name": "qkd_pv_fin_s32-s32r14-COMMIT",
+ "name": "qkd_pv_fin_s32-s32r15a-COMMIT",
  "block": "qkd_pv_fin_s32",
  "ref_tile": true,
- "owner": "Claude:KV-PARAMS6",
- "purpose": "PVFIN safe32 successor R14: 4x32x128 sum SRAM, static command calendar, per-group acceptance nodes (native census PASS max32/0 viol, R14 cfaa9a3cb); token-age delta 0; boot reset release: first start capture E6/accept E7 (+5 command edges vs legacy E1/E2).",
+ "owner": "Claude:KV-PVFIN15",
+ "purpose": "PVFIN safe32 R15a: mul stage-2 zero-logic copy hops removed (masks decoded in S2b from a registered clamped shift, fl47 incremented in S2b; MUL_LAT 6, token-age delta 0) + balanced register-sink CTS clustering against the R14 CTS hold-repair stall; boot +5 command edges vs legacy.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/kv-pvfin-r14-1020",
+  "branch": "claude/kv-pvfin15-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "results/rtl/kv_pvfin_sram_1020",
@@ -55,7 +55,7 @@
      "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
-    "pass_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m0.log"
+    "pass_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m0.log"
    },
    {
     "name": "pv_fin_s32_m1",
@@ -86,7 +86,7 @@
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=1 detected",
-    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m1.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m1.log"
    },
    {
     "name": "pv_fin_s32_m2",
@@ -117,7 +117,7 @@
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=2 detected",
-    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m2.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m2.log"
    },
    {
     "name": "pv_fin_s32_m3",
@@ -148,7 +148,7 @@
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=3 detected",
-    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m3.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m3.log"
    },
    {
     "name": "pv_fin_s32_m4",
@@ -179,7 +179,7 @@
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=4 detected",
-    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m4.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m4.log"
    },
    {
     "name": "pv_fin_s32_m5",
@@ -210,7 +210,7 @@
      "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=5 detected",
-    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m5.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m5.log"
    }
   ],
   "calibrate": {
@@ -263,7 +263,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r14-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r15a-COMMIT"
   }
  ],
  "cycles_added": 0,

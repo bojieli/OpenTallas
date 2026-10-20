@@ -178,31 +178,42 @@ module ot_hdc_fp32_mul_lat_pvfin #(
     (* keep="true",dont_touch="true" *) reg signed [11:0] s1_pwc0, s1_pwc1, s1_pwc2, s1_pwc3, s1_pwc4, s1_pwc5;
     always @(posedge clk) begin s1_pwc0 <= power; s1_pwc1 <= power; s1_pwc2 <= power; s1_pwc3 <= power; s1_pwc4 <= power; s1_pwc5 <= power; end
     wire signed [12*6-1:0] pwc = {s1_pwc5, s1_pwc4, s1_pwc3, s1_pwc2, s1_pwc1, s1_pwc0};
-    reg [47:0] m_round, m_sticky, m_oh;
+    // R15 (KV-PVFIN15 10-20, R14 gate OT_HOLD_STALL): no zero-logic flop->flop hop.  S2a only clamps the shift amount
+    // (6 b per group of 8 indexes, from its own kept s1_power copy) into c2; the round / sticky / one-hot masks are
+    // decoded in S2b from the registered amount straight into s2_mr / s2_ms / s2_shoh (same expressions, same values,
+    // same cycle).  c2 carries fl46 only; S2b registers fl47 = fl46 + 1 and S3a forms fl46 = fl47 - 1 (mod 2^12 exact).
+    reg [35:0] m_shk;
     integer k;
     always @* begin
-        for (k = 0; k < 48; k = k + 1) begin : g_mk
-            reg signed [11:0] pk, shs; reg [5:0] shk;
-            pk = pwc[12*(k/8) +: 12];
+        for (k = 0; k < 6; k = k + 1) begin : g_mk
+            reg signed [11:0] pk, shs;
+            pk = pwc[12*k +: 12];
             shs = -(pk + 12'sd149);
-            shk = (shs > 12'sd63) ? 6'd63 : shs[5:0];
-            m_round[k] = ({6'd0, k[5:0]} == {6'd0, shk} - 12'd1);
-            m_sticky[k] = ({6'd0, k[5:0]} < {6'd0, shk} - 12'd1);
-            m_oh[k] = (k[5:0] == shk);
+            m_shk[6*k +: 6] = (shs > 12'sd63) ? 6'd63 : shs[5:0];
         end
     end
-    localparam integer W2 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 48 + 48 + 48;
+    localparam integer W2 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 36;
     wire [W2-1:0] c2;
     ot_hdc_w11_cut_rn #(.W(W2), .NR(10)) u_c2 (.clk(clk), .rst_n(rst_v[13:4]),
-        .d({s1_v, s1_byp, s1_err, s1_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl47, fl46, m_oh, m_round, m_sticky}),
+        .d({s1_v, s1_byp, s1_err, s1_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl46, m_shk}),
         .q(c2));
     wire        q_v, q_byp, q_sign, q_s47, q_s46;
     wire [1:0]  q_err;
     wire [95:0] q_l7;
-    wire [11:0] q_fl47, q_fl46;
-    wire [47:0] q_oh;
-    wire [47:0] q_mr, q_ms;
-    assign {q_v, q_byp, q_err, q_sign, q_l7, q_s47, q_s46, q_fl47, q_fl46, q_oh, q_mr, q_ms} = c2;
+    wire [11:0] q_fl46;
+    wire [35:0] q_shk;
+    assign {q_v, q_byp, q_err, q_sign, q_l7, q_s47, q_s46, q_fl46, q_shk} = c2;
+    reg [47:0] q_mr, q_ms, q_oh;
+    integer kk;
+    always @* begin
+        for (kk = 0; kk < 48; kk = kk + 1) begin : g_md
+            reg [5:0] shk;
+            shk = q_shk[6*(kk/8) +: 6];
+            q_mr[kk] = ({6'd0, kk[5:0]} == {6'd0, shk} - 12'd1);
+            q_ms[kk] = ({6'd0, kk[5:0]} < {6'd0, shk} - 12'd1);
+            q_oh[kk] = (kk[5:0] == shk);
+        end
+    end
     // ---- S2b: the prefix add -----------------------------------------------------------------------
     wire [47:0] prod;
     wire unused_cout;
@@ -211,7 +222,7 @@ module ot_hdc_fp32_mul_lat_pvfin #(
     reg        s2_v, s2_byp, s2_sign, s2_sub47, s2_sub46;
     reg [1:0]  s2_err;
     reg [47:0] s2_prod, s2_mr, s2_ms;
-    reg signed [11:0] s2_fl47, s2_fl46;
+    reg signed [11:0] s2_fl47;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= q_v;
@@ -220,7 +231,7 @@ module ot_hdc_fp32_mul_lat_pvfin #(
         s2_byp <= q_byp; s2_err <= q_err; s2_sign <= q_sign;
         s2_prod <= prod;
         s2_sub47 <= q_s47; s2_sub46 <= q_s46;
-        s2_fl47 <= q_fl47; s2_fl46 <= q_fl46;
+        s2_fl47 <= q_fl46 + 12'sd1;
         s2_mr <= q_mr; s2_ms <= q_ms;
     end
     // NCR: kept same-edge copies of the S3a select controls (census: s2_sh[0] 130, s2_prod[47] 78 loads), is_sub registered
@@ -243,6 +254,7 @@ module ot_hdc_fp32_mul_lat_pvfin #(
 
     // ---- S3a: select, subnormal shift, round/sticky bits ------------------------------------------
     wire is_sub = s2_isc[8];
+    wire signed [11:0] s2_fl46 = s2_fl47 - 12'sd1;
     wire signed [11:0] fl = s2_top[12] ? s2_fl47 : s2_fl46;
     wire [23:0] main;
     reg  [23:0] s_main;
