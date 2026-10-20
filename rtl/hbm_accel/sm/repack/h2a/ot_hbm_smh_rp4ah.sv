@@ -96,7 +96,11 @@ module ot_rp4a_leaf (input wire clk, input wire rst_n, input wire [25:0] st, inp
     wire iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e;
     wire [TAGW-1:0] itag, itag_e;
     wire [LBS*266+LSB*16-1:0] iw, ix;
-    ot_hbm_accel_smh_xs #(.TAGW(TAGW), .NBEAT(NBEAT)) u_xs (.clk(clk), .rst_a(r_xs), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
+    ot_hbm_accel_smh_xs
+`ifndef OT_RP4A_HARD
+        #(.TAGW(TAGW), .NBEAT(NBEAT))
+`endif
+        u_xs (.clk(clk), .rst_a(r_xs), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
         .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rl1), .bk1(bk1), .ohl1(bk1[2060:2048]), .o_iv_b(iv_b), .o_iv_f(iv_f),
         .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iw(iw), .o_ix(ix), .o_ifirst_e(ifirst_e),
         .o_ilast_e(ilast_e), .o_itag_e(itag_e));
@@ -130,7 +134,11 @@ module ot_rp4a_leaf (input wire clk, input wire rst_n, input wire [25:0] st, inp
     wire [TAGW-1:0] bt, ft, ps_tag;
     wire [3:0] ps_word;
     wire [2:0] ps_slot;
-    ot_hbm_accel_smh_bdc #(.LBS(LBS), .IL(IL), .TAGW(TAGW)) u_bdc (.clk(clk), .rst_a(r_bdc), .i_v(bv), .i_first(bfirst),
+    ot_hbm_accel_smh_bdc
+`ifndef OT_RP4A_HARD
+        #(.LBS(LBS), .IL(IL), .TAGW(TAGW))
+`endif
+        u_bdc (.clk(clk), .rst_a(r_bdc), .i_v(bv), .i_first(bfirst),
         .i_last(blast), .i_fp4(bfp4), .i_tag(btag), .i_w(bw), .i_x(bx), .ov(bov), .y(by), .otag(bt), .fault(bfault));
     // publication delay line: static tap {attn_row, 4'b0} (0 / 16 / 32 / 48)
     reg [4:0] pub_pipe [0:48];
@@ -152,7 +160,11 @@ module ot_rp4a_leaf (input wire clk, input wire rst_n, input wire [25:0] st, inp
         .sum_o(s0), .lfault(lf0));
     ot_hbm_accel_smh_tcl_gu u_h1 (.clk(clk), .rst_a(r_tcc), .i_v(fv), .i_first(ffirst), .i_w(fw[255:128]),
         .i_x(fx[255:128]), .sum_o(s1), .lfault(lf1));
-    ot_hbm_accel_smh_tct #(.TAGW(TAGW)) u_qk (.clk(clk), .rst_a(r_tcc), .i_v(fv), .i_last(fqlast), .i_tag(ftag),
+    ot_hbm_accel_smh_tct
+`ifndef OT_RP4A_HARD
+        #(.TAGW(TAGW))
+`endif
+        u_qk (.clk(clk), .rst_a(r_tcc), .i_v(fv), .i_last(fqlast), .i_tag(ftag),
         .sum_i({s1, s0}), .lf_a(lf0), .lf_b(lf1), .ov(fov), .y(fy), .otag(ft), .fault(qf));
     wire event_v;
     wire [511:0] event_sum;
@@ -162,7 +174,12 @@ module ot_rp4a_leaf (input wire clk, input wire rst_n, input wire [25:0] st, inp
     wire pv_v;
     wire [511:0] pv_y;
     wire [TAGW-1:0] pv_tag;
-    ot_hbm_sm_pv_merge_s3 #(.TAGW(TAGW), .LV(4), .PUBLISH(1), .TURNREG(1), .SAFE(2)) u_merge (.clk(clk), .rst_n(r_tcc),
+    // hard view = the closed config (TAGW 16, LV 4, PUBLISH 1, TURNREG 1, SAFE 2): no overrides under OT_RP4A_HARD
+    ot_hbm_sm_pv_merge_s3
+`ifndef OT_RP4A_HARD
+        #(.TAGW(TAGW), .LV(4), .PUBLISH(1), .TURNREG(1), .SAFE(2))
+`endif
+        u_merge (.clk(clk), .rst_n(r_tcc),
         .ev(event_v), .sum(event_sum), .tag_d(event_tag), .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(mf),
         .pub_start(pc[3]), .pub_slot(selected_slot), .pub_v(ps_v), .pub_data(ps_data), .pub_word(ps_word),
         .pub_out_slot(ps_slot), .pub_tag(ps_tag), .fold_start(fold0), .fold_a(fold0_a), .fold_b(fold0_b));

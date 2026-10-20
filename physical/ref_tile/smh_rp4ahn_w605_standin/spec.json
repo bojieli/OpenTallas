@@ -73,7 +73,8 @@
   "OT_SMH_GROUP_TRANSPORT",
   "OT_SMH_WEST_SPLIT",
   "OT_SMH_TRANSPORT_KEEP",
-  "OT_SMH_RP4_SRST"
+  "OT_SMH_RP4_SRST",
+  "OT_RP4A_HARD"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -352,6 +353,7 @@
   "reason": "the RTL lands rst_n itself: ot_rp4h_rst u_rst = two KEPT face stages (l0, l1) then one KEPT copy per consumer (c[*], 1-12 loads each); the port net has ONE sink (u_rst.l0).  Depth 3 = the lp regional reset run, so the halves stay cycle-exact with ot_hbm_smh_rp4_flat_lp (bench H2_LOCKSTEP)."
  },
  "diagnostic": true,
+ "hard_define": "OT_RP4A_HARD",
  "clock": "cts",
  "pre_cts_extra": [
   "physical/common_flow/clock_split_km.tcl"

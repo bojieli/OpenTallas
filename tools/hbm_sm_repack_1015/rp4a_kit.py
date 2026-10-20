@@ -133,6 +133,8 @@ def spec(name, k, base):
     s["top"] = f"ot_hbm_smh_rp4ah_{half}"
     s["params"] = {"SOFTBEAT": 1, "GN": 2, "XB": 1} if half == "n" else {"GN": 2, "GS": 1, "XB": 1}
     s["sources"] = [f for f in s["sources"] if f not in EXTRA_SRC] + EXTRA_SRC
+    s["defines"] = [d for d in s["defines"] if d != "OT_RP4A_HARD"] + ["OT_RP4A_HARD"]
+    s["hard_define"] = "OT_RP4A_HARD"
     s["outline"] = {"w": W, "h": h}
     s["children"] = [{"view": V[v], "count": 1, "at": [x, y], "orient": o, "inst": i} for v, i, x, y, o in k["kids"]]
     s["pins"], s["pin_ranges"] = pins(half, h)
