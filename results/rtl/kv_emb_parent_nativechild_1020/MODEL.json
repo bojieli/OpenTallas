@@ -1,0 +1,50 @@
+{
+  "scope": "Model before successor source build; inherits KV-EMB6 model and static GEN9 schedule",
+  "base": "027eeaead",
+  "shape": {
+    "row_words": 64,
+    "word_bits": 512,
+    "row_sram_bits": 32768,
+    "return_trains": 4,
+    "return_record_bits": 299,
+    "tx_records_per_token": 65
+  },
+  "bandwidth": {
+    "return_beats_per_cycle": 1,
+    "return_payload_bits_per_cycle": 256,
+    "row_write_bits_per_cycle": 512,
+    "tx_payload_bits_per_cycle": 512
+  },
+  "compute_macs_per_cycle": 0,
+  "replicas": {
+    "parent": 1,
+    "child": 1
+  },
+  "latency": {
+    "NATIVE32_PIPE_JOIN_vs_legacy_active_edges": 2,
+    "native_child_vs_closed_c1b_fullview_active_edges": 0,
+    "parallel_reset_release_edges": 6
+  },
+  "area_um2": {
+    "parent_slot": 117573.12,
+    "child_slot": 35925.119999999995,
+    "child_macro": 13319.35488,
+    "child_mapped_total": 14462.22278
+  },
+  "reach": {
+    "child_outline_manhattan_um": 388.8,
+    "parent_max_single_cycle_um": 405,
+    "parent_boundary": "OPEN; require real native child clock compensation/phase+pin timing; no stand-in adoption"
+  },
+  "route_tracks": "Inherited x2a zero-overflow measured GRT; child replacement requires legal exported LEF and parent regate, no invented capacity credit",
+  "safe_checklist": {
+    "pins": "Inherited explicit registered faces; exact fullview child miter required",
+    "reach": "child fits405, parent actual binding/reach owed",
+    "fanout": "x2a mapped32, native child32; changed fullparent synthesis owed",
+    "depth": "x2a measured480.1ps; replacement census/depth owed",
+    "storage": "64x512 hard SRAM; no new storage",
+    "floorplan": "parent same slot; child237.6x151.2 requires actual exported view/lattice symmetry",
+    "clock": "region/spine inherited; child-parent compensated boundary OPEN",
+    "schedule": "static no credits, existing+2 active/+6 reset composed; no new cycle"
+  }
+}
