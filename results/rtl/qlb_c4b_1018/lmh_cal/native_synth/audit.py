@@ -1,4 +1,4 @@
-import json,collections,hashlib
+import json,collections,hashlib,re
 from pathlib import Path
 p=Path('flat.json');m=json.loads(p.read_text())['modules']['ot_qfd_tt_ctlm_static_hr']
 loads=collections.Counter();drivers=[];clock=set()
@@ -30,6 +30,10 @@ out=dict(schema='opentallas.segcal.native-driver-census.v1',flat_sha256=hashlib.
 for d in bad:
  d['netnames']=[n for n,v in m['netnames'].items()if d['bit'] in v['bits']]
 out['first_seq_attributes']=[dict(inst=n,attributes=c.get('attributes'))for n,c in m['cells'].items()if c['type'].startswith(('DFF','SDFF','DF'))][:5]
+out['fifo_seq_instance_sample']=[n for n,c in m['cells'].items()if 'fq' in n and c['type'].startswith(('DFF','SDFF','DF'))][:12]
+out['fifo_payload_ff_instances']=sum(1 for n,c in m['cells'].items()if '.fqv['in n and c['type'].startswith(('DFF','SDFF','DF')))
+out['fifo_payload_ff_by_row']={str(i):sum(1 for n,c in m['cells'].items()if ('.fqv['+str(i)+'][') in n and c['type'].startswith(('DFF','SDFF','DF')))for i in range(4)}
+out['fifo_storage_status']='FAIL_OVER_2048_FF'if out['fifo_payload_ff_instances']>2048 else 'CLASSIFICATION_REQUIRES_REVIEW'
 storage={}
 out['fifo_netname_samples']=[n for n in m['netnames']if 'fq' in n][:24]
 out['head_netname_samples']=[n for n in m['netnames']if 'hq' in n][:8]
@@ -57,6 +61,12 @@ while todo:
      if isinstance(x,int)and x not in seen:seen.add(x);todo.append(x)
 storage['fifo_write_enable_register_bits']=len(we_bits)
 storage['fifo_first_sequential_endpoints_from_native_we']=len(fifo_ff)
+out['reset_load_families']={}
+for dr in bad:
+ if not any('g_rrg' in n or 'g_rrep' in n for n in dr.get('netnames',[])):continue
+ families=collections.Counter(re.sub(r'\[\d+\]','',cn.split('$_')[0])for cn in users[dr['bit']])
+ out['reset_load_families'][str(dr['bit'])]=dict(driver=dr['netnames'],families=dict(families))
+
 
 for marker in ['.fqv[','.fq[','.hq','.grows[','.rows[']:
  bits={x for n,v in m['netnames'].items()if marker in n for x in v['bits']if isinstance(x,int)}

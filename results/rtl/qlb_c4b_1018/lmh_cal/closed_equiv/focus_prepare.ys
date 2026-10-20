@@ -1,0 +1,16 @@
+read_verilog -sv -DSYNTHESIS /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv /out/gold_focus.sv
+hierarchy -check -top gold
+proc
+flatten
+memory_map
+opt -full
+write_json /out/gold_focus.json
+design -stash gold
+read_verilog -sv -DSYNTHESIS /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv /out/gate_focus.sv
+hierarchy -check -top gate
+proc
+flatten
+memory_map
+opt -full
+write_json /out/gate_focus.json
+design -stash gate

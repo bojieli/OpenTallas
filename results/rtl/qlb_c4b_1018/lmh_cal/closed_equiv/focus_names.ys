@@ -1,0 +1,9 @@
+read_json /out/gold_focus.json
+read_json /out/gate_focus_names.json
+equiv_make gold gate equiv
+hierarchy -check -top equiv
+async2sync
+opt_clean
+equiv_simple -seq 2
+equiv_induct -seq 4
+equiv_status -assert

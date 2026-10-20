@@ -1,0 +1,2104 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/focus_prepare.ys' --
+
+1. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_pw'.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:93
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:89
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_pw'.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:103
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:99
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_seg_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:224
+Warning: Replacing memory \grows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:212
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:209
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /out/gold_focus.sv
+Parsing SystemVerilog input from `/out/gold_focus.sv' to AST representation.
+Generating RTLIL representation for module `\gold'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \gold
+Used module:     \gold_ot_qwen_fixed_issue_pw
+Used module:         \gold_ot_qwen_fixed_issue_stream_pw
+Used module:             \gold_ot_qwen_fixed_issue
+Parameter \DENSE_IMAGE = 1
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+
+8.2. Executing AST frontend in derive mode using pre-parsed AST for module `\gold_ot_qwen_fixed_issue_pw'.
+Parameter \DENSE_IMAGE = 1
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Generating RTLIL representation for module `$paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 0
+Parameter \SLATE = 0
+
+8.3. Executing AST frontend in derive mode using pre-parsed AST for module `\gold_ot_qwen_fixed_issue_stream_pw'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Generating RTLIL representation for module `$paramod$32dadd356328b724e4ebc8a2707b6420bd3f69f9\gold_ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:93
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:89
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+
+8.4. Executing AST frontend in derive mode using pre-parsed AST for module `\gold_ot_qwen_fixed_issue'.
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Generating RTLIL representation for module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\gold_ot_qwen_fixed_issue'.
+
+8.5. Analyzing design hierarchy..
+Top module:  \gold
+Used module:     $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw
+Used module:         \gold_ot_qwen_fixed_issue_dense_pw
+Used module:             \gold_ot_qwen_fixed_issue
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Found cached RTLIL representation for module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\gold_ot_qwen_fixed_issue'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 1
+Parameter \SLATE = 1
+
+8.6. Executing AST frontend in derive mode using pre-parsed AST for module `\gold_ot_qwen_fixed_issue_dense_pw'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Generating RTLIL representation for module `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67
+
+8.7. Analyzing design hierarchy..
+Top module:  \gold
+Used module:     $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw
+Used module:             \gold_ot_qwen_fixed_issue
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+
+8.8. Executing AST frontend in derive mode using pre-parsed AST for module `\gold_ot_qwen_fixed_issue'.
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Generating RTLIL representation for module `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue'.
+
+8.9. Analyzing design hierarchy..
+Top module:  \gold
+Used module:     $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw
+Used module:             $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue
+
+8.10. Analyzing design hierarchy..
+Top module:  \gold
+Used module:     $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw
+Used module:             $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue
+Removing unused module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\gold_ot_qwen_fixed_issue'.
+Removing unused module `$paramod$32dadd356328b724e4ebc8a2707b6420bd3f69f9\gold_ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `\ot_qwen_fixed_issue_seg_pw'.
+Removing unused module `\ot_qwen_fixed_issue_dense_pw'.
+Removing unused module `\ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `\ot_qwen_fixed_issue_pw'.
+Removing unused module `\ot_qwen_fixed_issue'.
+Removing unused module `\gold_ot_qwen_fixed_issue_dense_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue'.
+Removed 11 unused modules.
+
+9. Executing PROC pass (convert processes to netlists).
+
+9.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323'.
+Cleaned up 1 empty switch.
+
+9.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2284 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+Removed 1 dead cases from process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+Marked 14 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+Marked 54 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+Marked 5 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+Marked 1 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+Marked 5 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+Marked 7 switch rules as full_case in process $proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+Removed a total of 1 dead cases.
+
+9.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 24 assignments to connections.
+
+9.4. Executing PROC_INIT pass (extract init attributes).
+
+9.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+Found async reset \rst_n in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+Found async reset \rst_n in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323'.
+
+9.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~111 debug messages>
+
+9.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2284'.
+     1/1: $1$mem2reg_rd$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2016_DATA[55:0]$2286
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+     1/81: $9$lookahead\cp_valid$2147[2:0]$2249
+     2/81: $8$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2246
+     3/81: $8$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2247
+     4/81: $8$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2248
+     5/81: $8$lookahead\cp_valid$2147[2:0]$2243
+     6/81: $7$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2242
+     7/81: $7$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2241
+     8/81: $7$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2240
+     9/81: $7$lookahead\cp_valid$2147[2:0]$2232
+    10/81: $6$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2231
+    11/81: $6$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2230
+    12/81: $6$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2229
+    13/81: $6$lookahead\valid$2146[7:0]$2211
+    14/81: $5$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011[31:0]$2205
+    15/81: $5$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR[2:0]$2207
+    16/81: $5$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA[46:0]$2208
+    17/81: $6$lookahead\cp_valid$2147[2:0]$2212
+    18/81: $5$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2210
+    19/81: $5$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2209
+    20/81: $5$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2206
+    21/81: $5$lookahead\cp_valid$2147[2:0]$2204
+    22/81: $5$lookahead\valid$2146[7:0]$2203
+    23/81: $4$lookahead\cp_valid$2147[2:0]$2202
+    24/81: $4$lookahead\valid$2146[7:0]$2201
+    25/81: $4$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2200
+    26/81: $4$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2199
+    27/81: $4$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA[46:0]$2198
+    28/81: $4$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR[2:0]$2197
+    29/81: $4$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2196
+    30/81: $4$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011[31:0]$2195
+    31/81: $3$lookahead\cp_valid$2147[2:0]$2193
+    32/81: $3$lookahead\valid$2146[7:0]$2192
+    33/81: $3$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2191
+    34/81: $3$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2190
+    35/81: $3$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA[46:0]$2189
+    36/81: $3$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR[2:0]$2188
+    37/81: $3$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2187
+    38/81: $3$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011[31:0]$2186
+    39/81: $2$lookahead\cp_valid$2147[2:0]$2185
+    40/81: $2$lookahead\valid$2146[7:0]$2184
+    41/81: $2$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2183
+    42/81: $2$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2182
+    43/81: $2$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA[46:0]$2181
+    44/81: $2$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR[2:0]$2180
+    45/81: $2$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2179
+    46/81: $2$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011[31:0]$2178
+    47/81: $4$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_DATA[46:0]$2177
+    48/81: $3$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_DATA[46:0]$2176
+    49/81: $3$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_ADDR[2:0]$2175
+    50/81: $2$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_DATA[46:0]$2171
+    51/81: $2$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_ADDR[2:0]$2170
+    52/81: $1$lookahead\cp_valid$2147[2:0]$2169
+    53/81: $1$lookahead\valid$2146[7:0]$2168
+    54/81: $1$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA[55:0]$2167
+    55/81: $1$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR[1:0]$2166
+    56/81: $1$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA[46:0]$2165
+    57/81: $1$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR[2:0]$2164
+    58/81: $1$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012[31:0]$2161
+    59/81: $1$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011[31:0]$2160
+    60/81: $1$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_DATA[46:0]$2163
+    61/81: $1$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_ADDR[2:0]$2162
+    62/81: $0\meta_seen[0:0]
+    63/81: $0\stop_seen[0:0]
+    64/81: $0\loading[0:0]
+    65/81: $0\meta_q[63:0]
+    66/81: $0\cp_rows[2][55:0]
+    67/81: $0\cp_rows[1][55:0]
+    68/81: $0\cp_rows[0][55:0]
+    69/81: $0\rows[7][46:0]
+    70/81: $0\rows[6][46:0]
+    71/81: $0\rows[5][46:0]
+    72/81: $0\rows[4][46:0]
+    73/81: $0\rows[3][46:0]
+    74/81: $0\rows[2][46:0]
+    75/81: $0\rows[1][46:0]
+    76/81: $0\rows[0][46:0]
+    77/81: $0\read_fault[0:0]
+    78/81: $0\cfg_fault[0:0]
+    79/81: $0\sealed[0:0]
+    80/81: $0\q[46:0]
+    81/81: $0\stop_q[31:0]
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+     1/63: $46\seal_bad[0:0]
+     2/63: $45\seal_bad[0:0]
+     3/63: $44\seal_bad[0:0]
+     4/63: $43\seal_bad[0:0]
+     5/63: $42\seal_bad[0:0]
+     6/63: $41\seal_bad[0:0]
+     7/63: $40\seal_bad[0:0]
+     8/63: $39\seal_bad[0:0]
+     9/63: $38\seal_bad[0:0]
+    10/63: $37\seal_bad[0:0]
+    11/63: $36\seal_bad[0:0]
+    12/63: $35\seal_bad[0:0]
+    13/63: $1\k[31:0]
+    14/63: $34\seal_bad[0:0]
+    15/63: $33\seal_bad[0:0]
+    16/63: $32\seal_bad[0:0]
+    17/63: $31\seal_bad[0:0]
+    18/63: $16\copies[31:0]
+    19/63: $30\seal_bad[0:0]
+    20/63: $15\copies[31:0]
+    21/63: $29\seal_bad[0:0]
+    22/63: $28\seal_bad[0:0]
+    23/63: $27\seal_bad[0:0]
+    24/63: $14\copies[31:0]
+    25/63: $26\seal_bad[0:0]
+    26/63: $13\copies[31:0]
+    27/63: $25\seal_bad[0:0]
+    28/63: $24\seal_bad[0:0]
+    29/63: $23\seal_bad[0:0]
+    30/63: $12\copies[31:0]
+    31/63: $22\seal_bad[0:0]
+    32/63: $11\copies[31:0]
+    33/63: $21\seal_bad[0:0]
+    34/63: $20\seal_bad[0:0]
+    35/63: $19\seal_bad[0:0]
+    36/63: $10\copies[31:0]
+    37/63: $18\seal_bad[0:0]
+    38/63: $9\copies[31:0]
+    39/63: $17\seal_bad[0:0]
+    40/63: $16\seal_bad[0:0]
+    41/63: $15\seal_bad[0:0]
+    42/63: $8\copies[31:0]
+    43/63: $14\seal_bad[0:0]
+    44/63: $7\copies[31:0]
+    45/63: $13\seal_bad[0:0]
+    46/63: $12\seal_bad[0:0]
+    47/63: $11\seal_bad[0:0]
+    48/63: $6\copies[31:0]
+    49/63: $10\seal_bad[0:0]
+    50/63: $5\copies[31:0]
+    51/63: $9\seal_bad[0:0]
+    52/63: $8\seal_bad[0:0]
+    53/63: $7\seal_bad[0:0]
+    54/63: $4\copies[31:0]
+    55/63: $6\seal_bad[0:0]
+    56/63: $3\copies[31:0]
+    57/63: $5\seal_bad[0:0]
+    58/63: $4\seal_bad[0:0]
+    59/63: $3\seal_bad[0:0]
+    60/63: $2\copies[31:0]
+    61/63: $2\seal_bad[0:0]
+    62/63: $1\copies[31:0]
+    63/63: $1\seal_bad[0:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+     1/14: $0\pending[0:0]
+     2/14: $0\done[0:0]
+     3/14: $0\second_read[0:0]
+     4/14: $0\pending_index[2:0]
+     5/14: $0\index[2:0]
+     6/14: $0\tail_v[0:0]
+     7/14: $0\head_v[0:0]
+     8/14: $0\tail[46:0]
+     9/14: $0\head[46:0]
+    10/14: $0\stop_q[31:0]
+    11/14: $0\fault[0:0]
+    12/14: $0\cycle[31:0]
+    13/14: $0\active[0:0]
+    14/14: $0\cp_index[1:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323'.
+     1/1: $0\sched_q[0:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+     1/10: $4\active_a[0:0]
+     2/10: $3\active_a[0:0]
+     3/10: $3\head_v_a[0:0]
+     4/10: $2\active_a[0:0]
+     5/10: $3\head_lo_a[31:0]
+     6/10: $2\head_lo_a[31:0]
+     7/10: $2\head_v_a[0:0]
+     8/10: $1\active_a[0:0]
+     9/10: $1\head_v_a[0:0]
+    10/10: $1\head_lo_a[31:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+     1/18: $6\active_n[0:0]
+     2/18: $5\active_n[0:0]
+     3/18: $5\head_v_n[0:0]
+     4/18: $4\active_n[0:0]
+     5/18: $5\head_lo_n[31:0]
+     6/18: $4\head_lo_n[31:0]
+     7/18: $4\head_v_n[0:0]
+     8/18: $3\active_n[0:0]
+     9/18: $3\head_v_n[0:0]
+    10/18: $3\head_lo_n[31:0]
+    11/18: $2\active_n[0:0]
+    12/18: $2\head_lo_n[31:0]
+    13/18: $2\head_v_n[0:0]
+    14/18: $2\cycle_n[31:0]
+    15/18: $1\head_v_n[0:0]
+    16/18: $1\cycle_n[31:0]
+    17/18: $1\active_n[0:0]
+    18/18: $1\head_lo_n[31:0]
+
+9.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2016_DATA' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2284'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\k' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\copies' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\seal_bad' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\active_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head_v_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\cycle_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head_lo_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\active_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head_v_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\cycle_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head_lo_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+
+9.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\stop_q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3955' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\valid' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3960' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3965' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\sealed' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3970' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\cfg_fault' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3975' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\read_fault' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3980' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\cp_valid' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$3985' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[0]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$3992' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[1]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$3999' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[2]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4006' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[3]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4013' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[4]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4020' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[5]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4027' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[6]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4034' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\rows[7]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4041' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\cp_rows[0]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4048' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\cp_rows[1]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4055' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\cp_rows[2]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $dff cell `$procdff$4062' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\meta_q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4067' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\loading' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4072' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\stop_seen' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4077' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.\meta_seen' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4082' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2011' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4087' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$bitselwrite$pos$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2012' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4092' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4097' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:58$2013_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4102' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4107' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67$2014_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4112' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4117' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\cp_rows$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75$2015_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4122' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$lookahead\valid$2146' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4127' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$lookahead\cp_valid$2147' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+  created $adff cell `$procdff$4132' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\cp_index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4137' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\active' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4142' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\done' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4147' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\cycle' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4152' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\fault' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4157' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\stop_q' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4162' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4167' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\tail' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4172' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\head_v' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4177' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\tail_v' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4182' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4187' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\pending' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4192' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\pending_index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4197' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\second_read' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+  created $adff cell `$procdff$4202' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.\sched_q' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323'.
+  created $adff cell `$procdff$4207' with positive edge clock and positive level reset.
+
+9.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2284'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:89$2284'.
+Found and cleaned up 21 empty switches in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:54$2148'.
+Found and cleaned up 54 empty switches in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:33$2024'.
+Found and cleaned up 23 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:113$2340'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:96$2323'.
+Found and cleaned up 5 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:78$2310'.
+Found and cleaned up 7 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.$proc$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:60$2302'.
+Cleaned up 111 empty switches.
+
+9.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+<suppressed ~108 debug messages>
+Optimizing module $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw.
+Optimizing module gold.
+Optimizing module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+<suppressed ~37 debug messages>
+
+10. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\gold_ot_qwen_fixed_issue_dense_pw.
+Deleting now unused module $paramod$9bef5f13c1c5f639602ec37763a3c0a096849f4a\gold_ot_qwen_fixed_issue_pw.
+Deleting now unused module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\gold_ot_qwen_fixed_issue.
+<suppressed ~3 debug messages>
+
+11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+12. Executing OPT pass (performing simple optimizations).
+
+12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~275 debug messages>
+
+12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 760 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 669 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 661 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 660 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~300 debug messages>
+Removed a total of 100 cells.
+
+12.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3916: \u.g_dense.u_store.u_issue.active -> 1'0
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3890: \u.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3849: \u.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port B of cell $flatten\u.\g_dense.u_store.$procmux$2972: \u.g_dense.u_store.loading -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3621: \u.g_dense.u_store.u_issue.second_read -> 1'0
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3763: \u.g_dense.u_store.u_issue.active -> 1'0
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3757: \u.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3755: \u.g_dense.u_store.u_issue.active -> 1'1
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3861.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3861.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3872.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3872.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3881.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3881.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3908.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3908.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3922.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3922.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3928.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3928.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3934.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3934.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3940.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3940.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3943.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3943.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2911.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2911.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2908.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2908.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2903.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2903.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2897.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2897.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2878.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2878.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2875.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2875.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2872.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2872.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2869.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2869.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2866.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2866.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2863.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2863.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2852.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2852.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2846.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2846.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2840.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2840.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2834.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2834.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2828.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2828.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2822.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2822.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2801.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2801.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2792.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2792.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2783.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2783.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2774.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2774.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2765.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2765.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2756.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2756.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2702.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2702.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2690.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2690.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2678.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2678.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2654.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2654.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3949.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3949.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2642.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2642.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2630.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2630.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2603.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2603.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2588.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2588.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2573.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2573.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2540.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2540.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2522.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2522.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2504.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2504.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2465.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2465.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2444.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2444.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2423.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.$procmux$2423.
+    dead port 1/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3837.
+    dead port 2/2 on $mux $flatten\u.\g_dense.u_store.\u_issue.$procmux$3837.
+Removed 96 multiplexer ports.
+<suppressed ~336 debug messages>
+
+12.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u.\g_dense.u_store.$procmux$3594:
+      Old ports: A=0, B=1, Y=$flatten\u.\g_dense.u_store.$procmux$3594_Y
+      New ports: A=1'0, B=1'1, Y=$flatten\u.\g_dense.u_store.$procmux$3594_Y [0]
+      New connections: $flatten\u.\g_dense.u_store.$procmux$3594_Y [31:1] = 31'0000000000000000000000000000000
+    Consolidated identical input bits for $mux cell $flatten\u.\g_dense.u_store.$procmux$2972:
+      Old ports: A=1'1, B=1'1, Y=$flatten\u.\g_dense.u_store.$procmux$2972_Y
+      New connections: $flatten\u.\g_dense.u_store.$procmux$2972_Y = 1'1
+    Consolidated identical input bits for $mux cell $flatten\u.\g_dense.u_store.\u_issue.$procmux$3621:
+      Old ports: A=1'0, B=1'0, Y=$flatten\u.\g_dense.u_store.\u_issue.$procmux$3621_Y
+      New connections: $flatten\u.\g_dense.u_store.\u_issue.$procmux$3621_Y = 1'0
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u.\g_dense.u_store.$procmux$3602:
+      Old ports: A=0, B=$flatten\u.\g_dense.u_store.$2\copies[31:0], Y=$flatten\u.\g_dense.u_store.$procmux$3602_Y
+      New ports: A=1'0, B=$flatten\u.\g_dense.u_store.$procmux$3594_Y [0], Y=$flatten\u.\g_dense.u_store.$procmux$3602_Y [0]
+      New connections: $flatten\u.\g_dense.u_store.$procmux$3602_Y [31:1] = 31'0000000000000000000000000000000
+  Optimizing cells in module \gold.
+Performed a total of 4 changes.
+
+12.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 610 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 608 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 607 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 606 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 605 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 604 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 603 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+12.6. Executing OPT_SHARE pass.
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3572 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3561
+        $flatten\u.\g_dense.u_store.$procmux$3554
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3545 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3534
+        $flatten\u.\g_dense.u_store.$procmux$3527
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3518 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3507
+        $flatten\u.\g_dense.u_store.$procmux$3500
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3491 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3480
+        $flatten\u.\g_dense.u_store.$procmux$3473
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3464 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3453
+        $flatten\u.\g_dense.u_store.$procmux$3446
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3437 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3426
+        $flatten\u.\g_dense.u_store.$procmux$3419
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3410 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3399
+        $flatten\u.\g_dense.u_store.$procmux$3392
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3379 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3373
+        $flatten\u.\g_dense.u_store.$procmux$3365
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3357 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3351
+        $flatten\u.\g_dense.u_store.$procmux$3343
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3335 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3329
+        $flatten\u.\g_dense.u_store.$procmux$3321
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\g_dense.u_store.$procmux$3599 in front of them:
+        $flatten\u.\g_dense.u_store.$procmux$3588
+        $flatten\u.\g_dense.u_store.$procmux$3581
+
+12.7. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4055 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [55:0], Q = \u.g_dense.u_store.cp_rows[1]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4077 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$procmux$2945_Y, Q = \u.g_dense.u_store.stop_seen).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4062 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [55:0], Q = \u.g_dense.u_store.cp_rows[2]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4067 ($adff) from module gold (D = \u.g_dense.u_store.pw_data, Q = \u.g_dense.u_store.meta_q).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4072 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$procmux$2974_Y, Q = \u.g_dense.u_store.loading).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4182 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3655_Y, Q = \u.g_dense.u_store.u_issue.tail_v).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4177 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3670_Y, Q = \u.g_dense.u_store.u_issue.head_v).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4197 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$ternary$/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv:111$2339_Y, Q = \u.g_dense.u_store.u_issue.pending_index).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4172 ($adff) from module gold (D = \u.g_dense.u_store.u_issue.slot_q, Q = \u.g_dense.u_store.u_issue.tail).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4041 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[7]).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4167 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3693_Y, Q = \u.g_dense.u_store.u_issue.head).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4162 ($adff) from module gold (D = \u.g_dense.u_store.u_issue.stop_cycle, Q = \u.g_dense.u_store.u_issue.stop_q).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3960 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$3$lookahead\valid$2146[7:0]$2192, Q = \u.g_dense.u_store.valid).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4048 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [55:0], Q = \u.g_dense.u_store.cp_rows[0]).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4152 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3752_Y, Q = \u.g_dense.u_store.u_issue.cycle).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4082 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$procmux$2927_Y, Q = \u.g_dense.u_store.meta_seen).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3965 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$procmux$3301_Y, Q = \u.g_dense.u_store.q).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4187 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3638_Y, Q = \u.g_dense.u_store.u_issue.index).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3970 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$procmux$3292_Y, Q = \u.g_dense.u_store.sealed).
+Adding EN signal on $flatten\u.\g_dense.u_store.\u_issue.$procdff$4137 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.\u_issue.$procmux$3775_Y, Q = \u.g_dense.u_store.u_issue.cp_index).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3985 ($adff) from module gold (D = $flatten\u.\g_dense.u_store.$3$lookahead\cp_valid$2147[2:0]$2193, Q = \u.g_dense.u_store.cp_valid).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3992 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[0]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3999 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[1]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4006 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[2]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4034 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[6]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4013 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[3]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4020 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[4]).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$3955 ($adff) from module gold (D = \u.g_dense.u_store.pw_data [31:0], Q = \u.g_dense.u_store.stop_q).
+Adding EN signal on $flatten\u.\g_dense.u_store.$procdff$4027 ($dff) from module gold (D = \u.g_dense.u_store.pw_data [46:0], Q = \u.g_dense.u_store.rows[5]).
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 2 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 3 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 4 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 5 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 6 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 7 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 8 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 9 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 10 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 11 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 12 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 13 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 14 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 15 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 16 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 17 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 18 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 19 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 20 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 21 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 22 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 23 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 24 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 25 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 26 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 27 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 28 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 29 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 30 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 31 on $flatten\u.\g_dense.u_store.$procdff$4092 ($adff) from module gold.
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4117 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4117 ($adff) from module gold.
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 2 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 3 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 4 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 5 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 6 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 7 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 8 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 9 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 10 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 11 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 12 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 13 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 14 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 15 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 16 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 17 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 18 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 19 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 20 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 21 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 22 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 23 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 24 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 25 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 26 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 27 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 28 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 29 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 30 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 31 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 32 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 33 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 34 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 35 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 36 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 37 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 38 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 39 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 40 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 41 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 42 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 43 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 44 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 45 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 46 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 47 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 48 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 49 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 50 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 51 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 52 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 53 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 54 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 55 on $flatten\u.\g_dense.u_store.$procdff$4122 ($adff) from module gold.
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 2 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 3 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 4 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 5 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 6 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 7 on $flatten\u.\g_dense.u_store.$procdff$4127 ($adff) from module gold.
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 2 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 3 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 4 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 5 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 6 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 7 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 8 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 9 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 10 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 11 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 12 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 13 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 14 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 15 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 16 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 17 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 18 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 19 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 20 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 21 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 22 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 23 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 24 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 25 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 26 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 27 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 28 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 29 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 30 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 31 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 32 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 33 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 34 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 35 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 36 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 37 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 38 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 39 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 40 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 41 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 42 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 43 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 44 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 45 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 46 on $flatten\u.\g_dense.u_store.$procdff$4112 ($adff) from module gold.
+Setting constant 1-bit at position 0 on $flatten\u.\g_dense.u_store.$procdff$4132 ($adff) from module gold.
+Setting constant 1-bit at position 1 on $flatten\u.\g_dense.u_store.$procdff$4132 ($adff) from module gold.
+Setting constant 1-bit at position 2 on $flatten\u.\g_dense.u_store.$procdff$4132 ($adff) from module gold.
+
+12.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 125 unused cells and 1300 unused wires.
+<suppressed ~130 debug messages>
+
+12.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~54 debug messages>
+
+12.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+12.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~180 debug messages>
+
+12.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+12.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 528 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 476 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~156 debug messages>
+Removed a total of 52 cells.
+
+12.14. Executing OPT_SHARE pass.
+
+12.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $auto$ff.cc:337:slice$4354 ($adffe) from module gold (D = $flatten\u.\g_dense.u_store.$4$lookahead\valid$2146[7:0]$2201, Q = \u.g_dense.u_store.valid).
+Adding EN signal on $auto$ff.cc:337:slice$4416 ($adffe) from module gold (D = $flatten\u.\g_dense.u_store.$4$lookahead\cp_valid$2147[2:0]$2202, Q = \u.g_dense.u_store.cp_valid).
+
+12.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 2 unused cells and 92 unused wires.
+<suppressed ~3 debug messages>
+
+12.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~9 debug messages>
+
+12.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+12.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~171 debug messages>
+
+12.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+12.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 478 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 472 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+12.22. Executing OPT_SHARE pass.
+
+12.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+12.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~1 debug messages>
+
+12.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+12.26. Rerunning OPT passes. (Maybe there is more to do..)
+
+12.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~171 debug messages>
+
+12.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+12.29. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 472 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+12.30. Executing OPT_SHARE pass.
+
+12.31. Executing OPT_DFF pass (perform DFF optimizations).
+
+12.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+12.33. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+12.34. Finished fast OPT passes. (There is nothing left to do.)
+
+13. Executing JSON backend.
+
+14. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_pw'.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:93
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_pw.sv:89
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv
+Parsing SystemVerilog input from `/src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv' to AST representation.
+Generating RTLIL representation for module `\gold_ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/gold_ot_qwen_fixed_issue_dense_pw.sv:67
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_pw'.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:103
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:99
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv
+Parsing SystemVerilog input from `/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67
+Generating RTLIL representation for module `\ot_qwen_fixed_issue_seg_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:224
+Warning: Replacing memory \grows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:212
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:209
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: /out/gate_focus.sv
+Parsing SystemVerilog input from `/out/gate_focus.sv' to AST representation.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+21. Executing HIERARCHY pass (managing design hierarchy).
+
+21.1. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     \ot_qwen_fixed_issue_pw
+Used module:         \ot_qwen_fixed_issue_stream_pw
+Used module:             \ot_qwen_fixed_issue
+Parameter \DENSE_IMAGE = 1
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Parameter \SEG = 0
+
+21.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_fixed_issue_pw'.
+Parameter \DENSE_IMAGE = 1
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Parameter \SEG = 0
+Generating RTLIL representation for module `$paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw'.
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+
+21.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_fixed_issue'.
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Generating RTLIL representation for module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\ot_qwen_fixed_issue'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 0
+Parameter \SLATE = 0
+
+21.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_fixed_issue_stream_pw'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Generating RTLIL representation for module `$paramod$32dadd356328b724e4ebc8a2707b6420bd3f69f9\ot_qwen_fixed_issue_stream_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:103
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv:99
+
+21.5. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw
+Used module:         \ot_qwen_fixed_issue_dense_pw
+Used module:             \ot_qwen_fixed_issue
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 1
+Parameter \SLATE = 1
+
+21.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_fixed_issue_dense_pw'.
+Parameter \OWN = 1
+Parameter \DEPTH = 8
+Parameter \BASE = 976
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Generating RTLIL representation for module `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw'.
+Warning: Replacing memory \cp_rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75
+Warning: Replacing memory \rows with list of registers. See /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 0
+Parameter \SLATE = 0
+Found cached RTLIL representation for module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\ot_qwen_fixed_issue'.
+
+21.7. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw
+Used module:             \ot_qwen_fixed_issue
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+
+21.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_fixed_issue'.
+Parameter \ROW_AW = 3
+Parameter \OWN = 1
+Parameter \SREG = 1
+Parameter \SLATE = 1
+Generating RTLIL representation for module `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue'.
+
+21.9. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw
+Used module:             $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue
+
+21.10. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw
+Used module:         $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw
+Used module:             $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue
+Removing unused module `$paramod$32dadd356328b724e4ebc8a2707b6420bd3f69f9\ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `$paramod$62f51b9580aa9db2c5f6da135fd193a6109b67c2\ot_qwen_fixed_issue'.
+Removing unused module `\ot_qwen_fixed_issue_seg_pw'.
+Removing unused module `\ot_qwen_fixed_issue_dense_pw'.
+Removing unused module `\ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `\ot_qwen_fixed_issue_pw'.
+Removing unused module `\ot_qwen_fixed_issue'.
+Removing unused module `\gold_ot_qwen_fixed_issue_dense_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue_stream_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue_pw'.
+Removing unused module `\gold_ot_qwen_fixed_issue'.
+Removed 11 unused modules.
+
+22. Executing PROC pass (convert processes to netlists).
+
+22.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821'.
+Cleaned up 1 empty switch.
+
+22.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6782 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+Removed 1 dead cases from process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+Marked 14 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+Marked 54 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522 in module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+Marked 5 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+Marked 1 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+Marked 5 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+Marked 7 switch rules as full_case in process $proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800 in module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+Removed a total of 1 dead cases.
+
+22.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 24 assignments to connections.
+
+22.4. Executing PROC_INIT pass (extract init attributes).
+
+22.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+Found async reset \rst_n in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+Found async reset \rst_n in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821'.
+
+22.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~111 debug messages>
+
+22.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6782'.
+     1/1: $1$mem2reg_rd$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6514_DATA[55:0]$6784
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+     1/81: $9$lookahead\cp_valid$6645[2:0]$6744
+     2/81: $8$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6747
+     3/81: $8$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6746
+     4/81: $8$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6745
+     5/81: $7$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6741
+     6/81: $7$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6740
+     7/81: $7$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6739
+     8/81: $8$lookahead\cp_valid$6645[2:0]$6738
+     9/81: $6$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6730
+    10/81: $6$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6729
+    11/81: $6$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6728
+    12/81: $7$lookahead\cp_valid$6645[2:0]$6727
+    13/81: $6$lookahead\valid$6644[7:0]$6704
+    14/81: $5$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509[31:0]$6710
+    15/81: $5$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR[2:0]$6708
+    16/81: $5$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA[46:0]$6707
+    17/81: $5$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6709
+    18/81: $5$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6706
+    19/81: $5$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6705
+    20/81: $6$lookahead\cp_valid$6645[2:0]$6703
+    21/81: $5$lookahead\valid$6644[7:0]$6702
+    22/81: $5$lookahead\cp_valid$6645[2:0]$6701
+    23/81: $4$lookahead\valid$6644[7:0]$6694
+    24/81: $4$lookahead\cp_valid$6645[2:0]$6693
+    25/81: $4$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509[31:0]$6700
+    26/81: $4$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6699
+    27/81: $4$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR[2:0]$6698
+    28/81: $4$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA[46:0]$6697
+    29/81: $4$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6696
+    30/81: $4$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6695
+    31/81: $3$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509[31:0]$6691
+    32/81: $3$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6690
+    33/81: $3$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR[2:0]$6689
+    34/81: $3$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA[46:0]$6688
+    35/81: $3$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6687
+    36/81: $3$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6686
+    37/81: $3$lookahead\valid$6644[7:0]$6685
+    38/81: $3$lookahead\cp_valid$6645[2:0]$6684
+    39/81: $2$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509[31:0]$6683
+    40/81: $2$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6682
+    41/81: $2$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR[2:0]$6681
+    42/81: $2$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA[46:0]$6680
+    43/81: $2$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6679
+    44/81: $2$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6678
+    45/81: $2$lookahead\valid$6644[7:0]$6677
+    46/81: $2$lookahead\cp_valid$6645[2:0]$6676
+    47/81: $4$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_DATA[46:0]$6675
+    48/81: $3$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_DATA[46:0]$6673
+    49/81: $3$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_ADDR[2:0]$6674
+    50/81: $2$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_ADDR[2:0]$6669
+    51/81: $2$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_DATA[46:0]$6668
+    52/81: $1$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509[31:0]$6667
+    53/81: $1$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510[31:0]$6666
+    54/81: $1$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR[2:0]$6663
+    55/81: $1$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA[46:0]$6662
+    56/81: $1$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR[1:0]$6661
+    57/81: $1$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA[55:0]$6660
+    58/81: $1$lookahead\valid$6644[7:0]$6659
+    59/81: $1$lookahead\cp_valid$6645[2:0]$6658
+    60/81: $1$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_ADDR[2:0]$6665
+    61/81: $1$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_DATA[46:0]$6664
+    62/81: $0\stop_q[31:0]
+    63/81: $0\q[46:0]
+    64/81: $0\sealed[0:0]
+    65/81: $0\cfg_fault[0:0]
+    66/81: $0\read_fault[0:0]
+    67/81: $0\rows[0][46:0]
+    68/81: $0\rows[1][46:0]
+    69/81: $0\rows[2][46:0]
+    70/81: $0\rows[3][46:0]
+    71/81: $0\rows[4][46:0]
+    72/81: $0\rows[5][46:0]
+    73/81: $0\rows[6][46:0]
+    74/81: $0\rows[7][46:0]
+    75/81: $0\cp_rows[0][55:0]
+    76/81: $0\cp_rows[1][55:0]
+    77/81: $0\cp_rows[2][55:0]
+    78/81: $0\meta_q[63:0]
+    79/81: $0\loading[0:0]
+    80/81: $0\stop_seen[0:0]
+    81/81: $0\meta_seen[0:0]
+Creating decoders for process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+     1/63: $46\seal_bad[0:0]
+     2/63: $45\seal_bad[0:0]
+     3/63: $44\seal_bad[0:0]
+     4/63: $43\seal_bad[0:0]
+     5/63: $42\seal_bad[0:0]
+     6/63: $41\seal_bad[0:0]
+     7/63: $40\seal_bad[0:0]
+     8/63: $39\seal_bad[0:0]
+     9/63: $38\seal_bad[0:0]
+    10/63: $37\seal_bad[0:0]
+    11/63: $36\seal_bad[0:0]
+    12/63: $35\seal_bad[0:0]
+    13/63: $1\k[31:0]
+    14/63: $34\seal_bad[0:0]
+    15/63: $33\seal_bad[0:0]
+    16/63: $32\seal_bad[0:0]
+    17/63: $31\seal_bad[0:0]
+    18/63: $16\copies[31:0]
+    19/63: $30\seal_bad[0:0]
+    20/63: $15\copies[31:0]
+    21/63: $29\seal_bad[0:0]
+    22/63: $28\seal_bad[0:0]
+    23/63: $27\seal_bad[0:0]
+    24/63: $14\copies[31:0]
+    25/63: $26\seal_bad[0:0]
+    26/63: $13\copies[31:0]
+    27/63: $25\seal_bad[0:0]
+    28/63: $24\seal_bad[0:0]
+    29/63: $23\seal_bad[0:0]
+    30/63: $12\copies[31:0]
+    31/63: $22\seal_bad[0:0]
+    32/63: $11\copies[31:0]
+    33/63: $21\seal_bad[0:0]
+    34/63: $20\seal_bad[0:0]
+    35/63: $19\seal_bad[0:0]
+    36/63: $10\copies[31:0]
+    37/63: $18\seal_bad[0:0]
+    38/63: $9\copies[31:0]
+    39/63: $17\seal_bad[0:0]
+    40/63: $16\seal_bad[0:0]
+    41/63: $15\seal_bad[0:0]
+    42/63: $8\copies[31:0]
+    43/63: $14\seal_bad[0:0]
+    44/63: $7\copies[31:0]
+    45/63: $13\seal_bad[0:0]
+    46/63: $12\seal_bad[0:0]
+    47/63: $11\seal_bad[0:0]
+    48/63: $6\copies[31:0]
+    49/63: $10\seal_bad[0:0]
+    50/63: $5\copies[31:0]
+    51/63: $9\seal_bad[0:0]
+    52/63: $8\seal_bad[0:0]
+    53/63: $7\seal_bad[0:0]
+    54/63: $4\copies[31:0]
+    55/63: $6\seal_bad[0:0]
+    56/63: $3\copies[31:0]
+    57/63: $5\seal_bad[0:0]
+    58/63: $4\seal_bad[0:0]
+    59/63: $3\seal_bad[0:0]
+    60/63: $2\copies[31:0]
+    61/63: $2\seal_bad[0:0]
+    62/63: $1\copies[31:0]
+    63/63: $1\seal_bad[0:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+     1/14: $0\pending[0:0]
+     2/14: $0\done[0:0]
+     3/14: $0\cp_index[1:0]
+     4/14: $0\stop_q[31:0]
+     5/14: $0\head[46:0]
+     6/14: $0\tail[46:0]
+     7/14: $0\head_v[0:0]
+     8/14: $0\tail_v[0:0]
+     9/14: $0\index[2:0]
+    10/14: $0\pending_index[2:0]
+    11/14: $0\second_read[0:0]
+    12/14: $0\fault[0:0]
+    13/14: $0\cycle[31:0]
+    14/14: $0\active[0:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821'.
+     1/1: $0\sched_q[0:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+     1/10: $4\active_a[0:0]
+     2/10: $3\active_a[0:0]
+     3/10: $3\head_v_a[0:0]
+     4/10: $2\active_a[0:0]
+     5/10: $3\head_lo_a[31:0]
+     6/10: $1\active_a[0:0]
+     7/10: $2\head_v_a[0:0]
+     8/10: $2\head_lo_a[31:0]
+     9/10: $1\head_v_a[0:0]
+    10/10: $1\head_lo_a[31:0]
+Creating decoders for process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+     1/18: $6\active_n[0:0]
+     2/18: $5\active_n[0:0]
+     3/18: $5\head_v_n[0:0]
+     4/18: $4\active_n[0:0]
+     5/18: $5\head_lo_n[31:0]
+     6/18: $3\active_n[0:0]
+     7/18: $4\head_v_n[0:0]
+     8/18: $4\head_lo_n[31:0]
+     9/18: $3\head_v_n[0:0]
+    10/18: $3\head_lo_n[31:0]
+    11/18: $2\active_n[0:0]
+    12/18: $2\head_v_n[0:0]
+    13/18: $2\head_lo_n[31:0]
+    14/18: $2\cycle_n[31:0]
+    15/18: $1\head_v_n[0:0]
+    16/18: $1\cycle_n[31:0]
+    17/18: $1\active_n[0:0]
+    18/18: $1\head_lo_n[31:0]
+
+22.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6514_DATA' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6782'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\seal_bad' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\copies' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+No latch inferred for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\k' from process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head_lo_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\cycle_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head_v_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\active_a' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head_lo_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\cycle_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head_v_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+No latch inferred for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\active_n' from process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+
+22.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$lookahead\cp_valid$6645' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8453' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$lookahead\valid$6644' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8458' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8463' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\cp_rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6513_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8468' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8473' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_wr$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6512_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8478' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_DATA' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8483' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$mem2reg_rd$\rows$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58$6511_ADDR' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8488' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:75$6510' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8493' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$bitselwrite$pos$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67$6509' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8498' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\meta_seen' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8503' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\stop_seen' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8508' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\loading' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8513' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\meta_q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8518' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\cp_rows[2]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8525' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\cp_rows[1]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8532' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\cp_rows[0]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8539' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[7]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8546' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[6]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8553' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[5]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8560' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[4]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8567' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[3]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8574' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[2]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8581' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[1]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8588' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\rows[0]' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $dff cell `$procdff$8595' with positive edge clock.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\cp_valid' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8600' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\read_fault' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8605' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\cfg_fault' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8610' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\sealed' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8615' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8620' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\valid' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8625' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.\stop_q' using process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+  created $adff cell `$procdff$8630' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\active' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8635' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\done' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8640' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\cycle' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8645' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\fault' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8650' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\second_read' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8655' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\pending_index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8660' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\pending' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8665' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8670' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\tail_v' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8675' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head_v' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8680' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\tail' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8685' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\head' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8690' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\stop_q' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8695' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\cp_index' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+  created $adff cell `$procdff$8700' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.\sched_q' using process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821'.
+  created $adff cell `$procdff$8705' with positive edge clock and positive level reset.
+
+22.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+22.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6782'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:89$6782'.
+Found and cleaned up 21 empty switches in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:54$6646'.
+Found and cleaned up 54 empty switches in `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+Removing empty process `$paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33$6522'.
+Found and cleaned up 23 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:113$6838'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:96$6821'.
+Found and cleaned up 5 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:78$6808'.
+Found and cleaned up 7 empty switches in `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+Removing empty process `$paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.$proc$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:60$6800'.
+Cleaned up 111 empty switches.
+
+22.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+<suppressed ~108 debug messages>
+Optimizing module $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw.
+Optimizing module gate.
+Optimizing module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+<suppressed ~37 debug messages>
+
+23. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$06276035213a8cb98a9d3aac6cb257ca59ea8203\ot_qwen_fixed_issue_dense_pw.
+Deleting now unused module $paramod$8f30d5650616106d15ed0dc546a2be188ac68215\ot_qwen_fixed_issue_pw.
+Deleting now unused module $paramod$db9ae5a4d3e6eb1be6498743e3456bfde6e430ff\ot_qwen_fixed_issue.
+<suppressed ~3 debug messages>
+
+24. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+25. Executing OPT pass (performing simple optimizations).
+
+25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+<suppressed ~275 debug messages>
+
+25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 760 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 669 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 661 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 660 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+<suppressed ~300 debug messages>
+Removed a total of 100 cells.
+
+25.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8414: \u.genblk1.g_dense.u_store.u_issue.active -> 1'0
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8370: \u.genblk1.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8347: \u.genblk1.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8270: \u.genblk1.g_dense.u_store.u_issue.active -> 1'0
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8264: \u.genblk1.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8262: \u.genblk1.g_dense.u_store.u_issue.active -> 1'1
+      Replacing known input bits on port B of cell $flatten\u.\genblk1.g_dense.u_store.$procmux$7770: \u.genblk1.g_dense.u_store.loading -> 1'1
+      Replacing known input bits on port A of cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8203: \u.genblk1.g_dense.u_store.u_issue.second_read -> 1'0
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8359.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8359.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8379.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8379.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8388.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8388.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8406.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8406.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8420.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8420.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8426.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8426.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8432.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8432.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8438.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8438.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8441.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8441.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8447.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8447.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7409.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7409.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7406.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7406.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7401.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7401.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7395.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7395.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7370.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7370.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7367.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7367.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7364.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7364.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7361.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7361.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7358.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7358.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7355.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7355.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7338.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7338.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7332.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7332.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7326.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7326.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7320.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7320.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7314.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7314.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7308.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7308.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7299.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7299.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7290.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7290.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7281.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7281.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7272.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7272.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7263.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7263.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7254.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7254.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7188.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7188.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7176.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7176.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7164.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7164.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7152.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7152.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7140.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7140.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7128.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7128.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7086.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7086.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7071.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7071.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7056.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7056.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7020.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7020.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7002.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7002.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6984.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6984.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6963.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6963.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6942.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6942.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6921.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$6921.
+    dead port 1/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8335.
+    dead port 2/2 on $mux $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8335.
+Removed 96 multiplexer ports.
+<suppressed ~336 debug messages>
+
+25.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+    Consolidated identical input bits for $mux cell $flatten\u.\genblk1.g_dense.u_store.$procmux$8092:
+      Old ports: A=0, B=1, Y=$flatten\u.\genblk1.g_dense.u_store.$procmux$8092_Y
+      New ports: A=1'0, B=1'1, Y=$flatten\u.\genblk1.g_dense.u_store.$procmux$8092_Y [0]
+      New connections: $flatten\u.\genblk1.g_dense.u_store.$procmux$8092_Y [31:1] = 31'0000000000000000000000000000000
+    Consolidated identical input bits for $mux cell $flatten\u.\genblk1.g_dense.u_store.$procmux$7770:
+      Old ports: A=1'1, B=1'1, Y=$flatten\u.\genblk1.g_dense.u_store.$procmux$7770_Y
+      New connections: $flatten\u.\genblk1.g_dense.u_store.$procmux$7770_Y = 1'1
+    Consolidated identical input bits for $mux cell $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8203:
+      Old ports: A=1'0, B=1'0, Y=$flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8203_Y
+      New connections: $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8203_Y = 1'0
+  Optimizing cells in module \gate.
+    Consolidated identical input bits for $mux cell $flatten\u.\genblk1.g_dense.u_store.$procmux$8100:
+      Old ports: A=0, B=$flatten\u.\genblk1.g_dense.u_store.$2\copies[31:0], Y=$flatten\u.\genblk1.g_dense.u_store.$procmux$8100_Y
+      New ports: A=1'0, B=$flatten\u.\genblk1.g_dense.u_store.$procmux$8092_Y [0], Y=$flatten\u.\genblk1.g_dense.u_store.$procmux$8100_Y [0]
+      New connections: $flatten\u.\genblk1.g_dense.u_store.$procmux$8100_Y [31:1] = 31'0000000000000000000000000000000
+  Optimizing cells in module \gate.
+Performed a total of 4 changes.
+
+25.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 610 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 608 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 607 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 606 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 605 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 604 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 603 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+25.6. Executing OPT_SHARE pass.
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$8070 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8059
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8052
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$8043 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8032
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8025
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$8016 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8005
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7998
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7989 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7978
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7971
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7962 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7951
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7944
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7935 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7924
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7917
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7908 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7897
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7890
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7877 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7871
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7863
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7855 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7849
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7841
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$7833 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7827
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$7819
+
+    Found cells that share an operand and can be merged by moving the $mux $flatten\u.\genblk1.g_dense.u_store.$procmux$8097 in front of them:
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8086
+        $flatten\u.\genblk1.g_dense.u_store.$procmux$8079
+
+25.7. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8553 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[6]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8574 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[3]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8560 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[5]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8625 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$3$lookahead\valid$6644[7:0]$6685, Q = \u.genblk1.g_dense.u_store.valid).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8567 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[4]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8680 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8172_Y, Q = \u.genblk1.g_dense.u_store.u_issue.head_v).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8525 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [55:0], Q = \u.genblk1.g_dense.u_store.cp_rows[2]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8675 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8189_Y, Q = \u.genblk1.g_dense.u_store.u_issue.tail_v).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8695 ($adff) from module gate (D = \u.genblk1.g_dense.u_store.u_issue.stop_cycle, Q = \u.genblk1.g_dense.u_store.u_issue.stop_q).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8670 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8199_Y, Q = \u.genblk1.g_dense.u_store.u_issue.index).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8539 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [55:0], Q = \u.genblk1.g_dense.u_store.cp_rows[0]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8615 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$procmux$7454_Y, Q = \u.genblk1.g_dense.u_store.sealed).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8660 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$ternary$/src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:111$6837_Y, Q = \u.genblk1.g_dense.u_store.u_issue.pending_index).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8690 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8139_Y, Q = \u.genblk1.g_dense.u_store.u_issue.head).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8546 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[7]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8700 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8126_Y, Q = \u.genblk1.g_dense.u_store.u_issue.cp_index).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8645 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procmux$8259_Y, Q = \u.genblk1.g_dense.u_store.u_issue.cycle).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8581 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[2]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.\u_issue.$procdff$8685 ($adff) from module gate (D = \u.genblk1.g_dense.u_store.u_issue.slot_q, Q = \u.genblk1.g_dense.u_store.u_issue.tail).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8588 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[1]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8532 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [55:0], Q = \u.genblk1.g_dense.u_store.cp_rows[1]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8503 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$procmux$7811_Y, Q = \u.genblk1.g_dense.u_store.meta_seen).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8595 ($dff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [46:0], Q = \u.genblk1.g_dense.u_store.rows[0]).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8508 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$procmux$7790_Y, Q = \u.genblk1.g_dense.u_store.stop_seen).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8513 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$procmux$7772_Y, Q = \u.genblk1.g_dense.u_store.loading).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8620 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$procmux$7428_Y, Q = \u.genblk1.g_dense.u_store.q).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8518 ($adff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data, Q = \u.genblk1.g_dense.u_store.meta_q).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8630 ($adff) from module gate (D = \u.genblk1.g_dense.u_store.pw_data [31:0], Q = \u.genblk1.g_dense.u_store.stop_q).
+Adding EN signal on $flatten\u.\genblk1.g_dense.u_store.$procdff$8600 ($adff) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$3$lookahead\cp_valid$6645[2:0]$6684, Q = \u.genblk1.g_dense.u_store.cp_valid).
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 2 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 3 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 4 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 5 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 6 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 7 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 8 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 9 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 10 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 11 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 12 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 13 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 14 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 15 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 16 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 17 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 18 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 19 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 20 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 21 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 22 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 23 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 24 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 25 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 26 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 27 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 28 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 29 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 30 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 31 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8498 ($adff) from module gate.
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8488 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8488 ($adff) from module gate.
+Setting constant 1-bit at position 2 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8488 ($adff) from module gate.
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 2 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 3 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 4 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 5 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 6 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 7 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 8 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 9 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 10 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 11 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 12 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 13 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 14 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 15 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 16 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 17 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 18 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 19 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 20 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 21 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 22 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 23 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 24 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 25 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 26 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 27 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 28 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 29 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 30 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 31 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 32 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 33 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 34 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 35 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 36 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 37 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 38 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 39 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 40 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 41 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 42 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 43 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 44 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 45 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 46 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8483 ($adff) from module gate.
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8468 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8468 ($adff) from module gate.
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 2 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 3 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 4 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 5 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 6 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 7 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 8 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 9 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 10 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 11 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 12 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 13 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 14 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 15 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 16 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 17 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 18 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 19 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 20 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 21 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 22 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 23 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 24 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 25 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 26 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 27 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 28 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 29 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 30 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 31 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 32 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 33 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 34 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 35 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 36 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 37 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 38 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 39 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 40 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 41 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 42 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 43 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 44 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 45 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 46 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 47 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 48 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 49 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 50 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 51 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 52 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 53 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 54 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 55 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8463 ($adff) from module gate.
+Setting constant 1-bit at position 0 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 1 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 2 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 3 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 4 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 5 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 6 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+Setting constant 1-bit at position 7 on $flatten\u.\genblk1.g_dense.u_store.$procdff$8458 ($adff) from module gate.
+
+25.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Removed 125 unused cells and 1300 unused wires.
+<suppressed ~130 debug messages>
+
+25.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+<suppressed ~54 debug messages>
+
+25.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+25.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~180 debug messages>
+
+25.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+Performed a total of 0 changes.
+
+25.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 528 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 476 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+<suppressed ~156 debug messages>
+Removed a total of 52 cells.
+
+25.14. Executing OPT_SHARE pass.
+
+25.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $auto$ff.cc:337:slice$8777 ($adffe) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$4$lookahead\valid$6644[7:0]$6694, Q = \u.genblk1.g_dense.u_store.valid).
+Adding EN signal on $auto$ff.cc:337:slice$8972 ($adffe) from module gate (D = $flatten\u.\genblk1.g_dense.u_store.$4$lookahead\cp_valid$6645[2:0]$6693, Q = \u.genblk1.g_dense.u_store.cp_valid).
+
+25.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Removed 2 unused cells and 92 unused wires.
+<suppressed ~3 debug messages>
+
+25.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+<suppressed ~9 debug messages>
+
+25.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+25.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~171 debug messages>
+
+25.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+Performed a total of 0 changes.
+
+25.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 478 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 472 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+25.22. Executing OPT_SHARE pass.
+
+25.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+25.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~1 debug messages>
+
+25.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+
+25.26. Rerunning OPT passes. (Maybe there is more to do..)
+
+25.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~171 debug messages>
+
+25.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+Performed a total of 0 changes.
+
+25.29. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 472 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Removed a total of 0 cells.
+
+25.30. Executing OPT_SHARE pass.
+
+25.31. Executing OPT_DFF pass (perform DFF optimizations).
+
+25.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+
+25.33. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+
+25.34. Finished fast OPT passes. (There is nothing left to do.)
+
+26. Executing JSON backend.
+
+Warnings: 11 unique messages, 30 total
+End of script. Logfile hash: 8e763583b1, time: 0.82s, user: 0.82s, system: 0.04s, MEM: 39.09 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 27% 16x read_verilog (0 sec), 14% 12x opt_expr (0 sec), ...
