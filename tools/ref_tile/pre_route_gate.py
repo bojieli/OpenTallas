@@ -67,7 +67,8 @@ RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
 SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
-                "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl")
+                "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl",
+                "physical/common_flow/native_pg_binding.tcl")
 
 
 def ship_helpers(spec=None):

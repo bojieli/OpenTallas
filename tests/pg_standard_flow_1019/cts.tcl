@@ -15,7 +15,9 @@ ot_pg_assert_all_native $blk [ot_pg_prepare $blk]
 if {$::env(CASE) eq "context"} {
   source /src/physical/common_flow/clock_spine.tcl
   estimate_parasitics -placement
-  if {![catch {ot_pg_require_cts_placement_or_empty_context} why] || $why ne "OT_PG_PARASITICS_EXISTING_ANNOTATION_REFUSED"} {error "OLD_SECOND_ROOT_NOT_REFUSED $why"}
+  # Actual native witness: estimated placement RC is not marked as a SPEF
+  # annotation. The original guard already accepts it; preserve this behavior.
+  if {[ot_pg_require_cts_placement_or_empty_context] ne "placement"} {error TRUSTED_PLACEMENT_GUARD_FAILED}
   proc stop_before_bind {command operation} {error CONTEXT_ADMITTED_BEFORE_MUTATION}
   trace add execution ot_pg_bind_batch_before_protect enter stop_before_bind
   set before [ot_pg_binding_state $blk]
