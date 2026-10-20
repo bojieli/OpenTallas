@@ -1,5 +1,5 @@
 {
- "name": "hv16_dbk_cpl_l1-l1-COMMIT",
+ "name": "hv16_dbk_cpl_l1-l1-766b95a65",
  "block": "ot_hgi_dma_back_static_vp4_banks_cpl",
  "ref_tile": true,
  "owner": "Claude:LEAD5-HBM/HBM-HC7-DBK",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbm-hc7-dbk-1020",
-  "commit": "COMMIT",
+  "commit": "766b95a65ea4257b5b51cd4019df1a6be737db37",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -183,7 +183,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv16_dbk_cpl_l1/hv16_dbk_cpl_l1-l1-COMMIT"
+   "to": "results/rtl/ref_tile/hv16_dbk_cpl_l1/hv16_dbk_cpl_l1-l1-766b95a65"
   }
  ],
  "cycles_added": 0,
