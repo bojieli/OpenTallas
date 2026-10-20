@@ -37,7 +37,9 @@ SOURCES = {
     'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv': '62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e',
     'rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv': 'a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849',
     'rtl/qwen_split/qfd_fwd_lane.sv': '16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622',
-    'rtl/lib/face_land/qkd_astk_rly_296_fl.sv': 'f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c',
+       # KV-BIND3 10-19: rc1 wrapper (10 kept reset relay copies, ot_rst_relay REGIONS 10; data path b <= a unchanged;
+    # previous pin f6e02fd5...).
+    'rtl/lib/face_land/qkd_astk_rly_296_fl.sv': '5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904',
     'rtl/qwen_sys/split_20261014/qkd_astk_phys.sv': '5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de',
     'rtl/lib/ot_rst_relay.sv': '0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5',
 }
@@ -74,6 +76,27 @@ def pinned_sources(root, pins=None):
     return out
 
 
+def default_only(master, params, root=ROOT):
+    """KV-BIND3 10-19: the expanded parameter ledger materialises every parameterised leaf's evaluated parameters on the
+    bound instance (#(.MUT(32'sb0))).  A relay family instance stays qualified only when that list is exactly the module's
+    own RTL defaults (ASTK wrapper MUT 0); any override, unknown name or unparsable literal refuses."""
+    if not params:
+        return True
+    if master not in ASTK:
+        return False
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import kv_expand_parameters as XP
+    d = XP.integer_defaults((Path(root) / 'rtl/lib/face_land/qkd_astk_rly_296_fl.sv').read_text(), master)
+    for k, lit in params.items():
+        m = re.fullmatch(r"32'sb([01]{32})", lit) if isinstance(lit, str) else None
+        if k not in d or not m:
+            return False
+        v = int(m[1], 2) - ((1 << 32) if m[1][0] == '1' else 0)
+        if v != d[k]:
+            return False
+    return True
+
+
 def derive(die_v, root=ROOT, existing=None, pins=None):
     srcs = pinned_sources(root, pins)
     nets, tin, tout, insts = P.parse_die(str(die_v))
@@ -88,7 +111,7 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
             continue
         w = FAMILIES[m]
         aa, bb = P.expr_bits(cm.get('a', ''), nets), P.expr_bits(cm.get('b', ''), nets)
-        if params or aa is None or bb is None or len(aa) != w or len(bb) != w:
+        if not default_only(m, params, root) or aa is None or bb is None or len(aa) != w or len(bb) != w:
             raise ValueError(f'{inst}: unqualified relay width/parameters')
         conn[inst] = (m, [tuple(x) for x in aa], [tuple(x) for x in bb])
         for k, b in enumerate(bb):

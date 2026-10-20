@@ -1,0 +1,136 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-bind3-1019/astk/arch/qkd_astk_rly_296-rc1-1b6976095",
+ "closed": {
+  "commit": "1b69760953024d643dd556e23c8b2426ca94f893",
+  "final_v_sha256": "5e6c3e9766d22bf33b5c53e644154fdc87565951bf12b29c54756824b34c3230",
+  "job": "qkd_astk_rly_296-rc1-1b6976095",
+  "lef_sha256": "e13b4224d333cdc977641fc4b6cb99e7665f6da439f132c1351e04adf65c9b87",
+  "physical_json_sha256": "54944a12deb59c20f6ea48695cceccafcfe0456bd13e38802adb7a4ef16f54c9",
+  "spec_params": {},
+  "synth_sources": {
+   "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904",
+   "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+  },
+  "top": "qkd_astk_rly_296_fl",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {
+  "MUT": [
+   0,
+   1
+  ]
+ },
+ "equiv": {
+  "cells": 594,
+  "log_sha256": "8ca387ae4e3a0dc4db5731406dbc23692d4e3f0f1c121f45339aeb13d869f4de",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "proven_cells": 2,
+  "rc": 1,
+  "seconds": [
+   0.0,
+   14.8
+  ],
+  "unproven_cells": 592,
+  "unproven_sample": [
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14056: \\b_gold [295] \\b_gate [295]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14055: \\b_gold [294] \\b_gate [294]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14054: \\b_gold [293] \\b_gate [293]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14053: \\b_gold [292] \\b_gate [292]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14052: \\b_gold [291] \\b_gate [291]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14051: \\b_gold [290] \\b_gate [290]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14050: \\b_gold [289] \\b_gate [289]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14049: \\b_gold [288] \\b_gate [288]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14048: \\b_gold [287] \\b_gate [287]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14047: \\b_gold [286] \\b_gate [286]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14046: \\b_gold [285] \\b_gate [285]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14045: \\b_gold [284] \\b_gate [284]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14044: \\b_gold [283] \\b_gate [283]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14043: \\b_gold [282] \\b_gate [282]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14042: \\b_gold [281] \\b_gate [281]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14041: \\b_gold [280] \\b_gate [280]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14040: \\b_gold [279] \\b_gate [279]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14039: \\b_gold [278] \\b_gate [278]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14038: \\b_gold [277] \\b_gate [277]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$14037: \\b_gold [276] \\b_gate [276]"
+  ]
+ },
+ "expect": "fail",
+ "gate": {
+  "flops": 310,
+  "macros": {},
+  "replicas": 0
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "c049881a42557f4a62a7eba9768e460752e014cf2f00f2bc1f12c2274a6f6a8f",
+   "child_lint.json": "bf3cc2e94f818b71fe2971bc2206714e82833021930405645e3f41352e5e5c53",
+   "export_ff.log": "af499dc65ad2b232d777c016457c2025c004746f56ccdaa9e88e352fb5f8ba4c",
+   "export_ff.tcl": "c9dbd12b7ebd87629cb60a742ecf81e460233c86ee7e284a5a8aaf79e78dde2a",
+   "export_ss.log": "d809d34c8842323144a672bc9d1326fe2626b64edfa09d73befb40013a652565",
+   "export_ss.tcl": "9d3ae805574ed25b54485c0323f364aacf4c19d520fef7ecd8173374d4a0d93d",
+   "export_tt.log": "f3c1f66de06d3c07b0021285688f6263d51f26ba2c0eea86da360c86f85edec2",
+   "export_tt.tcl": "792b778e7e647635724d0a97913e0bc9bacf97a0dfc927716cefcb3bbbcbdd16",
+   "insertion.json": "df0d4fa565e5451936a0509479e4ed2d0ec1f73ff70f203860f4b4d03c1af62e",
+   "provenance/abstract_pin_stub.json": "889584add2d884c301895e569933d921649fed8a2fd73b9c7971946105feb81c",
+   "provenance/raw/qkd_astk_rly_296_fl.lef": "e13b4224d333cdc977641fc4b6cb99e7665f6da439f132c1351e04adf65c9b87",
+   "provenance/view_export.abstract.json": "fd4b0af713e0a1b8d3ff7e777b2eb6684b8f199bd23a59f59cdc9fec692a648f",
+   "qkd_astk_rly_296_fl.lef": "5a75a96fc874a4ae98f38ddb4cc9bc08b0a90c826a747c9aff9a5c3ffd73e39c",
+   "qkd_astk_rly_296_fl_ff.lib": "41802de77e4400e813df2969db1ae3eec8d24a62cf72a50ce486e54d8598fb6e",
+   "qkd_astk_rly_296_fl_ss.lib": "55b69d7fc71278d1e9b43cf3279087c2b50723e123c30dcd07f746d33c3915e6",
+   "qkd_astk_rly_296_fl_tt.lib": "7d9fe1cede01252b97cda7e990971541bad5a34d90df428c92493ac0d5b9c5a5"
+  },
+  "rtl": {
+   "path": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+   "sha256": "5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904"
+  },
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl"
+ },
+ "module": "qkd_astk_rly_296_fl",
+ "observe_zero": null,
+ "parameters": {
+  "MUT": 1
+ },
+ "proven": false,
+ "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904",
+  "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 12,
+  "gate_only_sample": [
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c0",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c1",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c2",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c3",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c4",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c5",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c6",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c7",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c8",
+   "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c9",
+   "u_ot_pr_core.g_rrel_rst_n.u_fl_rst_rst_n.sync_q[0]",
+   "u_ot_pr_core.g_rrel_rst_n.u_fl_rst_rst_n.sync_q[1]"
+  ],
+  "gold_only": 0,
+  "gold_only_sample": [],
+  "gold_regs": 298,
+  "paired": 298
+ },
+ "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl",
+ "wrapper": {
+  "clock": "ck",
+  "kind": "reset_landing",
+  "reset_landing_sha256": "b187a2e564228032a7f341fc92a91bfdd7e807f9b6975e968da40407cea14103",
+  "reset_ports": [
+   "rst_n"
+  ],
+  "stages": 2
+ }
+}
