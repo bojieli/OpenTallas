@@ -11,9 +11,16 @@ Patterns (block = one SM block of `lines` 136-B lines = ceil(lines*136/128) word
             6 routed w2 with RANDOM expert ids) with the HBM-BW layout: non-expert blocks rotate the bank-set and end on
             set 5, routed w1+w3 alternate sets 6/7 and routed w2 sets 1/2 (copy = routed position parity), shared w2 set 0
   ds_nodup  as ds but every routed w1+w3 on set 6 and every w2 on set 1 (no copy alternation)
+HBM-ROTLAYOUT (10-19) per-stream-class patterns, every address from the compiler's layout functions (hbm_bank_layout):
+  ds_rot     DS L14 layer stream laid out by hbm_bank_layout.layout_bw (= smb_unit) incl. kind-boundary phasing
+  weights    DS non-expert blocks (+ shared w2), slot-packed       experts  DS routed w1+w3 / w2, copies by position
+  kv         DS attention KV window runs, slot-packed               embed_head  LM-head run of full blocks, slot-packed
+  qwen       Qwen3-8B INT8 per-SM qkv/o/gu/down, slot-packed        tables   runtime-indexed 2-block rows (table_entry)
+  (ds = the HBM-MC2 hand layout: one same-set block pair at every layer boundary -> refused by the ROTLAYOUT check)
 """
 import argparse, json, os, random, re, subprocess, sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 ROOT = Path(__file__).resolve().parents[2]
 LINE_B, SECTOR_B = 136, 32
@@ -75,9 +82,113 @@ def gen(pattern, n_layers, seed):
                     row = 2048 + (L * 384 + item[3]) % 18000
                 blks.append((row, st, words(lines)))
             ne_row += 1
+    elif pattern in CLASS_PATTERNS:
+        blks = [(r, st, w) for (r, st, w, _rt) in gen_class(pattern, n_layers, rng)]
     else:
         raise SystemExit(f"unknown pattern {pattern}")
     return blks
+
+
+# ---------------------------------------------------------------- HBM-ROTLAYOUT (10-19): one census pattern per stream
+# class, every address produced by the compiler's layout functions (hbm_bank_layout: packed / expert_set / table_entry)
+# with the production shapes of that class.  (row, set, words, runtime_row)
+import hbm_bank_layout as BL  # noqa: E402
+QWEN_SM = (("qkv", 4096, 1536), ("o", 1024, 4096), ("gu", 4096, 6144), ("down", 3072, 4096))  # (tag, K, m per die)
+CLASS_PATTERNS = ("ds_rot", "weights", "experts", "kv", "embed_head", "qwen", "tables")
+PATTERN_CLASS = dict(ds_rot="weights", ds="weights", ds_nodup="weights", packed="weights", asbuilt="weights", rand="weights",
+                     weights="weights", experts="experts", kv="kv", embed_head="embed_head", qwen="weights",
+                     tables="tables")
+
+
+def _packed_lines(base, line_list):
+    return [(a >> 3, a & 7, words(n), False) for a, n in zip(BL.packed(base, len(line_list)), line_list)]
+
+
+def gen_class(pattern, n_layers, rng):
+    out = []
+    if pattern == "ds_rot":
+        out = gen_ds_rot(n_layers, rng)
+    elif pattern == "weights":                       # DS non-expert L14 blocks (incl. shared expert), slot-packed run
+        ne = [n for (_, b, l) in L14 for n in split(b, l)] + [SH2]
+        base = 100 * 8
+        for L in range(n_layers):
+            out += _packed_lines(base, ne)
+            base += -(-len(ne) // 8) * 8 + 8
+    elif pattern == "experts":                     # DS routed w1+w3 / w2, random ids, copies alternate by position
+        for L in range(n_layers):
+            ids = rng.sample(range(384), 6)
+            for p, e in enumerate(ids):
+                out.append((2048 + (L * 384 + e) % 18000, BL.expert_set(0, p), words(R13), True))
+            for p, e in enumerate(rng.sample(ids, 6)):
+                out.append((2048 + (L * 384 + e) % 18000, BL.expert_set(1, p), words(R2), True))
+    elif pattern == "kv":                          # DS attention KV of one SM: per layer a contiguous window run
+        base = 0x4000 * 8
+        for L in range(n_layers):
+            nl = 64 * 37 + 23 + 16 * L             # partial last block, different length per layer
+            out += _packed_lines(base, [min(64, nl - 64 * b) for b in range(-(-nl // 64))])
+            base += -(-(-(-nl // 64)) // 8) * 8 + 8
+    elif pattern == "embed_head":                  # LM head / output projection: one long slot-packed run of full blocks
+        out += _packed_lines(9000 * 8, [64] * (64 * n_layers))
+    elif pattern == "qwen":                        # Qwen3-8B INT8 per-SM rows ceil(m/16) x K codes, 128 codes a line
+        base = 100 * 8
+        for L in range(n_layers):
+            for (_, K, m) in QWEN_SM:
+                nl = -(-m // 16) * (K // 128)
+                out += _packed_lines(base, [min(64, nl - 64 * b) for b in range(-(-nl // 64))])
+                base += -(-nl // 64)
+            base = -(-base // 8) * 8
+    elif pattern == "tables":                      # runtime-indexed rows (embedding / engram shape: 64 + 42 lines)
+        for _ in range(32 * n_layers):
+            e = rng.randrange(100000)
+            for a, n in zip(BL.table_entry(20000 * 8, e, 2), (64, 42)):
+                out.append((a >> 3, a & 7, words(n), True))
+    return out
+
+
+def gen_ds_rot(n_layers, rng):
+    """DS V4.1 L14 layer stream laid out by THE compiler function (hbm_bank_layout.layout_bw = smb_unit.layout_bw) with
+    the ROTLAYOUT kind-boundary phasing (first block off every kind's tail sets).  (row, set, words, runtime_row)"""
+    def layer(L, avoid):
+        recs = []
+        for (tag, b, l) in L14:
+            recs.append(dict(tag=tag, slot=None, eid=None, blocks=[dict(n_lines=n) for n in split(b, l)]))
+        ids = rng.sample(range(384), 6)
+        for s_, e in enumerate(ids):
+            recs.append(dict(tag="w13", slot=s_, eid=e, blocks=[dict(n_lines=R13)]))
+        recs.append(dict(tag="shared.w2", slot=None, eid=None, blocks=[dict(n_lines=SH2)]))
+        for e in rng.sample(ids, 6):
+            recs.append(dict(tag="w2", slot=ids.index(e), eid=e, blocks=[dict(n_lines=R2)]))
+        nonexp = [b for r in recs if r["slot"] is None for b in r["blocks"]]
+        exp_blocks = {}
+        for r in recs:
+            if r["slot"] is not None:
+                exp_blocks.setdefault(r["slot"], []).extend(r["blocks"])
+        kd = dict(name="L14")
+        BL.layout_bw(kd, recs, nonexp, exp_blocks, 0, avoid_first=avoid)
+        kd["row_top_after"](800 + 8000 * L)          # one disjoint region per bench layer (row = addr >> 3 < 2^15)
+        return [b for r in recs for b in r["blocks"]]
+    avoid = BL.tail_sets(BL.kind_seq(layer(0, ())))
+    out = []
+    for L in range(n_layers):
+        for b in layer(L, avoid):
+            out.append((b["dram_row"] >> 3, b["dram_row"] & 7, words(b["n_lines"]), b["runtime_row"]))
+    return out
+
+
+def runtime_row(pattern, i, _cache={}):
+    """is block i's DRAM row a runtime value (routed expert id / table index)?  (the check treats it as a new row)"""
+    if pattern not in _cache:
+        if pattern in CLASS_PATTERNS:
+            _cache[pattern] = [rt for (*_, rt) in gen_class(pattern, 4, random.Random(1))]
+        elif pattern in ("ds", "ds_nodup"):
+            rt = []
+            for L in range(4):
+                rt += [it[0] in ("r13", "r2") for it in layer_ds(random.Random(1), L, pattern == "ds_nodup")]
+            _cache[pattern] = rt
+        else:
+            _cache[pattern] = None
+    v = _cache[pattern]
+    return bool(v[i]) if v is not None and i < len(v) else False
 
 def write_blk(blks, path):
     with open(path, "w") as f:
