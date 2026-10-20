@@ -192,6 +192,12 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # QW STREAM: the only guarded path is a NEW, tile-specific spec generator.
+    # It adds no gate/submit/route validator code and changes no existing helper.
+    "6ebf7706a64edfe81bfbde75defed9c374c5bfd8": dict(
+        kind="neutral", paths=("tools/ref_tile/specs_qw_stream_1019/mk_specs.py",),
+        what="new Qwen stream kit-spec generator only; no existing gate-rule or shared helper changes"),
+
     "ef6a3af26513c90c8af5d553c7238276df905848": dict(
         kind="relaxing", rule="0dq", requires="clock_pin_spread",
         what="clock rule 0dq (owner 10-17): insertion > 300 ps / > 15k sinks FAIL -> WARN; FAIL only on pin-flop "
