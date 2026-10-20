@@ -6,3 +6,6 @@ QW-A0-RC3 rc3/rc3b gates (10-19 21:35, @28d7d8290, --remote auto --cts):
  ck sinks (NL rc3b 3_place.odb): 3060 hub + 39 FREE land_rq/fault, all inside x 387-460 -> spread is the H-tree over a tall strip
  -> rc4 square-ish hub 70x140 (rc4b 80x110), n_va/fault_q FREE.
  NK rc3 1_synth.odb census (audit_odb): 33 registers > 32 loads, max 48 (rc1: 46, max 88); all g_rr6.g_sp[*] shift-amount copies.
+rc4/rc4b NL (ot-epyc7, @a26ea0ec8): DPL-0033 with only 2 / 1 buffers (BUFx3 place35072/35094; BUFx16f wire44675) overlapping
+ tapcells at y 441-487, i.e. in the 8.2 / 3.5 um lanes between the wide hub (70 / 80 um) and the tx1/2/5/6 fences.
+ -> rc5 hub 44x88 / rc5b 52x100: <=2:1 aspect and rc3's 21 / 17 um lanes. Area check gains "lane between side-by-side fences >= 12 um".

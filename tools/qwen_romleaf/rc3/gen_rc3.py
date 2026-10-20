@@ -50,6 +50,12 @@ HUB = {  # (x0, y0, x1, y1)
     ("rc4", False): (382.0, 380.0, 452.0, 520.0),         # 70 x 140, tile centre
     ("rc4b", True): (377.4, 316.0, 457.4, 426.0),         # 80 x 110 (1.4:1), comb above/below
     ("rc4b", False): (377.4, 395.0, 457.4, 505.0),
+    # rc5 (after rc4: 2 / 1 buffers stuck on tapcells in the 8 / 3.5 um lanes beside the wide hub): keep rc3's 21 um
+    # lanes AND <= 2:1 aspect -> hub 44 x 88 (rc5) / 52 x 100 (rc5b, 17 um lanes).  Register fill 25 % / 18 %.
+    ("rc5", True): (395.0, 338.0, 439.0, 426.0),
+    ("rc5", False): (395.0, 406.0, 439.0, 494.0),
+    ("rc5b", True): (391.0, 326.0, 443.0, 426.0),
+    ("rc5b", False): (391.0, 400.0, 443.0, 500.0),
 }
 LO = "([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])"
 
@@ -102,7 +108,8 @@ def make(nk, rev):
     s["io_tcl"] = f"tools/qwen_romleaf/rc3/{kit}_pins.tcl"
     s["pin_hook_before_flops"] = [f"tools/qwen_romleaf/rc3/{kit}_regions.tcl"]
     hubtxt = {"rc3": "hub column 395-439", "rc3b": "compact hub box", "rc4": "square-ish 70x140 hub box (ck H-tree spread)",
-              "rc4b": "80x110 hub box (ck H-tree spread)"}[rev] + (" under the node" if nk else "") + \
+              "rc4b": "80x110 hub box (ck H-tree spread)", "rc5": "44x88 hub box, 21 um lanes (ck spread + lanes)",
+              "rc5b": "52x100 hub box, 17 um lanes (ck spread + lanes)"}[rev] + (" under the node" if nk else "") + \
              ("" if rev in ("rc3", "rc3b") else "; u_g.u_tile.n_va/fault_q pin-side flops FREE (rc3 NK DPL-0008 n_va)")
     s["structural_change"] = (f"QW-A0-RC3 {rev} (10-19, after rc1/rc2 DPL-0033): fences are pin-side sub-lanes with a "
         f"free lane in every corridor for the non-member comb/repair cells ({hubtxt}); REGROOT 7 RTL, 820.8 x 907.2 "

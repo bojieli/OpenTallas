@@ -10,7 +10,8 @@ Model: row capacity = box area outside hard children x 0.946 (rc2 tx0: 3826.7 me
 (comb + repair buffers) proportional to its register area x 1.5 margin, plus NK bus buffers (1542 n_a/n_b/n_y nets x 2
 x 0.35 um2) in the west channel and the central column, and the tap buffers (508 x 2 x 0.35) in the east channel/centre.
 Checks (FAIL on any):
-  fence registers / fence rows        <= 0.35  (the parent_regions.tcl limit); hub fence aspect <= 2.5:1 (ck H-tree)
+  fence registers / fence rows        <= 0.35  (the parent_regions.tcl limit); hub fence aspect <= 2.5:1 (ck H-tree);
+  lane between two side-by-side fences >= 12 um
   fence width                         >= 10 um
   free rows in the corridor / corridor >= 0.40  and  non-member cells / free rows <= 0.60
   (registers + non-member) / corridor rows <= 0.60   (brief: <= 60 % local utilisation)
@@ -75,6 +76,15 @@ def check(kit):
         asp = max(wid, bx[3] - bx[1]) / max(1e-9, min(wid, bx[3] - bx[1]))
         if n == "hub" and asp > 2.5:   # rc3/rc3b gates: ck H-tree over a 1:19 / 1:9.5 hub -> spread 193 / 148 ps > 80
             fails.append(f"hub fence aspect {asp:.1f}:1 > 2.5 (one ck root over a tall strip: H-tree spread)")
+    names = sorted(fences)
+    for i, n1 in enumerate(names):          # rc4 gates: an 8 um lane between hub and tx fences left buffers stuck on tapcells
+        for n2 in names[i + 1:]:
+            p, q = fences[n1], fences[n2]
+            if min(p[3], q[3]) - max(p[1], q[1]) <= 0:
+                continue
+            gap = max(q[0] - p[2], p[0] - q[2])
+            if gap < 12.0:
+                fails.append(f"lane {n1}|{n2} {gap:.1f} um < 12 um (fences side by side)")
     for a, b in corridors:
         cbox = (a, 2.16, b, H - 2.16)
         crow = rows(cbox, macros)
