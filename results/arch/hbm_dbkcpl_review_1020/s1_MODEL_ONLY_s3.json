@@ -1,0 +1,2235 @@
+{
+  "schema": "opentallas.placed_sequential_reach.v1",
+  "scope": "conservative source to capture Manhattan displacement through all combinational pins, buffers transparent; SRAM and DFF are sequential cuts; PG/CLOCK excluded",
+  "odb_sha256": "dcd7a3c60d0de647a8dfb786a9be8a13cf772c6fa1e47e77f5f3f73f79d8a6b3",
+  "sequential_masters": {
+    "DFFHQNx3_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 1,
+    "ot_hgi_dma_back_cp_collar": 1,
+    "ot_hgi_dma_back_landing_bank": 8,
+    "ot_hgi_dma_back_static_vp4_controller": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 13
+  },
+  "checked_capture_pins": 5707,
+  "unreached_capture_pins": [
+    {
+      "net": "net",
+      "sink": [
+        248.198,
+        138.061,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[0\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net1",
+      "sink": [
+        257.432,
+        138.061,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[1\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net2",
+      "sink": [
+        429.152,
+        141.118,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[2\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net3",
+      "sink": [
+        246.47,
+        259.561,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[3\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net4",
+      "sink": [
+        246.47,
+        274.141,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[4\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net5",
+      "sink": [
+        247.01,
+        273.958,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[5\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net6",
+      "sink": [
+        254.084,
+        274.141,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[6\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net7",
+      "sink": [
+        428.72,
+        272.338,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[7\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net8",
+      "sink": [
+        427.964,
+        271.798,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[8\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net9",
+      "sink": [
+        250.92,
+        266.355,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0_/D"
+      ]
+    },
+    {
+      "net": "net10",
+      "sink": [
+        251.492,
+        266.398,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net11",
+      "sink": [
+        253.814,
+        266.938,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[1\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net12",
+      "sink": [
+        418.244,
+        269.281,
+        "u_ot_pr_core.u_rst_ctl.relay_q\\[0\\]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "net": "net13",
+      "sink": [
+        418.19,
+        270.178,
+        "u_ot_pr_core.u_rst_ctl.rst_n$_DFF_PN0_/SETN"
+      ]
+    }
+  ],
+  "max_um": 483.736,
+  "over405_count": 50,
+  "over405": [
+    {
+      "um": 483.736,
+      "source": [
+        600.0,
+        270.0,
+        "rst_n__ot_rl1$_DFF_P_/QN"
+      ],
+      "sink": [
+        248.159,
+        138.105,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[0\\]$_DFF_PN0_/RESETN"
+      ],
+      "net": "net15849"
+    },
+    {
+      "um": 475.428,
+      "source": [
+        446.076,
+        0.042,
+        "PORT/rr[770]"
+      ],
+      "sink": [
+        302.442,
+        331.836,
+        "u_ot_pr_core.u_dbk.u_control/rr_valid_i[2]"
+      ],
+      "net": "net15541"
+    },
+    {
+      "um": 474.502,
+      "source": [
+        600.0,
+        270.0,
+        "rst_n__ot_rl1$_DFF_P_/QN"
+      ],
+      "sink": [
+        257.393,
+        138.105,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[1\\]$_DFF_PN0_/RESETN"
+      ],
+      "net": "net15849"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        350.94,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[0]"
+      ],
+      "sink": [
+        99.804,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[0]"
+      ],
+      "net": "net13441"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.036,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[1]"
+      ],
+      "sink": [
+        99.9,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[1]"
+      ],
+      "net": "net13438"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.132,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[2]"
+      ],
+      "sink": [
+        99.996,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[2]"
+      ],
+      "net": "net13435"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.228,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[3]"
+      ],
+      "sink": [
+        100.092,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[3]"
+      ],
+      "net": "net13432"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.324,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[4]"
+      ],
+      "sink": [
+        100.188,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[4]"
+      ],
+      "net": "net13429"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.42,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[5]"
+      ],
+      "sink": [
+        100.284,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[5]"
+      ],
+      "net": "net13426"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.51599999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[6]"
+      ],
+      "sink": [
+        100.38,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[6]"
+      ],
+      "net": "net13423"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.61199999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[0]"
+      ],
+      "sink": [
+        102.876,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[0]"
+      ],
+      "net": "net13378"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.70799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[1]"
+      ],
+      "sink": [
+        102.972,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[1]"
+      ],
+      "net": "net13375"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.804,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[2]"
+      ],
+      "sink": [
+        103.068,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[2]"
+      ],
+      "net": "net13372"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.9,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[3]"
+      ],
+      "sink": [
+        103.164,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[3]"
+      ],
+      "net": "net13369"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[4]"
+      ],
+      "sink": [
+        103.26,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[4]"
+      ],
+      "net": "net13366"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        352.092,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[5]"
+      ],
+      "sink": [
+        103.356,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[5]"
+      ],
+      "net": "net13363"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        352.188,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[6]"
+      ],
+      "sink": [
+        103.452,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[6]"
+      ],
+      "net": "net13360"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.804,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[0]"
+      ],
+      "sink": [
+        123.42,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[0]"
+      ],
+      "net": "net13726"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.764,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[10]"
+      ],
+      "sink": [
+        124.38,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[10]"
+      ],
+      "net": "net13724"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.86,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[11]"
+      ],
+      "sink": [
+        124.476,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[11]"
+      ],
+      "net": "net13722"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.95599999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[12]"
+      ],
+      "sink": [
+        124.572,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[12]"
+      ],
+      "net": "net13720"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.05199999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[13]"
+      ],
+      "sink": [
+        124.668,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[13]"
+      ],
+      "net": "net13718"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.14799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[14]"
+      ],
+      "sink": [
+        124.764,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[14]"
+      ],
+      "net": "net13716"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.24399999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[15]"
+      ],
+      "sink": [
+        124.86,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[15]"
+      ],
+      "net": "net13714"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.34,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[16]"
+      ],
+      "sink": [
+        124.956,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[16]"
+      ],
+      "net": "net13712"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.436,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[17]"
+      ],
+      "sink": [
+        125.052,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[17]"
+      ],
+      "net": "net13710"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.532,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[18]"
+      ],
+      "sink": [
+        125.148,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[18]"
+      ],
+      "net": "net13708"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.628,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[19]"
+      ],
+      "sink": [
+        125.244,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[19]"
+      ],
+      "net": "net13706"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.9,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[1]"
+      ],
+      "sink": [
+        123.516,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[1]"
+      ],
+      "net": "net13704"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.724,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[20]"
+      ],
+      "sink": [
+        125.34,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[20]"
+      ],
+      "net": "net13702"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.82,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[21]"
+      ],
+      "sink": [
+        125.436,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[21]"
+      ],
+      "net": "net13700"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.916,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[22]"
+      ],
+      "sink": [
+        125.532,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[22]"
+      ],
+      "net": "net13698"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.012,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[23]"
+      ],
+      "sink": [
+        125.628,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[23]"
+      ],
+      "net": "net13696"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.108,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[24]"
+      ],
+      "sink": [
+        125.724,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[24]"
+      ],
+      "net": "net13694"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.204,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[25]"
+      ],
+      "sink": [
+        125.82,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[25]"
+      ],
+      "net": "net13692"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.3,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[26]"
+      ],
+      "sink": [
+        125.916,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[26]"
+      ],
+      "net": "net13690"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.396,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[27]"
+      ],
+      "sink": [
+        126.012,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[27]"
+      ],
+      "net": "net13688"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.49199999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[28]"
+      ],
+      "sink": [
+        126.108,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[28]"
+      ],
+      "net": "net13686"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.58799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[29]"
+      ],
+      "sink": [
+        126.204,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[29]"
+      ],
+      "net": "net13684"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[2]"
+      ],
+      "sink": [
+        123.612,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[2]"
+      ],
+      "net": "net13682"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.68399999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[30]"
+      ],
+      "sink": [
+        126.3,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[30]"
+      ],
+      "net": "net13680"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.78,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[31]"
+      ],
+      "sink": [
+        126.396,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[31]"
+      ],
+      "net": "net13678"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.092,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[3]"
+      ],
+      "sink": [
+        123.708,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[3]"
+      ],
+      "net": "net13668"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.188,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[4]"
+      ],
+      "sink": [
+        123.804,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[4]"
+      ],
+      "net": "net13656"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.284,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[5]"
+      ],
+      "sink": [
+        123.9,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[5]"
+      ],
+      "net": "net13644"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.38,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[6]"
+      ],
+      "sink": [
+        123.996,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[6]"
+      ],
+      "net": "net13626"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.476,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[7]"
+      ],
+      "sink": [
+        124.092,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[7]"
+      ],
+      "net": "net13604"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.572,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[8]"
+      ],
+      "sink": [
+        124.188,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[8]"
+      ],
+      "net": "net13582"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.668,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[9]"
+      ],
+      "sink": [
+        124.284,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[9]"
+      ],
+      "net": "net13568"
+    },
+    {
+      "um": 411.944,
+      "source": [
+        302.442,
+        333.948,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_en[0]"
+      ],
+      "sink": [
+        94.332,
+        130.114,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_en"
+      ],
+      "net": "net13486"
+    }
+  ],
+  "top": [
+    {
+      "um": 483.736,
+      "source": [
+        600.0,
+        270.0,
+        "rst_n__ot_rl1$_DFF_P_/QN"
+      ],
+      "sink": [
+        248.159,
+        138.105,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[0\\]$_DFF_PN0_/RESETN"
+      ],
+      "net": "net15849"
+    },
+    {
+      "um": 475.428,
+      "source": [
+        446.076,
+        0.042,
+        "PORT/rr[770]"
+      ],
+      "sink": [
+        302.442,
+        331.836,
+        "u_ot_pr_core.u_dbk.u_control/rr_valid_i[2]"
+      ],
+      "net": "net15541"
+    },
+    {
+      "um": 474.502,
+      "source": [
+        600.0,
+        270.0,
+        "rst_n__ot_rl1$_DFF_P_/QN"
+      ],
+      "sink": [
+        257.393,
+        138.105,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[1\\]$_DFF_PN0_/RESETN"
+      ],
+      "net": "net15849"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        350.94,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[0]"
+      ],
+      "sink": [
+        99.804,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[0]"
+      ],
+      "net": "net13441"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.036,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[1]"
+      ],
+      "sink": [
+        99.9,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[1]"
+      ],
+      "net": "net13438"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.132,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[2]"
+      ],
+      "sink": [
+        99.996,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[2]"
+      ],
+      "net": "net13435"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.228,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[3]"
+      ],
+      "sink": [
+        100.092,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[3]"
+      ],
+      "net": "net13432"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.324,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[4]"
+      ],
+      "sink": [
+        100.188,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[4]"
+      ],
+      "net": "net13429"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.42,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[5]"
+      ],
+      "sink": [
+        100.284,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[5]"
+      ],
+      "net": "net13426"
+    },
+    {
+      "um": 422.94,
+      "source": [
+        351.51599999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_s[6]"
+      ],
+      "sink": [
+        100.38,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_slot[6]"
+      ],
+      "net": "net13423"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.61199999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[0]"
+      ],
+      "sink": [
+        102.876,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[0]"
+      ],
+      "net": "net13378"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.70799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[1]"
+      ],
+      "sink": [
+        102.972,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[1]"
+      ],
+      "net": "net13375"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.804,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[2]"
+      ],
+      "sink": [
+        103.068,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[2]"
+      ],
+      "net": "net13372"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.9,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[3]"
+      ],
+      "sink": [
+        103.164,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[3]"
+      ],
+      "net": "net13369"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        351.996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[4]"
+      ],
+      "sink": [
+        103.26,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[4]"
+      ],
+      "net": "net13366"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        352.092,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[5]"
+      ],
+      "sink": [
+        103.356,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[5]"
+      ],
+      "net": "net13363"
+    },
+    {
+      "um": 420.54,
+      "source": [
+        352.188,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_s[6]"
+      ],
+      "sink": [
+        103.452,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/write_slot[6]"
+      ],
+      "net": "net13360"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.804,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[0]"
+      ],
+      "sink": [
+        123.42,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[0]"
+      ],
+      "net": "net13726"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.764,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[10]"
+      ],
+      "sink": [
+        124.38,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[10]"
+      ],
+      "net": "net13724"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.86,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[11]"
+      ],
+      "sink": [
+        124.476,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[11]"
+      ],
+      "net": "net13722"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.95599999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[12]"
+      ],
+      "sink": [
+        124.572,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[12]"
+      ],
+      "net": "net13720"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.05199999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[13]"
+      ],
+      "sink": [
+        124.668,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[13]"
+      ],
+      "net": "net13718"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.14799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[14]"
+      ],
+      "sink": [
+        124.764,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[14]"
+      ],
+      "net": "net13716"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.24399999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[15]"
+      ],
+      "sink": [
+        124.86,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[15]"
+      ],
+      "net": "net13714"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.34,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[16]"
+      ],
+      "sink": [
+        124.956,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[16]"
+      ],
+      "net": "net13712"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.436,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[17]"
+      ],
+      "sink": [
+        125.052,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[17]"
+      ],
+      "net": "net13710"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.532,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[18]"
+      ],
+      "sink": [
+        125.148,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[18]"
+      ],
+      "net": "net13708"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.628,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[19]"
+      ],
+      "sink": [
+        125.244,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[19]"
+      ],
+      "net": "net13706"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.9,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[1]"
+      ],
+      "sink": [
+        123.516,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[1]"
+      ],
+      "net": "net13704"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.724,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[20]"
+      ],
+      "sink": [
+        125.34,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[20]"
+      ],
+      "net": "net13702"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.82,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[21]"
+      ],
+      "sink": [
+        125.436,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[21]"
+      ],
+      "net": "net13700"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        365.916,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[22]"
+      ],
+      "sink": [
+        125.532,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[22]"
+      ],
+      "net": "net13698"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.012,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[23]"
+      ],
+      "sink": [
+        125.628,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[23]"
+      ],
+      "net": "net13696"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.108,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[24]"
+      ],
+      "sink": [
+        125.724,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[24]"
+      ],
+      "net": "net13694"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.204,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[25]"
+      ],
+      "sink": [
+        125.82,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[25]"
+      ],
+      "net": "net13692"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.3,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[26]"
+      ],
+      "sink": [
+        125.916,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[26]"
+      ],
+      "net": "net13690"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.396,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[27]"
+      ],
+      "sink": [
+        126.012,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[27]"
+      ],
+      "net": "net13688"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.49199999999996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[28]"
+      ],
+      "sink": [
+        126.108,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[28]"
+      ],
+      "net": "net13686"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.58799999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[29]"
+      ],
+      "sink": [
+        126.204,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[29]"
+      ],
+      "net": "net13684"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        363.996,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[2]"
+      ],
+      "sink": [
+        123.612,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[2]"
+      ],
+      "net": "net13682"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.68399999999997,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[30]"
+      ],
+      "sink": [
+        126.3,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[30]"
+      ],
+      "net": "net13680"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        366.78,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[31]"
+      ],
+      "sink": [
+        126.396,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[31]"
+      ],
+      "net": "net13678"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.092,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[3]"
+      ],
+      "sink": [
+        123.708,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[3]"
+      ],
+      "net": "net13668"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.188,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[4]"
+      ],
+      "sink": [
+        123.804,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[4]"
+      ],
+      "net": "net13656"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.284,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[5]"
+      ],
+      "sink": [
+        123.9,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[5]"
+      ],
+      "net": "net13644"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.38,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[6]"
+      ],
+      "sink": [
+        123.996,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[6]"
+      ],
+      "net": "net13626"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.476,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[7]"
+      ],
+      "sink": [
+        124.092,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[7]"
+      ],
+      "net": "net13604"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.572,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[8]"
+      ],
+      "sink": [
+        124.188,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[8]"
+      ],
+      "net": "net13582"
+    },
+    {
+      "um": 412.188,
+      "source": [
+        364.668,
+        302.442,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_addr_s[9]"
+      ],
+      "sink": [
+        124.284,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_addr[9]"
+      ],
+      "net": "net13568"
+    },
+    {
+      "um": 411.944,
+      "source": [
+        302.442,
+        333.948,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_en[0]"
+      ],
+      "sink": [
+        94.332,
+        130.114,
+        "u_ot_pr_core.u_dbk.L\\[0\\].u_bank/read_en"
+      ],
+      "net": "net13486"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.452,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[0]"
+      ],
+      "sink": [
+        99.804,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[0]"
+      ],
+      "net": "net13468"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.548,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[1]"
+      ],
+      "sink": [
+        99.9,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[1]"
+      ],
+      "net": "net13464"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.644,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[2]"
+      ],
+      "sink": [
+        99.996,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[2]"
+      ],
+      "net": "net13460"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.74,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[3]"
+      ],
+      "sink": [
+        100.092,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[3]"
+      ],
+      "net": "net13456"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.836,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[4]"
+      ],
+      "sink": [
+        100.188,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[4]"
+      ],
+      "net": "net13452"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        355.932,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[5]"
+      ],
+      "sink": [
+        100.284,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[5]"
+      ],
+      "net": "net13448"
+    },
+    {
+      "um": 403.608,
+      "source": [
+        356.02799999999996,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_slot_n[6]"
+      ],
+      "sink": [
+        100.38,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_slot[6]"
+      ],
+      "net": "net13444"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.12399999999997,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[0]"
+      ],
+      "sink": [
+        102.876,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[0]"
+      ],
+      "net": "net13405"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.21999999999997,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[1]"
+      ],
+      "sink": [
+        102.972,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[1]"
+      ],
+      "net": "net13401"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.316,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[2]"
+      ],
+      "sink": [
+        103.068,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[2]"
+      ],
+      "net": "net13397"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.412,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[3]"
+      ],
+      "sink": [
+        103.164,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[3]"
+      ],
+      "net": "net13393"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.508,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[4]"
+      ],
+      "sink": [
+        103.26,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[4]"
+      ],
+      "net": "net13389"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.604,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[5]"
+      ],
+      "sink": [
+        103.356,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[5]"
+      ],
+      "net": "net13385"
+    },
+    {
+      "um": 401.208,
+      "source": [
+        356.7,
+        371.478,
+        "u_ot_pr_core.u_dbk.u_control/bank_write_slot_n[6]"
+      ],
+      "sink": [
+        103.452,
+        519.438,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/write_slot[6]"
+      ],
+      "net": "net13381"
+    },
+    {
+      "um": 400.269,
+      "source": [
+        247.552,
+        273.915,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[5\\]$_DFF_PN0_/QN"
+      ],
+      "sink": [
+        92.316,
+        518.948,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/rst_n"
+      ],
+      "net": "net12794"
+    },
+    {
+      "um": 392.928,
+      "source": [
+        0.042,
+        250.332,
+        "PORT/rr[513]"
+      ],
+      "sink": [
+        273.276,
+        130.638,
+        "u_ot_pr_core.u_dbk.L\\[1\\].u_bank/write_en"
+      ],
+      "net": "net15539"
+    },
+    {
+      "um": 392.596,
+      "source": [
+        302.442,
+        334.428,
+        "u_ot_pr_core.u_dbk.u_control/bank_read_en[5]"
+      ],
+      "sink": [
+        94.332,
+        518.914,
+        "u_ot_pr_core.u_dbk.L\\[5\\].u_bank/read_en"
+      ],
+      "net": "net13477"
+    },
+    {
+      "um": 388.608,
+      "source": [
+        302.442,
+        339.324,
+        "u_ot_pr_core.u_dbk.u_control/rq[2]"
+      ],
+      "sink": [
+        0.042,
+        253.116,
+        "PORT/rq[2]"
+      ],
+      "net": "rq[2]"
+    },
+    {
+      "um": 388.416,
+      "source": [
+        302.442,
+        339.42,
+        "u_ot_pr_core.u_dbk.u_control/rq[3]"
+      ],
+      "sink": [
+        0.042,
+        253.404,
+        "PORT/rq[3]"
+      ],
+      "net": "rq[3]"
+    },
+    {
+      "um": 388.224,
+      "source": [
+        302.442,
+        339.51599999999996,
+        "u_ot_pr_core.u_dbk.u_control/rq[4]"
+      ],
+      "sink": [
+        0.042,
+        253.692,
+        "PORT/rq[4]"
+      ],
+      "net": "rq[4]"
+    },
+    {
+      "um": 387.984,
+      "source": [
+        302.442,
+        339.61199999999997,
+        "u_ot_pr_core.u_dbk.u_control/rq[5]"
+      ],
+      "sink": [
+        0.042,
+        254.028,
+        "PORT/rq[5]"
+      ],
+      "net": "rq[5]"
+    },
+    {
+      "um": 387.792,
+      "source": [
+        302.442,
+        339.70799999999997,
+        "u_ot_pr_core.u_dbk.u_control/rq[6]"
+      ],
+      "sink": [
+        0.042,
+        254.316,
+        "PORT/rq[6]"
+      ],
+      "net": "rq[6]"
+    },
+    {
+      "um": 387.6,
+      "source": [
+        302.442,
+        339.804,
+        "u_ot_pr_core.u_dbk.u_control/rq[7]"
+      ],
+      "sink": [
+        0.042,
+        254.604,
+        "PORT/rq[7]"
+      ],
+      "net": "rq[7]"
+    },
+    {
+      "um": 387.36,
+      "source": [
+        302.442,
+        339.9,
+        "u_ot_pr_core.u_dbk.u_control/rq[8]"
+      ],
+      "sink": [
+        0.042,
+        254.94,
+        "PORT/rq[8]"
+      ],
+      "net": "rq[8]"
+    },
+    {
+      "um": 387.168,
+      "source": [
+        302.442,
+        339.996,
+        "u_ot_pr_core.u_dbk.u_control/rq[9]"
+      ],
+      "sink": [
+        0.042,
+        255.228,
+        "PORT/rq[9]"
+      ],
+      "net": "rq[9]"
+    },
+    {
+      "um": 386.928,
+      "source": [
+        302.442,
+        340.092,
+        "u_ot_pr_core.u_dbk.u_control/rq[10]"
+      ],
+      "sink": [
+        0.042,
+        255.564,
+        "PORT/rq[10]"
+      ],
+      "net": "rq[10]"
+    },
+    {
+      "um": 386.736,
+      "source": [
+        302.442,
+        340.188,
+        "u_ot_pr_core.u_dbk.u_control/rq[11]"
+      ],
+      "sink": [
+        0.042,
+        255.852,
+        "PORT/rq[11]"
+      ],
+      "net": "rq[11]"
+    },
+    {
+      "um": 386.544,
+      "source": [
+        302.442,
+        340.284,
+        "u_ot_pr_core.u_dbk.u_control/rq[12]"
+      ],
+      "sink": [
+        0.042,
+        256.14,
+        "PORT/rq[12]"
+      ],
+      "net": "rq[12]"
+    },
+    {
+      "um": 386.304,
+      "source": [
+        302.442,
+        340.38,
+        "u_ot_pr_core.u_dbk.u_control/rq[13]"
+      ],
+      "sink": [
+        0.042,
+        256.476,
+        "PORT/rq[13]"
+      ],
+      "net": "rq[13]"
+    },
+    {
+      "um": 386.112,
+      "source": [
+        302.442,
+        340.476,
+        "u_ot_pr_core.u_dbk.u_control/rq[14]"
+      ],
+      "sink": [
+        0.042,
+        256.764,
+        "PORT/rq[14]"
+      ],
+      "net": "rq[14]"
+    },
+    {
+      "um": 385.968,
+      "source": [
+        302.442,
+        336.06,
+        "u_ot_pr_core.u_dbk.u_control/rq[0]"
+      ],
+      "sink": [
+        0.042,
+        252.492,
+        "PORT/rq[0]"
+      ],
+      "net": "rq[0]"
+    },
+    {
+      "um": 385.92,
+      "source": [
+        302.442,
+        340.572,
+        "u_ot_pr_core.u_dbk.u_control/rq[15]"
+      ],
+      "sink": [
+        0.042,
+        257.052,
+        "PORT/rq[15]"
+      ],
+      "net": "rq[15]"
+    },
+    {
+      "um": 385.776,
+      "source": [
+        302.442,
+        336.156,
+        "u_ot_pr_core.u_dbk.u_control/rq[1]"
+      ],
+      "sink": [
+        0.042,
+        252.78,
+        "PORT/rq[1]"
+      ],
+      "net": "rq[1]"
+    },
+    {
+      "um": 385.68,
+      "source": [
+        302.442,
+        340.668,
+        "u_ot_pr_core.u_dbk.u_control/rq[16]"
+      ],
+      "sink": [
+        0.042,
+        257.388,
+        "PORT/rq[16]"
+      ],
+      "net": "rq[16]"
+    },
+    {
+      "um": 385.488,
+      "source": [
+        302.442,
+        340.764,
+        "u_ot_pr_core.u_dbk.u_control/rq[17]"
+      ],
+      "sink": [
+        0.042,
+        257.676,
+        "PORT/rq[17]"
+      ],
+      "net": "rq[17]"
+    },
+    {
+      "um": 385.248,
+      "source": [
+        302.442,
+        340.86,
+        "u_ot_pr_core.u_dbk.u_control/rq[18]"
+      ],
+      "sink": [
+        0.042,
+        258.012,
+        "PORT/rq[18]"
+      ],
+      "net": "rq[18]"
+    },
+    {
+      "um": 385.056,
+      "source": [
+        302.442,
+        340.95599999999996,
+        "u_ot_pr_core.u_dbk.u_control/rq[19]"
+      ],
+      "sink": [
+        0.042,
+        258.3,
+        "PORT/rq[19]"
+      ],
+      "net": "rq[19]"
+    },
+    {
+      "um": 385.008,
+      "source": [
+        302.442,
+        345.46799999999996,
+        "u_ot_pr_core.u_dbk.u_control/rq[34]"
+      ],
+      "sink": [
+        0.042,
+        262.86,
+        "PORT/rq[34]"
+      ],
+      "net": "rq[34]"
+    },
+    {
+      "um": 384.864,
+      "source": [
+        302.442,
+        341.05199999999996,
+        "u_ot_pr_core.u_dbk.u_control/rq[20]"
+      ],
+      "sink": [
+        0.042,
+        258.588,
+        "PORT/rq[20]"
+      ],
+      "net": "rq[20]"
+    },
+    {
+      "um": 384.768,
+      "source": [
+        302.442,
+        345.56399999999996,
+        "u_ot_pr_core.u_dbk.u_control/rq[35]"
+      ],
+      "sink": [
+        0.042,
+        263.196,
+        "PORT/rq[35]"
+      ],
+      "net": "rq[35]"
+    },
+    {
+      "um": 384.624,
+      "source": [
+        302.442,
+        341.14799999999997,
+        "u_ot_pr_core.u_dbk.u_control/rq[21]"
+      ],
+      "sink": [
+        0.042,
+        258.924,
+        "PORT/rq[21]"
+      ],
+      "net": "rq[21]"
+    },
+    {
+      "um": 384.576,
+      "source": [
+        302.442,
+        345.65999999999997,
+        "u_ot_pr_core.u_dbk.u_control/rq[36]"
+      ],
+      "sink": [
+        0.042,
+        263.484,
+        "PORT/rq[36]"
+      ],
+      "net": "rq[36]"
+    },
+    {
+      "um": 384.432,
+      "source": [
+        302.442,
+        341.24399999999997,
+        "u_ot_pr_core.u_dbk.u_control/rq[22]"
+      ],
+      "sink": [
+        0.042,
+        259.212,
+        "PORT/rq[22]"
+      ],
+      "net": "rq[22]"
+    },
+    {
+      "um": 384.384,
+      "source": [
+        302.442,
+        345.756,
+        "u_ot_pr_core.u_dbk.u_control/rq[37]"
+      ],
+      "sink": [
+        0.042,
+        263.772,
+        "PORT/rq[37]"
+      ],
+      "net": "rq[37]"
+    },
+    {
+      "um": 384.24,
+      "source": [
+        302.442,
+        341.34,
+        "u_ot_pr_core.u_dbk.u_control/rq[23]"
+      ],
+      "sink": [
+        0.042,
+        259.5,
+        "PORT/rq[23]"
+      ],
+      "net": "rq[23]"
+    },
+    {
+      "um": 384.144,
+      "source": [
+        302.442,
+        345.852,
+        "u_ot_pr_core.u_dbk.u_control/rq[38]"
+      ],
+      "sink": [
+        0.042,
+        264.108,
+        "PORT/rq[38]"
+      ],
+      "net": "rq[38]"
+    },
+    {
+      "um": 384.0,
+      "source": [
+        0.042,
+        250.044,
+        "PORT/rr[256]"
+      ],
+      "sink": [
+        302.442,
+        331.644,
+        "u_ot_pr_core.u_dbk.u_control/rr_valid_i[0]"
+      ],
+      "net": "net15758"
+    },
+    {
+      "um": 384.0,
+      "source": [
+        302.442,
+        341.436,
+        "u_ot_pr_core.u_dbk.u_control/rq[24]"
+      ],
+      "sink": [
+        0.042,
+        259.836,
+        "PORT/rq[24]"
+      ],
+      "net": "rq[24]"
+    },
+    {
+      "um": 383.952,
+      "source": [
+        302.442,
+        345.948,
+        "u_ot_pr_core.u_dbk.u_control/rq[39]"
+      ],
+      "sink": [
+        0.042,
+        264.396,
+        "PORT/rq[39]"
+      ],
+      "net": "rq[39]"
+    },
+    {
+      "um": 383.808,
+      "source": [
+        0.042,
+        250.332,
+        "PORT/rr[513]"
+      ],
+      "sink": [
+        302.442,
+        331.74,
+        "u_ot_pr_core.u_dbk.u_control/rr_valid_i[1]"
+      ],
+      "net": "net15540"
+    }
+  ],
+  "updates": 9036
+}

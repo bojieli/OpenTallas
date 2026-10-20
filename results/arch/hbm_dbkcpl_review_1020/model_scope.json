@@ -1,0 +1,13 @@
+{
+  "status": "MODEL ONLY REJECTED",
+  "scope": "same frozen graph; explicit hypothetical endpoint coordinate transforms only; no DB source mutation",
+  "output": [
+    "s1_MODEL_ONLY_s3.json",
+    "s2_MODEL_ONLY_s3.json"
+  ],
+  "max_um": 483.736,
+  "over405": 50,
+  "zero_datapath_cycle_delta_proposed_but_not_proven": true,
+  "source_sha256": "d92dbc4d7f929b5022a5d9a0b94cf239e44fbcd460e9849a9b8d415d3ea308fa",
+  "fresh_layout": "NOT RUN"
+}
