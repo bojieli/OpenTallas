@@ -301,6 +301,48 @@ def pin_regs_vars(s: dict) -> list:
     return out
 
 
+SOURCE_NATIVE_RESET_LANDINGS = {
+    # This source already contains the two plain-FF landing levels. Counts
+    # remain a mandatory balanced_reset_proof obligation on the actual map.
+    "host_order_n32_1020": {
+        "source": "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+        "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+        "top": "qkd_hr_core_order_n32", "clock": "ck_core", "reset_ports": ["host_rst_n"],
+        "first_copies": {"host_rst_n": 12}, "copies": {"host_rst_n": 288},
+    },
+}
+
+
+def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
+    """Exact source admission for an existing forest, never a proof/threshold waiver."""
+    if "source_native" not in rl:
+        return None
+    key = rl["source_native"]
+    if not isinstance(key, str) or key not in SOURCE_NATIVE_RESET_LANDINGS:
+        raise SpecError("spec: reset_landing.source_native must name a reviewed source fingerprint")
+    entry = SOURCE_NATIVE_RESET_LANDINGS[key]
+    if (s.get("top") != entry["top"] or s.get("params", {}) != {} or s.get("defines", []) != []
+            or s.get("reset_ports") != entry["reset_ports"] or rl.get("enable") is not True
+            or rl.get("stages", 2) != 2 or rl.get("clock", entry["clock"]) != entry["clock"]
+            or s.get("clock_port") != entry["clock"]
+            or any(rl.get(k) != entry[k] for k in ("first_copies", "copies"))):
+        raise SpecError("spec: source-native reset top/parameters/defines/clock/counts differ from reviewed source")
+    if any(k in rl for k in ("waive", "max_sinks")) or s.get("reset_relay_split") is not None:
+        raise SpecError("spec: source-native reset forbids threshold waivers and reset-copy rewiring")
+    overrides = s.get("orfs_vars") or {}
+    if any(k in overrides for k in ("SYNTH_PARAMETERS", "SYNTH_DEFINES", "VERILOG_DEFINES", "VERILOG_FILES", "SYNTH_ARGS")) \
+            or any(k.startswith(("OT_RST_", "OT_PIN_REGS")) for k in overrides):
+        raise SpecError("spec: source-native reset forbids source/landing ORFS overrides")
+    pr = s.get("pin_regs") or {}
+    if pr.get("enable") is not False:
+        raise SpecError("spec: source-native reset requires existing source pin registers")
+    source = ROOT / entry["source"]
+    if entry["source"] not in s.get("sources", []) or not source.is_file() or \
+            hashlib.sha256(source.read_bytes()).hexdigest() != entry["sha256"]:
+        raise SpecError("spec: source-native reset source fingerprint changed or missing")
+    return {"id": key, "source": entry["source"], "sha256": entry["sha256"]}
+
+
 def reset_landing_plan(s: dict) -> dict | None:
     """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
     rl = s.get("reset_landing")
@@ -309,6 +351,7 @@ def reset_landing_plan(s: dict) -> dict | None:
     if not isinstance(rl, dict):
         raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
                         '"reason": ...})')
+    native = source_native_reset_landing(s, rl)
     if not rl.get("enable"):
         if not str(rl.get("reason") or rl.get("waive") or "").strip():
             raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
@@ -326,6 +369,10 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    if native:
+        if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
+            raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
+        plan["source_native"] = native
     fc = rl.get("first_copies")
     if fc is not None:
         if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
@@ -333,7 +380,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
         if st != 2:
             raise SpecError('spec: balanced first_copies requires exactly two landing stages')
-        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+        if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
             raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
         plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
@@ -345,7 +392,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
-        if not reset_relay_split_plan(s):
+        if not native and not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
         if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
             raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
@@ -394,7 +441,7 @@ def reset_relay_split_vars(s: dict) -> list:
 
 def reset_landing_vars(s: dict) -> list:
     plan = reset_landing_plan(s)
-    if not plan or not plan["enable"]:
+    if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
     pp = pin_regs_plan(s)
@@ -1595,7 +1642,7 @@ def pin_wrapper(s: dict) -> bool:
     reset_landing on (a landing-only wrapper); the design's core is then instance u_ot_pr_core of <top>__ot_pr_core"""
     pr = pin_regs_plan(s)
     rl = reset_landing_plan(s)
-    return bool((pr and pr.get("enable")) or (rl and rl.get("enable")))
+    return bool((pr and pr.get("enable")) or (rl and rl.get("enable") and not rl.get("source_native")))
 
 
 def gen_place(s: dict, blocks: list) -> str:
