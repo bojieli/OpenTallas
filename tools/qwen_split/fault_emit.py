@@ -469,17 +469,24 @@ def post(v, m, G):
                     return x0, y0
         return None
 
-    def _hop_route(c0, t):
+    def _hop_route(c0, tl, slack=26.0, stats=None):
         """QW-G5F3 10-20: A* over free node boxes (each hop <= REACH_UM centre to centre) from c0 until within REACH_UM
         of t; detours through row gaps / channels around hard blocks (dv2f20g5f4: the straight line from a leaf near
         (10688, 13116) crossed a cluster with no free box).  -> list of lower-lefts, or None."""
         import heapq
+        # tl: [(name, centre)] = every attached node of the clock root with a free input (join the nearest reachable)
         S_ = REACH_UM - 2 * 26.0 - 4.0
-        dirs = [(S_, 0), (-S_, 0), (0, S_), (0, -S_), (S_ / 2, S_ / 2), (S_ / 2, -S_ / 2), (-S_ / 2, S_ / 2), (-S_ / 2, -S_ / 2),
-                (S_ / 2, 0), (-S_ / 2, 0), (0, S_ / 2), (0, -S_ / 2)]
+        dirs = []
+        stats = stats if stats is not None else {}
+        for fr in (1.0, 0.7, 0.45, 0.25):
+            for a_ in range(16):
+                ux, uy = math.cos(a_ * math.pi / 8), math.sin(a_ * math.pi / 8)
+                k_ = fr * S_ / (abs(ux) + abs(uy))
+                dirs.append((ux * k_, uy * k_))
+        hd = lambda p_: min(_man(p_, c_) for _, c_ in tl)
         q = 43.2
         start = (c0[0], c0[1])
-        heap = [(math.ceil(_man(start, t) / S_), 0, start, None)]
+        heap = [(math.ceil(hd(start) / S_), 0, start, None)]
         back, seen = {}, set()
         back[(round(start[0] / 43.2), round(start[1] / 43.2))] = (None, None, 0)
         n_exp = 0
@@ -490,15 +497,16 @@ def post(v, m, G):
                 continue
             seen.add(key)
             n_exp += 1
-            if g_ > 0 and _man(p_, t) <= REACH_UM:
+            hit = [nm_ for nm_, c_ in tl if _man(p_, c_) <= REACH_UM]
+            if g_ > 0 and hit:
                 out = []
                 k_ = key
                 while k_ is not None and back[k_][0] is not None:
                     out.append(back[k_][0])
                     k_ = back[k_][1]
-                return out[::-1]
+                return out[::-1], min(hit, key=lambda nm_: _man(p_, _ctr(by[nm_])))
             for dx, dy in dirs:
-                s_ = _free_near(p_[0] + dx, p_[1] + dy)
+                s_ = _free_near(p_[0] + dx, p_[1] + dy, slack=slack, step=4.32 if slack <= 30 else 8.64)
                 if s_ is None:
                     continue
                 cc = (s_[0] + W / 2, s_[1] + H / 2)
@@ -509,8 +517,9 @@ def post(v, m, G):
                     continue
                 if k2 not in back or back[k2][2] > g_ + 1:
                     back[k2] = (s_, key, g_ + 1)
-                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, _man(cc, t) - REACH_UM) / S_), g_ + 1, cc, s_))
-        return None
+                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, hd(cc) - REACH_UM) / S_), g_ + 1, cc, s_))
+        stats.update(expanded=n_exp, open_left=len(heap), slack=slack)
+        return None, None
 
     # 2. each leaf joins the nearest attached node of its clock root (roots first), hops every <= REACH_UM
     for cj, ls in sorted(leaves.items()):
@@ -529,9 +538,15 @@ def post(v, m, G):
                     break
                 t = _ctr(by[tgt])
                 if os.environ.get('OT_SPLIT_FAULT_ASTAR', '1') == '1':
-                    route = _hop_route(c0, t)
+                    tl_ = [(a, _ctr(by[a])) for a in okp]
+                    st1, st2 = {}, {}
+                    route, tgt2 = _hop_route(c0, tl_, stats=st1)
+                    if route is None:   # wider snap (box still checked <= REACH_UM centre to centre)
+                        route, tgt2 = _hop_route(c0, tl_, slack=150.0, stats=st2)
                     if route is None:
-                        raise ValueError(f'fault emit: no hop route from {cur} {c0} to {tgt} {t} (A*)')
+                        raise ValueError(f'fault emit: no hop route from {cur} {c0} to any of {len(okp)} attached nodes, nearest {tgt} {t} '
+                                         f'(A* {st1} / wide {st2}; free boxes within 340 um of the leaf: '
+                                         f'{sum(1 for gx in range(-8, 9) for gy in range(-8, 9) if abs(gx) + abs(gy) <= 8 and occ.free((c0[0] - W / 2 + 40 * gx, c0[1] - H / 2 + 40 * gy, c0[0] + W / 2 + 40 * gx, c0[1] + H / 2 + 40 * gy)))}/145 sampled)')
                     for ll in route:
                         hop = new_node('hop', 0, 0, cj, nodes[cur]['rs'], nodes[cur]['owner'], at=ll)
                         if _man(_ctr(nodes[cur]['it']), _ctr(nodes[hop]['it'])) > REACH_UM:
