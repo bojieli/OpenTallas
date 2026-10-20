@@ -2,12 +2,12 @@
  "name": "qfd_dv_s5_lrly-lrly-COMMIT",
  "block": "qfd_dv_s5_lrly",
  "ref_tile": true,
- "owner": "Claude:QW-SLICE6-LRLY",
+ "owner": "Codex:QW-SLICE6",
  "purpose": "QW-SLICE6 Q.STA.SLICE.2 new leaf qfd_dv_s5_lrly (one SU lane's relay stages + su_lane IREG/OREG, x8 per slice): main, 2-face pins",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/qw-slice6-lrly-1019",
+  "branch": "codex/qw-lrly-qualified-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",

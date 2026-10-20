@@ -2,12 +2,12 @@
  "name": "qfd_dv_s5_lrlyb-lrlyb-COMMIT",
  "block": "qfd_dv_s5_lrly",
  "ref_tile": true,
- "owner": "Claude:QW-SLICE6-LRLY",
+ "owner": "Codex:QW-SLICE6",
  "purpose": "QW-SLICE6 qfd_dv_s5_lrly parallel fallback: square, pins on 4 faces (suvm side W+S, lane-head side E+N)",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/qw-slice6-lrly-1019",
+  "branch": "codex/qw-lrly-qualified-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
