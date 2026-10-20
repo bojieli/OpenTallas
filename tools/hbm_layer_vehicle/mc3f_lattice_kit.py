@@ -127,8 +127,15 @@ def main():
     spec['macros'] = macros()
     tag = NAME.replace('hdie_pc_ctrl_', '')
     spec['job'].update(tag=tag, record_to=f'results/rtl/ref_tile/{NAME}',
-                       owner='Claude:HBM-MC3F (parent LEAD5-HBM)', branch='claude/hbm-mc3f-1020')
+                       owner='Claude:HBM-MC3G (parent LEAD7-HBM)', branch='claude/hbm-mc3g-1020')
     spec['orfs_vars']['POST_IO_PLACEMENT_TCL'] = f'physical/ref_tile/{NAME}/post_iop_exact.tcl'
+    # HBM-MC3G 10-20: band confinement (physical/common_flow/std_band_fence.tcl): EXCLUSIVE full-width band fence after
+    # the pin cells are FIRM, births adopted before DPL and after CTS, role list for band_exception_harvest.py
+    spec['orfs_vars']['PRE_GLOBAL_PLACE_TCL'] = 'physical/hbm_bw_face_1019/pre_gpl_band.tcl'
+    spec['orfs_vars']['PRE_DETAIL_PLACE_TCL'] = 'physical/hbm_bw_face_1019/pre_dpl_band.tcl'
+    spec['orfs_vars']['OT_BAND_Y'] = f'{BAND[0]}:{BAND[1]}'
+    spec['post_cts_extra'] = ['physical/common_flow/std_band_post_cts.tcl']
+    spec['post_grt_extra'] = ['physical/common_flow/std_band_post_grt.tcl']
     spec['description'] = (f'MC3c v6 (source 272b37645, native32 PASS) LITERAL 43.2-lattice floorplan {LAYOUT}: all 23 '
                            'p192 SRAMs R0 on 43.2 origins (86.4 pitch, >= 52.7 um channels), one full-width std band '
                            f'y {BAND[0]}-{BAND[1]}, data group i over column {DC} on both faces.')

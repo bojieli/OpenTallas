@@ -2,12 +2,12 @@
  "name": "hdie_pc_ctrl_mc3c6_l358-mc3c6_l358-COMMIT",
  "block": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
  "ref_tile": true,
- "owner": "Claude:HBM-MC3F (parent LEAD5-HBM)",
+ "owner": "Claude:HBM-MC3G (parent LEAD7-HBM)",
  "purpose": "MC3c v6 keeps POST_REG=1 and ACT_HEAD=1. Each ACT eligibility operand and destination uses kept same-edge bank captures; seven destination groups bound row controls to ten bits. Four equivalent head-bank next muxes use kept regional forwarding identities and serve local look-bank/ACT captures. Independent kept head banks drive queue successor and plus2 eligibility; tail command decode serves four banks. No additional cycle over MC3c; +1 post edge over MC3b remains priced. v3/v4/v5 failed native census evidence is preserved.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hbm-mc3f-1020",
+  "branch": "claude/hbm-mc3g-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/hbm_bw_face_1019",

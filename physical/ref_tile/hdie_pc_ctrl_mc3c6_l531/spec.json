@@ -333,8 +333,8 @@
   }
  },
  "job": {
-  "owner": "Claude:HBM-MC3F (parent LEAD5-HBM)",
-  "branch": "claude/hbm-mc3f-1020",
+  "owner": "Claude:HBM-MC3G (parent LEAD7-HBM)",
+  "branch": "claude/hbm-mc3g-1020",
   "tag": "mc3c6_l531",
   "purpose": "MC3c v6 keeps POST_REG=1 and ACT_HEAD=1. Each ACT eligibility operand and destination uses kept same-edge bank captures; seven destination groups bound row controls to ten bits. Four equivalent head-bank next muxes use kept regional forwarding identities and serve local look-bank/ACT captures. Independent kept head banks drive queue successor and plus2 eligibility; tail command decode serves four banks. No additional cycle over MC3c; +1 post edge over MC3b remains priced. v3/v4/v5 failed native census evidence is preserved.",
   "extra_paths": [
@@ -469,15 +469,16 @@
  },
  "orfs_vars": {
   "OT_MEG_DEPTH_UM": 48,
-  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_gpl.tcl",
-  "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_dpl.tcl",
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_gpl_band.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_face_1019/pre_dpl_band.tcl",
   "POST_IO_PLACEMENT_TCL": "physical/ref_tile/hdie_pc_ctrl_mc3c6_l531/post_iop_exact.tcl",
   "OT_OFLOP_HOPS": 8,
   "OT_OFLOP_ALLOW_NONE": 1,
   "OT_OFLOP_COLS": 4,
   "OT_IOHOLD_IN": 1,
   "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
-  "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
+  "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
+  "OT_BAND_Y": "175.23:198.18"
  },
  "reroute_reason": {
   "kind": "rtl_change",
@@ -494,6 +495,12 @@
  "description": "MC3c v6 (source 272b37645, native32 PASS) LITERAL 43.2-lattice floorplan l531: all 23 p192 SRAMs R0 on 43.2 origins (86.4 pitch, >= 52.7 um channels), one full-width std band y 175.23-198.18, data group i over column [0, 1, 4, 5] on both faces.",
  "std_area_um2": 5871.6867600000005,
  "clock_decision": "HBM-MC3E 10-20: clk = die hb_ckgen.pll_hbm (hbm domain, functional period 1024 ps, JEDEC edges; die_case_v16 PERIOD table stream 833.333 / hbm 1024 / serial 1111.111). The block is routed AND signed off at 833.333 ps (route.period_ps = sign-off; the stale kit ROUTE_PERIOD 1.024 is removed): closure at 833.333 implies setup at 1024 with >=190 ps slack, hold is period-independent, and the native32 receipt aa54e94ad was mapped at 833.333. Die STA times the view in the hbm domain at 1024; the stream(833.333)<->hbm crossing is NOT in this block: it lands at the parent station (landed fixed-latency ring per the 10-18 clocking standard). BW = 4*32 B per 1024 ps edge (91.68/92.76/91.70 B/stream edge).",
+ "post_cts_extra": [
+  "physical/common_flow/std_band_post_cts.tcl"
+ ],
+ "post_grt_extra": [
+  "physical/common_flow/std_band_post_grt.tcl"
+ ],
  "fill_reason": {
   "lattice_channel_bound": {
    "why": "literal 43.2 lattice + >= 20 um channels with a W+E-pinned 33.696 x 27.54 SRAM forces one macro per 86.4 x 86.4 cell (pitch 43.2 leaves 9.50 / 15.66 um; abutment needs 27.552 or bare faces); 23 macros -> 531.36 x 354.24, fill 14 % by construction",
