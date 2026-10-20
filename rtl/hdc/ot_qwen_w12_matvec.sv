@@ -389,7 +389,42 @@ module ot_qwen_w12_matvec_part #(
 
     assign ready = !active && !pend;
 
+    //: REGROOT 6 (QW-CLUSTER3/A0 10-19, safe-design item 3): per-destination KEPT copies of the go-latched split /
+    //: wsrc fields (split_r[3:0] drove 415/335/281/235 and wsrc_r 89 mapped loads in NK c1r9f).  Each copy loads the
+    //: canonical next-state (the same go enable): same value on the same edge, 0 cycles.  Copy owners:
+    //: spc 0..7 the round-step shifters (tsh/osh even/odd set bits of GT, low/high halves), 8 pr_a/kpad_a, 9 kc_a,
+    //: 10..13 KV-offset q per group, 14..17 KV-offset c per group, 18..21 K-limit mask per group, 22..25 K-limit
+    //: shift / e_gm per group, 26 e_split.  wsc 0 kc_a, 1 tstep_r, 2 e_wsrc / e_gm.  REGROOT < 6: plain aliases.
+    localparam integer NSPC = 27;
+    wire [4*NSPC-1:0] spc;
+    wire [2:0]        wsc;
+    wire [4:0]        acc;        // active copies (assigned in the issue block)
+    wire              klc;        // k_last copy (assigned in the issue block)
+    generate if (REGROOT >= 6) begin : g_rr6
+        initial if (FAST_ISSUE == 0 || LANES == 0 || KV_PREP < 2 || G > 4)
+            $fatal(1, "ot_qwen_w12_matvec_part REGROOT 6 needs FAST_ISSUE, LANES, KV_PREP >= 2 and G <= 4");
+        wire ld_go = rst_n && !pend && !active && go;
+        wire [3:0] split_nx = ld_go ? i_split : split_r;
+        wire       wsrc_nx  = ld_go ? i_wsrc : wsrc_r;
+        genvar sc;
+        for (sc = 0; sc < NSPC; sc = sc + 1) begin : g_sp
+            (* keep *) reg [3:0] q;
+            always @(posedge clk) q <= split_nx;
+            assign spc[4*sc +: 4] = q;
+        end
+        for (sc = 0; sc < 3; sc = sc + 1) begin : g_ws
+            (* keep *) reg q;
+            always @(posedge clk) q <= wsrc_nx;
+            assign wsc[sc] = q;
+        end
+    end else begin : g_rr_alias
+        assign spc = {NSPC{split_r}};
+        assign wsc = {3{wsrc_r}};
+    end endgenerate
+
 generate if (FAST_ISSUE == 0) begin : g_issue_legacy
+    assign acc = {5{active}};
+    assign klc = k_last;
     // tiles one round covers: GT/S (the whole engine's groups)
     wire [$clog2(GT):0] per_round = GT >> i_split;
     //: KV ops cut their whole K interleaved: ceil(K/S) steps
@@ -483,14 +518,17 @@ end else begin : g_issue_fast
     reg [AW+PRW-1:0] tsh [0:NB_GT-1];
     reg [AW+PRW-1:0] osh [0:NB_GT-1];
     reg [NW:0]       kpad_a;
+    localparam [AW+PRW-1:0] SH_LO = {(AW+PRW)/2{1'b1}};   // REGROOT 6: low half of a round-step shifter (own copy)
     always @(posedge clk) begin : p_terms
         integer b;
         for (b = 0; b < NB_GT; b = b + 1) begin
-            tsh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
-            osh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+            tsh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_LO)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)+1) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)+1) +: 4])) : {(AW+PRW){1'b0}}) & ~SH_LO);
+            osh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(4+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(4+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_LO)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(5+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(5+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & ~SH_LO);
         end
-        pr_a <= GT >> split_r;
-        kpad_a <= {1'b0, ktot_r} + ((1 << split_r) - 1);
+        pr_a <= GT >> spc[4*8 +: 4];
+        kpad_a <= {1'b0, ktot_r} + ((1 << spc[4*8 +: 4]) - 1);
     end
     wire [AW+PRW-1:0] tsum, osum;
     wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
@@ -503,8 +541,8 @@ end else begin : g_issue_fast
     end
     always @(posedge clk) begin
         tsg_a <= tsum; otsg_a <= osum;
-        kc_a <= wsrc_r ? kpad_a[NW-1:0] >> split_r : ktot_r;       // ceil(K/S) (K + S - 1 < 2^NW)
-        tstep_r <= !wsrc_r ? ts_r : tsg_a[AW-1:0];
+        kc_a <= wsc[0] ? kpad_a[NW-1:0] >> spc[4*9 +: 4] : ktot_r;       // ceil(K/S) (K + S - 1 < 2^NW)
+        tstep_r <= !wsc[1] ? ts_r : tsg_a[AW-1:0];
         ot_step <= otsg_a[AW-1:0];
         nb_step <= pr_a * (W * IL);
         lb_step <= pr_a * W;
@@ -530,63 +568,192 @@ end else begin : g_issue_fast
     ot_qwen_w12_kadd #(.W(NW)) u_a13 (.a(t), .b(TWO), .s(t_2));
     //: the go's own first-boundary flags, without the K-step divide: ceil(K/S) == 1 <=> K <= S
     wire kc_is_1 = i_wsrc ? ({{(32-NW){1'b0}}, i_k} <= (32'd1 << i_split)) : (i_k == 1);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
-            wrom_re <= 1'b0; kv_re <= 1'b0;
-            split_fault <= 1'b0;
-        end else if (pend) begin
-            wrom_re <= 1'b0; kv_re <= 1'b0;
-            if (pcnt == 0) begin pend <= 1'b0; active <= 1'b1; end
-            else pcnt <= pcnt - 1'b1;
-        end else if (!active) begin
-            wrom_re <= 1'b0; kv_re <= 1'b0;
-            if (go) begin
-                if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
-                else active <= 1'b1;
-                if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
-                nout_r <= i_nout; tiles_r <= i_tiles; ktot_r <= i_k;
-                wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
-                rmax_r <= i_rmax; mbase_r <= i_mbase;
-                scale_base_r <= (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
-                mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
-                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
-                xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
-                t <= 0; k <= 0; j <= 0;
-                t_last <= (i_tiles == 1); k_last <= kc_is_1;
-                cur <= i_wbase; base_k <= i_wbase; base_t <= i_wbase;
-                xk <= i_xbase; xc <= i_xbase; xk_base <= i_xbase;
-                oa <= i_obase; ot <= i_obase;
-                nb <= 0; nb_t <= 0;
-                lb <= 0;
-            end
-        end else begin
-            wrom_re <= !wsrc_r; kv_re <= wsrc_r;
-            wrom_addr <= cur;
-            if (!j_last) begin
-                j <= j + 1'b1; oa <= oa_j; nb <= nb_j; xc <= xc_j;
-                if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur_js;
+    if (REGROOT < 6) begin : g_ctl_all
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                split_fault <= 1'b0;
+            end else if (pend) begin
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                if (pcnt == 0) begin pend <= 1'b0; active <= 1'b1; end
+                else pcnt <= pcnt - 1'b1;
+            end else if (!active) begin
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                if (go) begin
+                    if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+                    else active <= 1'b1;
+                    if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+                    nout_r <= i_nout; tiles_r <= i_tiles; ktot_r <= i_k;
+                    wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
+                    rmax_r <= i_rmax; mbase_r <= i_mbase;
+                    scale_base_r <= (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
+                    mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
+                    ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                    xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
+                    t <= 0; k <= 0; j <= 0;
+                    t_last <= (i_tiles == 1); k_last <= kc_is_1;
+                    cur <= i_wbase; base_k <= i_wbase; base_t <= i_wbase;
+                    xk <= i_xbase; xc <= i_xbase; xk_base <= i_xbase;
+                    oa <= i_obase; ot <= i_obase;
+                    nb <= 0; nb_t <= 0;
+                    lb <= 0;
+                end
             end else begin
-                j <= 0; nb <= nb_t; oa <= ot;
-                if (!k_last) begin
-                    k <= k_1; k_last <= (k_2 == k_r);
-                    base_k <= bk_k; cur <= bk_k;
-                    xk <= xk_k; xc <= xk_k;
+                wrom_re <= !wsrc_r; kv_re <= wsrc_r;
+                wrom_addr <= cur;
+                if (!j_last) begin
+                    j <= j + 1'b1; oa <= oa_j; nb <= nb_j; xc <= xc_j;
+                    if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur_js;
                 end else begin
-                    k <= 0; k_last <= (k_r == 1);
-                    xk <= xk_base; xc <= xk_base;
-                    if (!t_last) begin
-                        t <= t_1; t_last <= (t_2 == tiles_r);
-                        base_t <= bt_t; base_k <= bt_t; cur <= bt_t;
-                        ot <= ot_t; oa <= ot_t;
-                        nb_t <= nbt_t; nb <= nbt_t; lb <= lb_t;
+                    j <= 0; nb <= nb_t; oa <= ot;
+                    if (!k_last) begin
+                        k <= k_1; k_last <= (k_2 == k_r);
+                        base_k <= bk_k; cur <= bk_k;
+                        xk <= xk_k; xc <= xk_k;
                     end else begin
-                        active <= 1'b0;
+                        k <= 0; k_last <= (k_r == 1);
+                        xk <= xk_base; xc <= xk_base;
+                        if (!t_last) begin
+                            t <= t_1; t_last <= (t_2 == tiles_r);
+                            base_t <= bt_t; base_k <= bt_t; cur <= bt_t;
+                            ot <= ot_t; oa <= ot_t;
+                            nb_t <= nbt_t; nb <= nbt_t; lb <= lb_t;
+                        end else begin
+                            active <= 1'b0;
+                        end
                     end
                 end
             end
         end
+        assign acc = {5{active}};
+        assign klc = k_last;
+    end else begin : g_ctl_rr6
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                split_fault <= 1'b0;
+            end else if (pend) begin
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                if (pcnt == 0) begin pend <= 1'b0; active <= 1'b1; end
+                else pcnt <= pcnt - 1'b1;
+            end else if (!active) begin
+                wrom_re <= 1'b0; kv_re <= 1'b0;
+                if (go) begin
+                    if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+                    else active <= 1'b1;
+                    if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+                    nout_r <= i_nout; tiles_r <= i_tiles; ktot_r <= i_k;
+                    wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
+                    rmax_r <= i_rmax; mbase_r <= i_mbase;
+                    scale_base_r <= (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
+                    mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
+                    ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                    xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
+                    t <= 0; k <= 0; j <= 0;
+                    t_last <= (i_tiles == 1); k_last <= kc_is_1;
+                    xk <= i_xbase; xc <= i_xbase; xk_base <= i_xbase;
+                end
+            end else begin
+                wrom_re <= !wsrc_r; kv_re <= wsrc_r;
+                if (!j_last) begin
+                    j <= j + 1'b1; xc <= xc_j;
+                end else begin
+                    j <= 0;
+                    if (!k_last) begin
+                        k <= k_1; k_last <= (k_2 == k_r);
+                        xk <= xk_k; xc <= xk_k;
+                    end else begin
+                        k <= 0; k_last <= (k_r == 1);
+                        xk <= xk_base; xc <= xk_base;
+                        if (!t_last) begin
+                            t <= t_1; t_last <= (t_2 == tiles_r);
+                        end else begin
+                            active <= 1'b0;
+                        end
+                    end
+                end
+            end
+        end
+
+        //: REGROOT 6 (QW-CLUSTER3/A0 10-19, safe-design item 3): the issue loop's broad control state (active, pend,
+        //: j_last, k_last, t_last) is copied per destination field group as KEPT registers that load the canonical
+        //: next-state wires below (same edge, same value; 0 cycles).  Each loop address field below owns its copies, so
+        //: no control register or field-select decode drives more than one ~24-bit field.  The canonical registers stay
+        //: in the reduced block (j/k/t counters, op fields, ROM/KV read enables).
+        wire act_nx  = pend ? ((pcnt == 0) ? 1'b1 : active)
+                            : (!active ? (go && !(KV_PREP > 0 && i_wsrc)) : !(j_last && k_last && t_last));
+        wire pend_nx = pend ? (pcnt != 0) : ((!active && go && KV_PREP > 0 && i_wsrc) ? 1'b1 : pend);
+        wire [$clog2(IL)-1:0] j_nx = pend ? j : (!active ? (go ? {$clog2(IL){1'b0}} : j) : (!j_last ? j + 1'b1 : {$clog2(IL){1'b0}}));
+        wire jl_nx = (j_nx == IL - 1);
+        wire kl_nx = pend ? k_last : (!active ? (go ? kc_is_1 : k_last)
+                                              : (j_last ? (!k_last ? (k_2 == k_r) : (k_r == 1)) : k_last));
+        wire tl_nx = pend ? t_last : (!active ? (go ? (i_tiles == 1) : t_last)
+                                              : ((j_last && k_last && !t_last) ? (t_2 == tiles_r) : t_last));
+        localparam integer NGF = 9;    // cur, base_k, base_t, oa, ot, nb, nb_t, lb, wrom_addr
+        wire [NGF-1:0] fa, fp, fjl, fkl, ftl;
+        genvar fg;
+        for (fg = 0; fg < NGF; fg = fg + 1) begin : g_fc
+            (* keep *) reg a, p;
+            (* keep *) reg jl, kl, tl;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin a <= 1'b0; p <= 1'b0; end
+                else begin a <= act_nx; p <= pend_nx; end
+            always @(posedge clk) if (rst_n) begin jl <= jl_nx; kl <= kl_nx; tl <= tl_nx; end
+            assign fa[fg] = a; assign fp[fg] = p; assign fjl[fg] = jl; assign fkl[fg] = kl; assign ftl[fg] = tl;
+        end
+        //: copies for the consumers outside the loop: kv_addr groups 0..3, e_v / progress / idle (4); k_last for the tag
+        for (fg = 0; fg < 5; fg = fg + 1) begin : g_ac
+            (* keep *) reg a;
+            always @(posedge clk or negedge rst_n) if (!rst_n) a <= 1'b0; else a <= act_nx;
+            assign acc[fg] = a;
+        end
+        if (1) begin : g_kc
+            (* keep *) reg kl;
+            always @(posedge clk) if (rst_n) kl <= kl_nx;
+            assign klc = kl;
+        end
+            always @(posedge clk) if (rst_n && !fp[0]) begin
+            if (!fa[0]) begin if (go) cur <= i_wbase; end
+            else if (!fjl[0]) begin if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur_js; end
+            else if (!fkl[0]) cur <= bk_k;
+            else if (!ftl[0]) cur <= bt_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[1]) begin
+            if (!fa[1]) begin if (go) base_k <= i_wbase; end
+            else if (fjl[1]) begin if (!fkl[1]) base_k <= bk_k; else if (!ftl[1]) base_k <= bt_t; end
+        end
+        always @(posedge clk) if (rst_n && !fp[2]) begin
+            if (!fa[2]) begin if (go) base_t <= i_wbase; end
+            else if (fjl[2] && fkl[2] && !ftl[2]) base_t <= bt_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[3]) begin
+            if (!fa[3]) begin if (go) oa <= i_obase; end
+            else if (!fjl[3]) oa <= oa_j;
+            else oa <= (fkl[3] && !ftl[3]) ? ot_t : ot;
+        end
+        always @(posedge clk) if (rst_n && !fp[4]) begin
+            if (!fa[4]) begin if (go) ot <= i_obase; end
+            else if (fjl[4] && fkl[4] && !ftl[4]) ot <= ot_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[5]) begin
+            if (!fa[5]) begin if (go) nb <= 0; end
+            else if (!fjl[5]) nb <= nb_j;
+            else nb <= (fkl[5] && !ftl[5]) ? nbt_t : nb_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[6]) begin
+            if (!fa[6]) begin if (go) nb_t <= 0; end
+            else if (fjl[6] && fkl[6] && !ftl[6]) nb_t <= nbt_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[7]) begin
+            if (!fa[7]) begin if (go) lb <= 0; end
+            else if (fjl[7] && fkl[7] && !ftl[7]) lb <= lb_t;
+        end
+        always @(posedge clk) if (rst_n && !fp[8] && fa[8]) wrom_addr <= cur;
+
     end
+
 end endgenerate
     // x reads (group g = GBASE + local: chunk c = g mod S).  With a
     // non-power-of-two GT, the final GT % S groups have no complete K-split
@@ -634,8 +801,8 @@ end endgenerate
             for (rb = 0; rb < CW; rb = rb + 1) begin : g_rc
                 assign crows[rb*AW +: AW] = c_p[gq][rb] ? (wcs_r << rb) : {AW{1'b0}};
             end
-            wire [31:0] qv = (gb + gq) >> split_r;
-            wire [31:0] cv = (gb + gq) & ((1 << split_r) - 1);
+            wire [31:0] qv = (gb + gq) >> spc[4*(10+gq) +: 4];
+            wire [31:0] cv = (gb + gq) & ((1 << spc[4*(14+gq) +: 4]) - 1);
             wire [8*AW-1:0] part;
             ot_qwen_w12_csa_tree #(.W(AW), .N(QL)) u_q0 (.rows(qrows[QL*AW-1:0]), .s(part[0*AW +: AW]), .c(part[1*AW +: AW]));
             ot_qwen_w12_csa_tree #(.W(AW), .N(QW-QL)) u_q1 (.rows(qrows[QW*AW-1:QL*AW]), .s(part[2*AW +: AW]), .c(part[3*AW +: AW]));
@@ -661,7 +828,7 @@ end endgenerate
             end
             ot_qwen_w12_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
             always @(posedge clk)
-                if (active) kv_addr[gq*AW +: AW] <= a_s;
+                if (acc[gq]) kv_addr[gq*AW +: AW] <= a_s;
         end
     end endgenerate
 
@@ -678,7 +845,7 @@ end endgenerate
     reg [NW:0]   e_nb, e_lb, e_rem;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) e_v <= 1'b0;
-        else e_v <= active;
+        else e_v <= acc[4];
     end
     //: the element's round (SCALE_LOCAL scale addressing), beside the tag
     reg [NW-1:0] e_t, s1_t, s1b_t, s2_t, s3_t;
@@ -686,12 +853,12 @@ end endgenerate
     ot_hdc_delay #(.W(NW), .D(MEM_EXTRA)) u_mtt (.clk(clk), .rst_n(rst_n), .d(e_t), .q(m_t));
     always @(posedge clk) begin e_t <= t; s1_t <= m_t; s1b_t <= s1_t; s2_t <= s1b_t; s3_t <= s2_t; end
     always @(posedge clk) begin
-        e_first <= (k == 0); e_last <= k_last;
-        e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
-        e_split <= split_r; e_oa <= oa; e_ots <= ots_r; e_nb <= nb; e_lb <= lb;
+        e_first <= (k == 0); e_last <= klc;
+        e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsc[2]; e_round <= round_r; e_mmode <= mmode_r;
+        e_split <= spc[4*26 +: 4]; e_oa <= oa; e_ots <= ots_r; e_nb <= nb; e_lb <= lb;
         e_rem <= {1'b0, nout_r};
         e_rmax <= rmax_r; e_j <= j; e_mbase <= mbase_r;
-        e_opend <= t_last && k_last && j_last;           // the op's last element
+        e_opend <= t_last && klc && j_last;              // the op's last element
     end
     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
         //: k*S + c < K  <=>  k < ceil((K - c) / S) (K > c): the per-group K-step limit is constant through the op, a
@@ -700,11 +867,12 @@ end endgenerate
         reg [NW:0] klim [0:G-1];
         genvar gk;
         for (gk = 0; gk < G; gk = gk + 1) begin : g_kl
-            wire [31:0] c32 = (gb + gk) & ((1 << split_r) - 1);
+            wire [3:0]  sa = spc[4*(18+gk) +: 4], sb = spc[4*(22+gk) +: 4];
+            wire [31:0] c32 = (gb + gk) & ((1 << sa) - 1);
             always @(posedge clk) begin
-                kdif[gk] <= ({{(32-NW){1'b0}}, ktot_r} > c32) ? (ktot_r - c32[NW:0] + ((1 << split_r) - 1)) : {(NW+1){1'b0}};
-                klim[gk] <= kdif[gk] >> split_r;
-                e_gm[gk] <= (((gb + gk) >> split_r) < (GT >> split_r)) && (!wsrc_r || ({1'b0, k} < klim[gk]));
+                kdif[gk] <= ({{(32-NW){1'b0}}, ktot_r} > c32) ? (ktot_r - c32[NW:0] + ((1 << sa) - 1)) : {(NW+1){1'b0}};
+                klim[gk] <= kdif[gk] >> sb;
+                e_gm[gk] <= (((gb + gk) >> sb) < (GT >> sb)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
             end
         end
     end else if (LANES) begin : g_gm
@@ -1463,7 +1631,7 @@ end endgenerate
         if (!rst_n) begin
             n_last_issued <= 0; n_ov <= 0; ov_mark <= 0; progress <= 0;
         end else begin
-            n_last_issued <= n_last_issued + ((active && k_last) ? 16'd1 : 16'd0);
+            n_last_issued <= n_last_issued + ((acc[4] && klc) ? 16'd1 : 16'd0);
             n_ov <= n_ov + (ov ? 16'd1 : 16'd0);
             if (go && ready) begin
                 ov_mark <= n_last_issued; progress <= 0;
@@ -1477,7 +1645,7 @@ end endgenerate
     //: accepting edge so a just-issued op never reads as drained.
     localparam [ORD+2:0] OMASK = (1 << (ORD + 1)) - 2;     // result-write stages 1..ORD
     wire ord_busy = |(ov_line & OMASK);
-    wire idle_c = !active && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
+    wire idle_c = !acc[4] && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
                   && !ov2 && !ord_busy && !mx_we;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;

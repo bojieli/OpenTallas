@@ -128,9 +128,20 @@ module qfd_tile_nk_rp2_45 #(
     // metadata. The child clocks remain independent compensated entries.
     (* keep *) reg [507:0] tap_q;
     (* keep *) reg [15:0] tile_id_q;
-    (* keep *) reg reset_q;
+    // REGROOT 6 (QW-CLUSTER3/A0 10-19): the kit lands rst_n at the face in two registered stages on ck_fa4
+    // (ref_tile reset_landing, last stage as kept copies of <= 32 loads each), so the single native reset_q sample
+    // (one flop -> 104 loads in NK c1r9f) is not built; release is a scheduled boot constant (+1 edge: 2 kit stages
+    // replace this 1 RTL stage).  REGROOT < 6: unchanged native sample.
+    wire reset_q;
+    generate if (REGROOT >= 6) begin : g_rst_land
+        assign reset_q = rst_n;
+    end else begin : g_rst_native
+        (* keep *) reg q;
+        always @(posedge ck_fa4) q <= rst_n;
+        assign reset_q = q;
+    end endgenerate
     always @(posedge ck_fa4) begin
-        tap_q <= tap; tile_id_q <= tile_id; reset_q <= rst_n;
+        tap_q <= tap; tile_id_q <= tile_id;
     end
     (* keep *) reg [513:0] n_a_q,n_b_q;
     always @(posedge ck_fa0) n_a_q<=n_a;
