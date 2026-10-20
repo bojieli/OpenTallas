@@ -137,6 +137,13 @@ def grid_center(g, obstacles):
     return exact
 
 
+def collections_count(vio):
+    c = defaultdict(int)
+    for v in vio:
+        c[v['kind']] += 1
+    return dict(c)
+
+
 def esc(n):
     return n.replace('[', '\\[').replace(']', '\\]')
 
@@ -233,6 +240,10 @@ def build(a):
     spec = json.loads(Path(a.spec).read_text())
     rt.LEAF_UM = spec.get('leaf_um', rt.LEAF_UM)
     rt.LEAF_MAX = spec.get('leaf_max', rt.LEAF_MAX)
+    # QW-DIECLK3 10-19: safe tree (regtree.SAFE: every unbuffered clock segment <= SEG_MAX, runs over blocks <= 200 um,
+    # leaves within LEAF_REACH; violations recorded in the manifest and failed by clock_reach_check.py)
+    rt.SAFE = bool(spec.get('safe_tree', False))
+    rt.SEG_MAX = float(spec.get('seg_max_um', rt.SEG_MAX))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     D = Die(a)
     blk, u, odb = D.block, D.u, D.odb
@@ -405,7 +416,12 @@ def build(a):
         rb = root_it.getBBox()
         rn = f"dc_root_{ts[0]['name']}"
         lxy = rec.get('local_root_xy', {}).get(root)
-        ri = mk(rn, rt.BUF, *(lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)))
+        rxy_ = lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        if rt.SAFE:
+            # QW-DIECLK3: the root buffer sits on the SAME free grid cell the tree's trunk route starts from (Builder.build
+            # nearest_free(root_xy)); a site searched from a median inside a hard block could land on the far side
+            rxy_ = g.xy(g.nearest_free(*rxy_))
+        ri = mk(rn, rt.BUF, *rxy_)
         insts[rn] = ri
         rec['cell_tree'][rn] = ''
         nn = odb.dbNet.create(blk, f'n_{rn}')
@@ -494,7 +510,7 @@ def build(a):
         # the generator pin drives ONE spine source buffer beside it (a generator model without output drive left the
         # first trunk input at 382-413 ps slew); the spine starts at its output
         sbn = 'dc_spine_src'
-        insts[sbn] = mk(sbn, rt.BUF, *sxy)
+        insts[sbn] = mk(sbn, rt.BUF, *(g.xy(g.nearest_free(*sxy)) if rt.SAFE else sxy))
         rec['cell_tree'][sbn] = 'spine'
         insts[sbn].findITerm('A').connect(src_net)
         spine_net = odb.dbNet.create(blk, 'n_dc_spine_src')
@@ -541,6 +557,15 @@ def build(a):
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
             'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
+    if rt.SAFE:
+        vio = [dict(v, tree=tn) for tn, b_ in builders.items() for v in b_.violations]
+        if sp_:
+            vio += [dict(v, tree='spine') for v in sb.violations]
+        rec['safe_tree'] = dict(seg_max_um=rt.SEG_MAX, span_um=rt.SPAN, safe_runs_um=list(rt.SAFE_RUNS),
+                                leaf_reach_um=rt.LEAF_REACH, violations=vio,
+                                run_escalations=sum(b_.run_escalations for b_ in builders.values()))
+        log('SAFE_TREE violations', len(vio), json.dumps(collections_count(vio)), 'run escalations',
+            rec['safe_tree']['run_escalations'])
     clocks_orig = list(clocks)
     if spec.get('clock_at_root_buffer'):
         # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
@@ -666,13 +691,18 @@ def build(a):
             x, y = cell_xy[bname]
             off = (0.0, 0.0)
             if ty == 'W':     # stages alternate between the node and a free spot WPAD_UM away (wire like a tree stage)
-                for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM)):
+                # QW-DIECLK3: the far stage must sit on a LEGAL free site <= WPAD_UM away (shorter offsets tried);
+                # legacy fell back to (WPAD_UM, 0) even over a block, so sites.take put it at the nearest legal site,
+                # possibly across a hard column (an unbuffered pad pair wire of mm)
+                cand = [(s_ * dx, s_ * dy) for s_ in ((1.0, 2 / 3, 1 / 3) if rt.SAFE else (1.0,))
+                        for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM))]
+                for dx, dy in cand:
                     ix, iy = round((x + dx) / XPITCH), round((y + dy) / YPITCH)
                     if 0 <= x + dx < D.W and 0 <= y + dy < D.H and sites.legal(ix, iy):
                         off = (dx, dy)
                         break
                 else:
-                    off = (WPAD_UM, 0.0)
+                    off = (0.0, 0.0) if rt.SAFE else (WPAD_UM, 0.0)
             orig = rec['parent'][bname]
             first = None
             for j in range(k * (2 if ty == 'W' else 1)):
