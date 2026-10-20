@@ -1,0 +1,53 @@
+{
+ "status": "PROPOSED_NOT_GATED",
+ "source_commit": "e6846a038",
+ "source_leaf_sha256": "e1da21d2a602a858aeb8cfc01ae4a3c1973466efed525809c95ba1ae64a79cbf",
+ "outline_um": [
+  103.68,
+  71.28
+ ],
+ "macro_box_um": [
+  43.2,
+  43.2,
+  81.0,
+  66.984
+ ],
+ "macro_orient": "R0",
+ "clearances_to_core_um": {
+  "W": 41.04,
+  "E": 20.52,
+  "S": 41.04,
+  "N": 2.136
+ },
+ "std_band_um": [
+  2.16,
+  2.16,
+  101.52,
+  41.04
+ ],
+ "std_band_area_um2": 3863.1168000000002,
+ "std_area_um2_approx": 1574,
+ "band_util_approx": 0.4074430263149175,
+ "total_core_fill_approx": 0.37170387493098006,
+ "pin_counts": {
+  "q3": {
+   "S": 432,
+   "E": 49,
+   "W": 5,
+   "N": 0
+  },
+  "q2": {
+   "S": 432,
+   "E": 56,
+   "W": 5,
+   "N": 0
+  }
+ },
+ "macro_signal_faces": {
+  "W": 115,
+  "E": 115
+ },
+ "macro_face_pin_density_per_um": 4.835183316515304,
+ "max_internal_endpoint_manhattan_um": 174.96,
+ "native_functional_scope": "NOT ASSERTED: canonical PDK/Liberty coupon pending; only mapped connectivity counts plus direct RTL proofs"
+}

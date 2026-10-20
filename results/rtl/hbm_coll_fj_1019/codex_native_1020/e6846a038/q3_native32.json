@@ -1,0 +1,92 @@
+{
+ "cells": 10298,
+ "flops": 3005,
+ "icgs": 0,
+ "macros": 1,
+ "findings": {},
+ "refuse": {},
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 3005,
+    "icg": 0,
+    "macro_pins": 1,
+    "example": "configured$_DFF_PN0_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 3006,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 0,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 0,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 351.7,
+  "depth_path": [
+   "u_ot_pr_core.u.u_program.check_row[2]$_DFF_PN0_",
+   "program_fault$_DFF_PN0_/D"
+  ],
+  "depth_levels": 8
+ },
+ "top": "ot_hgi_coll_fj_n2s1_r128",
+ "netlist": "/srv/opentallas-scratch/claude/codex-collfj-native-1020/map3_e68/results/asap7/opentallas_ot_hgi_coll_fj_n2s1_r128_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 0.2,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 32,
+  "hf_max": 32,
+  "hf_port_refuse": 32,
+  "hf_reset_refuse": 32,
+  "hf_refuse": 32,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 3006,
+  "root": "port:clk",
+  "ok": true,
+  "text": "3,006 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "PASS",
+ "refusing_checks": [],
+ "summary": ""
+}

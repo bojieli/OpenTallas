@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits  1031 GB (avail 835, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 36 disk 135 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-collfj-native-1020/src_e6846a038/.bench_ready
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-collfj-native-1020/src_e6846a038/.bench_ready
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-collfj-native-1020/src_e6846a038/.bench_ready
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-collfj-native-1020/src_e6846a038/.bench_ready
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-collfj-native-1020/src_e6846a038/.bench_ready
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2258926-1792483815 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PT_S128_MISMATCH cyc 504 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 505 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 506 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 507 ref cfg 0000000000 st 1 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 508 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 509 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 510 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 511 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_COVER episodes 3000 cycles 956173 faults 2668 configured 300 starts 387 fwd_frames 8
+PT_S128_MITER FAIL mismatches 8159
+PT_S128_MUTANT lastale REJECTED
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2258926-1792483815): exit 1

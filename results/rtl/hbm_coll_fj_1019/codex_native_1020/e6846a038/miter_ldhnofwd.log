@@ -1,0 +1,14 @@
+PT_S128_MISMATCH cyc 96291 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 0
+PT_S128_MISMATCH cyc 96292 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 0
+PT_S128_MISMATCH cyc 96293 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96294 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96295 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96296 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96297 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96298 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_COVER episodes 3000 cycles 956173 faults 2668 configured 300 starts 387 fwd_frames 8
+PT_S128_MITER FAIL mismatches 2221
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pt_s128_miter.sv:107: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 2.059 s; speed 928.831 us/s
+- Verilator: cpu 2.056 s on 1 threads; allocated 7 MB

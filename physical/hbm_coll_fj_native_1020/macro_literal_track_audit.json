@@ -1,0 +1,35 @@
+{
+ "orient": "R0",
+ "origin_nm": [
+  43200,
+  43200
+ ],
+ "layers": {
+  "M4": {
+   "pins": 230,
+   "offtrack": 0,
+   "max_offset_nm": 0.0
+  }
+ },
+ "master": "ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+ "origin_um": [
+  43.2,
+  43.2
+ ],
+ "orientation": "R0",
+ "master_sha256": {
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir_ff.lib": "c5296ff39f55ef20334ab688df050ecf279a8d035c088757ada4603ce9b0e380",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir.json": "246e67d2c906320dcaac465648979036ddc66df2f183d64490b8223f65752f78",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir_ss.lib": "55172d60f6f71404e38c6827fb9b809b1b0e50e313a80db6bf3ad338ab1a3bc2",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir_tt.lib": "359bdb8a0cce64e34f1e7931e6951f36448f37d63db3999f67ad4df2e7fe37d7",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir.v": "5d1b077a4ddba87a98377b9c648ff03739d171281e2ace5072c157c7cb830e3b",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v": "3a1605b75e73bd733077b4f1e8b4a11e0857350acf7b554d937ba5e588da2be0",
+  "ot_sram_1rw_128x64_m2_r2c2_p192_mir.lef": "dac7ed66a330e605abcdf8f80c214dabb7fd79d4ee77557c90c194e39d957847"
+ },
+ "bare_faces": {
+  "W": false,
+  "E": false,
+  "S": true,
+  "N": true
+ }
+}
