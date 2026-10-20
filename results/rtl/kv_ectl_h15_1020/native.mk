@@ -1,0 +1,24 @@
+# PRIVATE PARAMETER-ONLY NATIVE PROBE, NOT A KIT OR GATE
+export DESIGN_NAME = qkd_ectl_c_st_h15
+export DESIGN_NICKNAME = private_ectl_c_h15
+export PLATFORM = asap7
+export VERILOG_FILES = /src/rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st_h15.sv /src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv /src/rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv /src/rtl/hdc/ot_hdc_delay.sv /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /src/rtl/lib/ot_rst_relay.sv
+export VERILOG_TOP_PARAMS = QK_ISSUE_AGE 91 ROW_RETURN_LAT 87 HXK 15
+export VERILOG_DEFINES = -DSYNTHESIS
+export SDC_FILE = /src/results/rtl/kv_ectl_h15_1020/native_clock.sdc
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_MEMORY_MAX_BITS = 65536
+export LEC_CHECK = 0
+export CORNER = WC
+export CORNERS = WC BC
+export ASAP7_USE_VT = RVT
+export ADDER_MAP_FILE =
+override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)
+export NUM_CORES = 4
+export OT_KEEP_PIN_REGS = 1
+export OT_PIN_REGS = 0
+export OT_RST_LAND = 0
+export SYNTH_CANONICALIZE_TCL = /src/physical/common_flow/ot_keep_regs.tcl

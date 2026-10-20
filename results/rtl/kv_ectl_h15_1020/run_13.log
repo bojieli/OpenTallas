@@ -1,0 +1,13 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs0 captured0 slot0
+TRACE c12 localstart0 rq1 rs0 captured0 slot0
+TRACE c13 localstart0 rq1 rs0 captured0 slot0
+TRACE c14 localstart0 rq1 rs0 captured0 slot0
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+[261000] %Fatal: tb_ectl_c_h15.sv:60: Assertion failed in tb_ectl_c_h15: SCORE_AGE_MISMATCH score0 at174 expected176
+%Error: /srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/results/rtl/kv_ectl_h15_1020/tb_ectl_c_h15.sv:60: Verilog $stop
+Aborting...

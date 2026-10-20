@@ -1,0 +1,131 @@
+{
+  "scope": "PARAMETER_ONLY_SOURCE_NATIVE_PROBE_FAIL_NOT_GATE_ADMITTED",
+  "source_manifest": {
+    "base": "1b69058edc36e5a6ac77292f53b67ae629891944",
+    "old_rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st.sv",
+    "old_sha256": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+    "candidate_rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st_h15.sv",
+    "candidate_sha256": "f9e189c6b368e6f6f3e157b5008058e4790b643ea5cabe1c84b17c1b888c9971",
+    "change": "sole module identity and parameter defaults91/87/15; body unchanged",
+    "params": {
+      "QK_ISSUE_AGE": 91,
+      "ROW_RETURN_LAT": 87,
+      "HXK": 15
+    },
+    "outline": {
+      "w": 138.24,
+      "h": 129.6
+    },
+    "shipping_kit_generated": false
+  },
+  "profile": {
+    "QK_ISSUE_AGE": 91,
+    "ROW_RETURN_LAT": 87,
+    "HXK": 15
+  },
+  "wrapper": {
+    "OT_PIN_REGS": 0,
+    "OT_RST_LAND": 0,
+    "source_owned_reset": true,
+    "canonicalize": "physical/common_flow/ot_keep_regs.tcl",
+    "helper_base": "1b69058edc36e5a6ac77292f53b67ae629891944"
+  },
+  "mapped": {
+    "path": "/work/results/asap7/private_ectl_c_h15/base/1_2_yosys.v",
+    "sha256": "c47fd9e8f0f9c0885e74be605b2b442711a4ee5e7f886f46982fbf16eb227df5"
+  },
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "max": 281,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "_7144_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_4034_",
+      "loads": 62
+    },
+    {
+      "driver": "_7306_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_4164_",
+      "loads": 62
+    },
+    {
+      "driver": "_7478_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_4304_",
+      "loads": 62
+    },
+    {
+      "driver": "u.u_rc.q$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "u.u_rc._0_",
+      "loads": 281
+    },
+    {
+      "driver": "u.u_rpin.rst_n$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_3139_",
+      "loads": 134
+    },
+    {
+      "driver": "u.u_rsc.q$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "u.u_rsc._0_",
+      "loads": 133
+    },
+    {
+      "driver": "u.x3[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_0235_",
+      "loads": 177
+    }
+  ],
+  "obligations": [
+    "exact seven mapped cones/source trace before source-local copy repair",
+    "preserve source/control data ages91/87/15 and every reset assertion/release age",
+    "complete actual boundary/functional-pin/storage/native checks; no legacy admission inheritance",
+    "fresh C and exact parent physical qualification after parent review only"
+  ]
+}

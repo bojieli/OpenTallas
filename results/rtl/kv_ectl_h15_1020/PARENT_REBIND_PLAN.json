@@ -1,0 +1,67 @@
+{
+  "scope": "SOURCE_PROOF_PROPOSAL_ONLY_NO_PHYSICAL_LAUNCH",
+  "base": "1b69058edc36e5a6ac77292f53b67ae629891944",
+  "old_parent": "qkd_ectl3_kiss_st",
+  "new_parent": "qkd_ectl3_kiss_st_h15",
+  "new_parent_source": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st_h15.sv",
+  "new_parent_source_sha256": "0a5e8fb8ad0a5ee19b190e910c352664609adadd3b0e86e4e23a42d2591773c1",
+  "parameters": {
+    "RESPONSE_LAT": 80,
+    "QK_ISSUE_AGE": 91,
+    "HXK": 15,
+    "MUT": 0
+  },
+  "outline": {
+    "w": 725.76,
+    "h": 261.36,
+    "exact": true
+  },
+  "children": [
+    {
+      "inst": "u_a",
+      "old_view": "physical/ref_tile/qkd_static_ectla_k4/views/qkd_static_ectla_kiss",
+      "old_artifact_sha256": {
+        "qkd_static_ectla_kiss_ss.lib": "cdb67606d15c9629d7a7d40b5e7b6e8305ed3299db1bd9a9fd808072d22029d6",
+        "qkd_static_ectla_kiss_tt.lib": "dd686aa2d02c21adf25da4378f8c1e11f134d217feb2a75181455eaffad1a3b9",
+        "qkd_static_ectla_kiss.lef": "92986c694f7200cf1c1722e3ca36ebcaac0caa5adc2060d03381aa6ade7e9cd3",
+        "qkd_static_ectla_kiss_ff.lib": "dd6b0220db654679f7aba5397236596007b2e0ebc4684be2da96d4a7beddef18"
+      },
+      "new_view": "physical/ref_tile/qkd_static_ectla_k4/views/qkd_static_ectla_kiss",
+      "new_qualification": "REUSE_PENDING_ACTUAL_13_VS15_OUTPUT_STATE_INDEPENDENCE_PROOF"
+    },
+    {
+      "inst": "u_b",
+      "old_view": "physical/ref_tile/qkd_ectl_b_tp8_direct_rt80/views/qkd_ectl_b_tp8_direct",
+      "old_artifact_sha256": {
+        "qkd_ectl_b_tp8_direct_tt.lib": "c1d5efebbf61fee8c07e0d185c1633a5635f16af2502195409478041ec69feb8",
+        "qkd_ectl_b_tp8_direct_ff.lib": "82b527e606bd1ed19bc3bc16d7ed01ce51ab5e75afb807a59adf1b663d8507bf",
+        "qkd_ectl_b_tp8_direct_ss.lib": "b94837eb94741627465fd5c93e70ca68a0252d57bf49fb3b70cef82189856b7d",
+        "qkd_ectl_b_tp8_direct.lef": "6dbe4219b6f15a7fbfeaa590c5613f3c54ba486df92c78feee582013937a2004"
+      },
+      "new_view": "physical/ref_tile/qkd_ectl_b_tp8_direct_rt80/views/qkd_ectl_b_tp8_direct",
+      "new_qualification": "REUSE_PENDING_ACTUAL_13_VS15_OUTPUT_STATE_INDEPENDENCE_PROOF"
+    },
+    {
+      "inst": "u_c",
+      "old_view": "physical/ref_tile/qkd_ectl_c_st_rt80/views/qkd_ectl_c_st",
+      "old_artifact_sha256": {
+        "qkd_ectl_c_st_ff.lib": "3f35c2a68062a123568f820d538c7606d7a8036885990565991dcb6f68f7df2c",
+        "qkd_ectl_c_st.lef": "c1a0d95e92b2df7b5bd3d96472eccc10c6ed5222a46aea25feaeb94bf0247bea",
+        "qkd_ectl_c_st_ss.lib": "16a59cf6b3eddacd097be1a5382c24b2be431d37ab50dbea6aa32b2ff1ba4284",
+        "qkd_ectl_c_st_tt.lib": "66b2306697643e1d9344305851d099b8dec295b4ade92a16652b9c6d50ac22d8"
+      },
+      "new_view": "physical/ref_tile/qkd_ectl_c_st_rt80_h15/views/qkd_ectl_c_st_h15",
+      "new_qualification": "PENDING_NATIVE32_COLD_BOUNDARY_TIMING_PG_REACH_AND_RECEIPT"
+    }
+  ],
+  "child_placement": "Unchanged exact parent at/source orientations from original spec; does not transfer physical qualification.",
+  "adoption": [
+    "actual C15 mapped native<=32 incl reset, full registered boundary/no tied functional ports",
+    "cold actual C15/realSRAM/tag score data proof and wrong13/14 age controls",
+    "A/B actual source/protocol independence proof; retain original H13 view identity labels",
+    "new C15 CTS/native face/capture/launch/full405/PG/timing and CLOSED receipt",
+    "fresh parent exact source-selected C15 LEF+libs+insertion SHA; reclose clock/reach/PG/timing and neighbours",
+    "strict current full KV binding/source calendar/profiles; no flag-only hard child substitution"
+  ],
+  "guards": "New hard parent refuses any profile other than80/91/15/MUT0. No current die selector changed; old H13 parent/gold untouched."
+}
