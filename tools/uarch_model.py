@@ -35,6 +35,30 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def s81_standard_lep_native32_model(host=True):
+    """Default-off standard LEP; reuse proven same-age SRAM/control components."""
+    tx_macros, rx_macros = 10, 10
+    return dict(schema="opentallas.s81-standard-lep-native32.v1", candidate=True,
+        opt_in_default=False, host_plane=bool(host), lanes=2, lane_payload_bits=553,
+        frame_bits=1104, issue_frames_per_edge=1, lane_bytes_per_edge=553/8,
+        macs_per_cycle=0, compute_communication_intensity=0,
+        tx_logical_storage_bits=2*512*553, rx_logical_storage_bits=2*8*553,
+        tx_macros=tx_macros, tx_macro_shape=[512,128], rx_macros=rx_macros, rx_macro_shape=[32,128],
+        tx_physical_storage_bits=tx_macros*512*128, rx_physical_storage_bits=rx_macros*32*128,
+        rx_replaced_flop_bits=2*8*553, tx_forward_slice_bits=8, tx_control_slices_per_group=4,
+        tx_address_groups_per_lane=18, tx_read_pipeline_edges=1,
+        input_face_added_edges=1, rx_added_edges=0, reset_release_edges=3,
+        added_edges_vs_slice3_lep=1, new_credits=0, credits_per_lane=8,
+        input_valid_copies=6, rx_output_select_groups=69,
+        rx_head_storage="true SRAM with exact current/previous write forwarding",
+        physical_candidate_outline_um=[475.2,561.6], macro_lattice_um=43.2,
+        macro_count_delta=10, boundary_fine_tracks_lower_bound=1104,
+        routing_track_qualification="must budget actual four-face pins and macro corridors after synthesis; no fit claim",
+        wire_hop_limit_um=405, intended_control_fanout_limit=32,
+        parent_price="+1 outward ring/host command edge vs TXRP1 baseline; RX unchanged; compiler update owed",
+        qualification="unqualified until full-shape component miter/mutants and mapped all-role BUF/INV census <=32, then layout")
+
+
 def qwen_tile_node_native_boundary_model():
     """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
     return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",
