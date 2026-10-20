@@ -1,0 +1,19 @@
+{
+  "source_commits": [
+    "21a30dc71",
+    "a4d5661c1"
+  ],
+  "remote_source": "ot-epyc9:/srv/opentallas-scratch/codex-coll-fast16-r1",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv": "9ed8e09ffe5d0968cdd631208bc312a730c9dd94fa2c39dc29427291dc9903d1",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv": "1a3aee3922f3e1f77e94a41fe5561f864ae4d3021534e8751ec6d248d5bee9a9",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_mulpipe_safephys.sv": "fcf8abeef3beaac98d089b2b5becea6f95f9271334c9377f85881d5aa2de822d",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv": "fc039614d7d165376da90c546238c4f5f0a832845d00f0722c6afe7a57578e66",
+    "tools/run_hbm_coll_fast16_proofs_1020.sh": "6c6afdb345920a318813c810785c1fc8303faf98437355595245c4627583c40f"
+  },
+  "bench": "Verilator5.050",
+  "cases": 10,
+  "result": "PASS all6positive/4causalnegative",
+  "cycles_added": 0,
+  "qualification": "RTL only; native32/layout and SS/FF closure unproven"
+}
