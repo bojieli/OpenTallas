@@ -372,8 +372,12 @@ def main(argv=None):
     param_path = case / 'die.v.params.json'
     child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
     profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
+    qkh32_missing = []
     if QKH32.enabled():
-        QKH32.require_profiles(ROOT, profiles)
+        qkh32_missing = QKH32.require_profiles(ROOT, profiles, allow_missing=True)
+        if qkh32_missing:
+            print(f'kv_expand: DIAGNOSTIC {QKH32.DIAG_FLAG}: safe32 receipts not landed for {qkh32_missing} '
+                  f'(autoprofiled, never native-qualified)')
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
     wires = {}
@@ -427,7 +431,7 @@ def main(argv=None):
                preexpand_die_sha256=EP.sha(case / 'die.v'))
     if QKH32.enabled():
         rep['qkh_safe32'] = dict(flag=QKH32.FLAG, targets=QKH32.TARGETS,
-                                 native_profiles_required=True, token_cycles_added=0,
+                                 native_profiles_required=True, diagnostic_missing_receipts=qkh32_missing, token_cycles_added=0,
                                  placement='actual CLOSED leaf sizes; existing containment/overlap checks remain required')
     occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()
