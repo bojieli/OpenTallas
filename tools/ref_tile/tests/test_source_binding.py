@@ -122,7 +122,7 @@ class SourceBindingTest(unittest.TestCase):
                 # numbers remain diagnostic and cannot qualify a gate PASS.
                 self.assertEqual(g.verdict, 'FAIL')
                 self.assertEqual([i['check'] for i in g.items if i['severity'] != 'INFO'],
-                                 ['floorplan.pin_geometry', 'clock_rule', 'layout_images'])
+                                 ['native_census', 'floorplan.pin_geometry', 'clock_rule', 'layout_images'])
                 self.assertEqual(next(i for i in g.items if i['check']=='clock_rule')['severity'], 'WARN')
 
     def test_recovery_requires_full_manifest_log_script_and_staged_bytes(self):
