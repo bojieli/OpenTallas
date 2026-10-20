@@ -1,0 +1,7 @@
+[
+  "PASS exact selected source",
+  "kv_bound_netlist: wrapper: selected binding source missing: /tmp/tmpp3r5ki72/selected.sv",
+  "kv_bound_netlist: wrapper: selected source /tmp/tmpp3r5ki72/selected.sv declares 0 copies of wanted (need exactly one; no by-name fallback)",
+  "kv_bound_netlist: wrapper: selected source /tmp/tmpp3r5ki72/selected.sv declares 2 copies of wanted (need exactly one; no by-name fallback)",
+  "kv_bound_netlist: wrapper: indexed module wanted does not come from selected source /tmp/tmpp3r5ki72/selected.sv"
+]
