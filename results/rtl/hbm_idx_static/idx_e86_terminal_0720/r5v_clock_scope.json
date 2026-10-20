@@ -1,0 +1,15 @@
+{
+  "clock_source": "clk",
+  "tt_boundary_count": 5497,
+  "all_flops_on_root": 29903,
+  "tt_boundary_min_ps": 1000.0,
+  "tt_boundary_max_ps": 1134.8,
+  "tt_spread_ps": 134.8,
+  "ff_boundary_min_ps": 796.0,
+  "ff_boundary_max_ps": 941.1,
+  "ff_spread_ps": 145.1,
+  "verdict": "FAIL",
+  "limit_ps": 80,
+  "grt_status": "NOT RUN",
+  "note": "Original GRT job still progressing; no terminal GRT verdict. High insertion alone is not a refusal. The measured boundary spread independently fails."
+}

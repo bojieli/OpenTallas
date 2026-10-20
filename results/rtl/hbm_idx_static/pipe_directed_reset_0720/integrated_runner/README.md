@@ -1,0 +1,1 @@
+Committed integrated runner f28aa7e19 verified on fleet: renamed strict fixture and generated actual reset-disconnect mutant. Nominal unit263303-1792507252 PASS3x200000/all31async observations; mutant263313-1792507252 causal FAIL44ns. Exact shipped helper10 hash identity on active s3p_b gate is c08afcc64. These are behavioral receipts; physical gate remains pending.
