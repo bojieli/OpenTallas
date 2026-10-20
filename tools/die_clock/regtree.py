@@ -176,3 +176,34 @@ class Builder:
         self.nets = list(by.values())
         return dict(top=top['buf'], model_insertion_ps=round(d + top['d'], 1), leaves=len(leaves), buffers=len(self.bufs),
                     pads=sum(1 for b in self.bufs if b[1] == PAD))
+
+
+def spine_members(trees, built, root_buffer, spine):
+    """SPINE (landed-regions standard, GEN16 10-19): the region trees fed by ONE forwarded clock spine from the generator.
+    trees: expanded tree specs; built: names of trees actually built; root_buffer: root pin -> root buffer name.
+    A member has a local_root (regional clock entry), a root buffer, and the spine's period (or is listed by name).
+    Returns [(tree spec, root buffer)].  A listed tree that cannot join raises (fail closed)."""
+    per = float(spine.get('period', 833.333333))
+    sel = spine.get('trees')
+    out = []
+    for t in trees:
+        if t['name'] not in built:
+            continue
+        listed = isinstance(sel, list) and t['name'] in sel
+        if isinstance(sel, list) and not listed:
+            continue
+        if not isinstance(sel, list) and abs(float(t.get('period', 833.333333)) - per) > 1e-3:
+            continue
+        rb = root_buffer.get(t['root'])
+        if not t.get('local_root') or not rb:
+            if listed:
+                raise ValueError(f"spine tree {t['name']} has no local_root / root buffer")
+            continue
+        out.append((t, rb))
+    return out
+
+
+def spine_leaves(members, cell_xy):
+    """one spine leaf per regional entry: sink = the entry's root buffer input, key = the tree name (so its region
+    tree's model insertion is compensated by the merge: neighbour regions meet at their FLOPS, not at their entries)."""
+    return [[(f'{rb}/A', BUF, cell_xy[rb][0], cell_xy[rb][1], t['name'])] for t, rb in members]

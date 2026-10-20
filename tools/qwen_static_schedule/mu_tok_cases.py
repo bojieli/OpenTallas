@@ -64,9 +64,19 @@ def F(**kv):
     return w
 
 
+# MU-DQ-SLICEKC 10-19 (coordinator: kc on EVERY matvec STN): k steps per (round, j) of each matvec op's tiles.  The tiles
+# stream their running accumulator every k step; qfd_dv_redstn2 keeps only the k = kc - 1 block of every pair, from STN
+# cmd[66:59] = kc - 1 (QW-DIEFIX last-k, moved off the MU user [52:51] by MU-SLICE-GATE 4180abc13).  kc 1 there would
+# pass every partial sum as a result (MUT 14 behaviour).  Source: the L0 stage-1 ROM command k fields
+# (rtl/test/qwen_dv/xhead/xt1_prep.py OPS, tt_ctlm_prog unit_c4 log decoded by ibdec.dec380; = input dim / split:
+# qkv 4096/512, o 512/256, gate/up 4096/128, down 1536/256); LM head = split 512 over 4096 (dv_lower: split 512 ->
+# level 9 like qkv) -> 8.
+MATVEC_KC = {"qkv": 8, "o_proj": 2, "gate_up": 32, "down": 6, "lm_head": 8}
+
+
 def su(p):                 return F(go=(0, 1, 1), kind=(1, 3, 1), pidx=(4, 9, p), dst=(112, 4, 15))
-def stn(db, amax=0):       return F(go=(0, 1, 1), kind=(1, 3, 2), nw=(7, 8, 16), dst2=(24, 2, 1), db=(26, 24, db),
-                                    amax=(50, 1, amax), dst=(112, 4, 15))
+def stn(db, kc, amax=0):   return F(go=(0, 1, 1), kind=(1, 3, 2), nw=(7, 8, 16), dst2=(24, 2, 1), db=(26, 24, db),
+                                    amax=(50, 1, amax), kcm1=(59, 8, kc - 1), dst=(112, 4, 15))   # kc: no default
 def ports(ar, dd, em):     return F(go=(0, 1, 1), kind=(1, 3, 4), ar=(4, 24, ar), dd=(28, 24, dd), aren=(52, 1, 1),
                                     dden=(53, 1, 1), em=(54, 24, em), dst=(112, 4, 15))
 def xc(seg, words):        return F(go=(0, 1, 1), kind=(1, 3, 0), sub=(4, 2, 0), mode=(6, 1, 0), words=(7, 16, words),
@@ -88,7 +98,7 @@ def layer_segment(p=None):
     for i, (op, unit, _, _) in enumerate(M.LAYER_WINDOWS):
         a = ops[op][0]
         if unit == "me":
-            ent.append((a + 8, stn(0x100 + 0x40 * i)))
+            ent.append((a + 8, stn(0x100 + 0x40 * i, kc=MATVEC_KC[op])))
         elif unit == "su":
             ent.append((a + 8, su(1 + i)))
         elif unit == "kv":
@@ -107,7 +117,7 @@ def segments(p=None):
             # stage 0: emit prev argmax, open next, embedding.  SMOKE convention: the EMB at 16 precedes the result (stale
             # token); the op calendar of record (mu_opcal.segments) moves it to mu_opcal.EMB_T = 60 (MU-OPCAL-EMB)
             0: [(8, amax_cmd(0, 1)), (12, amax_cmd(1, 0)), (16, loc_emb())],
-            2: [(8, stn(0x180, amax=1))],                                         # stage 37: one LM-head row chunk
+            2: [(8, stn(0x180, kc=MATVEC_KC["lm_head"], amax=1))],                                         # stage 37: one LM-head row chunk
             3: [(4, setid()), (8, su(30))]}                                       # boot
 
 

@@ -12,7 +12,7 @@
 // Log: S0AR / S0DD (W5 edge), S<k>SU / S<k>SD (scalar words leaving slice k up / down), S<N-1>E (up-end stream),
 // S<k>TOK (status token), S<k>ST at the end.
 module tb_qfd_dv2 (input wire ck);
-    parameter integer MUT = 0, N = 2;
+    parameter integer MUT = 0, N = 2, SU_LT = 0, HD_W130 = 0;   // MU-SLICE-GATE: the kitted slice is SU_LT 1, HD_W130 1
     parameter integer MU_NU = 1;     // MU-ADOPT-SLICE: qfd_dv_slice2 MU_NU (R4 per-user LM-head argmax)
     parameter integer FACE = 0;      // 0 master qfd_dv_slice2; 1 the W face qfd_dv_slice2_w; 2 the E face qfd_dv_slice2_e
     reg rst_n = 1'b0;
@@ -36,7 +36,7 @@ module tb_qfd_dv2 (input wire ck);
     genvar k;
     generate for (k = 0; k < N; k = k + 1) begin : g_s
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
-        tb_dv2_slice #(.MUT(MUT), .MU_NU(MU_NU), .FACE(FACE)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
+        tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
             .hr_i(hrc[k]), .hr_o(hrc[k+1]), .rs_s(rss[k]), .rs_n(rsn[k]), .l9_i(l9i), .l9_o(l9o[k]),
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),
@@ -113,7 +113,8 @@ endmodule
 
 // MU-ADOPT-SLICE 10-19: the master port list on a master core (FACE 0) or on a generated face wrapper (FACE 1 W, 2 E),
 // so every dv_bench2 bench runs unchanged on the face RTL (the face is a port map: dn face = master W for _w, E for _e).
-module tb_dv2_slice #(parameter integer MUT = 0, parameter integer MU_NU = 1, parameter integer FACE = 0) (
+module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, parameter integer HD_W130 = 0,
+                      parameter integer MU_NU = 1, parameter integer FACE = 0) (
     input  wire ck, input wire rst_n,
     input  wire [115:0] cmd_i, output wire [115:0] cmd_o, input wire [452:0] hr_i, output wire [452:0] hr_o,
     input  wire [1027:0] rs_s, input wire [1027:0] rs_n, input wire [513:0] l9_i, output wire [513:0] l9_o,
@@ -123,7 +124,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer MU_NU = 1, pa
     output wire [515:0] cw_n0, cw_n1, cw_n2, cw_n3, cw_s0, cw_s1, cw_s2, cw_s3,
     output wire [106:0] st, output wire [49:0] cc_o, input wire [9:0] ag_up_i, output wire [9:0] ag_dn_o);
     generate if (FACE == 0) begin : g_m
-        qfd_dv_slice2 #(.MUT(MUT), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
+        qfd_dv_slice2 #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
             .hr_i(hr_i), .hr_o(hr_o), .rs_s(rs_s), .rs_n(rs_n), .l9_i(l9_i), .l9_o(l9_o),
             .st_up_i(st_up_i), .st_up_o(st_up_o), .st_dn_i(st_dn_i), .st_dn_o(st_dn_o),
             .sc_up_i(sc_up_i), .sc_up_o(sc_up_o), .sc_dn_i(sc_dn_i), .sc_dn_o(sc_dn_o),
@@ -131,7 +132,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer MU_NU = 1, pa
             .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2),
             .cw_s3(cw_s3), .st(st), .cc_o(cc_o), .ag_up_i(ag_up_i), .ag_dn_o(ag_dn_o));
     end else if (FACE == 1) begin : g_w
-        qfd_dv_slice2_w #(.MUT(MUT), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd_i), .cmd_eo(cmd_o),
+        qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd_i), .cmd_eo(cmd_o),
             .hr_wi(hr_i), .hr_eo(hr_o), .st_wo(st_dn_o), .st_wi(st_up_i), .st_eo(st_up_o), .st_ei(st_dn_i),
             .sc_wo(sc_dn_o), .sc_wi(sc_up_i), .sc_eo(sc_up_o), .sc_ei(sc_dn_i),
             .arv_wo(ch_dn_o[1094]), .art_wo(ch_dn_o[1093:1062]), .arm_wo(ch_dn_o[1061]), .arl_wo(ch_dn_o[1060]),
@@ -148,7 +149,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer MU_NU = 1, pa
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
     end else begin : g_e
-        qfd_dv_slice2_e #(.MUT(MUT), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
+        qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
             .hr_ei(hr_i), .hr_wo(hr_o), .st_eo(st_dn_o), .st_ei(st_up_i), .st_wo(st_up_o), .st_wi(st_dn_i),
             .sc_eo(sc_dn_o), .sc_ei(sc_up_i), .sc_wo(sc_up_o), .sc_wi(sc_dn_i),
             .arv_eo(ch_dn_o[1094]), .art_eo(ch_dn_o[1093:1062]), .arm_eo(ch_dn_o[1061]), .arl_eo(ch_dn_o[1060]),

@@ -1,0 +1,23 @@
+WARNING: /srv/opentallas-scratch/claude/mu-dq-sysface/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:38: $readmemh(/srv/opentallas-scratch/claude/mu-dq-sysface/runs/gmu_m2/img/cfg_writes.memh): Not enough words in the file for the requested range [0:255].
+  provider fault @1439 (T+196) face 1 store 0
+ERR @1505 embedding word not stored bit-exact
+ERR @1506 embedding word not stored bit-exact
+ERR @1507 embedding word not stored bit-exact
+ERR @1508 embedding word not stored bit-exact
+ERR @1509 embedding word not stored bit-exact
+ERR @1510 embedding word not stored bit-exact
+ERR @1511 embedding word not stored bit-exact
+ERR @1512 embedding word not stored bit-exact
+ERR @1513 embedding word not stored bit-exact
+ERR @1514 embedding word not stored bit-exact
+ERR @1515 embedding word not stored bit-exact
+ERR @1516 embedding word not stored bit-exact
+ERR @1517 embedding word not stored bit-exact
+ERR @1518 embedding word not stored bit-exact
+ERR @1519 embedding word not stored bit-exact
+ERR @1520 embedding word not stored bit-exact
+ERR @1521 embedding word not stored bit-exact
+ERR @1522 embedding word not stored bit-exact
+ERR @1523 embedding word not stored bit-exact
+SYS_FACE_FAIL MUT=2 timeout (errors 64, face_fault 1 cal_fault 0)
+/srv/opentallas-scratch/claude/mu-dq-sysface/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:295: $finish called at 450000000 (1ps)

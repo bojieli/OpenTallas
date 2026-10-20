@@ -1142,6 +1142,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 finalize_model(m, _reset_release)
         if before_relays is not None:
             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
+            _gen16_fwd_ck_names(m)       # DIE-QWEN-GEN16: lane src_ck / dst_ck = the nets the pins are on now
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     if su_vm_abut:
         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
@@ -2877,6 +2878,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def region_of(cx, cy):
         return region_at(regs, cx, cy)
     ck_add = {}
+    # DIE-QWEN-GEN16 (Q-CLK GAP, 5,538 b): (lane cell, clock pin) -> the block whose ROOT that pin must share (landing ->
+    # receiver, hop 0 -> sender); _regions_from_placement re-files these with their owner, never by the cell's own centre
+    _ckf = m.setdefault('ck_follow', {})
     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
     stage_of = {}
     # it24: the KV host link (d2d_fdi) places first: its spine lane + IO sub-lane relay sites never depend on the
@@ -4355,10 +4359,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # re-registers the level on the receiving block's root (no epoch bit, no ring, no straps)
                 if kind_ == 'rlyrl':
                     ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: re-filed with the RECEIVER's root
                     fwd['landing'] = nm
                 else:
                     if k == 0:
                         ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
+                        _ckf[(nm, 'ck')] = fwd['src']    # DIE-QWEN-GEN16: hop 0 stays on the SENDER's root
                     else:
                         fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
                     fwd['stations'].append(nm)
@@ -4368,6 +4374,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
                     # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
                     ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
+                    _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']   # DIE-QWEN-GEN16: sender's root
                     fwd_attach.append((nm, 'en', *fwd['src_rst']))
                 else:
                     fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
@@ -4375,6 +4382,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if kind_ in ('landh', 'landh0'):
                     # the landing reads on the RECEIVING block's root, from its regional reset; K strap from own ties
                     ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: the landing reads on the RECEIVER's root
                     fwd_attach.append((nm, 'rs', *fwd['dst_rst']))
                     hi_ = [(nm, f'k{b_}') for b_ in range(3) if (fwd['K'] >> b_) & 1]
                     lo_ = [(nm, f'k{b_}') for b_ in range(3) if not (fwd['K'] >> b_) & 1]
@@ -5091,11 +5099,51 @@ def _reset_tree(v, m):
         rec['partial_unbuilt_nets'] = sorted(bad)
         if not nets:
             return rec
+    # Q-RSTGEN7 10-19 (RELEASE_TREE Q.STA.GEN.7; tools/qwen_split/reset_sync_contract.py): reset release into a foreign
+    # clock.  (c) a sink on a clock DOMAIN not mesochronous with its tree, without its own synchroniser (link-PHY rst_n: dv2f15codex io_ucie
+    # -220.9 ps stream -> ucie) gets its LAST tree hop re-clocked onto its own clock (qfd_rst_rep = 2-flop synchroniser
+    # of the level in the receiving domain); (b) a tile whose rst_n feeds only its own 2-flop reset synchroniser
+    # (qfd_d2d_static / qfd_sys_face, RTL-proved) is a synchroniser input (d2d_rom early tap -100.7 ps).  Both become
+    # declared synchroniser endpoints (case/reset_sync.sdc, die STA false path with the structural reason); same depth.
+    rsync = dict(reclock={}, endpoints=[], errors=[])
+    if _os.environ.get('OT_SPLIT_RST_SYNC', '1') != '0':
+        from qwen_split import reset_sync_contract as _RS
+        _repo = Path(__file__).resolve().parents[1]
+        _ok = _RS.rtl_check(_repo)
+        _rep_ok = _RS.rep_check(_repo) if (_repo / _RS.REP_SYNC['qfd_rst_rep']).exists() else (False, 'RTL missing')
+        _meso = _RS.mesochronous(m)    # SerDes FDI roots mesochronous with the core (clock_contract.py); ucie 6:5 is not
+        rsync = _RS.plan(cells, wires, ck_of_bus, ckof, {i.name: i.master for i in m['insts']}, _ok, _meso)
+        if rsync['reclock'] and not _rep_ok[0]:
+            rsync['errors'].append(dict(error=f'qfd_rst_rep is not a 2-flop synchroniser: {_rep_ok[1]}'))
+        _rclk = {c[0]: rsync['reclock'].get(c[0], ck_of_bus[c[4]]) for c in cells}
+        rsync['untreated'] = _RS.audit(wires, _rclk, ckof, {i.name: i.master for i in m['insts']}, rsync['endpoints'], _meso)
+        rsync['mesochronous'] = sorted(_meso)
+        if rsync['untreated']:
+            rsync['errors'].append(dict(error='untreated reset release hops', hops=rsync['untreated'][:8]))
+        rsync['rtl_check'] = {k: list(r) for k, r in _ok.items()}
+        rsync['rep_check'] = list(_rep_ok)
+        rec['reset_sync'] = dict(reclock=rsync['reclock'], endpoints=len(rsync['endpoints']), errors=rsync['errors'],
+                                 by_class={c: sum(1 for e in rsync['endpoints'] if e['cls'] == c)
+                                           for c in sorted({e['cls'] for e in rsync['endpoints']})})
+        if rsync['errors']:
+            raise ValueError(f"reset tree: reset synchroniser plan failed: {rsync['errors'][:4]}")
+    m['reset_sync'] = rsync
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:
         m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
-        ck_add.setdefault(ck_of_bus[bid], []).append((nm, 'clk'))
+        ck_add.setdefault(rsync['reclock'].get(nm, ck_of_bus[bid]), []).append((nm, 'clk'))
+    # DIE-QWEN-GEN16 (Q-CB16RST 10-19): a repeater whose output drops on a cluster's regional reset pin (qfd_c_b16_dv
+    # rst_c<c>r<r>) is the LAST hop of that drop: it is clocked from the cluster's own root (re-filed with the cluster),
+    # so the 16 drops of an instance leave the die tree on the cluster's clock, all at the tree's equal depth (same edge)
+    _rn = {c[0] for c in cells}
+    _ckf = m.setdefault('ck_follow', {})
+    for w_ in wires:
+        eps_ = w_[-1]
+        drv = next((i for i, p in eps_ if i in _rn and p in ('q0', 'q1')), None)
+        tgt = next((i for i, p in eps_ if re.fullmatch(r'rst_c\d+r\d+', p.lstrip('*'))), None)
+        if drv and tgt:
+            _ckf.setdefault((drv, 'clk'), tgt)
     drop = set(idx_of.values())
     B = [b for j, b in enumerate(m['buses']) if j not in drop]
     B = [(bid, cl, bits, eps + ck_add.pop(bid)) if bid in ck_add else (bid, cl, bits, eps) for bid, cl, bits, eps in B]
@@ -6654,11 +6702,145 @@ def _regions_from_placement(m):
             ext = round(max(max(xs_) - min(xs_), max(ys_) - min(ys_)) / 1000, 4)
             regs[kk]['extent_mm'], regs[kk]['within_5p25'] = ext, ext <= REGION_MAX_MM + 1e-9
         work += [k, nk]
+    _gen16_clock_refile(m, regs, by, per)
     moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
                 for i, p in bus[3] if not p.startswith('pll_r')
                 and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
     m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
     m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), duplicate_sinks_removed=duplicates, refiled=moved, region_nets=len(per), split=split)
+
+
+REP_SEG_MM = float(os.environ.get('OT_SPLIT_REP_SEG_MM', '1.3'))
+REP_COL_UM = 20.0
+REP_COL_MIN = 4
+
+
+def _gen16_clock_refile(m, regs, by, per):
+    """DIE-QWEN-GEN16 10-19 (Q-CLK verdict FAIL on dv2f14bi, items 2 + 4), after the placement re-file + span split:
+    (a) every forwarded-lane clock pin recorded in m['ck_follow'] (landing ck -> RECEIVER, hop-0 ck / ck_s -> SENDER) joins
+        the region of its owner block, not the region its own cell centre falls in (dv2f14bi: 5,538 b on the wrong root:
+        dvw_dd_wo landing r54 vs native59 r55, dv_x0_dr/rt r93 vs dvs_E0 r92, ...);
+    (b) reset repeaters (qfd_rst_rep*) whose region's repeater set spans more than REP_SEG_MM leave that region and form
+        their own local regions, one per repeater column and per <= REP_SEG_MM segment of it (dv2f14bi r12/13/14/28/29/30:
+        the field columns in the 6.48 um reset slot arrive 700-870 ps early beside the c_b16 roots and no pad fits in the
+        slot; split, each column segment is a small tree of its own).  Reset hops between segments stay registered reset
+        hops (RESET_ROOT: release window), never data crossings."""
+    rec = m['b3r2'].setdefault('gen16_clock_refile', dict(follow_moved=0, follow_missing_owner=[], rep_regions_split=0,
+                                                            rep_segments=0))
+    # (c) OT_SPLIT_CK_COROOT='a,b,c;d,e': abutting W-column blocks with direct (unlanded) buses share ONE local region
+    #     (dv2f14bi: tt_ctlm <-> native59 423 + 95 b direct, embed_prov <-> native59 / tt_ctlm on r54 vs r55)
+    dho = (m.get('q3h') or {}).get('dv_dhobs')
+    for grp in [g.split(',') for g in os.environ.get('OT_SPLIT_CK_COROOT', '').split(';') if g.strip()]:
+        if dho and 'tt_ctlm' in grp and dho['inst'] not in grp:
+            grp = grp + [dho['inst']]     # MU-DQ-DHUSER: the dh_user observer drives tt_ctlm.dh_user direct (same root)
+        loc = {}
+        for k, l in per.items():
+            for i, p in l:
+                if i in grp:
+                    loc.setdefault(i, []).append((k, p))
+        if grp[0] not in loc:
+            continue
+        k1 = next((k for k, p in loc[grp[0]] if p == 'ck'), loc[grp[0]][0][0])
+        n_ = 0
+        for i in grp[1:]:
+            for k, p in loc.get(i, []):
+                if k != k1:
+                    per[k].remove((i, p)); per[k1].append((i, p)); n_ += 1
+        rec.setdefault('coroot', []).append(dict(group=grp, region=k1, moved=n_))
+        for k in [k for k, l in per.items() if not l]:
+            del per[k]
+    follow = m.get('ck_follow') or {}
+    if follow:
+        where = {}
+        for k, l in per.items():
+            for i, p in l:
+                where[(i, p)] = k
+        own = {}
+        for k, l in sorted(per.items()):
+            for i, p in l:
+                pr = 0 if p == 'ck' else 1 if p == 'clk' else 2
+                if (i, p) not in follow and (i not in own or pr < own[i][0]):
+                    own[i] = (pr, k)
+        for (i, p), o in sorted(follow.items()):
+            k0 = where.get((i, p))
+            if k0 is None:
+                continue
+            if o not in own:
+                rec['follow_missing_owner'].append(f'{i}.{p}->{o}')
+                continue
+            k1 = own[o][1]
+            if k1 != k0:
+                per[k0].remove((i, p))
+                per[k1].append((i, p))
+                rec['follow_moved'] += 1
+        for k in [k for k, l in per.items() if not l]:
+            del per[k]
+    cap = REP_SEG_MM * 1000
+    for k in sorted(per):
+        reps = [(i, p) for i, p in per[k] if by[i].master.startswith('qfd_rst_rep')]
+        if len(reps) < 2:
+            continue
+        cx = lambda i: by[i].x + by[i].w / 2
+        cy = lambda i: by[i].y + by[i].h / 2
+        xs, ys = [cx(i) for i, _ in reps], [cy(i) for i, _ in reps]
+        if max(max(xs) - min(xs), max(ys) - min(ys)) <= cap:
+            continue
+        # columns: repeaters stacked in one reset slot (same x within REP_COL_UM, >= REP_COL_MIN of them); scattered
+        # repeaters along lanes stay in the block region (dv2f16 first GEN: x single linkage made 1,340 one-repeater roots)
+        grp, cur = [], []
+        for i, p in sorted(reps, key=lambda e: cx(e[0])):
+            if cur and cx(i) - cx(cur[-1][0]) > REP_COL_UM:
+                grp.append(cur); cur = []
+            cur.append((i, p))
+        grp.append(cur)
+        cols = [c for c in grp if len(c) >= REP_COL_MIN]
+        if not cols:
+            continue
+        reps = [e for c in cols for e in c]
+        segs = []
+        for col in cols:
+            col = sorted(col, key=lambda e: cy(e[0]))
+            seg = [col[0]]
+            for e in col[1:]:
+                if cy(e[0]) - cy(seg[0][0]) > cap:
+                    segs.append(seg); seg = []
+                seg.append(e)
+            segs.append(seg)
+        rs_ = set(reps)
+        rest = [e for e in per[k] if e not in rs_]
+        r0 = regs[k]
+        first = True
+        for j, seg in enumerate(segs):
+            if first and not rest:
+                per[k] = seg; first = False
+                continue
+            nk = len(regs)
+            regs.append(dict(name=f"{r0['name']}_rep{j}", kind='reset_column', rect=list(r0['rect']), split_of=r0['name']))
+            per[nk] = seg
+        if rest:
+            per[k] = rest
+        rec['rep_regions_split'] += 1
+        rec['rep_segments'] += len(segs)
+
+
+def _gen16_fwd_ck_names(m):
+    """fwd_lanes.json src_ck / dst_ck = the region nets the lane's hop-0 / landing clock pins are ACTUALLY on (Q-CLK: the
+    names recorded at plan time were stale after the placement re-file)."""
+    lanes = (m.get('fwd_lanes') or {}).get('lanes') or []
+    if not lanes:
+        return
+    net = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'clock_trunk':
+            for i, p in eps:
+                net[(i, p)] = bid
+    for ln in lanes:
+        st = ln.get('stations') or []
+        h0 = st[0] if st else ln.get('landing')
+        if h0:
+            ln['src_ck'] = net.get((h0, 'ck'), net.get((h0, 'ck_s'), ln.get('src_ck')))
+        if ln.get('landing'):
+            ln['dst_ck'] = net.get((ln['landing'], 'ck'), ln.get('dst_ck'))
 
 
 def region_spans(m):
@@ -7236,6 +7418,51 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     man = v.case_real(m, work)
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
+    # DIE-QWEN-LEAD 10-19 (Q-CLK finding on dv2f14bi / dv2f15next): the clock receiver master took its pll_r<k> pins
+    # from the bus list seen when the masters were first built, so the late region trunks (pll_r55, pll_r89..r106) were
+    # in die.v but NOT in the LEF (STA-0201 x19; ~960 clock entry pins undriven physically). Give qfd_clkrx every root
+    # the final netlist connects, at the GEN's stable slot (rom_r22k.py: 3.2 um grid, pll_r<k> -> slot k).
+    cxm = M.get('qfd_clkrx')
+    if cxm is not None:
+        want = set()
+        for _bid, _cl, _bits, eps in m['buses']:
+            for inst, port in eps:
+                if inst == 'clk_rx':
+                    want.add(port.lstrip('*'))
+        added = []
+        for p in sorted(want - set(cxm.ports)):
+            mk_ = re.fullmatch(r'pll_r(\d+)', p)
+            if not mk_:
+                raise SystemExit(f'qfd_clkrx: die.v connects clk_rx.{p} but the master has no such pin (not a pll_r root)')
+            j = int(mk_.group(1))
+            cxm.area(p, 1, min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                     min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)), 1)
+            pw.setdefault(('qfd_clkrx', p), 1)
+            added.append(p)
+        # GEN16 10-19 (dv2f16 first GEN: PIN_OVERLAP FAIL qfd_clkrx 8 pairs): rom_r22k puts the non-pll ports at slots
+        # 200+, which collide with pll_r200.. once the die has > 200 region roots (48 c_b16 x 16 regional clocks); move
+        # every non-pll area pin that sits on a pll_r slot to the first free slot past the highest pll_r index
+        def _slot_xy(j):
+            return (min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                    min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)))
+        pll_k = [int(q.group(1)) for q in (re.fullmatch(r'pll_r(\d+)', p) for p in cxm.ports) if q]
+        taken = {tuple(round(c, 3) for c in _slot_xy(j)) for j in pll_k}
+        nxt, relocated = max(pll_k, default=199) + 1, []
+        for p in list(cxm.order):
+            sp_ = cxm.ports[p]
+            if sp_[0] != 'area' or re.fullmatch(r'pll_r\d+', p):
+                continue
+            if (round(sp_[2], 3), round(sp_[3], 3)) not in taken:
+                continue
+            while tuple(round(c, 3) for c in _slot_xy(nxt)) in taken:
+                nxt += 1
+            x_, y_ = _slot_xy(nxt)
+            cxm.ports[p] = ('area', sp_[1], x_, y_, sp_[4])
+            taken.add((round(x_, 3), round(y_, 3)))
+            relocated.append(f'{p}->slot{nxt}')
+            nxt += 1
+        print(f'CLKRX_PORTS netlist {len(want)} master {len(cxm.ports)} added {len(added)} {added} '
+              f'relocated {len(relocated)} {relocated}', flush=True)
     parts = []
     # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
     # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical

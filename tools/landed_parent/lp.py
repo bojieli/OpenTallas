@@ -1325,6 +1325,13 @@ def audit(spec: dict, rtl_text: str) -> dict:
             if dirs[i["module"]].get(pin) == "out":
                 for n in idents(ex):
                     drv.setdefault(n, set()).add(i["inst"])
+    # OWN-QWEN/SLICE-E 10-18: input ports placed by port_regions are drivers in THAT region, so a port -> reader crossing
+    # without its ring / read is an UNLANDED crossing too (before, a port-sourced crossing was never audited and the
+    # --mut-unland mutant passed the audit whenever landing 0 came from a port).
+    for p, r in (spec.get("port_regions") or {}).items():
+        if any(q["name"] == p and q["dir"] == "in" for q in mod["ports"]):
+            drv.setdefault(p, set()).add(f"port:{p}")
+            reg[f"port:{p}"] = r
     for _ in range(len(assigns) + 1):
         for lhs, rhs in assigns:
             src = set().union(*(drv.get(n, set()) for n in rhs)) if rhs else set()
@@ -1338,6 +1345,9 @@ def audit(spec: dict, rtl_text: str) -> dict:
             for n in idents(ex):
                 for d in drv.get(n, ()):
                     if reg[d] == reg[i["inst"]]:
+                        continue
+                    if d.startswith("port:"):
+                        fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
                     if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \

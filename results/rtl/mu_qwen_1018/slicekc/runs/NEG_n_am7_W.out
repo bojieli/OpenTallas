@@ -1,0 +1,5 @@
+# case NEG_n_am7_W env DV2_AM_MUT=7 args n --vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 --work /srv/opentallas-scratch/claude/mu-dq-slicekc/r2/work/AM7_W host regular-crane 2026-10-19T04:39:39-07:00 commit 549e8e808256d8cc3d7d337799727f2be775fcdd Verilator 5.050 2026-07-01 rev v5.050
+    bench2 (n): MU_NU 4 FACE 1 AM_MUT 7
+bench2 (n) MUT=0: FAIL 1/2
+    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)
+# exit 1

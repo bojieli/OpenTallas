@@ -7,8 +7,10 @@
 // {go, ib, xl} is compared on every edge at one constant offset (the slice path minus the fabric path), taken from the
 // first go.  Ops: the production TP8 shapes (qkv k 8 S 512, o_proj k 2 S 256 x3, gate_up k 32 S 128, down k 6 S 256 x3)
 // with random x images.  Prints PASS / FAIL.
+// QW-DIEFIX-NFAR 10-19: corridor station model = the die clusters' physical sidx numbering (g_s below), matching the
+// qfd_dv_heads corridor retag; the old model (sidx = logical station) passes only the pre-fix heads.
 module tb_qfd_dv_heads;
-    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500;
+    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500, HD_W130 = 0;
     localparam integer NW = 18, AW = 24, XCW = 12, NH = 8, TG = 4, IL = 8, NCOL = 48;
     localparam integer IBW = 3 * NW + 13 * AW + 13, CW = 1 + IBW + 128 + 8;
     reg clk = 0, rst_n = 0;
@@ -61,7 +63,7 @@ module tb_qfd_dv_heads;
     wire [4*CW-1:0] n_d, s_d;
     wire [69:0] st;
     wire [1087:0] swi = sw_v ? {1'b1, 3'd0, 4'hF, 4'hE, sw_a, 28'd0, sw_bf} : 1088'd0;
-    qfd_dv_slice #(.MUT(MUT)) u_dut (.ck(clk), .rst_n(rst_n), .sid(4'(SID)), .cmd(116'd0), .cw0(514'd0), .cw1(514'd0),
+    qfd_dv_slice #(.MUT(MUT), .HD_W130(HD_W130)) u_dut (.ck(clk), .rst_n(rst_n), .sid(4'(SID)), .cmd(116'd0), .cw0(514'd0), .cw1(514'd0),
         .nb9_i(514'd0), .nb9_o(), .sw_i(swi), .so_e(), .se_i(1088'd0), .so_w(), .sc_i(96'd0), .sc_o(),
         .ar_o(), .ar_i(518'd0), .dd_o(), .dd_i(520'd0), .hr_i({go, ib, xpf}), .hr_o(), .n_d(n_d), .s_d(s_d), .st(st));
     function automatic integer tid(input integer c, input integer r);
@@ -86,12 +88,19 @@ module tb_qfd_dv_heads;
         for (h = 0; h < 2; h = h + 1) begin : g_h
             wire [CW-1:0] chain [0:NH];
             assign chain[0] = h == 0 ? n_d[c*CW +: CW] : s_d[c*CW +: CW];
+            // s = PHYSICAL station position along the side's chain from the slice (0..3 near cluster, 4..7 far).
+            // Die cluster numbering (qfd_c_b16_dv: sidx {far, q} near / {far, ~q} far, q = position inside the
+            // cluster from the slice): SIDX = s (near) / 11 - s (far).  The tile there is the heads' logical station
+            // LS whose corridor tag (qfd_dv_heads retag, QW-XHEAD ea371ad83: tag = s ^ 3 for N s >= 4 and S s < 4)
+            // equals SIDX: N LS = s; S LS = s ^ 3 (near) / 11 - s (far).  (Pre-fix model: SIDX = LS = s.)
             for (s = 0; s < NH; s = s + 1) begin : g_s
+                localparam integer SIDX = (s < 4) ? s : 11 - s;
+                localparam integer LS = (h == 0) ? s : ((s < 4) ? (s ^ 3) : 11 - s);
                 wire [IBW+128:0] tap, tq;
-                ot_qfd_xcst #(.AW(AW), .NW(NW), .IL(IL), .XOFF(3)) u_st (.ck(clk), .rst_n(rst_n), .sidx(s[2:0]),
+                ot_qfd_xcst #(.AW(AW), .NW(NW), .IL(IL), .XOFF(3)) u_st (.ck(clk), .rst_n(rst_n), .sidx(3'(SIDX)),
                     .a_d(chain[s]), .a_r(), .b_d(chain[s+1]), .b_r(1'b1), .tap_d(tap));
                 ot_hdc_delay #(.W(IBW + 129), .D(NH - 1 - s)) u_eq (.clk(clk), .rst_n(rst_n), .d(tap), .q(tq));
-                localparam integer K = c * 16 + h * NH + s;
+                localparam integer K = c * 16 + h * NH + LS;
                 assign d_go[K] = tq[0];
                 assign d_ib[K*IBW +: IBW] = tq[IBW:1];
                 assign d_xl[K*128 +: 128] = tq[IBW+128 -: 128];

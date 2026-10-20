@@ -93,8 +93,13 @@ module qfd_dv_scalar2 #(
     wire [47:0] own_tw_w = ps_v ? {1'b1, K_PSUM, ps_idx[11:0], ps_val} :
                            am_v ? {1'b1, K_AMI, am_tag, 8'd0, am_idx} : {1'b1, K_AMV, am2_tag, am2_val};
     wire        own_bc = rb_v || rr_v || tk_send;
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    wire [23:0] tk_index = tok_idx;
+`else
+    wire [23:0] tk_index = (MU_NU > 1) ? tok_idx : am_best[55:32];
+`endif
     wire [47:0] own_bc_w = rb_v ? {1'b1, K_RB, 12'd0, rb_val} : rr_v ? {1'b1, K_RB, 12'd0, rr_y} :
-                           {1'b1, K_TOK, tk_tag, 8'd0, (MU_NU > 1) ? tok_idx : am_best[55:32]};
+                           {1'b1, K_TOK, tk_tag, 8'd0, tk_index};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin am2 <= 1'b0; am2_val <= 32'd0; am2_u <= 2'd0; end
         else begin am2 <= am_v && !root; am2_val <= am_val; am2_u <= (MU_NU > 1) ? am_u : 2'd0; end
@@ -196,10 +201,40 @@ module qfd_dv_scalar2 #(
     reg  [23:0] di, ui;                              // latched index beats per direction
     wire        d_amv = dv && dk == K_AMV && root, u_amv = uv && uk == K_AMV && root, o_am = am_v && root;
     wire [56:0] cd = {1'b1, di, dn_i[31:0]}, cu = {1'b1, ui, up_i[31:0]}, co = {1'b1, am_idx, am_val};
+    reg [5:0] amc;
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    // Stage1 reduces only this edge's arriving candidates; stage2 merges that
+    // registered winner with the running best. Feedback stays one edge, so
+    // back-to-back arrivals and successive MU users sustain one group/edge.
+    wire [56:0] cdi = d_amv ? cd : 57'd0, cui = u_amv ? cu : 57'd0, coi = o_am ? co : 57'd0;
+    wire [56:0] pair_best = better(cdi,cui) ? cdi : cui;
+    wire [56:0] edge_best = better(coi,pair_best) ? coi : pair_best;
+    wire [1:0] edge_user = d_amv ? dn_i[33:32] : u_amv ? up_i[33:32] : am_u;
+    wire edge_mix = (d_amv && dn_i[33:32] != edge_user) ||
+                    (u_amv && up_i[33:32] != edge_user) || (o_am && am_u != edge_user);
+    reg [56:0] candidate;
+    reg [1:0] candidate_user;
+    reg [1:0] candidate_count;
+    reg candidate_v,candidate_mix;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin candidate_v<=0;candidate_count<=0;candidate_mix<=0; end
+        else if (cfg_v) begin candidate_v<=0;candidate_count<=0;candidate_mix<=0; end
+        else begin candidate_v<=d_amv||u_amv||o_am;
+            candidate_count<={1'b0,d_amv}+{1'b0,u_amv}+{1'b0,o_am};
+            candidate_mix<=edge_mix; end
+    always @(posedge ck) begin candidate<=edge_best;candidate_user<=edge_user;end
+    wire [56:0] m3 = better(candidate,am_best) ? candidate : am_best;
+    wire [5:0] amc_n = amc + {4'd0,candidate_count};
+    wire a_any = candidate_v;
+    wire [1:0] f_u = candidate_user;
+    reg [1:0] mg_u;
+    wire [1:0] cur_u = (amc == 0) ? f_u : mg_u;
+    wire am_mix = (MU_NU > 1) && (MU_MUT != 2) && a_any &&
+                  (candidate_mix || (f_u != cur_u));
+`else
     wire [56:0] m1 = (d_amv && better(cd, am_best)) ? cd : am_best;
     wire [56:0] m2 = (u_amv && better(cu, m1)) ? cu : m1;
     wire [56:0] m3 = (o_am && better(co, m2)) ? co : m2;
-    reg  [5:0]  amc;
     wire [5:0]  amc_n = amc + (d_amv ? 6'd1 : 6'd0) + (u_amv ? 6'd1 : 6'd0) + (o_am ? 6'd1 : 6'd0);
     // MU-QW-AMIX (MU_NU > 1): the users of the arriving candidates (AMV tag[1:0]; own = am_u) and the open merge's user
     wire [1:0]  du = dn_i[33:32], uu = up_i[33:32];
@@ -209,6 +244,7 @@ module qfd_dv_scalar2 #(
     wire [1:0]  cur_u = (amc == 6'd0) ? f_u : mg_u;
     wire        am_mix = (MU_NU > 1) && (MU_MUT != 2) && a_any &&
                          ((d_amv && du != cur_u) || (u_amv && uu != cur_u) || (o_am && am_u != cur_u));
+`endif
     always @(posedge ck or negedge rst_n)
         if (!rst_n) mg_u <= 2'd0;
         else if (MU_NU > 1 && a_any && amc == 6'd0 && !cfg_v) mg_u <= f_u;
@@ -220,7 +256,7 @@ module qfd_dv_scalar2 #(
             if (dv && dk == K_AMI && root) di <= dn_i[23:0];
             if (uv && uk == K_AMI && root) ui <= up_i[23:0];
             if (cfg_v) begin am_best <= 57'd0; amc <= 6'd0; end
-            else if (d_amv || u_amv || o_am) begin
+            else if (a_any) begin
                 am_best <= m3;
                 if (amc_n == amnb && amnb != 6'd0) begin amc <= 6'd0; tk_send <= 1'b1; tok_v <= 1'b1; tok_idx <= m3[55:32];
                                                           tok_own <= 1'b1; tok_val <= m3[31:0];
