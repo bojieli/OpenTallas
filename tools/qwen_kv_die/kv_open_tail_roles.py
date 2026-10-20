@@ -6,6 +6,7 @@ assertion, every generator assertion and every die-position check below holds on
 (faults, aborts, admission/readiness certificates, STATUS/recovery observations: kc.kf, dcal.*, d2d recovery_cycles,
 all qkd_host_root_admission outputs) stays OUTPUT_OPEN for the retirement/admission owner (lane KV-RETIRE).
 KV-BIND4 10-19: rx_zero17 of the sfm d2d master (z17_dup) is a DUP face; recovery_cycles stays OPEN (STATUS owner).
+KV-FRAMEPINS 10-20: with OT_KV_HOST_OBSX=1, dcal adm_done/cal_ready/running/layer + d2d recovery_cycles are READ (HOST window).
 
 Role kinds:
   TAIL   the last element of a linear generator chain: its forward output is a pure registered/wire copy of its chain
@@ -57,7 +58,9 @@ SOURCES = {
 # pc__hfx group (PC_SRAM only).  The kc chain order / last-PC-ko note and the BOOT hes/ler skip are unchanged (GEN_ASSERT).
 # KV-BIND4 10-19 (merge): + HEALTH_SRC 1-endpoint health_src buses (kc kf x4, dcal flt) and the attn rv3 / d2d sfm merges; no
 # PC / GRP chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'dd1541925a6827eed6e66b76248adbed1b110251b7e17ba0bef510ecdebc15c4')
+# KV-FRAMEPINS 10-20: re-pinned (was dd154192...).  Change: default-off OBSX block in _die_joins (three kv_oneway buses
+# dcal dob/lay + d2d_kv rcy -> host odc/odl/odr); no PC / GRP chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '79939e3d6fc1af2385be25af66b45d454d629082b6e97a4f7a0eb33436522a6c')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
