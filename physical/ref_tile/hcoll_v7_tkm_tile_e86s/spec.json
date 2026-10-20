@@ -1,0 +1,238 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86s",
+ "top": "ot_hgi_coll_tkm_tile_e86",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "clock": "multiple_cts_roots",
+ "reset_ports": [],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
+ "pins": {
+  "N": [
+   "ins_v",
+   "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
+   "up_out"
+  ],
+  "S": [
+   "ovf_v",
+   "ovf_b",
+   "up_in"
+  ],
+  "W": [
+   "clr",
+   "conv",
+   "busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.025,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:L2H-IDX",
+  "branch": "claude/l2h-idx-e86s-1019",
+  "tag": "e86s",
+  "purpose": "TKM tile at d4f TP=192 (EW 86, PT 64) x32 per SW tkm_m; SAFE successor of e86: same-edge kept per-slice one-hot control copies (CREP 1, <= 29 loads per copy); PRE 1; five related roots; 259.2 sq",
+  "benches": [
+   {
+    "name": "tkm_e86s_crep_lockstep",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/crep0 4000 0",
+    "expect": "pass",
+    "pass_regex": "^TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS$",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86s/bench/crep_m0.log"
+   },
+   {
+    "name": "tkm_e86s_crep_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/crep1 4000 1",
+    "expect": "fail",
+    "fail_regex": "^TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL$",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86s/bench/crep_m1.log"
+   },
+   {
+    "name": "tkm_tp192_static_gate",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_static.sh {RUN}/bench/tp192",
+    "expect": "pass",
+    "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
+    "min_count_regex": "TKM_STATIC PASS words=([0-9]+) cycles=",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/tkm3_1018/witness/tp192_static_gate_pass.log"
+   },
+   {
+    "name": "tkm_tp192_tie_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_tile_mut.sh {RUN}/bench/mut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/tkm3_1018/witness/tp192_tie_mut_fail.log"
+   },
+   {
+    "name": "tkm_tp192_cal_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_cal_mut.sh {RUN}/bench/calmut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_coll_tkm_tp192_vectors.py",
+   "tools/hgi_coll_tkm_vectors.py"
+  ],
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/hcoll_v7_tkm_tile_e86s/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86s"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_reg_split": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "clr",
+    "conv",
+    "ins_v",
+    "ins_b"
+   ],
+   "outputs": [
+    "busy"
+   ]
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "up_out"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r3"
+   ],
+   "inputs": [
+    "up_in"
+   ],
+   "outputs": [
+    "ovf_v",
+    "ovf_b"
+   ]
+  }
+ },
+ "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86s/io_spread.tcl",
+ "structural_change": "L2H-IDX e86s 10-19 (SAFE successor of hcoll_v7_tkm_tile_e86, AGENT-QUEUE HBM-TKM-E86-SAFE; terminal packet a9a97c79b: mapped census q_conv_g[1..7] 2,064 loads each, q_conv_g[0] 1,378 = one control flop per row group steering 8 x 86 X bits through a 3-level priority mux). RTL ot_hgi_coll_tkm_tile_rg CREP 1 on ot_hgi_coll_tkm_tile_e86: per row group a kept copy of the pin-stage p_clr/p_conv/p_v (clk root, same D), decoded once, registered on the group's root as a kept one-hot select {hold, ins, shift, clr} per 29-bit slice of each position (3 per position) and of up_out / ovf_b (12 each); X / up_out / ovf_b update through AND-OR legs (<= 29 loads per select copy). Same edges and function as e86 (CREP 1 vs CREP 0 lockstep bench every output every edge). Everything else = e86 (PRE 1, five related roots, io_spread pins, 259.2 sq). Prior: HH-4 10-18: route d4f2-21a3c7d78 NEEDS_RTL TT -166.81 / 1,613 D pins: every reported worst path (ORFS 3_dp..6_finish, pre-route gate) = u.p_bg[g][*] (pin-stage root clk, at the N-face pins, ~200 ps buffered wire) -> 85-b ot_tkm_lt_live -> gn insertion OR -> u.gt[q][j] on the row-group root: a 10-level cone crossing roots under the 210 ps different-entry setup reserve. Not fan-out (<=12 loads), not a yosys ROM/merge. Fix: tile_rg PRE=1 = one input stage s_* (clk, at pins); p_bg/p_vg copies clocked by their row group's root, so the crossing is flop->flop and the compare cone is intra-root. +1 edge a chain hop: tkm_static TLAT=4 for e86 (SETTLE 4NT+8, up-chain tap conv_pipe[2]); tb expected timeline follows; new calendar mutant MUT=3. (Route hold margin HM already 0.025; io_hold_margin is unused for multiple_cts_roots.) Prior: fab3f5eba gate: 756,805 insbuf BUFx2 (55.2k um2) from ot_tkm_lt kept padding (1,711 BUF per 85-b compare, yosys measured; 9 with ot_tkm_lt_live) -> util read 97% vs placed 32%; single root TT 373.1 ps / 12,792 sinks -> five related roots (pin stage + four row groups) meeting register to register; coordinator review item 3 (pins N/S right halves, clock W) -> io_tcl spreads N/S/W faces, clocks centred on N beside ins_b and the pin-stage mass; TKM 10-18: e86 shape drops the unused tau probe and tid (tau_t/tau_l tied 0, tau_o open in tkm_static) -- removes the 85-b 64:1 tau_o select across all row groups (rg gate worst reg->reg -141.5 ps at u.tau_o[71]); outline kept 259.2 sq (rg synth std 33,791 um2 = util 0.52: the 84,572 um2 / 130% FAIL was the pre-rg insbuf build)"
+}
