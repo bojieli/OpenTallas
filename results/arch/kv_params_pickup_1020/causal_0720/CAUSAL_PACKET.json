@@ -1,0 +1,145 @@
+{
+  "status": "FAIL_CLOSED_DIAGNOSTIC_NO_RECEIPT",
+  "source_sha256": {
+    "attn/rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+    "attn/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+    "attn/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "pvslice/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+    "pvslice/rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9"
+  },
+  "attn": {
+    "original_closed_job": "qkd_kvs_attn_rv3-rv3-6fdacf98c",
+    "parameters": {
+      "RETIRE_STATIC": 1,
+      "STATUS_DELAY": 213
+    },
+    "all_sources_unchanged_in_audit": true,
+    "base_cex_raw_sha256": "3535f1937a589a6ed6bc33af9b9b000871bd257afdfca62d6d2a6c6321949b58",
+    "derivative_json_name_fix_only_sha256": "b9bd7bf5f076b902fba60fdafe9fbe330c76b135b0df42e9768fb3d1ba30cf16",
+    "decoded_post_reset": [
+      {
+        "step": 7,
+        "paired_bit_differences_including_x": 150,
+        "definite_binary_differences": [
+          {
+            "state": "S__u_ot_pr_core_u_core_u_attn_cal_po1_8_6_",
+            "gold": "0",
+            "gate": "1"
+          }
+        ]
+      },
+      {
+        "step": 8,
+        "paired_bit_differences_including_x": 97,
+        "definite_binary_differences": [
+          {
+            "state": "S__u_ot_pr_core_u_core_u_attn_cal_cal9_150_",
+            "gold": "0",
+            "gate": "1"
+          }
+        ]
+      },
+      {
+        "step": 9,
+        "paired_bit_differences_including_x": 61,
+        "definite_binary_differences": []
+      },
+      {
+        "step": 10,
+        "paired_bit_differences_including_x": 46,
+        "definite_binary_differences": []
+      },
+      {
+        "step": 11,
+        "paired_bit_differences_including_x": 0,
+        "definite_binary_differences": []
+      },
+      {
+        "step": 12,
+        "paired_bit_differences_including_x": 0,
+        "definite_binary_differences": []
+      },
+      {
+        "step": 13,
+        "paired_bit_differences_including_x": 0,
+        "definite_binary_differences": []
+      },
+      {
+        "step": 14,
+        "paired_bit_differences_including_x": 0,
+        "definite_binary_differences": []
+      }
+    ],
+    "concrete_causal_chain": [
+      "step7 cal.po1_8[6]: gold0 gate1",
+      "step8 cal.cal9[150]: gold0 gate1",
+      "source cal9[159:144] is po1_8, captured unconditionally at the next edge; exact bit150==po1_8[6]"
+    ],
+    "source_authority": {
+      "file": "attn/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv",
+      "unreset_calendar_comment_line": 519,
+      "stage8_unreset_capture_lines": [
+        603,
+        611
+      ],
+      "stage9_unreset_capture_lines": [
+        612,
+        628
+      ],
+      "boot_count80_lines": [
+        375,
+        394,
+        397,
+        418,
+        423
+      ],
+      "reset_shell": "face_land source documents plain2-edge assertion AND release delay; active core reset properties are separate"
+    },
+    "diagnosis": "Original induction remains failed. The diagnostic compares every paired internal state after6 reset edges. Calendar data S1..S9 are unreset/unconditional even while valid strobes are reset. Definite po1_8 bit discrepancy propagates into cal9 at the next edge. This is an internal-state startup witness; no externally observable functional counterexample or allowed boot-contract change has been established. Actual service readiness has source boot_count80 but it does not authorize ignoring early outputs or weakening any audit comparison.",
+    "next_required": "Resolve startup/state relation from actual producer/consumer/boot contract with all required observations preserved, or implement and reclose a source successor that satisfies the required contract. No parameter-only induction retry, reset-shortening, range masking, or receipt from this failure."
+  },
+  "pvslice": {
+    "closed_job": "qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+    "profile": {
+      "RESET_PIN": 1
+    },
+    "positive_unproven": 2388,
+    "negative_rp0_unproven": 3016,
+    "macro_cut": {
+      "compared_input_bits": 1076,
+      "compared_inputs": 28,
+      "free_output_bits": 512,
+      "free_outputs": 4,
+      "macro_state_pairs": 0,
+      "macro_models": {}
+    },
+    "earliest_unproven_cone_not_temporal_cex": "All4 SRAM write-address cut portbit4 is unproven. No temporal counterexample was generated for this induction failure; do not label it earliest temporal mismatch.",
+    "cone_source": [
+      "wrapper c={3zero,a4}; reduce_dst={4zero,red_dst3}; init_c={3zero,init_c4}",
+      "u_slice cp[0:10] shifts c unconditionally and wp[0:6] shifts reduce_issue?reduce_dst:cp[3] unconditionally; neither array resets",
+      "commit_c=wp[6]; SRAM w_addr_in=5bit(init_zero?init_c:commit_c)"
+    ],
+    "reduced_high_bit_diagnostic": {
+      "status": "LOCAL_EXHAUSTIVE_SOURCE_CONE_MODEL_NOT_NATIVE_RECEIPT",
+      "initial_cp4_wp7_patterns": 2048,
+      "constant_zero_current_inputs": true,
+      "worst_case_reduce_issue": 0,
+      "reset_effect_on_cp_wp": "none by source always block",
+      "initial_patterns_with_wp6_bit4_nonzero_after_edge": {
+        "1": 1024,
+        "2": 1024,
+        "3": 1024,
+        "4": 1024,
+        "5": 1024,
+        "6": 1024,
+        "7": 1024,
+        "8": 1024,
+        "9": 1024,
+        "10": 1024,
+        "11": 0
+      },
+      "interpretation": "A synthesis-constant high address bit need not equal arbitrary unreset RTL pipeline state after6 reset edges. By11 shifts it is0 for all2048 examined initial patterns in this reduced cone. This does not qualify the full design, reset contract, macro write enable, memory contents or parameter profile."
+    },
+    "diagnosis": "Cut-boundary state proof is incomplete; no paired SRAM array/read state exists in this recipe. Even proving cut controls would not by itself establish full memory-state equivalence. Preserve NOTPROVEN and add actual stateful SRAM model/paired state in a separately reviewed meaningful proof, without deleting any original comparison."
+  }
+}
