@@ -62,6 +62,7 @@ def split_intervals(cal):
 def pack_layer(order, starts):
     import xs_calendar as XC
     packed,lookup,iss,segments = [],{},{},[]
+    intervals=[]
     for n,c in enumerate(order):
         S = starts[c['op']]
         for t,v in c['iss'].items():
@@ -69,18 +70,39 @@ def pack_layer(order, starts):
                 continue
             assert S+t not in iss, ('issuer collision',S+t)
             iss[S+t] = v
-        for chunk in split_intervals(c):
-            rows = chunk['rows']
-            if rows not in lookup:
-                lookup[rows] = len(packed)
-                packed.extend(rows)
-            base = lookup[rows]
-            for delta,key in [(-20,'prime'),(0,'start')]:
-                t = S+XC.TS+chunk['start']+delta
-                assert t not in iss, ('PRIME/START issuer collision',t)
-                iss[t] = XC.isd(**{key:1},base=base,length=len(rows))
-            segments.append(dict(op=c['op'],start=S+chunk['start'],end=S+chunk['end'],base=base,rows=len(rows)))
-    assert len(packed) <= 4096, ('segmented calendar capacity',len(packed))
+        for i,chunk in enumerate(split_intervals(c)):
+            start=S+chunk['start']
+            events=[(start+(w>>75),w&ACTION_MASK) for w in chunk['rows'] if not w&END]
+            # ASAP op windows may touch: a next op's first ACCEPT is only
+            # one edge after the previous RETIRE. Keep both in one interval;
+            # re-priming there would overlap an active reader. The next phase
+            # boundary has the checked fixed gap and resumes ordinary reuse.
+            if intervals and intervals[-1]['end'] >= start-20:
+                assert i==0, ('phase PRIME overlap',c['op'],i)
+                prev=intervals[-1]
+                assert prev['events'][-1][0] < events[0][0], 'op action overlap'
+                prev['events'].extend(events)
+                prev['end']=events[-1][0]+2
+                prev['ops'].append(c['op'])
+            else:
+                intervals.append(dict(start=start,end=events[-1][0]+2,events=events,ops=[c['op']]))
+    replay=[e for c in intervals for e in c['events']]
+    original=[(starts[c['op']]+(w>>75),w&ACTION_MASK) for c in order for w in c['packed'] if not w&END]
+    assert replay==original, 'layer functional action-edge mismatch'
+    for chunk in intervals:
+        start=chunk['start']
+        rows=tuple([((t-start)<<75)|a for t,a in chunk['events']]+[((chunk['end']-start)<<75)|END])
+        if rows not in lookup:
+            lookup[rows]=len(packed)
+            packed.extend(rows)
+        base=lookup[rows]
+        for delta,key in [(-20,'prime'),(0,'start')]:
+            t=XC.TS+start+delta
+            assert t not in iss, ('PRIME/START issuer collision',t)
+            iss[t]=XC.isd(**{key:1},base=base,length=len(rows))
+        segments.append(dict(ops=chunk['ops'],start=start,end=chunk['end'],base=base,rows=len(rows)))
+    assert all(a['end'] < b['start']-20 for a,b in zip(segments,segments[1:])), 'reader re-prime while active'
+    assert len(packed)<=4096, ('segmented calendar capacity',len(packed))
     ts=sorted(iss)
-    assert all(sum(j <= t < j+XC.OFF+2 for j in ts) <= XC.ND for t in ts), 'issuer delay-line overflow'
+    assert all(sum(j <= t < j+XC.OFF+2 for j in ts)<=XC.ND for t in ts), 'issuer delay-line overflow'
     return dict(packed=packed,iss=iss,segments=segments,rows=len(packed),unique_intervals=len(lookup),PASS=True)
