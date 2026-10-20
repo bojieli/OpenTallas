@@ -77,7 +77,6 @@ if LAYOUT != 'bw':
     raise BL.LayoutRefused(f"ROTLAYOUT REFUSED: SMB_LAYOUT={LAYOUT!r}; the rotated layout 'bw' is the only HBM layout")
 if BSCALE != 1:
     raise BL.LayoutRefused(f"ROTLAYOUT REFUSED: SMB_BSCALE={BSCALE}; only 1 (slot-packed, rotated) is allowed")
-RSETS = BL.RSETS                                   # HBM-BW: routed copies, per routed block index (w1+w3, w2)
 layout_bw = BL.layout_bw
 
 
@@ -269,20 +268,28 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
     # ---- HBM-ROTLAYOUT: lay every kind out rotated (hbm_bank_layout.assign_sets: starts on sets 0,1,2, ends so any kind
     # may follow it), then check every kind's fetch order, its non-expert and routed sub-streams and every kind -> kind
     # boundary -- an unrotated stream is a compile refusal (SystemExit)
-    row_top = 0
+    heads = None                                   # pass 1: canonical HEAD; then the actual heads of every kind
+    for _pass in range(4):
+        row_top = 0
+        for kd in kinds:
+            recs_, nonexp_, exp_, L_ = kd["_layout_args"]
+            layout_bw(kd, recs_, nonexp_, exp_, L_, heads=heads)
+            row_top = kd["row_top_after"](row_top)
+        nh = [BL.head_of(BL.kind_seq([b for r in kd["recs"] for b in r["blocks"]])) for kd in kinds]
+        if nh == heads:
+            break
+        heads = nh
     for kd in kinds:
-        recs_, nonexp_, exp_, L_ = kd.pop("_layout_args")
-        layout_bw(kd, recs_, nonexp_, exp_, L_)
-        row_top = kd["row_top_after"](row_top)
+        del kd["_layout_args"]
     rot, seqs = [], {}
     for kd in kinds:
         order = [b for r in kd["recs"] for b in r["blocks"]]
         sq = BL.kind_seq(order)
         seqs[kd["name"]] = sq
         cls = "embed_head" if kd["name"] == "head" else "weights"
-        rot.append(BL.check_wrapped(cls, sq, f"{kd['name']} fetch order"))
+        rot.append(BL.check_stream(cls, sq, f"{kd['name']} fetch order"))
         if kd["exp"]:                              # routed blocks are checked IN the fetch order (sets by position)
-            rot.append(dict(BL.check_wrapped("experts", sq, f"{kd['name']} fetch order (routed positions)"),
+            rot.append(dict(BL.check_stream("experts", sq, f"{kd['name']} fetch order (routed positions)"),
                             routed_blocks=sum(1 for b in order if b.get("runtime_row"))))
     rot += BL.check_sequence_pairs(seqs)
     rotlayout = dict(**BL.require_all(rot), checks=len(rot),

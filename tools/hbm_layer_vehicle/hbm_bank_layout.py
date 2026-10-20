@@ -29,8 +29,9 @@ THE layout (assign_sets; every stream class):
 
 Check (check_stream), from the controller contract (aq_pc_safe.sv:14-20): in a stream's fetch order
   R1 two blocks on the same set with different rows are separated by >= T_HIDE (35 = tRP 16 + tRCD 19) column words;
-  R2 no block's set is d = 4 or 5 ahead (mod 8) of any of the three blocks before it -- those are the sets REFpb may be
-     refreshing (LEAD + tRFCpb = 244 cycles) when the earlier block was the newest queued entry (protected d = 6,7,0..3);
+  R2 no block's set is d = 4 or 5 ahead (mod 8) of any earlier block less than REF_WIN = 160 column words (calibrated,
+     LEAD + tRFCpb = 244 HBM cycles) before it -- those are the sets REFpb may be refreshing since the earlier block was the newest
+     queued entry (protected d = 6, 7, 0..3; measured: short blocks + plain +1 rotation stall ~100-180 cycles);
   R3 a stream of > 1 block uses more than one set.
 Any violation is a refusal (SystemExit 'ROTLAYOUT REFUSED'), not a warning: the compiler never emits an unrotated stream.
 
@@ -43,7 +44,10 @@ import sys
 NSETS = 8                      # bank sets per PC = bank[4:2] (32 banks = 8 sets x 4)
 T_HIDE = 35                    # tRP 16 + tRCD 19 HBM cycles (tb_svg_rel_dram_sparse / cfg_safe HBM3-class timing)
 REF_UNPROT = (4, 5)            # aq_pc_safe.sv:414: prot = d >= 6 || d <= 3, d = set - tail_set (mod 8)
-REF_BACK = 3                   # blocks back R2 looks (a refreshed bank is not needed for >= 4 blocks)
+REF_WIN = 160                  # column words (hard refusal); calibrated on the MC3 census logs (rot_fit): a block whose
+                               # set is d = 4/5 ahead of a block < 160 words back stalls 26-44 % of the time (mean +20-71
+                               # cycles), 160-199: 18 % (+11), 200-239: 0.7 %, >= 240: 0 (LEAD 48 + tRFCpb 196 = 244)
+REF_BACK = 8                   # blocks of a tail the wrap / pair checks carry
 CLASSES = ("weights", "experts", "kv", "embed_head", "tables")
 HEAD = (0, 1, 2)               # every stream starts here (the wrap check appends it after every stream's tail)
 LINE_B, WORD_B = 136, 128
@@ -69,6 +73,36 @@ def split(addr):
 
 
 # ------------------------------------------------------------------------------------------------ the check
+def _r1(seq, i, t_hide=T_HIDE):
+    r, s, _ = seq[i]
+    acc = 0
+    for j in range(i - 1, -1, -1):
+        rj, sj, wj = seq[j]
+        if sj == s and (r is None or rj is None or rj != r):
+            return (f"R1 block {i} (row {r}, set {s}) follows block {j} (row {rj}, same set) with only {acc} column "
+                    f"words between (< T_HIDE {t_hide}): not rotated across bank sets")
+        acc += wj
+        if acc >= t_hide:
+            return None
+    return None
+
+
+def _r2(seq, i):
+    """R2: while block j was the newest queued entry, REFpb may start on sets d = 4/5 ahead of it and hold that bank
+    LEAD + tRFCpb = REF_WIN cycles; block i must not need such a set within that time (words of blocks j .. i-1)"""
+    s = seq[i][1]
+    acc = 0
+    for j in range(i - 1, -1, -1):
+        acc += seq[j][2]
+        if acc >= REF_WIN:
+            return None
+        d = (s - seq[j][1]) % NSETS
+        if d in REF_UNPROT:
+            return (f"R2 block {i} set {s} is {d} sets ahead of block {j} (set {seq[j][1]}) only {acc} column words "
+                    f"earlier (< REF_WIN {REF_WIN}): REFpb may hold that set (not a cyclic rotation)")
+    return None
+
+
 def check_stream(cls, seq, what="", t_hide=T_HIDE):
     """seq = fetch order [(row | None, set, words)]; row None = runtime (routed expert / table entry) = a row different
     from every other.  Returns a summary dict or raises LayoutRefused."""
@@ -89,12 +123,9 @@ def check_stream(cls, seq, what="", t_hide=T_HIDE):
             acc += wj
             if acc >= t_hide:
                 break
-        for j in range(max(0, i - REF_BACK), i):                          # R2
-            d = (s - seq[j][1]) % NSETS
-            if d in REF_UNPROT:
-                raise LayoutRefused(
-                    f"ROTLAYOUT REFUSED {cls} {what}: R2 block {i} set {s} is {d} sets ahead of block {j} (set "
-                    f"{seq[j][1]}, {i - j} back): REFpb may hold that set (not a cyclic rotation)")
+        err = _r2(seq, i)                                                 # R2
+        if err:
+            raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: {err}")
     if len(seq) > 1 and len(sets_used) < 2:                               # R3
         raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: R3 all {len(seq)} blocks on bank set {sets_used}")
     return dict(cls=cls, what=what, blocks=len(seq), sets=sorted(sets_used), t_hide=t_hide, verdict="ROTATED")
@@ -118,52 +149,86 @@ def require_all(results):
 
 
 # ------------------------------------------------------------------------------------------------ the layout
-def assign_sets(tokens, cls="weights", what="", max_adj=12):
-    """tokens = fetch order [('ne', words) | ('r', b_i, words)] -> (sets, triples, phase steps).  ne blocks step +1
-    (-2 at the chosen phase positions); routed block kind b_i cycles its copy triple.  The first assignment (fewest
-    phase steps) whose stream + wrap passes check_stream wins; none -> LayoutRefused."""
-    ne_idx = [i for i, t in enumerate(tokens) if t[0] == "ne" and i >= len(HEAD)]
-    last_err = None
-    cands = [(0, 0, 6)]
-    for nadj in range(1, max_adj + 1):
-        if len(ne_idx) < nadj:
-            break
-        for step in (6, 7):                        # phase step -2 or -1
-            for shift in range(0, 3):
-                cands.append((nadj, shift, step))
-    for (nadj, shift, step) in cands:
-        if True:
-            adj = set()
-            if nadj:
-                stride = max(1, len(ne_idx) // nadj)
-                adj = {ne_idx[min(len(ne_idx) - 1, k * stride + shift)] for k in range(nadj)}
-                if len(adj) < nadj:
-                    continue
-            sets, triples, pos, prev = [], {}, {}, None
-            for i, t in enumerate(tokens):
-                if t[0] == "ne":
-                    s = 0 if prev is None else (prev + (step if i in adj else 1)) % NSETS
+def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None):
+    """tokens = fetch order [('ne', words) | ('r', b_i, words)] -> (sets, triples, deviations).  Beam search over the
+    fetch order: an ne block steps +1, -1, -2, +2 or +3 from the previous set (the first three are HEAD); a routed
+    block kind b_i takes its copy triple (base = previous set +1 / -1 / +2 at its first occurrence, triples disjoint,
+    then cycled by position).  Every partial assignment must keep R1 + R2; states are merged on what the checks can still
+    see (the sets of the last REF_WIN words, the triples); fewest deviations from +1 are kept.  The stream must also
+    pass the wrap into HEAD (or into each of `heads`: the actual first blocks [(set, words)] of every stream that may
+    follow, e.g. every compiled kind).  None -> LayoutRefused."""
+    heads = heads or [[(h, 68) for h in HEAD]]
+    n = len(tokens)
+    win = max(T_HIDE, REF_WIN)
+    # state: (seq tuple of (None, set, words), triples tuple, dev, parent-chain list of sets)
+    states = [((), (), 0, [])]
+    for i, t in enumerate(tokens):
+        nxt = {}
+        for seq, tri, dev, path in states:
+            prev = seq[-1][1] if seq else None
+            trd = dict(tri)
+            if t[0] == "ne":
+                if i < len(HEAD):
+                    opts = [(HEAD[i], 0, None)]
                 else:
-                    b = t[1]
-                    if b not in triples:
-                        base = 0 if prev is None else (prev + 1) % NSETS
-                        triples[b] = tuple((base + k) % NSETS for k in range(3))
-                    s = triples[b][pos.get(b, 0) % 3]
-                    pos[b] = pos.get(b, 0) + 1
-                sets.append(s)
-                prev = s
-            tv = list(triples.values())
-            if any(set(a) & set(b) for x, a in enumerate(tv) for b in tv[x + 1:]):
-                last_err = "routed copy triples overlap"
-                continue
-            seq = [(None, s, t[-1]) for s, t in zip(sets, tokens)]
-            try:
-                check_wrapped(cls, seq, what)
-            except LayoutRefused as e:
-                last_err = str(e)
-                continue
-            return sets, triples, nadj
-    raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: no rotated assignment ({last_err})")
+                    opts = [((prev + st) % NSETS, int(st != 1), None) for st in (1, 7, 6, 2, 3)]
+            else:
+                b = t[1]
+                k = sum(1 for x in tokens[:i] if x[0] == "r" and x[1] == b)
+                if b in trd:
+                    opts = [(trd[b][k % 3], 0, None)]
+                else:
+                    bases = [0] if prev is None else [(prev + st) % NSETS for st in (1, 7, 2)]
+                    opts = [(bs, int(j > 0), b) for j, bs in enumerate(bases)]
+            for s_, dd, newb in opts:
+                tr2 = trd
+                if newb is not None:
+                    tri3 = tuple((s_ + kk) % NSETS for kk in range(3))
+                    if any(set(tri3) & set(v) for v in trd.values()):
+                        continue
+                    tr2 = dict(trd)
+                    tr2[newb] = tri3
+                sq = seq + ((None, s_, t[-1]),)
+                j = len(sq) - 1
+                if _r1(sq, j) is not None or _r2(sq, j) is not None:
+                    continue
+                acc, cut = 0, len(sq)                      # keep only the window the checks can still see
+                while cut > 0 and acc < win + 68:
+                    cut -= 1
+                    acc += sq[cut][2]
+                sq = sq[cut:]
+                key = (tuple(x[1:] for x in sq), tuple(sorted(tr2.items())))
+                cand = (sq, tuple(sorted(tr2.items())), dev + dd, path + [s_])
+                if key not in nxt or nxt[key][2] > cand[2]:
+                    nxt[key] = cand
+        states = sorted(nxt.values(), key=lambda c: c[2])[:beam]
+        if not states:
+            raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: no rotated assignment for block {i} of {n}")
+
+    def wrap_ok(seq):
+        tail = list(seq[-REF_BACK:])
+        for hd in heads:
+            full = tail + [(None, h, w) for (h, w) in hd]
+            if not all(_r1(full, k) is None and _r2(full, k) is None for k in range(len(tail), len(full))):
+                return False
+        return True
+    good = [c for c in states if wrap_ok(c[0])]
+    if not good:
+        raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: no rotated assignment of {n} blocks that wraps into HEAD")
+    seq, tri, dev, sets = good[0]
+    check_stream(cls, [(None, s_, t[-1]) for s_, t in zip(sets, tokens)], what)
+    return sets, dict(tri), dev
+
+
+def head_of(seq):
+    """the first blocks [(set, words)] of a stream that a predecessor's tail can still see (>= REF_WIN words)"""
+    out, acc = [], 0
+    for (_, s_, w) in seq:
+        out.append((s_, w))
+        acc += w
+        if acc >= REF_WIN + 68:
+            break
+    return out
 
 
 def static_run(base, line_list, cls="weights", what=""):
@@ -193,7 +258,7 @@ def table_entry(base_row, e, nb, position):
     return [block_address(base_row + e, c * nb + k) for k in range(nb)]
 
 
-def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384):
+def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384, heads=None):
     """The d4g SM block layout of one compiled kind (smb_unit calls it; HBM-BW layout generalised by HBM-ROTLAYOUT).
     The sub-row slot of a block address IS the physical bank set; strides that are multiples of 8 keep it per layer and
     per expert.  Sets come from assign_sets over the kind's fetch order (record order, blocks in wave order); routed
@@ -207,7 +272,7 @@ def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384):
             routed[id(b)] = (s_, b_i)
     toks = [("r", routed[id(b)][1], words(b["n_lines"])) if id(b) in routed else ("ne", words(b["n_lines"]))
             for b in order]
-    sets, triples, nadj = assign_sets(toks, "weights", f"kind {kd.get('name')}")
+    sets, triples, nadj = assign_sets(toks, "weights", f"kind {kd.get('name')}", heads=heads)
     want = {id(b): s for b, s in zip(order, sets)}
     p, offs = -1, {}
     for b in order:
@@ -258,7 +323,7 @@ def check_sequence_pairs(kinds, what="kinds"):
     for na, sa in kinds.items():
         for nb, sb in kinds.items():
             if sa and sb:
-                win = [(None, s, w) for (_, s, w) in sa[-REF_BACK:]] + [(None, s, w) for (_, s, w) in sb[:REF_BACK + 1]]
+                win = [(None, s, w) for (_, s, w) in sa[-REF_BACK:]] + [(None, s, w) for (s, w) in head_of(sb)]
                 res.append(check_stream("weights", win, f"{what} boundary {na}->{nb}"))
     return res
 
