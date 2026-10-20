@@ -1,0 +1,242 @@
+{
+  "schema": "opentallas.stream.c3r_readonly_reconciliation.v1",
+  "captured_PT": "2026-10-20T08:08:46.743765-07:00",
+  "status": "PENDING_ORIGINAL_HOLD_ECO_UNQUALIFIED",
+  "job_snapshot_sha256": "02914b1baf525a1a1a7356f95698809bf5d5a522230db36553ab68a5e2bc7772",
+  "job": {
+    "name": "qfd_dv_stream_t3c_1020-c3r-c9be6ed8a",
+    "status": "ECO",
+    "stage_tag": "hold_eco.a1",
+    "stage_started": "2026-10-20T06:25:54-07:00",
+    "updated": "2026-10-20T07:54:40-07:00",
+    "host": "ot-epyc7",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_stream_t3c_1020-c3r-c9be6ed8a",
+    "commit_full": "c9be6ed8a5072fb754ecad0914b450c9f80be2d7"
+  },
+  "helper_overlay_verification": {
+    "status": "verified_original",
+    "origin_main": "c0768b96a8f6c54fa061c73e8cd1e0e982bc9e05",
+    "content_sha256": "5b87a481c37d660435677effcce7c4a83aaf80103e1d3c98d009a50d92cc3a2a",
+    "files": 50,
+    "verified_at": "2026-10-20T06:25:53-07:00",
+    "host": "ot-epyc7",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_stream_t3c_1020-c3r-c9be6ed8a",
+    "mutation": false
+  },
+  "source_hashes": {
+    "rtl/qwen_dv/qfd_dv_stream_tile.sv": "bdb914aed2010300ff8f906c4d3c509e80c05ee3a21fefe0a612736a160b46da",
+    "rtl/qwen_dv/qfd_dv_stream.sv": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69"
+  },
+  "bench_witness_matches_source": true,
+  "bench_m0": {
+    "expect": "pass",
+    "rc": 0,
+    "ok": true,
+    "tail": "c_stream/tb_stream_tile.sv\n83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69  rtl/qwen_dv/qfd_dv_stream.sv\nbdb914aed2010300ff8f906c4d3c509e80c05ee3a21fefe0a612736a160b46da  rtl/qwen_dv/qfd_dv_stream_tile.sv\nSTREAM_TILE_EQ PASS edges10000 resets2 sids2 emits946 tw2511 xt1992 relay4298 badedges3691 fault1 xtbad1\n- rtl/test/qwen_dv/static_stream/tb_stream_tile.sv:93: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 100us; walltime 0.481 s; speed 207.725 us/s\n- Verilator: cpu 0.481 s on 1 threads; allocated 7 MB\nMUT0 sim exit 0\n",
+    "track": "parallel"
+  },
+  "mutation_receipts": {
+    "bench_stream_tile_m2": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m2.log",
+      "sha256": "cdc07a0a17f5738b0df07e3788729f1a4ae64841172304ace6c89bc523b886a1",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:39:51-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m21": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m21.log",
+      "sha256": "0253331da6caa4e5f5475e5a5654e7bb3a08760f6413bde20221c1121c0dbe77",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:40:41-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m22": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m22.log",
+      "sha256": "7e8781aa8e05343ff413d8bae3258bd99f926101a25832fbcf6ff5e06676697f",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:41:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m31": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m31.log",
+      "sha256": "88611ecabec93bbe1e9152e4592cb8d8b1931fd818a6ad11915c46f1110630e0",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:42:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m32": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m32.log",
+      "sha256": "3f84d246c60e37d19ef84e681eccbbe6b2e291b0027d0771e49e85a2f7d3ddd7",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:43:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m33": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m33.log",
+      "sha256": "892ef2fe77a4c48c2f4fc2e601b6cb6e29d4920362905c4594adf82771c5ec3a",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:44:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m34": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m34.log",
+      "sha256": "8e664a0696734bfd3f7dc132c7866954599aaa8955a7e1f3e3a7d77faec8b5f6",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:45:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m35": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m35.log",
+      "sha256": "3158d6009726119e046428accd4ca6e39056bd21aa6c6e8f619d1e7a8bb2929e",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:46:41-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m37": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m37.log",
+      "sha256": "fc7f8b9c71f2e788d243db342a544847999f47d5295c9348b079be642d95bb2d",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:47:40-07:00",
+      "declared": null
+    },
+    "bench_stream_tile_m38": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/bench_stream_tile_m38.log",
+      "sha256": "90f442497222f89c42d9b22a366c40c890f067962f277f22d63de8b9e949b60f",
+      "fail_regex": "STREAM_TILE_MISMATCH",
+      "matched": "STREAM_TILE_MISMATCH",
+      "captured_at": "2026-10-20T04:48:40-07:00",
+      "declared": null
+    }
+  },
+  "pre_ECO_routed_ioref": {
+    "key": "1|/srv/opentallas-scratch/claude/closure-loop/qfd_dv_stream_t3c_1020-c3r-c9be6ed8a/routes/qfd_dv_stream_t3c_1020_c3r_c9be6ed8a/work/orfs|0|ae0410-cecorner-1015-pfhc1019",
+    "at": "2026-10-20T06:23:21-07:00",
+    "available": true,
+    "meas_resta_sha256": "ac1e0ee1d4fa3a12cff3f942de76e0a39ab85c7b55146f5e06339dec45f22839",
+    "ioref_edge": {
+      "tt": {
+        "core_clk": {
+          "boundary": 7174,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      },
+      "ff": {
+        "core_clk": {
+          "boundary": 7174,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      }
+    },
+    "tt": 89.18,
+    "ff": -0.66,
+    "errors": [],
+    "ioref": {
+      "tt": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 386.7,
+          "min": 345.1,
+          "max": 439.1,
+          "n": 7174,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 320.8,
+          "min": 282.4,
+          "max": 369.8,
+          "n": 7174,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": 234.01,
+    "tt_out": 253.44,
+    "ff_i2r": 7.92,
+    "ff_out": 47.29,
+    "ff_r2r": -0.66,
+    "json": "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_stream_t3c_1020-c3r-c9be6ed8a/cl/routed_ioref.a1.json",
+    "registers": 16610,
+    "registers_clocked": 16610
+  },
+  "pre_ECO_boundary_spread_ps": {
+    "tt": 94.0,
+    "ff": 87.4
+  },
+  "ECO_pass1": {
+    "TT_ps": 89.59,
+    "FF_ps": 13.84,
+    "DRC": 0,
+    "cells_added": 1456,
+    "scope": "Intermediate pass1 only; originaljob still running pass2, no final verdict."
+  },
+  "old_verdict_diff_only": [
+    {
+      "name": "qfd_dv_stream_t2_1019-s2-49ac29c7e",
+      "status": "CLOSED",
+      "updated": "2026-10-20T07:47:37-07:00",
+      "reason": "CLOSED TT +18.64 / FF +16.99 ps DRC 0; SS sensitivity -276.71 ps | record claude/qw-stream2-1019 e665673c8 (1 files) | AUTO-MERGED into main 99cf9c0f2",
+      "commit_full": "49ac29c7e1fbce8855046901fcbd71864a1a227f"
+    },
+    {
+      "name": "qfd_dv_stream_t2c_1019-c2-49ac29c7e",
+      "status": "CLOSED",
+      "updated": "2026-10-20T06:47:37-07:00",
+      "reason": "CLOSED TT +18.44 / FF +2.72 ps DRC 0; SS sensitivity -273.92 ps | record claude/qw-stream2-1019 970770da7 (1 files) | AUTO-MERGED into main 6ff993b4d",
+      "commit_full": "49ac29c7e1fbce8855046901fcbd71864a1a227f"
+    },
+    {
+      "name": "qfd_dv_stream_t3c_1020-c3-4ca98be4e",
+      "status": "REFUSED",
+      "updated": "2026-10-20T04:15:38-07:00",
+      "reason": "SUBMIT_LINT CLOSED_STANDS: qfd_dv_stream_tile is CLOSED with a published view (qfd_dv_stream_t2_1019-s2-49ac29c7e @ 49ac29c7e and 1 more): the spec carries no \"reroute_reason\"; measured: RTL vs the closed commit differs (1 of 1 RTL source file(s) differ from 49ac29c7e: rtl/qwen_dv/qfd_dv_stream_tile.sv); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ \"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", \"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route being retried) | native_reach (+ committed exact all-path audit and changed pin coordinates; same RTL/slot) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that records the closed view's unbound VDD/VSS terminals, \"fix\"; same RTL and outline)}",
+      "commit_full": null
+    }
+  ],
+  "age_contract": {
+    "DP": 2,
+    "DX": 2,
+    "relative_to_t2_pass_taps_edges": 1,
+    "relative_to_t2_own_write_edges": -1,
+    "parent_compiler_bound": false
+  },
+  "qualification_holds": [
+    "Original c3r job still ECO; no CLOSED or finalrecord",
+    "Actual final PG/native32/completeclock/fullstage405 audit owed",
+    "Pre-ECO actual boundaryspread94.0TT87.4FF exceeds80, pre-gate68.8/65.3 cannotqualifyfinalroute",
+    "Parent slice2 clock compensation/pins/native gate and static DP2/DX2/+1pass/-1own schedule owed",
+    "Oldt2/t2c numericalCLOSED does not repair existingactualnative211>32/max69 refusal; no adoption or replacementcredit"
+  ],
+  "scope": "Finite read-only reconciliation only. Originaljob/source/helpers preserved; no reroute, duplicate, runtime change or source adoption.",
+  "old_vs_new_source_comparison": {
+    "rtl/qwen_dv/qfd_dv_stream_tile.sv": {
+      "sha256_by_commit": {
+        "49ac29c7e": "caacbf7b9942e21f52284fd39c92905089060f2fbb748233d6d958407c396b19",
+        "c9be6ed8a": "bdb914aed2010300ff8f906c4d3c509e80c05ee3a21fefe0a612736a160b46da"
+      },
+      "changed": true
+    },
+    "rtl/qwen_dv/qfd_dv_stream.sv": {
+      "sha256_by_commit": {
+        "49ac29c7e": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69",
+        "c9be6ed8a": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69"
+      },
+      "changed": false
+    }
+  }
+}
