@@ -1,0 +1,10 @@
+CTL_MISMATCH cyc 71 ref(prev) busy/fault 00 dut 10
+CTL_MISMATCH cyc 52407 ref(prev) busy/fault 10 dut 00
+CTL_MISMATCH cyc 52417 ref(prev) busy/fault 00 dut 10
+CTL_MISMATCH cyc 52614 ref(prev) busy/fault 10 dut 00
+QXPQ_CPR cycles=1831111 windows=41 rel_ref=2 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 ctl_mism=57 ctl_first=71 busy_dut=1827164 phases=300 resets=40 early=20 go=300 cfg=7512 xs=141784 pv_cycles=2823 busy=1827164 fault=0 bank_free=1818233 walking=1809727
+QXPQ_CPR FAIL
+- /srv/opentallas-scratch/claude/s81-pinreg4/qbench/src/tools/dsrom_qelem_cl/tb_qxpq_cpr.sv:194: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 44.232 s; speed 41.398 us/s
+- Verilator: cpu 44.230 s on 1 threads; allocated 8 MB
