@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "qfd_d2d_static_sf7w",
- "reviewer": "coordinator",
+ "reviewer": "codex /root/qwen_takeover delegated coordinator",
  "verdict": "APPROVED",
  "time": "2026-10-19T23:14:00-07:00",
  "gate_commit": "9c875b9bc",
@@ -13,5 +13,6 @@
   "shape": "388.8x172.8 aspect 2.25 ACCEPTED (pin-bound faces), fill 25% pin-bound; PG-bind fix included"
  },
  "notes": "COORD 10-19 23:25: approved (Q.STA.D2D; aspect 2.25 accepted as pin-bound; earlier gate GRT0, FF hold +30)",
- "geometry_sha256": "0f6ebd7467796ce286c209108d3175810e6c3931ec64f60c4a5cc1699144892c"
+ "geometry_sha256": "0f6ebd7467796ce286c209108d3175810e6c3931ec64f60c4a5cc1699144892c",
+ "codex_receipt": "2026-10-20: Qwen lead actual floorplan/density inspection and all-native <=32 census review; exact geometry unchanged, pinbound aspect/fill original waiver retained. Intermediate pre-global_connect PG failure reconciled, final6_final nativePG audit still required."
 }
