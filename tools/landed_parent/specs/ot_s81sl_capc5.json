@@ -1,0 +1,89 @@
+{
+ "top": "ot_s81sl_capc5f",
+ "top_lp": "ot_s81sl_capc5",
+ "why": "S81-CAPC4 10-20 (S81.STA.PAR.1): capc2/capc4 single core_clk root over hard children with boundary insertion u_rt 234..298 TT vs trees 125..150, ED 94..103, LD 104..121 -> conservative child envelope TT109.1/FF122.4, 11 compensation variants all > 80 at one corner (codex_s81_capc_audit_1020). CLOCKING STANDARD 10-18: u_rt gets its own region; the three crossings into it (W word, E word, cfg) are landed; core region = trees + calendar leaves + input face registers.",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc5f.sv"
+ ],
+ "child_sources": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv"
+ ],
+ "synthesis_hard_instances": [
+  "u_ld3",
+  "u_tw",
+  "u_te",
+  "u_ed",
+  "u_rt"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_dv/slice/lp",
+ "record_dir": "results/arch/landed_parent_1018/s81sl_capc5",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk",
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "landing_chunk_bits": 24,
+ "regions": [
+  {
+   "name": "core",
+   "insts": [
+    "u_fw",
+    "u_fe",
+    "u_fcv",
+    "u_fcd",
+    "u_ld3",
+    "u_tw",
+    "u_te",
+    "u_ed"
+   ],
+   "centre": [
+    172.8,
+    300.0
+   ]
+  },
+  {
+   "name": "rt",
+   "insts": [
+    "u_rt"
+   ],
+   "centre": [
+    172.8,
+    100.0
+   ]
+  }
+ ],
+ "out_regs": {
+  "cw_s_v": 1,
+  "cw_s_a": 1,
+  "cw_s_d": 1,
+  "cw_n_v": 1,
+  "cw_n_a": 1,
+  "cw_n_d": 1,
+  "fault": 1
+ },
+ "mut_child": "u_rt",
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ }
+}
