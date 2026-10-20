@@ -44,7 +44,7 @@ def make(side, km):
     s["top"] = f"dsfd_coll_lane_{side}_safe7"
     if km:
         s["pre_cts_extra"] = ["physical/common_flow/clock_split_km.tcl"]
-        s["orfs_vars"] = dict(s.get("orfs_vars", {}), OT_CKKM_K="16")
+        s["orfs_vars"] = dict(s.get("orfs_vars", {}), OT_CKKM_K="16", OT_CKKM_PORT="ck")
     s["structural_change"] = __doc__.strip()
     s["fill_reason"] = {"pin_bound": "lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice "
                         "with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). "
