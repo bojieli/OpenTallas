@@ -70,7 +70,7 @@ def main(argv=None):
                              closed_job=a.closed_job, closed_commit=a.closed_commit, gate_sha256=r['gate_sha256'],
                              view_tie='view TT/FF liberty bytes == the closed job liberty (record/views or closed_archive final)', record_libs=libs,
                              wrapper=r.get('wrapper'), sources=r['sources'], aig=r.get('aig'),
-                             abc_log_sha256=r['engine']['abc_log_sha256'], aig_sha256=r['aig_sha256'],
+                             abc_log_sha256=r['engine']['abc_log_sha256'], abc_cmd=r['engine'].get('abc_cmd'), aig_sha256=r['aig_sha256'],
                              lec=Path(a.lec).name, lec_sha256=sha(a.lec), control=ctl))
     rp = out / 'receipts' / f'{a.module}.json'
     rp.parent.mkdir(parents=True, exist_ok=True)

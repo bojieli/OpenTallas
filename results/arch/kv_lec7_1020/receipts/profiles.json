@@ -36,6 +36,42 @@
    "SCALE": 1035273459
   }
  },
+ "ot_qkh_lane8_nc32c": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qkh_lane8_nc32c.json",
+   "sha256": "bbf25c6a09f8de54685261be7c21f312fbafeae6e06b9af5c43e2c13bdc93cc8"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "19d089dfe6e1fda6298481a6840c8b153d4a6c0a925f7542ace53e4d1d0c237b",
+    "child_lint.json": "a0ef7418153d32ec1a6cd076d38e4f2fb0ec8df1c48f071134e18ddc3db185fe",
+    "export_ff.log": "2cb1dc4cd14c3fe7f6bef3c14c89e727296191cc8b476f5a6302b63bc310b16d",
+    "export_ff.tcl": "99989ae06eb921eb4a8fb390d2dcf23547b3273cff0dadb3cbd9ee2647dfc969",
+    "export_ss.log": "b9f1eed2d039ba0ef887b6e1639edc5a7837e49ca123509433227d0c0648ef5c",
+    "export_ss.tcl": "366c40714a4b142d9e201fee5fbcbcecdd7d9dc18a8734bb119620d103eea35a",
+    "export_tt.log": "6a4869fa9cbf686117abd6a51a61db5a9ea6f782464cd352b96b14f9a89d4b45",
+    "export_tt.tcl": "36a5d82679d5abbcab29cbe335f26792580d07600c30879467991a6af137ed3e",
+    "insertion.json": "df13f3a5752aaf31990a54acdb9fc9f2dfacaa93ccfc6f0c8ce5aa8ed0db38af",
+    "ot_qkh_lane8_nc32c.lef": "ba91c13f6f745e8a2ad88a70f1a10471d43afc828feb8682f9fd5b1fbeb0c874",
+    "ot_qkh_lane8_nc32c_ff.lib": "fa38ee4b9f44f5c3508dbf0d8c449f1a1407b75e8092af55798c7d6103150edb",
+    "ot_qkh_lane8_nc32c_ss.lib": "b7264f071c45b437865a74bacfde6a9b2c2c192023433454611b15347de3d4ed",
+    "ot_qkh_lane8_nc32c_tt.lib": "07137c3fc5e3330758a5acc5d8f4114729d9ecfda5f6a48910ccc90927086c77",
+    "port_latency.json": "f19780b296ab5cbb77ac06e7a6edec14e3b37bef4db13aefffe4f5c6cb965871",
+    "provenance/abstract_pin_stub.json": "a123ad7a1084b1ebbd6b2949e2953d960c438dd1313a312bb75d5023e214fece",
+    "provenance/raw/ot_qkh_lane8_nc32c.lef": "01578b2db42328a617753f6238978f457eea39352cfb507963f55ea61e1e228e",
+    "provenance/view_export.abstract.json": "3a007a213a9fc4d98e6d8a429ea830bbeda10b18dbc3db91237434e92ffaa0dd"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qkh_lane8_nc32c.sv",
+    "sha256": "bc7ad4904996da93be0be9e2b8ba1061dac9e1f6d04dbe2b4f75c03b7ed90c6a"
+   },
+   "view": "physical/ref_tile/ot_qkh_lane8_nc32c/views/ot_qkh_lane8_nc32c"
+  },
+  "parameters": {
+   "ADD_LAT": 7,
+   "LTW": 12
+  }
+ },
  "ot_qwen_tp8_pv_join_s32_t": {
   "frozen_receipt": {
    "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qwen_tp8_pv_join_s32_t.json",
