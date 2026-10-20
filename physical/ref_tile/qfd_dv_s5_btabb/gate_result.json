@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_dv_s5_btabb",
- "verdict": "FAIL",
- "generated": "2026-10-19T23:47:39-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-20T00:01:08-0700",
  "host": "ot-epyc5",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "3ebbbf526c59d3cf2be0c1e5f57a3dd38b298e15",
+  "start_commit": "3c9a61289c48241594d18ae1ce401244359d44c9",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -22,8 +22,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "6e2ce7fdd0dd61da2da5afd40bc281bb771a4abb12cdbd351de44ecf03770b4e",
-  "manifest_sha256": "c3c6eeac59794ce1241c97bca929cd09ea72c0c66694074f4dce5c914a78c1ae",
+  "archive_sha256": "4c0ac898d720ead90bc03fe2aa1cdc7eb1110ee7e3e60bb5ecc147b1cfc93746",
+  "manifest_sha256": "4d58083ff5ff21148224eb80cd14581b9e45d07c6917830e339318e66b636b2f",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17196,8 +17196,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_btabb/README.md",
     "kind": "file",
-    "sha256": "1856b2af659a8c007341bafca2489871818a1e88c402379695cd4bfd67c5d3db",
-    "git_blob": "ea0f1c25ba4842767a07f32307c4d6357c60f94d",
+    "sha256": "5baa829ab91983e3cbb9bdbfed7d9cd5afb166d8f2b350a8e49bbb45f04607c6",
+    "git_blob": "42f666caf9ae50a81be4747e0ad8ca913d490da1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17212,8 +17212,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_btabb/floorplan.json",
     "kind": "file",
-    "sha256": "de222d30edfd107f2e9eb56d4ac5f8d27aed4960a9f390d835d1ddc0c4f850b5",
-    "git_blob": "79180885d7ff8c05f4bf11538e7f7e05c4945b5a",
+    "sha256": "43f1dc8f9dbb9a103e2041f3c666d10f5954b2f00a3576fe986120cb4ee916d4",
+    "git_blob": "8719d8e723154c90d038b7e2d69ebf76f05e761b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17228,8 +17228,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_btabb/kit.env",
     "kind": "file",
-    "sha256": "dc424cfcd6fbe670e023d4e4bc6638454b689d4324ed7a81909fccd1d70b84b1",
-    "git_blob": "88e8df7898cc9bc93168424caaaf08163e1be702",
+    "sha256": "037e0b88ccfcef78605a0bdc6190de27390d9af781be509d607db9773fe7aae5",
+    "git_blob": "48da766a2c7a908c0466b375e51b19883a17a580",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17252,8 +17252,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_btabb/place.tcl",
     "kind": "file",
-    "sha256": "7cd5ecc1833449944281d0a62765779821d12c8eac0dc7ba3020c354acd57a25",
-    "git_blob": "bca429697f97414c0dcaf0194c7c2e041e013cbf",
+    "sha256": "261fa1a65e46df19fe41a779956fa6e95831508244f2dc67b202b99715b9010c",
+    "git_blob": "e60964c86b5ea74adbbcde9bc77a22c7c14d2f3b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17340,8 +17340,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_btabb/spec.json",
     "kind": "file",
-    "sha256": "670625f363065143f5d0c67c10e5208fd6a2f64b43a520738c3ea82605805c81",
-    "git_blob": "523e5abbff151a161cf6b54c3d14b956d449bc02",
+    "sha256": "21a9d0ef16f76eaa0e0a7c3d7163b19e52e659f05b89df099455fb3d740657ae",
+    "git_blob": "af3c65c48d985c00895e57db4e7f7cad1cd6b0c6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -23268,24 +23268,24 @@
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv",
     "kind": "file",
-    "sha256": "be58b827b0632676f2f52ff9461ed926939f6d51081c24cd9c14c73b711725e0",
-    "git_blob": "3467ba44b09e3e3ecfe8cf4a061803d7dbcfe1e4",
+    "sha256": "378a654b4d765d2c43a6975e22ff817558c42c1fbcb66a0e502801915046f1eb",
+    "git_blob": "a91e260d2dc85122be871e3123c9e59f82b76327",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv",
     "kind": "file",
-    "sha256": "851fe76a25f0acf87190196d65bec5c8cc48e8545e3ec2e8e6fe55b8edb9bd33",
-    "git_blob": "4c0d7e1699188d5f6f8ce4b6728899122917228a",
+    "sha256": "b34267e6a76a320646a56a00ebc1e2dab636afb1b0e8e1ed8f5de975c136dad6",
+    "git_blob": "dcbeaa2e135ceaf53cdb1ac72f2481c8e8438306",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
     "kind": "file",
-    "sha256": "7e8a041ced0c403e01a8b31d8fdaba32ffc410b2bcfda950d3897727112270a4",
-    "git_blob": "9e16b208e9654dbcf44f803848d0ee6c02fa21ab",
+    "sha256": "f366f19169175709cae660824536e5c8f9b0b9f92a2a3f49b8cdeb1b234a0dfc",
+    "git_blob": "86df681bc4e523bc168bc27bb8a266331fed9d68",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -70444,8 +70444,8 @@
    {
     "path": "tools/qwen_dv/gen_slice5_flat.py",
     "kind": "file",
-    "sha256": "8a3e46288f455af394a7ebcfa4c1ff075155290f52696f9d968d7e497bd8784f",
-    "git_blob": "c9b1d94f8ff08e1c2ded1c1e207df7f7e4e7869f",
+    "sha256": "7e6f6f87cb0fb92c51e191949640793d5c7877994e4da2626ce04a2d591e9e8e",
+    "git_blob": "cd65b00e948ace3731b4955c8d1bc60e1efe7eb5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -82980,16 +82980,16 @@
    {
     "path": "tools/ref_tile/specs_qw_slice6/qfd_dv_s5_btab.json",
     "kind": "file",
-    "sha256": "7420d6dba328e8ae1bb7e1d3556baf032b950424f61d3766717ad3ab94861339",
-    "git_blob": "2981c8175ef7de9be4a994936dd5d7b3bf7ce30b",
+    "sha256": "6ebb677ad570c244a8cbdf2a5913534e30480207bd07989f2a26fa0a95e91ffe",
+    "git_blob": "e8c8668c6ae08b3c3e515fe52e88be9b3e945a14",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_qw_slice6/qfd_dv_s5_btabb.json",
     "kind": "file",
-    "sha256": "bc71ef2224bd14242c882dec86b64c85d540b31840e974c2b0f79794a7b12583",
-    "git_blob": "0edd42044c675eedd0fc0a6dbee830ab4a944f6b",
+    "sha256": "160b32ccc5a241d3eb8373a55826469d84650027ea80804fbb8a9fcbf3bbac00",
+    "git_blob": "52ee8a02bace4bede091379388ff49549e1e7e48",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -99908,14 +99908,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 90113303,
-   "unpacked_bytes": 623718400,
+   "archive_bytes": 90115350,
+   "unpacked_bytes": 623726592,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "19091fe544df77041f3af8424791e468716a7d89",
+   "origin_main": "cc357f7c60f587ebbc7d5b82f0286eb9e00af885",
    "content_sha256": "e768a786364d9fbf1cafa9ed2fbf4334dac3cbd4f1650fac5c3215a2f95647de",
    "files": [
     {
@@ -104677,13 +104677,13 @@
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
-    "physical/ref_tile/qfd_dv_s5_btabb/README.md": "1856b2af659a8c007341bafca2489871818a1e88c402379695cd4bfd67c5d3db",
+    "physical/ref_tile/qfd_dv_s5_btabb/README.md": "5baa829ab91983e3cbb9bdbfed7d9cd5afb166d8f2b350a8e49bbb45f04607c6",
     "physical/ref_tile/qfd_dv_s5_btabb/clock.sdc": "4797afd5d404bb7660a19e8629956bf0a3b8fef2e0fdfa37770fb5f3f2f39d8b",
-    "physical/ref_tile/qfd_dv_s5_btabb/floorplan.json": "de222d30edfd107f2e9eb56d4ac5f8d27aed4960a9f390d835d1ddc0c4f850b5",
-    "physical/ref_tile/qfd_dv_s5_btabb/kit.env": "dc424cfcd6fbe670e023d4e4bc6638454b689d4324ed7a81909fccd1d70b84b1",
+    "physical/ref_tile/qfd_dv_s5_btabb/floorplan.json": "43f1dc8f9dbb9a103e2041f3c666d10f5954b2f00a3576fe986120cb4ee916d4",
+    "physical/ref_tile/qfd_dv_s5_btabb/kit.env": "037e0b88ccfcef78605a0bdc6190de27390d9af781be509d607db9773fe7aae5",
     "physical/ref_tile/qfd_dv_s5_btabb/pdn.tcl": "2d6a804a8fdbb9c9fe5f3dd64062af6e51b330cae082968604fb952dfcf09d63",
     "physical/ref_tile/qfd_dv_s5_btabb/pin_regs.json": "22f77abd9f28a195258cbffa3741a79211de5153145ce498b4607348d089f645",
-    "physical/ref_tile/qfd_dv_s5_btabb/place.tcl": "7cd5ecc1833449944281d0a62765779821d12c8eac0dc7ba3020c354acd57a25",
+    "physical/ref_tile/qfd_dv_s5_btabb/place.tcl": "261fa1a65e46df19fe41a779956fa6e95831508244f2dc67b202b99715b9010c",
     "physical/ref_tile/qfd_dv_s5_btabb/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
     "physical/ref_tile/qfd_dv_s5_btabb/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
     "physical/ref_tile/qfd_dv_s5_btabb/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -104694,7 +104694,7 @@
     "physical/ref_tile/qfd_dv_s5_btabb/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/qfd_dv_s5_btabb/reset_landing.json": "f1e39517683b221b9dedd4b715255eb22f6da82871288aef4c862a1d1aa97725",
     "physical/ref_tile/qfd_dv_s5_btabb/signoff.sdc": "368aa3fb55b7307cc53d27ee91c019e434ca910230f023db07a11a60c281e628",
-    "physical/ref_tile/qfd_dv_s5_btabb/spec.json": "670625f363065143f5d0c67c10e5208fd6a2f64b43a520738c3ea82605805c81",
+    "physical/ref_tile/qfd_dv_s5_btabb/spec.json": "21a9d0ef16f76eaa0e0a7c3d7163b19e52e659f05b89df099455fb3d740657ae",
     "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
     "rtl/common/landed_parent/ot_pl_land_physical.sv": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
@@ -105435,9 +105435,9 @@
     "rtl/qwen_dv/qfd_tt_ctlm_dv.sv": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
     "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv": "09d4cfb51a08c701abf67a2f4319663de81f890e42ab155dbdb717a46872b68a",
     "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv": "f351caf9db765adf8e19d00f539d92af88fcc269d0fd68532b65c5ba2d02cb0c",
-    "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv": "be58b827b0632676f2f52ff9461ed926939f6d51081c24cd9c14c73b711725e0",
-    "rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv": "851fe76a25f0acf87190196d65bec5c8cc48e8545e3ec2e8e6fe55b8edb9bd33",
-    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "7e8a041ced0c403e01a8b31d8fdaba32ffc410b2bcfda950d3897727112270a4",
+    "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv": "378a654b4d765d2c43a6975e22ff817558c42c1fbcb66a0e502801915046f1eb",
+    "rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv": "b34267e6a76a320646a56a00ebc1e2dab636afb1b0e8e1ed8f5de975c136dad6",
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "f366f19169175709cae660824536e5c8f9b0b9f92a2a3f49b8cdeb1b234a0dfc",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv": "6bc5223f4ff8e4d6d7921c941709ab2b6c051d3c806a033b60ea589f31035e68",
     "rtl/qwen_sys/async/headreg/ot_qwen_rom_sys_top.sv": "0582fd863aba54adc86b9d8304ac9f69662a0116f3c980c602f1bedb4ad5913e",
     "rtl/qwen_sys/async/headreg/ot_qwen_sys_die.sv": "c11bf486d3deee47ef5825e769e6486a6d58153f6d03c41f192dc7b231043680",
@@ -108855,7 +108855,7 @@
     "tools/qwen_dv/gen_amax_rsafe.py": "02a2fe46c90f55745fe3d00f113386b189ebdb5abbefd805f1e5dd3ebaaa66c0",
     "tools/qwen_dv/gen_scalar_rsafe.py": "69b2790bd2af710927dd6e4b7813574c9c48db4224d7d810ce1234d1287e06de",
     "tools/qwen_dv/gen_slice2_lpf.py": "2742879f1d3567fca2f12828246a42043f200fbc0e5f819d154798e84118a7e8",
-    "tools/qwen_dv/gen_slice5_flat.py": "8a3e46288f455af394a7ebcfa4c1ff075155290f52696f9d968d7e497bd8784f",
+    "tools/qwen_dv/gen_slice5_flat.py": "7e6f6f87cb0fb92c51e191949640793d5c7877994e4da2626ce04a2d591e9e8e",
     "tools/qwen_dv/gen_slice5_tb.py": "d9a927010408253b98be353b63972ec084c992757229dc695c5f10e3a322242c",
     "tools/qwen_dv/gen_slice_faces.py": "3e60de5cf73a45c102614747cddaaf304b62c785ce6d8aa349a1aaadfdd75bc0",
     "tools/qwen_dv/gen_station_csafe.py": "30098bcc0991b91a337dcc3f6283fae32ac69a783e5b09cbd120b35dc370062a",
@@ -108974,16 +108974,16 @@
    },
    "digest": "7f6b2a46fedb267f44d92c5679f878704a550a44b9b26891b1d461465c9f1313"
   },
-  "captured": "2026-10-19T23:22:55-0700",
+  "captured": "2026-10-19T23:49:19-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_dv_s5_btabb/signoff.sdc"
   },
-  "remote_script_sha256": "b3c37b4c3839538bb2fd7b9aa437073c155b4732b2f4f500fb5a4481148988ce",
+  "remote_script_sha256": "9c1421e8cbf23e972c4dafdd8ea5d76e3b6ed1a012eec303f80814fbf1c62c78",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_btabb-20261019-232223",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_btabb-20261019-234847",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -108994,12 +108994,12 @@
   "max_root_sinks": 1032,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 300.0,
-  "tt_spread_ps": 57.8,
-  "tt_pin_spread_ps": 57.8,
-  "ff_insertion_ps": 247.2,
-  "ff_spread_ps": 50.4,
-  "ff_pin_spread_ps": 50.4,
+  "tt_insertion_ps": 281.7,
+  "tt_spread_ps": 61.6,
+  "tt_pin_spread_ps": 61.6,
+  "ff_insertion_ps": 234.9,
+  "ff_spread_ps": 55.1,
+  "ff_pin_spread_ps": 55.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -109016,51 +109016,51 @@
      },
      "boundary": {
       "n": 1032,
-      "mean": 260.0,
-      "min": 242.2,
-      "max": 300.0
+      "mean": 236.9,
+      "min": 220.1,
+      "max": 281.7
      },
      "all": {
       "n": 1032,
-      "mean": 260.0,
-      "min": 242.2,
-      "max": 300.0
+      "mean": 236.9,
+      "min": 220.1,
+      "max": 281.7
      },
      "errors": [],
      "macros": {
       "n": 4,
       "nets": 2,
       "max_per_net": 2,
-      "reg_mean": 260.0,
+      "reg_mean": 236.9,
       "max_slew": 37.3,
-      "max_late": -17.2,
+      "max_late": -16.2,
       "pins": [
        {
         "pin": "g_btb[0].u_m/clk",
-        "arr": 242.8,
+        "arr": 220.7,
         "slew": 37.3,
-        "late": -17.2,
+        "late": -16.2,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "g_btb[1].u_m/clk",
-        "arr": 242.7,
+        "arr": 220.6,
         "slew": 37.0,
-        "late": -17.3,
+        "late": -16.3,
         "net": "clknet_1_1__leaf_ck"
        },
        {
         "pin": "g_btb[2].u_m/clk",
-        "arr": 242.3,
+        "arr": 220.2,
         "slew": 36.1,
-        "late": -17.7,
+        "late": -16.7,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "g_btb[3].u_m/clk",
-        "arr": 242.2,
+        "arr": 220.1,
         "slew": 35.7,
-        "late": -17.8,
+        "late": -16.8,
         "net": "clknet_1_1__leaf_ck"
        }
       ]
@@ -109069,15 +109069,15 @@
      "child_flop": {
       "boundary": {
        "n": 1032,
-       "mean": 260.0,
-       "min": 242.2,
-       "max": 300.0
+       "mean": 236.9,
+       "min": 220.1,
+       "max": 281.7
       },
       "all": {
        "n": 1032,
-       "mean": 260.0,
-       "min": 242.2,
-       "max": 300.0
+       "mean": 236.9,
+       "min": 220.1,
+       "max": 281.7
       },
       "refs": {
        "ot_sram_1r1w_128x256_m1_r2c2": {
@@ -109089,15 +109089,15 @@
       "soft": {
        "boundary": {
         "n": 1028,
-        "mean": 260.0,
-        "min": 252.4,
-        "max": 300.0
+        "mean": 237.0,
+        "min": 223.3,
+        "max": 281.7
        },
        "all": {
         "n": 1028,
-        "mean": 260.0,
-        "min": 252.4,
-        "max": 300.0
+        "mean": 237.0,
+        "min": 223.3,
+        "max": 281.7
        }
       }
      }
@@ -109105,28 +109105,28 @@
     "ff": {
      "boundary": {
       "n": 1032,
-      "mean": 211.9,
-      "min": 196.8,
-      "max": 247.2
+      "mean": 194.5,
+      "min": 179.8,
+      "max": 234.9
      },
      "all": {
       "n": 1032,
-      "mean": 211.9,
-      "min": 196.8,
-      "max": 247.2
+      "mean": 194.5,
+      "min": 179.8,
+      "max": 234.9
      },
      "child_flop": {
       "boundary": {
        "n": 1032,
-       "mean": 211.9,
-       "min": 196.8,
-       "max": 247.2
+       "mean": 194.5,
+       "min": 179.8,
+       "max": 234.9
       },
       "all": {
        "n": 1032,
-       "mean": 211.9,
-       "min": 196.8,
-       "max": 247.2
+       "mean": 194.5,
+       "min": 179.8,
+       "max": 234.9
       },
       "refs": {
        "ot_sram_1r1w_128x256_m1_r2c2": {
@@ -109138,15 +109138,15 @@
       "soft": {
        "boundary": {
         "n": 1028,
-        "mean": 211.9,
-        "min": 204.2,
-        "max": 247.2
+        "mean": 194.6,
+        "min": 181.6,
+        "max": 234.9
        },
        "all": {
         "n": 1028,
-        "mean": 211.9,
-        "min": 204.2,
-        "max": 247.2
+        "mean": 194.6,
+        "min": 181.6,
+        "max": 234.9
        }
       }
      },
@@ -109154,36 +109154,36 @@
       "n": 4,
       "nets": 2,
       "max_per_net": 2,
-      "reg_mean": 211.9,
+      "reg_mean": 194.5,
       "max_slew": 36.7,
-      "max_late": -14.4,
+      "max_late": -13.9,
       "pins": [
        {
         "pin": "g_btb[0].u_m/clk",
-        "arr": 197.5,
+        "arr": 180.6,
         "slew": 36.7,
-        "late": -14.4,
+        "late": -13.9,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "g_btb[1].u_m/clk",
-        "arr": 197.4,
+        "arr": 180.4,
         "slew": 36.3,
-        "late": -14.5,
+        "late": -14.1,
         "net": "clknet_1_1__leaf_ck"
        },
        {
         "pin": "g_btb[2].u_m/clk",
-        "arr": 196.9,
+        "arr": 180.0,
         "slew": 35.3,
-        "late": -15.0,
+        "late": -14.5,
         "net": "clknet_1_0__leaf_ck"
        },
        {
         "pin": "g_btb[3].u_m/clk",
-        "arr": 196.8,
+        "arr": 179.8,
         "slew": 34.8,
-        "late": -15.1,
+        "late": -14.7,
         "net": "clknet_1_1__leaf_ck"
        }
       ]
@@ -109207,7 +109207,7 @@
   },
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "1,032 sinks on the largest root; measured TT insertion 300.0 ps, FF insertion 247.2 ps, TT pin-flop spread 57.8 ps, FF pin-flop spread 50.4 ps (spread <= 80 ps)"
+  "text": "1,032 sinks on the largest root; measured TT insertion 281.7 ps, FF insertion 234.9 ps, TT pin-flop spread 61.6 ps, FF pin-flop spread 55.1 ps (spread <= 80 ps)"
  },
  "items": [
   {
@@ -109223,10 +109223,10 @@
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "fill",
-   "message": "fill 29% = (hard macros 15575.4 + synthesized std cells 507.7) / outline 55427.3 um2; pin demand per face: S 301 pins over 282.0/285.1 um (99%), N 0 pins over 0.0/285.1 um (0%), W 63 pins over 185.3/194.4 um (95%), E 1058 pins over 192.2/194.4 um (99%) (< 35%)",
-   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+   "message": "fill 35% = (hard macros 15575.4 + synthesized std cells 507.7) / outline 46282.8 um2; pin demand per face: S 303 pins over 264.9/267.8 um (99%), N 0 pins over 0.0/267.8 um (0%), W 1083 pins over 170.6/172.8 um (99%), E 30 pins over 0.0/172.8 um (0%) (pin-bound: tw_* (1,051 b) on the W face + bt_q (266 b) on S, faces >= 95% occupied; 4 macros 15,575 um2, std cells 508 um2)",
+   "fix": ""
   }
  ],
  "trial_route": {
@@ -109235,7 +109235,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "0",
-  "grt_s": 334,
+  "grt_s": 254,
   "layers": [
    {
     "layer": "M1",
@@ -109246,30 +109246,30 @@
    },
    {
     "layer": "M2",
-    "capacity": 1169210,
-    "usage": 170709,
-    "pct": 14.6,
+    "capacity": 897014,
+    "usage": 142937,
+    "pct": 15.93,
     "overflow": 0
    },
    {
     "layer": "M3",
-    "capacity": 1389289,
-    "usage": 144130,
-    "pct": 10.37,
+    "capacity": 1068036,
+    "usage": 147053,
+    "pct": 13.77,
     "overflow": 0
    },
    {
     "layer": "M4",
-    "capacity": 1068077,
-    "usage": 154989,
-    "pct": 14.51,
+    "capacity": 821165,
+    "usage": 175343,
+    "pct": 21.35,
     "overflow": 0
    },
    {
     "layer": "M5",
-    "capacity": 1189777,
-    "usage": 95269,
-    "pct": 8.01,
+    "capacity": 952937,
+    "usage": 75569,
+    "pct": 7.93,
     "overflow": 0
    },
    {
@@ -109281,8 +109281,8 @@
    }
   ],
   "worst_layer_usage": [
-   "M2",
-   14.6
+   "M4",
+   21.35
   ],
   "hotspot": null,
   "congestion_png": null

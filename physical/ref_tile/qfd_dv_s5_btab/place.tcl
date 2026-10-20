@@ -29,16 +29,16 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_btb?0?*u_m}]
-$i setOrient R0; $i setLocation [expr {round(51.84 * $dbu)}] [expr {round(51.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 51.84 51.84 R0"
+$i setOrient MY; $i setLocation [expr {round(22.896 * $dbu)}] [expr {round(69.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 22.896 69.12 MY"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_btb?1?*u_m}]
-$i setOrient R0; $i setLocation [expr {round(51.84 * $dbu)}] [expr {round(92.928 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 51.84 92.928 R0"
+$i setOrient MY; $i setLocation [expr {round(22.896 * $dbu)}] [expr {round(110.208 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 22.896 110.208 MY"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_btb?2?*u_m}]
-$i setOrient R0; $i setLocation [expr {round(51.84 * $dbu)}] [expr {round(134.016 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 51.84 134.016 R0"
+$i setOrient R0; $i setLocation [expr {round(160.704 * $dbu)}] [expr {round(69.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 160.704 69.12 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_btb?3?*u_m}]
-$i setOrient R0; $i setLocation [expr {round(51.84 * $dbu)}] [expr {round(175.104 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 51.84 175.104 R0"
+$i setOrient R0; $i setLocation [expr {round(160.704 * $dbu)}] [expr {round(110.208 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 160.704 110.208 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }

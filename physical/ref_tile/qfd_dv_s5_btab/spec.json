@@ -35,8 +35,8 @@
  ],
  "reset_ports": [],
  "outline": {
-  "w": 172.8,
-  "h": 239.76
+  "w": 280.8,
+  "h": 194.4
  },
  "macros": [
   {
@@ -44,30 +44,30 @@
    "count": 1,
    "inst": "*g_btb?0?*u_m",
    "at": [
-    51.84,
-    51.84
+    22.896,
+    69.12
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "inst": "*g_btb?1?*u_m",
    "at": [
-    51.84,
-    92.928
+    22.896,
+    110.208
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "MY"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "inst": "*g_btb?2?*u_m",
    "at": [
-    51.84,
-    134.016
+    160.704,
+    69.12
    ],
    "at_exact": true,
    "orient": "R0"
@@ -77,28 +77,27 @@
    "count": 1,
    "inst": "*g_btb?3?*u_m",
    "at": [
-    51.84,
-    175.104
+    160.704,
+    110.208
    ],
    "at_exact": true,
    "orient": "R0"
   }
  ],
  "pins": {
-  "W": [
+  "N": [
    "bt_re",
    "bt_word",
-   "bt_q"
+   "bt_q",
+   "ck"
   ],
-  "E": [
+  "W": [
    "tw_we",
    "tw_kind",
    "tw_addr",
    "tw_data"
   ],
-  "N": [
-   "ck"
-  ],
+  "E": [],
   "S": []
  },
  "pin_regs": {
@@ -113,7 +112,7 @@
   "owner": "Claude:QW-SLICE6-LRLY",
   "branch": "claude/qw-slice6-lrly-1019",
   "tag": "btab",
-  "purpose": "QW-SLICE6 Q.STA.SLICE.2 new leaf qfd_dv_s5_btab (station BTAB copy beside stnrgc region 0): main, abutted 4-stack + full-width S band",
+  "purpose": "QW-SLICE6 qfd_dv_s5_btab parallel fallback (redesign after gate2 FAIL of the single 4-stack: GRT ovf 6142 = tw data crossing the macro stack to W-side wd pins): relaxed 2x2, 43.2-um capture channel, bt_q on N",
   "extra_paths": [
    "rtl",
    "tools/qwen_dv",
@@ -151,6 +150,6 @@
   ]
  },
  "fill_reason": {
-  "pin_bound": "tw_* (1,051 b) enters on the E face at 4.4 pins/um over the 4-stack height (face 99% occupied); the 4 macros (15,575 um2) set the rest, std cells are 508 um2"
+  "pin_bound": "tw_* (1,051 b) on the W face (>= 95% occupied) + bt_q (266 b) on N; 4 macros 15,575 um2, std cells 508 um2; relaxed 43-um capture channel"
  }
 }

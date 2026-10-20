@@ -3,7 +3,7 @@
  "block": "qfd_dv_s5_btab",
  "ref_tile": true,
  "owner": "Claude:QW-SLICE6-LRLY",
- "purpose": "QW-SLICE6 Q.STA.SLICE.2 new leaf qfd_dv_s5_btab (station BTAB copy beside stnrgc region 0): main, abutted 4-stack + full-width S band",
+ "purpose": "QW-SLICE6 qfd_dv_s5_btab parallel fallback (redesign after gate2 FAIL of the single 4-stack: GRT ovf 6142 = tw data crossing the macro stack to W-side wd pins): relaxed 2x2, 43.2-um capture channel, bt_q on N",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {

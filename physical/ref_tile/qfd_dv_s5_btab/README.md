@@ -22,3 +22,9 @@ SAFE-DESIGN checklist (owner 10-19):
    full-width std-cell band; aspect 1.39 (main) / 1.55 (fallback); gate1 FAIL fill 30% (outline too big) -> outlines shrunk to fill ~39% / ~35%, faces pin-bound (fill_reason).
 7. Clock: single centre-fed root (~1.0k flops + 4 macro clocks), io_hold_margin 0.03.
 8. Schedule: static, 0 added edges.
+
+Gate history: gate2 (single abutted 4-stack, 172.8 x 239.76) FAIL -- trial GRT overflow 6,142 on M4 over the stack (tw data from
+the E face must reach the wd_in pins on the macros' W edge: no horizontal capacity across the stack at layer cap M5) and TT
+pin-flop spread 83.1 ps. Structural redesign: the 2 x 2 arrangement (two abutted stacks, read pins facing a centre capture
+channel, write pins outward) -- qfd_dv_s5_btabb (gate2 WARN: GRT 0, spread 61.6/55.1) is now the MAIN candidate; this kit
+qfd_dv_s5_btab is re-cut as its relaxed parallel fallback (280.8 x 194.4, 43.2-um capture channel, bt_q on N).
