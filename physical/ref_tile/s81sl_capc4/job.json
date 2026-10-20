@@ -1,13 +1,13 @@
 {
- "name": "s81sl_capc4-s81capc2-COMMIT",
+ "name": "s81sl_capc4-capc4-COMMIT",
  "block": "ot_s81sl_capc2",
  "ref_tile": true,
- "owner": "Claude:LEAD2-S81/CAPC2",
+ "owner": "Codex:S81-CAPC3",
  "purpose": "S81.STA.PAR.1 release CAPC cluster: closed rt/tr + new ED24/LD16 calendar leaves, PINPIPE 1 faces; bench vs closed 3-child RTL",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-capc2-cal-1019",
+  "branch": "codex/s81-capc-audit-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -150,11 +150,11 @@
  "record": [
   {
    "from": "{RUN}/record/views",
-   "to": "physical/ref_tile/s81sl_capc2/views"
+   "to": "physical/ref_tile/s81sl_capc4/views"
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_capc2/s81sl_capc4-s81capc2-COMMIT"
+   "to": "results/rtl/ref_tile/s81sl_capc4/s81sl_capc4-capc4-COMMIT"
   }
  ],
  "cycles_added": 0,

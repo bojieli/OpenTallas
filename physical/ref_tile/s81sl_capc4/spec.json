@@ -109,9 +109,9 @@
  "structural_change": "Zero-cycle reach correction of CLOSED capc2: E rt_e pin span starts at43.2um to move low eq pin flops north; existing second reset landing rst_l1 anchored at centroid(172,190) with both reset stages unchanged. No RTL/clock/child/outline change. Native source census CLOSED exact mapping max16 inclreset, no storage above2kb outside hard children; new placement must remeasure all reach<=405 and clock spread<=80.",
  "why_floorplan": "Closed children at R0 on the 43.2 lattice: rt (43.2,43.2), tw (43.2,302.4), te (216,302.4), ED (216,216) between u_te S-face outputs and rt N-face e_* pins, LD (43.2,216) between the W-face lane-3 pin registers and u_tw; channels rt-ED/LD 56.16, ED/LD-trees 38.88 (gen channel rule >= 20; the 43.2 lattice gives no 99.36 seam with both >= 20), full-width south 43.2 std band and the 82.08 tree-to-tree channel unchanged. Outline = the child stack + the 20 um core-edge channels (rt/te right edges 302.4/306.72 + 22.16; trees top 388.8 + 22.68) on the 0.054 / 0.27 site grid: 329.184 x 411.48, fill 38 % WARN (set by the closed children and the lattice, not std area).",
  "job": {
-  "owner": "Claude:LEAD2-S81/CAPC2",
-  "branch": "claude/s81-capc2-cal-1019",
-  "tag": "s81capc2",
+  "owner": "Codex:S81-CAPC3",
+  "branch": "codex/s81-capc-audit-1020",
+  "tag": "capc4",
   "purpose": "S81.STA.PAR.1 release CAPC cluster: closed rt/tr + new ED24/LD16 calendar leaves, PINPIPE 1 faces; bench vs closed 3-child RTL",
   "benches": [
    {
@@ -193,8 +193,8 @@
    "tools/s81",
    "tools/s81_slice"
   ],
-  "views_to": "physical/ref_tile/s81sl_capc2/views",
-  "record_to": "results/rtl/ref_tile/s81sl_capc2",
+  "views_to": "physical/ref_tile/s81sl_capc4/views",
+  "record_to": "results/rtl/ref_tile/s81sl_capc4",
   "reroute_reason": {
    "kind": "native_reach",
    "source": "results/rtl/codex_s81_capc_audit_1020/native_final.json",
