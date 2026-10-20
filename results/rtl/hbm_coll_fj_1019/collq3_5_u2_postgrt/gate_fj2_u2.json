@@ -1,0 +1,131 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/faul",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hcoll_fj2_r128u2_20261020-022119.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hcoll_fj2_r128u2_20261020-022119.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hcoll_fj2_r128u2-20261020-022119",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 117 s (gate total 356 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 461, 'pin_rectangles': 461, 'pin_track_checked': 461, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 d4076554e577805576e06f5491825365c6177f921ffdef89bb5d6e4900985fa3",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 1588 um2 + macros 899 in core 6653: util 29% (std-cell density 28.9% of placeable 5492 um2; total fill 37.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS ot_hgi_coll_fj_q2_r128 cells 10,295 flops 3,012 depth 268.4 ps util 0.3767 reach 0.0 um (0.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 193.7..219.2 ps (spread 25.5), boundary mean 211.5; tt insertion all 140.2..164.6 ps (spread 24.4), boundary mean 157.4; ff insertion all 109.2..133.1 ps (spread 23.9), boundary mean 126.2; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hcoll_fj2_r128u2/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg      5 paths, worst slack 174.1 ps (e.g. configured$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       60 paths, worst slack 279.4 ps (e.g. issuer_start_pc[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro      8 paths, worst slack 310.6 ps (e.g. u_ot_pr_core.u.u_program.u_flow/ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      527 paths, worst slack 314.0 ps (e.g. issuer_cfg[15]$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.7412060682175934e-10 hold WNS 4.899608496700125e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 3,013 sinks on the largest root; measured TT insertion 164.6 ps, FF insertion 133.1 ps, TT pin-flop spread 16.3 ps, FF pin-flop spread 14.7 ps (spread <= 80 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/collq3-5-1020/physical/ref_tile/hcoll_fj2_r128u2/gate_layout/floorplan.png; density /home/ubuntu/wt/collq3-5-1020/physical/ref_tile/hcoll_fj2_r128u2/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 31.30% used; GRT 57 s",
+   "fix": ""
+  }
+ ]
+}

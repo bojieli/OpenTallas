@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collq3-5-audit
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/collq3-5-audit
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collq3-5-audit
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/collq3-5-audit
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collq3-5-audit
+ot-run: ot-agidock128  admits    98 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 7 disk 243 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1242540-1792488548 after 1 s
+FJ3 RC=0
+ODB /old/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_n2s1_r128_asap7_ref_gate/base/5_1_grt.odb
+3 FAIL 8808 37 errors 0 violations 2
+NATIVE_RC=1
+FJ_PROTECTED_PG_MISSING n=448 groups={HB2xp67_ASAP7_75t_R PLACED} 448 examples=ot_inhold_00000 ot_inhold_00001 ot_inhold_00002 ot_inhold_00003 ot_inhold_00004 ot_inhold_00005 ot_inhold_00006 ot_inhold_00007 ot_inhold_00008 ot_inhold_00009 ot_inhold_00010 ot_inhold_00011 ot_inhold_00012 ot_inhold_00013 ot_inhold_00014 ot_inhold_00015 ot_inhold_00016 ot_inhold_00017 ot_inhold_00018 ot_inhold_00019
+FJ2 RC=0
+ODB /old/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_q2_r128_asap7_ref_gate/base/5_1_grt.odb
+2 FAIL 8825 37 errors 0 violations 1
+NATIVE_RC=1
+FJ_PROTECTED_PG_MISSING n=455 groups={HB2xp67_ASAP7_75t_R PLACED} 455 examples=ot_inhold_00000 ot_inhold_00001 ot_inhold_00002 ot_inhold_00003 ot_inhold_00004 ot_inhold_00005 ot_inhold_00006 ot_inhold_00007 ot_inhold_00008 ot_inhold_00009 ot_inhold_00010 ot_inhold_00011 ot_inhold_00012 ot_inhold_00013 ot_inhold_00014 ot_inhold_00015 ot_inhold_00016 ot_inhold_00017 ot_inhold_00018 ot_inhold_00019
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1242540-1792488548): exit 0
