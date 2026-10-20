@@ -103,98 +103,99 @@
 
         +----------Local Count, excluding submodules.
         | 
-    73792 wires
-   121843 wire bits
-     1800 public wires
-    49469 public wire bits
+    74451 wires
+   122613 wire bits
+     1860 public wires
+    49640 public wire bits
        18 ports
      3272 port bits
-    81562 cells
+    82199 cells
        28   $scopeinfo
-      957   A2O1A1Ixp33_ASAP7_75t_R
-       37   A2O1A1O1Ixp25_ASAP7_75t_R
-      414   AND2x2_ASAP7_75t_R
-       63   AND3x1_ASAP7_75t_R
-       24   AND4x1_ASAP7_75t_R
-        7   AND5x1_ASAP7_75t_R
-        3   AO211x2_ASAP7_75t_R
-      223   AO21x1_ASAP7_75t_R
-       11   AO221x1_ASAP7_75t_R
-        7   AO22x1_ASAP7_75t_R
-        6   AO32x1_ASAP7_75t_R
-      305   AOI211xp5_ASAP7_75t_R
-     6327   AOI21xp33_ASAP7_75t_R
-      187   AOI221xp5_ASAP7_75t_R
-        2   AOI222xp33_ASAP7_75t_R
-      291   AOI22xp33_ASAP7_75t_R
-       39   AOI311xp33_ASAP7_75t_R
-       60   AOI31xp33_ASAP7_75t_R
-        7   AOI321xp33_ASAP7_75t_R
-        6   AOI32xp33_ASAP7_75t_R
-      549   DFFASRHQNx1_ASAP7_75t_R
-    17707   DFFHQNx1_ASAP7_75t_R
+      802   A2O1A1Ixp33_ASAP7_75t_R
+       49   A2O1A1O1Ixp25_ASAP7_75t_R
+      389   AND2x2_ASAP7_75t_R
+       47   AND3x1_ASAP7_75t_R
+       30   AND4x1_ASAP7_75t_R
+       14   AND5x1_ASAP7_75t_R
+        4   AO211x2_ASAP7_75t_R
+      169   AO21x1_ASAP7_75t_R
+        6   AO221x1_ASAP7_75t_R
+        1   AO222x2_ASAP7_75t_R
+        5   AO22x1_ASAP7_75t_R
+        2   AO31x2_ASAP7_75t_R
+       18   AO32x1_ASAP7_75t_R
+        1   AO33x2_ASAP7_75t_R
+      357   AOI211xp5_ASAP7_75t_R
+     6444   AOI21xp33_ASAP7_75t_R
+      159   AOI221xp5_ASAP7_75t_R
+        9   AOI222xp33_ASAP7_75t_R
+      319   AOI22xp33_ASAP7_75t_R
+       36   AOI311xp33_ASAP7_75t_R
+       84   AOI31xp33_ASAP7_75t_R
+        5   AOI321xp33_ASAP7_75t_R
+        4   AOI32xp33_ASAP7_75t_R
+      550   DFFASRHQNx1_ASAP7_75t_R
+    17760   DFFHQNx1_ASAP7_75t_R
      2596   DLLx1_ASAP7_75t_R
-    10973   INVx1_ASAP7_75t_R
-      249   MAJIxp5_ASAP7_75t_R
-      117   MAJx2_ASAP7_75t_R
-     5243   NAND2xp33_ASAP7_75t_R
-      544   NAND3xp33_ASAP7_75t_R
-      116   NAND4xp25_ASAP7_75t_R
-      157   NAND5xp2_ASAP7_75t_R
-     5352   NOR2xp33_ASAP7_75t_R
-      317   NOR3xp33_ASAP7_75t_R
-      177   NOR4xp25_ASAP7_75t_R
-       54   NOR5xp2_ASAP7_75t_R
-     1976   O2A1O1Ixp33_ASAP7_75t_R
-       63   OA211x2_ASAP7_75t_R
-      390   OA21x2_ASAP7_75t_R
-        5   OA222x2_ASAP7_75t_R
-       12   OA22x2_ASAP7_75t_R
-        1   OA31x2_ASAP7_75t_R
-        4   OA33x2_ASAP7_75t_R
-      268   OAI211xp5_ASAP7_75t_R
-    16656   OAI21xp33_ASAP7_75t_R
-      974   OAI221xp5_ASAP7_75t_R
-       81   OAI222xp33_ASAP7_75t_R
-     2753   OAI22xp33_ASAP7_75t_R
-       21   OAI311xp33_ASAP7_75t_R
-      634   OAI31xp33_ASAP7_75t_R
-       10   OAI321xp33_ASAP7_75t_R
-      121   OAI32xp33_ASAP7_75t_R
+    11001   INVx1_ASAP7_75t_R
+      246   MAJIxp5_ASAP7_75t_R
+      113   MAJx2_ASAP7_75t_R
+     5395   NAND2xp33_ASAP7_75t_R
+      484   NAND3xp33_ASAP7_75t_R
+      140   NAND4xp25_ASAP7_75t_R
+      155   NAND5xp2_ASAP7_75t_R
+     5631   NOR2xp33_ASAP7_75t_R
+      344   NOR3xp33_ASAP7_75t_R
+      197   NOR4xp25_ASAP7_75t_R
+       61   NOR5xp2_ASAP7_75t_R
+     2211   O2A1O1Ixp33_ASAP7_75t_R
+       58   OA211x2_ASAP7_75t_R
+      436   OA21x2_ASAP7_75t_R
+        8   OA22x2_ASAP7_75t_R
+        5   OA33x2_ASAP7_75t_R
+      245   OAI211xp5_ASAP7_75t_R
+    16880   OAI21xp33_ASAP7_75t_R
+     1043   OAI221xp5_ASAP7_75t_R
+       42   OAI222xp33_ASAP7_75t_R
+     2416   OAI22xp33_ASAP7_75t_R
+       12   OAI311xp33_ASAP7_75t_R
+      602   OAI31xp33_ASAP7_75t_R
+       25   OAI321xp33_ASAP7_75t_R
+      149   OAI32xp33_ASAP7_75t_R
         1   OAI33xp33_ASAP7_75t_R
-     2980   OR2x2_ASAP7_75t_R
-      102   OR3x1_ASAP7_75t_R
-       61   OR4x1_ASAP7_75t_R
-       15   OR5x1_ASAP7_75t_R
-      835   XNOR2xp5_ASAP7_75t_R
-      444   XOR2xp5_ASAP7_75t_R
-      276 submodules
+     2962   OR2x2_ASAP7_75t_R
+       78   OR3x1_ASAP7_75t_R
+       50   OR4x1_ASAP7_75t_R
+       10   OR5x1_ASAP7_75t_R
+      822   XNOR2xp5_ASAP7_75t_R
+      489   XOR2xp5_ASAP7_75t_R
+      315 submodules
         5   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
        46   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
-      109   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+      117   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000000010
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000010110
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100010
         3   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100011
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001000000
         2   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001100101
-        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110
-      102   ot_bf6_kand
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010111010
+      133   ot_bf6_kand
         4   ot_bf6_kor
 
-=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110 ===
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010111010 ===
 
         +----------Local Count, excluding submodules.
         | 
         7 wires
-      198 wire bits
+      202 wire bits
         7 public wires
-      198 public wire bits
+      202 public wire bits
         5 ports
-      186 port bits
-      194 submodules
+      190 port bits
+      198 submodules
         6   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
-      182   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+      186   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
         6   ot_bf6_kor
 
 === $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg ===
@@ -275,7 +276,7 @@
 
         +----------Count including submodules.
         | 
-    83288 dsfd_bf_front_roots
+    83980 dsfd_bf_front_roots
         2 $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
         2 $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
         2 $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
@@ -305,85 +306,86 @@
 
         +----------Count including submodules.
         | 
-    78243 wires
-   126927 wire bits
-     5454 public wires
-    53756 public wire bits
-     3652 ports
-     7507 port bits
+    79055 wires
+   127854 wire bits
+     5655 public wires
+    54072 public wire bits
+     3793 ports
+     7652 port bits
         - memories
         - memory bits
         - processes
-    83288 cells
+    83980 cells
        28   $scopeinfo
-      957   A2O1A1Ixp33_ASAP7_75t_R
-       37   A2O1A1O1Ixp25_ASAP7_75t_R
-      516   AND2x2_ASAP7_75t_R
-       63   AND3x1_ASAP7_75t_R
-       24   AND4x1_ASAP7_75t_R
-        7   AND5x1_ASAP7_75t_R
-        3   AO211x2_ASAP7_75t_R
-      223   AO21x1_ASAP7_75t_R
-       11   AO221x1_ASAP7_75t_R
-        7   AO22x1_ASAP7_75t_R
-        6   AO32x1_ASAP7_75t_R
-      305   AOI211xp5_ASAP7_75t_R
-     6327   AOI21xp33_ASAP7_75t_R
-      187   AOI221xp5_ASAP7_75t_R
-        2   AOI222xp33_ASAP7_75t_R
-      291   AOI22xp33_ASAP7_75t_R
-       39   AOI311xp33_ASAP7_75t_R
-       60   AOI31xp33_ASAP7_75t_R
-        7   AOI321xp33_ASAP7_75t_R
-        6   AOI32xp33_ASAP7_75t_R
-      735   DFFASRHQNx1_ASAP7_75t_R
-    18318   DFFHQNx1_ASAP7_75t_R
+      802   A2O1A1Ixp33_ASAP7_75t_R
+       49   A2O1A1O1Ixp25_ASAP7_75t_R
+      522   AND2x2_ASAP7_75t_R
+       47   AND3x1_ASAP7_75t_R
+       30   AND4x1_ASAP7_75t_R
+       14   AND5x1_ASAP7_75t_R
+        4   AO211x2_ASAP7_75t_R
+      169   AO21x1_ASAP7_75t_R
+        6   AO221x1_ASAP7_75t_R
+        1   AO222x2_ASAP7_75t_R
+        5   AO22x1_ASAP7_75t_R
+        2   AO31x2_ASAP7_75t_R
+       18   AO32x1_ASAP7_75t_R
+        1   AO33x2_ASAP7_75t_R
+      357   AOI211xp5_ASAP7_75t_R
+     6444   AOI21xp33_ASAP7_75t_R
+      159   AOI221xp5_ASAP7_75t_R
+        9   AOI222xp33_ASAP7_75t_R
+      319   AOI22xp33_ASAP7_75t_R
+       36   AOI311xp33_ASAP7_75t_R
+       84   AOI31xp33_ASAP7_75t_R
+        5   AOI321xp33_ASAP7_75t_R
+        4   AOI32xp33_ASAP7_75t_R
+      744   DFFASRHQNx1_ASAP7_75t_R
+    18375   DFFHQNx1_ASAP7_75t_R
      2596   DLLx1_ASAP7_75t_R
-    11770   INVx1_ASAP7_75t_R
-      249   MAJIxp5_ASAP7_75t_R
-      117   MAJx2_ASAP7_75t_R
-     5243   NAND2xp33_ASAP7_75t_R
-      544   NAND3xp33_ASAP7_75t_R
-      116   NAND4xp25_ASAP7_75t_R
-      157   NAND5xp2_ASAP7_75t_R
-     5352   NOR2xp33_ASAP7_75t_R
-      317   NOR3xp33_ASAP7_75t_R
-      177   NOR4xp25_ASAP7_75t_R
-       54   NOR5xp2_ASAP7_75t_R
-     1976   O2A1O1Ixp33_ASAP7_75t_R
-       63   OA211x2_ASAP7_75t_R
-      390   OA21x2_ASAP7_75t_R
-        5   OA222x2_ASAP7_75t_R
-       12   OA22x2_ASAP7_75t_R
-        1   OA31x2_ASAP7_75t_R
-        4   OA33x2_ASAP7_75t_R
-      268   OAI211xp5_ASAP7_75t_R
-    16656   OAI21xp33_ASAP7_75t_R
-      974   OAI221xp5_ASAP7_75t_R
-       81   OAI222xp33_ASAP7_75t_R
-     2753   OAI22xp33_ASAP7_75t_R
-       21   OAI311xp33_ASAP7_75t_R
-      634   OAI31xp33_ASAP7_75t_R
-       10   OAI321xp33_ASAP7_75t_R
-      121   OAI32xp33_ASAP7_75t_R
+    11810   INVx1_ASAP7_75t_R
+      246   MAJIxp5_ASAP7_75t_R
+      113   MAJx2_ASAP7_75t_R
+     5395   NAND2xp33_ASAP7_75t_R
+      484   NAND3xp33_ASAP7_75t_R
+      140   NAND4xp25_ASAP7_75t_R
+      155   NAND5xp2_ASAP7_75t_R
+     5631   NOR2xp33_ASAP7_75t_R
+      344   NOR3xp33_ASAP7_75t_R
+      197   NOR4xp25_ASAP7_75t_R
+       61   NOR5xp2_ASAP7_75t_R
+     2211   O2A1O1Ixp33_ASAP7_75t_R
+       58   OA211x2_ASAP7_75t_R
+      436   OA21x2_ASAP7_75t_R
+        8   OA22x2_ASAP7_75t_R
+        5   OA33x2_ASAP7_75t_R
+      245   OAI211xp5_ASAP7_75t_R
+    16880   OAI21xp33_ASAP7_75t_R
+     1043   OAI221xp5_ASAP7_75t_R
+       42   OAI222xp33_ASAP7_75t_R
+     2416   OAI22xp33_ASAP7_75t_R
+       12   OAI311xp33_ASAP7_75t_R
+      602   OAI31xp33_ASAP7_75t_R
+       25   OAI321xp33_ASAP7_75t_R
+      149   OAI32xp33_ASAP7_75t_R
         1   OAI33xp33_ASAP7_75t_R
-     3010   OR2x2_ASAP7_75t_R
-      102   OR3x1_ASAP7_75t_R
-       61   OR4x1_ASAP7_75t_R
-       15   OR5x1_ASAP7_75t_R
-      835   XNOR2xp5_ASAP7_75t_R
-      444   XOR2xp5_ASAP7_75t_R
-      276 submodules
+     2992   OR2x2_ASAP7_75t_R
+       78   OR3x1_ASAP7_75t_R
+       50   OR4x1_ASAP7_75t_R
+       10   OR5x1_ASAP7_75t_R
+      822   XNOR2xp5_ASAP7_75t_R
+      489   XOR2xp5_ASAP7_75t_R
+      315 submodules
         5   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
        46   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
-      109   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+      117   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000000010
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000010110
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100010
         3   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100011
         1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001000000
         2   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001100101
-        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110
-      102   ot_bf6_kand
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010111010
+      133   ot_bf6_kand
         4   ot_bf6_kor
 
