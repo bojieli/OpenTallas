@@ -1117,6 +1117,28 @@
       }
     }
   ],
+  "fifo_seq_instance_sample": [
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_n[0]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_n[1]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_n[2]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_rd[0]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_rd[1]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_wr[0]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fq_wr[1]$_DFFE_PN0P_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fqv[0][0]$_DFFE_PP_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fqv[0][100]$_DFFE_PP_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fqv[0][101]$_DFFE_PP_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fqv[0][102]$_DFFE_PP_",
+    "u_ot_pr_core.u_head.u_ctrl_me.fqv[0][103]$_DFFE_PP_"
+  ],
+  "fifo_payload_ff_instances": 2240,
+  "fifo_payload_ff_by_row": {
+    "0": 560,
+    "1": 560,
+    "2": 560,
+    "3": 560
+  },
+  "fifo_storage_status": "FAIL_OVER_2048_FF",
   "fifo_netname_samples": [
     "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[0]",
     "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[1]",
@@ -1144,6 +1166,197 @@
     "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[26].we"
   ],
   "head_netname_samples": [],
+  "reset_load_families": {
+    "11841": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[1].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.gstop_q": 64,
+        "u_ot_pr_core.u_head.u_ctrl_me.o_cnt": 24,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.head": 47,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.gdesc_q": 64,
+        "_56764_": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.meta_q": 58,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.loading": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.candidate_pc": 12,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.tail_v": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.tail": 47,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.gstop_seen": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.o_cnt1": 24,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.stop_q": 32,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.q": 47,
+        "u_ot_pr_core.u_head.u_ctrl_me.fpc": 12,
+        "_54829_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.h_rd_c": 32,
+        "u_ot_pr_core.u_head.u_ctrl_me.hc": 2,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.cycle": 32,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.stop_q": 32,
+        "_54827_": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.valid": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.st": 2,
+        "u_ot_pr_core.u_head.u_ctrl_me.fq_rd": 2,
+        "u_ot_pr_core.u_head.u_ctrl_me.fq_wr": 2,
+        "u_ot_pr_core.u_head.u_ctrl_me.last_row0": 18,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.seg_q": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.cp_index": 2,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.stop_seen": 1,
+        "_54831_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.fq_n": 3,
+        "u_ot_pr_core.u_head.u_ctrl_me.nx_v": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.pending_index": 3,
+        "u_ot_pr_core.u_head.u_ctrl_me.pend1": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.meta_seen": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.cp_valid": 3,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.gvalid": 8,
+        "_54813_": 1,
+        "_54815_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.kvd_v": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.read_fault": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.o_fin": 1,
+        "_71469_": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.sealed": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.sched_q": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.prog_re": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.second_read": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.osync": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.fault": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.index": 3,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.active": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.h_wr": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.cfg_fault": 1,
+        "_54833_": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.fault": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.head_v": 1,
+        "_54817_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.run_any": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.pend2": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.gdesc_seen": 1,
+        "u_ot_pr_core.u_head.u_fixed_issue.g_seg.u_store.u_issue.pending": 1,
+        "_54825_": 1
+      }
+    },
+    "43024": {
+      "driver": [
+        "u_ot_pr_core.g_rrep.r2[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.rom_cmd": 190
+      }
+    },
+    "43027": {
+      "driver": [
+        "u_ot_pr_core.g_rrep.r1[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.rom_cmd": 190
+      }
+    },
+    "43482": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[6].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.cp": 56,
+        "u_ot_pr_core.u_head.native_tok": 18,
+        "u_ot_pr_core.u_head.me_observe": 16,
+        "u_ot_pr_core.u_head.native_pos": 18,
+        "u_ot_pr_core.u_head.layer_context_v": 1,
+        "_71464_": 1,
+        "u_ot_pr_core.u_head.u_sd_me_go.q": 1
+      }
+    },
+    "43029": {
+      "driver": [
+        "u_ot_pr_core.g_rrep.r0[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.program_obs": 76,
+        "u_ot_pr_core.u_head.schedule_stage": 6,
+        "u_ot_pr_core.u_head.g_rrg.g_r.r": 12,
+        "u_ot_pr_core.command_stage": 6,
+        "u_ot_pr_core.u_native_route.native_fault": 1,
+        "u_ot_pr_core.relocation_sticky": 1,
+        "u_ot_pr_core.u_native_route.native_selected": 1,
+        "u_ot_pr_core.u_head.program_load_fault": 1,
+        "u_ot_pr_core.u_head.cp_active_q": 1
+      }
+    },
+    "43472": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[11].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e.g_w.we": 32,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.hcf_d": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.run_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqrd_c": 16,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqnz_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hwr_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hcf_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.fqnz_d": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.run_d": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.fqrd_d": 2,
+        "_71459_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.hwr_d": 1
+      }
+    },
+    "43474": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[10].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hcf_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e.g_w.we": 32,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqrd_c": 16,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqnz_c": 8,
+        "_71460_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hwr_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.run_c": 8
+      }
+    },
+    "43476": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[9].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqnz_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hcf_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqrd_c": 16,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e.g_w.we": 32,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hwr_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.run_c": 8,
+        "_71461_": 1
+      }
+    },
+    "43478": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[8].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e.g_w.we": 32,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqrd_c": 16,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hwr_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.run_c": 8,
+        "_71462_": 1,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.fqnz_c": 8,
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_k.hcf_c": 8
+      }
+    },
+    "43480": {
+      "driver": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[7].r[0]"
+      ],
+      "families": {
+        "u_ot_pr_core.u_head.prog_re_c": 32,
+        "_71463_": 1,
+        "u_ot_pr_core.u_head.g_psram.g_m.g_cp.wr_ce": 2,
+        "u_ot_pr_core.u_head.g_psram.pw_v2": 1,
+        "u_ot_pr_core.u_head.u_su_me_ready.q": 1,
+        "u_ot_pr_core.u_head.u_su_me_am_any.q": 1
+      }
+    }
+  },
   "retained_storage_net_bits": {
     "fqwe_fifo_distinct_retained_bits": 0,
     "fifo_write_enable_register_bits": 128,
