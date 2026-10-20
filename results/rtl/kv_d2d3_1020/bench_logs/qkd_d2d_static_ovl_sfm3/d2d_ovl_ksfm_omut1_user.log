@@ -1,0 +1,5 @@
+RECOVERY abort->epoch_begin KV 145 cycles, compute 0 cycles; HOST-visible 55 cycles
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 206
+D2D_OVL_USER tx 198 rx 0
+D2D_DIES_FAIL
+localparam [31:0] QKD_D2D_TXDP = 32'h03030416;   // KV [22, 4, 3, 3]

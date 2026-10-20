@@ -1,0 +1,43 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d3-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d3-1020
+ot-run: ot-epyc7       admits   238 GB (avail 267, growth 101, headroom 0, waiters 0/0 GB) load 117/96 running 30 disk 5646 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/kv-d2d3-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d3-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d3-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-330232-1792489493 after 1 s
+qkd_d2d_static_r7w_sfm3 lint expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 leaf_eq expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 leaf_mutw_col136 expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm_miter_feg0 expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 sfm_miter_feg1 expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 sfm_miter_randinit expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 sfm_mutfo2_bypass_select expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm_mutfo6_crc_late expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm_mutfo7_z17_bit19 expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm_guard expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 sfm_guard_mutfo5_off expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 d2d_dies_ksfm expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 d2d_dies_ksfm_mut_slot expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 d2d_ksfm_lock expect=pass rc=0 OK
+qkd_d2d_static_r7w_sfm3 sfm3_mutfo8_image_q expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm3_mutfo9_hdr_copy_hold expect=fail rc=1 OK
+qkd_d2d_static_r7w_sfm3 sfm3_mutfo1_seg1_selfhold expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 lint expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 leaf_eq expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 leaf_mutw_col136 expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm_miter_feg0 expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 sfm_miter_feg1 expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 sfm_miter_randinit expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 sfm_mutfo2_bypass_select expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm_mutfo6_crc_late expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm_mutfo7_z17_bit19 expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm_guard expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 sfm_guard_mutfo5_off expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 d2d_dies_ksfm expect=pass rc=0 OK
+qkd_d2d_static_ovl_sfm3 d2d_dies_ksfm_mut_slot expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 d2d_ovl_ksfm_omut1_user expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm3_mutfo8_image_q expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm3_mutfo9_hdr_copy_hold expect=fail rc=1 OK
+qkd_d2d_static_ovl_sfm3 sfm3_mutfo1_seg1_selfhold expect=fail rc=1 OK
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-330232-1792489493): exit 0
