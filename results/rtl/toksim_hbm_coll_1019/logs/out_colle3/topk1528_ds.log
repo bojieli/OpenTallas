@@ -1,0 +1,9 @@
+XDIE_PROBE die0 drain->COLL pin 16 edges (DRX 16)
+XDIE_INST 0 P=1528 A->B E=2644.4 first=555.8 | B->A E=2645.4 first=555.3 (1.2 GHz cycles: COLL wr issue -> last / first far COLL rx_v)
+XDIE_STATIC worst_ready_after_tx_last=360.76 ns LXB=367.45 ns worst_slack=7.08 ns sched_fail=0 drx_bad=0
+XDIE_LAND arrival_after_tx min=356.85 max=357.43 ns LA=359.12 ns GAPB=9 probe=0
+XDIE_HBM MUT=0 EPMUT_B=0 RLY=10 SWD=333 NI=1 errors=0 link_fault=0/0 cause=000/000 ep_fault=0/0 cause=000/000 st=10/10 PASS
+- /srv/opentallas-scratch/claude/toksim-hbm-coll/src_e3/rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_link.sv:326: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.769 s; speed 3.526 us/s
+- Verilator: cpu 0.769 s on 1 threads; allocated 13 MB

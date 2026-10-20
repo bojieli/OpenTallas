@@ -1,0 +1,6 @@
+XDIE2_MUTANT m_order REJECTED
+XDIE2_MUTANT m_flip REJECTED
+XDIE2_MUTANT m_early REJECTED
+XDIE_HBM MUT=0 EPMUT_B=0 RLY=10 SWD=333 NI=1 errors=0 link_fault=0/0 cause=000/000 ep_fault=0/0 cause=000/000 st=10/10 PASS
+XDIE2_GATE rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-95610-1792459856): exit 0

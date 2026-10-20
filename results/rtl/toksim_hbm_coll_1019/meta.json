@@ -1,0 +1,34 @@
+{
+ "branch": "claude/toksim-hbm-coll-1019@PENDING",
+ "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+ "src": {
+  "AG48": "claude/hd4g-gen2e3-1019@9787e078a",
+  "AG144": "origin/main@22137b39b",
+  "RS144+AG144": "origin/main@22137b39b",
+  "TOPK1528": "claude/hd4g-gen2e3-1019@9787e078a",
+  "QAR_TP8": "claude/hd4g-gen2e3-1019@9787e078a"
+ },
+ "bench": {
+  "AG48": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+  "AG144": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step6.sh reg_ds_ag144",
+  "RS144+AG144": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step6.sh ds_rs144 + reg_ds_ag144",
+  "TOPK1528": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_coll.sh topk1528 (tb_xdie_hbm_link)",
+  "QAR_TP8": "run_xdie_hbm_step4.sh qw_rs64/32/16 + run_xdie_hbm_step.sh qw_ag16/32/64"
+ },
+ "job": {
+  "AG48": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+  "AG144": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s6main (unit oth-ubuntu-96092-1792459857)",
+  "RS144+AG144": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s6main (unit oth-ubuntu-96092-1792459857)",
+  "TOPK1528": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_colle3 (unit oth-ubuntu-95610-1792459856)",
+  "QAR_TP8": "ot-epyc9:.../toksim-hbm-coll/out_s4e3 (oth-ubuntu-95607-1792459856) + out_s3e3"
+ },
+ "where": {
+  "ds_ar.COLL.ALL_GATHER": "price's TU endpoint+crossing+tail (765-883/train) > measured AG(48) 613 / AG(144) 773 launch->last pub (incl. 333 modelled flight): off-die over-priced ~15-20%",
+  "ds_ar.COLL.GROUP_REDUCE_MCAST": "price 1326 off-die vs measured RS(144) 885 + AG(144) 773 = 1658: the 2-crossing reduce-mcast is UNDER-priced by ~330/record (the 3-block RS/AG boundaries + RS drain)",
+  "ds_ar.COLL.TOPK_MERGE": "off-die priced 2680.6 vs measured link E(1528) 2645.4 (-35): price right within 1.3%",
+  "ds_ar.COLL.ROW_GATHER": "no row-payload co-sim exists (TOKEN-XDIE-HBM gap 3); model kept",
+  "ds_ar.COLL.ARGMAX_MERGE": "only the on-die v8x merge is benched (P1 launch->done 133, PASS); off-die gather not co-simulated; model kept",
+  "qwen.COLL.ALL_REDUCE_SUM": "price 1358 (TP4 1 KB calibration + delivery) vs measured TP8 hypercube 6 dependent steps 1714: the 3-link package topology costs +356/AR (+24% per record)",
+  "qwen.COLL.ARGMAX_MERGE": "as DS: on-die v8x argmax only; model kept"
+ }
+}

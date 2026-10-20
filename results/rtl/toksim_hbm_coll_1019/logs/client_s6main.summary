@@ -1,0 +1,7 @@
+XDIE6_CFG reg_ds_ag48 PASS
+XDIE6_CFG reg_ds_ag144 PASS
+XDIE6_CFG ds_rs144 PASS
+XDIE6_MUTANT m_nogap REJECTED
+XDIE6_MUTANT m_vmstep REJECTED
+XDIE6_GATE rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-96092-1792459857): exit 0
