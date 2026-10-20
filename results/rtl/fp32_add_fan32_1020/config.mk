@@ -1,0 +1,14 @@
+export DESIGN_NICKNAME = fan32_probe
+export DESIGN_NAME = fan32_probe
+export PLATFORM = asap7
+export VERILOG_FILES = /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv /src/results/rtl/fp32_add_fan32_1020/probe.sv
+export SDC_FILE = /work/constraint.sdc
+export DIE_AREA = 0 0 432 432
+export CORE_AREA = 2.16 2.16 429.84 429.84
+export PLACE_DENSITY = 0.5
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_HIERARCHICAL = 0
+export LEC_CHECK = 0
+export ADDER_MAP_FILE =
+export ASAP7_USE_VT = RVT
+export NUM_CORES = 4
