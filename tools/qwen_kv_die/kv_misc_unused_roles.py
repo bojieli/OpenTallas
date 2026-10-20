@@ -71,7 +71,9 @@ FACTS = {
                    ('rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv', r'module qkd_rlys_296')],
 }
 RELAY = re.compile(r'^(qkd_rlys_\d+|qkd_astk_rly_\d+_fl|qkd_rlysh0?_\d+|qkd_landsh0?_\d+)$')
-DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static(?:_sfm)?:\w+|'
+# KV-BIND9 10-20: + the d2ds successor master qkd_d2d_static_sfm3 (KV-D2D3, same ports as _sfm): d12s left its hsvc fork
+# branch rly_pinfix_hsvc_f0_r4_0 (86 b, the seq svc_h reads a narrower field of the same held word) unread.
+DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static(?:_sfm3?)?:\w+|'
                            r'qkd_kvs_ctl:dcfg__age_pv)$')
 
 
