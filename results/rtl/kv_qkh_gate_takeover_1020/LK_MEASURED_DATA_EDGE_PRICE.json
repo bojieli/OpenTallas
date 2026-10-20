@@ -122,12 +122,38 @@
     "old_HXK": 13,
     "candidate_HXK_capture_age": 15,
     "requires_before_enable": [
-      "34bit retire/fault and wrapper controls complete",
-      "actual ECTL HXK15 source capture bench+causal HXK14/13",
       "canonical compiler G3S2/calgen derivation+causal previousage fault",
       "new ECTL physical parameter profiles/views as required; old HXK13 view cannot be relabelled",
       "full generic-wrapper native proof on actual CLOSED lane8",
       "largerheadphysicalplan+source-pinned static-unused role qualification"
     ]
+  },
+  "complete_34bit_score_fault_retirement": {
+    "seeds": [
+      11,
+      19
+    ],
+    "compared": 1800,
+    "unique_lag": 2,
+    "mismatches": 0
+  },
+  "capture_component": {
+    "source": "qkd_ectl3_epoch_direct_s real control/SRAM source; no head arithmetic qualification from this component",
+    "parameters": {
+      "QK_ISSUE_AGE": 91,
+      "ROW_RETURN_LAT": 87
+    },
+    "hxk15": {
+      "requests": 256,
+      "consumes": 256,
+      "score_tags": 256,
+      "firstconsume": 94,
+      "first_score": 176,
+      "retire_age": 82,
+      "fault": 0,
+      "result": "PASS"
+    },
+    "hxk14": "FAIL SCORE_AGE_MISMATCH first175 expected176",
+    "hxk13": "FAIL SCORE_AGE_MISMATCH first174 expected176"
   }
 }
