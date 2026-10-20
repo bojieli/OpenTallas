@@ -1,0 +1,31 @@
+Verilator 5.050 2026-07-01 rev v5.050
+plan latencies: -GL_BC=9 -GL_TAP=5 -GL_NA=7 -GL_NB=3 -GL_TO=3 -GL_NY=6 -GL_LF=9
+== M3: source lines mutated: 0
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[7].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[6].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[5].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[4].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[3].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[2].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[1].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[10].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[9].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[8].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[7].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[6].u.u_ep
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=45 got=7cd3ba0c6126205b exp=5670557a4d9953f7
+REG1_REF_MISMATCH out=ly_o top=reg1b edge=45 got=7cd3ba0c6126205b exp=5670557a4d9953f7
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=46 got=5670557a4d9953f7 exp=e9c13188a29a4ab1
+REG1_REF_MISMATCH out=ly_o top=reg1b edge=46 got=5670557a4d9953f7 exp=e9c13188a29a4ab1
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=47 got=e9c13188a29a4ab1 exp=5a98f24584be7102
+REG1_REF_MISMATCH out=ly_o top=reg1b edge=47 got=e9c13188a29a4ab1 exp=5a98f24584be7102
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=48 got=5a98f24584be7102 exp=214fc9d16ee556c0
+REG1_REF_MISMATCH out=ly_o top=reg1b edge=48 got=5a98f24584be7102 exp=214fc9d16ee556c0
+REG1_SUMMARY MUT3 PHS=0 eq_checks=96148 eq_err=0 (bco 0 lf_o 0 lt_o 0 ly_o 0) ref_checks=192218 ref_err=48032 epoch_slices w=374 r=374 first_word=374 epoch_err=88
+[24062000] %Fatal: tb_qfd_c_b16_reg1.sv:251: Assertion failed in tb: REG1_FAIL MUT3 eq_err=0 ref_err=48032 epoch_err=88
+%Error: tools/qwen_cluster/tb_qfd_c_b16_reg1.sv:251: Verilog $stop
+Aborting...
+   (94 per-crossing epoch / first-word lines, sim exit 1)
+REG1_BENCH M3 FAILS AS REQUIRED /REG1_EPOCH_FAIL side=r edge=33 exp=32 .*tb\.u[12]\.u_l_leg_3_0a_4_r(lo|hi)\./
+REG1_BENCH_EXIT 0 CASES=M3
