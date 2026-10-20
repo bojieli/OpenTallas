@@ -55,7 +55,9 @@ SOURCES = {
 # KV-BIND4 10-19: re-pinned (was 52192834...).  Changes: merge claude/kv-pc3-1019 (default-off OT_KV_PC_RLAND /
 # OT_KV_PC_SRAM text rewrites of the PC kit modules, pc__hfx export), PC_SR_EDGES / pc_chain_ages ledger, bindings()
 # pc__hfx group (PC_SRAM only).  The kc chain order / last-PC-ko note and the BOOT hes/ler skip are unchanged (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '06dc5f230cad7b6f682c8ba411cb919e76e4e16679e6cd291e212f27084de4c6')
+# KV-BIND4 10-19 (merge): + HEALTH_SRC 1-endpoint health_src buses (kc kf x4, dcal flt) and the attn rv3 / d2d sfm merges; no
+# PC / GRP chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'dd1541925a6827eed6e66b76248adbed1b110251b7e17ba0bef510ecdebc15c4')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
