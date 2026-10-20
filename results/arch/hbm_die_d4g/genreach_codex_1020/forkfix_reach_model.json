@@ -96,11 +96,16 @@
     "offending_hop": "rf0027_k02_00_l16.b -> cij_SE.idx_tx_v",
     "reason": "no free spot keeps every hop <= reach"
   },
-  "actual_NS_624_lef_size_um": [
-    64.8,
+  "concrete_row_width_um": 396.576,
+  "next_model": "Per-tile actual port-pin geometry and global footprint reservation before station count/depth finalization; existing shared centroid and independently planned buses are insufficient",
+  "qualification": "No reach/STA/function/release qualification",
+  "erratum": "The prior1101.6um actual-row claim was wrong: rf0027 contains17 hbfd_land_136_NS SYNTH tiles, not NS624 real relays. Synthetic624 coupons never represented this row. Endpoint tuple is lo,hi_exclusive; corrected before candidate use.",
+  "concrete_row_master": "hbfd_land_136_NS",
+  "concrete_row_view_kind": "SYNTH",
+  "concrete_tile_size_um": [
+    23.328,
     23.76
   ],
-  "concrete_row_width_um": 1101.6,
-  "next_model": "Per-tile actual port-pin geometry and global footprint reservation before station count/depth finalization; existing shared centroid and independently planned buses are insufficient",
-  "qualification": "No reach/STA/function/release qualification"
+  "tile_size_derivation": "std_area324.74034/0.60 gives square23.264434; snapceil to0.216x1.08 gives23.328x23.76;280portbits do not trigger pin-bound growth",
+  "meta_sha256": "c4266dc380dd7a1591b2752126231bd7ef2ccfaa1564d7b4dbf06e148eb2cc60"
 }

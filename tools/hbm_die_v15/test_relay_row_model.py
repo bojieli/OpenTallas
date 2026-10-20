@@ -21,6 +21,8 @@ class RowModel(unittest.TestCase):
         e = exact_contract_cost(edges, pl, masters, views, widths,
                                 escape_um={('ns', 'a[1]'): 200})
         self.assertEqual(len(e['over_reach']), 1)
+        sliced = [dict(source=['we', 'a', 1, 2], sink=['ns', 'a', 0, 1], bits=1)]
+        self.assertEqual(exact_contract_cost(sliced, pl, masters, views, widths)['bits_checked'], 1)
         del widths['ns', 'ck']
         with self.assertRaises(ValueError):
             exact_contract_cost(edges, pl, masters, views, widths)

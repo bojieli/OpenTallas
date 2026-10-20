@@ -1,9 +1,10 @@
 {
-  "status": "MODEL COUPONS ONLY / actual candidate not qualified",
+  "status": "SYNTHETIC COUPONS ONLY; not actual rf0027 or fullcandidate closure",
   "actual_lef_sha256": {
     "hbfd_rly_624_NS.lef": "db66c4270ba7ff6a515c37d699efeb5d075483095691f199061b317f64eb4f1b",
     "hbfd_rly_624_WE.lef": "9cf335ed0891e3fca0d089cfdbc2584801dbcf49507c6638a555c7c11e59e087"
   },
+  "endpoint_schema": "lo,hi_exclusive",
   "rows": [
     {
       "flow": "WE",
@@ -14,7 +15,7 @@
         "feasible": true
       },
       "nonoverlap": true,
-      "note": "Actual template pins and OUTPUT->INPUT roles; output bits drive scalar ck/rs only in this geometric coupon. No production clock/reset functional topology or timing claim."
+      "note": "Synthetic OUTPUT-bit to scalar clock/reset geometry only; no production topology claim"
     },
     {
       "flow": "NS",
@@ -25,9 +26,8 @@
         "feasible": true
       },
       "nonoverlap": true,
-      "note": "Actual template pins and OUTPUT->INPUT roles; output bits drive scalar ck/rs only in this geometric coupon. No production clock/reset functional topology or timing claim."
+      "note": "Synthetic OUTPUT-bit to scalar clock/reset geometry only; no production topology claim"
     }
   ],
-  "missing_authority": "Current full candidate actual bit endpoints and forwarded-clock LEFs/port mapping must be supplied; missing exact pins fail closed. No new fullGEN launched.",
-  "previous_coupon_scope_correction": "Earlier 5a5670efa scalar ck->ck/rs->rs coupons were geometric-only and used INPUT ports as launch points; stricter model now rejects such roles. They never qualified production topology."
+  "erratum": "Prior1101.6um actual rf0027 attribution withdrawn; actualSYNTH land136 row396.576um. Low/high tuples corrected; all626bitpairs regenerated. Missing production forwardedclock/pin authority blocks integration."
 }

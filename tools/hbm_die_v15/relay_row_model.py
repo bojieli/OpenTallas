@@ -37,13 +37,14 @@ class Reservations:
 def exact_contract_cost(edges, placements, masters, views, port_widths, reach=405.0, escape_um=None):
     """Bit-exact cost, including reset/clock; no bus centroid or rectangle fallback.
 
-    Endpoint shape is the production [instance, port, low_bit, width]. Every
+    Endpoint shape is production [instance, port, low_bit, high_bit_exclusive]. Every
     expanded bit must have a real LEF pin and explicit port width. escape_um
     optionally adds measured local escape detours by (instance, pin) key.
     Missing authority raises ValueError; this helper never qualifies timing.
     """
     def pin(endpoint, bit, expected_direction):
-        n, port, lo, width = endpoint
+        n, port, lo, hi = endpoint
+        width = hi - lo
         if bit >= width or (n, port) not in port_widths:
             raise ValueError(f'missing width or endpoint bit: {endpoint}')
         index = lo + bit
@@ -63,9 +64,10 @@ def exact_contract_cost(edges, placements, masters, views, port_widths, reach=40
     costs = []
     for e in edges:
         s, t = e['source'], e['sink']
-        if s[3] != t[3] or (e.get('bits', s[3]) != s[3]):
+        width = s[3] - s[2]
+        if width <= 0 or width != t[3] - t[2] or e.get('bits', width) != width:
             raise ValueError('source/sink bit widths differ')
-        for bit in range(s[3]):
+        for bit in range(width):
             a, ae, ak = pin(s, bit, 'OUTPUT')
             b, be, bk = pin(t, bit, 'INPUT')
             costs.append(dict(source=ak, sink=bk, span_um=abs(a[0]-b[0])+abs(a[1]-b[1])+ae+be))
