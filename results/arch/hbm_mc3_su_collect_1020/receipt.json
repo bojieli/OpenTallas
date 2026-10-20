@@ -1,0 +1,20 @@
+{
+  "schema": "codex.hbm_mc3_su.collection.v1",
+  "status": "EVIDENCE_ONLY_NO_SUBMIT",
+  "source_mc3": "ae2a8e0bef079d2323039050d10673fdf8820159",
+  "source_sfups12": "8d12be477",
+  "personally_viewed": [
+    "hdie_pc_ctrl_mc3c6_t242/gate_layout/floorplan.png",
+    "hdie_pc_ctrl_mc3c6_t242/gate_layout/density.png",
+    "hdie_pc_ctrl_mc3c6_s350/gate_layout/floorplan.png",
+    "hdie_pc_ctrl_mc3c6_s350/gate_layout/density.png"
+  ],
+  "findings": [
+    "Both MC3 gates WARN zero failures/GRT zero; native mapped pre-floorplan census max32.",
+    "Both use abutted R0 stacks outside literal43.2 lattice; no waiver or approval inferred.",
+    "Density PNGs show main central mass plus logic in column/edge strips; exact native per-role cell geometry and exceptions still owed.",
+    "PG conductor/via proof separate from net-binding audit; root combined PG helper still pending.",
+    "SFUPS12 r12_cl fails GPL-0305 after routability inflation1459.48% and timing-driven growth165.89%; preserve failure, do not retune/retry same layout.",
+    "r12_clg (routability off) independently GPL converged331s and CTS573s; GRT progressing; no claim of closure."
+  ]
+}

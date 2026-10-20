@@ -1,0 +1,19 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hgi_sfu_store_stripe_leaf_r10': 'M5'}
+GATE INFO remote: ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_sfu_programme_store_r12_cl_20261020-023607.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_sfu_programme_store_r12_cl_20261020-023607.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_programme_store_r12_cl-20261020-023607
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=18
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 125 s (gate total 4575 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2904, 'pin_rectangles': 2904, 'pin_track_checked': 2904, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4036d5ed99783a24b257cd2452c400a0260fe0db6081b01b0e63b8e67ebd4096
+GATE INFO util: synthesized std area 5103 um2 + macros 609701 in core 1017679: util 1% (std-cell density 1.5% of placeable 349729 um2; total fill 60.4%)
+GATE INFO textbook: WARN ot_hgi_sfu_programme_store_r11 cells 30,661 flops 14,929 depth 273.4 ps util 0.6041 reach 0.0 um (1.9 s)
+GATE WARN textbook.clock_domain: clock root port clk: 14,929 flops > 8,000 spread over a 1076 x 946 um outline (> 600 um) (+0 ICGs, 11 macro clock pins; e.g. c_f$_SDFFE_PN0P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_rule: root port:clk: 14,940 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-su6-sfups12-1020/physical/ref_tile/hbm_sfu_programme_store_r12_cl/gate_layout/floorplan.png
+GATE INFO fill: fill 60% = (hard macros 609700.6 + synthesized std cells 5072.4) / outline 1026432.0 um2; pin demand per face: S 2307 pins over 583.3/1080.0 um (54%), N 0 pins over 0.0/1080.0 um (0%), W 88 pins over 0.0/950.4 um (0%), E 709 pins over 946.8/950.4 um (100%)
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: hbm_sfu_programme_store_r12_cl/gate_result.json written (exact staged source binding; commit it with the kit)
