@@ -28,6 +28,7 @@ import re
 import subprocess
 import sys
 import time
+from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -215,6 +216,56 @@ def gold_states(js, top):
     return regs
 
 
+def dup_witnesses(a, work, regs, bit_of, hit):
+    """KV-BIND4 10-19 (--dup-witness): a power-up WITNESS for gold-only registers, never an assumption about the netlist.
+
+    The reset base is an existential statement about the RTL: the routed netlist's one power-up state must be admitted by
+    SOME RTL power-up state.  Paired registers take the netlist's value.  A gold-only register is a register synthesis
+    removed: Yosys itself (opt_dff -sat + opt_merge -share_all on the elaborated gold, the same passes synthesis runs)
+    tells which ones are CONSTANT (D is a constant under every state: the owner-accepted shared power-up base, 10-19
+    18:16) and which ones are MERGED into a kept twin (identical D / clock / enable / reset after constant propagation).
+    Those take the constant resp. the twin's netlist value at step 1, and the witness is ALSO a compared miter output at
+    every checked step (gold dup == gate twin, gold const == const), so a wrong classification fails the proof; nothing is
+    masked.  Registers the passes leave alone (dead or live) stay FREE.  Returns
+    [(gold_name, twin_gold_name | None, const | None, why)]."""
+    (work / 'gold2.ys').write_text('\n'.join([
+        'read_rtlil gold1.il', 'opt_dff -sat', 'opt_merge -share_all', 'opt_dff -sat', 'opt_merge -share_all',
+        'opt_dff -sat', 'opt_clean', 'write_json gold2.json', '']))
+    rc, _t = run([a.yosys, '-q', '-s', 'gold2.ys'], work, 'gold2.log', a.timeout)
+    if rc:
+        raise SystemExit('dup-witness: gold opt failed: ' + (work / 'gold2.log').read_text()[-1500:])
+    m = json.loads((work / 'gold2.json').read_text())['modules']['gold']
+    ffq = set()
+    for c in m['cells'].values():
+        t = c['type']
+        if t in FF_TYPES or t.startswith(('$_DFF', '$_SDFF', '$_ALDFF', '$_DFFSR')):
+            ffq.update(b for b in c['connections'].get('Q', []) if isinstance(b, int))
+    bit2 = {}
+    for w, n in m['netnames'].items():
+        if w.startswith('$'):
+            continue
+        bits, off, upto = n['bits'], n.get('offset', 0), n.get('upto', 0)
+        for i, b in enumerate(bits):
+            idx = off + (len(bits) - 1 - i if upto else i)
+            bit2[w if len(bits) == 1 and off == 0 and not upto else f'{w}[{idx}]'] = b
+    kept = {}                            # gold2 Q bit -> a PAIRED gold1 register name aliasing it
+    for b_, ns in regs.items():
+        if b_ in hit:
+            for n in ns:
+                if isinstance(bit2.get(n), int) and bit2[n] in ffq:
+                    kept.setdefault(bit2[n], ns[0])
+    out = []
+    for b_, ns in regs.items():
+        if b_ in hit or not ns:
+            continue
+        v = next((bit2[n] for n in ns if n in bit2), None)
+        if v in ('0', '1'):
+            out.append((ns[0], None, int(v), 'constant (opt_dff -sat)'))
+        elif isinstance(v, int) and v in kept:
+            out.append((ns[0], kept[v], None, 'merged into ' + kept[v] + ' (opt_merge -share_all)'))
+    return out
+
+
 def run(cmd, work, log, timeout):
     t = time.time()
     p = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=timeout)
@@ -364,6 +415,30 @@ def audit(a):
         L += ['cd', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
+    wit_lines, wit_sets, wit_rec, wit_at = [], [], [], len(L)
+    if a.dup_witness and a.reset_base:
+        swire = {}
+        for s_, n_ in pair.items():
+            if not states[s_][1]:
+                swire.setdefault(bit_of[n_], s_)
+        ws = dup_witnesses(a, work, regs, bit_of, hit)
+        gate_side = []
+        for i, (nm, twin, cst, why) in enumerate(ws):
+            if a.observe_zero_regex and re.search(a.observe_zero_regex, nm):
+                continue        # already an observe-zero comparison with its tied-0 power-up value
+            if cst is None and bit_of[twin] not in swire:
+                continue        # twin is a flow replica: stays free
+            w_ = f'S__wit_{i:04d}'
+            wit_lines += [f'add -wire {w_} 1', f'connect -set {w_} {nm}']
+            gate_side += [f'add -wire {w_} 1', f"connect -set {w_} " + (f"1'{cst}" if cst is not None else swire[bit_of[twin]])]
+            wit_sets.append(f'-set-at 1 gold.{w_} gate.{w_}')
+            wit_rec.append(dict(gold=nm, witness=(twin if cst is None else f"1'{cst}"), why=why))
+        if gate_side:   # the gate twin is ALSO a compared output at every checked step: dup == kept flop is proven
+            wit_lines += ['cd', 'cd gate'] + gate_side + ['cd', 'cd gold']
+        res['dup_witness'] = dict(count=len(wit_rec), merged=sum(1 for w in wit_rec if w['why'].startswith('merged')),
+                                  constant=sum(1 for w in wit_rec if w['why'].startswith('constant')),
+                                  gold2_log_sha256=sha(work / 'gold2.log'),
+                                  gold_only=len(gold_only), unwitnessed=len(gold_only) - len(wit_rec), list=wit_rec)
     # KV-PARAMS2 10-19 joint mode: source registers that synthesis removed as constants (e.g. the adder's unreset
     # *_err[1] metadata chain x->s1->t->w->s2->u, only E_NONE/E_NONFINITE upstream) are no invariant of an arbitrary
     # induction state.  --observe-zero-regex names gold-only registers whose ZERO value is then an extra comparison
@@ -387,6 +462,8 @@ def audit(a):
     L += ['cd', 'setattr -set keep 1 w:S__*']
     L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d']
     prelude = list(L)
+    if wit_lines:   # base only: the gold-side witness wires (gold has no gate twin; equiv_make never sees them)
+        prelude = prelude[:wit_at] + wit_lines + prelude[wit_at:]
     L += ['async2sync',
           'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', 'equiv_induct',
           'equiv_status', 'equiv_status -assert', '']
@@ -409,7 +486,7 @@ def audit(a):
         # power-up state gives the RTL's unreset (X) register that value at step 1 (the gate side of S__proof_meta is
         # 1'0).  Range predicates (--observe-ge) are NOT paired: they would restrict real routed power-up states.
         res['base'] = reset_base(a, work, prelude, states, pair, [s_ for s_, _w, _n in mstate]
-                                 + [f'S__proof_meta_{i:03d}' for i in range(len(obs))])
+                                 + [f'S__proof_meta_{i:03d}' for i in range(len(obs))], wit_sets)
         res['proven'] = res['base']['proven']
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
                                    f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
@@ -439,7 +516,7 @@ def observe_ge_cells(specs, il):
     return out
 
 
-def reset_base(a, work, prelude, states, pair, extra=()):
+def reset_base(a, work, prelude, states, pair, extra=(), witness=()):
     """KV-PARAMS2 10-19: the reset base the induction needs (equiv_induct assumes its comparisons for 3 steps).
 
     The chip has ONE power-up state, the routed netlist's.  The RTL admits that state on the same registers, so every
@@ -453,6 +530,8 @@ def reset_base(a, work, prelude, states, pair, extra=()):
     paired = sorted(s_ for s_ in pair if not states[s_][1]) + list(extra)   # extra: macro-model array/read state
     sets = ' '.join(f'-set-at {i} in_{a.reset_port} {a.reset_active}' for i in range(1, n + 1))
     sets += ' ' + ' '.join(f'-set-at 1 gold.{s_} gate.{s_}' for s_ in paired)
+    if witness:
+        sets += ' ' + ' '.join(witness)
     B = prelude + ['async2sync', 'expose gold/w:S__* gate/w:S__*', 'miter -equiv -flatten -make_assert gold gate miter',
                    'hierarchy -top miter', 'opt_clean',
                    f'sat -seq {n + 4} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
@@ -462,7 +541,7 @@ def reset_base(a, work, prelude, states, pair, extra=()):
     log = (work / 'base.log').read_text() if (work / 'base.log').is_file() else ''
     ok = rc == 0 and 'no model found: SUCCESS!' in log
     return dict(rc=rc, seconds=t, proven=ok, reset_edges=n, reset_port=a.reset_port, reset_active=a.reset_active,
-                checked_steps=[n + 1, n + 4], paired_initial=len(paired), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
+                checked_steps=[n + 1, n + 4], paired_initial=len(paired), witnesses=len(witness), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
                 log_sha256=sha(work / 'base.log') if log else None,
                 cex=str(work / 'base_cex.json') if (work / 'base_cex.json').is_file() else None,
                 error=None if log else (work / 'base.out').read_text()[-1500:])
@@ -522,6 +601,8 @@ def main(argv=None):
     a1.add_argument('--observe-ge', action='append', default=[],
                     help="WIRE:LSB:WIDTH:CONST gold range predicate proven ZERO jointly (repeatable)")
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
+    a1.add_argument('--dup-witness', action='store_true',
+                    help='reset base: merged-duplicate / constant gold-only registers take their kept twin / constant')
     a1.add_argument('--reset-port', default='rst_n')
     a1.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
     a1.add_argument('--timeout', type=int, default=14400)
