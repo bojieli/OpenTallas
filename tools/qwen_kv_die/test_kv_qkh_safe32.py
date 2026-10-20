@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 import head_st_rtl as H
+import head_qkh_safe32_rtl as G
 import kv_expand_parameters as EP
 import kv_qkh_safe32 as Q
 
@@ -22,8 +23,8 @@ class Safe32Selection(unittest.TestCase):
         self.assertEqual(H.generate_lk(), H.OUT_LK.read_text())
 
     def test_successor_preserves_all_connections_and_clock_homes(self):
-        txt = H.generate_safe32()
-        self.assertEqual(txt, H.OUT_S32.read_text())
+        txt = G.generate()
+        self.assertEqual(txt, G.OUT.read_text())
         for new, old in (
                 ('ot_qkh_lane8_nc32c u_l8', 'ot_qkh_lane8 u_l8'),
                 ('ot_qkh_ktree_lk_nc32c u_kt', 'ot_qkh_ktree_lk u_kt'),
