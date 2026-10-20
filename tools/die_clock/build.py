@@ -137,6 +137,13 @@ def grid_center(g, obstacles):
     return exact
 
 
+def collections_count(vio):
+    c = defaultdict(int)
+    for v in vio:
+        c[v['kind']] += 1
+    return dict(c)
+
+
 def esc(n):
     return n.replace('[', '\\[').replace(']', '\\]')
 
@@ -233,6 +240,10 @@ def build(a):
     spec = json.loads(Path(a.spec).read_text())
     rt.LEAF_UM = spec.get('leaf_um', rt.LEAF_UM)
     rt.LEAF_MAX = spec.get('leaf_max', rt.LEAF_MAX)
+    # QW-DIECLK3 10-19: safe tree (regtree.SAFE: every unbuffered clock segment <= SEG_MAX, runs over blocks <= 200 um,
+    # leaves within LEAF_REACH; violations recorded in the manifest and failed by clock_reach_check.py)
+    rt.SAFE = bool(spec.get('safe_tree', False))
+    rt.SEG_MAX = float(spec.get('seg_max_um', rt.SEG_MAX))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     D = Die(a)
     blk, u, odb = D.block, D.u, D.odb
@@ -272,6 +283,12 @@ def build(a):
         trees = [t for t in trees if t['name'] in keep or t['name'].split('_')[0] in keep]
     rec = dict(schema='opentallas.die_clock.manifest.v1', odb=a.odb, spec=spec, trees={}, cells=[], parent={}, cell_tree={},
                leaves={}, iterations=[])
+    if a.targets:
+        modeled = {k: v for k, v in json.loads(Path(a.targets).read_text())['masters'].items()
+                   if v.get('physical_qualification_eligible') is False or v.get('view') == 'MODEL_PASS_THROUGH_R0'}
+        if modeled:
+            rec['physical_qualification_eligible'] = False
+            rec['qualification'] = dict(scope='MODEL_ONLY', modeled_masters=modeled)
     clocks, sink_pins, builders = [], {}, {}
     tree_group = {t['name']: t['balance_group'] for t in trees if t.get('balance_group')}
     by_root = defaultdict(list)
@@ -405,7 +422,12 @@ def build(a):
         rb = root_it.getBBox()
         rn = f"dc_root_{ts[0]['name']}"
         lxy = rec.get('local_root_xy', {}).get(root)
-        ri = mk(rn, rt.BUF, *(lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)))
+        rxy_ = lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        if rt.SAFE:
+            # QW-DIECLK3: the root buffer sits on the SAME free grid cell the tree's trunk route starts from (Builder.build
+            # nearest_free(root_xy)); a site searched from a median inside a hard block could land on the far side
+            rxy_ = g.xy(g.nearest_free(*rxy_))
+        ri = mk(rn, rt.BUF, *rxy_)
         insts[rn] = ri
         rec['cell_tree'][rn] = ''
         nn = odb.dbNet.create(blk, f'n_{rn}')
@@ -475,16 +497,37 @@ def build(a):
             src_net.setSigType('CLOCK')
             src_it.connect(src_net)
         mrb = {rb for _, rb in members}
+        dissolved = []
+        if sp_.get('dissolve_receiver'):
+            from receiver_guard import preflight
+            proof = json.loads(Path(a.targets).read_text()).get('masters', {}) if a.targets else {}
+            preflight(src_it, mrb, {t['root'] for t, _ in members}, proof)
         for x in [x for x in src_net.getITerms() if x.getIoType() == 'INPUT']:
             if x.getInst().getName() not in mrb:
+                # QW-GEN5 10-20 (g5, spine.dissolve_receiver): the spine starts at the core feed bump; the forwarded-
+                # clock receiver it fed (qfd_clkrx pll_fwd, an identity of the forwarded clock) is dissolved: its
+                # input is disconnected and every output must end up without loads (checked below)
+                if sp_.get('dissolve_receiver') and x.getInst().getMaster().getName() in ('qfd_clkrx', 'qfd_clkrx_qclk'):
+                    dissolved.append(f'{x.getInst().getName()}/{x.getMTerm().getName()}')
+                    x.disconnect()
+                    continue
                 raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
             x.disconnect()
+        if sp_.get('dissolve_receiver') and not dissolved:
+            raise ValueError(f'spine dissolve_receiver: source {src} feeds no qfd_clkrx input')
         rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
         # QW-DIECLK 10-19: spine "balance": false = FORWARDED regional spine (landed-regions standard): the member regions
         # are mesochronous (every cross-region crossing LANDED), so the spine neither compensates region insertion nor
         # pads: geometric merge, repeaters <= SPAN, fixed latency; only the landed-lane clock drift is judged downstream
         bal = sp_.get('balance', True)
-        sb = rt.Builder(g, 'dc_spine', r_of=(lambda key: rmodel.get(key, 0.0)) if bal else None, pads=bool(bal))
+        # QW-DIECLK4 10-20: balance "geometric" = merge points where the region model insertions meet ON THE WIRE, no pad
+        # QW-DIECLK6 10-20 spine "topology": "spt" = shortest-path-tree forwarded spine (regtree.build_spt): bounded depth
+        # (each entry at its own geodesic delay), forwarded/unbalanced only
+        topo = sp_.get('topology', 'dme')
+        if topo == 'spt' and bal:
+            raise ValueError('spine topology spt is a forwarded (balance false) spine only')
+        sb = rt.Builder(g, 'dc_spine', r_of=(lambda key: rmodel.get(key, 0.0)) if bal else None, pads=bal is True,
+                        topo=topo)
         sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
                (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
         smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
@@ -494,7 +537,7 @@ def build(a):
         # the generator pin drives ONE spine source buffer beside it (a generator model without output drive left the
         # first trunk input at 382-413 ps slew); the spine starts at its output
         sbn = 'dc_spine_src'
-        insts[sbn] = mk(sbn, rt.BUF, *sxy)
+        insts[sbn] = mk(sbn, rt.BUF, *(g.xy(g.nearest_free(*sxy)) if rt.SAFE else sxy))
         rec['cell_tree'][sbn] = 'spine'
         insts[sbn].findITerm('A').connect(src_net)
         spine_net = odb.dbNet.create(blk, 'n_dc_spine_src')
@@ -534,13 +577,28 @@ def build(a):
             while sb.parent.get(x_) not in (None, src):
                 x_ = sb.parent[x_]; d_ += 1
             lv[c_] = d_ + 1      # + the spine source buffer
-        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)), balance=bool(bal),
+        if dissolved:
+            from receiver_guard import assert_disconnected
+            for rx in {d_.split('/')[0] for d_ in dissolved}:
+                assert_disconnected(blk.findInst(rx))
+        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)),
+                            balance=bal if bal == 'geometric' else bool(bal), topology=topo,
                             members=[t['name'] for t, _ in members],
                             cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
-                            generator_pins_without_loads=orphan)
+                            generator_pins_without_loads=orphan,
+                            dissolved_receiver=dict(inputs_disconnected=dissolved, outputs_with_loads=0) if dissolved else None)
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
             'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
+    if rt.SAFE:
+        vio = [dict(v, tree=tn) for tn, b_ in builders.items() for v in b_.violations]
+        if sp_:
+            vio += [dict(v, tree='spine') for v in sb.violations]
+        rec['safe_tree'] = dict(seg_max_um=rt.SEG_MAX, span_um=rt.SPAN, safe_runs_um=list(rt.SAFE_RUNS),
+                                leaf_reach_um=rt.LEAF_REACH, violations=vio,
+                                run_escalations=sum(b_.run_escalations for b_ in builders.values()))
+        log('SAFE_TREE violations', len(vio), json.dumps(collections_count(vio)), 'run escalations',
+            rec['safe_tree']['run_escalations'])
     clocks_orig = list(clocks)
     if spec.get('clock_at_root_buffer'):
         # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
@@ -666,13 +724,18 @@ def build(a):
             x, y = cell_xy[bname]
             off = (0.0, 0.0)
             if ty == 'W':     # stages alternate between the node and a free spot WPAD_UM away (wire like a tree stage)
-                for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM)):
+                # QW-DIECLK3: the far stage must sit on a LEGAL free site <= WPAD_UM away (shorter offsets tried);
+                # legacy fell back to (WPAD_UM, 0) even over a block, so sites.take put it at the nearest legal site,
+                # possibly across a hard column (an unbuffered pad pair wire of mm)
+                cand = [(s_ * dx, s_ * dy) for s_ in ((1.0, 2 / 3, 1 / 3) if rt.SAFE else (1.0,))
+                        for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM))]
+                for dx, dy in cand:
                     ix, iy = round((x + dx) / XPITCH), round((y + dy) / YPITCH)
                     if 0 <= x + dx < D.W and 0 <= y + dy < D.H and sites.legal(ix, iy):
                         off = (dx, dy)
                         break
                 else:
-                    off = (WPAD_UM, 0.0)
+                    off = (0.0, 0.0) if rt.SAFE else (WPAD_UM, 0.0)
             orig = rec['parent'][bname]
             first = None
             for j in range(k * (2 if ty == 'W' else 1)):
