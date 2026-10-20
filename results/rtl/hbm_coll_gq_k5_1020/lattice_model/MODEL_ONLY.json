@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.gq_lattice_channel_model.v1",
+  "scope": "MODEL ONLY: literal origin and channel geometry; no RTL source-to-capture or CTS qualification",
+  "old_kit": "hcoll_gq_issue_k5_1020",
+  "old_source_commit": "b7adbc8f3",
+  "old_literal_lattice": "FAIL",
+  "old_off_grid": [
+    {
+      "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
+      "axis": "y",
+      "origin": 166.944,
+      "lattice_fraction": 3.86444444
+    },
+    {
+      "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
+      "axis": "y",
+      "origin": 247.488,
+      "lattice_fraction": 5.72888889
+    },
+    {
+      "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
+      "axis": "y",
+      "origin": 328.032,
+      "lattice_fraction": 7.59333333
+    },
+    {
+      "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
+      "axis": "y",
+      "origin": 166.944,
+      "lattice_fraction": 3.86444444
+    },
+    {
+      "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
+      "axis": "y",
+      "origin": 247.488,
+      "lattice_fraction": 5.72888889
+    },
+    {
+      "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
+      "axis": "y",
+      "origin": 328.032,
+      "lattice_fraction": 7.59333333
+    }
+  ],
+  "old_vertical_macro_gap_um": 0.072,
+  "old_pinless_abutment_exception": "REJECTED by coordinator; all origins require literal43.2 and channels>=20",
+  "proposed_outline_um": {
+    "w": 475.2,
+    "h": 561.6
+  },
+  "proposed_macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        86.4,
+        43.2
+      ],
+      "inst": "*u_aq0.u_x.g_sram?0?.u_mem*",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        86.4,
+        172.8
+      ],
+      "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        86.4,
+        302.4
+      ],
+      "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        86.4,
+        431.99999999999994
+      ],
+      "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        302.4,
+        43.2
+      ],
+      "inst": "*u_aq1.u_x.g_sram?0?.u_mem*",
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        302.4,
+        172.8
+      ],
+      "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        302.4,
+        302.4
+      ],
+      "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "at": [
+        302.4,
+        431.99999999999994
+      ],
+      "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+      "at": [
+        216.0,
+        43.2
+      ],
+      "inst": "*u_vmring.g_m?0?.u_mem*",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+      "at": [
+        259.2,
+        43.2
+      ],
+      "inst": "*u_vmring.g_m?1?.u_mem*",
+      "at_exact": true,
+      "orient": "MY"
+    }
+  ],
+  "proposed_literal_lattice": "PASS",
+  "proposed_vertical_stack_pitch_um": 129.6,
+  "proposed_vertical_clearance_um": 49.128,
+  "proposed_center_channel_um": 121.176,
+  "proposed_outer_face_channels_um": {
+    "W": 86.4,
+    "E": 77.976
+  },
+  "proposed_vmring_pair_channel_um": 24.84,
+  "proposed_vmring_to_right_stack_channel_um": 24.84,
+  "pin_face_density_per_um": 5.09494,
+  "std_band": "one continuous center band121.176um plus continuous lateral corridors",
+  "reach_status": "NOT RUN: no current physical ODB; must assign every original port->capture and sequential source->capture endpoint, buffer-transparent <=405um. Outline alone is not qualification.",
+  "required_before_any_new_layout_gate": [
+    "native census <=32 all roots incl combinational",
+    "new source split/landing proposal for any path beyond405; static schedule cost measured",
+    "literal source/capture endpoints and per-field regions, including VMrr consumers on both quantizers",
+    "8 checklist items, pinfaces<=6/um, clock region boundary planning",
+    "real logic area + pin area inventory; current geometry area266872um2, synthesis measures utilization"
+  ],
+  "subsequent_checks": [
+    "freshgate originalPG + diagnostic existingrule bind classification",
+    "fullbuffertransparent FF/SRAM/BLOCK/port graph and all unreached pin classes",
+    "real TT/FF spread and SS/FF timing"
+  ],
+  "cycles_added": null,
+  "throughput_claim": null
+}
