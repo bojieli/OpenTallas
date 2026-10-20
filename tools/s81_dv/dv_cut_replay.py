@@ -76,6 +76,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+from xr_timing import inject_cycles, check_run_source
 
 SCHEMA = 'opentallas.s81_dv.cut_replay.v1'
 RSTOP_HOP = 2                       # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop
@@ -296,7 +297,7 @@ def derive_line_events(S, die):
         if e['port'] == 'vi':
             if col != LINE_INJECT_COL:
                 raise ValueError(f'CTL event {e["tag"]} at {e["inst"]}.vi is not the column-{LINE_INJECT_COL} injector')
-            t_out = e['cycle'] - RSTOP_HOP + V_CTL_INJECT
+            t_out = e['cycle'] - RSTOP_HOP + inject_cycles(S)
         else:
             path = W if e['port'] == 'ri_e' else E
             if col not in path:
@@ -341,7 +342,7 @@ def derive_vctl_line_events(S, die):
             col, tier = int(m.group(1)), m.group(2)
             src = die.sid(w['inst'])
             hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + RSTOP_HOP
-            t_out = w['cycle_land'] - RSTOP_HOP + V_CTL_INJECT
+            t_out = w['cycle_land'] - RSTOP_HOP + inject_cycles(S)
             for path, port in ((range(col - 1, -1, -1), 'ri_e'), (range(col + 1, 8), 'ri_w')):
                 t, prev = t_out, col
                 for c in path:
@@ -750,7 +751,7 @@ def gen(a):
         mu['mutant_bits'] = dict(mu_mut)
         mu['lanes'] = mu_lanes(die, cut, bnd)
         mu['ep'] = ep_expect(a, S, mu, cut, out)
-    doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
+    doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', timing_contract=S.get('timing_contract'), die_v=str(a.die_v), die_v_sha256=die.sha256,
                prog=str(prog), prog_manifest_sha256=hashlib.sha256((prog / 'manifest.json').read_bytes()).hexdigest()
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
                mutant=a.mutant or None, lane_age=a.lane_age, equalize=a.equalize, host_boot=host, verdict_kind=kind, stale=st,
@@ -1274,6 +1275,7 @@ def value_at(changes, c):
 
 def check(a):
     rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    check_run_source(rp.get('timing_contract'), a.run)
     cut = Cut(rp['cut'])
     tr = read_trace(a.run)
     t0 = rp['t0']
