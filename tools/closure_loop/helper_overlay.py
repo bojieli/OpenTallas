@@ -351,6 +351,35 @@ RULE_COMMITS = {
         kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
         what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
              "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
+    # ROOT4-QWMERGE 10-19 (merge note, history not rewritten): the Qwen branches qw-slice3 / toksim-qw-stg / toksim-qw-link
+    # (base 9cba02d14) inherited helper commits without a trailer.  In the merged tree every one of these paths is main's
+    # blob (the copy-of-main / RLYH0-EN / SLICE-E content is already on main under its own classified commits); none of
+    # the branch blobs below is read by a main gate.
+    "16cfc00b6091057abf89debd8c49372d436ef69c": dict(
+        kind="neutral", rule="copy-of-main",
+        paths=("tools/closure_loop/ck_insertion.py", "tools/ref_tile/pre_route_gate.py", "tools/ref_tile/source_binding.py"),
+        what="QK-SLICE: tools/closure_loop + tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "516b68f312152d7a8e0281fcfa45ad8171f0dde9": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/clock_entry_constraints.py",),
+        what="MU-DQ-DHUSER: tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "5972dd261119d646c106fc414b78e3bb53fc20de": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/ref_tile.py",),
+        what="MU-DQ-SLICEKC: tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "d3cf669e3a78eb68520be5d61e78d6968d89e0c6": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/ref_tile.py",),
+        what="MU-SLICE-GATE: tools/closure_loop + tools/ref_tile carried from origin/main onto the SLICE-E tree"),
+    "70d2a74d202f0483728a983ad0a06682d4ad1382": dict(
+        kind="neutral", rule="duplicate-of-main",
+        paths=("tools/ref_tile/pre_route_gate.py", "tools/ref_tile/ref_tile.py"),
+        what="RLYH0-EN reset-landing / face_land helpers: the same content reached main separately; merged tree = main's"),
+    "c7be255085b0c640a08d3262d1041108dc65f729": dict(
+        kind="neutral", rule="duplicate-of-main",
+        paths=("tools/ref_tile/pre_route_gate.py", "tools/ref_tile/ref_tile.py"),
+        what="OWN-QWEN/SLICE-E landed-parent ref_tile / pre_route_gate support: on main already; merged tree = main's"),
+    "ea5b57e3bcc2758d66b52e44b0cb8e746bc0f479": dict(
+        kind="relaxing", rule="literal-pin-no-m6", paths=("tools/ref_tile/ref_tile.py",),
+        what="QK-SLICE: a literal pin plan with no M6 pin needed no M6 grant (qfd_xs_leaf_w130m5 stand-in); NOT kept by "
+             "the ROOT4 merge -- main's check (io_tcl + m6_pin_grant required) stands"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
