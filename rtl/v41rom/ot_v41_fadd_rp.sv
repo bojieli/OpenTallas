@@ -56,11 +56,33 @@ module ot_v41_fadd_rp #(
     wire [31:0] code1;
     assign {v1, ae1, be1, am1, bm1, as1, bs1, nonf1, az1, bz1, egt1, eeq1, mgt1, code1} = i1;
     wire swap1 = egt1 || (eeq1 && mgt1);
+`ifdef OT_BF_FOREP32
+    wire [10:0] swap_k;
+    if (CUT[0]) begin : g_swap_k
+        (* keep *) reg [10:0] r;
+        always @(posedge clk) r <= {11{(b_exp0 > a_exp0) || ((b_exp0 == a_exp0) && !age0)}};
+        assign swap_k = r;
+    end else begin : g_swap_wire
+        assign swap_k = {11{swap1}};
+    end
+    wire [7:0] bigx1 = swap_k[0] ? be1 : ae1;
+    wire [7:0] smlx1 = swap_k[1] ? ae1 : be1;
+    wire sign1 = swap_k[2] ? bs1 : as1;
+    wire [23:0] bigm1, smlm1;
+    for (genvar j = 0; j < 4; j++) begin : g_swap_word
+        assign bigm1[6*j +: 6] = swap_k[3+j] ? bm1[6*j +: 6] : am1[6*j +: 6];
+        assign smlm1[6*j +: 6] = swap_k[7+j] ? am1[6*j +: 6] : bm1[6*j +: 6];
+    end
+`else
     wire [7:0]  bigx1 = swap1 ? be1 : ae1;
     wire [7:0]  smlx1 = swap1 ? ae1 : be1;
+    wire sign1 = swap1 ? bs1 : as1;
+    wire [23:0] bigm1 = swap1 ? bm1 : am1;
+    wire [23:0] smlm1 = swap1 ? am1 : bm1;
+`endif
     localparam integer W1 = 1 + 1 + 2 + 32 + 1 + 1 + 8 + 8 + 24 + 24;
     wire [W1-1:0] o1 = {v1, nonf1 || az1 || bz1, nonf1 ? E_NONFINITE : E_NONE, code1, as1 != bs1,
-                        swap1 ? bs1 : as1, bigx1, bigx1 - smlx1, swap1 ? bm1 : am1, swap1 ? am1 : bm1};
+                        sign1, bigx1, bigx1 - smlx1, bigm1, smlm1};
     wire [W1-1:0] i2;
     ot_v41_cut #(.W(W1), .EN(CUT[1])) u_c1 (.clk(clk), .rst_n(rst_n), .d(o1), .q(i2));
 

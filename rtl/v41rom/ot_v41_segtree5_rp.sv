@@ -61,7 +61,12 @@ module ot_v41_segtree5_rp #(
     reg [QW-1:0] qr, qw;
     reg [QW:0] qc;
     // held left operands
+`ifndef OT_BF_HELD_SRAM
     reg [31:0] held [0:NT*LV-1];
+`elsif QP_CHECK
+    // Simulation-only shadow checks the SRAM path and collision bypass against the old array.
+    reg [31:0] held [0:NT*LV-1];
+`endif
     wire [NT*LV-1:0] have, herr;     // per-tree registers (g_tr below)
     // adder result (event at level + 1), registered once before it is an event (1.2 GHz: the event decision and
     // the held-operand write no longer follow the adder's output stage in the same cycle)
@@ -203,14 +208,32 @@ module ot_v41_segtree5_rp #(
     wire idle_tree = y_infl == (y_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
     wire early = (EARLY != 0) && y_v && y_f && !y_have && !above && idle_tree;
     wire top = y_l == LV[LW-1:0] || early;
+`ifdef OT_BF_HELD_SRAM
+    // Existing x->y synchronous read edge becomes a real 1R1W macro read.
+    // The y-stage same-slot forwarding below owns read/write collisions.
+    wire [31:0] held_rd;
+    `ifdef OT_BF_HELD_SRAM_MUT_ADDR
+    wire [6:0] held_ra = 7'(x_t * LV + x_l) ^ 7'd1;
+`else
+    wire [6:0] held_ra = 7'(x_t * LV + x_l);
+`endif
+    wire [6:0] held_wa = 7'(y_t * LV + y_l);
+    initial if (NT*LV > 128) $fatal(1, "held SRAM capacity exceeded");
+    ot_v41_bf_held128x32 u_held_mem (.clk(clk), .ren(x_v && x_l < LV),
+        .ra(held_ra), .rd(held_rd), .wen(|s_hold), .wa(held_wa), .wd(y_d));
+`endif
     wire pair = y_v && !top && y_have;
     wire promote = y_v && !top && !y_have && y_f;
     wire hold = y_v && !top && !y_have && !y_f;
     reg [31:0] u_held;
     reg        u_herr;
     always @* begin
+`ifdef OT_BF_HELD_SRAM
+        u_held = held_rd;
+`else
         u_held = 32'd0;
         for (int g = 0; g < NG; g++) u_held = u_held | y_hd[32*g +: 32];
+`endif
 `ifdef OT_BF_FOREP
         for (int b = 0; b < 32; b++) if (y_fwc[(b * 3) / 32]) u_held[b] = y_fd[b];
 `else
@@ -271,12 +294,14 @@ module ot_v41_segtree5_rp #(
             r_hv[gi / GS] = r_hv[gi / GS] | (have_nx[gi] & x_oh[gi]);
             r_ab[gi / GS] = r_ab[gi / GS] | (have_nx[gi] & x_above[gi]);
             r_he[gi / GS] = r_he[gi / GS] | (herr[gi] & x_oh[gi]);
+`ifndef OT_BF_HELD_SRAM
 `ifdef OT_BF_FOREP
             if (x_oh[gi])  r_hd[32*(gi / GS) +: 8] = r_hd[32*(gi / GS) +: 8] | held[gi][7:0];
             for (int c = 0; c < 3; c++)
                 if (x_ohd[c*NH + gi]) r_hd[32*(gi / GS) + 8*(c+1) +: 8] = r_hd[32*(gi / GS) + 8*(c+1) +: 8] | held[gi][8*(c+1) +: 8];
 `else
             if (x_oh[gi]) r_hd[32*(gi / GS) +: 32] = r_hd[32*(gi / GS) +: 32] | held[gi];
+`endif
 `endif
         end
         for (gi = 0; gi < NT; gi = gi + 1)
@@ -390,7 +415,11 @@ module ot_v41_segtree5_rp #(
             for (ti = 0; ti < NT; ti = ti + 1) h_toh[ti] <= qt[qr + (use_q ? 1'b1 : 1'b0)] == ti;
 `endif
         end
+`ifndef OT_BF_HELD_SRAM
         for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
+`elsif QP_CHECK
+        for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
+`endif
         oval <= y_d;
         otree <= y_t;
 `ifdef OT_BF_FOREP
@@ -416,3 +445,26 @@ module ot_v41_segtree5_rp #(
     end
 `endif
 endmodule
+
+// Production SRAM primitive and an edge-identical simulation model; no reset/clear of data.
+`ifdef OT_BF_HELD_SRAM
+module ot_v41_bf_held128x32 (
+    input wire clk, ren, wen,
+    input wire [6:0] ra, wa,
+    input wire [31:0] wd,
+    output wire [31:0] rd
+);
+`ifdef SYNTHESIS
+    ot_sram_1r1w_128x32_m1 u_mem (.clk(clk), .r_ce_in(ren), .r_addr_in(ra), .rd_out(rd),
+        .w_ce_in(wen), .w_addr_in(wa), .wd_in(wd), .w_mask_in(32'hffffffff));
+`else
+    reg [31:0] mem [0:127];
+    reg [31:0] q;
+    always @(posedge clk) begin
+        if (wen) mem[wa] <= wd;
+        if (ren) q <= mem[ra];
+    end
+    assign rd = q;
+`endif
+endmodule
+`endif
