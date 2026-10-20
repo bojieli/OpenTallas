@@ -502,18 +502,23 @@ module qkd_kvpc_s_tq #(parameter integer TQD = 64, parameter integer MUT = 0)(  
     ot_sram_1r1w2c_32x64_m1 u_o (.wclk(clk), .rclk(clk), .r_ce_in(!(we && wa[0] && wa[A-1:1] == ra_o)),
         .r_addr_in(ra_o), .rd_out(rd_o), .w_ce_in(we && wa[0]), .w_addr_in(wa[A-1:1]), .wd_in({30'd0, wd}),
         .w_mask_in({64{1'b1}}));
-    reg s_q, b0_q, b1_q;
+    // KV-PC5 (native32): the bank-swap select and the two bypass flags as kept identical copies, each driving one
+    // <= 9-bit slice (s_q drove 68 mux selects = 80 mapped pins, b0_q 70)
+    (* keep *) reg [3:0] s_qv; (* keep *) reg [3:0] b0_qv, b1_qv;
     reg [33:0] bd_q;
     always @(posedge clk) begin
-        s_q <= s;
-        b0_q <= (MUT == 1) ? 1'b0 : hit0;
-        b1_q <= (MUT == 1) ? 1'b0 : hit1;
+        s_qv <= {4{s}};
+        b0_qv <= {4{(MUT == 1) ? 1'b0 : hit0}};
+        b1_qv <= {4{(MUT == 1) ? 1'b0 : hit1}};
         bd_q <= wd;
     end
-    wire [33:0] m0 = s_q ? rd_o[33:0] : rd_e[33:0];
-    wire [33:0] m1 = s_q ? rd_e[33:0] : rd_o[33:0];
-    assign h0 = b0_q ? bd_q : m0;
-    assign h1 = b1_q ? bd_q : m1;
+    wire [33:0] s_x = {{7{s_qv[3]}}, {9{s_qv[2]}}, {9{s_qv[1]}}, {9{s_qv[0]}}};
+    wire [33:0] b0_x = {{7{b0_qv[3]}}, {9{b0_qv[2]}}, {9{b0_qv[1]}}, {9{b0_qv[0]}}};
+    wire [33:0] b1_x = {{7{b1_qv[3]}}, {9{b1_qv[2]}}, {9{b1_qv[1]}}, {9{b1_qv[0]}}};
+    wire [33:0] m0 = (s_x & rd_o[33:0]) | (~s_x & rd_e[33:0]);
+    wire [33:0] m1 = (s_x & rd_e[33:0]) | (~s_x & rd_o[33:0]);
+    assign h0 = (b0_x & bd_q) | (~b0_x & m0);
+    assign h1 = (b1_x & bd_q) | (~b1_x & m1);
 endmodule
 
 `endif

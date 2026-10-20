@@ -735,7 +735,7 @@ module qkd_kvpc_s_ctrl #(
     assign co = {l_data, l_row, l_sec, e_l_v};
 endmodule
 
-// ---- qkd_kvpc_s_sched: clone of qkd_ctrl_pc_sched_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 10 substitution(s); kept copy families static_owner_q[1]x3(2) ----
+// ---- qkd_kvpc_s_sched: clone of qkd_ctrl_pc_sched_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 13 substitution(s); kept copy families static_owner_q[1]x3(2) ----
 module qkd_kvpc_s_sched #(
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
@@ -909,9 +909,10 @@ module qkd_kvpc_s_sched #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
+    wire [31:0] row_act_oh;
     ot_qkd_static_ctrl_pc_emb_kvpc_s #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
-        .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
+        .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row), .row_act_oh(row_act_oh),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
         .s_context({c_context,c_d[274:256],c_d[284:280],c_d[279:275],c_d[255:0]}),.col_context(col_context),.s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
         .s_cr(s_cr), .col_sr(col_sr));
@@ -947,7 +948,7 @@ module qkd_kvpc_s_sched #(
     wire [9:0]  t_j     = (MUT == 3) ? {t_head[9:2], t_head[0], t_head[1]} : t_head[9:0];
     wire [7:0]  t_layer = t_head[17:10] - 8'(ROW0);
     always @(posedge hclk) begin
-        if (row_v && row_op == 3'd1) brow[row_bank] <= row_row[7:0];
+        for (integer b = 0; b < 32; b = b + 1) if (row_act_oh[b]) brow[b] <= row_row[7:0];
     end
     // tr(t), presented at t-1: tr is cleared asynchronously by h_rn, which only changes on hclk edges (hr_q capture of
     // hrst); next(tr) = 0 if the scheduler is in reset at this edge or enters it at this edge, else tr + kv_v.
@@ -1649,13 +1650,14 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  end
 endmodule
 
-// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 1 substitution(s); kept copy families rp[3]x15(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1) ----
+// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 8 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1) ----
 module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
  input wire [9:0] cmd_first, input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
  output reg cmd_credit,
  output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,
+ output reg [31:0] row_act_oh,   // KV-PC5: == {32{row_v && row_op == ACT}} & onehot(row_bank), registered
  output wire [18:0] row_row,
  output reg col_v,output wire [4:0] col_bank,output wire [4:0] col_col,output reg col_we,
  output reg busy,fault,output wire phase_idle,
@@ -1679,7 +1681,7 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=
  reg [9:0] first_fifo[0:7];reg [9:0] head_first;
  reg [31:0] fifo[0:7];
  reg [2:0] wp;
- (* keep, ot_rst_split = 3 *) reg [44:0] rp__qv;   // KV-PC SAFE: 15 kept copies of rp
+ (* keep, ot_rst_split = 3 *) reg [5:0] rp__qv;   // KV-PC SAFE: 2 kept copies of rp
     function [2:0] rp__f; input [2:0] v; rp__f = v; endfunction
  wire [2:0] rp = rp__qv[2:0];
  reg [3:0] count;
@@ -1698,8 +1700,25 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=
  wire descriptor_head=head[31:30]==0 || context_head;
  wire malformed=(head[31:30]==3 && !context_head) || (context_head && (head[27:19]>256 || head_first>128)) ||
     (head[31:30]==0 && (head[29:19]==0 || head[29:19]>1024 || head_first>=head[29:19]));
- wire pop=live && (malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
- wire push=(ENABLE!=0) && cmd_v_q && count<8;
+ // KV-PC5 (native32): pop / push as kept AND-leaf copies (0 = the plain signal; 1..3 = head field groups)
+ wire [3:0] ctl_pop_c, ctl_push_c;
+ for (genvar q = 0; q < 4; q = q + 1) begin : g_ctl_pp
+   ot_kvpc5_and2 u_pop (.a(live), .b(malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1)), .y(ctl_pop_c[q]));
+   ot_kvpc5_and2 u_push (.a((ENABLE!=0) && cmd_v_q), .b(count<8), .y(ctl_push_c[q]));
+ end
+ wire pop=ctl_pop_c[0];
+ wire push=ctl_push_c[0];
+ // lookahead (next-state pointers -> registered one-hot copies): free write slot per field group (ungated write: slot
+ // wp is never live while count < 8), and per head group {count > 1, count == 0, onehot(rp + 1)}
+ wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+ wire [2:0] ctl_wp_nx = push ? wp + 3'd1 : wp;
+ wire [2:0] ctl_rp_nx = pop ? rp + 3'd1 : rp;
+ wire [7:0] ctl_ws_nx = (ctl_count_nx != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [9:0] ctl_hf_nx = {ctl_count_nx > 4'd1, ctl_count_nx == 4'd0, 8'b1 << 3'(ctl_rp_nx + 3'd1)};
+ (* keep *) reg [23:0] ctl_ws_qv; (* keep *) reg [29:0] ctl_hf_qv;
+ always @(posedge clk or negedge rst_n)
+  if (!rst_n) begin ctl_ws_qv <= {3{8'b1}}; ctl_hf_qv <= {3{2'b01, 8'b10}}; end
+  else begin ctl_ws_qv <= {3{ctl_ws_nx}}; ctl_hf_qv <= {3{ctl_hf_nx}}; end
  assign phase_idle=core_idle && count==0 && !cmd_v_q && !s_v_q;
  ot_qkd_static_kv_timing_kvpc_s #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
   .REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
@@ -1713,36 +1732,51 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=
   .wr_r(wr_ready),.col_we(cwe),.wr_rd(1'b0),.col_aq(),
   .s_context(s_context_q),.col_context(core_context),.s_v(ENABLE!=0 && s_v_q),.s_we(s_we_q),.s_bank(s_bank_q),.s_col(s_col_q),.s_row(s_row_q),
   .s_r(sr_r),.col_sr(csr),.s_pop(spop));
+ wire [13:0] ctl_a1_0 = ({14{ctl_hf_qv[0]}} & fifo[0][13:0]) | ({14{ctl_hf_qv[1]}} & fifo[1][13:0]) | ({14{ctl_hf_qv[2]}} & fifo[2][13:0]) | ({14{ctl_hf_qv[3]}} & fifo[3][13:0]) | ({14{ctl_hf_qv[4]}} & fifo[4][13:0]) | ({14{ctl_hf_qv[5]}} & fifo[5][13:0]) | ({14{ctl_hf_qv[6]}} & fifo[6][13:0]) | ({14{ctl_hf_qv[7]}} & fifo[7][13:0]);
+ wire [13:0] ctl_a1_1 = ({14{ctl_hf_qv[10]}} & fifo[0][27:14]) | ({14{ctl_hf_qv[11]}} & fifo[1][27:14]) | ({14{ctl_hf_qv[12]}} & fifo[2][27:14]) | ({14{ctl_hf_qv[13]}} & fifo[3][27:14]) | ({14{ctl_hf_qv[14]}} & fifo[4][27:14]) | ({14{ctl_hf_qv[15]}} & fifo[5][27:14]) | ({14{ctl_hf_qv[16]}} & fifo[6][27:14]) | ({14{ctl_hf_qv[17]}} & fifo[7][27:14]);
+ wire [3:0] ctl_a1_2h = ({4{ctl_hf_qv[20]}} & fifo[0][31:28]) | ({4{ctl_hf_qv[21]}} & fifo[1][31:28]) | ({4{ctl_hf_qv[22]}} & fifo[2][31:28]) | ({4{ctl_hf_qv[23]}} & fifo[3][31:28]) | ({4{ctl_hf_qv[24]}} & fifo[4][31:28]) | ({4{ctl_hf_qv[25]}} & fifo[5][31:28]) | ({4{ctl_hf_qv[26]}} & fifo[6][31:28]) | ({4{ctl_hf_qv[27]}} & fifo[7][31:28]);
+ wire [9:0] ctl_a1_2l = ({10{ctl_hf_qv[20]}} & first_fifo[0][9:0]) | ({10{ctl_hf_qv[21]}} & first_fifo[1][9:0]) | ({10{ctl_hf_qv[22]}} & first_fifo[2][9:0]) | ({10{ctl_hf_qv[23]}} & first_fifo[3][9:0]) | ({10{ctl_hf_qv[24]}} & first_fifo[4][9:0]) | ({10{ctl_hf_qv[25]}} & first_fifo[5][9:0]) | ({10{ctl_hf_qv[26]}} & first_fifo[6][9:0]) | ({10{ctl_hf_qv[27]}} & first_fifo[7][9:0]);
+ wire [13:0] ctl_a1_2 = {ctl_a1_2h, ctl_a1_2l};
  always @(posedge clk) begin
   cmd_q<=cmd;first_q<=cmd_first;
   s_context_q<=s_context;col_context<=core_context;
   s_we_q<=s_we;s_bank_q<=s_bank;s_col_q<=s_col;s_row_q<=s_row;
-  if(push)begin fifo[wp]<=cmd_q;first_fifo[wp]<=first_q;end
-  if(count==0 && push)begin head<=cmd_q;head_first<=first_q;end
-  else if(pop) begin
-   if(count>1)begin head<=fifo[rp_next];head_first<=first_fifo[rp_next];end
-   else if(push)begin head<=cmd_q;head_first<=first_q;end
+  // KV-PC5: ungated slot writes and per-group head loads (exactly: count == 0 && push -> cmd_q; pop && count > 1 ->
+  // fifo[rp + 1]; pop && count == 1 && push -> cmd_q; else hold)
+  for (integer e = 0; e < 8; e = e + 1) begin
+   if (ctl_ws_qv[e]) fifo[e][13:0] <= cmd_q[13:0];
+   if (ctl_ws_qv[8 + e]) fifo[e][27:14] <= cmd_q[27:14];
+   if (ctl_ws_qv[16 + e]) begin fifo[e][31:28] <= cmd_q[31:28]; first_fifo[e] <= first_q; end
   end
+  head[13:0] <= ctl_pop_c[1] ? (ctl_hf_qv[9] ? ctl_a1_0 : (ctl_push_c[1] ? cmd_q[13:0] : head[13:0])) :
+          ((ctl_hf_qv[8] && ctl_push_c[1]) ? cmd_q[13:0] : head[13:0]);
+  head[27:14] <= ctl_pop_c[2] ? (ctl_hf_qv[19] ? ctl_a1_1 : (ctl_push_c[2] ? cmd_q[27:14] : head[27:14])) :
+          ((ctl_hf_qv[18] && ctl_push_c[2]) ? cmd_q[27:14] : head[27:14]);
+  head[31:28] <= ctl_pop_c[3] ? (ctl_hf_qv[29] ? ctl_a1_2[13:10] : (ctl_push_c[3] ? cmd_q[31:28] : head[31:28])) :
+          ((ctl_hf_qv[28] && ctl_push_c[3]) ? cmd_q[31:28] : head[31:28]);
+  head_first <= ctl_pop_c[3] ? (ctl_hf_qv[29] ? ctl_a1_2[9:0] : (ctl_push_c[3] ? first_q : head_first)) :
+          ((ctl_hf_qv[28] && ctl_push_c[3]) ? first_q : head_first);
+
   // Equal output delay on every row/column preserves all JEDEC spacings.
   row_op<=rop;row_bank<=rb;row_row__qv <= {2{row_row__f(rr)}};col_bank__qv <= {11{col_bank__f(cb)}};col_col__qv <= {3{col_col__f(cc)}};
  end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;cmd_credit<=0;wp<=0;rp__qv <= {15{rp__f(0)}};count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
-   row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;
+   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;cmd_credit<=0;wp<=0;rp__qv <= {2{rp__f(0)}};count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
+   row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;row_act_oh<=32'b0;
   end else begin
    cmd_v_q<=cmd_v;rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;
    s_v_q<=s_v;s_cr<=spop;col_sr<=csr;
    cmd_credit<=pop;
    if(push) wp<=wp+1'b1;
-   if(pop) rp__qv <= {15{rp__f(rp+1'b1)}};
+   rp__qv <= {2{rp__f(ctl_rp_nx)}};
    case({push,pop})
     2'b10:count<=count+1'b1;
     2'b01:count<=count-1'b1;
     default:count<=count;
    endcase
    if(ENABLE!=0 && ((cmd_v_q && !push) || (pop && malformed) || (s_v_q && !sr_r))) fault_q<=1;
-   row_v<=rv;col_v<=cv;col_we<=cwe;busy<=core_busy;
+   row_v<=rv;col_v<=cv;col_we<=cwe;busy<=core_busy;row_act_oh<=(rv && rop==3'd1) ? (32'b1 << rb) : 32'b0;
    fault<=fault_q || core_fault || schedule_fault;
   end
  end
