@@ -3,7 +3,7 @@
 # release source (claude/s81-bind-mu4-1019 19bf4121e; dsdv_seq_host.sv / ot_dsdv_fixed_issue.sv blobs = release).
 # Same TB/checker as tools/s81_dv/layer_prog/run_mu.sh (MU-S81/TOK); the only change is the calendar:
 # prog_L0_mu_mtp = prog_L0_mu with prog/mu_slots.json from calendar_mtp_q4.json (10 MTP + 1 filler, slot 124,524,
-# period 1,303,400), via dv_layer_compile.mu_slot_tables. Two passes of the period (22 starts).
+# period 1,303,400), via dv_layer_compile.mu_slot_tables. One period (11 starts; 2 periods exceed the TB #2000000 timeout).
 # Also re-runs L0_all (AR q4 46 users) for a release-pinned record, and mutant m_shift4 (must FAIL, issuer code 9).
 # run_mu_mtp.sh <tree R> <out O>
 set -u
@@ -20,7 +20,7 @@ mkdir -p $O/mu
 $CK --make $PM/prog/mu_slots.json --copy A --out $O/mu/p0.txt --pass 0 > /dev/null
 $CK --make $PM/prog/mu_slots.json --copy A --out $O/mu/p1.txt --pass 1 > /dev/null
 P=$(python3 -c "import json;print(json.load(open('$PM/prog/mu_slots.json'))['period'])")
-{ cat $O/mu/p0.txt; awk -v P=$P '{ $1 = $1 + P; print }' $O/mu/p1.txt; } > $O/mu/L0_mtp.txt
+cp $O/mu/p0.txt $O/mu/L0_mtp.txt   # one period (11 starts, 1.25M edges): the TB times out at #2000000
 head -1 $O/mu/L0_mtp.txt > $O/mu/L0_single.txt
 $CK --make $PA/prog/mu_slots.json --copy A --out $O/mu/L0_all.txt > /dev/null
 head -1 $O/mu/L0_all.txt > $O/mu/L0_all_single.txt
