@@ -1,0 +1,593 @@
+{
+ "group": "idxdma",
+ "branch": "claude/toksim-hbm-idxdma-1019@8726044a0",
+ "updated_utc": "2026-10-20T01:42Z",
+ "designs": {
+  "ds_ar": {
+   "IDX.TOPK": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 384, 1, \"FP32\"], \"O\": [\"VM\", 6, 1, \"U32\"]}": {
+      "cycles": 156,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_idx_rootctl_static_am (topk engine ot_hbm_idx_topk_static)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idxdma.sh topk_bound",
+      "job": "ot-epyc9:oth-ubuntu-151973-1792460142:/srv/opentallas-scratch/claude/toksim-idxdma/out/topk_bound",
+      "verilator": "5.050",
+      "notes": "k6 n384 m1 ascending ids, REPL scores; 4 records (one with a tied max), O words checked vs hgi_sim topk_ids. Faces (VM_RT 1/CR_RT 1, = rootctl_am_pin) 158; banklat budget (65/36) 257.",
+      "cycles_faces": 158,
+      "cycles_banklat_budget": 257,
+      "job_budget": "ot-epyc9:oth-ubuntu-152269-1792460142:/srv/opentallas-scratch/claude/toksim-idxdma/out/topk_budget"
+     }
+    },
+    "ratio": 0.3462,
+    "ratio_banklat_budget": 0.5704,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "model 450.6 charges bl_idx 181 (reader RT 171 + g4) fully exposed on TOPK; the TOPK engine pays VM_RT only once per row (+65) and CR_RT once (+36): budget 257, bound 156"
+   },
+   "ARGMAX.LOCAL": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"STREAM\", 1347, 1, \"FP32\"], \"O\": [\"VM\", 2, 1, \"FP32\"]}": {
+      "cycles": 218,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_argmax_static_sw_vm_r2 #(TP 192) behind ot_hbm_idx_rootctl_static_am argmax share",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idxdma.sh am_ds_bound",
+      "job": "ot-epyc9:oth-ubuntu-151323-1792460141:/srv/opentallas-scratch/claude/toksim-idxdma/out/am_ds_bound",
+      "verilator": "5.050",
+      "notes": "record A is STREAM, but the die-bound r2 has NO STREAM input (mode 1 = record fault, header \"STREAM = unwired on this die\"); measured the only mode the die has: VM mode, n 1347 FP32 logits in VM (REPL), one sector per edge, O {value,id} checked vs numpy argmax (lowest index on ties; id = local + 3*imm). Banklat budget 329.",
+      "cycles_banklat_budget": 329,
+      "job_budget": "ot-epyc9:oth-ubuntu-151952-1792460142:/srv/opentallas-scratch/claude/toksim-idxdma/out/am_ds_budget"
+     }
+    },
+    "ratio": 0.9413,
+    "ratio_banklat_budget": 1.4206,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "STREAM unwired on the die-bound r2; VM mode at n 1347 is ~equal to the model (218 vs 231.6) only because n is small"
+   },
+   "DMA.KVWB_DS": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"HBM\", 512, 128, \"FP32\"]}": {
+      "cycles": 27,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_dma_back_static_vp4_banks (core of ot_hgi_dma_back_static_vp4_banks_cp, hb_dbk_<q>)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idxdma.sh dma_kvwb_bound",
+      "job": "ot-epyc9:oth-ubuntu-138762-1792460078:/srv/opentallas-scratch/claude/toksim-idxdma/out/dma_kvwb_bound",
+      "verilator": "5.050",
+      "notes": "512 FP32 = 64 VM sectors x 1 row; 4 moves, every wd beat checked through the real landing SRAMs (payload = f(VM sector), once, on drain_at+3+chunk); issue_at -> mv_done (doorbell -> done = +8, TB lead). Ends at the last wd beat to the HBM write path (posted): HBM write completion is DMA.FENCE. Banklat budget (RR_RT 80) 100.",
+      "cycles_banklat_budget": 100,
+      "job_budget": "ot-epyc9:oth-ubuntu-139775-1792460078:/srv/opentallas-scratch/claude/toksim-idxdma/out/dma_kvwb_budget"
+     }
+    },
+    "ratio": 0.3188,
+    "ratio_banklat_budget": 1.1806,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "model 84.7 vs dbk move 27 (bound) / 100 (RR_RT 80 budget: drain lag 83 dominates)"
+   },
+   "DMA.FENCE": {
+    "law": "shape_table",
+    "shapes": {
+     "{}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hgi_dma_back_static_vp4_banks_cp -> ot_hbm_svc_wb_* -> ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (k_wr_done)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "not measured: posted-write visibility = dbk wd beat -> WB landing -> PC write -> k_wr_done; no bench of that chain was run here"
+     }
+    },
+    "ratio": null,
+    "grade": "unmeasured",
+    "pending": [],
+    "where_model_wrong": "model 60 + terms is an estimate; on the static die the compiler knows the last write edge, the fence cost = WB->PC write completion latency (unmeasured)"
+   },
+   "DMA.LOAD": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"HBM\", 1, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "4 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 256, 1, \"FP8E4M3\"], \"I\": [\"VM\", 1, 1, \"U32\"], \"O\": [\"VM\", 256, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "256 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 8, 1, \"UE8M0\"], \"I\": [\"VM\", 1, 1, \"U32\"], \"O\": [\"VM\", 8, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "8 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 1280, 1, \"FP32\"], \"O\": [\"VM\", 1280, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "5120 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "2048 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 64, 1, \"FP32\"], \"O\": [\"VM\", 64, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "256 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 384, 1, \"FP32\"], \"O\": [\"VM\", 384, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "1536 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 24, 1, \"U32\"], \"O\": [\"VM\", 24, 1, \"U32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "96 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 20480, 1, \"FP32\"], \"O\": [\"VM\", 20480, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "81920 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     }
+    },
+    "ratio": null,
+    "grade": "pending",
+    "hbm_side_pc_h9b": {
+     "pc_1x1_rl23": {
+      "first_min": 57,
+      "first_max": 71,
+      "first_mean": 59.67,
+      "last_min": 57,
+      "last_max": 71,
+      "last_mean": 59.67,
+      "first_mean_833": 73.3,
+      "last_mean_833": 73.3,
+      "job": "ot-epyc9:oth-ubuntu-208381-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x1_rl23"
+     },
+     "pc_1x4_rl23": {
+      "first_min": 57,
+      "first_max": 71,
+      "first_mean": 59.67,
+      "last_min": 71,
+      "last_max": 235,
+      "last_mean": 131.5,
+      "first_mean_833": 73.3,
+      "last_mean_833": 161.6,
+      "job": "ot-epyc9:oth-ubuntu-209168-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x4_rl23"
+     },
+     "pc_4x4_rl23": {
+      "first_min": 56,
+      "first_max": 314,
+      "first_mean": 101.5,
+      "last_min": 81,
+      "last_max": 446,
+      "last_mean": 176.33,
+      "first_mean_833": 124.7,
+      "last_mean_833": 216.7,
+      "job": "ot-epyc9:oth-ubuntu-209191-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_4x4_rl23"
+     },
+     "pc_40x4_rl23": {
+      "first_min": 56,
+      "first_max": 63,
+      "first_mean": 57.83,
+      "last_min": 253,
+      "last_max": 478,
+      "last_mean": 324.67,
+      "first_mean_833": 71.1,
+      "last_mean_833": 399.0,
+      "job": "ot-epyc9:oth-ubuntu-209067-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_40x4_rl23"
+     },
+     "pc_64x4_rl23": {
+      "first_min": 56,
+      "first_max": 57,
+      "first_mean": 56.83,
+      "last_min": 363,
+      "last_max": 835,
+      "last_mean": 476.67,
+      "first_mean_833": 69.8,
+      "last_mean_833": 585.7,
+      "job": "ot-epyc9:oth-ubuntu-209193-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_64x4_rl23"
+     },
+     "pc_1x1_rl14": {
+      "first_min": 48,
+      "first_max": 62,
+      "first_mean": 50.67,
+      "last_min": 48,
+      "last_max": 62,
+      "last_mean": 50.67,
+      "first_mean_833": 62.3,
+      "last_mean_833": 62.3,
+      "job": "ot-epyc9:oth-ubuntu-209201-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x1_rl14"
+     },
+     "pc_40x4_rl14": {
+      "first_min": 47,
+      "first_max": 62,
+      "first_mean": 50.17,
+      "last_min": 236,
+      "last_max": 461,
+      "last_mean": 313.0,
+      "first_mean_833": 61.6,
+      "last_mean_833": 384.6,
+      "job": "ot-epyc9:oth-ubuntu-208595-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_40x4_rl14"
+     }
+    },
+    "pending": [
+     {
+      "job": null,
+      "result_path": null,
+      "what": "NEEDS AGENT: chain bench fill calendar -> h9b (64 PCs, striping per the compiler layout) -> kshare_splitstrap -> vmdel_lane_n -> VM bank at production row sizes; the q integration bench (tb_hbm_vm_hbm_path_q) shows block landing with 256-edge VM readouts, so a small DMA.LOAD may cost far more than first_access 160"
+     }
+    ],
+    "where_model_wrong": "first_access 160 is an estimate; the die-bound path has no DMA engine; HBM side alone is ~73 stream edges for one cold beat, ~400 for 5 KB on one PC; landing/readout granularity of the fill path is the open risk"
+   },
+   "IDX.INDEX": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 32, 1, \"FP32\"], \"C\": [\"VM\", 2048, 2, \"U32\"], \"O\": [\"VM\", 512, 1, \"U32\"], \"R\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "pending",
+      "rtl_master": "ot_hbm_idx_client_static_quad (quad_1017 score_quarter/xq_node/qctl + rootctl_static, vm_query, selector_static, topk_link)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": false,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idx_quad.sh",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-idxdma/out/idx_quad",
+      "verilator": "5.050",
+      "notes": "production frame rank 191 / 5456 keys (1M ctx, TP 192), exact scores/flits vs the N_Q2 reference; the bench binds rootctl_static / vm_query / selector_static, not the die's rootctl_am / vm_query_n12 / selector_static_sel (grade newest-bench-passing-not-bound when it lands)"
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 32, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"U32\"], \"R\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "pending",
+      "rtl_master": "ot_hbm_idx_client_static_quad (quad_1017 score_quarter/xq_node/qctl + rootctl_static, vm_query, selector_static, topk_link)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": false,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idx_quad.sh",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-idxdma/out/idx_quad",
+      "verilator": "5.050",
+      "notes": "production frame rank 191 / 5456 keys (1M ctx, TP 192), exact scores/flits vs the N_Q2 reference; the bench binds rootctl_static / vm_query / selector_static, not the die's rootctl_am / vm_query_n12 / selector_static_sel (grade newest-bench-passing-not-bound when it lands)"
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 32, 1, \"FP32\"], \"D\": [\"VM\", 1366, 2, \"U32\"], \"O\": [\"VM\", 512, 1, \"U32\"], \"R\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "pending",
+      "rtl_master": "ot_hbm_idx_client_static_quad (quad_1017 score_quarter/xq_node/qctl + rootctl_static, vm_query, selector_static, topk_link)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": false,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idx_quad.sh",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-idxdma/out/idx_quad",
+      "verilator": "5.050",
+      "notes": "production frame rank 191 / 5456 keys (1M ctx, TP 192), exact scores/flits vs the N_Q2 reference; the bench binds rootctl_static / vm_query / selector_static, not the die's rootctl_am / vm_query_n12 / selector_static_sel (grade newest-bench-passing-not-bound when it lands)"
+     }
+    },
+    "ratio": null,
+    "grade": "pending",
+    "pending": [
+     {
+      "job": "ot-epyc9 unit (local client log /home/ubuntu/scratch/toksim-idxdma/idx_quad.log)",
+      "result_path": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-idxdma/out/idx_quad/run_pos.log",
+      "what": "parse \"edges from start: ... done old N new M\" (new = d4g quad frame) into IDX.INDEX cycles; add the n12 reader VM_RT_EXTRA delta (bound 4 vs budget 171) per pass"
+     }
+    ],
+    "where_model_wrong": "pending"
+   }
+  },
+  "qwen": {
+   "ARGMAX.LOCAL": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"STREAM\", 37984, 1, \"FP32\"], \"O\": [\"VM\", 2, 1, \"FP32\"]}": {
+      "cycles": 4797,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_argmax_static_sw_vm_r2 #(TP 192) behind ot_hbm_idx_rootctl_static_am argmax share",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idxdma.sh am_qw_bound",
+      "job": "ot-epyc9:oth-ubuntu-151530-1792460142:/srv/opentallas-scratch/claude/toksim-idxdma/out/am_qw_bound",
+      "verilator": "5.050",
+      "notes": "record A is STREAM, but the die-bound r2 has NO STREAM input (mode 1 = record fault, header \"STREAM = unwired on this die\"); measured the only mode the die has: VM mode, n 37984 FP32 logits in VM (REPL), one sector per edge, O {value,id} checked vs numpy argmax (lowest index on ties; id = local + 3*imm). Banklat budget 4908.",
+      "cycles_banklat_budget": 4908,
+      "job_budget": "ot-epyc9:oth-ubuntu-152268-1792460142:/srv/opentallas-scratch/claude/toksim-idxdma/out/am_qw_budget"
+     }
+    },
+    "ratio": 1.932,
+    "ratio_banklat_budget": 1.9767,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "model prices STREAM at 16 logits/edge (+20); the die has no STREAM argmax: VM read is 8 logits/edge (one sector), so the 37,984-logit head costs 4797 not 2,483 (and the logits must first land in VM)"
+   },
+   "DMA.STORE": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 128, 2, \"FP32\"], \"O\": [\"HBM\", 128, 2, \"FP8E4M3\"]}": {
+      "cycles": 20,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_dma_back_static_vp4_banks (hb_dbk_<q>)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/run_toksim_idxdma.sh dma_st8_bound",
+      "job": "ot-epyc9:oth-ubuntu-209190-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/dma_st8_bound",
+      "verilator": "5.050",
+      "notes": "kv_append 128 x 2 as FP8 already in VM (256 B = 8 sectors, one contiguous row; the 4-sector x 2-row form raised mv_fault in this bench, not investigated); the dbk moves sectors and has NO FP32->FP8 convert (A is FP32 in the record): raw FP32 128x2 (16 sectors x 2 rows) = 23 bound / 96 budget. Banklat budget FP8 93.",
+      "cycles_banklat_budget": 93,
+      "cycles_fp32_raw": 23,
+      "cycles_fp32_raw_banklat_budget": 96,
+      "job_budget": "ot-epyc9:oth-ubuntu-208875-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/dma_st8_budget"
+     }
+    },
+    "ratio": 0.3656,
+    "ratio_banklat_budget": 1.7002,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "model 54.7 vs 20 bound / 93 budget; the FP32->FP8 quantisation the record implies is not in the DMA back path (must be an SU record before it)"
+   },
+   "DMA.FENCE": {
+    "law": "shape_table",
+    "shapes": {
+     "{}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hgi_dma_back_static_vp4_banks_cp -> ot_hbm_svc_wb_* -> ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (k_wr_done)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "not measured: posted-write visibility = dbk wd beat -> WB landing -> PC write -> k_wr_done; no bench of that chain was run here"
+     }
+    },
+    "ratio": null,
+    "grade": "unmeasured",
+    "pending": [],
+    "where_model_wrong": "model 60 + terms is an estimate; on the static die the compiler knows the last write edge, the fence cost = WB->PC write completion latency (unmeasured)"
+   },
+   "DMA.LOAD": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"HBM\", 4096, 1, \"BF16\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "8192 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 1536, 1, \"BF16\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "3072 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 6144, 1, \"BF16\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "12288 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 4096, 1, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "4096 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 1, 1, \"BF16\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "2 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "512 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 1, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "4 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     },
+     "{\"A\": [\"HBM\", 37984, 1, \"BF16\"], \"O\": [\"VM\", 37984, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "HBM->VM fill path: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (64x) -> ot_hbm_svc_vm_kshare_splitstrap -> ot_hbm_svc_vmdel_lane_n -> VM bank (fill calendar vmfc)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/test/toksim_idxdma/tb_toksim_pc_load.sv (HBM side only)",
+      "job": null,
+      "verilator": "5.050",
+      "notes": "75968 B. GEN2e3 die.v binds NO DMA load engine (ot_hgi_dma_front* absent; only the 4 dbk write-back masters): a VM load rides the svc fill path. Measured HBM side only (one PC, h9b, DRAM RL 23 HBM edges incl. PHY): 1-beat cold read k_v->beat 59.7 HBM edges = 73.3 stream edges; VM side (kshare/vmdel landing + CDC + VM write) unmeasured."
+     }
+    },
+    "ratio": null,
+    "grade": "pending",
+    "hbm_side_pc_h9b": {
+     "pc_1x1_rl23": {
+      "first_min": 57,
+      "first_max": 71,
+      "first_mean": 59.67,
+      "last_min": 57,
+      "last_max": 71,
+      "last_mean": 59.67,
+      "first_mean_833": 73.3,
+      "last_mean_833": 73.3,
+      "job": "ot-epyc9:oth-ubuntu-208381-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x1_rl23"
+     },
+     "pc_1x4_rl23": {
+      "first_min": 57,
+      "first_max": 71,
+      "first_mean": 59.67,
+      "last_min": 71,
+      "last_max": 235,
+      "last_mean": 131.5,
+      "first_mean_833": 73.3,
+      "last_mean_833": 161.6,
+      "job": "ot-epyc9:oth-ubuntu-209168-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x4_rl23"
+     },
+     "pc_4x4_rl23": {
+      "first_min": 56,
+      "first_max": 314,
+      "first_mean": 101.5,
+      "last_min": 81,
+      "last_max": 446,
+      "last_mean": 176.33,
+      "first_mean_833": 124.7,
+      "last_mean_833": 216.7,
+      "job": "ot-epyc9:oth-ubuntu-209191-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_4x4_rl23"
+     },
+     "pc_40x4_rl23": {
+      "first_min": 56,
+      "first_max": 63,
+      "first_mean": 57.83,
+      "last_min": 253,
+      "last_max": 478,
+      "last_mean": 324.67,
+      "first_mean_833": 71.1,
+      "last_mean_833": 399.0,
+      "job": "ot-epyc9:oth-ubuntu-209067-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_40x4_rl23"
+     },
+     "pc_64x4_rl23": {
+      "first_min": 56,
+      "first_max": 57,
+      "first_mean": 56.83,
+      "last_min": 363,
+      "last_max": 835,
+      "last_mean": 476.67,
+      "first_mean_833": 69.8,
+      "last_mean_833": 585.7,
+      "job": "ot-epyc9:oth-ubuntu-209193-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_64x4_rl23"
+     },
+     "pc_1x1_rl14": {
+      "first_min": 48,
+      "first_max": 62,
+      "first_mean": 50.67,
+      "last_min": 48,
+      "last_max": 62,
+      "last_mean": 50.67,
+      "first_mean_833": 62.3,
+      "last_mean_833": 62.3,
+      "job": "ot-epyc9:oth-ubuntu-209201-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_1x1_rl14"
+     },
+     "pc_40x4_rl14": {
+      "first_min": 47,
+      "first_max": 62,
+      "first_mean": 50.17,
+      "last_min": 236,
+      "last_max": 461,
+      "last_mean": 313.0,
+      "first_mean_833": 61.6,
+      "last_mean_833": 384.6,
+      "job": "ot-epyc9:oth-ubuntu-208595-1792460333:/srv/opentallas-scratch/claude/toksim-idxdma/out/pc_40x4_rl14"
+     }
+    },
+    "pending": [
+     {
+      "job": null,
+      "result_path": null,
+      "what": "NEEDS AGENT: chain bench fill calendar -> h9b (64 PCs, striping per the compiler layout) -> kshare_splitstrap -> vmdel_lane_n -> VM bank at production row sizes; the q integration bench (tb_hbm_vm_hbm_path_q) shows block landing with 256-edge VM readouts, so a small DMA.LOAD may cost far more than first_access 160"
+     }
+    ],
+    "where_model_wrong": "first_access 160 is an estimate; the die-bound path has no DMA engine; HBM side alone is ~73 stream edges for one cold beat, ~400 for 5 KB on one PC; landing/readout granularity of the fill path is the open risk"
+   }
+  }
+ },
+ "conventions": "cycles = 833 ps stream edges from the edge sampling the record go (unit face) to the edge sampling done (IDX/ARGMAX) or from the compiler issue_at slot to mv_done (DMA back). Unit work only: the model adds dispatch wire (IDX 17 / ARGMAX 5 edges) and other terms outside the unit. \"bound\" = parameters exactly as GEN2e3 die.v binds them (rootctl_am VM_RT 0 / CR_RT 0, argmax r2 VMX 5 / ACK 13, dbk RR_RT 7) on the VM contract those parameters state; \"*_banklat_budget\" = the HBM-BANKLAT GEN2c budget parameters with padded die lanes (rootctl_am 65/36, argmax VMX 77 / ACK 52 + lanes 4/3, dbk RR_RT 80 + NE lanes). The die as built has faces pin banks + relay lanes, so the bound parameters are LAT-FAIL there (HBM-BANKLAT); the budget numbers are what a functional die with those lanes costs."
+}

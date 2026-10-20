@@ -56,6 +56,7 @@ def grade(units, mjobs, pjobs, out, row):
         p = json.loads((Path(pjobs) / f"{row}__{tag}.json").read_text())
         rows = {}
         tot = {"measured-on-bound": 0.0, "measured-not-bound": 0.0, "model": 0.0}
+        used = dict(tot)
         for c, a in sorted(m["classes"].items(), key=lambda kv: -kv[1]["used_sum"]):
             u = des.get(dn, {}).get(c, {})
             gr = grade_of(u.get("grade")) if u else "model"
@@ -67,13 +68,16 @@ def grade(units, mjobs, pjobs, out, row):
                            ratio_records=a.get("ratio_n", 0), grade=gr, unit_grade=u.get("grade"),
                            where_model_wrong=u.get("where_model_wrong"))
             tot[gr] += a["crit_cycles"]
+            used[gr] += a["used_sum"]
         T = m["schedule_total"]
         res[dn] = dict(schedule_total=T, price_schedule_total=p["schedule_total"], result=m["result"],
                        price_result=p["result"], crit_by_grade=tot,
-                       crit_share={k: round(v / T, 4) for k, v in tot.items()}, classes=rows)
+                       crit_share={k: round(v / T, 4) for k, v in tot.items()},
+                       used_by_grade={k: round(v, 1) for k, v in used.items()},
+                       used_share={k: round(v / max(sum(used.values()), 1e-9), 4) for k, v in used.items()}, classes=rows)
     Path(out).write_text(json.dumps(res, indent=1) + "\n")
     for dn, r in res.items():
-        print(dn, r["result"], "price", r["price_result"], r["crit_share"])
+        print(dn, r["result"], "price", r["price_result"], "crit", r["crit_share"], "used", r["used_share"])
 
 
 if __name__ == "__main__":
