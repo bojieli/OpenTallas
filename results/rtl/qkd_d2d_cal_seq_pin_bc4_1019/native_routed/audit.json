@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_d2d_cal_seq_pin_bc4",
+ "view": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4/views/qkd_d2d_cal_seq_pin_bc4",
+ "lib_cell": "qkd_d2d_cal_seq_pin_bc4",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 92.5,
+ "spread_ps": 3.8,
+ "outputs": 53,
+ "inputs": 44,
+ "launch_ps": 175.0,
+ "launch_pin": "cfg_data[28]",
+ "capture_ps": 130.1,
+ "capture_pin": "bcfg_tx_we",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 3.6,
+ "ff_launch_min_ps": 110.2,
+ "ff_hold_need_ps": -59.4,
+ "pass": true,
+ "fail_why": ""
+}

@@ -15,6 +15,10 @@ TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
 MU_ARGS=()
 [ "${D2D_MU:-0}" = 1 ] && MU_ARGS+=(--mu)
+# KV-DCAL2 10-19 (KV-EMB2): D2D_CTX_HOST_REQ=<measured HOST RESULT->context edges> moves the token-run CONTEXT slot after
+# RESULT(n) reaches the KV HOST; D2D_EMB_FILL=<fork + 2 + join last + 1> fails closed on a short fill budget
+[ -n "${D2D_CTX_HOST_REQ:-}" ] && MU_ARGS+=(--ctx-host-req "$D2D_CTX_HOST_REQ")
+[ -n "${D2D_EMB_FILL:-}" ] && MU_ARGS+=(--emb-fill-edges "$D2D_EMB_FILL")
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \

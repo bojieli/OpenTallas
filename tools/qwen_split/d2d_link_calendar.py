@@ -131,7 +131,22 @@ PREC_K0 = 3   # first S->C program-record slot of the token / admission run (run
 ADM_REPLAY = 1056   # admission: AUTH accepted -> 1,032-word replay + ledger commit (~1,045, Q-NETLIST) + margin
 
 
-def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False, status_delay=0):
+def context_slot(txl, phy, host_stages, host_req):
+    """KV-DCAL2 10-19 (KV-EMB2 d9631325d): the token-run kind-12 CONTEXT slot carries step n+1's owner/token; for a
+    generated token that token IS RESULT(n), so the slot is legal only once the KV HOST holds the step n+1 request:
+    RESULT(n) at the KV HOST (send 2 + codec 1 + txl + phy + rx 2 + 1 + host stages) + host_req (the HOST's measured
+    RESULT -> context-record latency).  Prompt tokens are ready earlier; one static slot serves both.  host_req None =
+    the pre-EMB2 slot PREC_K0 (images unchanged)."""
+    if host_req is None:
+        return PREC_K0, None
+    if type(host_req) is not int or host_req < 0:
+        raise ValueError("host_req must be a measured nonnegative integer")
+    r_host = 2 + 1 + txl + phy + 2 + 1 + (host_stages or 0)
+    return max(PREC_K0, r_host + host_req), r_host
+
+
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False,
+                    host_req=None, emb_fill=None, status_delay=0):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -166,15 +181,21 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     # of the compute RX (arrival + 2) plus 2 face edges, with slack for the pin registers
     # token run: S->C kind 12 CONTEXT (token / position for the face) and C->S kind 14 beat 0 per-token WITNESS
     # (ready / digest or not-ready: always a record)
-    m1.append(dict(seg=1, src="K", cyc=PREC_K0, tx_port=1, rx_port=1, kind=12, beat=0))
+    ctx_k, r_host = context_slot(txl, phy, host_stages, host_req)
+    hdr = e_last - 64
+    ctx_budget = hdr - ctx_k     # edges from the CONTEXT slot to the row-header slot (EMB2 fill: fork + 2 + join last + 1)
+    if emb_fill is not None and ctx_budget < emb_fill:
+        raise SystemExit(f"embedding fill budget {ctx_budget} edges (CONTEXT slot {ctx_k} -> header slot {hdr}) < required "
+                         f"{emb_fill} (fork + 2 + join last + 1): lengthen the embed window by {emb_fill - ctx_budget}")
+    m1.append(dict(seg=1, src="K", cyc=ctx_k, tx_port=1, rx_port=1, kind=12, beat=0))
     if mu:
         # MU-KV-CTX 10-19 (coordinator 0kg, --mu; Qwen ROM 4 users): the MU CONTEXT slot, S->C kind 12 beat 1 ONE cycle
         # before the existing kind-12 slot.  The KV host record port (qkd_host_record_port_mu MU 1) fills it with one
         # filler's initial context (or a user-0 copy); the compute face's own kind-12 RX accepts it and the existing slot
         # one edge later restores user 0's context; qfd_mu_ctx_rx loads users 1..3 into the ctlm boot-context loader.
         # Field spec: results/rtl/mu_qwen_1018/kvctx/README.md section 2.  (= mu-die-qw2 05a8c8fe3; KV-LINKCFG-MU 10-19)
-        m1.append(dict(seg=1, src="K", cyc=PREC_K0 - 1, tx_port=1, rx_port=1, kind=12, beat=1))
-    prec_w = PREC_K0 + txl + phy + 12
+        m1.append(dict(seg=1, src="K", cyc=ctx_k - 1, tx_port=1, rx_port=1, kind=12, beat=1))
+    prec_w = ctx_k + txl + phy + 12
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
     # BEGIN, beat 2 AUTH; the compute face replays the 1,032-word program from one edge after AUTH and commits its
@@ -187,8 +208,14 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, [int(n) + (status_delay if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (status_delay if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last], emb_header_send=e_last - 64,
-                  program_records=dict(k_send=[PREC_K0, PREC_K0], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
-                                       witness_send=prec_w),
+                  program_records=dict(k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
+                                       witness_send=prec_w,
+                                       context_after_result=(None if host_req is None else dict(
+                                           result_at_kv_host=r_host, host_req=host_req, context_send=ctx_k,
+                                           moved_by=ctx_k - PREC_K0, header_send=hdr, fill_budget_edges=ctx_budget,
+                                           fill_required_edges=emb_fill,
+                                           note="KV-EMB2: kvs_emb starts the row fill from this record (fork + 2 edges); "
+                                                "the budget must cover join last + 1, else the embed window grows"))),
                   admission=dict(k_send=[PREC_K0, PREC_K0 + 1], kinds="13/1 BEGIN, 13/2 AUTH S->C; 14/1 WITNESS C->S",
                                  witness_send=adm_w, replay_edges=ADM_REPLAY),
                   token_period=int(d["totals"]["cycles"]) + 36 * status_delay,
@@ -341,6 +368,12 @@ def main():
                          "TXD per port is derived from them (overrides --txd-c / --txd-k; QXF-LINK F4)")
     ap.add_argument("--allow-unmeasured-host", action="store_true",
                     help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
+    ap.add_argument("--ctx-host-req", type=int, default=None,
+                    help="KV-DCAL2/KV-EMB2 10-19: place the token-run kind-12 CONTEXT slot after RESULT(n) reaches the KV HOST "
+                         "plus this measured HOST request latency (edges); default off = the PREC_K0 slot (images unchanged)")
+    ap.add_argument("--emb-fill-edges", type=int, default=None,
+                    help="with --ctx-host-req: required CONTEXT->header edges (die fork ages + 2 + join4_cal last + 1); "
+                         "fail closed when the slot leaves less")
     ap.add_argument("--mu", action="store_true",
                     help="MU-KV-CTX 10-19 (Qwen ROM 4 users): add the token run's MU context slot (S->C kind 12 beat 1, one "
                          "cycle before the existing kind-12 slot); default off = the single-user images, unchanged")
@@ -367,7 +400,9 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu, status_delay=a.status_delay)   # STATUS capture after the (+2) KVN captures
+                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
+                                        host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges,
+                                        status_delay=a.status_delay)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
