@@ -6,7 +6,9 @@ class RowModel(unittest.TestCase):
     def test_exact_bit_mapping_orientations_reset_clock_and_escape(self):
         v = dict(w=64.8, h=23.76, pins={'a[0]': (0, 1), 'a[1]': (0, 20),
                                       'ck': (32, 0), 'rst_n': (63, 0)})
-        views = {'V': v}; masters = {'we': 'V', 'ns': 'V'}
+        v['directions'] = {p: 'OUTPUT' for p in v['pins']}
+        sink = dict(v, directions={p: 'INPUT' for p in v['pins']})
+        views = {'V': v, 'S': sink}; masters = {'we': 'V', 'ns': 'S'}
         pl = {'we': dict(x=0, y=0, orient='MY'), 'ns': dict(x=300, y=0, orient='R90')}
         widths = {(n, p): w for n in masters for p, w in [('a', 2), ('ck', 1), ('rst_n', 1)]}
         edges = [dict(source=['we', 'a', 0, 2], sink=['ns', 'a', 0, 2], bits=2),
@@ -20,6 +22,10 @@ class RowModel(unittest.TestCase):
                                 escape_um={('ns', 'a[1]'): 200})
         self.assertEqual(len(e['over_reach']), 1)
         del widths['ns', 'ck']
+        with self.assertRaises(ValueError):
+            exact_contract_cost(edges, pl, masters, views, widths)
+        widths['ns', 'ck'] = 1
+        sink['directions']['ck'] = 'OUTPUT'
         with self.assertRaises(ValueError):
             exact_contract_cost(edges, pl, masters, views, widths)
 

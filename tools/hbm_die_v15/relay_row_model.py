@@ -42,7 +42,7 @@ def exact_contract_cost(edges, placements, masters, views, port_widths, reach=40
     optionally adds measured local escape detours by (instance, pin) key.
     Missing authority raises ValueError; this helper never qualifies timing.
     """
-    def pin(endpoint, bit):
+    def pin(endpoint, bit, expected_direction):
         n, port, lo, width = endpoint
         if bit >= width or (n, port) not in port_widths:
             raise ValueError(f'missing width or endpoint bit: {endpoint}')
@@ -53,6 +53,8 @@ def exact_contract_cost(edges, placements, masters, views, port_widths, reach=40
         v = views[masters[n]]
         if name not in v['pins']:
             raise ValueError(f'missing actual LEF pin: {n}.{name}')
+        if v.get('directions', {}).get(name) != expected_direction:
+            raise ValueError(f'actual LEF direction is not {expected_direction}: {n}.{name}')
         p = xf(placements[n], v['w'], v['h'], *v['pins'][name])
         detour = (escape_um or {}).get((n, name), 0.0)
         if detour < 0:
@@ -64,8 +66,8 @@ def exact_contract_cost(edges, placements, masters, views, port_widths, reach=40
         if s[3] != t[3] or (e.get('bits', s[3]) != s[3]):
             raise ValueError('source/sink bit widths differ')
         for bit in range(s[3]):
-            a, ae, ak = pin(s, bit)
-            b, be, bk = pin(t, bit)
+            a, ae, ak = pin(s, bit, 'OUTPUT')
+            b, be, bk = pin(t, bit, 'INPUT')
             costs.append(dict(source=ak, sink=bk, span_um=abs(a[0]-b[0])+abs(a[1]-b[1])+ae+be))
     if not costs:
         raise ValueError('no contract edges')

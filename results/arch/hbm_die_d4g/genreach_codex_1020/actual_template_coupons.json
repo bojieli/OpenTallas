@@ -14,7 +14,7 @@
         "feasible": true
       },
       "nonoverlap": true,
-      "note": "Actual template pins; clock/reset coupon costs included, clock source topology is synthetic, not production route qualification"
+      "note": "Actual template pins and OUTPUT->INPUT roles; output bits drive scalar ck/rs only in this geometric coupon. No production clock/reset functional topology or timing claim."
     },
     {
       "flow": "NS",
@@ -25,8 +25,9 @@
         "feasible": true
       },
       "nonoverlap": true,
-      "note": "Actual template pins; clock/reset coupon costs included, clock source topology is synthetic, not production route qualification"
+      "note": "Actual template pins and OUTPUT->INPUT roles; output bits drive scalar ck/rs only in this geometric coupon. No production clock/reset functional topology or timing claim."
     }
   ],
-  "missing_authority": "Current full candidate actual bit endpoints and forwarded-clock LEFs/port mapping must be supplied; missing exact pins fail closed. No new fullGEN launched."
+  "missing_authority": "Current full candidate actual bit endpoints and forwarded-clock LEFs/port mapping must be supplied; missing exact pins fail closed. No new fullGEN launched.",
+  "previous_coupon_scope_correction": "Earlier 5a5670efa scalar ck->ck/rs->rs coupons were geometric-only and used INPUT ports as launch points; stricter model now rejects such roles. They never qualified production topology."
 }
