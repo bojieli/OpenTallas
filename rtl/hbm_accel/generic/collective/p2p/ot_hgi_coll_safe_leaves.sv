@@ -271,7 +271,8 @@ endmodule
 // drives from bit 0 of its KEPT copy family rst__ot_rlv; ot_rst_copies.tcl re-points the loads over the copies.
 module ot_hgi_coll_static_program_target_s128 #(
     parameter [7:0] TARGET=8'd52,
-    parameter integer MUT_DATA=0
+    parameter integer MUT_DATA=0,
+    parameter integer ASSEMBLY_PIPE=0
 )(
     input wire clk,rst_n,
     input wire cfg_v,
@@ -345,6 +346,24 @@ module ot_hgi_coll_static_program_target_s128 #(
         (seen!=0 && row!=a_row) || ((seen & seg_q[6:0])!=0) || (seg_q[6] && dsp_q);
     wire desc=dv && tm_q;
     wire dacc=desc && !(occupied || lv || draining || checking || seen!=0 || fault || cv || dbad_q);
+    // COLLFJ native census 10-20: six 256-bit write enables had logical fanout 264.
+    // Eight kept write-enable copies per segment each serve one 32-bit chunk.
+    // The SRAM-style write landing is one internal edge later; first assembly read
+    // is drain step 1, two edges after the final accepted frame, so output edges stay exact.
+    generate if(ASSEMBLY_PIPE!=0)begin:g_assembly_pipe
+        (* keep = "true" *) reg [47:0] we_copy;
+        reg [255:0] payload;
+        always @(posedge clk) payload<=data_q;
+        for(genvar sg=0;sg<6;sg=sg+1)begin:g_seg
+            for(genvar ch=0;ch<8;ch=ch+1)begin:g_chunk
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n)we_copy[sg*8+ch]<=0;
+                    else we_copy[sg*8+ch]<=frame && !frame_bad && seg_q[sg];
+                always @(posedge clk)
+                    if(we_copy[sg*8+ch])assembly[sg*256+ch*32+:32]<=payload[ch*32+:32];
+            end
+        end
+    end endgenerate
     wire fw=frame && !frame_bad && seg_q[6];
     wire [FW-1:0] fwd={data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]};
 `ifdef OT_PT_MUT_LA_STALE
@@ -397,7 +416,7 @@ module ot_hgi_coll_static_program_target_s128 #(
                 else begin
                     row<=a_row;seen<=seen | seg_q[6:0];init_busy<=1;
                     if(seg_q[6])metadata<=data_q[63:0];
-                    for(k=0;k<6;k=k+1) if(seg_q[k]) assembly[k*256+:256]<=data_q;
+                    if(ASSEMBLY_PIPE==0)for(k=0;k<6;k=k+1) if(seg_q[k]) assembly[k*256+:256]<=data_q;
                     if((seen | seg_q[6:0])==7'h7f)begin draining<=1;step<=0;end
                 end
             end
@@ -486,7 +505,7 @@ module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC
    sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
   end
  wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
- ot_hgi_coll_static_program_target_s128 #(.TARGET(8'd52)) u_program(
+ ot_hgi_coll_static_program_target_s128 #(.TARGET(8'd52),.ASSEMBLY_PIPE(1)) u_program(
   .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
   .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
   .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
