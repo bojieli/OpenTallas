@@ -22,7 +22,24 @@
 Edge rules = the RTL headers (pgslice FILL commit E+RR+3; lane write = emit + 28 (MLAT 4, ALAT 3, LEAF 1) + SFU depth;
 reducer issue E+2, scalar E+11, commit / dependent distance 10; RF word readable >= export + 13 + L_RF).
 Golden: independent NumPy (hdc_golden add/mul/to_bf16/exp, IEEE float32 division) in the calendar's order.
-usage: prod_compile.py OUT RECORD_NAME --rr RR --wr WR      (records: see RECS)
+usage: prod_compile.py OUT RECORD_NAME --rr RR --wr WR [--pretree [--qpr 0|1|2|4]]     (records: see RECS)
+
+PRETREE (HBM-PRETREE2 10-20, --pretree; the bench build must be PRETREE=1): reductions go through the closed HH-6
+reducer pre-tree (pgslice ot_hbm_su_red_pretree_s x16 + qcore ot_hbm_su_red_pretree_j) instead of one lane operand per
+quarter per edge, and their result is the MODEL's reduction, not the calendar's:
+  * order = the models' R-ARITH chunk8 csum (hdc_golden_v41.csum: DeepSeek-V4.1 HDC_V41_ARITH=chunk8 norms / softmax
+    denominators / Engram dots; tools/qwen_r25_golden.py RMSNorm csum8(x*x), softmax Z = csum8_p(e_p), m = max_p s_p);
+    max = the reducer's ordered max with canonical +0 (order-free).  Every exported value is asserted equal to
+    hdc_golden_v41.csum / the ordered max over the record row's element vector (independent of the lowering).
+  * placement: a row is cut into QPR quarter runs of SW = NCp*8/QPR words (NCp = csum's padded chunk count), each run
+    an aligned csum subtree; run j -> quarter (row group)*QPR + j; an issue carries block k (L words, aligned) of every
+    run (QPR 1: rows round-robin over the quarters).  Emission order per row: groups of <= DEP block pairs, even blocks
+    first, odd blocks >= DEP edges after their partner (so the odd block's ADD_EXT meets its partner's LOAD at the
+    reducer's same-address distance).
+  * per emission at edge e: tree_cmd (tree.mem, su_pretree_lower.tree_cmd_word, cnt = live lanes) at E = e + LAT,
+    reducer LOAD / ADD_EXT|MAX_EXT {osel 1, lane 0x20} at E + PT_RED (80); in-quarter pairwise ADD_TREE|MAX_TREE over the
+    pair nodes (odd node carried up = csum's +0 padding); quarter roots exported to RF and joined ((Q0+Q1)+(Q2+Q3)) on
+    the row group's first reducer; final export -> RF word 128+row -> RF sector drain (as before).
 """
 import argparse, json, sys
 from pathlib import Path
@@ -31,6 +48,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 sys.path.insert(0, str(ROOT / 'tools/hbm_static')); sys.path.insert(0, str(ROOT / 'tools'))
 from su_arith_compile import pack, physical_word  # noqa: E402
+import su_pretree_lower as SPL  # noqa: E402  (closed HH-6 pre-tree: tree_cmd_word, block_subtree, PT_RED)
 from hdc_golden import add, mul, to_bf16, exp, neg, z, rsqrt  # noqa: E402
 F = np.float32
 MLAT, ALAT, LEAF = 4, 3, 1
@@ -92,6 +110,9 @@ RECS = {
  # small production-sized points of the reduction law (same record class, fewer rows)
  'qw_softmax_exp_sum_r1': ('qwen', 8192, 1, dict(A='vm', B='rf'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE, ca_ad=3, ci_sfu=1, cs_sfu=1), 'sum', True),
  'qw_softmax_max_r1': ('qwen', 8192, 1, dict(A='vm'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE), 'max', False),
+ # HBM-PRETREE2: 2/3-row exp_sum points (the 8-row record needs 1,024 store rows on 32 SFU lanes/quarter > 512)
+ 'qw_softmax_exp_sum_r2': ('qwen', 8192, 2, dict(A='vm', B='rf'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE, ca_ad=3, ci_sfu=1, cs_sfu=1), 'sum', True),
+ 'qw_softmax_exp_sum_r3': ('qwen', 8192, 3, dict(A='vm', B='rf'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE, ca_ad=3, ci_sfu=1, cs_sfu=1), 'sum', True),
 }
 ROW_OF = dict(A=0, B=1, C=2, D=3, O=4)
 
@@ -153,6 +174,7 @@ class Prog:
         s.rf = [[0] * 4 for _ in range(n)]; s.red = [[0] * 4 for _ in range(n)]
         s.expw, s.exps = [], []; s.lw = np.zeros((n, 4), dtype=np.int64)
         s.bankw = set()                                    # (edge, q, bank) write-port use (fill pins / lane write)
+        s.tree = [[0] * 4 for _ in range(n)]               # PRETREE: per edge, per quarter 4 x 12-b slice tree commands
 
     def put(s, arr, e, q, sh, w, val):
         assert 0 <= val < 1 << w and 0 <= e < s.n
@@ -184,13 +206,176 @@ class Prog:
             for e in range(s.n): f.write(''.join(f'{int(s.lw[e][q]):02x}' for q in (3, 2, 1, 0)) + '\n')
 
 
+def model_reduce(kind, vals_u):
+    """the MODEL's reduction of one row (independent of the lowering): R-ARITH csum8 / ordered canonical max"""
+    import hdc_golden_v41 as G41
+    w = np.asarray(vals_u, dtype=np.uint32)
+    if kind == 'sum':
+        return u32(G41.csum(w.view(np.float32)))
+    r = int(w[0])
+    for v in w[1:]: r = fmax_u(r, int(v))
+    return fmax_u(r, r)
+
+
+def reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LAT, gold):
+    """PRETREE lowering (see the module docstring); returns rinfo (+ '_last_lg')"""
+    mx = 1 if red == 'max' else 0
+    comb = fmax_u if mx else (lambda x, y: u32(add(f32(x), f32(y))))
+    op_ext, op_tree = (3, 5) if mx else (1, 2)
+    PTR = SPL.PT_RED
+    blk = {}                                             # (row, q, k) -> (consume edge, value)
+    for (e, g, j) in emits:
+        E = e + LAT
+        s_, t_ = divmod(g, NBQ); k = PERM[t_]
+        for q in range(4):
+            cnt = int(live[g, q])
+            if cnt == 0: continue
+            ids = [EI(g, q, b) for b in range(cnt)]
+            row = ids[0] // N
+            words = [int(gold[i]) for i in ids]
+            assert P.tree[E][q] == 0, ('tree slot busy', E, q)
+            P.tree[E][q] = SPL.tree_cmd_word(mx, cnt)
+            blk[(row, q, k)] = (E + PTR, SPL.block_subtree(red, words, cnt))
+    addr_next = {q: 0 for q in range(4)}
+    def new_addr(q):
+        x = addr_next[q]; addr_next[q] += 1; assert x < 1000, 'reducer addresses'; return x
+    roots = {}
+    rows_q = sorted(set((r, q) for (r, q, k) in blk))
+    # level 0: pair (2i, 2i+1) of each quarter run -> LOAD + ADD_EXT (odd >= DEP after its partner)
+    nodes = {}
+    for (r, q) in rows_q:
+        ks = sorted(k for (rr, qq, k) in blk if rr == r and qq == q)
+        assert ks == list(range(len(ks))), ('blocks not contiguous', r, q, ks)
+        lv = []
+        for i in range(0, len(ks), 2):
+            ce, v = blk[(r, q, ks[i])]
+            d = new_addr(q)
+            P.put(P.red, ce, q, 0, 74, (1 << 73) | (0 << 70) | (d << 40) | (1 << 7) | 0x20)
+            ready = ce + DEP
+            if i + 1 < len(ks):
+                co, vo = blk[(r, q, ks[i + 1])]
+                assert co >= ce + DEP, ('pair spacing', r, q, ks[i], ce, co)
+                P.put(P.red, co, q, 0, 74, (1 << 73) | (op_ext << 70) | (d << 60) | (d << 40) | (1 << 7) | 0x20)
+                v = comb(v, vo); ready = co + DEP
+            lv.append((d, ready, v))
+        nodes[(r, q)] = lv
+    # in-quarter pairwise tree (free reducer slots), odd node carried up; export the quarter root
+    for (r, q) in rows_q:
+        lv = nodes[(r, q)]; last = 0
+        while len(lv) > 1:
+            nl = []
+            for i in range(0, len(lv) - 1, 2):
+                (xa, ra, va), (xb, rb, vb) = lv[i], lv[i + 1]
+                e = max(ra, rb, last + 1)
+                while not P.free(P.red, e, q, 0, 74): e += 1
+                last = e; d = new_addr(q)
+                P.put(P.red, e, q, 0, 74, (1 << 73) | (op_tree << 70) | (xa << 60) | (xb << 50) | (d << 40))
+                nl.append((d, e + DEP, comb(va, vb)))
+            if len(lv) % 2: nl.append(lv[-1])
+            lv = nl
+        roots[(r, q)] = lv[0]
+    finals = {}
+    for r in sorted(set(r for r, _ in rows_q)):
+        qs = sorted(q for (rr, q) in rows_q if rr == r)
+        qb = qs[0]
+        assert qb % QPR == 0 and all(q // QPR == qb // QPR for q in qs), ('row quarters', r, qs)
+        wfin = 128 + r; tagf = 0x100 | wfin
+        if len(qs) == 1:
+            d, rdy, v = roots[(r, qb)]
+            e = rdy
+            while not P.free(P.red, e, qb, 0, 74): e += 1
+            P.put(P.red, e, qb, 0, 74, (1 << 73) | (4 << 70) | (d << 60) | (tagf << 8))
+            P.exps.append((e + RLAT + 3, qb, tagf, v)); finals[r] = (wfin, e + RLAT + 4 + RFL, v)
+            continue
+        # quarter roots -> RF words, then ((Q0+Q1)+(Q2+Q3)) on reducer qb through RF class 4
+        rw = {}
+        for q in qs:
+            d, rdy, v = roots[(r, q)]
+            e = rdy
+            while not P.free(P.red, e, q, 0, 74): e += 1
+            w = 8 + (r * 4 + q) % 112; tag = 0x100 | w
+            P.put(P.red, e, q, 0, 74, (1 << 73) | (4 << 70) | (d << 60) | (tag << 8))
+            P.exps.append((e + RLAT + 3, q, tag, v)); rw[q] = (w, e + RLAT + 4 + RFL, v)
+        def rfop(e0, op, aa, dd, w):
+            ee = e0
+            while not (P.free(P.red, ee, qb, 0, 74) and P.free(P.rf, ee - 2, qb, 4 * 9, 9)): ee += 1
+            P.put(P.rf, ee - 2, qb, 4 * 9, 9, (1 << 8) | w)
+            P.put(P.red, ee, qb, 0, 74, (1 << 73) | (op << 70) | (aa << 60) | (dd << 40) | (1 << 7))
+            return ee
+        halves = []
+        for h in range(0, len(qs), 2):
+            pq = qs[h:h + 2]
+            d = new_addr(qb)
+            w0, r0, v0 = rw[pq[0]]
+            e0 = rfop(r0 + 2, 0, 0, d, w0); rdy = e0 + DEP; v = v0
+            if len(pq) == 2:
+                w1, r1, v1 = rw[pq[1]]
+                e1 = rfop(max(r1 + 2, e0 + DEP), op_ext, d, d, w1); rdy = e1 + DEP; v = comb(v, v1)
+            halves.append((d, rdy, v))
+        if len(halves) == 2:
+            (xa, ra, va), (xb, rb, vb) = halves
+            e = max(ra, rb)
+            while not P.free(P.red, e, qb, 0, 74): e += 1
+            d = new_addr(qb)
+            P.put(P.red, e, qb, 0, 74, (1 << 73) | (op_tree << 70) | (xa << 60) | (xb << 50) | (d << 40))
+            halves = [(d, e + DEP, comb(va, vb))]
+        d, rdy, v = halves[0]
+        e = rdy
+        while not P.free(P.red, e, qb, 0, 74): e += 1
+        P.put(P.red, e, qb, 0, 74, (1 << 73) | (4 << 70) | (d << 60) | (tagf << 8))
+        P.exps.append((e + RLAT + 3, qb, tagf, v)); finals[r] = (wfin, e + RLAT + 4 + RFL, v)
+    # the MODEL check: every row's lowered value == csum8 / ordered max of the row (independent reference)
+    for r, (w, rdy, v) in finals.items():
+        ref = model_reduce(red, gold[r * N:(r + 1) * N])
+        assert v == ref, ('pre-tree lowering != model reduction', r, hex(v), hex(ref))
+    # RF sector drains of words 128.. (sector 16 + row//8), as the as-built path
+    last_lg = 0
+    for sec_i in sorted(set(w // 8 for w, _, _ in finals.values())):
+        ws = {w: v for w, rdy, v in finals.values() if w // 8 == sec_i}
+        rdy = max(rr for w, rr, v in finals.values() if w // 8 == sec_i)
+        e = rdy + a.rfd_slack
+        while not (P.free(P.vmw, e + 1, 0, 0, 39) and P.free(P.rf, e - LRF, 0, 5 * 9, 9)): e += 1
+        P.put(P.rf, e - LRF, 0, 5 * 9, 9, (1 << 8) | (8 * sec_i))
+        mask = 0; words = []
+        for k in range(8):
+            w = 8 * sec_i + k
+            if w in ws: mask |= 1 << k; words.append(ws[w])
+            else: words.append(0)
+        sec = (0 << 13) | (498 << 4)
+        P.put(P.vmw, e + 1, 0, 0, 39, (1 << 38) | (1 << 37) | (sec << 8) | mask)
+        P.expw.append((e + 1 + 4, 0, 0, sec, mask, words))
+        last_lg = max(last_lg, e + 1 + 4)
+    return dict(rows=len(finals), finals={str(r): f'{v[2]:08x}' for r, v in finals.items()},
+                model_check='PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)',
+                _last_lg=last_lg)
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('rec')
     ap.add_argument('--rr', type=int, default=12); ap.add_argument('--wr', type=int, default=10)
     ap.add_argument('--fill-slack', type=int, default=1); ap.add_argument('--drain-slack', type=int, default=2)
     ap.add_argument('--side-ii', type=int, default=0)
     ap.add_argument('--rfd-slack', type=int, default=1)  # HBM-SUFIX: class-5 RF drain strictly after RF commit (su_top_compile Z > g_ready)
+    ap.add_argument('--pretree', action='store_true')    # HBM-PRETREE2: reductions through the bound pre-tree (build PRETREE=1)
+    ap.add_argument('--qpr', type=int, default=0)        # quarters per reduction row: 1/2/4; 0 = try all, keep the fastest
     a = ap.parse_args()
+    if a.pretree and RECS[a.rec][5] and a.qpr == 0:
+        import copy, io, contextlib
+        best = None
+        for qpr in (1, 2, 4):
+            b = copy.copy(a); b.qpr = qpr
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    r = compile_rec(b)
+            except AssertionError as ex:
+                print(f'qpr {qpr}: not feasible ({ex})', file=sys.stderr); continue
+            print(f'qpr {qpr}: cycles_serial {r}', file=sys.stderr)
+            if best is None or r < best[0]: best = (r, qpr)
+        a.qpr = best[1]
+    compile_rec(a)
+
+
+def compile_rec(a):
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     design, N, ROWS, roles, mods, red, writes_o = RECS[a.rec]
     RR, WR = a.rr, a.wr
@@ -198,11 +383,33 @@ def main():
     side = mods.get('ci_sfu', 0) in SIDE_FN
     L = 1 if side else (32 if sfu else 128); LV = 0 if side else (5 if sfu else 7)
     NT = N * ROWS
+    PT = bool(a.pretree and red)
+    if PT:
+        assert not side, 'pre-tree reductions need lane issues'
+        QPR = a.qpr or 4
+        NCp = 1 << max(0, (-(-N // 8) - 1).bit_length())          # csum's padded chunk count
+        SW = N if QPR == 1 else NCp * 8 // QPR                      # words per quarter run (aligned csum subtree)
+        assert QPR in (1, 2, 4) and (QPR == 1 or (SW >= 8 and SW * QPR >= N)), ('qpr', QPR, N)
+        NGRP = 4 // QPR                                            # rows in flight (one per quarter group)
+        NBQ = -(-min(SW, N) // L)                                  # blocks (issues) per row slot
+        SLOTS = -(-ROWS // NGRP)
+        # emission order inside a row slot: groups of <= DEP pairs, evens then odds
+        PERM, MINGAP = [], {}
+        npairs = -(-NBQ // 2)
+        for g0 in range(0, npairs, DEP):
+            P_ = min(DEP, npairs - g0)
+            ev = [2 * (g0 + i) for i in range(P_)]
+            od = [2 * (g0 + i) + 1 for i in range(P_) if 2 * (g0 + i) + 1 < NBQ]
+            for k in od: MINGAP[k] = k - 1                         # odd block k waits >= DEP after block k-1
+            PERM += ev + od
+        assert sorted(PERM) == list(range(NBQ))
     # HBM-SUFIX: a per-row RF broadcast scalar is ONE word per issue, so rows that do not fill whole issues get their
     # own issues (PR); otherwise elements are packed contiguously across issues.
     PR = (not side) and roles.get('B') == 'rf' and ROWS > 1 and N % (4 * L) != 0
     GR = -(-N // (4 * L)) if PR else 0
     G = NT if side else (ROWS * GR if PR else -(-NT // (4 * L)))
+    if PT:
+        PR = False; G = SLOTS * NBQ
     LAT = LIN + sfu_depth(mods)
     import zlib
     rng = np.random.default_rng(zlib.crc32(a.rec.encode()))
@@ -212,11 +419,18 @@ def main():
     if mods.get('ci_sfu') == 2: seed = np.abs(seed).astype(F)          # rsqrt argument: a sum of squares
     # element placement: element e -> issue g, quarter q, lane b
     def place(e):
+        if PT:
+            row, i = divmod(e, N); s_, grp = divmod(row, NGRP); j, o = divmod(i, SW) if QPR > 1 else (0, i)
+            k, b = divmod(o, L); return s_ * NBQ + PERM.index(k), grp * QPR + j, b
         if side: return e, 0, 0                          # every element on global lane 0 (quarter 0, lane 0)
         if PR:
             row, i = divmod(e, N); k, r = divmod(i, 4 * L); return row * GR + k, r // L, r % L
         g, r = divmod(e, 4 * L); return g, r // L, r % L
     def EI(g, q, b):                                     # element index of (issue, quarter, lane) or None
+        if PT:
+            s_, t_ = divmod(g, NBQ); grp, j = divmod(q, QPR); row = s_ * NGRP + grp
+            o = PERM[t_] * L + b; i = j * SW + o
+            return row * N + i if (row < ROWS and b < L and o < SW and i < N) else None
         if side: return g if (q == 0 and b == 0 and g < NT) else None
         if PR:
             row, k = divmod(g, GR); i = k * 4 * L + q * L + b; return row * N + i if i < N else None
@@ -326,13 +540,25 @@ def main():
     srcs = (1 << 2) if roles.get('B') == 'rf' else 0
     first_em = max(fill_ready.get(0, D0) + a.fill_slack, D0 + 8)
     ld_e = first_em - 8
-    row_of_issue = [EI(g, 0, 0) // N for g in range(G)]
+    def _row(g):
+        for q in range(4):
+            for b in range(L):
+                x = EI(g, q, b)
+                if x is not None: return x // N
+        return 0
+    row_of_issue = [_row(g) for g in range(G)]
+    def rowq(g, q):                                      # PRETREE: rows differ per quarter group -> per-quarter RF word
+        if PT and g < G:
+            for b in range(L):
+                x = EI(g, q, b)
+                if x is not None: return x // N
+        return row_of_issue[g] if g < G else 0
     def fields(q, g, emit, dst):
         nl_tot = (G - 1) * L + live[G - 1, q] if G else 0
         vb = 0
         for s, role in enumerate('ABCDO'):
             if role == 'B' and roles.get('B') == 'rf':
-                vb |= rf_words[row_of_issue[g] if g < G else 0] << (s * 24)
+                vb |= rf_words[rowq(g, q)] << (s * 24)
             elif role in base:
                 vb |= physical_word(q, base[role] + g, 0) << (s * 24)
             else:                                        # HBM-SUFIX: unused stream still reads; keep it in-quarter
@@ -342,16 +568,23 @@ def main():
                     i_v=g * L, vb=vb, dst=dst, co_dst=dst)
     emits = []                                           # (edge, g, j)
     te = first_em
-    reps = L if red else 1
+    reps = L if (red and not PT) else 1
+    em_edge = {}                                         # PT: issue -> emission edge (pair spacing)
     # HBM-SUFIX: the SIDE pipe is built at MLAT 3 (ot_hbm_su_static_side localparam) while the bound lane takes its
     # result at its MLAT-4 insertion depth; the side result register is overwritten by the next element first unless
     # side elements are spaced by (lane depth - side depth + 1).  RTL lever: side pipe at the lane's MLAT.
     SII = (a.side_ii if a.side_ii > 0 else {2: 10, 3: 1, 6: 19, 7: 8}.get(mods.get('ci_sfu', 0), 1)) if side else 1
     prev_row = 0
     for g in range(G):
-        if roles.get('B') == 'rf' and row_of_issue[g] != prev_row:
-            te += 8; prev_row = row_of_issue[g]          # RF broadcast word changes: window gap
+        rk = tuple(rowq(g, q) for q in range(4)) if PT else row_of_issue[g]
+        if roles.get('B') == 'rf' and g > 0 and rk != prev_row:
+            te += 8                                      # RF broadcast word changes: window gap
+        prev_row = rk
         te = max(te, fill_ready[g] + a.fill_slack)
+        if PT:
+            s_, t_ = divmod(g, NBQ); k = PERM[t_]
+            if k in MINGAP: te = max(te, em_edge[s_ * NBQ + PERM.index(MINGAP[k])] + DEP)
+            em_edge[g] = te
         for j in range(reps):
             if red and j >= max(live[g]):
                 break
@@ -379,10 +612,11 @@ def main():
         if dst: out_w[g] = e + LAT
     # RF class-1 broadcast windows (per row)
     if roles.get('B') == 'rf':
-        for row in sorted(set(row_of_issue)):
-            es = [e for (e, g, j) in emits if row_of_issue[g] == row]
-            for e in range(min(es) - 1 - LRF, max(es) + 6 - LRF):
-                for q in range(4): P.put(P.rf, e, q, 1 * 9, 9, (1 << 8) | rf_words[row])
+        for q in range(4):
+            for row in sorted(set(rowq(g, q) for g in range(G))):
+                es = [e for (e, g, j) in emits if rowq(g, q) == row]
+                for e in range(min(es) - 1 - LRF, max(es) + 6 - LRF):
+                    P.put(P.rf, e, q, 1 * 9, 9, (1 << 8) | rf_words[row])
     retire = None; last_lg = 0
     # drains
     if writes_o:
@@ -410,7 +644,10 @@ def main():
                 last_lg = max(last_lg, e + 4); dnext = e + 1
     # reductions
     rinfo = {}
-    if red:
+    if PT:
+        rinfo = reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LAT, gold)
+        last_lg = max(last_lg, rinfo.pop('_last_lg'))
+    if red and not PT:
         comb = (lambda x, y: u32(add(f32(x), f32(y)))) if red == 'sum' else fmax_u
         op_ext, op_tree = (1, 2) if red == 'sum' else (3, 5)
         vals_u = gold
@@ -510,7 +747,12 @@ def main():
     assert ne < NE
     P.n = ne
     P.ctl = P.ctl[:ne]; P.vmr = P.vmr[:ne]; P.vmw = P.vmw[:ne]; P.rf = P.rf[:ne]; P.red = P.red[:ne]; P.lw = P.lw[:ne]
+    P.tree = P.tree[:ne]
     P.write(out, seed)
+    if PT:
+        with open(out / 'tree.mem', 'w') as f:
+            for e in range(ne):
+                f.write(''.join(f'{P.tree[e][q]:012x}' for q in (3, 2, 1, 0)) + '\n')
     ser = retire - D0
     man = dict(schema='toksim.hbm.su_vop_record.v1', record=a.rec, design=design, N=N, rows=ROWS, roles=roles,
                mods={k: v for k, v in mods.items()}, red=red, sfu_lanes=sfu, lanes_per_quarter=L, issues=G,
@@ -518,9 +760,13 @@ def main():
                dispatch_edge=D0, first_emit=first_em, last_emit=last_em, last_lg_write=last_lg, retire_edge=retire,
                cycles_serial=ser, cycles_stream_833ps=round(ser * 4 / 3, 2), edges=ne,
                expected_vm_writes=len(P.expw), expected_scalars=len(P.exps), reduction=rinfo,
-               golden='hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order')
+               golden=('hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the '
+                       'MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree') if PT else
+                      'hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order',
+               pretree=dict(on=True, qpr=QPR, quarter_run_words=SW, blocks_per_row=NBQ, pt_red=SPL.PT_RED) if PT else None)
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps({k: man[k] for k in ('record', 'issues', 'emissions', 'cycles_serial', 'cycles_stream_833ps', 'edges', 'expected_vm_writes', 'expected_scalars')}))
+    return ser
 
 
 if __name__ == '__main__':
