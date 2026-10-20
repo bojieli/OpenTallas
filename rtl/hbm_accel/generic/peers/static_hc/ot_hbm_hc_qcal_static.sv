@@ -14,7 +14,16 @@
 // all reserved bits zero. The independent capture rung is the macro's only load.
 module ot_hbm_hc_qcal_static #(
     parameter integer W=146,
-    parameter integer MUT=0 // 1 wrong wrap PC, 2 extra cycle at loop boundary
+    parameter integer MUT=0, // 1 wrong wrap PC, 2 extra cycle at loop boundary
+    // HBM-HCBANK6 10-20 (QHUB SAFE 2, native32): FAN32 1 = same edges and values, every driver <= 32 loads: the programme
+    // word check is registered beside the capture (wok_c copies of word_ok computed from the macro output and pc0 on the
+    // edge captured / pc1 load), valid1 has kept copies, and the start-accept select has one kept start copy per loaded
+    // register group (pc / base / limit / loops).  gl = GLC kept copies of calendar bit 22 (the gathered-reader launch,
+    // same D), for the reader's per-group launch selects.  Default 0 = unchanged (gl = calendar[22] replicated).
+    parameter integer FAN32=0,
+    parameter integer GLC=12,
+    parameter integer GPC=10,
+    parameter integer NWS=9
 )(
     input wire clk,rst_n,
     input wire cfg_we,
@@ -28,7 +37,12 @@ module ot_hbm_hc_qcal_static #(
     output reg calendar_v,
     output reg [31:0] ordinal,
     output reg active,done,fault,
-    output reg gb
+    output reg gb,
+    output wire [GLC-1:0] gl,
+    // FAN32: kept copies of the gather-phase bit (calendar[21], GPC) and the result-store lane selects: wsel[(j*8+b)*NWS+k]
+    // = (sector j of the store maps to LG lane b) for calendar fields base [75:60] / position [78:76] (k = copy)
+    output wire [GPC-1:0] gp,
+    output wire [24*NWS-1:0] wsel
 );
     initial if(W<1 || W>223)$fatal(1,"VM calendar width must fit protected programme payload");
     reg cfg_we_q,start_v_q;
@@ -72,6 +86,7 @@ module ot_hbm_hc_qcal_static #(
     wire [18:0] gb_last=19'(gb_base)+19'(2)+({19{gb_n1[0]}}&19'(gb_stride))+({19{gb_n1[1]}}&(19'(gb_stride)<<1))
                        +({19{gb_n1[2]}}&(19'(gb_stride)<<2));
     wire gb_d=gb_npos>=1&&gb_npos<=8&&!gb_base[15]&&gb_last[18:15]==4'd0&&gb_last[14:13]==gb_base[14:13];
+    generate if(FAN32==0)begin:g_f0
     // Payload, ordinal and address identity have dedicated, nonreset rungs.
     always @(posedge clk)begin
         captured<=macro_data;
@@ -110,5 +125,81 @@ module ot_hbm_hc_qcal_static #(
                 end else pc<=pc+1;
             end
         end
+        assign gl={GLC{calendar[22]}};
+        assign gp={GPC{calendar[21]}};
+        wire [2:0] f0_b=calendar[62:60], f0_p=calendar[78:76];
+        for(genvar j=0;j<3;j=j+1)begin:g_ws0
+            wire [2:0] s=3'(f0_b+f0_p*3+j);
+            for(genvar b=0;b<8;b=b+1)begin:g_b
+                assign wsel[(j*8+b)*NWS+:NWS]={NWS{s==3'(b)}};
+            end
+        end
+    end else begin:g_f32
+        (* keep = "true", dont_touch = "true" *) reg [3:0] wok_c,v1_c,sv_c;
+        (* keep = "true", dont_touch = "true" *) reg [GLC-1:0] gl_c;
+        wire wok_d=macro_data[255:240]==16'hc7a1 && macro_data[233:224]==pc0 && macro_data[239:234]==0 && macro_data[223:W]==0;
+        always @(posedge clk)begin
+            captured<=macro_data;
+            pc0<=pc;pc1<=pc0;ord0<=issued;ord1<=ord0;
+            wok_c<={4{wok_d}};
+            for(integer i=0;i<W;i=i+1)calendar[i]<=v1_c[(i*4)/W]&&wok_c[(i*4)/W]&&captured[i];
+            gl_c<={GLC{v1_c[(22*4)/W]&&wok_c[(22*4)/W]&&captured[22]}};
+            ordinal<=ord1;
+            gb<=gb_d;
+        end
+        assign gl=gl_c;
+        (* keep = "true", dont_touch = "true" *) reg [GPC-1:0] gp_c;
+        (* keep = "true", dont_touch = "true" *) reg [24*NWS-1:0] ws_c;
+        wire okw=v1_c[3]&&wok_c[3];
+        wire [2:0] cb=okw?captured[62:60]:3'd0, cpp=okw?captured[78:76]:3'd0;
+        always @(posedge clk)begin
+            gp_c<={GPC{v1_c[(21*4)/W]&&wok_c[(21*4)/W]&&captured[21]}};
+            for(integer j=0;j<3;j=j+1)
+                for(integer b=0;b<8;b=b+1)
+                    ws_c[(j*8+b)*NWS+:NWS]<={NWS{3'(cb+cpp*3+j)==3'(b)}};
+        end
+        assign gp=gp_c;
+        assign wsel=ws_c;
+        wire [3:0] acc;
+        for(genvar k=0;k<4;k=k+1)begin:g_acc
+            assign acc[k]=sv_c[k] && !busy && !cfg_we_q && legal_start;
+        end
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin v1_c<=0;sv_c<=0;end
+            else begin v1_c<={4{valid0}};sv_c<={4{start_v}};end
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin
+                running<=0;issued<=0;valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;active<=0;done<=0;fault<=0;
+            end else begin
+                valid0<=running;valid1<=valid0;last0<=running && final_issue;last1<=last0;
+                calendar_v<=valid1;
+                active<=busy;done<=valid1 && last1;
+                if(v1_c[0] && !wok_c[0])fault<=1;
+                if(cfg_we_q && (busy || start_v_q))fault<=1;
+                if(start_v_q && (busy || cfg_we_q || !legal_start))fault<=1;
+                if(acc[0])begin running<=1;issued<=0;end
+                if(running)begin
+                    issued<=issued+1;
+                    if({1'b0,pc}+11'd1==limit)begin
+                        if(loops_left==1)running<=0;
+                        else if(MUT==2)running<=0;
+                    end
+                end
+            end
+        // per-group register updates (same next state as the FAN32 0 block; start accept and running are exclusive)
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)pc<=0;
+            else if(acc[0])pc<=start_base_q;
+            else if(running)begin
+                if({1'b0,pc}+11'd1==limit)begin if(loops_left!=1)pc<=base + ((MUT==1)?10'd1:10'd0); end
+                else pc<=pc+1;
+            end
+        always @(posedge clk or negedge rst_n) if(!rst_n)base<=0; else if(acc[1])base<=start_base_q;
+        always @(posedge clk or negedge rst_n) if(!rst_n)limit<=0; else if(acc[2])limit<=start_limit_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)loops_left<=0;
+            else if(acc[3])loops_left<=start_loops_q;
+            else if(running && {1'b0,pc}+11'd1==limit && loops_left!=1)loops_left<=loops_left-1;
+    end endgenerate
 endmodule
 `default_nettype wire

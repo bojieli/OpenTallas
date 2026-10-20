@@ -105,11 +105,20 @@ module ot_hgi_hc_residual_vm_static #(
         end else begin:g_safe
             // ECOP kept copies of valid[CAPTURE_LAT-1] (loaded from valid[CAPTURE_LAT-2] on the same edge, same reset):
             // copy k enables data bits [k*32 +: 32] of the 2,048-b beat register
-            localparam integer ECOP=64;
-            initial if(CAPTURE_LAT<2)$fatal(1,"SAFE needs CAPTURE_LAT >= 2");
+            // SAFE 2 (HBM-HCBANK6 10-20, native32): 128 copies (16 data bits each: an enable mux is 2 loads a bit) fed
+            // through 4 first-level copies of valid[CAPTURE_LAT-3] (same values on the same edges)
+            localparam integer ECOP=(SAFE>=2)?128:64, EW=2048/ECOP;
+            initial if(CAPTURE_LAT<((SAFE>=2)?3:2))$fatal(1,"SAFE needs CAPTURE_LAT >= 2 (SAFE 2: 3)");
             (* keep = "true", dont_touch = "true" *) reg [ECOP-1:0] vcap;
-            always @(posedge clk or negedge rst_n)
-                if(!rst_n)vcap<=0; else vcap<={ECOP{valid[CAPTURE_LAT-2]}};
+            if(SAFE>=2)begin:g_v2
+                (* keep = "true", dont_touch = "true" *) reg [3:0] vc1;
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n)begin vc1<=0;vcap<=0;end
+                    else begin vc1<={4{valid[CAPTURE_LAT-3]}};for(integer k=0;k<ECOP;k=k+1)vcap[k]<=vc1[k/32];end
+            end else begin:g_v1
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n)vcap<=0; else vcap<={ECOP{valid[CAPTURE_LAT-2]}};
+            end
             always @(posedge clk)begin
                 if(late_v)begin x_wave_beat<=2'd3;x_wave_word<=late_word;end
                 else if(send)begin x_wave_beat<=mut_beat;x_wave_word<=cap_word;end
@@ -118,8 +127,8 @@ module ot_hgi_hc_residual_vm_static #(
             for(genvar k=0;k<ECOP;k=k+1)begin:g_e
                 wire sk=vcap[k]&&!(MUT_BEAT==2&&cap_beat==3);
                 always @(posedge clk)
-                    if(late_v)x_wave[k*32+:32]<=late_d[k*32+:32];
-                    else if(sk)x_wave[k*32+:32]<=cap_d[k*32+:32];
+                    if(late_v)x_wave[k*EW+:EW]<=late_d[k*EW+:EW];
+                    else if(sk)x_wave[k*EW+:EW]<=cap_d[k*EW+:EW];
             end
             // per-face beat-control copies (W, N, E, S, centre): same next-state / enable as x_wave_v / x_wave_beat
             (* keep = "true", dont_touch = "true" *) reg [4:0] fv;

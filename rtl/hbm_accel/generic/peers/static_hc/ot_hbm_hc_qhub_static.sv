@@ -22,9 +22,15 @@ module ot_hbm_hc_qhub_static #(
     // SAFE (s_i pin register: +1 subtree edge -> root QCHX + 1; centre reset copies).  The bank beat control on each face
     // (xb_v*, xb_beat*) and the centre's rx then leave their OWN kept copy (W, N, E, S, centre) instead of one register
     // fanned to four faces.  Default 0 = unchanged.
+    // HBM-HCBANK6 10-20 (kit hbm_hcq_hub_c1, H.STA.BLK.17.2): SAFE 2 = SAFE 1 timing (0 added edges) + the hub as a
+    // CLUSTER: the centre's subtree levels 1..4 (60 of 63 LAT-7 adders, ~37k of the 51k flops) are 4 hard children
+    // ot_hbm_hc_qtree16_static (u_cen.g_hard.g_qt[c].u_t) with their own clock entries clk_t[c] (regional roots beside
+    // their register mass, compensated by the die), every adder the native-fanout LAT-7 graph, and the hc_<q> client
+    // FAN32 fixes of ot_hbm_hc_q_static SAFE 2.  clk_t[3:0] is unused for SAFE < 2 (the die ties it to the HC clock).
     parameter integer SAFE = 0
 )(
     input  wire           clk, rst_n,
+    input  wire [3:0]     clk_t,                 // SAFE 2: clock entries of the 4 hard tree slices
     // ---- hc_<q> (ot_hbm_hc_q_static)
     input  wire [7:0]     tgt,
     input  wire           cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
@@ -72,7 +78,7 @@ module ot_hbm_hc_qhub_static #(
         .program_done(program_done), .fault(hcq_fault));
     wire cxv = (SAFE != 0) ? xfv[4] : xv; wire [1:0] cxb = (SAFE != 0) ? xfb[9:8] : xbt;
     ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .SAFE(SAFE)) u_cen (
-        .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
+        .clk(clk), .clk_t(clk_t), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(cxv), .x_beat(cxb), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),

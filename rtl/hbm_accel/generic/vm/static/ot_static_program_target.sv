@@ -18,7 +18,16 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                                   // identical copies (wire *__ot_rlv), which the kit's reset_relay_split pass
                                   // (physical/common_flow/ot_rst_copies.tcl) spreads over the body's ~1,060 reset loads (<= 32 a
                                   // copy).  Same assert / release edges as reset_live.  Default 1 = unchanged.
-                                  parameter integer RLC=1)(
+                                  parameter integer RLC=1,
+                                  // HBM-HCBANK6 10-20 (QHUB SAFE 2, native32 census): FAN32 1 = every driver <= 32 loads with the SAME
+                                  // externally visible behaviour.  The 1,024-row installed bitmap is written ONE edge later from
+                                  // slice-local kept copies (32 slices x 32 rows: clear / set-enable / low-address copies, fed by 2
+                                  // first-level copies of program_cfg_we / install_open / address), and the scan reads it through a
+                                  // one-entry bypass of that pending write, so the scan sees exactly the bitmap the FAN32 0 form holds
+                                  // on every edge (write-after-clear generation semantics included).  The scan row is held in 16 kept
+                                  // slice copies (64-row read slices) next to the master counter.  Requires PCW 10.  Default 0 = unchanged.
+                                  parameter integer FAN32=0,
+                                  parameter integer MUT=0)(   // bench: FAN32 1 + MUT 1 = scan without the pending-write bypass
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -75,6 +84,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     reg [PCW:0] scan_limit;
     reg [1:0] commit;
     wire launch_ready=armed&&validated&&!scanning&&commit==0&&!program_active&&!fault;
+    // installed-row view seen by the scan (FAN32 0: the bitmap itself; FAN32 1: bitmap + the pending write, see g_f32)
+    wire row_installed;
     always @(posedge clk_in)begin
         target<=cfg_target;address<=cfg_addr;data_q<=cfg_data;
         base<=desc_base;limit<=desc_limit;loops<=desc_loops;
@@ -85,7 +96,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     always @(posedge clk or negedge rl)
         if(!rl)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
-            installed<=0;install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;
+            if(FAN32==0)installed<=0;
+            install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;
             scan_row<=0;scan_limit<=0;commit<=0;
         end else begin
             program_cfg_we<=0;program_start_v<=0;
@@ -94,8 +106,10 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             // capture and SRAM write consume two further edges; commit masks both.
             commit<={commit[0],program_cfg_we};
             if(program_cfg_we)begin
-                if(!install_open)installed<=({{(ROWS-1){1'b0}},1'b1}<<program_cfg_addr);
-                else installed[program_cfg_addr]<=1'b1;
+                if(FAN32==0)begin
+                    if(!install_open)installed<=({{(ROWS-1){1'b0}},1'b1}<<program_cfg_addr);
+                    else installed[program_cfg_addr]<=1'b1;
+                end
                 install_open<=1;
             end
             if(cv && target==tid)begin
@@ -120,10 +134,10 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 end
             end
             if(scanning)begin
-                if(!installed[scan_row])missing<=1;
+                if(!row_installed)missing<=1;
                 if({1'b0,scan_row}+1'b1==scan_limit)begin
                     scanning<=0;
-                    if(missing || !installed[scan_row])fault<=1;
+                    if(missing || !row_installed)fault<=1;
                     else validated<=1;
                 end else scan_row<=scan_row+1'b1;
             end
@@ -136,5 +150,65 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 end
             end
         end
+    generate if(FAN32==0)begin:g_f0
+        assign row_installed=installed[scan_row];
+    end else begin:g_f32
+        initial if(PCW!=10)$fatal(1,"FAN32 needs PCW 10 (32 x 32 write slices, 16 x 64 read slices)");
+        // first-level copies (same D and edge as program_cfg_we / install_open / program_cfg_addr)
+        (* keep = "true", dont_touch = "true" *) reg [2:0] we_a,open_a;   // copy 2 feeds the bypass
+        (* keep = "true", dont_touch = "true" *) reg [PCW-1:0] addr_a [0:2];
+        always @(posedge clk or negedge rl)
+            if(!rl)begin we_a<=0;open_a<=0;end
+            else begin
+                we_a<=3'b000;
+                if(cv && target==tid && !(program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
+                   data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address}))we_a<=3'b111;
+                if(program_cfg_we)open_a<=3'b111;
+                if(dv && target==tid)open_a<=3'b000;
+            end
+        always @(posedge clk)
+            if(cv && target==tid)begin addr_a[0]<=address[PCW-1:0];addr_a[1]<=address[PCW-1:0];addr_a[2]<=address[PCW-1:0];end
+        // pending write (one edge after program_cfg_we): slice copies + one bypass copy
+        (* keep = "true", dont_touch = "true" *) reg [31:0] clr_s,set_s;
+        (* keep = "true", dont_touch = "true" *) reg [4:0] lo_s [0:31];
+        reg pend_we,pend_open; reg [PCW-1:0] pend_addr;
+        always @(posedge clk or negedge rl)
+            if(!rl)begin clr_s<=0;set_s<=0;pend_we<=0;pend_open<=0;end
+            else begin
+                pend_we<=we_a[2];pend_open<=open_a[2];
+                for(integer k=0;k<32;k=k+1)begin
+                    clr_s[k]<=we_a[k/16]&&!open_a[k/16];
+                    set_s[k]<=we_a[k/16]&&(addr_a[k/16][9:5]==5'(k));
+                end
+            end
+        always @(posedge clk)begin
+            pend_addr<=addr_a[2];
+            for(integer k=0;k<32;k=k+1)lo_s[k]<=addr_a[k/16][4:0];
+        end
+        reg [ROWS-1:0] inst;
+        always @(posedge clk or negedge rl)
+            if(!rl)inst<=0;
+            else for(integer k=0;k<32;k=k+1)
+                for(integer r=0;r<32;r=r+1)
+                    inst[k*32+r]<=(inst[k*32+r]&&!clr_s[k])||(set_s[k]&&lo_s[k]==5'(r));
+        // scan-row read copies: 16 x 6-bit low copies (64-row read slices) + the 4-bit slice select
+        (* keep = "true", dont_touch = "true" *) reg [5:0] sl_c [0:15];
+        reg [3:0] sh_c;
+        wire scan_load=dv && target==tid && !(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} ||
+                       limit>(13'd1<<PCW)) && !(validated && base==stored_base && limit==stored_limit);
+        wire scan_step=scanning && !({1'b0,scan_row}+1'b1==scan_limit);
+        wire [PCW-1:0] scan_nxt=scan_load?base[PCW-1:0]:scan_step?scan_row+1'b1:scan_row;
+        always @(posedge clk or negedge rl)
+            if(!rl)begin for(integer k=0;k<16;k=k+1)sl_c[k]<=0;sh_c<=0;end
+            else begin for(integer k=0;k<16;k=k+1)sl_c[k]<=scan_nxt[5:0];sh_c<=scan_nxt[9:6];end
+        wire [15:0] slice_rd;
+        for(genvar k=0;k<16;k=k+1)begin:g_rd
+            assign slice_rd[k]=inst[k*64+sl_c[k]];
+        end
+        wire inst_rd=slice_rd[sh_c];
+        // the FAN32 0 bitmap on this edge = inst updated with the pending write
+        wire pend_hit=pend_addr==scan_row;
+        assign row_installed=(MUT==1)?inst_rd:pend_we?(pend_open?(inst_rd||pend_hit):pend_hit):inst_rd;
+    end endgenerate
 endmodule
 `default_nettype wire

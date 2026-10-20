@@ -21,6 +21,15 @@
 //           SAFE 0: the root takes it as QCHX + 1 (programme RAW0 + 1, bench HC_QSI=1).
 //   reset   the centre's own reset loads hang off u_rst_relay (RCN kept copies; the kit's reset_relay_split spreads them
 //           <= 32 a copy); the 8 bank resets keep their own relay u_rst (one copy per bank face).
+// SAFE 2 (HBM-HCBANK6 10-20, kit hbm_hcq_hub_c1; = SAFE 1 timing, 0 added edges): the register mass of the subtree
+//   (levels 1..4, 60 of the 63 LAT-7 adders, ~37k flops) leaves the hub glue for 4 HARD CHILD tree slices
+//   ot_hbm_hc_qtree16_static g_qt[c].u_t (16 chunk sums each, own clock entry clk_t[c] = their own CTS root beside their
+//   register mass: the SAFE 1 hub had one 51k-flop root whose 566..849 ps arrival spread stalled the hold repair on 28k
+//   endpoints).  Each slice registers its 512-b s_i slice (the SAFE 1 s_i pin register) and the leaf valid (handed one
+//   edge early, vl[VD-2]); its level-4 node feeds the 3 glue adders (levels 5, 6).  Every adder is the reviewed native
+//   fanout LAT-7 graph (ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1, SAT-equal to the LAT-7 DRST-0 adder).  ps_f ORs the
+//   slices' node valid/err output registers on the same edge as SAFE 1.  The lane-fault bit s_i[2048] keeps its glue pin
+//   register.  clk_t is unused for SAFE < 2.
 module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
@@ -30,6 +39,7 @@ module ot_hbm_hc_qcen_static #(
     parameter integer SAFE = 0
 )(
     input  wire           clk, rst_n,
+    input  wire [3:0]     clk_t,                     // SAFE 2: clock entries of the 4 hard tree slices
     input  wire           d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
     input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, i_w,
     input  wire [11:0]    i_cnt, input wire [9:0] i_word,
@@ -50,13 +60,22 @@ module ot_hbm_hc_qcen_static #(
     localparam integer RCN = 32;
     wire [8:0] rn; wire rc;
     ot_rst_relay #(.REGIONS((SAFE != 0) ? 8 : 9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[((SAFE != 0) ? 7 : 8):0]));
+    wire [3:0] rcn_t;                                    // SAFE 2: one kept relay copy per hard tree slice
     if (SAFE != 0) begin : g_rc
         wire [RCN-1:0] rcn;
         ot_rst_relay #(.REGIONS(RCN)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn));
         assign rc = rcn[0];
         assign rn[8] = 1'b1;
+        if (SAFE >= 2) begin : g_rt
+            wire [3:0] rtn;
+            ot_rst_relay #(.REGIONS(4)) u_rst_t (.clk(clk), .rst_n_in(rst_n), .rst_n(rtn));
+            assign rcn_t = rtn;
+        end else begin : g_rt0
+            assign rcn_t = 4'hf;
+        end
     end else begin : g_rc0
         assign rc = rn[8];
+        assign rcn_t = 4'hf;
     end
     assign rst_b = rn[7:0];
 
@@ -135,44 +154,82 @@ module ot_hbm_hc_qcen_static #(
     end
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
-    // SAFE: the chunk-sum pin register (no reset: data + the lane-fault bit, qualified by the leaf valid below)
-    wire [2048:0] s_l;
-    if (SAFE != 0) begin : g_sireg
-        reg [2048:0] s_q;
-        always @(posedge clk) s_q <= s_i;
-        assign s_l = s_q;
-    end else begin : g_sidir
-        assign s_l = s_i;
-    end
     localparam integer SID = (SAFE != 0 && MUT != 6) ? 1 : 0;   // MUT 6: landing without the valid delay
     // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY (+ SID) edges ago
     localparam integer VD = SB + DRLY + CHX + SID;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
-    wire [64*32-1:0] lv0;
-    for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
-        localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
-        assign lv0[i*32 +: 32] = s_l[SRC*32 +: 32];
-    end
     wire [63*32-1:0] nd; wire [62:0] nv, ne;
-    for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
-        localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
-        for (genvar i = 0; i < N; i = i + 1) begin : g_n
-            wire [31:0] a, b; wire va; wire [1:0] e;
-            if (l == 1) begin : g_leaf
-                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
-            end else begin : g_up
-                assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
+    wire s_lf;                                                 // lane-fault bit as the subtree sees it
+    if (SAFE < 2) begin : g_flat
+        // SAFE 1: the chunk-sum pin register (no reset: data + the lane-fault bit, qualified by the leaf valid below)
+        wire [2048:0] s_l;
+        if (SAFE != 0) begin : g_sireg
+            reg [2048:0] s_q;
+            always @(posedge clk) s_q <= s_i;
+            assign s_l = s_q;
+        end else begin : g_sidir
+            assign s_l = s_i;
+        end
+        assign s_lf = s_l[W*32];
+        wire [64*32-1:0] lv0;
+        for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
+            localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
+            assign lv0[i*32 +: 32] = s_l[SRC*32 +: 32];
+        end
+        for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
+            localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
+            for (genvar i = 0; i < N; i = i + 1) begin : g_n
+                wire [31:0] a, b; wire va; wire [1:0] e;
+                if (l == 1) begin : g_leaf
+                    assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
+                end else begin : g_up
+                    assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
+                end
+                ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+                assign ne[OFF + i] = nv[OFF + i] && (|e);
             end
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
-                .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
-            assign ne[OFF + i] = nv[OFF + i] && (|e);
+        end
+    end else begin : g_hard
+        // SAFE 2: levels 1..4 in the 4 hard slices, levels 5..6 here (node numbering as g_flat)
+        initial if (TLA != 7 || VD < 2) $fatal(1, "SAFE 2: TLA 7 (native-fanout adder graph) and VD >= 2");
+        reg lf_q; always @(posedge clk) lf_q <= s_i[W*32];
+        assign s_lf = lf_q;
+        wire [4*32-1:0] ty; wire [3:0] tv;
+        for (genvar c = 0; c < 4; c = c + 1) begin : g_qt
+            wire [14:0] snv; wire [29:0] se;
+            ot_hbm_hc_qtree16_static #(.TLA(TLA), .MUT((MUT == 4) ? 4 : 0)) u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
+                .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+            // slice node j (level l = 1..4) = centre node OFF(l) + (N(l) * c) + (j - SOFF(l))
+            for (genvar j = 0; j < 15; j = j + 1) begin : g_m
+                localparam integer L = (j < 8) ? 1 : (j < 12) ? 2 : (j < 14) ? 3 : 4;
+                localparam integer SOFF = 16 - (32 >> L), N = 64 >> L, OFF = 64 - (128 >> L);
+                localparam integer G = OFF + (N / 4) * c + (j - SOFF);
+                assign nv[G] = snv[j];
+                assign ne[G] = snv[j] && (|se[j*2 +: 2]);
+                if (L == 4) begin : g_top
+                    assign nd[G*32 +: 32] = ty[c*32 +: 32];
+                end else begin : g_in
+                    assign nd[G*32 +: 32] = 32'd0;          // internal slice node: its sum stays in the slice
+                end
+            end
+        end
+        for (genvar l = 5; l <= LT; l = l + 1) begin : g_lvl
+            localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
+            for (genvar i = 0; i < N; i = i + 1) begin : g_n
+                wire [1:0] e;
+                ot_hdc_fp32_add_lat_fan32 #(.LAT(TLA), .DRST(0), .SAFE_DIST(1)) u_a (.clk(clk), .rst_n(rc),
+                    .valid_in(nv[POFF + 2*i]), .a(nd[(POFF + 2*i)*32 +: 32]), .b(nd[(POFF + 2*i + 1)*32 +: 32]),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+                assign ne[OFF + i] = nv[OFF + i] && (|e);
+            end
         end
     end
     localparam integer RT = 62;
     reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_l[W*32] && leaf_v};
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_lf && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin

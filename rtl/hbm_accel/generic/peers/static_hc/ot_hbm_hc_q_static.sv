@@ -44,6 +44,11 @@ module ot_hbm_hc_q_static #(
     //           response edges, which the programme never overlaps -- an overlap still faults exactly as before);
     //           the x_wave capture enable is ECOP kept copies and the beat control leaves per-face kept copies x_face_*;
 //           the gathered reader's 768-b return mux select is 24 kept copies of return_sector[2:0] (RSC, one-hot AND-OR).
+    // HBM-HCBANK6 10-20 (QHUB SAFE 2, native32 census, 0 added edges): SAFE 2 = SAFE 1 + every mapped driver <= 32 loads:
+    //   F20 target FAN32 (bitmap from slice copies + pending-write bypass, scan-row copies), programme ot_hbm_hc_qcal_static
+    //   FAN32 (registered word check copies, start-accept copies, launch / gather-phase / store-lane kept copies),
+    //   ot_hgi_hc_gathered_mix_reader_f32_static (per-group launch accepts, predicted response / request copies, one-hot
+    //   row select), ot_hgi_hc_result_vm_f32_static (kept store-lane selects), residual capture enables 128 x 16 b.
     parameter integer SAFE=0
 )(
     input wire clk,rst_n,
@@ -104,7 +109,7 @@ module ot_hbm_hc_q_static #(
     wire [255:0] p_data;
     wire [10:0] start_limit;
     wire [15:0] start_loops;
-    ot_static_program_target #(.PCW(10),.TGT_PIN(1),.RLC((SAFE!=0)?40:1)) target(
+    ot_static_program_target #(.PCW(10),.TGT_PIN(1),.RLC((SAFE!=0)?40:1),.FAN32((SAFE>=2)?1:0)) target(
         .clk(clk),.rst_n(rr_n[0]),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(program_active),.program_cfg_we(cfg_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),
@@ -113,17 +118,21 @@ module ot_hbm_hc_q_static #(
     // ---- programme issuer
     wire [78:0] c;
     wire cal_v,cal_fault,gb;
+    localparam integer GLC=11, GPC=11, NWS=9;
+    wire [GLC-1:0] gl; wire [GPC-1:0] gp; wire [24*NWS-1:0] wsel;
     generate if(SAFE!=0)begin:g_qcal
-        ot_hbm_hc_qcal_static #(.W(79)) programme(
+        ot_hbm_hc_qcal_static #(.W(79),.FAN32((SAFE>=2)?1:0),.GLC(GLC),.GPC(GPC),.NWS(NWS)) programme(
             .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
             .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
-            .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault),.gb(gb));
+            .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault),.gb(gb),
+            .gl(gl),.gp(gp),.wsel(wsel));
     end else begin:g_vcal
         ot_vms_calendar_static #(.W(79)) programme(
             .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
             .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
             .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
         assign gb=1'b0;
+        assign gl={GLC{c[22]}}; assign gp={GPC{c[21]}}; assign wsel={24*NWS{1'b0}};
     end endgenerate
     wire residual_launch=c[0];
     wire [3:0] residual_npos=c[4:1];
@@ -143,8 +152,9 @@ module ot_hbm_hc_q_static #(
     // valid bits (b*257+256) are steered, the data bits go to both readers ungated
     wire [2055:0] rr_res,rr_gat;
     for(genvar b=0;b<8;b=b+1)begin:g_rr
-        assign rr_res[b*257+256]=gather_phase?1'b0:rr_q[b*257+256];
-        assign rr_gat[b*257+256]=gather_phase?rr_q[b*257+256]:1'b0;
+        wire gps=(SAFE>=2)?gp[9]:gather_phase;
+        assign rr_res[b*257+256]=gps?1'b0:rr_q[b*257+256];
+        assign rr_gat[b*257+256]=gps?rr_q[b*257+256]:1'b0;
         assign rr_res[b*257+:256]=(SAFE!=0)?rr_q[b*257+:256]:(gather_phase?256'd0:rr_q[b*257+:256]);
         assign rr_gat[b*257+:256]=(SAFE!=0)?rr_q[b*257+:256]:(gather_phase?rr_q[b*257+:256]:256'd0);
     end
@@ -156,25 +166,51 @@ module ot_hbm_hc_q_static #(
         .x_face_v(x_face_v),.x_face_beat(x_face_beat));
     // MUT 6 (SAFE): bounds from the previous word (a stale precompute must FAIL the bench via its out-of-range vector)
     reg gb_prev; always @(posedge clk) gb_prev<=gb;
+    generate if(SAFE>=2)begin:g_gat2
+        ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(GATHER_PHASE),.GL(GLC)) gather(
+            .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.launch_c(gl),.npos(gather_npos),
+            .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
+            .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
+            .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
+            .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
+    end else begin:g_gat1
     ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.EXTB((SAFE!=0)?1:0),.RSC((SAFE!=0)?24:0)) gather(
-        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
-        .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
-        .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
-        .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
-        .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
+            .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
+            .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
+            .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
+            .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
+            .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
+    end endgenerate
+    generate if(SAFE>=2)begin:g_st2
+        ot_hgi_hc_result_vm_f32_static #(.NWS(NWS)) store(
+            .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
+            .store_position(store_position),.wsel(wsel),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
+            .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
+    end else begin:g_st1
     ot_hgi_hc_result_vm_static store(
-        .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
-        .store_position(store_position),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
-        .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
+            .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
+            .store_position(store_position),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
+            .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
+    end endgenerate
     // ---- output pin register on the request port (phase-owned, never merged)
     reg res_any,gat_any;
     always @*begin
         res_any=0;gat_any=0;
         for(integer b=0;b<8;b=b+1)begin res_any=res_any|res_rq[b*17+16];gat_any=gat_any|gat_rq[b*17+16];end
     end
-    always @(posedge clk or negedge rr_n[5])
-        if(!rr_n[5])lg_rq<=0;
-        else lg_rq<=gather_phase?gat_rq:res_rq;
+    generate if(SAFE>=2)begin:g_rq2
+        // 9 kept gather-phase copies, 16 request bits each (a 2:1 select is 2 loads a bit)
+        for(genvar g=0;g<9;g=g+1)begin:g_q
+            localparam integer LO=g*16, N=(g==8)?(136-128):16;
+            always @(posedge clk or negedge rr_n[5])
+                if(!rr_n[5])lg_rq[LO+:N]<=0;
+                else lg_rq[LO+:N]<=gp[g]?gat_rq[LO+:N]:res_rq[LO+:N];
+        end
+    end else begin:g_rq1
+        always @(posedge clk or negedge rr_n[5])
+            if(!rr_n[5])lg_rq<=0;
+            else lg_rq<=gather_phase?gat_rq:res_rq;
+    end endgenerate
     // ---- write-done reservation: every store's banks return local_w_done exactly DONE_LAT edges later
     reg [7:0] done_cal[0:DONE_LAT-1];
     reg own_fault;
@@ -186,7 +222,7 @@ module ot_hbm_hc_q_static #(
             done_cal[0]<=write_sel;
             for(integer i=1;i<DONE_LAT;i=i+1)done_cal[i]<=done_cal[i-1];
             if(w_done_q!=done_cal[DONE_LAT-1])own_fault<=1;
-            if((gather_phase&&res_any)||(!gather_phase&&gat_any))own_fault<=1;
+            if(((SAFE>=2?gp[10]:gather_phase)&&res_any)||(!(SAFE>=2?gp[10]:gather_phase)&&gat_any))own_fault<=1;
             fault<=own_fault|cal_fault|res_fault|gat_fault|wr_fault|tgt_fault;
         end
 endmodule

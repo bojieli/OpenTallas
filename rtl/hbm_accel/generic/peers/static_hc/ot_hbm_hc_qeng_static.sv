@@ -48,6 +48,7 @@ module ot_hbm_hc_qeng_static #(
     parameter integer CPR  = 0,
     // QHUB-S1 10-19: SAFE 1 = the hub centre's safe form (ot_hbm_hc_qcen_static SAFE: s_i pin register, +1 subtree edge ->
     // root QCHX + 1, programme RAW0 + 1; MUT 6 = that register without the valid delay).  Default 0 = unchanged.
+    // HBM-HCBANK6 10-20: SAFE 2 = the centre's hard tree slices (same edges as SAFE 1; slices clocked by clk here).
     parameter integer SAFE = 0,
     parameter integer MUT  = 0
 )(
@@ -83,7 +84,7 @@ module ot_hbm_hc_qeng_static #(
     wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
     ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT((MUT == 3 || MUT == 4 || MUT == 6) ? MUT : 0),
         .SAFE(SAFE)) u_cen (
-        .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
+        .clk(clk), .clk_t({4{clk}}), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(x_wave_v), .x_beat(x_wave_beat), .x_word(x_wave_word), .s_i(s_c), .wfault_i(wf), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
