@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvs_attn_rv3-rv3-COMMIT",
+ "name": "qkd_kvs_attn_rv3-rv3-56f49b294",
  "block": "qkd_kvs_attn_fl",
  "ref_tile": true,
  "owner": "Claude:KV-ATTN2",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/kv-attn2b-1019",
-  "commit": "COMMIT",
+  "commit": "56f49b294c68e7f0ea6de38d1613380ed89e98d7",
   "extra_paths": [
    "rtl",
    "tools/qwen_kv_die/attn_rv_1019",
@@ -172,7 +172,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv3/qkd_kvs_attn_rv3-rv3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv3/qkd_kvs_attn_rv3-rv3-56f49b294"
   }
  ],
  "cycles_added": 0,
