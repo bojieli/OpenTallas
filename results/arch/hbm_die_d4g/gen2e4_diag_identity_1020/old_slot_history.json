@@ -461,5 +461,75 @@
   "strap_layer": "M6",
   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12284, 25147), 107 um off it; 76 um from its GEN2a site",
   "instance": "epcal_NE"
+ },
+ "hb_idx__selector": {
+  "name": "idx_sel",
+  "cell": "ot_hbm_idx_selector_static",
+  "kind": "tile",
+  "parent": "die",
+  "outline": {
+   "w": 600.0,
+   "h": 450.0
+  },
+  "origin": {
+   "x": 7899.984,
+   "y": 15211.8,
+   "orient": "R0"
+  },
+  "io_budget": {
+   "in_delay_frac": 0.2,
+   "out_delay_frac": 0.2
+  },
+  "clock_entry": {
+   "pin": "clk_ctl",
+   "face": "E",
+   "layer": "M4",
+   "offset": 225.0
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "signal_max_layer": "M5",
+  "layer_cap": "M5",
+  "version": 1,
+  "pins": [],
+  "face_utilisation": {
+   "E": 0.001,
+   "W": 0.594
+  },
+  "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+  "params": {},
+  "layer_rule": "tile",
+  "synth": null,
+  "need_um2": 0,
+  "plan_block": "idx_sel",
+  "pin_status": "FACES_ONLY",
+  "grant": "d4f_idx_soft_1017",
+  "notes": "IDX soft-hierarchy child (contract 50de1fe73) | GEN2 SET2 (HANDOFF 0gl): clock clk_ctl E mid-face (stale offset 581.304 was outside the 450-um face); faces = kit hidx_sel_g4",
+  "faces": {
+   "W": "op, pass, addr, k, in_line, out_v, threshold_observe, selected_v, selected_observe, fault",
+   "E": "clk_ctl, clk_q, clk_mem, rst_n, selected_line",
+   "S": "out_line"
+  },
+  "synth_pin_bind": {
+   "source": "kit hidx_sel_g4 floorplan.json pins (claude/hbm-idx-small-1018)",
+   "faces": {
+    "op": "W",
+    "pass": "W",
+    "addr": "W",
+    "k": "W",
+    "in_line": "W",
+    "out_v": "W",
+    "threshold_observe": "W",
+    "selected_v": "W",
+    "selected_observe": "W",
+    "fault": "W",
+    "clk_ctl": "E",
+    "clk_q": "E",
+    "clk_mem": "E",
+    "rst_n": "E",
+    "selected_line": "E",
+    "out_line": "S"
+   }
+  }
  }
 }

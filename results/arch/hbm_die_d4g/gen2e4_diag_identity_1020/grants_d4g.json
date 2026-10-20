@@ -4303,7 +4303,7 @@
   },
   {
    "name": "idx_sel",
-   "cell": "ot_hbm_idx_selector_static",
+   "cell": "ot_hbm_idx_selector_static_sel",
    "kind": "tile",
    "parent": "die",
    "outline": {
@@ -4335,7 +4335,7 @@
     "E": 0.001,
     "W": 0.594
    },
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
    "params": {},
    "layer_rule": "tile",
    "synth": null,
@@ -4357,19 +4357,23 @@
      "addr": "W",
      "k": "W",
      "in_line": "W",
-     "out_v": "W",
-     "threshold_observe": "W",
      "selected_v": "W",
-     "selected_observe": "W",
      "fault": "W",
      "clk_ctl": "E",
      "clk_q": "E",
      "clk_mem": "E",
      "rst_n": "E",
-     "selected_line": "E",
-     "out_line": "S"
+     "selected_line": "E"
     }
-   }
+   },
+   "qualification": "SYNTH_DIAGNOSTIC_ONLY_NOT_CLOSED",
+   "parent_qualified": false,
+   "gen2e4_removed_pin_metadata_1020": [
+    "out_line",
+    "out_v",
+    "selected_observe",
+    "threshold_observe"
+   ]
   },
   {
    "name": "idx_link",
