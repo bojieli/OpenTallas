@@ -70,6 +70,17 @@ class HostSramTests(unittest.TestCase):
   proof=G.lint(spec,ROOT)
   self.assertEqual(len(proof['fifos']),2)
   self.assertEqual(len(proof['macros']),4)
+  self.assertEqual(len(proof['dual_clock_macros']),2)
+  rx=next(v for k,v in proof['dual_clock_macros'].items() if 'u_rx' in k)
+  tx=next(v for k,v in proof['dual_clock_macros'].items() if 'u_tx' in k)
+  self.assertEqual(rx['clocks'],dict(rclk=['ck_core','core'],wclk=['ck_phy_fam','phy']))
+  self.assertEqual(tx['clocks'],dict(rclk=['ck_phy_fam','phy'],wclk=['ck_core','core']))
+  self.assertEqual(rx['input_clocks']['w_ce_in'],'wclk')
+  self.assertEqual(rx['input_clocks']['r_addr_in'],'rclk')
+  bindings=G.bindings(proof)
+  self.assertIn('set ::ot_gf_dual_macros [dict create',bindings)
+  self.assertNotIn('set_false_path',G.DUAL_CLOCK_TCL)
+  self.assertNotIn('set_multicycle_path',G.DUAL_CLOCK_TCL)
   with tempfile.TemporaryDirectory() as tmp:
    root=Path(tmp)
    files=set(spec['sources'])|{'physical/common_flow/ot_keep_regs.tcl'}

@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_tt_ctlm_dv_wtn-wtn1-9fa6fd27d bench bench_f16_wtn_fmut1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_tt_ctlm_dv_wtn-wtn1-9fa6fd27d log cl/bench_f16_wtn_fmut1.a1b1.log captured 2026-10-19T17:31:02-07:00
+# fail_regex 'F16_FACE_BEGIN_NOT_WITHDRAWN'
+Verilator 5.050 2026-07-01 rev v5.050
+TWC_VECTORS 114 witnesses offsets [0, 16, 32, 168] mutants 27
+TWC_SUMMARY en=1 fault=0 obs_fault=0 ready_seen=1 ready_end=1 completions=65 retired=5 starts=5 max_live=4 active_end=0000 first_fault=-1 edges=26823
+TWC_RESULT_CLEAN
+F16_FACE_SUMMARY fmut=1 mismatched_edges=0 face_fault_seen=0
+F16_FACE_BEGIN_NOT_WITHDRAWN
+- /srv/opentallas-scratch/claude/closure-loop/qfd_tt_ctlm_dv_wtn-wtn1-9fa6fd27d/bench_src_a1/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.402 s; speed 133.648 us/s
+- Verilator: cpu 0.402 s on 1 threads; allocated 7 MB
