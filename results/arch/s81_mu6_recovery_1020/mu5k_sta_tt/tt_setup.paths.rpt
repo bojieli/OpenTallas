@@ -1,0 +1,510 @@
+Startpoint: u_s_4N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_4L12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_4N/clk (rv_s_4N)
+     1  841.0   20.0   25.0   25.0 v u_s_4N/ck_xc[11] (rv_s_4N)
+     1   16.7   84.2 40552.5 40577.5 ^ st_x_f_4L12_l3_0/ck_o (dsfd_dvrlyh_276_EW)
+     1   19.7   33.3   71.9 40649.4 ^ wire2584728/Y (BUFx8_ASAP7_75t_R)
+     1   15.6   28.9   60.1 40709.5 ^ wire2584727/Y (BUFx8_ASAP7_75t_R)
+                53.5   14.7 40724.2 ^ u_f_4L12/xk[3] (rv_f_4L12)
+                            40724.2   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_4L12/clk (rv_f_4L12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -40724.2   data arrival time
+-------------------------------------------------------------------------
+                            -39975.8   slack (VIOLATED)
+
+
+Startpoint: u_s_4N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_4L12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_4N/clk (rv_s_4N)
+     1  841.4   20.0   25.0   25.0 v u_s_4N/ck_xc[10] (rv_s_4N)
+     1   19.6   98.8 40541.2 40566.2 ^ st_x_f_4L12_l2_0/ck_o (dsfd_dvrlyh_276_EW)
+     1   15.5   27.0   64.3 40630.5 ^ wire2584730/Y (BUFx8_ASAP7_75t_R)
+     1   18.6   33.4   58.0 40688.6 ^ wire2584729/Y (BUFx8_ASAP7_75t_R)
+                58.1   15.7 40704.3 ^ u_f_4L12/xk[2] (rv_f_4L12)
+                            40704.3   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_4L12/clk (rv_f_4L12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -40704.3   data arrival time
+-------------------------------------------------------------------------
+                            -39955.9   slack (VIOLATED)
+
+
+Startpoint: u_s_4S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_4L02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_4S/clk (rv_s_4S)
+     1  837.0   20.0   25.0   25.0 v u_s_4S/ck_xc[11] (rv_s_4S)
+     1   18.4   94.1 26569.0 26594.0 ^ st_x_f_4L02_l3_0/ck_o (dsfd_dvrlyh_276_EW)
+     1   17.1   32.4   70.9 26664.9 ^ wire2584844/Y (BUFx8_ASAP7_75t_R)
+     1   17.7   30.6   49.1 26714.0 ^ wire2584843/Y (BUFx8_ASAP7_75t_R)
+                56.5   15.6 26729.6 ^ u_f_4L02/xk[3] (rv_f_4L02)
+                            26729.6   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_4L02/clk (rv_f_4L02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -26729.6   data arrival time
+-------------------------------------------------------------------------
+                            -25981.2   slack (VIOLATED)
+
+
+Startpoint: u_s_4S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_4L02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_4S/clk (rv_s_4S)
+     1  837.8   20.0   25.0   25.0 v u_s_4S/ck_xc[10] (rv_s_4S)
+     1   16.7   84.4 26554.8 26579.8 ^ st_x_f_4L02_l2_0/ck_o (dsfd_dvrlyh_276_EW)
+     1   14.3   25.3   70.0 26649.8 ^ wire2584846/Y (BUFx8_ASAP7_75t_R)
+     1   15.8   28.5   53.3 26703.1 ^ wire2584845/Y (BUFx8_ASAP7_75t_R)
+                54.2   15.0 26718.1 ^ u_f_4L02/xk[2] (rv_f_4L02)
+                            26718.1   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_4L02/clk (rv_f_4L02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -26718.1   data arrival time
+-------------------------------------------------------------------------
+                            -25969.8   slack (VIOLATED)
+
+
+Startpoint: u_s_7N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_7R12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_7N/clk (rv_s_7N)
+     1   93.3   20.0   25.0   25.0 v u_s_7N/ck_xc[12] (rv_s_7N)
+     1    6.9   15.4  774.7  799.7 v wire425063/Y (BUFx8_ASAP7_75t_R)
+     1    4.7   12.4   32.0  831.7 v wire425062/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.2   28.8  860.5 v wire425061/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.4   28.6  889.0 v wire425060/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   27.6  916.6 v wire425059/Y (BUFx8_ASAP7_75t_R)
+     1    2.5   10.1   25.0  941.6 v wire425058/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   25.1  966.7 v wire425057/Y (BUFx8_ASAP7_75t_R)
+     1    5.9   14.0   26.7  993.4 v wire425056/Y (BUFx8_ASAP7_75t_R)
+     1    6.8   15.3   30.8 1024.3 v wire425055/Y (BUFx8_ASAP7_75t_R)
+     1    4.7   12.4   31.9 1056.2 v wire425054/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.2   28.7 1084.9 v wire425053/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.3   28.6 1113.5 v wire425052/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.5 1142.0 v wire425051/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   27.8 1169.7 v wire425050/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   26.9 1196.6 v wire425049/Y (BUFx8_ASAP7_75t_R)
+     1    6.0   14.0   26.7 1223.3 v wire425048/Y (BUFx8_ASAP7_75t_R)
+     1    6.9   15.4   30.9 1254.2 v wire425047/Y (BUFx8_ASAP7_75t_R)
+     1  365.5  161.5  102.2 1356.4 v wire425046/Y (BUFx8_ASAP7_75t_R)
+     1    2.2 1130.0 13339.5 14695.9 v wire425045/Y (BUFx8_ASAP7_75t_R)
+     1   60.3   71.2  222.0 14917.9 v wire425044/Y (BUFx8_ASAP7_75t_R)
+               831.6  262.1 15180.0 v u_f_7R12/xk[0] (rv_f_7R12)
+                            15180.0   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_7R12/clk (rv_f_7R12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -15180.0   data arrival time
+-------------------------------------------------------------------------
+                            -14431.6   slack (VIOLATED)
+
+
+Startpoint: u_s_3S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_3R02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_3S/clk (rv_s_3S)
+     1  113.5   20.0   25.0   25.0 v u_s_3S/ck_xc[12] (rv_s_3S)
+     1    4.4   12.1 1010.4 1035.4 v wire500256/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.1   28.2 1063.6 v wire500255/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   27.3 1090.9 v wire500254/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.1   26.4 1117.4 v wire500253/Y (BUFx8_ASAP7_75t_R)
+     1    2.7   10.4   27.4 1144.8 v wire500252/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   26.2 1171.0 v wire500251/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.2   27.9 1198.9 v wire500250/Y (BUFx8_ASAP7_75t_R)
+     1    3.0   10.6   27.6 1226.5 v wire500249/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   26.5 1253.0 v wire500248/Y (BUFx8_ASAP7_75t_R)
+     1    3.0   10.6   27.0 1280.0 v wire500247/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.3   26.7 1306.8 v wire500246/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.4 1335.1 v wire500245/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   27.0 1362.1 v wire500244/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.1   26.5 1388.6 v wire500243/Y (BUFx8_ASAP7_75t_R)
+     1    2.7   10.3   27.3 1415.9 v wire500242/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.0   26.3 1442.3 v wire500241/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.1   28.1 1470.4 v wire500240/Y (BUFx8_ASAP7_75t_R)
+     1    3.0   10.6   27.5 1497.9 v wire500239/Y (BUFx8_ASAP7_75t_R)
+     1  358.7  161.6   97.0 1594.9 v wire500238/Y (BUFx8_ASAP7_75t_R)
+     1    2.5 1086.5 12833.5 14428.4 v wire500237/Y (BUFx8_ASAP7_75t_R)
+     1   64.4   72.0  216.9 14645.3 v wire500236/Y (BUFx8_ASAP7_75t_R)
+               569.1  178.6 14823.8 v u_f_3R02/xk[0] (rv_f_3R02)
+                            14823.8   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_3R02/clk (rv_f_3R02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14823.8   data arrival time
+-------------------------------------------------------------------------
+                            -14075.5   slack (VIOLATED)
+
+
+Startpoint: u_s_3S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_3L02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_3S/clk (rv_s_3S)
+     1   99.0   20.0   25.0   25.0 v u_s_3S/ck_xc[11] (rv_s_3S)
+     1    2.8   10.4  340.7  365.7 v wire500277/Y (BUFx8_ASAP7_75t_R)
+     1    2.6   10.2   25.5  391.2 v wire500276/Y (BUFx8_ASAP7_75t_R)
+     1    2.0    9.8   25.0  416.2 v wire500275/Y (BUFx8_ASAP7_75t_R)
+     1    2.1    9.9   24.7  440.8 v wire500274/Y (BUFx8_ASAP7_75t_R)
+     1    2.2   10.0   24.8  465.6 v wire500273/Y (BUFx8_ASAP7_75t_R)
+     1    2.9   10.5   25.2  490.8 v wire500272/Y (BUFx8_ASAP7_75t_R)
+     1    2.6   10.3   25.7  516.4 v wire500271/Y (BUFx8_ASAP7_75t_R)
+     1    1.8    9.6   24.9  541.3 v wire500270/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   24.6  565.9 v wire500269/Y (BUFx8_ASAP7_75t_R)
+     1    2.6   10.2   25.1  591.0 v wire500268/Y (BUFx8_ASAP7_75t_R)
+     1    2.6   10.3   25.3  616.3 v wire500267/Y (BUFx8_ASAP7_75t_R)
+     1    2.1    9.9   25.1  641.4 v wire500266/Y (BUFx8_ASAP7_75t_R)
+     1    1.8    9.6   24.5  666.0 v wire500265/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   24.9  690.8 v wire500264/Y (BUFx8_ASAP7_75t_R)
+     1    2.7   10.3   25.5  716.4 v wire500263/Y (BUFx8_ASAP7_75t_R)
+     1    2.0    9.8   25.0  741.4 v wire500262/Y (BUFx8_ASAP7_75t_R)
+     1    2.2    9.9   24.7  766.0 v wire500261/Y (BUFx8_ASAP7_75t_R)
+     1    2.2    9.9   24.8  790.8 v wire500260/Y (BUFx8_ASAP7_75t_R)
+     1  366.8  161.8   96.4  887.2 v wire500259/Y (BUFx8_ASAP7_75t_R)
+     1    2.5 1134.0 13398.0 14285.2 v wire500258/Y (BUFx8_ASAP7_75t_R)
+     1   61.1   71.3  222.5 14507.7 v wire500257/Y (BUFx8_ASAP7_75t_R)
+               849.7  267.8 14775.6 v u_f_3L02/xk[3] (rv_f_3L02)
+                            14775.6   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_3L02/clk (rv_f_3L02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14775.6   data arrival time
+-------------------------------------------------------------------------
+                            -14027.2   slack (VIOLATED)
+
+
+Startpoint: u_s_5S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_5L02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_5S/clk (rv_s_5S)
+     1   92.5   20.0   25.0   25.0 v u_s_5S/ck_xc[9] (rv_s_5S)
+     1    4.1   11.7  461.6  486.6 v wire455818/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.2   28.0  514.6 v wire455817/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.4  542.9 v wire455816/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.2   27.9  570.8 v wire455815/Y (BUFx8_ASAP7_75t_R)
+     1    2.5   10.2   27.6  598.4 v wire455814/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   26.0  624.4 v wire455813/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.2   28.0  652.3 v wire455812/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.4  680.7 v wire455811/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.0   27.8  708.5 v wire455810/Y (BUFx8_ASAP7_75t_R)
+     1    4.3   11.9   28.2  736.7 v wire455809/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   28.1  764.8 v wire455808/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   27.2  791.9 v wire455807/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   26.2  818.2 v wire455806/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   27.7  845.9 v wire455805/Y (BUFx8_ASAP7_75t_R)
+     1    4.3   11.9   28.0  873.9 v wire455804/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   28.1  902.0 v wire455803/Y (BUFx8_ASAP7_75t_R)
+     1    2.7   10.3   27.1  929.1 v wire455802/Y (BUFx8_ASAP7_75t_R)
+     1  364.9  161.7   96.7 1025.8 v wire455801/Y (BUFx8_ASAP7_75t_R)
+     1    1.6 1124.7 13247.2 14273.0 v wire455800/Y (BUFx8_ASAP7_75t_R)
+     1   60.1   71.0  220.9 14493.9 v wire455799/Y (BUFx8_ASAP7_75t_R)
+               823.8  259.6 14753.6 v u_f_5L02/xk[1] (rv_f_5L02)
+                            14753.6   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_5L02/clk (rv_f_5L02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14753.6   data arrival time
+-------------------------------------------------------------------------
+                            -14005.2   slack (VIOLATED)
+
+
+Startpoint: u_s_2N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_2R12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_2N/clk (rv_s_2N)
+     1   96.7   20.0   25.0   25.0 v u_s_2N/ck_xc[13] (rv_s_2N)
+     1    3.8   11.4  326.3  351.3 v wire533270/Y (BUFx8_ASAP7_75t_R)
+     1    4.3   12.0   27.8  379.2 v wire533269/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   28.4  407.5 v wire533268/Y (BUFx8_ASAP7_75t_R)
+     1    4.8   12.6   28.4  436.0 v wire533267/Y (BUFx8_ASAP7_75t_R)
+     1    5.0   12.8   29.5  465.5 v wire533266/Y (BUFx8_ASAP7_75t_R)
+     1    4.0   11.6   28.8  494.3 v wire533265/Y (BUFx8_ASAP7_75t_R)
+     1    3.6   11.2   27.6  521.9 v wire533264/Y (BUFx8_ASAP7_75t_R)
+     1    1.9    9.7   26.2  548.1 v wire533263/Y (BUFx8_ASAP7_75t_R)
+     1    3.9   11.5   25.4  573.6 v wire533262/Y (BUFx8_ASAP7_75t_R)
+     1    4.3   12.0   27.9  601.4 v wire533261/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.9   28.3  629.8 v wire533260/Y (BUFx8_ASAP7_75t_R)
+     1    4.8   12.5   28.5  658.2 v wire533259/Y (BUFx8_ASAP7_75t_R)
+     1    5.0   12.7   29.4  687.7 v wire533258/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.7  716.4 v wire533257/Y (BUFx8_ASAP7_75t_R)
+     1    3.7   11.2   27.7  744.1 v wire533256/Y (BUFx8_ASAP7_75t_R)
+     1    1.9    9.7   26.2  770.3 v wire533255/Y (BUFx8_ASAP7_75t_R)
+     1    2.5   10.2   24.7  795.0 v wire533254/Y (BUFx8_ASAP7_75t_R)
+     1  365.9  161.6   96.5  891.5 v wire533253/Y (BUFx8_ASAP7_75t_R)
+     1    2.2 1128.9 13325.8 14217.3 v wire533252/Y (BUFx8_ASAP7_75t_R)
+     1   59.9   71.2  221.8 14439.1 v wire533251/Y (BUFx8_ASAP7_75t_R)
+               819.1  258.2 14697.3 v u_f_2R12/xk[1] (rv_f_2R12)
+                            14697.3   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_2R12/clk (rv_f_2R12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14697.3   data arrival time
+-------------------------------------------------------------------------
+                            -13948.9   slack (VIOLATED)
+
+
+Startpoint: u_s_6N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_6L12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_6N/clk (rv_s_6N)
+     1   95.9   20.0   25.0   25.0 v u_s_6N/ck_xc[11] (rv_s_6N)
+     1    6.2   14.4  323.2  348.2 v wire445653/Y (BUFx8_ASAP7_75t_R)
+     1    5.9   14.1   31.4  379.6 v wire445652/Y (BUFx8_ASAP7_75t_R)
+     1    1.8    9.6   29.5  409.0 v wire445651/Y (BUFx8_ASAP7_75t_R)
+     1    4.0   11.6   25.5  434.5 v wire445650/Y (BUFx8_ASAP7_75t_R)
+     1    6.5   14.9   28.6  463.2 v wire445649/Y (BUFx8_ASAP7_75t_R)
+     1    5.9   14.0   32.0  495.2 v wire445648/Y (BUFx8_ASAP7_75t_R)
+     1    3.9   11.5   30.6  525.7 v wire445647/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   26.6  552.3 v wire445646/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.1   26.0  578.3 v wire445645/Y (BUFx8_ASAP7_75t_R)
+     1    4.6   12.3   28.5  606.8 v wire445644/Y (BUFx8_ASAP7_75t_R)
+     1    1.8    9.6   27.2  634.0 v wire445643/Y (BUFx8_ASAP7_75t_R)
+     1    3.7   11.3   25.3  659.3 v wire445642/Y (BUFx8_ASAP7_75t_R)
+     1    4.5   12.2   27.5  686.8 v wire445641/Y (BUFx8_ASAP7_75t_R)
+     1    6.2   14.4   29.2  716.0 v wire445640/Y (BUFx8_ASAP7_75t_R)
+     1    5.9   14.0   31.9  747.9 v wire445639/Y (BUFx8_ASAP7_75t_R)
+     1    1.9    9.7   29.4  777.4 v wire445638/Y (BUFx8_ASAP7_75t_R)
+     1    4.0   11.6   25.5  802.9 v wire445637/Y (BUFx8_ASAP7_75t_R)
+     1  366.2  160.8   97.8  900.7 v wire445636/Y (BUFx8_ASAP7_75t_R)
+     1    4.5 1123.4 13383.4 14284.1 v wire445635/Y (BUFx8_ASAP7_75t_R)
+     1   65.9   73.0  223.0 14507.0 v wire445634/Y (BUFx8_ASAP7_75t_R)
+               593.9  186.6 14693.6 v u_f_6L12/xk[3] (rv_f_6L12)
+                            14693.6   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_6L12/clk (rv_f_6L12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14693.6   data arrival time
+-------------------------------------------------------------------------
+                            -13945.3   slack (VIOLATED)
+
+
+Startpoint: u_s_2S (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_2L02 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_2S/clk (rv_s_2S)
+     1   94.9   20.0   25.0   25.0 v u_s_2S/ck_xc[8] (rv_s_2S)
+     1    2.2   10.0  315.0  340.0 v wire522925/Y (BUFx8_ASAP7_75t_R)
+     1    4.7   12.5   26.1  366.1 v wire522924/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.1   28.8  395.0 v wire522923/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   28.2  423.2 v wire522922/Y (BUFx8_ASAP7_75t_R)
+     1    2.3   10.0   26.8  450.0 v wire522921/Y (BUFx8_ASAP7_75t_R)
+     1    2.6   10.3   25.1  475.1 v wire522920/Y (BUFx8_ASAP7_75t_R)
+     1    4.8   12.5   26.4  501.5 v wire522919/Y (BUFx8_ASAP7_75t_R)
+     1    3.7   11.3   28.5  530.1 v wire522918/Y (BUFx8_ASAP7_75t_R)
+     1    2.0    9.7   26.1  556.2 v wire522917/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   25.0  581.2 v wire522916/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.1   26.4  607.6 v wire522915/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   27.5  635.1 v wire522914/Y (BUFx8_ASAP7_75t_R)
+     1    3.8   11.4   26.1  661.2 v wire522913/Y (BUFx8_ASAP7_75t_R)
+     1    2.2    9.9   26.4  687.6 v wire522912/Y (BUFx8_ASAP7_75t_R)
+     1    4.8   12.5   26.1  713.7 v wire522911/Y (BUFx8_ASAP7_75t_R)
+     1    4.4   12.0   28.9  742.5 v wire522910/Y (BUFx8_ASAP7_75t_R)
+     1    4.0   11.6   28.1  770.7 v wire522909/Y (BUFx8_ASAP7_75t_R)
+     1  366.4  161.7   98.2  868.9 v wire522908/Y (BUFx8_ASAP7_75t_R)
+     1    1.2 1134.4 13344.6 14213.5 v wire522907/Y (BUFx8_ASAP7_75t_R)
+     1   59.8   71.4  222.4 14435.9 v wire522906/Y (BUFx8_ASAP7_75t_R)
+               816.3  257.2 14693.1 v u_f_2L02/xk[0] (rv_f_2L02)
+                            14693.1   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_2L02/clk (rv_f_2L02)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14693.1   data arrival time
+-------------------------------------------------------------------------
+                            -13944.8   slack (VIOLATED)
+
+
+Startpoint: u_s_7N (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_f_7R12 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (propagated)
+                 0.0    0.0    0.0 ^ u_s_7N/clk (rv_s_7N)
+     1   96.0   20.0   25.0   25.0 v u_s_7N/ck_xc[14] (rv_s_7N)
+     1    4.0   11.7  322.4  347.4 v wire425023/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   27.7  375.2 v wire425022/Y (BUFx8_ASAP7_75t_R)
+     1    1.9    9.7   26.8  401.9 v wire425021/Y (BUFx8_ASAP7_75t_R)
+     1    5.9   13.9   26.5  428.4 v wire425020/Y (BUFx8_ASAP7_75t_R)
+     1    6.8   15.3   30.8  459.2 v wire425019/Y (BUFx8_ASAP7_75t_R)
+     1    6.3   14.7   32.5  491.7 v wire425018/Y (BUFx8_ASAP7_75t_R)
+     1    4.8   12.6   32.2  523.9 v wire425017/Y (BUFx8_ASAP7_75t_R)
+     1    2.9   10.5   28.3  552.2 v wire425016/Y (BUFx8_ASAP7_75t_R)
+     1    4.1   11.7   26.4  578.6 v wire425015/Y (BUFx8_ASAP7_75t_R)
+     1    4.2   11.8   27.8  606.3 v wire425014/Y (BUFx8_ASAP7_75t_R)
+     1    1.9    9.7   26.7  633.0 v wire425013/Y (BUFx8_ASAP7_75t_R)
+     1    6.0   14.0   26.5  659.5 v wire425012/Y (BUFx8_ASAP7_75t_R)
+     1    6.7   15.2   30.7  690.2 v wire425011/Y (BUFx8_ASAP7_75t_R)
+     1    6.3   14.6   33.1  723.2 v wire425010/Y (BUFx8_ASAP7_75t_R)
+     1    4.9   12.7   32.2  755.4 v wire425009/Y (BUFx8_ASAP7_75t_R)
+     1    2.8   10.4   28.2  783.7 v wire425008/Y (BUFx8_ASAP7_75t_R)
+     1    4.0   11.7   26.2  809.9 v wire425007/Y (BUFx8_ASAP7_75t_R)
+     1  364.3  161.0   97.9  907.9 v wire425006/Y (BUFx8_ASAP7_75t_R)
+     1    4.0 1118.4 13292.5 14200.4 v wire425005/Y (BUFx8_ASAP7_75t_R)
+     1   61.5   70.7  220.9 14421.3 v wire425004/Y (BUFx8_ASAP7_75t_R)
+               859.8  271.1 14692.4 v u_f_7R12/xk[2] (rv_f_7R12)
+                            14692.4   data arrival time
+
+                      833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ u_f_7R12/clk (rv_f_7R12)
+                      -25.0  748.3   library setup time
+                             748.3   data required time
+-------------------------------------------------------------------------
+                             748.3   data required time
+                            -14692.4   data arrival time
+-------------------------------------------------------------------------
+                            -13944.1   slack (VIOLATED)
+
+

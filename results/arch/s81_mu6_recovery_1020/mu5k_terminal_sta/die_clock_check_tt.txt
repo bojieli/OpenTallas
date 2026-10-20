@@ -1,0 +1,52 @@
+die clock check: 5744 tiles / 6004 clock entries, 418 die clock cells, 0 die flops, roots port:ck_cl0N, port:ck_cl0S, port:ck_cl1N, port:ck_cl1S, port:ck_cl2N, port:ck_cl2S, port:ck_cl3N, port:ck_cl3S, port:ck_cl4N, port:ck_cl4S, port:ck_cl5N, port:ck_cl5S, port:ck_cl6N, port:ck_cl6S, port:ck_cl7N, port:ck_cl7S, port:ck_edge0, port:ck_edge8, port:ck_hbm, port:ck_south2, port:ck_south3, port:ck_south4, port:ck_south5, port:ck_void1, port:ck_void3, port:ck_void4
+insertion model ps : min 669.3 / med 11590.4 / p90 18171.4 / max 23634.7 (spread 22965.4)
+insertion STA ps   : min 0.0 / med 0.0 / p90 0.0 / max 2697.1 (spread 2697.1)  [late]; min 0.0 / med 0.0 / p90 0.0 / max 2674.7 (spread 2674.7) [early]
+tree levels        : min 0 / med 0.0 / p90 0 / max 29 (spread 29)
+non-common pairs 1750 (no common root 97, unmatched 2772)
+non-common model ps: min 1143.8 / med 11567.2 / p90 17685.3 / max 23634.7 (spread 22490.9)
+non-common STA ps  : min 0.0 / med 0.0 / p90 0.0 / max 256.4 (spread 256.4)
+pair skew STA ps   : min 0.0 / med 0.0 / p90 0.0 / max 2697.1 (spread 2697.1)
+per region (26): entries | insertion STA late | flop arrival spread | intra pairs NCP / skew
+  port:ck_void1                    66 |        0.0..2697.1 |      n/a |     21 0.0 / 0.0
+  port:ck_cl0N                    233 |         0.0..256.4 |      n/a |     67 256.4 / 256.4
+  port:ck_south3                  253 |         0.0..255.6 |      n/a |     83 202.0 / 202.0
+  port:ck_edge0                    30 |         0.0..252.7 |      n/a |      6 0.0 / 0.0
+  port:ck_south4                  252 |         0.0..252.4 |      n/a |     98 218.8 / 218.8
+  port:ck_cl7N                    284 |         0.0..241.6 |      n/a |     74 238.6 / 211.8
+  port:ck_cl0S                    320 |         0.0..240.5 |      n/a |     83 220.3 / 220.3
+  port:ck_cl3N                    294 |         0.0..239.6 |      n/a |     81 239.6 / 239.6
+  port:ck_cl3S                    255 |         0.0..234.7 |      n/a |     66 234.7 / 234.7
+  port:ck_cl7S                    353 |         0.0..233.1 |      n/a |     96 220.2 / 220.2
+  port:ck_cl4N                    396 |         0.0..232.7 |      n/a |     98 232.7 / 232.7
+  port:ck_void4                   177 |         0.0..232.6 |      n/a |     66 217.4 / 16.4
+  port:ck_cl1S                    324 |         0.0..232.1 |      n/a |     89 232.1 / 232.1
+  port:ck_void3                    71 |         0.0..231.0 |      n/a |     17 0.0 / 0.0
+  port:ck_edge8                    23 |         0.0..228.7 |      n/a |      6 0.0 / 0.0
+  port:ck_cl2S                    350 |         0.0..228.4 |      n/a |     86 228.4 / 228.4
+  port:ck_cl5S                    298 |         0.0..224.3 |      n/a |     97 224.3 / 224.3
+  port:ck_cl1N                    270 |         0.0..222.3 |      n/a |     82 110.9 / 110.9
+  port:ck_cl5N                    360 |         0.0..222.3 |      n/a |     86 220.6 / 220.6
+  port:ck_cl6S                    320 |         0.0..221.2 |      n/a |     95 221.2 / 221.2
+inter-region pairs: 97
+worst 20 pairs (non-common = max side from the branch point):
+  tile A                             tile B                                model      STA     skew  branch
+  u_ctrl_08                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_09                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_10                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_11                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_12                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_13                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_14                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  u_ctrl_15                          u_phy_hbm                                 -        -      0.0  NO COMMON ROOT
+  st_rs_0_26                         u_f_0L03                                  -        -      0.0  NO COMMON ROOT
+  st_rs_0_38                         u_lk_WN0                                  -        -      0.0  NO COMMON ROOT
+  st_rs_0_9_3                        u_lk_WS0                                  -        -      0.0  NO COMMON ROOT
+  st_rs_15_36_2                      st_tvN_bk_col_0                           -        -   2697.1  NO COMMON ROOT
+  st_lr_lk_WS0_0                     st_rs_1_18                                -        -    252.7  NO COMMON ROOT
+  st_rs_28_10_1                      u_f_2R01                                  -        -      0.0  NO COMMON ROOT
+  st_hrq_00_0                        st_rs_29_3                                -        -     90.4  NO COMMON ROOT
+  st_rs_31_10_2                      u_f_3L01                                  -        -      0.0  NO COMMON ROOT
+  st_rs_33_34_2                      st_rsg_rs_33_34_2_cl3N_0                  -        -      0.0  NO COMMON ROOT
+  st_rs_33_34_2                      u_f_3L10                                  -        -      0.0  NO COMMON ROOT
+  st_r_f_3L10_0                      st_rs_33_34_3                             -        -    220.2  NO COMMON ROOT
+  st_rs_34_13_2                      u_s_3S                                    -        -      0.0  NO COMMON ROOT

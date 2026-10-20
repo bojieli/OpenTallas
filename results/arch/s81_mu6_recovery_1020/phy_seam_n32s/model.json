@@ -1,0 +1,267 @@
+{
+  "schema": "opentallas.s81.actual_pin_seam_model.v1",
+  "status": "MODEL_ONLY",
+  "source_hashes": {
+    "mu5k_grt/phy_source.lef": "188c0f25011aa87da11f5934085de5bb562966f4d110a5ec0f623d5d12d67a29",
+    "mu5k_grt/controller7_standin.lef": "8c8f31feaf12cf45e04a824196dabe5b04bf3cd1dae373580d987843af307123",
+    "phy_seam_n32s/n32s_pins.tcl": "71470860d2a4964e634291c99f0e247d12a1f6ab76659c5382a2f193cb9c4317",
+    "phy_seam_n32s/n32s_floorplan.json": "667588285c0057f386b5f56744285ca2d3881d8b7c7d955a41621b8160ee8189"
+  },
+  "missing": [],
+  "old": {
+    "bits": 19904,
+    "over405": 9952,
+    "over100": 19904,
+    "max_um": 631.3190000000002,
+    "worst": [
+      {
+        "pair": 15,
+        "pin": "k_wdata[0]",
+        "phy_pin": "k_wdata[7680]",
+        "phy_xy": [
+          19713.116,
+          1197.104
+        ],
+        "old_xy": [
+          20234.206000000002,
+          1307.333
+        ],
+        "n32s_xy": [
+          19795.228,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 631.3190000000002,
+        "n32s_l1_um": 85.00799999999731
+      },
+      {
+        "pair": 14,
+        "pin": "k_wdata[0]",
+        "phy_pin": "k_wdata[7168]",
+        "phy_xy": [
+          19181.948,
+          1197.104
+        ],
+        "old_xy": [
+          19702.956000000002,
+          1307.333
+        ],
+        "n32s_xy": [
+          19263.978,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 631.2370000000017,
+        "n32s_l1_um": 84.9259999999988
+      },
+      {
+        "pair": 13,
+        "pin": "k_wdata[0]",
+        "phy_pin": "k_wdata[6656]",
+        "phy_xy": [
+          18650.78,
+          1197.104
+        ],
+        "old_xy": [
+          19171.706000000002,
+          1307.333
+        ],
+        "n32s_xy": [
+          18732.728,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 631.1550000000032,
+        "n32s_l1_um": 84.84400000000028
+      },
+      {
+        "pair": 12,
+        "pin": "k_wdata[0]",
+        "phy_pin": "k_wdata[6144]",
+        "phy_xy": [
+          18119.612,
+          1197.104
+        ],
+        "old_xy": [
+          18640.456000000002,
+          1307.333
+        ],
+        "n32s_xy": [
+          18201.478,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 631.073000000001,
+        "n32s_l1_um": 84.76199999999812
+      },
+      {
+        "pair": 15,
+        "pin": "k_wdata[1]",
+        "phy_pin": "k_wdata[7681]",
+        "phy_xy": [
+          19713.307999999997,
+          1197.104
+        ],
+        "old_xy": [
+          20234.206000000002,
+          1307.237
+        ],
+        "n32s_xy": [
+          19795.555,
+          1200.0
+        ],
+        "n32s_layer": "M5",
+        "old_l1_um": 631.0310000000047,
+        "n32s_l1_um": 85.14300000000298
+      }
+    ]
+  },
+  "n32s": {
+    "bits": 19904,
+    "over405": 0,
+    "over100": 6875,
+    "max_um": 149.2230000000011,
+    "worst": [
+      {
+        "pair": 15,
+        "pin": "kr_data[255]",
+        "phy_pin": "kr_data[7935]",
+        "phy_xy": [
+          19821.98,
+          1197.104
+        ],
+        "old_xy": [
+          20234.206000000002,
+          1282.853
+        ],
+        "n32s_xy": [
+          19968.307,
+          1200.0
+        ],
+        "n32s_layer": "M5",
+        "old_l1_um": 497.9750000000024,
+        "n32s_l1_um": 149.2230000000011
+      },
+      {
+        "pair": 14,
+        "pin": "kr_data[255]",
+        "phy_pin": "kr_data[7423]",
+        "phy_xy": [
+          19290.811999999998,
+          1197.104
+        ],
+        "old_xy": [
+          19702.956000000002,
+          1282.853
+        ],
+        "n32s_xy": [
+          19437.057,
+          1200.0
+        ],
+        "n32s_layer": "M5",
+        "old_l1_um": 497.8930000000039,
+        "n32s_l1_um": 149.14100000000258
+      },
+      {
+        "pair": 15,
+        "pin": "kr_data[254]",
+        "phy_pin": "kr_data[7934]",
+        "phy_xy": [
+          19821.788,
+          1197.104
+        ],
+        "old_xy": [
+          20234.206000000002,
+          1282.949
+        ],
+        "n32s_xy": [
+          19968.028,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 498.2630000000015,
+        "n32s_l1_um": 149.13599999999792
+      },
+      {
+        "pair": 13,
+        "pin": "kr_data[255]",
+        "phy_pin": "kr_data[6911]",
+        "phy_xy": [
+          18759.644,
+          1197.104
+        ],
+        "old_xy": [
+          19171.706000000002,
+          1282.853
+        ],
+        "n32s_xy": [
+          18905.807,
+          1200.0
+        ],
+        "n32s_layer": "M5",
+        "old_l1_um": 497.81100000000174,
+        "n32s_l1_um": 149.05900000000042
+      },
+      {
+        "pair": 14,
+        "pin": "kr_data[254]",
+        "phy_pin": "kr_data[7422]",
+        "phy_xy": [
+          19290.62,
+          1197.104
+        ],
+        "old_xy": [
+          19702.956000000002,
+          1282.949
+        ],
+        "n32s_xy": [
+          19436.778,
+          1200.0
+        ],
+        "n32s_layer": "M3",
+        "old_l1_um": 498.181000000003,
+        "n32s_l1_um": 149.0539999999994
+      }
+    ]
+  },
+  "routing_budget": {
+    "old": {
+      "pair": 0,
+      "peak_crossing_wires": 1244,
+      "cut_x": 12120.044,
+      "M6_pitch_um": 0.064,
+      "target_use": 0.55,
+      "required_escape_height_um": 144.75636363636363
+    },
+    "n32s": {
+      "pair": 0,
+      "peak_crossing_wires": 476,
+      "cut_x": 11854.46,
+      "M6_pitch_um": 0.064,
+      "target_use": 0.55,
+      "required_escape_height_um": 55.38909090909091
+    },
+    "assumption": "one horizontal M6 layer,55percent target availability; actualPG/OBS/above-body native tracks must be audited"
+  },
+  "body_fit": {
+    "old_slot_wh": [
+      531.25,
+      250
+    ],
+    "n32s_wh": [
+      388.8,
+      324
+    ],
+    "center_dx": 71.225,
+    "body_height_growth": 74,
+    "reader_y_idx3": 1490,
+    "ctrl_top_n32s": 1524,
+    "reader_overlap34": true
+  },
+  "limitations": [
+    "prospective gate pinplan, no closed n32s view yet",
+    "endpoint Manhattan lowerbound only; routed wires and insertedbuffers not proven",
+    "n32s body exceeds old250um reservation by74um and overlaps idx3 reader by34um",
+    "pin-to-pin100um target and routing-density budget still explicit obligations"
+  ]
+}
