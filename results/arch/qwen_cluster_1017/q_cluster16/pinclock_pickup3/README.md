@@ -1,0 +1,9 @@
+# CB16 transparent clock lookup — source proposal, hand-back 17:45 PT
+
+Existing representative qfd_c_b16_reg1 gate (A0 diagnostic stand-in) terminated CTS with OT_QC_IO missing clock arrival for lrst_dn1_rly3_w. Native immutable 3_place.odb audit on OpenROAD6cb3f2b704/image16470 proves both lrst ports retain their exact net names; real hard-half ck terminals appear after four/five transparent buffers. The previous hop<4 traversal stopped before both terminals. This is a lookup defect, not evidence of missing reset registers.
+
+Proposed source replaces only the bounded transparent walk by fixed-point traversal with visited-net cycle protection in qc_kit.py and the generated region SDC. Clock ownership, fail-closed empty-clock check, IO budgets, propagation, uncertainty and all MCP windows are unchanged. Native comparison unit337975 exit0 returned OLD empty/NEW two clock pins for both reset ports, and identical OLD/NEW one clock for data la_i[0]. Independent OpenDB BFS records every native path/master.
+
+Follow-up assertion harness unit343668 exit1 at its diagnostic get_full_name call on a list of two Pins (STA-2204), after the first old-count0/new-count2 assertion passed. Remaining assertions were not reached. This is retained as a harness failure; no full assertion-suite PASS or published admission is claimed. No rerun started after CLAUDE IS BACK.
+
+Source remains private/unadopted; ROOT has not admitted publication. No new gate/route is launched. Existing reg1b failures, off43.2 origins by0.024um, full region reset epochs/bench, native PG and all-driver proof, qualified A0, full16-region parent remain unresolved. The old failed gate and source WT are untouched. Read-only audits used data-local ep8,4GB/1thread reservation,469MB input ODB; no clock/design mutation or late binding.

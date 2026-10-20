@@ -1,0 +1,11 @@
+ot-run: ot-epyc8       admits  1142 GB (avail 896, growth 96, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 31 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-337975-1792457037 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+NATIVE_PINCLOCK lrst_dn1_rly3_w OLD= NEW=_113e70ae5a5c0000_p_Pin _01726eae5a5c0000_p_Pin
+NATIVE_PINCLOCK lrst_dn1_rly6_r OLD= NEW=_51d673ae5a5c0000_p_Pin _210a72ae5a5c0000_p_Pin
+NATIVE_PINCLOCK la_i[0] OLD=_e9c185ae5a5c0000_p_Pin NEW=_e9c185ae5a5c0000_p_Pin
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-337975-1792457037): exit 0

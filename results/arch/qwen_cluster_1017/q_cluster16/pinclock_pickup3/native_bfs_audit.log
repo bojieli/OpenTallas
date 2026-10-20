@@ -1,0 +1,219 @@
+ot-run: ot-epyc8       admits  1174 GB (avail 901, growth 79, headroom 0, waiters 0/0 GB) load 37/128 running 14 disk 32 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-321590-1792456979 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "routes/gate/work/orfs/results/asap7/opentallas_qfd_c_b16_reg1_asap7_ref_gate/base/3_place.odb",
+  "size": 469178836,
+  "ports": [
+    {
+      "port": "lrst_dn1_rly3_w",
+      "exists": true,
+      "net": "lrst_dn1_rly3_w",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "wire73014",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ],
+      "transparent_buffers": [
+        {
+          "instance": "wire73014",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 0
+        },
+        {
+          "instance": "wire73013",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 1
+        },
+        {
+          "instance": "input2059",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 2
+        },
+        {
+          "instance": "wire72920",
+          "master": "BUFx10_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 3
+        },
+        {
+          "instance": "wire72919",
+          "master": "BUFx12f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 4
+        }
+      ],
+      "terminal_inputs": [
+        {
+          "instance": "u_l_dn1_rly3_wlo",
+          "master": "qfd_c_land_w258_narrow",
+          "pin": "rsi",
+          "depth": 4,
+          "candidate_clock_names": [
+            "ck"
+          ],
+          "transparent_path": [
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx2_ASAP7_75t_R",
+            "BUFx10_ASAP7_75t_R"
+          ]
+        },
+        {
+          "instance": "u_l_dn1_rly3_whi",
+          "master": "qfd_c_land_w258_narrow",
+          "pin": "rsi",
+          "depth": 5,
+          "candidate_clock_names": [
+            "ck"
+          ],
+          "transparent_path": [
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx2_ASAP7_75t_R",
+            "BUFx10_ASAP7_75t_R",
+            "BUFx12f_ASAP7_75t_R"
+          ]
+        }
+      ]
+    },
+    {
+      "port": "lrst_dn1_rly6_r",
+      "exists": true,
+      "net": "lrst_dn1_rly6_r",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "wire73012",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ],
+      "transparent_buffers": [
+        {
+          "instance": "wire73012",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 0
+        },
+        {
+          "instance": "wire73011",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 1
+        },
+        {
+          "instance": "input2060",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 2
+        },
+        {
+          "instance": "wire72918",
+          "master": "BUFx12f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 3
+        },
+        {
+          "instance": "wire72917",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 4
+        }
+      ],
+      "terminal_inputs": [
+        {
+          "instance": "u_l_dn1_rly6_rlo",
+          "master": "qfd_c_land_r258_narrow",
+          "pin": "rsi",
+          "depth": 4,
+          "candidate_clock_names": [
+            "ck"
+          ],
+          "transparent_path": [
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx3_ASAP7_75t_R",
+            "BUFx12f_ASAP7_75t_R"
+          ]
+        },
+        {
+          "instance": "u_l_dn1_rly6_rhi",
+          "master": "qfd_c_land_r258_narrow",
+          "pin": "rsi",
+          "depth": 5,
+          "candidate_clock_names": [
+            "ck"
+          ],
+          "transparent_path": [
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx16f_ASAP7_75t_R",
+            "BUFx3_ASAP7_75t_R",
+            "BUFx12f_ASAP7_75t_R",
+            "BUFx16f_ASAP7_75t_R"
+          ]
+        }
+      ]
+    },
+    {
+      "port": "bc",
+      "exists": false
+    },
+    {
+      "port": "la_i[0]",
+      "exists": true,
+      "net": "la_i[0]",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "input517",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ],
+      "transparent_buffers": [
+        {
+          "instance": "input517",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A",
+          "depth": 0
+        }
+      ],
+      "terminal_inputs": [
+        {
+          "instance": "u_l_leg_2_0a_3_wlo",
+          "master": "qfd_c_land_w257_narrow",
+          "pin": "i[0]",
+          "depth": 1,
+          "candidate_clock_names": [
+            "ck"
+          ],
+          "transparent_path": [
+            "BUFx2_ASAP7_75t_R"
+          ]
+        }
+      ]
+    }
+  ]
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-321590-1792456979): exit 0

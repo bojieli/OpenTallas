@@ -1,0 +1,67 @@
+ot-run: ot-epyc8       admits  1162 GB (avail 895, growth 82, headroom 0, waiters 0/0 GB) load 36/128 running 14 disk 33 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-310920-1792456944 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "routes/gate/work/orfs/results/asap7/opentallas_qfd_c_b16_reg1_asap7_ref_gate/base/3_place.odb",
+  "size": 469178836,
+  "ports": [
+    {
+      "port": "lrst_dn1_rly3_w",
+      "exists": true,
+      "net": "lrst_dn1_rly3_w",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "wire73014",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ]
+    },
+    {
+      "port": "lrst_dn1_rly6_r",
+      "exists": true,
+      "net": "lrst_dn1_rly6_r",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "wire73012",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ]
+    },
+    {
+      "port": "bc",
+      "exists": false
+    },
+    {
+      "port": "la_i[0]",
+      "exists": true,
+      "net": "la_i[0]",
+      "by_name_net_exists": true,
+      "connections": [
+        {
+          "instance": "input517",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A",
+          "dir": "INPUT",
+          "master_clock_pins": [],
+          "candidate_clock_names": []
+        }
+      ]
+    }
+  ]
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-310920-1792456944): exit 0

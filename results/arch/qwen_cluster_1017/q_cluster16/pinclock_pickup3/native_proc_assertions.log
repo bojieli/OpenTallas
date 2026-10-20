@@ -1,0 +1,10 @@
+ot-run: ot-epyc8       admits  1143 GB (avail 894, growth 94, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 30 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-343668-1792457063 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[ERROR STA-2204] get_property _119e303985620000_p_Pin _01d22e3985620000_p_Pin is not an object.
+Error: native_proc_compare_pickup3.tcl, 77 STA-2204
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-343668-1792457063): exit 1
