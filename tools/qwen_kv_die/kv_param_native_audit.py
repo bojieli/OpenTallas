@@ -433,14 +433,37 @@ def audit(a):
     # (shared arbitrary initial memory, never zero-filled).  MODEL must define module CELL with reg arrays `arr` and
     # registered output `rd_out` (sram_gen behaviour); the words / read register are paired by instance name.
     mm = dict(x.split('=', 1) for x in (a.macro_model or []))
+    # --macro-cut CELL[=MODEL.v] (KV-PARAMS3 10-20, PV slice SRAM): the SAME hard macro sits on both sides, so instead of
+    # modelling its array as SAT state (32 words x 128 b per instance: the PV slice equiv timed out at 4 h) it becomes a
+    # CUT POINT: every macro input pin is a compared S__mc_<inst>_in_<pin> wire (proven equal every cycle, by the
+    # induction AND the reset base) and every output pin is ONE free primary input P__mc_<inst>_<pin> shared by gold and
+    # gate.  Over-approximation: any read data sequence is allowed, the real macro's is one of them (same macro, equal
+    # inputs every cycle, one physical power-up state), so a PROVEN result holds for the real macro.  The model is
+    # generated from the kit's blackbox *_bb.v port list (or given), its sha is recorded.
+    mc = {}
+    for x in (a.macro_cut or []):
+        cell, _, f = x.partition('=')
+        if not f:
+            bb = [root / b_ for b_ in bbs if re.search(r'module\s+' + re.escape(cell) + r'\b', (root / b_).read_text())]
+            if len(bb) != 1:
+                raise SystemExit(f'--macro-cut {cell}: need exactly one *_bb.v defining it among the closed sources, got {bb}')
+            f = str(work / f'{cell}_cut.v')
+            Path(f).write_text(cut_model(cell, bb[0].read_text()))
+        mc[cell] = f
+    if set(mc) & set(mm):
+        raise SystemExit(f'--macro-cut and --macro-model on the same cell: {sorted(set(mc) & set(mm))}')
+    mcut, mcin = [], []
     mstate = []
-    if mm:
-        unknown = sorted(set(mm) - set(macros.values()))
+    if mm or mc:
+        mm_all = dict(mm, **mc)
+        unknown = sorted(set(mm_all) - set(macros.values()))
         if unknown:
             raise SystemExit(f'--macro-model for cells not in the routed netlist: {unknown}')
         bbs_r = [b_ for b_ in bbs if not any(re.search(r'module\s+' + re.escape(c) + r'\b', (root / b_).read_text())
-                                             for c in mm)]
+                                             for c in mm_all)]
         res['macro_models'] = {c: dict(path=f, sha256=sha(f)) for c, f in mm.items()}
+        res['macro_cuts'] = {c: dict(path=f, sha256=sha(f), instances=sorted(i for i, c_ in macros.items() if c_ == c))
+                             for c, f in mc.items()}
         for inst, cell in sorted(macros.items()):
             if cell in mm:
                 m_ = re.search(r'reg\s*\[\s*(\d+)\s*:\s*0\s*\]\s*arr\s*\[\s*0\s*:\s*(\d+)\s*\]', Path(mm[cell]).read_text())
@@ -448,17 +471,31 @@ def audit(a):
                 tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
                 mstate += [(f'S__mm_{tag}_arr_{k}', f'{inst}.arr[{k}]', wbits) for k in range(words)]
                 mstate.append((f'S__mm_{tag}_rd_out', f'{inst}.rd_out', wbits))
+            if cell in mc:
+                tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
+                for d_, pin, w_ in cut_ports(Path(mc[cell]).read_text()):
+                    if d_ == 'input':
+                        mcin.append((f'S__mc_{tag}_in_{pin}', f'{inst}.cut_in_{pin}', w_))
+                    else:
+                        mcut.append((f'P__mc_{tag}_{pin}', f'{inst}.cut_out_{pin}', w_))
         pre = (['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs_r]
-               + [f'read_verilog -sv {f}' for f in mm.values()] + ['proc', 'memory -nomap', 'memory_map', 'opt_clean'])
+               + [f'read_verilog -sv {f}' for f in mm_all.values()] + ['proc', 'memory -nomap', 'memory_map', 'opt_clean'])
         L = pre + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate', 'proc',
                    'read_rtlil gold1.il', 'flatten gate gold', 'cd gold']
         res['macro_state_pairs'] = len(mstate)
+        res['macro_cut_points'] = dict(compared_inputs=len(mcin), compared_input_bits=sum(w_ for *_x, w_ in mcin),
+                                       free_outputs=len(mcut), free_output_bits=sum(w_ for *_x, w_ in mcut))
     else:
         L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs] + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate',
              'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
     if mstate:
         for side in ('gold', 'gate'):
             L += ['cd', f'cd {side}'] + [x for s_, w_, n_ in mstate for x in (f'add -wire {s_} {n_}', f'connect -set {s_} {w_}')]
+        L += ['cd', 'cd gold']
+    if mcin or mcut:
+        for side in ('gold', 'gate'):
+            L += ['cd', f'cd {side}'] + [x for s_, w_, n_ in mcin for x in (f'add -wire {s_} {n_}', f'connect -set {s_} {w_}')]
+            L += [x for p_, w_, n_ in mcut for x in (f'add -input {p_} {n_}', f'connect -set {w_} {p_}')]
         L += ['cd', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
@@ -512,7 +549,7 @@ def audit(a):
     if wit_lines:   # base only: the gold-side witness wires (gold has no gate twin; equiv_make never sees them)
         prelude = prelude[:wit_at] + wit_lines + prelude[wit_at:]
     L += ['async2sync',
-          'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', 'equiv_induct',
+          'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', f'equiv_induct -seq {a.induct_seq}',
           'equiv_status', 'equiv_status -assert', '']
     (work / 'equiv.ys').write_text('\n'.join(L))
     rc, t2 = run([a.yosys, '-l', 'equiv.log', '-q', '-s', 'equiv.ys'], work, 'equiv.out', a.timeout)
@@ -523,7 +560,8 @@ def audit(a):
                         proven_cells=int(m[-1][1]) if m else None, unproven_cells=int(m[-1][2]) if m else None,
                         log_sha256=sha(work / 'equiv.log') if log else None,
                         unproven_sample=re.findall(r'Unproven \$equiv [^\n]*', log)[:20],
-                        method=f'equiv_make (ports + routed-flop-name state), equiv_simple -seq {a.seq}, equiv_induct')
+                        method=f'equiv_make (ports + routed-flop-name state), equiv_simple -seq {a.seq}, '
+                               f'equiv_induct -seq {a.induct_seq}' + (f'; macro cut points {sorted(mc)}' if mc else ''))
     res['proven'] = rc == 0 and bool(m) and m[-1][2] == '0' and int(m[-1][0]) > 0
     if not log:
         res['error'] = (work / 'equiv.out').read_text()[-1500:]
@@ -536,7 +574,7 @@ def audit(a):
                                  + [f'S__proof_meta_{i:03d}' for i in range(len(obs))], wit_sets)
         res['proven'] = res['base']['proven']
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
-                                   f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
+                                   f'state, steps {a.reset_base + 1}..{a.reset_base + a.induct_seq} (miter, sat -verify)')
     return res
 
 
@@ -572,7 +610,9 @@ def reset_base(a, work, prelude, states, pair, extra=(), witness=()):
     words make two copies of the same unreset datapath disagree until it flushed -- RTL-vs-itself fails that way too
     (kv-native-comparator-replay 2c2bd3c92: 213 u_cc bits, kp_r 7 stages deep, 6 reset edges) -- so that formulation
     proves nothing about the netlist.  Every original comparison and observation stays a miter output; the reset port
-    is held active for N target edges, all other inputs arbitrary, steps N+1..N+4 checked."""
+    is held active for N target edges, all other inputs arbitrary, steps N+1..N+S checked, S = the equiv_induct -seq
+    depth (default 4): equiv_induct proves the circuits never diverge once they agree for S cycles, so S agreeing
+    cycles after reset are exactly the base it needs (--induct-seq 2 halves the unrolled checked window)."""
     n = a.reset_base
     paired = sorted(s_ for s_ in pair if not states[s_][1]) + list(extra)   # extra: macro-model array/read state
     sets = ' '.join(f'-set-at {i} in_{a.reset_port} {a.reset_active}' for i in range(1, n + 1))
@@ -581,17 +621,48 @@ def reset_base(a, work, prelude, states, pair, extra=(), witness=()):
         sets += ' ' + ' '.join(witness)
     B = prelude + ['async2sync', 'expose gold/w:S__* gate/w:S__*', 'miter -equiv -flatten -make_assert gold gate miter',
                    'hierarchy -top miter', 'opt_clean',
-                   f'sat -seq {n + 4} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
+                   f'sat -seq {n + a.induct_seq} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
                    '-verify', '']
     (work / 'base.ys').write_text('\n'.join(B))
     rc, t = run([a.yosys, '-l', 'base.log', '-q', '-s', 'base.ys'], work, 'base.out', a.timeout)
     log = (work / 'base.log').read_text() if (work / 'base.log').is_file() else ''
     ok = rc == 0 and 'no model found: SUCCESS!' in log
     return dict(rc=rc, seconds=t, proven=ok, reset_edges=n, reset_port=a.reset_port, reset_active=a.reset_active,
-                checked_steps=[n + 1, n + 4], paired_initial=len(paired), witnesses=len(witness), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
+                checked_steps=[n + 1, n + a.induct_seq], induct_seq=a.induct_seq, paired_initial=len(paired), witnesses=len(witness), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
                 log_sha256=sha(work / 'base.log') if log else None,
                 cex=str(work / 'base_cex.json') if (work / 'base_cex.json').is_file() else None,
                 error=None if log else (work / 'base.out').read_text()[-1500:])
+
+
+PORT_RE = re.compile(r'\b(input|output)\s+(?:wire\s+|reg\s+)?(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?(\w+)')
+
+
+def cut_ports(text):
+    """[(direction, pin, width)] of a macro (blackbox / cut model) module header."""
+    out = []
+    for d_, hi, lo, pin in PORT_RE.findall(text):
+        if pin.startswith(('cut_in_', 'cut_out_')):
+            continue
+        out.append((d_, pin, abs(int(hi) - int(lo)) + 1 if hi else 1))
+    if not out:
+        raise SystemExit('macro cut: no ports parsed')
+    return out
+
+
+def cut_model(cell, bb_text):
+    """Cut-point model of a hard macro from its blackbox: (* keep *) cut_in_<pin> = input, output = undriven cut_out_<pin>."""
+    ports = cut_ports(bb_text)
+    L = [f'// generated by kv_param_native_audit --macro-cut from the blackbox of {cell}', f'module {cell} (']
+    L.append(',\n'.join(f'    {d_} wire ' + (f'[{w_ - 1}:0] ' if w_ > 1 else '') + p_ for d_, p_, w_ in ports))
+    L.append(');')
+    for d_, p_, w_ in ports:
+        r_ = f'[{w_ - 1}:0] ' if w_ > 1 else ''
+        if d_ == 'input':
+            L += [f'  (* keep *) wire {r_}cut_in_{p_};', f'  assign cut_in_{p_} = {p_};']
+        else:
+            L += [f'  (* keep *) wire {r_}cut_out_{p_};', f'  assign {p_} = cut_out_{p_};']
+    L.append('endmodule')
+    return '\n'.join(L) + '\n'
 
 
 def receipts(a):
@@ -643,6 +714,10 @@ def main(argv=None):
     a1.add_argument('--reset-landing', help="the kit's reset_landing.json at the closed commit (flow landing shell)")
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
+    a1.add_argument('--induct-seq', type=int, default=4,
+                    help='equiv_induct -seq S; the reset base then checks steps N+1..N+S (S agreeing cycles)')
+    a1.add_argument('--macro-cut', action='append', default=[],
+                    help='CELL[=MODEL.v]: hard macro as a cut point (inputs compared, outputs one shared free input)')
     a1.add_argument('--observe-zero-regex', help='gold-only registers proven ZERO jointly (see audit())')
     a1.add_argument('--macro-model', action='append', default=[], help='CELL=MODEL.v stateful SAT model, both sides')
     a1.add_argument('--observe-ge', action='append', default=[],
