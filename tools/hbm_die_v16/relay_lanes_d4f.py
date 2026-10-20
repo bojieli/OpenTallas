@@ -291,6 +291,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for k in ('--stations', '--pins', '--contract', '--manifest', '--out'):
         ap.add_argument(k, required=True)
+    ap.add_argument('--split-port-faces', action='store_true', help='repartition rows by nearby real source and sink port anchors before routing')
+    ap.add_argument('--pin-group-span', type=float, default=200.0, help='maximum Manhattan span of port centroids within a row')
     ap.add_argument('--plan-um', type=float, default=380.0)
     ap.add_argument('--report')
     ap.add_argument('--grid', type=float, default=10.0)
@@ -322,6 +324,50 @@ def main():
             return None
         n = sum(x[2] for x in xs)
         return (sum(x[0] * x[2] for x in xs) / n, sum(x[1] * x[2] for x in xs) / n)
+    if a.split_port_faces:
+        import copy
+        # A centroid averaged across opposite macro faces lies inside the hard
+        # block. Repartition actual source-bit/sink-set classes, never move a
+        # physical pin or change a consumer/bit mapping to shorten a report.
+        bit_sinks = collections.defaultdict(set)
+        for e in c['edges']:
+            src, dst = e['source'], e['sink']
+            for k in range(src[2], src[3]):
+                bit_sinks[src[0], src[1], k].add(dst[0])
+        counts = collections.Counter((di, port, frozenset(sinks))
+                                     for (di, port, _), sinks in bit_sinks.items())
+        split_rows = []; split_log = []
+        for row in st['rows']:
+            di, plist = row['driver'].split('.', 1); ports = plist.split('+')
+            expected = {p: counts[di, p, frozenset(row['sinks'])] for p in ports}
+            anchors = {p: [pc(di, [p])] + [pc(sink, sport.get((di, p, sink), set())) for sink in row['sinks']]
+                       for p in ports}
+            if (sum(expected.values()) != row['bits'] or any(not expected[p] for p in ports)
+                    or any(x is None for v in anchors.values() for x in v)):
+                split_rows.append(row)
+                split_log.append(dict(driver=row['driver'], status='kept_unresolved',
+                                      bits=row['bits'], matched_bits=sum(expected.values())))
+                continue
+            groups = []
+            for port in sorted(ports):
+                match = next((g for g in groups if all(md(x, y) <= a.pin_group_span
+                             for q in g for x, y in zip(anchors[port], anchors[q]))), None)
+                if match is None:
+                    groups.append([port])
+                else:
+                    match.append(port)
+            for group in groups:
+                new = copy.deepcopy(row)
+                new['driver'] = di + '.' + '+'.join(group)
+                new['bits'] = sum(expected[p] for p in group)
+                new['port_face_split'] = dict(original_driver=row['driver'], groups=len(groups),
+                                              max_span_um=a.pin_group_span)
+                split_rows.append(new)
+            if len(groups) > 1:
+                split_log.append(dict(driver=row['driver'], status='split',
+                                      groups=[di + '.' + '+'.join(g) for g in groups], bits=row['bits']))
+        st['rows'] = split_rows
+        st['port_face_split'] = split_log
     import sys as _s
     _s.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hbm_die_v15'))
     import relay_router as RR, die_relay_stations as DS
@@ -410,6 +456,8 @@ def main():
                worst_violations=sorted(viol)[-20:],
                stations_before=sum(len(r['stations']) for r in load(a.stations)['rows']),
                stations_after=sum(len(r['stations']) for r in st['rows']))
+    if a.split_port_faces:
+        out['port_face_split'] = st.get('port_face_split', [])
     if a.report:
         Path(a.report).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps({k: v for k, v in out.items() if k != 'worst_violations'}))
