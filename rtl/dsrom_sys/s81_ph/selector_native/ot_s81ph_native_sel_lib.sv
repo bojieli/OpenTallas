@@ -526,7 +526,11 @@ module ot_s81ph_native_sel_pack #(
     wire [2*W*RE-1:0] rq = rof[2*W*RE*(NCR-1) +: 2*W*RE];
     wire              rq_v = ro_v[NCR-1], rq_fl = ro_fl[NCR-1];
     wire [LW:0]       rq_tot = {1'b0, rff[LW*(NCR-1) +: LW]} + rcf[(LW+1)*(NCR-1) +: LW+1];
+`ifdef OT_S81PH_SEL_ACC32
+    wire [W*RE-1:0]   acc;             // per-lane KEPT accumulate (g_acl below)
+`else
     reg  [W*RE-1:0]   acc;
+`endif
     reg               oflush;
     wire [2*W*RE-1:0] win;
     generate
@@ -541,6 +545,7 @@ module ot_s81ph_native_sel_pack #(
     reg [W*RE-1:0] oline_d;
     reg            ov_d;
     integer l;
+`ifndef OT_S81PH_SEL_ACC32
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             acc <= 0; oflush <= 1'b0; o_v <= 1'b0; o_bv <= 1'b0; o_fl <= 1'b0;
@@ -563,6 +568,74 @@ module ot_s81ph_native_sel_pack #(
         end
     end
     always @(*) oline_d = oflush ? acc : win[W*RE-1:0];
+`else
+    // S81-TOPK ACC32 (10-19, SAFE item 3): the accumulate controls rq_v (1,132/1,134 loads), oflush (1,183/1,219) and
+    // the rq_tot decode (OR4 1,184) fanned out to all W*RE = 1,216 acc / o_line bits in one cycle.  Each output lane gets
+    // KEPT identical copies of the last-stage control registers {ro_v, ro_fl, qf, qc} (same D, same edge, same reset)
+    // and its own oflush copy with the original's update rule, and computes its lane's acc / o_line from them.  The
+    // original oflush / ro_v / ro_fl / qf / qc keep driving only o_v / o_fl / o_bv.  Exact; 0 added edges.
+    wire          rv_d  = (NCR > 1) ? ro_v[(NCR > 1 ? NCR-2 : 0)]  : cp_v;
+    wire          rfl_d = (NCR > 1) ? ro_fl[(NCR > 1 ? NCR-2 : 0)] : cp_fl;
+    wire [LW-1:0] rf_d  = (NCR > 1) ? rff[LW*(NCR > 1 ? NCR-2 : 0) +: LW] : frun;
+    wire [LW:0]   rc_d  = (NCR > 1) ? rcf[(LW+1)*(NCR > 1 ? NCR-2 : 0) +: LW+1] : cp_cnt;
+    wire [W*RE-1:0] ol;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            oflush <= 1'b0; o_v <= 1'b0; o_bv <= 1'b0; o_fl <= 1'b0;
+        end else begin
+            o_v <= 1'b0; o_fl <= 1'b0; o_bv <= rq_v;
+            if (oflush) begin
+                o_v <= 1'b1; o_fl <= 1'b1; oflush <= 1'b0;
+            end else if (rq_v) begin
+                if (rq_tot[LW]) begin
+                    o_v <= 1'b1;
+                    if (rq_fl) begin
+                        if (rq_tot[LW-1:0] != 0) oflush <= 1'b1;
+                        else o_fl <= 1'b1;
+                    end
+                end else if (rq_fl) begin
+                    o_v <= (rq_tot != 0); o_fl <= 1'b1;
+                end
+            end
+        end
+    end
+    for (gl = 0; gl < W; gl = gl + 1) begin : g_acl
+        (* keep = "true" *) reg          cv, cfl, cof;
+        (* keep = "true" *) reg [LW-1:0] cf;
+        (* keep = "true" *) reg [LW:0]   cc;
+        reg  [RE-1:0] a;
+`ifdef OT_S81PH_SEL_ACC32_MUT
+        // mutant: upper-half lanes drop the running fill from their total (must FAIL the bench)
+        wire [LW:0]   ct = (gl >= W / 2) ? cc : ({1'b0, cf} + cc);
+`else
+        wire [LW:0]   ct = {1'b0, cf} + cc;
+`endif
+        wire [RE-1:0] wl = a[RE-1] ? a : rq[RE*gl +: RE];
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                cv <= 1'b0; cfl <= 1'b0; cof <= 1'b0; a <= {RE{1'b0}};
+            end else begin
+                cv <= rv_d; cfl <= rfl_d;
+                if (cof) begin
+                    a <= {RE{1'b0}}; cof <= 1'b0;
+                end else if (cv) begin
+                    if (ct[LW]) begin
+                        a <= rq[RE*(W+gl) +: RE];
+                        if (cfl) begin
+                            if (ct[LW-1:0] != 0) cof <= 1'b1;
+                            else a <= {RE{1'b0}};
+                        end
+                    end else if (cfl) a <= {RE{1'b0}};
+                    else a <= wl;
+                end
+            end
+        end
+        always @(posedge clk) begin cf <= rf_d; cc <= rc_d; end
+        assign acc[RE*gl +: RE] = a;
+        assign ol[RE*gl +: RE] = cof ? a : wl;
+    end
+    always @(*) oline_d = ol;
+`endif
     always @(posedge clk) begin
         for (l = 0; l < W; l = l + 1) begin
             o_lv[l] <= oline_d[RE*l + RE - 1];
