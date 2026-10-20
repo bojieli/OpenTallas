@@ -13,10 +13,11 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_LVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_SS_nldm_211120.lib.gz
 read_liberty /mv0/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
-read_db /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2lv_b3ca6169e/base/6_final.odb
+set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib]
+read_db /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2km2_1b13d46c2/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2lv_b3ca6169e/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2lv_b3ca6169e/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2km2_1b13d46c2/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2km2_1b13d46c2/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /src/physical/ref_tile/s81dvbk_g2/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc
