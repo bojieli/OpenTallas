@@ -16,7 +16,7 @@
 //   command pin: beat k = code word k (k 0..63), then beat 0 = {496'd0, scale}; provider and DUT fault-free.
 // BAD_Q=1: one Q dd word is never sent -> NEW must fault and never complete (schedule violation, no stall).
 // Pass line: N59DV_PASS ...; any failure prints N59DV_FAIL and $fatal.
-module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0,EMBR=0)(input wire clk);
+module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=1,SPL_BOFF=0,SPL_ROFF=1)(input wire clk);
  // EMBR (QW-N59-3 safe4): DUT EMB_RELAY; the embedding words land one edge later (cmd+7..+71), group 0 unchanged
  localparam integer HEADS=1;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
@@ -159,6 +159,20 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  .expected_epoch(EEP),.fill_begin(fill_begin),.fill_token(ETOK),.fill_epoch(EEP),.core_start(core_start),.core_token(ETOK),.core_epoch(EEP),
  .embed_code_re(e_cre),.embed_code_addr(e_caddr),.embed_code_q(e_cq),.embed_scale_re(e_sre),.embed_scale_addr(e_saddr),.embed_scale_q(e_sq),
  .fault(p_fault));
+
+`ifdef N59_SPLIT
+ // QW-N59-4: lockstep shadow of the hardened split (n59_split_shadow) against the reference DUT above
+ integer sh_mism,sh_cmp;
+ n59_split_shadow #(.NU(1),.MU_SEQ0(14'd0),.MCTX(0),.EMBR(EMBR),.MUT(SPLIT_MUT),.QB_MUT(QB_MUT),.LP_MUT(LP_MUT),.SOFF(SPL_SOFF),.BOFF(SPL_BOFF),.ROFF(SPL_ROFF))shadow(
+ .ck(clk),.rst_n(rst_n),.cmp_en(1'b1),.host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(16'd9),.host_tag({16'd9,6'd0,18'd50994,13'd255,6'd0}),.host_generation(2'd1),.layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),.dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),.q_slot(safe_qslot),.q_slot_beat(safe_qbeat),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.emb_code_q(e_cq),.emb_scale_q(e_sq),.visibility_slot(visibility_slot),.complete_slot(complete_slot),
+ .r_x3(n_x3),.r_x3_identity(n_xid),.r_x3_generation(n_xg),.r_native_tx_v(n_tv),.r_native_tx_payload(n_td),.r_dr_o(dr),.r_emb_code_re(e_cre),.r_emb_code_addr(e_caddr),.r_emb_scale_re(e_sre),.r_emb_scale_addr(e_saddr),.r_completed(n_done),.r_native_ret(n_ret),.r_fault(n_fault),.mism(sh_mism),.compared(sh_cmp));
+ task automatic split_verdict;begin
+  if(sh_mism!=0||sh_cmp<100)begin $display("N59DV_FAIL SPLIT lockstep: %0d of %0d edges differ (split vs reference)",sh_mism,sh_cmp);$fatal(1);end
+  $display("N59DV_PASS_SPLIT lockstep: %0d edges, every output of the split == reference (SOFF %0d BOFF %0d ROFF %0d)",sh_cmp,SPL_SOFF,SPL_BOFF,SPL_ROFF);
+ end endtask
+`else
+ task automatic split_verdict;begin end endtask
+`endif
  // ------------------------------------------------------------------ recorders and comparisons
  reg[583:0]ox3[0:7];reg[31:0]ox3c[0:7];integer nox3=0,nnx3=0;
  reg[547:0]otx[0:63];reg[31:0]otxc[0:63];integer notx=0,nntx=0;
@@ -206,6 +220,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  always @(posedge clk)if(cyc==EMB+80)begin
   if(BAD_Q!=0)begin
    if(!n_fault||n_done_c!=-1)begin $display("N59DV_FAIL BAD_Q: missing Q seat did not fault / still completed");$fatal(1);end
+   split_verdict;
    $display("N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion");$finish;
   end else begin
    if(n_fault)err("NEW fault");
@@ -216,6 +231,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
     $display("N59DV_FAIL errors=%0d x3 %0d/%0d tx %0d/%0d ar %0d/%0d emb %0d done %0d/%0d fault %0d",errs,nox3,nnx3,notx,nntx,noar,nnar,nemb,o_done_c,n_done_c,n_fault);
     $fatal(1);
    end
+   split_verdict;
    $display("N59DV_PASS x3=%0d tx=%0d(1 CMD+32 Q) ar=%0d bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done %0d->%0d, emb group-1 words=%0d at cmd+%0d..+%0d",
             nnx3,nntx,nnar,o_done_c,n_done_c,nemb,6+EMBR,70+EMBR);
    $finish;

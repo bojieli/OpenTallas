@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_native59_qbank",
+ "enable": false,
+ "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+}

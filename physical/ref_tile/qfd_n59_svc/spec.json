@@ -1,0 +1,412 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 2,
+ "layer_cap": "M5",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_svc",
+ "top": "qfd_native59_svc",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_svc.sv",
+  "rtl/qwen_split/qfd_native59_dv_service.sv",
+  "rtl/qwen_split/qfd_native59_command_context.sv",
+  "rtl/qwen_split/qfd_native59_q_export_control.sv",
+  "rtl/qwen_split/qfd_native59_static_service.sv",
+  "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv"
+ ],
+ "params": {
+  "NU": 4,
+  "MCTX": 1,
+  "EMB_RELAY": 1
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 216.0,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "native_rx_v",
+   "native_rx_payload",
+   "rx_slot",
+   "rx_slot_kind",
+   "rx_slot_beat",
+   "kv_x3_slot",
+   "kv_word_slot",
+   "kv_word_index",
+   "x3_identity",
+   "x3_generation",
+   "x3",
+   "tx_slot",
+   "tx_slot_kind",
+   "tx_slot_beat",
+   "native_tx_v",
+   "native_tx_payload"
+  ],
+  "E": [
+   "emb_code_q",
+   "dr_o"
+  ],
+  "W": [
+   "native_cmd",
+   "native_token",
+   "native_position",
+   "native_ret",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation",
+   "emb_code_re",
+   "emb_code_addr",
+   "emb_scale_re",
+   "emb_scale_addr",
+   "emb_scale_q",
+   "visibility_slot",
+   "complete_slot",
+   "completed",
+   "fault",
+   "rst_n"
+  ],
+  "S": [
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "layer_context_v",
+   "command_stage",
+   "dd_i"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   257.7,
+   260.7
+  ],
+  "native_rx_v": [
+   1.05,
+   3.292
+  ],
+  "native_rx_payload": [
+   3.392,
+   217.221
+  ],
+  "rx_slot": [
+   217.321,
+   219.564
+  ],
+  "rx_slot_kind": [
+   219.664,
+   221.906
+  ],
+  "rx_slot_beat": [
+   222.006,
+   224.248
+  ],
+  "kv_x3_slot": [
+   224.348,
+   226.591
+  ],
+  "kv_word_slot": [
+   226.691,
+   228.933
+  ],
+  "kv_word_index": [
+   229.033,
+   231.275
+  ],
+  "x3_identity": [
+   231.375,
+   254.308
+  ],
+  "x3_generation": [
+   254.408,
+   256.65
+  ],
+  "x3": [
+   261.75,
+   383.901
+  ],
+  "tx_slot": [
+   384.001,
+   385.301
+  ],
+  "tx_slot_kind": [
+   385.401,
+   386.7
+  ],
+  "tx_slot_beat": [
+   386.8,
+   388.1
+  ],
+  "native_tx_v": [
+   388.2,
+   389.5
+  ],
+  "native_tx_payload": [
+   389.6,
+   517.35
+  ],
+  "emb_code_q": [
+   1.05,
+   107.121
+  ],
+  "dr_o": [
+   107.221,
+   214.95
+  ],
+  "native_cmd": [
+   1.05,
+   116.461
+  ],
+  "native_token": [
+   116.561,
+   121.933
+  ],
+  "native_position": [
+   122.033,
+   127.405
+  ],
+  "native_ret": [
+   127.505,
+   156.282
+  ],
+  "host_epoch_valid": [
+   156.382,
+   158.106
+  ],
+  "host_fused_capability": [
+   158.206,
+   159.93
+  ],
+  "host_epoch": [
+   160.03,
+   164.794
+  ],
+  "host_tag": [
+   164.894,
+   182.728
+  ],
+  "host_generation": [
+   182.828,
+   184.552
+  ],
+  "emb_code_re": [
+   184.652,
+   186.376
+  ],
+  "emb_code_addr": [
+   186.476,
+   193.672
+  ],
+  "emb_scale_re": [
+   193.772,
+   195.495
+  ],
+  "emb_scale_addr": [
+   195.595,
+   200.967
+  ],
+  "emb_scale_q": [
+   201.067,
+   205.831
+  ],
+  "visibility_slot": [
+   205.931,
+   207.655
+  ],
+  "complete_slot": [
+   207.755,
+   209.478
+  ],
+  "completed": [
+   209.578,
+   211.302
+  ],
+  "fault": [
+   211.402,
+   213.126
+  ],
+  "rst_n": [
+   213.226,
+   214.95
+  ],
+  "qb_row": [
+   1.05,
+   240.875
+  ],
+  "qb_v": [
+   240.975,
+   243.686
+  ],
+  "qb_beat": [
+   243.786,
+   246.498
+  ],
+  "qb_full": [
+   246.598,
+   249.309
+  ],
+  "qb_committed": [
+   249.409,
+   252.121
+  ],
+  "qb_bad": [
+   252.221,
+   254.933
+  ],
+  "layer_context_v": [
+   255.033,
+   257.744
+  ],
+  "command_stage": [
+   257.844,
+   260.556
+  ],
+  "dd_i": [
+   260.656,
+   517.35
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: service child of native59 (all std cells; pin-bound: 4,690 pins); N part of the 518.4 x 648 native59 slot above a 43.2 um landing band and the Q-seat bank child",
+  "requested_outline_um": [
+   518.4,
+   216.0
+  ]
+ },
+ "job": {
+  "owner": "Claude:QW-N59-4",
+  "branch": "claude/qw-n59-4-1019",
+  "tag": "sv",
+  "purpose": "QW-N59-4 (10-19) hardened split of native59 (Q.STA.N59) after the one-root safe4/4b CTS stalls (pin-flop spread 145/127, SS setup -635 at the Q-seat select, 10,330 s hold repair): service child (all non-Q logic); own centre-fed root; landed into the parent by lp.py (record results/arch/landed_parent_1018/qfd_native59_split_flat).",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4"
+  ],
+  "benches": [
+   {
+    "name": "split_dv_positive",
+    "cmd": "SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/dv_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^dv_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_mu_ovl_positive",
+    "cmd": "SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/mu_ovl_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^mu_ovl_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_rnd_s1",
+    "cmd": "SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^rnd_s1 OK \\(pass\\)"
+   },
+   {
+    "name": "split_m2_kv_addr",
+    "cmd": "SPLIT_ONLY=m2_kv_addr bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m2_kv_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m2_kv_addr.log"
+   },
+   {
+    "name": "split_m3_emb_word",
+    "cmd": "SPLIT_ONLY=m3_emb_word bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m3_emb_word",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m3_emb_word.log"
+   },
+   {
+    "name": "split_m5_mu_tag",
+    "cmd": "SPLIT_ONLY=m5_mu_tag bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m5_mu_tag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m5_mu_tag.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_svc/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_svc"
+ }
+}

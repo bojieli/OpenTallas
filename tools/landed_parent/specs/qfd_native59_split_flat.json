@@ -1,0 +1,75 @@
+{
+ "top": "qfd_native59_split_flat",
+ "why": "QW-N59-4 10-19: native59 dv service (Qwen compute die, Q.STA.N59) as a landed parent after the one-root safe4/safe4b CTS stalls (pin-flop TT 633..777 / FF 516..643, SS setup -635 at the Q-seat select, 10,330 s hold repair: 24k flops on one root at 10 % std density over the 518.4 x 648 slot). Two hard children with their own centre-fed roots: qb = u_qb (8 Q-seat SRAMs + scatter / owner / select, faces dd_i / context / q_slot) and svc = u_svc (command context, formatter, x3, static services, codecs, dr landing, embedding, dr_o). Bank ports land in qb; every bank -> service net (qb_* words, dd / context relays) is a landed crossing; every other port is read in svc.",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_split_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_split/qfd_native59_qbank.sv",
+  "rtl/qwen_split/qfd_native59_svc.sv",
+  "rtl/qwen_split/qfd_native59_dv_service.sv",
+  "rtl/qwen_split/qfd_native59_command_context.sv",
+  "rtl/qwen_split/qfd_native59_q_export_control.sv",
+  "rtl/qwen_split/qfd_native59_static_service.sv",
+  "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v"
+ ],
+ "params": {
+  "NU": 4,
+  "MCTX": 1,
+  "EMB_RELAY": 1
+ },
+ "out_dir": "rtl/qwen_split/lp",
+ "record_dir": "results/arch/landed_parent_1018/qfd_native59_split_flat",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "landing_chunk_bits": 24,
+ "regions": [
+  {
+   "name": "svc",
+   "insts": [
+    "u_svc"
+   ],
+   "centre": [
+    259.2,
+    453.6
+   ]
+  },
+  {
+   "name": "qb",
+   "insts": [
+    "u_qb"
+   ],
+   "centre": [
+    259.2,
+    172.8
+   ]
+  }
+ ],
+ "port_regions": {
+  "dd_i": "qb",
+  "layer_context_v": "qb",
+  "command_stage": "qb",
+  "q_slot": "qb",
+  "q_slot_beat": "qb"
+ },
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "mut_child": "u_svc"
+}

@@ -1,0 +1,346 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 2,
+ "layer_cap": "M5",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_qbank_b",
+ "top": "qfd_native59_qbank",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_qbank.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v"
+ ],
+ "params": {},
+ "outline": {
+  "w": 518.4,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "lcv_o",
+   "stage_o",
+   "dd_o"
+  ],
+  "S": [
+   "dd_i",
+   "layer_context_v",
+   "command_stage",
+   "q_slot",
+   "q_slot_beat"
+  ],
+  "E": [],
+  "W": []
+ },
+ "pin_ranges": {
+  "ck": [
+   257.7,
+   260.7
+  ],
+  "qb_row": [
+   1.05,
+   239.852
+  ],
+  "qb_v": [
+   239.952,
+   242.652
+  ],
+  "qb_beat": [
+   242.752,
+   245.451
+  ],
+  "qb_full": [
+   245.551,
+   248.251
+  ],
+  "qb_committed": [
+   248.351,
+   251.051
+  ],
+  "qb_bad": [
+   251.151,
+   253.85
+  ],
+  "rst_n": [
+   253.95,
+   256.65
+  ],
+  "lcv_o": [
+   261.75,
+   264.39
+  ],
+  "stage_o": [
+   264.49,
+   267.129
+  ],
+  "dd_o": [
+   267.229,
+   517.35
+  ],
+  "dd_i": [
+   1.05,
+   495.683
+  ],
+  "layer_context_v": [
+   495.783,
+   501.1
+  ],
+  "command_stage": [
+   501.2,
+   506.516
+  ],
+  "q_slot": [
+   506.616,
+   511.933
+  ],
+  "q_slot_beat": [
+   512.033,
+   517.35
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?0?*u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?1?*u_mem",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?2?*u_mem",
+   "at": [
+    43.2,
+    119.376
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?3?*u_mem",
+   "at": [
+    302.4,
+    119.376
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?4?*u_mem",
+   "at": [
+    43.2,
+    195.552
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?5?*u_mem",
+   "at": [
+    302.4,
+    195.552
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?6?*u_mem",
+   "at": [
+    43.2,
+    271.728
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?7?*u_mem",
+   "at": [
+    302.4,
+    271.728
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: Q-seat bank child of native59 (8 x 167.4 x 76.14 SRAMs, two N-S stacks of 4 abutted at the 76.176 um track-legal pitch (0.036 um gap, no pins on the touching faces); column 0 mirrored MY so both columns' rd_out faces the 91.8 um middle gather channel, write faces outward); sits in the S part of the 518.4 x 648 native59 slot under the service child",
+  "requested_outline_um": [
+   518.4,
+   388.8
+  ]
+ },
+ "job": {
+  "owner": "Claude:QW-N59-4",
+  "branch": "claude/qw-n59-4-1019",
+  "tag": "qbb",
+  "purpose": "QW-N59-4 (10-19) hardened split of native59 (Q.STA.N59) after the one-root safe4/4b CTS stalls (pin-flop spread 145/127, SS setup -635 at the Q-seat select, 10,330 s hold repair): Q-seat SRAM bank child (8 SRAMs, kept one-hot read face, registered outputs + dd/context relays); own centre-fed root; landed into the parent by lp.py (record results/arch/landed_parent_1018/qfd_native59_split_flat); parallel fallback: unclustered H-tree CTS.",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4"
+  ],
+  "benches": [
+   {
+    "name": "split_dv_positive",
+    "cmd": "SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/dv_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^dv_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_mu_ovl_positive",
+    "cmd": "SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/mu_ovl_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^mu_ovl_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_rnd_s1",
+    "cmd": "SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^rnd_s1 OK \\(pass\\)"
+   },
+   {
+    "name": "split_m1_q_lane",
+    "cmd": "SPLIT_ONLY=m1_q_lane bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m1_q_lane",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m1_q_lane.log"
+   },
+   {
+    "name": "split_m7_owner",
+    "cmd": "SPLIT_ONLY=m7_owner bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m7_owner",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m7_owner.log"
+   },
+   {
+    "name": "split_qb1_unreg",
+    "cmd": "SPLIT_ONLY=qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/qb1_unreg",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/qb1_unreg.log"
+   },
+   {
+    "name": "split_rnd_qb1_unreg",
+    "cmd": "SPLIT_ONLY=rnd_qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_qb1_unreg",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/rnd_qb1_unreg.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_qbank_b/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_qbank_b"
+ }
+}

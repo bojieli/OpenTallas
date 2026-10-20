@@ -1,0 +1,160 @@
+{
+ "name": "qfd_n59_svc-sv-COMMIT",
+ "block": "qfd_native59_svc",
+ "ref_tile": true,
+ "owner": "Claude:QW-N59-4",
+ "purpose": "QW-N59-4 (10-19) hardened split of native59 (Q.STA.N59) after the one-root safe4/4b CTS stalls (pin-flop spread 145/127, SS setup -635 at the Q-seat select, 10,330 s hold repair): service child (all non-Q logic); own centre-fed root; landed into the parent by lp.py (record results/arch/landed_parent_1018/qfd_native59_split_flat).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/qw-n59-4-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_svc #(.NU(4), .MCTX(1), .EMB_RELAY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_svc.sv rtl/qwen_split/qfd_native59_dv_service.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_static_service.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_dv_positive",
+    "cmd": "SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/dv_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^dv_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_mu_ovl_positive",
+    "cmd": "SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/mu_ovl_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^mu_ovl_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_rnd_s1",
+    "cmd": "SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^rnd_s1 OK \\(pass\\)"
+   },
+   {
+    "name": "split_m2_kv_addr",
+    "cmd": "SPLIT_ONLY=m2_kv_addr bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m2_kv_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m2_kv_addr.log"
+   },
+   {
+    "name": "split_m3_emb_word",
+    "cmd": "SPLIT_ONLY=m3_emb_word bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m3_emb_word",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m3_emb_word.log"
+   },
+   {
+    "name": "split_m5_mu_tag",
+    "cmd": "SPLIT_ONLY=m5_mu_tag bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m5_mu_tag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4/m5_mu_tag.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_n59_svc/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_n59_svc/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_n59_svc --out {RUN}/record/views/qfd_native59_svc  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_n59_svc/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_n59_svc/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_n59_svc/qfd_n59_svc-sv-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

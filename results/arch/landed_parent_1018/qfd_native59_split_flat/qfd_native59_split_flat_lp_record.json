@@ -1,0 +1,294 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "qfd_native59_split_flat",
+ "top": "qfd_native59_split_flat_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "svc": {
+   "clock_port": "ck_svc",
+   "children": [
+    "u_svc"
+   ]
+  },
+  "qb": {
+   "clock_port": "ck_qb",
+   "children": [
+    "u_qb"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "rl_lcv",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_svc.layer_context_v"
+   ],
+   "ring": "u_lpl_0_w (ck_qb)",
+   "read": "u_lpl_0_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "rl_stage",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 6,
+   "readers": [
+    "u_svc.command_stage"
+   ],
+   "ring": "u_lpl_1_w (ck_qb)",
+   "read": "u_lpl_1_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "rl_dd",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 548,
+   "readers": [
+    "u_svc.dd_i"
+   ],
+   "ring": "u_lpl_2_w (ck_qb)",
+   "read": "u_lpl_2_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "qb_v",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_svc.qb_v"
+   ],
+   "ring": "u_lpl_3_w (ck_qb)",
+   "read": "u_lpl_3_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "qb_beat",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 5,
+   "readers": [
+    "u_svc.qb_beat"
+   ],
+   "ring": "u_lpl_4_w (ck_qb)",
+   "read": "u_lpl_4_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "qb_row",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 512,
+   "readers": [
+    "u_svc.qb_row"
+   ],
+   "ring": "u_lpl_5_w (ck_qb)",
+   "read": "u_lpl_5_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "qb_full",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_svc.qb_full"
+   ],
+   "ring": "u_lpl_6_w (ck_qb)",
+   "read": "u_lpl_6_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "qb_committed",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_svc.qb_committed"
+   ],
+   "ring": "u_lpl_7_w (ck_qb)",
+   "read": "u_lpl_7_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  },
+  {
+   "name": "8",
+   "net": "qb_bad",
+   "src_region": "qb",
+   "dst_region": "svc",
+   "src_nodes": [
+    "u_qb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_svc.qb_bad"
+   ],
+   "ring": "u_lpl_8_w (ck_qb)",
+   "read": "u_lpl_8_r (ck_svc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "svc",
+  "depth": 2,
+  "hops": {
+   "svc": 0,
+   "qb": 1
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 6472,
+  "pads": 0,
+  "reset": 6
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "qb-svc"
+  ],
+  "reset_hops": [
+   "qb-svc"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_qb": 0,
+   "u_svc": 3
+  },
+  "input_port_offset_edges": {
+   "host_epoch_valid": 3,
+   "host_fused_capability": 3,
+   "host_epoch": 3,
+   "host_tag": 3,
+   "host_generation": 3,
+   "layer_context_v": 0,
+   "command_stage": 0,
+   "native_token": 3,
+   "native_position": 3,
+   "native_cmd": 3,
+   "dd_i": 0,
+   "kv_word_slot": 3,
+   "kv_word_index": 3,
+   "kv_x3_slot": 3,
+   "q_slot": 0,
+   "q_slot_beat": 0,
+   "tx_slot": 3,
+   "tx_slot_kind": 3,
+   "tx_slot_beat": 3,
+   "native_rx_v": 3,
+   "native_rx_payload": 3,
+   "rx_slot": 3,
+   "rx_slot_kind": 3,
+   "rx_slot_beat": 3,
+   "emb_code_q": 3,
+   "emb_scale_q": 3,
+   "visibility_slot": 3,
+   "complete_slot": 3
+  },
+  "output_port_offset_edges": {
+   "x3": 3,
+   "x3_identity": 3,
+   "x3_generation": 3,
+   "native_tx_v": 3,
+   "native_tx_payload": 3,
+   "dr_o": 3,
+   "emb_code_re": 3,
+   "emb_code_addr": 3,
+   "emb_scale_re": 3,
+   "emb_scale_addr": 3,
+   "completed": 3,
+   "native_ret": 3,
+   "fault": 3
+  },
+  "reset_release_added_edges": 2,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "max_added_edges": 3
+ },
+ "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['qb-svc']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 9,
+  "reset_hops": 1,
+  "fails": []
+ }
+}

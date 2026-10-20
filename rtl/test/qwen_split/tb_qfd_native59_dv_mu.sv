@@ -21,7 +21,7 @@
 //   outputs of op k inside op k+1's window).  OVLP=1 MCTX=0 = the as-built single-context service: must FAIL.
 //   COLL=1 (OVLP): op 3's completion slot is never driven, so op 5's begin takes op 3's still-active slot -> fault.
 // Pass line N59MU_PASS ...; failure N59MU_FAIL ... and exit != 0.
-module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0,LATE_PREFETCH=0,EMBR=0)(input wire clk);
+module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0,LATE_PREFETCH=0,EMBR=0,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,SPL_SOFF=1,SPL_BOFF=0,SPL_ROFF=1)(input wire clk);
  localparam integer NOP=14,P=OVLP?170:240,B0=10,BK=OVLP?60:0;
  localparam[13:0]SEQ0=14'd9;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
@@ -126,6 +126,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  // (OVLP: the front pins follow the period's op, the back pins -- rx, visibility, complete -- the op they belong to)
  wire m0=m0f;wire m0r=OVLP?m0b:m0f;
  // ------------------------------------------------------------------ DUTs
+ wire m_cre,m_sre;wire[23:0]m_caddr;wire[17:0]m_saddr;
  wire[519:0]dr4,dr1;wire tv4,tv1,dn4,dn1,f4,f1;wire[58:0]xid4,xid1;wire[1:0]xg4,xg1;wire[523:0]x34,x31;wire[547:0]td4,td1;wire[94:0]ret4,ret1;
 `ifdef N59_R1
  qfd_native59_dv_service_r1 #(.MUT(MUT),.NU(4),.MU_SEQ0(SEQ0),.MCTX(MCTX),.SAFE(SAFE),.EMB_RELAY(EMBR))dut4(
@@ -140,7 +141,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  .x3(x34),.x3_identity(xid4),.x3_generation(xg4),
  .q_slot(SAFE==2&&LATE_PREFETCH==0?safe_qslot:qslot),.q_slot_beat(SAFE==2&&LATE_PREFETCH==0?safe_qbeat:qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv4),.native_tx_payload(td4),
  .native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr4),
- .emb_code_re(),.emb_code_addr(),.emb_scale_re(),.emb_scale_addr(),.emb_code_q(512'd0),.emb_scale_q(16'd0),
+ .emb_code_re(m_cre),.emb_code_addr(m_caddr),.emb_scale_re(m_sre),.emb_scale_addr(m_saddr),.emb_code_q(512'd0),.emb_scale_q(16'd0),
  .visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(dn4),.native_ret(ret4),.fault(f4));
  qfd_native59_dv_service #(.NU(1))dut1(
  .ck(clk),.rst_n(rst_n),
@@ -152,6 +153,20 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  .native_rx_v(rxv&&m0r),.native_rx_payload(m0r?rxdata:548'd0),.rx_slot(rxslot&&m0r),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr1),
  .emb_code_re(),.emb_code_addr(),.emb_scale_re(),.emb_scale_addr(),.emb_code_q(512'd0),.emb_scale_q(16'd0),
  .visibility_slot(visibility_slot&&m0r),.complete_slot(complete_slot&&m0r),.completed(dn1),.native_ret(ret1),.fault(f1));
+
+`ifdef N59_SPLIT
+ // QW-N59-4: lockstep shadow of the hardened split (n59_split_shadow) against the reference DUT above
+ integer sh_mism,sh_cmp;
+ n59_split_shadow #(.NU(4),.MU_SEQ0(SEQ0),.MCTX(MCTX),.EMBR(EMBR),.MUT(SPLIT_MUT),.QB_MUT(QB_MUT),.LP_MUT(LP_MUT),.SOFF(SPL_SOFF),.BOFF(SPL_BOFF),.ROFF(SPL_ROFF))shadow(
+ .ck(clk),.rst_n(rst_n),.cmp_en(1'b1),.host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(he),.host_tag(htag),.host_generation(2'd1),.layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),.dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),.q_slot(SAFE==2&&LATE_PREFETCH==0?safe_qslot:qslot),.q_slot_beat(SAFE==2&&LATE_PREFETCH==0?safe_qbeat:qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.emb_code_q(512'd0),.emb_scale_q(16'd0),.visibility_slot(visibility_slot),.complete_slot(complete_slot),
+ .r_x3(x34),.r_x3_identity(xid4),.r_x3_generation(xg4),.r_native_tx_v(tv4),.r_native_tx_payload(td4),.r_dr_o(dr4),.r_emb_code_re(m_cre),.r_emb_code_addr(m_caddr),.r_emb_scale_re(m_sre),.r_emb_scale_addr(m_saddr),.r_completed(dn4),.r_native_ret(ret4),.r_fault(f4),.mism(sh_mism),.compared(sh_cmp));
+ task automatic split_verdict;begin
+  if(sh_mism!=0||sh_cmp<100)begin $display("N59MU_FAIL SPLIT lockstep: %0d of %0d edges differ (split vs reference)",sh_mism,sh_cmp);$fatal(1);end
+  $display("N59MU_PASS_SPLIT lockstep: %0d edges, every output of the split == reference (SOFF %0d BOFF %0d ROFF %0d)",sh_cmp,SPL_SOFF,SPL_BOFF,SPL_ROFF);
+ end endtask
+`else
+ task automatic split_verdict;begin end endtask
+`endif
  // ------------------------------------------------------------------ the KV seam checks
  integer errs=0,tagerr=0,nrec[0:3],ncmd[0:3],nq[0:3],nres[0:NOP-1],ndone[0:NOP-1],nx3[0:NOP-1],nid=0,first_fault=-1;
  integer ko,ro,b,q,kb;reg[511:0]exq;reg[15:0]ee;
@@ -205,6 +220,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
   end
   if(RET_BAD!=0)begin
    if(first_fault<0||s1!=0||ko<0)begin $display("N59MU_FAIL RET_BAD: wrong-user RESULT did not fault (fault %0d) or the op completed (%0d)",first_fault,s1);$fatal(1);end
+   split_verdict;
    $display("N59MU_PASS RET_BAD user-2 RESULT with user tag 1 -> sticky fault at %0d, no completion",first_fault);$finish;
   end else begin
    if(f4)err("DUT4 fault");
@@ -215,6 +231,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
     $display("N59MU_FAIL errors=%0d tag_errors=%0d first_fault=%0d records u0..3 %0d/%0d/%0d/%0d",errs,tagerr,first_fault,nrec[0],nrec[1],nrec[2],nrec[3]);
     $fatal(1);
    end
+   split_verdict;
    $display("N59MU_PASS ops=%0d users=4 CMD u0..3 %0d/%0d/%0d/%0d Q %0d/%0d/%0d/%0d (every beat tagged {seq,user}); results 32/op matched, 1 completion/op, KVN identity tagged; user-0 == NU 1 on %0d edges",
             NOP,ncmd[0],ncmd[1],ncmd[2],ncmd[3],nq[0],nq[1],nq[2],nq[3],nid);
    $finish;
