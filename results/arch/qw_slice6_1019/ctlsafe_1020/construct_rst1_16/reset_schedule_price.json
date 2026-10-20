@@ -1,0 +1,17 @@
+{
+  "reference_source": "1f858dec1",
+  "variant": "qfd_dv_s5_ctl_bounded4_rst1",
+  "shape": {
+    "MU_NU": 4,
+    "MUT": 0,
+    "HARD": 1
+  },
+  "reset_assertion_added_edges": 1,
+  "reset_release_added_edges": 1,
+  "steady_state_data_added_edges": 0,
+  "boot_contract": "Clocks run during reset; hold assertion and release for one extra edge before issuing commands. The compiler/boot schedule must price BOTH transitions.",
+  "proof": "Delayed-reset reference registers rst_n once; all outputs compared151677times over8000edges incl two midrun resetbursts; PASS. Checker mutation catches7983.",
+  "native_mapping": "LIVE; no mappedPASS claimed",
+  "generic_internal_load_cap": 16,
+  "generic_input_load_cap": 32
+}
