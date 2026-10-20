@@ -1,0 +1,8 @@
+LEP_STD_PHASE_MISMATCH cycle=88 ri=1/1 lo=11/11 fault=0/0
+LEP_STD_PHASE_MISMATCH cycle=93 ri=1/1 lo=11/11 fault=1/1
+LEP_STD_PHASE_MISMATCH cycle=98 ri=1/1 lo=00/00 fault=1/1
+LEP_STD_PHASE_MISMATCH cycle=103 ri=1/1 lo=00/00 fault=1/1
+LEP_STD_PHASE_MISMATCH cycle=108 ri=1/1 lo=11/11 fault=1/1
+[1820000] %Fatal: tb_s81sl_lep_std_phase.sv:49: Assertion failed in tb_s81sl_lep_std_phase: LEP_STD_PHASE_FAIL HOST=1 bad=263 checked=1779
+%Error: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_std_phase.sv:49: Verilog $stop
+Aborting...

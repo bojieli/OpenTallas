@@ -1,0 +1,3 @@
+LEP_STATS sent A->B 1000 recv 1000, B->A 1000 recv 1000, mismatches 0, fault_main 0, overflow_fault 1, lane_flt A 000000 B 000000
+PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+BENCH_PASS lep MUT=none seed 1

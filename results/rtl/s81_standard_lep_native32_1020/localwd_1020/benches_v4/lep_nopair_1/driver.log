@@ -1,0 +1,8 @@
+MISMATCH B->A beat 0 at cycle 8044: got 0000000000000001.. exp 244113f3b722072d..
+MISMATCH A->B beat 0 at cycle 8046: got 0000000000000001.. exp 6be1b26e4143cd6d..
+MISMATCH B->A beat 1 at cycle 8047: got 0000000000000001.. exp 6c1845995f36e7d5..
+MISMATCH A->B beat 1 at cycle 8048: got 0000000000000001.. exp 6b392e77bf20d7a3..
+MISMATCH B->A beat 2 at cycle 8048: got 0000000000000001.. exp 5df24724f4613c69..
+LEP_STATS sent A->B 1000 recv 1000, B->A 1000 recv 1000, mismatches 2000, fault_main 1, overflow_fault 1, lane_flt A 000000 B 000000
+FAIL lep: mismatches 2000 recv 1000/1000 1000/1000 fault_main 1 overflow_fault 1
+BENCH_FAIL lep MUT=nopair seed 1
