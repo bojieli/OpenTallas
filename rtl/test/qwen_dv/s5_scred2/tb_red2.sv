@@ -26,8 +26,8 @@ module tb_red2;
     endfunction
     always @(posedge ck) begin
         cyc <= cyc + 1;
-        if (r_we) begin rq_t.push_back(cyc); rq_v.push_back({r_addr, r_data}); end
-        if (d_we) begin dq_t.push_back(cyc); dq_v.push_back({d_addr, d_data}); end
+        if (rst_n && cyc > 3 && r_we) begin rq_t.push_back(cyc); rq_v.push_back({r_addr, r_data}); end
+        if (rst_n && cyc > 3 && d_we) begin dq_t.push_back(cyc); dq_v.push_back({d_addr, d_data}); end
         rdv_hist <= {rdv_hist[4094:0], r_rdv};
         if (rst_n && cyc > 4 + `RDOFF && d_rdv !== rdv_hist[`RDOFF - 1]) begin
             errors = errors + 1; if (errors < 5) $display("MISMATCH rd_v cyc=%0d", cyc); end

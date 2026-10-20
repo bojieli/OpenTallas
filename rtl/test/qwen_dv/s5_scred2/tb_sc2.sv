@@ -27,6 +27,7 @@ module tb_sc2;
     reg [63:0] rv0[$], dv0[$], rv1[$], dv1[$], rv2[$], dv2[$], rv3[$], dv3[$];
     always @(posedge ck) begin
         cyc <= cyc + 1;
+        if (rst_n && cyc > 3) begin
         if (r_dn[47]) begin rt0.push_back(cyc); rv0.push_back({16'd0, r_dn}); end
         if (d_dn[47]) begin dt0.push_back(cyc); dv0.push_back({16'd0, d_dn}); end
         if (r_up[47]) begin rt1.push_back(cyc); rv1.push_back({16'd0, r_up}); end
@@ -35,6 +36,7 @@ module tb_sc2;
         if (d_we) begin dt2.push_back(cyc); dv2.push_back({8'd0, d_wa, d_wd}); end
         if (r_tv) begin rt3.push_back(cyc); rv3.push_back({5'd0, r_to, r_tu, r_ti, r_to ? r_tval : 32'd0}); end
         if (d_tv) begin dt3.push_back(cyc); dv3.push_back({5'd0, d_to, d_tu, d_ti, d_to ? d_tval : 32'd0}); end
+        end
         if (rst_n && cyc > 3 && (d_f !== 1'b0 || r_f !== 1'b0)) begin
             errors = errors + 1; if (errors < 5) $display("MISMATCH fault cyc=%0d d=%b r=%b", cyc, d_f, r_f); end
     end
