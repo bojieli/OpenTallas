@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.pvfin-sram.source-proof.v1",
+  "source_commit": "21d73156e",
+  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
+  "tool": "Verilator 5.050",
+  "shape": {
+    "lanes": 16,
+    "beats": 32,
+    "ADD_LAT": 7,
+    "MUL_LAT": 6,
+    "SKEW": 1
+  },
+  "token_age_delta": 0,
+  "reset_release_edges": 3,
+  "legacy_reset_release_edges": 1,
+  "proofs": {
+    "golden_plus_full_cold_stream": {
+      "stretch0_commands": 40,
+      "stretch1_commands": 48,
+      "timed_beats": 2816,
+      "scope": "All328 commands/10496 beats repeated at R6 source including3 additional cold seeds"
+    },
+    "random_powerup": "OT_MEM_NO_INIT, --x-initial unique, --x-assign unique, +verilator+rand+reset+2",
+    "reset": "partially written SRAM command interrupted before results; periodic 11-command reset epochs",
+    "negative_faults": [
+      1,
+      2,
+      3
+    ],
+    "causal_mutants": {
+      "1": "reciprocal head",
+      "2": "operand tap age",
+      "3": "late reciprocal omitted from join",
+      "4": "prefetch-edge write forwarding suppressed",
+      "5": "capture-edge write forwarding suppressed"
+    },
+    "additional_cold_seeds": {
+      "seeds": [
+        1,
+        29,
+        53
+      ],
+      "stretch_regimes": [
+        0,
+        1
+      ],
+      "commands_per_regime": 40,
+      "timed_beats": 7680
+    },
+    "total_complete_commands": 328,
+    "total_timed_beats": 10496,
+    "mul_live_fp32_corners": {
+      "source_commit": "ccc2ec81f",
+      "checked_per_seed": 11997,
+      "seeds": [
+        1,
+        29,
+        53
+      ],
+      "class_coverage": "zeros, normal/subnormal boundaries, max finite, Inf, NaN, random32bit, occupied-pipeline reset"
+    }
+  },
+  "files": [
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+      "sha256": "11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+      "sha256": "533fb1f63d48931ad15f673425ef70a4bbcea43a3b5b2e8105450fb14201d168"
+    },
+    {
+      "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+      "sha256": "ad6104869562ce38bb90af0c77094a8838267566397dcc615af4b82615ff81ac"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+      "sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+      "sha256": "28b2f290ae281f91a107bb54737822ddb887a6ad6dcf4b3a579f241026d90a15"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+      "sha256": "8af05d9c0a96ca9685a2167f556b8baeb064a53ce6c5e07e5032430e45e20d63"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+      "sha256": "d774db62fc20074d1e1c33b355c06dc881cae6fdd28e8df17cac3dc1f6f33ba5"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay_bounded32.sv",
+      "sha256": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+      "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
+      "sha256": "50c01676fc54d7bb8296e24d62d5f8602a192b80b2d9098d5bce3fc0402f4a35"
+    },
+    {
+      "path": "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+      "sha256": "0f99b98ce6a172db7dc74cf15d1c295e7f0464c1e34a6eff24c30225bbec439a"
+    }
+  ],
+  "native_status": "R6 production mapped census running; no gate admission",
+  "remote": "ot-epyc5:/srv/opentallas-scratch/claude/codex-pvfin-v4-1020",
+  "build_unit": "oth-ubuntu-3932914-1792495289",
+  "census_job": "ot-run session44312 src_r5/native_run.log",
+  "source_parent_receipt": "source_proof.json (R5 FAIL preserved)"
+}
