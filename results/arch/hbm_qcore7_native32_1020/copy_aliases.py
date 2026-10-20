@@ -3,7 +3,7 @@ import argparse,json,re
 from collections import defaultdict
 from pathlib import Path
 
-def graph(m):
+def graph(m, original_names=()):
  nodes=defaultdict(set)
  const=[]
  for cn,c in m.get("cells",{}).items():
@@ -15,6 +15,14 @@ def graph(m):
  for pn,p in m.get("ports",{}).items():
   for ix,b in enumerate(p["bits"]):
    term=("PORT",pn,ix)
+   if isinstance(b,int):nodes[b].add(term)
+   else:const.append((str(b),term))
+ # JSON bit IDs are local to each write_json. Original wire-bit contacts
+ # identify even unused bits without relying on these unstable IDs. Exclude
+ # newly added aliases so the two graphs have identical terminal inventories.
+ for nn in original_names:
+  for ix,b in enumerate(m["netnames"][nn]["bits"]):
+   term=("WIRE",nn,ix)
    if isinstance(b,int):nodes[b].add(term)
    else:const.append((str(b),term))
  return {b:frozenset(v) for b,v in nodes.items()},frozenset(const)
@@ -38,12 +46,14 @@ def main():
   new=c["modules"][mn];assert old["cells"].keys()==new["cells"].keys(),mn
   for cn,cell in old["cells"].items():
    for k in ["type","parameters","attributes","port_directions"]:assert cell.get(k)==new["cells"][cn].get(k),(mn,cn,k)
-  og,oc=graph(old);ng,nc=graph(new);assert frozenset(og.values())==frozenset(ng.values()) and oc==nc,mn
+  assert old.get("ports",{}).keys()==new.get("ports",{}).keys(),mn
+  names=old.get("netnames",{}).keys()
+  og,oc=graph(old,names);ng,nc=graph(new,names);assert frozenset(og.values())==frozenset(ng.values()) and oc==nc,mn
   for pn,x in old.get("ports",{}).items():
    y=new["ports"][pn];assert {k:v for k,v in x.items() if k!="bits"}=={k:v for k,v in y.items() if k!="bits"}
    assert [og.get(v,("const",v)) for v in x["bits"]]==[ng.get(v,("const",v)) for v in y["bits"]]
   for nn,x in old.get("netnames",{}).items():
-   y=new["netnames"][nn];assert x.get("attributes",{})==y.get("attributes",{}),(mn,nn)
+   y=new["netnames"][nn];assert {k:v for k,v in x.items() if k!="bits"}=={k:v for k,v in y.items() if k!="bits"},(mn,nn)
    assert [og.get(v,("const",v)) for v in x["bits"]]==[ng.get(v,("const",v)) for v in y["bits"]],(mn,nn)
   cells+=len(old["cells"])
  r={"status":"PASS","contract":"Actual cell graph, constant contacts, all cell properties, primary ports and every original named net preserved; only new aliases allowed.","cells":cells};Path(a.manifest).write_text(json.dumps(r,indent=2)+"\n");print("COPY_ALIAS_GRAPH PASS",cells)
