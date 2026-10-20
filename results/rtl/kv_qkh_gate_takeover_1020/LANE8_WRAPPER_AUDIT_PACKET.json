@@ -163,7 +163,28 @@
     "generic_reset_landing_names": 0,
     "kit_env_no_OT_PIN_REGS": true,
     "ot_pin_regs_tcl_absent_at_closed_commit": true,
-    "physical_json": "/home/ubuntu/closed_archive/ot_qkh_lane8/ot_qkh_lane8_m5-m5-e5e8e058b/run/routes/ot_qkh_lane8_m5_m5_e5e8e058b/physical.json"
+    "physical_json": "/home/ubuntu/closed_archive/ot_qkh_lane8/ot_qkh_lane8_m5-m5-e5e8e058b/run/routes/ot_qkh_lane8_m5_m5_e5e8e058b/physical.json",
+    "selected_view_liberty_tie": {
+      "tt": {
+        "view_sha256": "82ae393134bcac5cfc113668ff472e3fe376da832a4400ef5bf5d8f17b406e02",
+        "closed_final_sha256": "f8e5ea75048371c475ae8c2ccaca8f7572311ba8a53aee0d25b5419dd1660d1d",
+        "equal": false
+      },
+      "ff": {
+        "view_sha256": "6ea939864b71a4e7650a5ded58f78ad2523e2f6afd4a321c70d00da5c028ef49",
+        "closed_final_sha256": "babc7d3593840a79daaec454eb823cb9c7e0c7ea0fc9e3506c9ff8951874555b",
+        "equal": false
+      }
+    },
+    "reexported_abstract_tie": {
+      "abstract_orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/ot_qkh_lane8_m5-m5-e5e8e058b/routes/ot_qkh_lane8_m5_m5_e5e8e058b/work/orfs",
+      "exact_job_in_orfs_dir": true,
+      "ot_qkh_lane8.lef": {
+        "view_sha256": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f",
+        "closed_sha256": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f",
+        "equal": true
+      }
+    }
   },
   "data_edge_delta": {
     "per_input_port": 1,
