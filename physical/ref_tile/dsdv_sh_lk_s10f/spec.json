@@ -327,7 +327,7 @@
     "name": "n32_lockstep_mutbyp",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutBYP '1' BYP",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_BYP/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
@@ -336,7 +336,7 @@
     "name": "n32_lockstep_mutgod",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutGOD '1' GOD",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_GOD/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
@@ -345,7 +345,7 @@
     "name": "n32_lockstep_mutwin",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutWIN '1' WIN",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_WIN/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
@@ -354,7 +354,7 @@
     "name": "n32_lockstep_mutkind",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutKIND '1' KIND",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_KIND/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
@@ -363,7 +363,7 @@
     "name": "n32_lockstep_mutfqs",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutFQS '1' FQS",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_FQS/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
@@ -372,7 +372,7 @@
     "name": "n32_lockstep_mutcqr",
     "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutCQR '1' CQR",
     "expect": "fail",
-    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_regex": "^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_CQR/run_1.log",
     "threads": 8,
     "peak_ram_gb": 8
