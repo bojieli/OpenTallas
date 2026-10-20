@@ -104,61 +104,61 @@
  },
  "util": 0.5,
  "outline": {
-  "w": 38.88,
-  "h": 34.56
+  "w": 51.84,
+  "h": 47.52
  },
  "keep_pin_regs": true,
  "pin_ranges": {
   "i_v": [
-   4.32,
-   5.4
+   6.48,
+   7.56
   ],
   "i_t": [
-   5.4,
-   15.12
+   7.56,
+   20.52
   ],
   "i_d": [
-   15.12,
-   24.84
+   20.52,
+   33.48
   ],
   "i_e": [
-   24.84,
-   25.92
+   33.48,
+   34.56
   ],
   "i_f": [
-   25.92,
-   27.0
+   34.56,
+   35.64
   ],
   "o_v": [
-   4.32,
-   5.4
+   6.48,
+   7.56
   ],
   "o_t": [
-   5.4,
-   15.12
+   7.56,
+   20.52
   ],
   "o_d": [
-   15.12,
-   24.84
+   20.52,
+   33.48
   ],
   "o_e": [
-   24.84,
-   25.92
+   33.48,
+   34.56
   ],
   "o_f": [
-   25.92,
-   27.0
+   34.56,
+   35.64
   ],
   "clk": [
-   17.28,
-   19.44
+   23.76,
+   25.92
   ],
   "rst_n": [
-   19.44,
-   21.6
+   25.92,
+   28.08
   ]
  },
- "why_floorplan": "38.88 x 34.56 (1,344 um2; ~1.55k flops + 21:1 x 66 read mux, est. ~650 um2 cells -> ~48 % util, aspect 1.13): input word W face (66 pins over 21.6 um = 3.1 pins/um, faces u_te), output word E face (faces u_rt E port), clk/rst_n S face mid; no macros, one std-cell band, one clock root.",
+ "why_floorplan": "51.84 x 47.52 (core 47.52 x 43.2 = 2,053 um2; gate e8bab98ef synthesis std 996 um2 -> util 48.5 %, aspect 1.09): input word W face (67 pins over 29 um = 2.3 pins/um, faces u_te), output word E face (faces u_rt E port), clk/rst_n S face mid; no macros, one std-cell band, one clock root (1,536 sinks).",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true

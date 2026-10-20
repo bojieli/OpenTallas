@@ -16,6 +16,6 @@ Bench (Verilator 5.050): tools/s81_slice/cap_ed_bench.sh -- base D 23 PASS (204 
   a critical cone besides the reset relay copies); verify kept copies at gate.
 4 Depth: PASS -- one 21:1 read mux per bit, one stage at 833 ps.
 5 Storage: PASS -- 1,386 b < 2 kb register-file ring (ot_hdc_delay_rf), no flop->flop hold chain.
-6 Floorplan: PASS (gate to confirm) -- no macros, one std-cell band, outline ~48 % est. util, aspect 1.13, pins <= 3.1/um.
+6 Floorplan: fixed -- first gate e8bab98ef: std 996 um2 in 1,045 um2 (95 %); outline 51.84 x 47.52 = 48.5 % util; no macros, one std-cell band, aspect 1.13, pins <= 3.1/um.
 7 Clock: PASS (gate to confirm) -- one centre root, ~1.55k sinks; io_hold_margin 0.03; pin-flop spread checked at --cts gate.
 8 Schedule: PASS -- static; +23 edges handed to the compiler (packD_23) and logged in lanes/LEAD2-S81.md INBOX.
