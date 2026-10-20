@@ -1,0 +1,55 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: ot-epyc5       admits  1096 GB (avail 880, growth 113, headroom 0, waiters 0/0 GB) load 124/128 running 31 disk 770 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/src
+ot-run: -> ot-epyc5
+ot-heavy: request 128G is charged 84G (class 'run_scheduled.sh' measured peak 56.0G, n=6+0 proved); the cap stays 128G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-468107-1792454637 after 0 s
+[pos_gap100] DIAG link-core flush edge1276 total501 ingests171 first1104 last1274 selected_observe021808201f407b
+[pos_gap100] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link-1 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[pos_gap100] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[pos_gap100] IDX_SCHEDULED_STATIC PASS
+[pos_gap4] DIAG link-core flush edge1180 total501 ingests171 first1008 last1178 selected_observe021808201f407b
+[pos_gap4] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link-1 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[pos_gap4] IDX_SCHEDULED_STATIC N1315 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey219 firstscore342 lastscore512 firsttx1190 lasttx1310 done1317 (edges from start; expected key219 tx1190)
+[pos_gap4] IDX_SCHEDULED_STATIC PASS
+[mut1_query] SCOREBAD ord0 expected4075 got4083
+[mut1_query] SCOREBAD ord1 expectedbf08 gotbe22
+[mut1_query] SCOREBAD ord3 expectedc03b gotbf91
+[mut1_query] SCOREBAD ord5 expectedbfb7 got3f5e
+[mut1_query] SCOREBAD ord7 expected3d90 got3f9c
+[mut1_query] SCOREBAD ord12 expectedbfb9 gotbf9c
+[mut1_query] SCOREBAD ord2736 expected3fa6 got405d
+[mut1_query] DIAG link-core flush edge1276 total502 ingests171 first1104 last1274 selected_observe021808201dc081
+[mut1_query] TXBAD edge1286 ord85 gold1 seen0 rec40d90000 score40c4
+[mut1_query] TXBAD edge1286 ord5557 gold1 seen0 rec40c30000 score408c
+[mut1_query] TXBAD edge1286 ord8288 gold1 seen0 rec41000000 score40f3
+[mut1_query] TXBAD edge1286 ord5579 gold1 seen0 rec40c60000 score4097
+[mut1_query] mutant rejected
+[mut2_key] SCOREBAD ord2048 expectedc01d gotc023
+[mut2_key] DIAG link-core flush edge1276 total501 ingests171 first1104 last1274 selected_observe021808201f407b
+[mut2_key] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link-1 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[mut2_key] IDX_SCHEDULED_STATIC N1411 mutation2 scores10928 records512 flits64 errors1 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[mut2_key] %Error: rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:129: Verilog $stop
+[mut2_key] mutant rejected
+[mut_flush] DIAG link-core flush edge1095 total0 ingests0 first-191 last-191 selected_observe00000000000000
+[mut_flush] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link1102 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[mut_flush] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault1 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[mut_flush] %Error: rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:129: Verilog $stop
+[mut_flush] mutant rejected
+[mut_pins0] DIAG link-core flush edge1259 total478 ingests166 first1094 last1259 selected_observe021407f01e807a
+[mut_pins0] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link1266 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[mut_pins0] IDX_SCHEDULED_STATIC N1389 mutation0 scores10928 records512 flits64 errors0 fault1 status0 firstkey309 firstscore432 lastscore602 firsttx1269 lasttx1389 done1391 (edges from start; expected key309 tx1262)
+[mut_pins0] TIMELINE first TX edge 1269 != compiled 1262
+[mut_pins0] %Error: rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:129: Verilog $stop
+[mut_pins0] mutant rejected
+[mut_drain] DIAG link-core flush edge1276 total501 ingests171 first1104 last1274 selected_observe021808201f407b
+[mut_drain] DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link-1 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+[mut_drain] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[mut_drain] IDX_SCHEDULED_STATIC PASS
+MUTANT mut_drain SURVIVED
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-468107-1792454637): exit 1
+EXIT 1

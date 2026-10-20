@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       admits  1258 GB (avail 994, growth 113, headroom 0, waiters 0/0 GB) load 47/128 running 24 disk 634 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/bench
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/bench
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/bench
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-idxsel/bench
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1131028-1792470645 after 0 s
+shift 1 ok
+SHIFT 1 rc=0
+[d1] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[d1] IDX_SCHEDULED_STATIC PASS
+shift 2 ok
+SHIFT 2 rc=0
+[d2] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[d2] IDX_SCHEDULED_STATIC PASS
+shift 3 ok
+SHIFT 3 rc=0
+[d3] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[d3] IDX_SCHEDULED_STATIC PASS
+shift 4 ok
+SHIFT 4 rc=0
+[d4] IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[d4] IDX_SCHEDULED_STATIC PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1131028-1792470645): exit 0
