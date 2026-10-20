@@ -1,0 +1,109 @@
+{
+  "edges": 320372,
+  "role_errors": [],
+  "gt405_count": 84,
+  "source_instances_gt405": 78,
+  "maximum": [
+    {
+      "span_um": 508.39050000000003,
+      "source": "u_ot_pr_core.f_dd\\[339\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[339\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 507.6345,
+      "source": "u_ot_pr_core.f_dd\\[340\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[340\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 507.2025,
+      "source": "u_ot_pr_core.f_dd\\[341\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[341\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 507.04049999999995,
+      "source": "u_ot_pr_core.f_dd\\[333\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[333\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 506.2305,
+      "source": "u_ot_pr_core.f_dd\\[342\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[342\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 506.12249999999995,
+      "source": "u_ot_pr_core.f_dd\\[332\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[332\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 505.8525,
+      "source": "u_ot_pr_core.f_dd\\[338\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[338\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 474.5865,
+      "source": "u_ot_pr_core.f_dd\\[331\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[331\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 460.423,
+      "source": "u_ot_pr_core.dup_a\\[13\\]$_DFF_PN0_/QN",
+      "sink": "qb_bad$_DFF_PN0_/D"
+    },
+    {
+      "span_um": 458.0625,
+      "source": "u_ot_pr_core.f_dd\\[325\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[325\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 439.05449999999996,
+      "source": "u_ot_pr_core.f_dd\\[68\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[68\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 429.605,
+      "source": "u_ot_pr_core.dup_a\\[10\\]$_DFF_PN0_/QN",
+      "sink": "qb_bad$_DFF_PN0_/D"
+    },
+    {
+      "span_um": 429.28049999999996,
+      "source": "u_ot_pr_core.f_dd\\[30\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[30\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 429.0105,
+      "source": "u_ot_pr_core.f_dd\\[53\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[53\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 427.44500000000005,
+      "source": "u_ot_pr_core.dup_a\\[0\\]$_DFF_PN0_/QN",
+      "sink": "qb_bad$_DFF_PN0_/D"
+    },
+    {
+      "span_um": 426.79650000000004,
+      "source": "u_ot_pr_core.f_dd\\[67\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[67\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 425.9865,
+      "source": "u_ot_pr_core.f_dd\\[77\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[77\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 425.6625,
+      "source": "u_ot_pr_core.f_dd\\[44\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[44\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 425.3925,
+      "source": "u_ot_pr_core.f_dd\\[58\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[58\\]$_DFF_P_/D"
+    },
+    {
+      "span_um": 425.1765,
+      "source": "u_ot_pr_core.f_dd\\[327\\]$_DFF_P_/QN",
+      "sink": "u_ot_pr_core.dd_m\\[327\\]$_DFF_P_/D"
+    }
+  ],
+  "scope": "All actual combinational function dependencies collapsed from FF/macro/input to FF/macro/output. Clock pins excluded by native/Lib clock role; async data reset pins retained. Endpoint span is a necessary stage constraint, not detailed-route wirelength or timing."
+}

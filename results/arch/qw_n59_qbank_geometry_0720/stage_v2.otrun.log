@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc9       admits   919 GB (avail 739, growth 95, headroom 0, waiters 0/0 GB) load 72/128 running 27 disk 105 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3863243-1792507805 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+STAGE parsed 76807 224840 targets 23564 roles 211
+STAGE edges 320372
+{"edges": 320372, "nodes": 36953, "role_errors": 0, "edge_classes": {"seq->seq": 293617, "port->seq": 927, "macro->seq": 4096, "seq->macro": 20656, "seq->port": 1076}, "max_endpoint_L1_current_um": [508.39050000000003, ["u_ot_pr_core.f_dd\\[339\\]$_DFF_P_/QN", "u_ot_pr_core.dd_m\\[339\\]$_DFF_P_/D"]]}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3863243-1792507805): exit 0
