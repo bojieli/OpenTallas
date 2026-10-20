@@ -1,0 +1,11 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2948671-1792457503 after 1 s
+REGIONAL_MISMATCH edge239 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge240 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge241 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge242 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge247 front0 r_v0 r_idx0 r_last0 r_d1
+[2476000] %Fatal: tb_station_regional.sv:113: Assertion failed in tb_station_regional: REGIONAL_STATION_MISMATCH
+%Error: rtl/test/qwen_dv/safe_storage/tb_station_regional.sv:113: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2948671-1792457503): exit 1

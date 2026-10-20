@@ -1,0 +1,22 @@
+GATE INFO pin_regs: pin registers opted out: the RTL registers every data/control input at its pin (PIN_IN=1, in the region's own clock) and every output is flop Q; the flow wrapper would add a second +1 register (single clock)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc7 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_dv_slice2_stnrg_20261019-172429.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_dv_slice2_stnrg_20261019-172429.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice2_stnrg-20261019-172429
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 270 s (gate total 1712 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 560, 'pin_rectangles': 560, 'pin_track_checked': 560, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 03614814e08d5ce1caee6de1bd0ff6aa437fd0e1dea677fdd8a67690e84ed908
+GATE INFO util: synthesized std area 7424 um2 + macros 2762 in core 21574: util 48% (std-cell density 47.7% of placeable 15569 um2; total fill 47.2%)
+GATE INFO textbook: PASS qfd_dv_redstn2_region cells 55,093 flops 10,801 depth 531.8 ps util 0.4726 reach 2.8 um (2.0 s)
+GATE INFO cts_calibration: ss insertion all 292.2..391.0 ps (spread 98.8), boundary mean 355.5; tt insertion all 217.0..310.8 ps (spread 93.8), boundary mean 276.0; ff insertion all 173.1..260.7 ps (spread 87.6), boundary mean 227.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_dv_slice2_stnrg/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: macro->reg    203 paths, worst slack 119.5 ps (e.g. g_l9[1].u_add.g_exact.u_d.u_173/Q$_DFF_P_/D)
+GATE INFO path_classes: reg->reg      318 paths, worst slack 122.7 ps (e.g. g_sc[0].u_mul.g_exact.u_d.u_49/Q$_SDFF_PP0_/D)
+GATE INFO path_classes: reg->macro      5 paths, worst slack 215.7 ps (e.g. u_scale_wait.u_m.g_bank[0].u_m/wd_in[24])
+GATE INFO path_classes: setup WNS 1.1947587363891898e-10 hold WNS 4.014027998877623e-11
+GATE WARN clock_rule: root port:ck: 10,806 sinks on the largest root; measured TT insertion 310.8 ps, FF insertion 260.7 ps, TT pin-flop spread 53.9 ps, FF pin-flop spread 52.6 ps; WARN: insertion 310.8 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-slice3-1019/physical/ref_tile/qfd_dv_slice2_stnrg/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-slice3-1019/physical/ref_tile/qfd_dv_slice2_stnrg/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 30.54% used; GRT 298 s
+PRE_ROUTE_GATE: WARN (0 fail, 1 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/qw-slice3-1019/physical/ref_tile/qfd_dv_slice2_stnrg/source_binding_history/1ade89e58fb5faf72fd1dde2f69239a3118d7a1bafe57adc4365ee97f80be92c.json
+GATE: qfd_dv_slice2_stnrg/gate_result.json written (exact staged source binding; commit it with the kit)
