@@ -5,7 +5,7 @@
 # pos must print "VMS_GLUE_LT_EQUIV <Q> PASS checks=N errors=0"; mutants (rmut: ring-stop flit bit; land: eg not landed;
 # sid: E strap = the other E quadrant's sid; g3: hub pq without the g3 face-group edge; g4: pi / rce without the g4 relays) must print "VMS_GLUE_LT_EQUIV <Q> FAIL checks=N errors=M>0".
 # Exit status 0 only on a counted PASS.
-#   run_vms_glue_tile_equiv.sh Q pos|rmut|land|sid|g3|g4 OUT
+#   run_vms_glue_tile_equiv.sh Q pos|rmut|land|sid|g3|g4|g5|g7|g7e OUT
 set -uo pipefail
 q=${1:?quadrant}; m=${2:?pos|rmut|land|sid|g3|g4}; OUT=$(realpath -m "${3:?out}"); mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}

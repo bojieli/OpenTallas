@@ -1,0 +1,93 @@
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_hfd_hgi_vms_glue_sw_t_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+REF_TILE spine: child insertion targets 
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 7223 sinks 113525 cells 14469 leaf arrival 616.5..863.1 ps (spread 246.6) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 7223 sinks 113525 cells 26779 leaf arrival 790.1..865.1 ps (spread 75.0) pad 65.0 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 7223 sinks 113525 cells 34297 leaf arrival 824.6..865.9 ps (spread 41.3) pad 65.0 / 8.4 ps
+OT_SPINE iter 3 (fine) leaves 7223 sinks 113525 cells 41663 leaf arrival 838.7..877.8 ps (spread 39.1) pad 65.0 / 16.1 ps
+OT_SPINE iter 4 (fine) leaves 7223 sinks 113525 cells 43386 leaf arrival 845.6..877.8 ps (spread 32.2) pad 65.0 / 15.9 ps
+OT_SPINE iter 5 (fine) leaves 7223 sinks 113525 cells 43971 leaf arrival 849.4..877.8 ps (spread 28.4) pad 65.0 / 16.3 ps
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 43971 spine cells
+OT_SPINE done port clk buffers 43971
+QDM PINFLOP reference: 9676 input pin flops, median arrival 1072.932617 (range 1045.486450 .. 1140.456787)
+QDM reference pin u_core.u_cw.a_l[1293]$_DFF_P_/CLK clock arrival max 1072.932617 min 404.709198 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 404.709198 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_LINK_BUDGET clock core_clk T 833.333 L 1085.3 (985.9..1184.8 clock_latency) skew 150 link 114 -> S 254.7 R 254.7; in max 518.7 out max 518.7
+OT_LINK_BUDGET ports in:core_clk 9675 out:core_clk 11719 async_pins_excluded 4162
+Took 455 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+Took 11 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 998270.44 um^2
+[INFO DPL-0007] Movable instances area: 61274.91 um^2
+[INFO DPL-0008] Fixed instances area within core: 11267.80 um^2
+[INFO DPL-0009] Utilization: 7.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 489455 cells
+[INFO DPL-0500] Runtime: 3.86s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL        12512485.4 u
+legalized HPWL       12512485.4 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Took 10 seconds: estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=0 clock buffers=0
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hfd_hgi_vms_glue_sw_g6/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 9676 input pin flops, median arrival 876.9773 (range 848.8198 .. 948.9128)
+QDM reference pin u_core.u_cw.a_l[494]$_DFF_P_/CLK clock arrival max 876.9773 min 845.9422 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 845.9422 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws -1837.33 / FF hold ws -65.92 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 518 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 518 out of 518 (100.00%) violating endpoints...
+OT_HOLD_MM after repair: SS setup ws -1597.59 / FF hold ws -128.27 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hfd_hgi_vms_glue_sw_g6/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 9676 input pin flops, median arrival 689.5428 (range 677.0615 .. 706.4387)
+QDM reference pin u_core.u_cw.a_l[465]$_DFF_P_/CLK clock arrival max 689.5428 min 665.7943 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 665.7943 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws -1597.59 / FF hold ws -35.00 ps
+OT_HM_GUARD: margin 30 kept: 46076 endpoints in margin, ~63109 buffers, +0.5 util pts (46076 endpoints in margin > 10000)
+OT_HOLD_GUARD start: hold ws -35.00 tns -35761.5 viol 6277 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 46076 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -35.005 | -35761.480 | u_core.u_hub.rr0[178]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -26.380 | -35557.383 | bk_xq2_s0[1227]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -23.483 | -35330.715 | u_core.u_hub.req_grp[1].qr_g[513]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% | -22.585 | -35105.137 | u_core.u_replay.r_d[140]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.0% | -21.660 | -34883.789 | u_core.u_cw.band[1].ln_m[263]$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.0% | -21.162 | -34669.730 | bk_pq_s1[624]$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.0% | -20.305 | -34462.027 | u_core.u_hub.req_grp[1].qr_g[190]$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.0% | -20.105 | -34259.809 | u_core.u_cw.band[5].ln_m[220]$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.0% | -19.773 | -34059.875 | u_core.u_hub.req_grp[2].qr_g[439]$_DFF_P_/D
+    20670 |       0 |   39975 |            0 |    +4.0% | -11.957 | -94.945 | u_core.u_hub.rr0[178]$_DFF_P_/D
+    20680 |       0 |   39994 |            0 |    +4.0% | -11.957 | -94.945 | u_core.u_hub.rr0[178]$_DFF_P_/D
+GATE_STALL gate_cts_hfd_hgi_vms_glue_sw_g6-20261019-170037 exceeded 14400 s

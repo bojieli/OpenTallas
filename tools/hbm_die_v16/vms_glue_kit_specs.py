@@ -42,14 +42,15 @@ BANKP = ('xq', 'xq2', 'eg', 'pq', 'pr', 'status', 'xq_done', 'xq2_done', 'flt')
 RING = ('cw_in', 'cw_out', 'ccw_out', 'ccw_in')
 M = dict(
     sw=dict(top='hfd_hgi_vms_glue_sw_t', ring='E', far='W', plan='A', q='SW', inst='hb_vms_SW',
-            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3'), ('SW', 'g4'), ('SW', 'g5')]),
+            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3'), ('SW', 'g4'), ('SW', 'g5'), ('SW', 'g7'), ('SW', 'g7e')]),
     e=dict(top='hfd_hgi_vms_glue_e_t', ring='W', far='E', plan='A', q='SE (R0, sid 1) / NE (MX, sid 3)', inst='hb_vms_SE, hb_vms_NE',
-           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3'), ('SE', 'g4'), ('SE', 'g5')]),
+           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3'), ('SE', 'g4'), ('SE', 'g5'),
+                  ('SE', 'g7'), ('SE', 'g7e')]),
     nw=dict(top='hfd_hgi_vms_glue_nw_t', ring='E', far='W', plan='B', q='NW', inst='hb_vms_NW',
-            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3'), ('NW', 'g4'), ('NW', 'g5')]))
+            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3'), ('NW', 'g4'), ('NW', 'g5'), ('NW', 'g7'), ('NW', 'g7e')]))
 FACE = dict(E='right', W='left', N='top', S='bottom')
 TAG = 'VMS_GLUE_LT_EQUIV'
-WIT = 'results/rtl/vm_glue_1018/bench_g6/'
+WIT = 'results/rtl/vm_glue_1018/bench_g7/'
 # g5 (LEAD-HBM/LH-PGVM2 10-19, parallel to the live g4 gates): distinct kit names <kit>_g5; RTL = g4 + hub response stage 1
 # (registered one-hot hit per 32-b slice, NW rsp_grp d_q -225..-349) + hub-side registered bank select (E req_grp sel
 # -93..-184) + kept per-port relay chains (no merged relays: 33 ports were not single-flop, SW b3_pq[4]); kit recipe 4 with
@@ -59,7 +60,15 @@ WIT = 'results/rtl/vm_glue_1018/bench_g6/'
 # roots > 32): same edges as g5; every broadcast is a kept per-slice copy (hub ring-injection one-hot, re / rseq copies,
 # writes folded into rsel, registered ring-hit and store-enable copies, 16 / 24-b slices), ring-stop one-hot commit
 # pointer + valid ring, reset forest (<= 24 leaves per group, <= 26 loads per net; same 2 / 5-edge timing).
-GEN = '_g6'
+# g7 (L2H-PGVM-G7 10-19, after the g6 r2 gates' GATE_STALL in CTS hold repair; placed census of the g6 SW 3_place.odb:
+# 70,083 of 114,320 flops on pure flop -> flop hops, 29,495 of them <= 50 um): reach relays on a planned lattice
+# (kit hook tools/hbm_die_v16/vms_relay_lattice.tcl, FIRM through GPL, released for DPL), eg tile depth 1 (the stop
+# landings are the eg reach relays: eg -2 edges), hub landing br removed (pr -1 edge).  g7d = the fallback variant
+# (parallel gates): g7 + one deterministic dont_touch HB4 in front of every in-place pure-hop D pin (ring-stop band
+# ln_m / ln, hub request copies qr_g1 / qr_g / sq_g1 / sq_g; tools/hbm_die_v16/vms_inplace_hold.tcl).
+VARIANTS = {'_g7': ['tools/hbm_die_v16/vms_relay_lattice.tcl'],
+            '_g7d': ['tools/hbm_die_v16/vms_relay_lattice.tcl', 'tools/hbm_die_v16/vms_inplace_hold.tcl']}
+GEN = '_g7'
 
 
 def ports(top):
@@ -84,7 +93,7 @@ def lay(face_len, items):
     return rng, tot / usable
 
 
-def spec(k, c):
+def spec(k, c, gen='_g7'):
     P = dict(ports(c['top']))
     bank = lambda b: [(f'b{b}_{n}', P[f'b{b}_{n}']) for n in BANKP if f'b{b}_{n}' in P]
     lane = lambda b: [(f'{n}_l{b}', P[f'{n}_l{b}']) for n in RING]
@@ -142,9 +151,11 @@ def spec(k, c):
                f"client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 "
                f"with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 "
                f"reset regions; reset_landing on. g5: hub response stage 1 (bank returns +1: pr +1), hub-side registered "
-               f"bank select (pq +1), kept per-port relay chains, recipe 4 die boundary hold budget. g6: no edge change; every mapped root <= 32 (kept per-slice copies, one-hot commit pointer, reset forest).")
+               f"bank select (pq +1), kept per-port relay chains, recipe 4 die boundary hold budget. g6: no edge change; every mapped root <= 32 (kept per-slice copies, one-hot commit pointer, reset forest). "
+               f"g7: reach relays on a planned lattice (kit hook vms_relay_lattice.tcl), eg tile depth 1 (eg -2), hub landing br removed (pr -1)"
+               f"{'; g7d fallback: + deterministic HB4 on the in-place pure hops (vms_inplace_hold.tcl)' if gen == '_g7d' else ''}.")
     return {
-        'name': f'hfd_hgi_vms_glue_{k}{GEN}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
+        'name': f'hfd_hgi_vms_glue_{k}{gen}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
         'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': False, 'reason': 'the RTL lands it: rst_n -> rst_l0 (plain face flop, gen_vms_glue_tiles.py) -> ot_vms_rst_forest (replicated second landing l1 per group, 2 sync, <= 24 kept leaves per group; assertion +2, release +5 edges)'}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 4, 'hold_budget': 'die',
         'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16'},
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
@@ -158,19 +169,20 @@ def spec(k, c):
                      'from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an '
                      'edge the contract (gen_vms_glue_tiles.py) does not have.'},
         'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False, 'keep_pin_regs': True,
+        'pin_hook_before_flops': VARIANTS[gen], 'pre_dpl_extra': ['tools/hbm_die_v16/vms_relay_lattice_release.tcl'],
         'purpose': purpose,
         'pin_density_per_um': dens,
-        'job': {'owner': 'Claude LEAD2-HBM/L2H-PGVM 1019', 'branch': 'claude/vm-glue-g6-1019', 'tag': 'g6', 'purpose': purpose,
+        'job': {'owner': 'Claude LEAD3-HBM/L2H-PGVM-G7 1019', 'branch': 'claude/vm-glue-g7-1019', 'tag': gen[1:], 'purpose': purpose,
                 'extra_paths': ['rtl/hbm_accel/generic/vm', 'rtl/lib', 'tools/hbm_die_v16'],
-                'record_to': f'results/rtl/ref_tile/hfd_hgi_vms_glue_{k}{GEN}', 'benches': benches,
-                'views_to': f'physical/ref_tile/hfd_hgi_vms_glue_{k}{GEN}/views'},
+                'record_to': f'results/rtl/ref_tile/hfd_hgi_vms_glue_{k}{gen}', 'benches': benches,
+                'views_to': f'physical/ref_tile/hfd_hgi_vms_glue_{k}{gen}/views'},
     }
 
 
 def main():
     OUTDIR.mkdir(parents=True, exist_ok=True); ok = True
-    for k, c in M.items():
-        s = json.dumps(spec(k, c), indent=1) + '\n'; f = OUTDIR / f'hfd_hgi_vms_glue_{k}{GEN}.json'
+    for (k, c), gen in [(kc, g) for g in VARIANTS for kc in M.items()]:
+        s = json.dumps(spec(k, c, gen), indent=1) + '\n'; f = OUTDIR / f'hfd_hgi_vms_glue_{k}{gen}.json'
         if '--check' in sys.argv:
             ok &= f.exists() and f.read_text() == s
         else:

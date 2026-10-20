@@ -387,7 +387,7 @@ module ot_vms_hub_lt #(
     parameter integer NC=4,
     parameter integer PHYSICAL_RING=1,
     parameter integer CW=(NC<1)?1:$clog2(NC+1),
-    parameter integer MUT=0,            // bench only: 4 = pq from the hub centre without the face-group edge
+    parameter integer MUT=0,            // bench only: 4 = pq from the hub centre without the face-group edge, 7 = g6 br
     parameter integer NLH=3+14*(NC+1)   // reset leaves (layout: see L_* below)
 )(
     input wire clk,
@@ -425,7 +425,15 @@ module ot_vms_hub_lt #(
     reg ce, cce;
     reg [CW-1:0] cs, ccs;
     reg [1:0] me;
-    reg [8*266-1:0] br;
+    // g7 (L2H-PGVM-G7 10-19): no hub landing br on the bank returns -- the tile pr chain's last relay feeds the group
+    // stage 1 directly (br was a pure in-place flop -> flop hop: 2,128 hold-critical endpoints); bank returns -1 edge
+    // MUT 7 (bench only): the g6 landing kept (contract break)
+    wire [8*266-1:0] br;
+    if(MUT==7) begin : g_br6
+        reg [8*266-1:0] br_q; always @(posedge clk) br_q<=pr; assign br=br_q;
+    end else begin : g_br7
+        assign br=pr;
+    end
     reg [263:0] rr0,rr1;
     reg [N-1:0] re;
     reg [N*2-1:0] rseq;
@@ -482,7 +490,7 @@ module ot_vms_hub_lt #(
     reg [N-1:0] re_a; reg [N*2-1:0] rseq_a;
     always @(posedge clk) begin
         qr<=cq; sq<=client_seq; bc<=bank_client; cs<=cw_client;
-        ccs<=ccw_client; me<=sid; br<=pr; rr0<=cco0; rr1<=cco1; re_a<=response_enable; rseq_a<=response_seq; rseq<=rseq_a;
+        ccs<=ccw_client; me<=sid; rr0<=cco0; rr1<=cco1; re_a<=response_enable; rseq_a<=response_seq; rseq<=rseq_a;
     end
     reg [N-1:0] qvalid;
     reg [7:0] bvalid;   // g3: = br valid bits (plain landing; the face-group partial registers carry the reset)

@@ -5,7 +5,7 @@
 // plain delays around the UNCHANGED historical children: each ring stop sees every input except xq_done 2 edges late (g3
 // landing + g4 band relay) and its rce leaves 2 edges late (3-level lane-OR tree); the hub sees pr / response_enable /
 // response_seq 1 edge late and its pq leaves 1 edge late (g3), g5 one more each (pr 2, pq 2: hub response stage 1 and the
-// hub-side registered bank select); g4 hub-island <-> ring-stop reach relays: pi and ri +1
+// hub-side registered bank select; g7: the hub landing br is gone, pr 1); g4 hub-island <-> ring-stop reach relays: pi and ri +1
 // more into the stops, cco +1 into the hub, rce +1 into the replay, ring faults +1 into the status block.
 module hfd_vms_glue_core_g4_ref #(
     parameter integer NC=0,
@@ -56,7 +56,7 @@ module hfd_vms_glue_core_g4_ref #(
     wire ack01,ack10;
     wire [8*285-1:0] pq_h;
     // the g3 / g4 edges
-    reg [8*266-1:0] pr_d, pr_e; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d, pq_e;
+    reg [8*266-1:0] pr_d; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d, pq_e;
     reg [2223:0] cwi_d, ccwi_d, cwi_e, ccwi_e; reg [289:0] pi0_h, pi1_h, pi0_d, pi1_d, pi0_e, pi1_e;
     reg [2207:0] eg_d, eg_e; reg [265:0] ri0_h, ri1_h, ri0_d, ri1_d, ri0_e, ri1_e;
     reg [2:0] wk01_d, wk10_d, wk01_e, wk10_e; reg ack01_d, ack10_d, ack01_e, ack10_e; reg [1:0] txe_d, txe_e;
@@ -65,7 +65,8 @@ module hfd_vms_glue_core_g4_ref #(
     wire [263:0] cco0_s, cco1_s;
     always @(posedge clk) begin
         pr_d<=bk_pr; re_d<=response_enable; rs_d<=response_seq; pq_d<=pq_h;
-        pr_e<=pr_d; pq_e<=pq_d;   // g5: hub response stage 1 (bank returns +1) and hub-side registered bank select (pq +1)
+        pq_e<=pq_d;   // g5: hub-side registered bank select (pq +1); g7: the g5 bank-return stage stays, the g3 landing
+                      // is gone (one pr delay: pr_d)
         pi0_h<=pi0; pi1_h<=pi1; ri0_h<=ri0; ri1_h<=ri1;
         cwi_d<=cw_in; ccwi_d<=ccw_in; pi0_d<=pi0_h; pi1_d<=pi1_h; eg_d<=bk_eg; ri0_d<=ri0_h; ri1_d<=ri1_h;
         wk01_d<=wk01; wk10_d<=wk10; ack01_d<=ack01; ack10_d<=ack10; txe_d<=ring_tx_enable; txs_d<=ring_tx_source;
@@ -82,7 +83,7 @@ module hfd_vms_glue_core_g4_ref #(
         .bank_enable(bank_enable),.bank_client(bank_client),
         .cw_enable(hub_ring_enable[0]),.cw_client(hub_ring_client[0+:CW]),
         .ccw_enable(hub_ring_enable[1]),.ccw_client(hub_ring_client[CW+:CW]),
-        .pq(pq_h),.pr(pr_e),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
+        .pq(pq_h),.pr(pr_d),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
     ot_vms_rstop_static #(.COMMIT_DELAY(COMMIT_DELAY)) u_cw(
         .clk(clk),.rst_n(rst_n),.sid(sid_e),.dir(1'b0),
         .tx_enable(txe_e[0]),.tx_source(txs_e[0+:3]),
@@ -138,7 +139,7 @@ module hfd_hgi_vms_glue_sw_t_ref (
     reg rst_l0, rst_l1;
     always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
-    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
+    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4; g7 overrides {'eg': 1}), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s1; always @(posedge clk) bk_xq_d_s1 <= bk_xq_d_s0;
@@ -163,9 +164,7 @@ module hfd_hgi_vms_glue_sw_t_ref (
     assign bk_xq2_done_g = bk_xq2_done_d_s3;
     wire [2207:0] bk_eg_g;
     (* keep = "true" *) reg [2207:0] bk_eg_d_s0; always @(posedge clk) bk_eg_d_s0 <= bk_eg;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s1; always @(posedge clk) bk_eg_d_s1 <= bk_eg_d_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s2; always @(posedge clk) bk_eg_d_s2 <= bk_eg_d_s1;
-    assign bk_eg_g = bk_eg_d_s2;
+    assign bk_eg_g = bk_eg_d_s0;
     wire [2279:0] bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s0; always @(posedge clk) bk_pq_d_s0 <= bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s1; always @(posedge clk) bk_pq_d_s1 <= bk_pq_d_s0;
@@ -316,7 +315,7 @@ module hfd_hgi_vms_glue_e_t_ref (
     reg rst_l0, rst_l1;
     always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
-    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
+    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4; g7 overrides {'eg': 1}), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s1; always @(posedge clk) bk_xq_d_s1 <= bk_xq_d_s0;
@@ -341,9 +340,7 @@ module hfd_hgi_vms_glue_e_t_ref (
     assign bk_xq2_done_g = bk_xq2_done_d_s3;
     wire [2207:0] bk_eg_g;
     (* keep = "true" *) reg [2207:0] bk_eg_d_s0; always @(posedge clk) bk_eg_d_s0 <= bk_eg;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s1; always @(posedge clk) bk_eg_d_s1 <= bk_eg_d_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s2; always @(posedge clk) bk_eg_d_s2 <= bk_eg_d_s1;
-    assign bk_eg_g = bk_eg_d_s2;
+    assign bk_eg_g = bk_eg_d_s0;
     wire [2279:0] bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s0; always @(posedge clk) bk_pq_d_s0 <= bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s1; always @(posedge clk) bk_pq_d_s1 <= bk_pq_d_s0;
@@ -489,7 +486,7 @@ module hfd_hgi_vms_glue_nw_t_ref (
     reg rst_l0, rst_l1;
     always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
-    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
+    // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4; g7 overrides {'eg': 1}), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;
     (* keep = "true" *) reg [2207:0] bk_xq_d_s1; always @(posedge clk) bk_xq_d_s1 <= bk_xq_d_s0;
@@ -514,9 +511,7 @@ module hfd_hgi_vms_glue_nw_t_ref (
     assign bk_xq2_done_g = bk_xq2_done_d_s3;
     wire [2207:0] bk_eg_g;
     (* keep = "true" *) reg [2207:0] bk_eg_d_s0; always @(posedge clk) bk_eg_d_s0 <= bk_eg;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s1; always @(posedge clk) bk_eg_d_s1 <= bk_eg_d_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_d_s2; always @(posedge clk) bk_eg_d_s2 <= bk_eg_d_s1;
-    assign bk_eg_g = bk_eg_d_s2;
+    assign bk_eg_g = bk_eg_d_s0;
     wire [2279:0] bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s0; always @(posedge clk) bk_pq_d_s0 <= bk_pq_g;
     (* keep = "true" *) reg [2279:0] bk_pq_d_s1; always @(posedge clk) bk_pq_d_s1 <= bk_pq_d_s0;

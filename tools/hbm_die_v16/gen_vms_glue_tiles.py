@@ -38,9 +38,17 @@ the header decode / tx select / payloads (stop inputs +2 vs historical, ring tra
 tree (rce +1 vs g3).  Schedule selects are REGISTERED ONE-HOT, decoded a stage ahead from the static schedule: hub bank
 select (bank_enable / bank_client, qualified), ring-stop tx select (tx_enable / tx_source), replay select (replay_source);
 a schedule collision stays a fault (status), never an arbitration.  hfd_vms_glue_core_g4_ref states every edge.
-Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 4 hub pq
+Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 7 g6 hub br landing kept
+(contract break), 8 g6 eg relays kept (contract break), 4 hub pq
 without the g3 face-group edge (contract break), 5 hub -> ring pi and ring -> replay rce without the g4 relays (contract break),
 6 hub bank select copies without the g5 hub-side select register (contract break).
+g7 part (L2H-PGVM-G7 10-19, after the g6 r2 --cts gates stalled in CTS hold repair: 46,076 endpoints inside the 30 ps
+hold margin, ~40k hold buffers; the placed census of the g6 3_place.odb found 70,083 of 114,320 flops (61 %) on PURE
+flop -> flop hops, 29,495 of them <= 50 um: duplicated landings and reach relays that the placer clumped): the mirror
+egress eg keeps only its pin flop at the tile (DEPTH eg 1: the stop's own landings a_eg / eg_m are the reach relays,
+placed on the lattice by the kit hook vms_relay_lattice.tcl) -> eg -2 edges; the hub no longer lands the bank returns
+(br removed, the pr chain's last relay feeds the face-group stage 1) -> pr -1 edge.  hfd_vms_glue_core_g4_ref drops
+the matching pr_e delay; the tile reach chains get deterministic relay positions (kit, 0 cycles).
     gen_vms_glue_tiles.py [--check]
 """
 import sys
@@ -141,8 +149,12 @@ def chain(L, src, width, depth, name):
     return prev
 
 
+# g7: per-port tile depth overrides (eg: pin flop only -- the stop's a_eg / eg_m landings are the reach relays)
+DEPTH = {'eg': 1}
+
+
 def bank_depth(n):
-    return DD if n in ('xq_done', 'xq2_done') else DB
+    return DEPTH.get(n, DD if n in ('xq_done', 'xq2_done') else DB)
 
 
 def client_ins(c):
@@ -184,6 +196,15 @@ def tile(k, c):
             L.append(f'    assign {f}_p = ' + cat([f'b{b}_{n}' for b in reversed(range(8))]) + ';')
             last = chain(L, f'{f}_p', 8 * wd, dep, f)
             byp = " (MUT == 3) ? bk_eg_p :" if f == 'bk_eg' else ''
+            if f == 'bk_eg' and dep < DB:   # g7 MUT 8 (bench only): the g6 eg relays kept (contract break)
+                L.append(f'    wire [{8 * wd - 1}:0] {f}_m8;')
+                L.append(f'    if (MUT == 8) begin : g_{f}_m8')
+                m8 = chain(L, last, 8 * wd, DB - dep, f'{f}_m8')
+                L.append(f'        assign {f}_m8 = {m8};')
+                L.append(f'    end else begin : g_{f}_n8')
+                L.append(f'        assign {f}_m8 = {last};')
+                L.append('    end')
+                last = f'{f}_m8'
             L.append(f'    assign {f}_c ={byp} {last};')
         else:
             last = chain(L, f'{f}_c', 8 * wd, dep, f)
@@ -214,7 +235,7 @@ def tile(k, c):
              '.bk_xq2_done(bk_xq2_done_c)', '.bk_eg(bk_eg_c)', '.bk_pq(bk_pq_c)', '.bk_pr(bk_pr_c)']
     conn += [f'.{n}({n}_c)' for n, _ in OUTS]
     L.append(f'    hfd_vms_glue_core_lt #(.NC({nc}),.COMMIT_DELAY({COMMIT_DELAY}),.UPPER({c["upper"]}),'
-             f'.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (\n        '
+             f'.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : (MUT == 7) ? 7 : 0)) u_core (\n        '
              + ',\n        '.join(conn) + ');')
     L.append('endmodule')
     return '\n'.join(L) + '\n'
@@ -227,8 +248,8 @@ def ref(k, c):
     L.append('    reg rst_l0, rst_l1;')
     L.append('    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end')
     L.append('    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));')
-    L.append(f'    // contract: bank-side inputs consumed {DB} edges later (xq_done / xq2_done {DD}), bank-side outputs {DB} edges later;'
-             f' hub-side client inputs / outputs (+ sid strap) {DC} edges each way')
+    L.append(f'    // contract: bank-side inputs consumed {DB} edges later (xq_done / xq2_done {DD}; g7 overrides {DEPTH}), bank-side'
+             f' outputs {DB} edges later; hub-side client inputs / outputs (+ sid strap) {DC} edges each way')
     for n, d, wd, f in bankp(c):
         dep = bank_depth(n)
         L.append(f'    wire [{8 * wd - 1}:0] {f}_g;')
@@ -271,7 +292,7 @@ REFCORE = """// g4 contract core (HBM-SAFE-VMGLUE 10-19): ot_vms_slice_static_gl
 // plain delays around the UNCHANGED historical children: each ring stop sees every input except xq_done 2 edges late (g3
 // landing + g4 band relay) and its rce leaves 2 edges late (3-level lane-OR tree); the hub sees pr / response_enable /
 // response_seq 1 edge late and its pq leaves 1 edge late (g3), g5 one more each (pr 2, pq 2: hub response stage 1 and the
-// hub-side registered bank select); g4 hub-island <-> ring-stop reach relays: pi and ri +1
+// hub-side registered bank select; g7: the hub landing br is gone, pr 1); g4 hub-island <-> ring-stop reach relays: pi and ri +1
 // more into the stops, cco +1 into the hub, rce +1 into the replay, ring faults +1 into the status block.
 module hfd_vms_glue_core_g4_ref #(
     parameter integer NC=0,
@@ -322,7 +343,7 @@ module hfd_vms_glue_core_g4_ref #(
     wire ack01,ack10;
     wire [8*285-1:0] pq_h;
     // the g3 / g4 edges
-    reg [8*266-1:0] pr_d, pr_e; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d, pq_e;
+    reg [8*266-1:0] pr_d; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d, pq_e;
     reg [2223:0] cwi_d, ccwi_d, cwi_e, ccwi_e; reg [289:0] pi0_h, pi1_h, pi0_d, pi1_d, pi0_e, pi1_e;
     reg [2207:0] eg_d, eg_e; reg [265:0] ri0_h, ri1_h, ri0_d, ri1_d, ri0_e, ri1_e;
     reg [2:0] wk01_d, wk10_d, wk01_e, wk10_e; reg ack01_d, ack10_d, ack01_e, ack10_e; reg [1:0] txe_d, txe_e;
@@ -331,7 +352,8 @@ module hfd_vms_glue_core_g4_ref #(
     wire [263:0] cco0_s, cco1_s;
     always @(posedge clk) begin
         pr_d<=bk_pr; re_d<=response_enable; rs_d<=response_seq; pq_d<=pq_h;
-        pr_e<=pr_d; pq_e<=pq_d;   // g5: hub response stage 1 (bank returns +1) and hub-side registered bank select (pq +1)
+        pq_e<=pq_d;   // g5: hub-side registered bank select (pq +1); g7: the g5 bank-return stage stays, the g3 landing
+                      // is gone (one pr delay: pr_d)
         pi0_h<=pi0; pi1_h<=pi1; ri0_h<=ri0; ri1_h<=ri1;
         cwi_d<=cw_in; ccwi_d<=ccw_in; pi0_d<=pi0_h; pi1_d<=pi1_h; eg_d<=bk_eg; ri0_d<=ri0_h; ri1_d<=ri1_h;
         wk01_d<=wk01; wk10_d<=wk10; ack01_d<=ack01; ack10_d<=ack10; txe_d<=ring_tx_enable; txs_d<=ring_tx_source;
@@ -348,7 +370,7 @@ module hfd_vms_glue_core_g4_ref #(
         .bank_enable(bank_enable),.bank_client(bank_client),
         .cw_enable(hub_ring_enable[0]),.cw_client(hub_ring_client[0+:CW]),
         .ccw_enable(hub_ring_enable[1]),.ccw_client(hub_ring_client[CW+:CW]),
-        .pq(pq_h),.pr(pr_e),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
+        .pq(pq_h),.pr(pr_d),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
     ot_vms_rstop_static #(.COMMIT_DELAY(COMMIT_DELAY)) u_cw(
         .clk(clk),.rst_n(rst_n),.sid(sid_e),.dir(1'b0),
         .tx_enable(txe_e[0]),.tx_source(txs_e[0+:3]),

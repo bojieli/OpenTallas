@@ -40,9 +40,17 @@
 // tree (rce +1 vs g3).  Schedule selects are REGISTERED ONE-HOT, decoded a stage ahead from the static schedule: hub bank
 // select (bank_enable / bank_client, qualified), ring-stop tx select (tx_enable / tx_source), replay select (replay_source);
 // a schedule collision stays a fault (status), never an arbitration.  hfd_vms_glue_core_g4_ref states every edge.
-// Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 4 hub pq
+// Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 7 g6 hub br landing kept
+// (contract break), 8 g6 eg relays kept (contract break), 4 hub pq
 // without the g3 face-group edge (contract break), 5 hub -> ring pi and ring -> replay rce without the g4 relays (contract break),
 // 6 hub bank select copies without the g5 hub-side select register (contract break).
+// g7 part (L2H-PGVM-G7 10-19, after the g6 r2 --cts gates stalled in CTS hold repair: 46,076 endpoints inside the 30 ps
+// hold margin, ~40k hold buffers; the placed census of the g6 3_place.odb found 70,083 of 114,320 flops (61 %) on PURE
+// flop -> flop hops, 29,495 of them <= 50 um: duplicated landings and reach relays that the placer clumped): the mirror
+// egress eg keeps only its pin flop at the tile (DEPTH eg 1: the stop's own landings a_eg / eg_m are the reach relays,
+// placed on the lattice by the kit hook vms_relay_lattice.tcl) -> eg -2 edges; the hub no longer lands the bank returns
+// (br removed, the pr chain's last relay feeds the face-group stage 1) -> pr -1 edge.  hfd_vms_glue_core_g4_ref drops
+// the matching pr_e delay; the tile reach chains get deterministic relay positions (kit, 0 cycles).
 module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     input wire clk,
     input wire rst_n,
@@ -238,9 +246,15 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     wire [2207:0] bk_eg_p, bk_eg_c;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
     (* keep = "true" *) reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
-    (* keep = "true" *) reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
+    wire [2207:0] bk_eg_m8;
+    if (MUT == 8) begin : g_bk_eg_m8
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s0; always @(posedge clk) bk_eg_m8_s0 <= bk_eg_s0;
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s1; always @(posedge clk) bk_eg_m8_s1 <= bk_eg_m8_s0;
+        assign bk_eg_m8 = bk_eg_m8_s1;
+    end else begin : g_bk_eg_n8
+        assign bk_eg_m8 = bk_eg_s0;
+    end
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_m8;
     wire [2279:0] bk_pq_p, bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
@@ -331,7 +345,7 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     (* keep = "true" *) reg [2:0] ring_fault_g_s1; always @(posedge clk) ring_fault_g_s1 <= ring_fault_g_s0;
     (* keep = "true" *) reg [2:0] ring_fault_g_s2; always @(posedge clk) ring_fault_g_s2 <= ring_fault_g_s1;
     assign ring_fault = ring_fault_g_s2;
-    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : (MUT == 7) ? 7 : 0)) u_core (
         .clk(clk),
         .rst_l0(rst_l0),
         .sid(2'd0),
@@ -559,9 +573,15 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     wire [2207:0] bk_eg_p, bk_eg_c;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
     (* keep = "true" *) reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
-    (* keep = "true" *) reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
+    wire [2207:0] bk_eg_m8;
+    if (MUT == 8) begin : g_bk_eg_m8
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s0; always @(posedge clk) bk_eg_m8_s0 <= bk_eg_s0;
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s1; always @(posedge clk) bk_eg_m8_s1 <= bk_eg_m8_s0;
+        assign bk_eg_m8 = bk_eg_m8_s1;
+    end else begin : g_bk_eg_n8
+        assign bk_eg_m8 = bk_eg_s0;
+    end
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_m8;
     wire [2279:0] bk_pq_p, bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
@@ -647,7 +667,7 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     (* keep = "true" *) reg [2:0] ring_fault_g_s1; always @(posedge clk) ring_fault_g_s1 <= ring_fault_g_s0;
     (* keep = "true" *) reg [2:0] ring_fault_g_s2; always @(posedge clk) ring_fault_g_s2 <= ring_fault_g_s1;
     assign ring_fault = ring_fault_g_s2;
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : (MUT == 7) ? 7 : 0)) u_core (
         .clk(clk),
         .rst_l0(rst_l0),
         .sid(sid_c),
@@ -882,9 +902,15 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     wire [2207:0] bk_eg_p, bk_eg_c;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
     (* keep = "true" *) reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
-    (* keep = "true" *) reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
-    (* keep = "true" *) reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
+    wire [2207:0] bk_eg_m8;
+    if (MUT == 8) begin : g_bk_eg_m8
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s0; always @(posedge clk) bk_eg_m8_s0 <= bk_eg_s0;
+    (* keep = "true" *) reg [2207:0] bk_eg_m8_s1; always @(posedge clk) bk_eg_m8_s1 <= bk_eg_m8_s0;
+        assign bk_eg_m8 = bk_eg_m8_s1;
+    end else begin : g_bk_eg_n8
+        assign bk_eg_m8 = bk_eg_s0;
+    end
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_m8;
     wire [2279:0] bk_pq_p, bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
     (* keep = "true" *) reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
@@ -982,7 +1008,7 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     assign bank_status_m[107:90] = {bank_status_c[107] | bk_flt_c[5], bank_status_c[106:90]};
     assign bank_status_m[125:108] = {bank_status_c[125] | bk_flt_c[6], bank_status_c[124:108]};
     assign bank_status_m[143:126] = {bank_status_c[143] | bk_flt_c[7], bank_status_c[142:126]};
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b11000011),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b11000011),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : (MUT == 7) ? 7 : 0)) u_core (
         .clk(clk),
         .rst_l0(rst_l0),
         .sid(2'd2),
