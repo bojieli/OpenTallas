@@ -1,0 +1,816 @@
+{
+ "name": "hbm_su_pglg_lo_d4g_fb",
+ "top": "ot_hbm_su_static_pglg_lo",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/lp/ot_hbm_su_static_pglg_lo.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_parts.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pglg_half_parts.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_physical.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_pad_ring.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "QID": 1,
+  "G": 2,
+  "STRAP": 1,
+  "PRETREE": 0,
+  "GMUT": 0,
+  "MUT": 0,
+  "SMUT": 0
+ },
+ "clock_port": "ck_s",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1321.92,
+  "h": 1576.8,
+  "exact": true
+ },
+ "slot_change_request": "HBM-PGLG3 10-20 -> HBM-DIE6 / H-D4G: LIGHT su_<q>2/3 slice = TWO landed halves stacked in one column (H_LO = R0|R1|S_lo below, H_HI = S_hi|R2|R3 above, abutting at the seam), each 1321.92 x 1576.8 (column 1321.92 x 3153.6, was 1235.52 x 3045.6); seam = H_LO N face / H_HI S face x [766.72, 1201.52] (seam_bank / seam_vld wires, landed); W = die command side (commands fan out to both halves), E = stream tile (pg_stream) / pre-tree sibling (pt_ro_x / pt_ro_v) / cxport side; fallback: +43.2 um channels",
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_0",
+   "at": [
+    43.2,
+    734.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_0",
+   "at": [
+    216.0,
+    734.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_1",
+   "at": [
+    691.2,
+    734.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_1",
+   "at": [
+    864.0,
+    734.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_2",
+   "at": [
+    43.2,
+    907.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_2",
+   "at": [
+    216.0,
+    907.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_3",
+   "at": [
+    691.2,
+    907.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_3",
+   "at": [
+    864.0,
+    907.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_4",
+   "at": [
+    43.2,
+    1080.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_4",
+   "at": [
+    216.0,
+    1080.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_5",
+   "at": [
+    691.2,
+    1080.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_5",
+   "at": [
+    864.0,
+    1080.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_6",
+   "at": [
+    43.2,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_6",
+   "at": [
+    216.0,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r1_7",
+   "at": [
+    691.2,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r1_7",
+   "at": [
+    864.0,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_0",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_1",
+   "at": [
+    691.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_1",
+   "at": [
+    864.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_2",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_2",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_3",
+   "at": [
+    691.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_3",
+   "at": [
+    864.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_4",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_4",
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_5",
+   "at": [
+    691.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_5",
+   "at": [
+    864.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_6",
+   "at": [
+    43.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_6",
+   "at": [
+    216.0,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_r0_7",
+   "at": [
+    691.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_r0_7",
+   "at": [
+    864.0,
+    561.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "control",
+   "vmr_cmd",
+   "vmw_cmd",
+   "rf_bword",
+   "rf_bcmd",
+   "rf_dsec",
+   "red_sel",
+   "tree_cmd",
+   "dw_v0",
+   "dw_row0",
+   "dw_d0",
+   "pos",
+   "pos_r0",
+   "pos_r1",
+   "ck_s",
+   "rst_n",
+   "ck_r1",
+   "ck_r0"
+  ],
+  "E": [
+   "su_wq",
+   "su_rr",
+   "ij_v",
+   "ij_row0",
+   "ij_bad",
+   "pg_fault",
+   "slice_x",
+   "tree_o",
+   "fault",
+   "inj_q",
+   "pt_ro_x",
+   "pt_ro_v"
+  ],
+  "N": [
+   "seam_bank",
+   "seam_vld"
+  ]
+ },
+ "pin_ranges": {
+  "control": [
+   991.6,
+   1340.0
+  ],
+  "vmr_cmd": [
+   1340.4,
+   1352.4
+  ],
+  "vmw_cmd": [
+   1352.8,
+   1368.4
+  ],
+  "rf_bword": [
+   1368.8,
+   1394.4
+  ],
+  "rf_bcmd": [
+   1394.8,
+   1402.0
+  ],
+  "rf_dsec": [
+   1402.4,
+   1453.6
+  ],
+  "red_sel": [
+   1454.0,
+   1456.4
+  ],
+  "tree_cmd": [
+   1456.8,
+   1459.2
+  ],
+  "dw_v0": [
+   1459.6,
+   1459.8
+  ],
+  "dw_row0": [
+   1460.2,
+   1462.0
+  ],
+  "dw_d0": [
+   1462.4,
+   1564.8
+  ],
+  "pos": [
+   1565.2,
+   1566.0
+  ],
+  "pos_r0": [
+   1566.4,
+   1567.2
+  ],
+  "pos_r1": [
+   1567.6,
+   1568.4
+  ],
+  "su_wq": [
+   908.0,
+   1020.4
+  ],
+  "su_rr": [
+   1020.8,
+   1123.6
+  ],
+  "ij_v": [
+   1124.0,
+   1124.8
+  ],
+  "ij_row0": [
+   1125.2,
+   1128.8
+  ],
+  "ij_bad": [
+   1129.2,
+   1129.4
+  ],
+  "pg_fault": [
+   1129.8,
+   1130.0
+  ],
+  "slice_x": [
+   1130.4,
+   1136.8
+  ],
+  "tree_o": [
+   1137.2,
+   1150.6
+  ],
+  "fault": [
+   1151.0,
+   1151.2
+  ],
+  "inj_q": [
+   1151.6,
+   1356.4
+  ],
+  "pt_ro_x": [
+   1356.8,
+   1561.6
+  ],
+  "pt_ro_v": [
+   1562.0,
+   1568.4
+  ],
+  "seam_bank": [
+   766.72,
+   1183.52
+  ],
+  "seam_vld": [
+   1183.92,
+   1201.52
+  ],
+  "rst_n": [
+   989.6,
+   989.8
+  ],
+  "ck_s": [
+   1570.4,
+   1570.6
+  ],
+  "ck_r1": [
+   985.6,
+   985.8
+  ],
+  "ck_r0": [
+   378.0,
+   378.2
+  ]
+ },
+ "pg_layer": "M7",
+ "refglob": "*",
+ "recipe": 1,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data pin: W/E face relays u_wrly / u_erly (flop-first, ck_s), u_sout FRLY on rf_dsec / red_sel / tree_cmd, outputs from u_sout / lp landing-read registers, seam inputs into the landing read ot_pl_land_phys_local_r; pos straps are static identity straps (die constants)"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck_s"
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 1111.111,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_s",
+  "ck_r1",
+  "ck_r0"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_s"
+   ],
+   "inputs": [
+    "control",
+    "vmr_cmd",
+    "vmw_cmd",
+    "rf_bword",
+    "rf_bcmd",
+    "rf_dsec",
+    "red_sel",
+    "tree_cmd",
+    "dw_v0",
+    "dw_row0",
+    "dw_d0",
+    "pos",
+    "rst_n",
+    "su_rr",
+    "ij_v",
+    "ij_row0",
+    "ij_bad",
+    "pg_fault",
+    "seam_bank",
+    "seam_vld"
+   ],
+   "outputs": [
+    "fault",
+    "inj_q",
+    "pt_ro_v",
+    "pt_ro_x",
+    "slice_x",
+    "su_wq",
+    "tree_o"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r1"
+   ],
+   "inputs": [
+    "pos_r1"
+   ],
+   "outputs": []
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r0"
+   ],
+   "inputs": [
+    "pos_r0"
+   ],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/rtl/hbm_pglg3_1020/lp/ot_hbm_su_static_pglg_lo_record.json",
+ "landed_note": "HBM-PGLG3 10-20: kit top ot_hbm_su_static_pglg_lo = lp.py landed ot_hbm_su_static_pglg_lof (3 regions s, r1, r0; landings D 2 / E 1 with 24-bit kept chunk counters + reset forest; ring pads) + the seam landing (read on ck_s, 1042 b, +2). Offsets vs ot_hbm_su_static_pgslice_lg unchanged from the one-column parent: frames r1/r2 +3, r0/r3 +6; red_sel / tree_cmd / rf_dsec issued +10; slice_x / pt_ro / inj_q +11; fault +12; VM write +12 serial (+16 stream). Lockstep bench tb_hbm_su_pglg_h2 (both halves + seam + pg_stream vs pgslice_lg) + mutants; partner kit hbm_su_pglg_hi_d4g_fb.",
+ "job": {
+  "owner": "Claude:HBM-PGLG3",
+  "branch": "claude/hbm-pglg3-1020",
+  "tag": "r1f",
+  "purpose": "HBM die d4g LIGHT SU port-group slice su_<q>2/3, LOWER landed half (H.STA.BLK.15.3 two-half successor of hbm_su_pgslice_lg_light_d4g): 16 KIND0 r2 leaves + 16 CLOSED bank6_clock banks, 3 region roots [fallback outline +43.2 channels]",
+  "record_to": "results/rtl/ref_tile/hbm_su_pglg_lo_d4g_fb",
+  "views_to": "physical/ref_tile/hbm_su_pglg_lo_d4g_fb/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_pglg_h2_vl_run.sh",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pglg_h2.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pglg_h2rg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/lp",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction",
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hdc",
+   "rtl/proto",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
+   "physical/ref_tile/hbm_su_static_bank6_clock7_1015",
+   "results/rtl/hbm_pglg3_1020",
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
+   "results/closure_loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
+   "results/closure_loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835"
+  ],
+  "benches": [
+   {
+    "name": "h2_lockstep",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m0 0 1200",
+    "expect": "pass",
+    "pass_regex": "PGLG_H2 PASS checks=",
+    "pass_witness": "results/rtl/hbm_pglg3_1020/m0/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "h2_mut1",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m1 1 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m1/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "fill registered early (u_sinh, both halves)"
+   },
+   {
+    "name": "h2_mut2",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m2 2 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m2/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain group select flipped (u_sout)"
+   },
+   {
+    "name": "h2_mut20",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m20 20 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m20/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "outer-region relay 2 stages (both halves)"
+   },
+   {
+    "name": "h2_mut21",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m21 21 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m21/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain delay line one short"
+   },
+   {
+    "name": "h2_mut23",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m23 23 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m23/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "E-face relay u_erly bypassed (both halves)"
+   },
+   {
+    "name": "h2_mut101",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m101 101 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m101/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "H_LO lp landing 0 bypassed (unlanded)"
+   },
+   {
+    "name": "h2_mut103",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m103 103 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m103/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "H_LO lp pad 0 one stage short (ring pad)"
+   },
+   {
+    "name": "h2_mut111",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m111 111 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m111/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "H_HI lp landing 0 bypassed (unlanded)"
+   },
+   {
+    "name": "h2_mut121",
+    "cmd": "bash tools/hbm_static/su_pglg_h2_vl_run.sh {RUN}/bench/m121 121 300",
+    "expect": "fail",
+    "fail_regex": "PGLG_H2 FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg3_1020/m121/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "seam read released one edge late (calendar slip)"
+   }
+  ]
+ }
+}

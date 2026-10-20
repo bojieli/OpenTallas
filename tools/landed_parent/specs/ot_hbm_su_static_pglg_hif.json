@@ -1,0 +1,126 @@
+{
+ "top": "ot_hbm_su_static_pglg_hif",
+ "top_lp": "ot_hbm_su_static_pglg_hi",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pglg_hif.sv"
+ ],
+ "child_sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_parts.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pglg_half_parts.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv"
+ ],
+ "defines": [
+  "OT_HARD_CHILDREN",
+  "OT_SU_SYNC_RST"
+ ],
+ "params": {},
+ "out_dir": "rtl/hbm_accel/generic/adapters/static_su/top/lp",
+ "record_dir": "results/rtl/hbm_pglg3_1020/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "clk_stage_0",
+  "clk_stage_1",
+  "clk_stage_2",
+  "clk_stage_3",
+  "clk_stage_4",
+  "clk_stage_5",
+  "clk_stage_6",
+  "clk_stage_7",
+  "clk_insert_0",
+  "clk_insert_1",
+  "clk_insert_2",
+  "clk_insert_3",
+  "clk",
+  "clk_rd",
+  "clk_ws",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3",
+  "clk_macro4",
+  "clk_macro5",
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "reset_region": "s",
+ "regions": [
+  {
+   "name": "s",
+   "insts": [
+    "u_wrly",
+    "u_erly",
+    "u_sinh"
+   ],
+   "centre": [
+    617.76,
+    86.4
+   ]
+  },
+  {
+   "name": "r2",
+   "insts": [
+    "u_rg2",
+    "u_ln_r2_*",
+    "u_bk_r2_*",
+    "u_rly2",
+    "u_rlyb2",
+    "u_dly2"
+   ],
+   "centre": [
+    617.76,
+    507.6
+   ]
+  },
+  {
+   "name": "r3",
+   "insts": [
+    "u_rg3",
+    "u_ln_r3_*",
+    "u_bk_r3_*"
+   ],
+   "centre": [
+    617.76,
+    1198.8
+   ]
+  }
+ ],
+ "port_regions": {
+  "control": "s",
+  "vmr_cmd": "s",
+  "vmw_cmd": "s",
+  "rf_bword": "s",
+  "rf_bcmd": "s",
+  "dw_v1": "s",
+  "dw_row1": "s",
+  "dw_d1": "s",
+  "su_rr": "s",
+  "ij_v1": "s",
+  "ij_row1": "s"
+ },
+ "static": [
+  "pos_r3",
+  "pos_r2"
+ ],
+ "D": 2,
+ "E": 1,
+ "reach_um": 405,
+ "landing_chunk_bits": 24,
+ "landing_reset_forest": true,
+ "pad_ring_min": 3,
+ "mut_child": "u_sinh",
+ "bench": {
+  "cycles": 1500,
+  "reset_cycles": 8,
+  "sim": "verilator"
+ },
+ "why": "HBM-PGLG3 10-20: upper half of the LIGHT SU slice (two landed halves, SAFE-AUDIT form). D 2 / E 1 as the one-column parent; landing_chunk_bits 24 + landing_reset_forest: every landing's read-slot counter / slot one-hot / valid is a kept per-chunk copy with its own reset leaf (lg4: rc[0] 4,181 loads); pad_ring_min 3: wide alignment pads are ring buffers (item 5).",
+ "out_regs": {
+  "ret2d": 4
+ }
+}

@@ -88,6 +88,10 @@ SPEC (JSON; paths relative to the repo root):
                  region, each landed by N plain stages on that region's own clock beside its pin (u_lpr_<r>, ot_pl_pad);
                  the die releases every regional reset on the same edge (die obligation in the record).  RB = N.
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
+  pad_ring_min   (HBM-PGLG3 10-20, opt-in; absent = byte-identical): alignment pads and out_regs of >= this many stages
+                 (>= 3) on a net wider than 1 bit are emitted as ot_pl_pad_ring (rtl/common/landed_parent/ot_pl_pad_ring.sv):
+                 the same delay as ot_pl_pad (no reset, plain register chain semantics) built as a ring buffer with kept
+                 12-bit chunk pointers (owner SAFE-DESIGN item 5: delay lines >= 3 deep become ring buffers).
   reschedule     true: the parent's children form cross-region LOOPS (e.g. a bidirectional rung stack), so no offset
                  schedule keeps the flat calendar.  Then every child keeps t = 0 (all resets released together, no pads)
                  and every landed net is a COMPILER RE-SCHEDULE of +E+1 edges.  The lockstep reference becomes
@@ -111,6 +115,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LIB_RTL = "rtl/common/landed_parent/ot_pl_land.sv"
+PAD_RING_RTL = "rtl/common/landed_parent/ot_pl_pad_ring.sv"
 RESET_FOREST_RTL = ["rtl/common/landed_parent/ot_pl_land_field_copies.sv",
                     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"]
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
@@ -125,6 +130,7 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+LIB_PORTS['ot_pl_pad_ring'] = dict(LIB_PORTS['ot_pl_pad'])     # pad_ring_min (HBM-PGLG3 10-20)
 
 
 
@@ -497,6 +503,9 @@ class Parent:
         self.K = self.E
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
+        self.pad_ring = int(spec.get("pad_ring_min", 0))
+        if self.pad_ring and self.pad_ring < 3:
+            raise SystemExit("pad_ring_min must be >= 3 (shorter pads stay plain register stages)")
         self.reset_forest = spec.get("landing_reset_forest", False)
         # QW-CTLM3 10-19: landing_reset_lead -- the ring / read rq (their own re-registering flop) released at the SAME
         # edge as a t = 0 child (regional run RB - 2 stages + rq), not one edge after it.  Without it a ring misses the
@@ -545,6 +554,12 @@ class Parent:
                 raise SystemExit("reset_net must have exactly one child driver")
             self.reset_driver = drivers[0]["inst"]
             spec.setdefault("reset_region", self.region[self.reset_driver])
+
+    def pad_prim(self, rng, k):
+        """ot_pl_pad, or the ring-buffer equivalent for a wide pad of >= pad_ring_min stages (opt-in)"""
+        if self.pad_ring and k >= self.pad_ring and eval_width(rng, self.env) > 1:
+            return "ot_pl_pad_ring"
+        return "ot_pl_pad"
 
     def rng(self, n):
         if n in self.wires:
@@ -916,7 +931,7 @@ class Parent:
         for p, k in sorted(oregs.items()):
             rng = self.ports[p]["range"]
             w(f"    // ---- OUTPUT REGISTER {p}: +{k} edge(s) in region {P['nreg'][f'port:{p}']} (out_regs; port offset +{k})")
-            w(f"    ot_pl_pad #(.W({width_text(rng)}), .N({k})) u_lpo_{p} "
+            w(f"    {self.pad_prim(rng, k)} #(.W({width_text(rng)}), .N({k})) u_lpo_{p} "
               f"(.ck(ck_{P['nreg'][f'port:{p}']}), .d({p}__o), .q({p}));")
         # reset tree
         w(f"    // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region {rr} holds the root)")
@@ -990,7 +1005,8 @@ class Parent:
             src = sub.get((inst, net), net)
             q = f"{net}__p_{inst}"
             kk = f"(MUT == 3) ? {k - 1} : {k}" if j == 0 and mut else f"{k}"
-            w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
+            prim = self.pad_prim(rng, k)
+            w(f"    wire {rng or ''} {q};  {prim} #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
               f".d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
         # child resets
@@ -1240,6 +1256,7 @@ class Parent:
                 landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
                                             **({"no_data_multicycle": True} if not self.mcp else {}),
                                             **({"reset_lead": True} if self.reset_lead else {}),
+                                            **({"pad_ring_min": self.pad_ring} if self.pad_ring else {}),
                                             **(dict(compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
                                                     overwrite_gap_min_T=1.25)
                                                if self.chunk_bits or self.direct_timing else {})))),
@@ -1406,7 +1423,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
-                        (RESET_FOREST_RTL if self.reset_forest else []) +
+                        (RESET_FOREST_RTL if self.reset_forest else []) + ([PAD_RING_RTL] if self.pad_ring else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
