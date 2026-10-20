@@ -1,25 +1,27 @@
 ot-run: die-level command (DIE_RE): --priority die
-ot-run: ot-epyc5       admits   657 GB (avail 573, growth 113, headroom 0, waiters 0/0 GB) load 102/128 running 30 disk 596 GB 
+ot-run: ot-epyc5       admits   631 GB (avail 555, growth 113, headroom 0, waiters 0/0 GB) load 116/128 running 31 disk 595 GB 
 ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die-station-plan-1020
-ot-run: ot-epyc7       admits   756 GB (avail 614, growth 85, headroom 0, waiters 0/0 GB) load 47/96 running 23 disk 5604 GB 
-ot-run: ot-epyc9       admits   962 GB (avail 821, growth 147, headroom 0, waiters 0/0 GB) load 93/128 running 43 disk 87 GB 
+ot-run: ot-epyc7       admits   784 GB (avail 650, growth 101, headroom 0, waiters 0/0 GB) load 91/96 running 35 disk 5579 GB 
+ot-run: ot-epyc9       admits   893 GB (avail 805, growth 180, headroom 0, waiters 0/0 GB) load 131/128 running 46 disk 80 GB 
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die-station-plan-1020
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die-station-plan-1020
-ot-run: ot-epyc9 skipped for this die job: DISK 87 GB free - 3 running die job(s) x 60 GB < 1 GB
+ot-run: ot-epyc9 skipped for this die job: DISK 80 GB free - 3 running die job(s) x 60 GB < 1 GB
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-524922-1792494112 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1155257-1792494324 after 0 s
 test_complete_far_bus_fails (__main__.GeometryCoverage.test_complete_far_bus_fails) ... ok
 test_complete_near_bus_passes (__main__.GeometryCoverage.test_complete_near_bus_passes) ... ok
+test_legacy_parameter_parser_is_unchanged (__main__.GeometryCoverage.test_legacy_parameter_parser_is_unchanged) ... ok
 test_missing_contract_port_is_refused (__main__.GeometryCoverage.test_missing_contract_port_is_refused) ... ok
 test_missing_lef_false_pass_is_refused (__main__.GeometryCoverage.test_missing_lef_false_pass_is_refused) ... ok
 test_missing_pin_false_pass_is_refused (__main__.GeometryCoverage.test_missing_pin_false_pass_is_refused) ... ok
 test_missing_placement_is_refused (__main__.GeometryCoverage.test_missing_placement_is_refused) ... ok
 test_parameters_cannot_hide_far_bus (__main__.GeometryCoverage.test_parameters_cannot_hide_far_bus) ... ok
+test_unexpected_connected_instance_preserves_net_and_refuses (__main__.GeometryCoverage.test_unexpected_connected_instance_preserves_net_and_refuses) ... ok
 test_unknown_direction_is_refused (__main__.GeometryCoverage.test_unknown_direction_is_refused) ... ok
 test_unparsed_instance_is_refused (__main__.GeometryCoverage.test_unparsed_instance_is_refused) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 0.004s
+Ran 11 tests in 0.005s
 
 OK
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-524922-1792494112): exit 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1155257-1792494324): exit 0

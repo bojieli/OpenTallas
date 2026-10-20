@@ -36,7 +36,7 @@ RST = re.compile(r'(^|_)(rst|reset|por)(_|n|$)|rst_n|_rstn|^rs$')
 
 def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict_coverage=False):
     C = json.loads(Path(contract).read_text()); I = C['instances']
-    coverage = {}
+    coverage = {} if strict_coverage else None
     pl, nets, directions, top_inputs = RP.load_case(Path(case), C, coverage=coverage)
 
     def planned(inst, xy):
@@ -100,7 +100,7 @@ def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict
                fix_summary=dict(buses=len(fix), extra_stations=sum(f['extra_stations'] for f in fix),
                                 extra_cycles_sum=sum(f['extra_cycles'] for f in fix),
                                 worst_bus_extra_cycles=max([f['extra_cycles'] for f in fix] or [0])))
-    res['geometry_coverage'] = coverage
+    res['geometry_coverage'] = coverage or dict(verdict='NOT_CHECKED', reason='use --strict-coverage')
     res['strict_coverage'] = strict_coverage
     if strict_coverage and coverage['verdict'] != 'PASS':
         res['verdict'] = 'FAIL'

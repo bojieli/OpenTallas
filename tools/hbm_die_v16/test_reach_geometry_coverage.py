@@ -80,6 +80,23 @@ END tile
         p=self.root/'die.v';p.write_text(p.read_text().replace('.i(w)', '.i()'))
         self.assertEqual(self.run_case()['geometry_coverage']['by_reason'],dict(missing_contract_port_connection=1))
         self.assertEqual(self.run_case()['verdict'],'FAIL')
+    def test_unexpected_connected_instance_preserves_net_and_refuses(self):
+        # The extra real sink must participate even in legacy mode. A partial
+        # contract must never erase its physical endpoint from the reach scan.
+        self.placement['b']['x']=100
+        self.placement['extra']=dict(master='tile',x=900,y=0,w=10,h=10,orient='R0')
+        self.emit()
+        p=self.root/'die.v'
+        p.write_text(p.read_text().replace('endmodule', '  tile extra (\n    .i(w)\n  );\nendmodule'))
+        self.assertEqual(self.run_case(False)['over_buses_by_class'],dict(sync=1))
+        r=self.run_case()
+        self.assertEqual(r['geometry_coverage']['by_reason'],dict(unexpected_instance=1))
+        self.assertEqual(r['over_buses_by_class'],dict(sync=1))
+        self.assertEqual(r['verdict'],'FAIL')
+    def test_legacy_parameter_parser_is_unchanged(self):
+        self.emit(parameter=True)
+        self.assertEqual(self.run_case(False)['buses_checked'],0)
+        self.assertEqual(self.run_case()['buses_checked'],1)
     def test_unknown_direction_is_refused(self):
         self.lef.write_text(self.lef.read_text().replace('DIRECTION INPUT','DIRECTION INOUT'))
         self.assertEqual(self.run_case()['geometry_coverage']['by_reason'],dict(unknown_signal_direction=1))

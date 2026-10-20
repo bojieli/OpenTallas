@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.hbm.s3i_planning_review.v1",
+  "time": "2026-10-20T04:04:00.254666-07:00",
+  "verdict": "GO_PLANNING_ONLY",
+  "source_commit": "7b303c847",
+  "proposal_admitted": "efadc4b60d1d98638cb863733a2accd572994bfda811fd82cf5cf441ed7c1bc1",
+  "manifest_sha256": "1c1a3bb7875572eb8b40319a79270bc40c2ec87ea8b95f6692ca2256df7bd7b8",
+  "layout_sha256": "b70e3b884fcabd000c24a09b3a46ba3ccf79173d004f21d0c58a65733c723d7a",
+  "png_inspected": true,
+  "visual_findings": "Four quadrants symmetric; IDX scorer blocks at actual PHY-side strips; HC centre banks; no corner overflow or red region overflow blocks. Two generated homes hb_vms_SE/NE remain in owner vmh slots. All82 prior generic-centroid-fallback blocks now real grants.",
+  "placement_instances": 1228,
+  "placement_problems": [],
+  "placement_coverage": "PASS",
+  "generated_homes": [
+    "hb_vms_SE owner vmh_SE",
+    "hb_vms_NE owner vmh_NE"
+  ],
+  "remaining_failures": [
+    "reach lower-bound7689 buses pre-relay",
+    "reset1861 missing regional forest",
+    "mapped MC3 unsafe196 dynamic roots >32",
+    "104 pin-density entries remain diagnostic",
+    "native_complete false; SYNTH standins; clock regional model fails neighbour margins"
+  ],
+  "allowed_next": "S4/S5 station and landing exploration only; S7/S10 strict reach/reset/native unchanged; no release qualification."
+}

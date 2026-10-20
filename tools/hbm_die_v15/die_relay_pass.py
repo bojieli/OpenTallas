@@ -40,11 +40,13 @@ def load_case(c, contract, coverage=None):
     for hi, lo, name in re.findall(r'\binput\s+(?:wire\s+)?(?:\[(\d+):(\d+)\]\s*)?(\w+)', txt):
         top_inputs.update([f'{name}[{k}]' for k in range(int(lo), int(hi) + 1)] if hi else [name])
     nets, directions = collections.defaultdict(list), {}
-    for m in re.finditer(r'^\s+(\w+)(?:\s+#\(.*?\))? (\w+) \(\n(.*?)\n\s+\);', txt, re.M | re.S):
+    pattern = (r'^\s+(\w+) (\w+) \(\n(.*?)\n\s+\);' if coverage is None else
+               r'^\s+(\w+)(?:\s+#\(.*?\))? (\w+) \(\n(.*?)\n\s+\);')
+    for m in re.finditer(pattern, txt, re.M | re.S):
         mas, inst = m.group(1), m.group(2)
-        if expected and inst not in expected:
-            continue
         seen.add(inst)
+        if expected and inst not in expected:
+            defects.append(dict(instance=inst, master=mas, reason='unexpected_instance'))
         if inst not in pl or mas not in L:
             defects.append(dict(instance=inst, master=mas,
                                 reason='missing_placement' if inst not in pl else 'missing_lef'))
