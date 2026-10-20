@@ -42,7 +42,7 @@
   ],
   "artifacts": {
     "SOURCE_CONTRACT.json": "ea29516c1b39dfb355df9c5fb3d245410cd7892ef20e057c2fc9068b7c0e08d4",
-    "README.md": "ca72ff9cd5f76a16c38fd75fdefda3bade0c02acfc688f973c3f721d7638c734",
+    "README.md": "bd3b3533f6de3cdbb54a0d678e1307f4e088d1fbc077834c7e84c497b4c49079",
     "source_contract.py": "3f3bb831a652771c83b16ab9d3c3c0fcc2c5ddbcdb2b2cb4decb2809fed76bfd",
     "neg_bank/build.log": "3c0b9e7bc2f97e6afa93105fc75bf913906f5735f20dce7cb46a8ab85bb82193",
     "neg_bank/run.log": "305d7f0d60d123c5afb6235c519c14a96f25c20f999a18a750ae372580c1aeb8",
@@ -56,5 +56,9 @@
     "neg_age/run.log": "8ad07749af9ee1c6b6ae7957e5b29becb8b03dee27cf8970221c7cfd23e3efdb"
   },
   "legacy_reference_body_exact_original": true,
-  "old_bench_remains_unchanged": true
+  "old_bench_remains_unchanged": true,
+  "canonical_first_use_contract": {
+    "path": "physical/ref_tile/qfd_dv_s5_btab_s4/FIRST_USE_CONTRACT.md",
+    "sha256": "eb5d76811e4eba06e03f0580bd92a05f8dda89770f4dcfb7b27dfeaf28b3fb42"
+  }
 }
