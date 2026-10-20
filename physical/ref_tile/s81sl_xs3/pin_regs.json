@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xs",
+ "enable": false,
+ "reason": "Source-registered (S81 slice x streamer leaf): every data input lands in a pin flop (gv_q / gf_q / gi_q / gd_q, isv_q / isd_q; fi -> fo register) and every output leaves a flop (xw_d relay register, xw_v = its bit 0, fault, fo). recipe-3 pin_regs would add a second unpriced stage on the ring-to-buffer and frame-word paths (slice contract)."
+}

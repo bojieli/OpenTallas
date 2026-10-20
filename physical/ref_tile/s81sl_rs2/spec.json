@@ -1,0 +1,243 @@
+{
+ "name": "s81sl_rs2",
+ "top": "ot_s81sl_rs",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rs.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 907.2,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w",
+   "nx_wi",
+   "nx_wo"
+  ],
+  "E": [
+   "ri_e",
+   "ro_e",
+   "nx_ei",
+   "nx_eo"
+  ],
+  "N": [
+   "sid",
+   "dl_ev",
+   "dl_e",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "ci_dir",
+   "ci_b",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "g_v",
+   "g_fam",
+   "g_idx",
+   "g_d",
+   "xf_v",
+   "xf_s",
+   "xf",
+   "fault",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "g_v": [
+   10.8,
+   17.28
+  ],
+  "g_fam": [
+   19.44,
+   25.92
+  ],
+  "g_idx": [
+   28.08,
+   47.52
+  ],
+  "g_d": [
+   49.68,
+   583.2
+  ],
+  "xf_v": [
+   604.8,
+   611.28
+  ],
+  "xf_s": [
+   613.4399999999999,
+   619.92
+  ],
+  "xf": [
+   622.0799999999999,
+   885.6
+  ],
+  "fault": [
+   887.76,
+   889.9200000000001
+  ],
+  "clk": [
+   587.5200000000001,
+   589.6800000000001
+  ],
+  "rst_n": [
+   591.84,
+   594.0
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81 slice ring stop leaf ot_s81sl_rs): every data input lands in a pin flop (iw / ie / iv / xf_q / neo_q / nwo_q / ci_q / sid_c and the 46 control copies' header / valid copies) and every output leaves a flop (ro_e / ro_w / vo / dl_* / nx_* relay registers, g_* gather registers, fault). recipe-3 pin_regs would add a second unpriced stage per ring hop (SPEC: +1 ring-stop register ~ +8 cycles per ring traversal) and break the landed-slice lockstep latencies."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16"
+ },
+ "fill_reason": {
+  "pin_bound": "Pin-bound leaf without macros: 15,180 signal pins (W / E 2,554 each = line in + out + xfin NX; N 4,150 control-plane deliveries / inject + V rung; S 4,492 gather word to the x streamer leaf + own fragments). Outline from face density <= 5.8 pins/um, not synthesis area (~15k um2 std)."
+ },
+ "structural_change": "S81-XG3 (LEAD3-S81 10-19): the s81sl_xg tile (ring stop + x streamer, 38k flops on one root over 648 um; gates xgr CTS rc=137 / xgr2 DPL-0038 after 1.2M repair buffers, GPL overflow stuck 0.30) is split into two sibling hard leaves of the slice parent: this ring stop leaf ot_s81sl_rs and the x streamer leaf s81sl_xs3; ot_s81sl_xg is wiring only. ot_s81sl_rs = ot_s81sl_rstop RELAY=1 cycle-for-cycle (rs_equiv: 8 random protocol cases x 20k cycles, all outputs every edge, 0 mismatches; MUT_SLICE negative control FAILs), restructured as 46 bit slices of 24 b each with its own kept control copy (header pin-flop copies + fragment-state replicas) so no select drives more than ~24 b of the 1,104-b muxes; header bits [20:0] / scalar valids / faults from copy 0. g_d leaves on the S face in [49.68, 583.20] facing the x streamer leaf's N-face g_d range (same span), so the 3 x 1,031-b gather port is a straight registered abutment. SAFE checklist (owner 10-19): 1 pins waived-with-reason (source-registered: every input lands in a pin flop, every output leaves a relay flop; reset_landing 2 stages ON). 2 reach fixed: W pin -> E pin is iw flop -> line mux + ro_e_p -> ro_e_q relay (two hops of ~432 um at 864 wide). 3 fanout fixed: 46 kept control copies (ot_s81sl_rs_cc, keep_hierarchy, unparameterised so Yosys cannot rename it) each drive <= 24 b of every wide mux; reset via ot_rst_relay 4 regions. 4 depth PASS: 5:1 one-hot line mux + header format, no arithmetic beyond hops-1. 5 storage PASS: fragment slots 2 x 828 b written once per beat (no runtime index, no delay line). 6 floorplan waived-with-reason: pin-bound (no macros), outline from face pin density <= 5.8/um, not synthesis area. 7 clock: clock_split_km K=16 regional roots; spread judged TT+FF <= 80; io_hold_margin 0.03. 8 schedule: cycle-equal to ot_s81sl_rstop RELAY=1 (rs_equiv) -> no schedule change vs xgr.",
+ "job": {
+  "owner": "Claude:S81-XG3",
+  "branch": "claude/s81-xgr-1019",
+  "tag": "s81sl_rs2",
+  "purpose": "S81 slice ring stop leaf ot_s81sl_rs (sibling of the x streamer leaf s81sl_xs3; replaces the s81sl_xg tile) to closure (TT setup / FF hold / DRC 0 + native audit); child of the slice parents s81dv_slice C1 / C3.",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_slice_1019/xg3"
+  ],
+  "benches": [
+   {
+    "name": "rs_equiv",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv",
+    "expect": "pass",
+    "pass_regex": "^RS_EQUIV_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutslice",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_m mut",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=0 seed=1 dens=40 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/rs_equiv_mut_bench.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_lockstep",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_lockstep L0_near_s5 L0_far_s0 L0_rand_s15 L2_near_s9 L2_rand_s3 L2_far_s14 L0_rand_s8 L0_offm1",
+    "expect": "pass",
+    "pass_regex": "^XG_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_mutfrag",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_mutfrag L0_mutfrag",
+    "expect": "fail",
+    "fail_regex": "^XG_CASE L0_mutfrag FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/L0_mutfrag.log",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_mutvasm",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_mutvasm L0_mutvasm",
+    "expect": "fail",
+    "fail_regex": "^XG_CASE L0_mutvasm FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/L0_mutvasm.log",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_mutgswap",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_mutgswap L0_mutgswap",
+    "expect": "fail",
+    "fail_regex": "^XG_CASE L0_mutgswap FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/L0_mutgswap.log",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_rs2/views",
+  "record_to": "results/rtl/ref_tile/s81sl_rs2"
+ },
+ "macros": [],
+ "children": [],
+ "inter": []
+}

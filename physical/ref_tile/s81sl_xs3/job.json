@@ -1,0 +1,137 @@
+{
+ "name": "s81sl_xs3-s81sl_xs3-COMMIT",
+ "block": "ot_s81sl_xs",
+ "ref_tile": true,
+ "owner": "Claude:S81-XG3",
+ "purpose": "S81 slice x streamer leaf ot_s81sl_xs RD2=2 (sibling of ot_s81sl_rs; replaces the s81sl_xg tile) to closure; child of the slice parents s81dv_slice C1 / C3.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/s81-xgr-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_slice_1019/xg3"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_xs #(.RD2(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DDSFD_PQ_STATIC_X2 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_lockstep",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_lockstep L0_near_s5 L0_far_s0 L0_rand_s15 L2_near_s9 L2_rand_s3 L2_far_s14 L0_rand_s8 L0_offm1",
+    "expect": "pass",
+    "pass_regex": "^XG_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_mutbank",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_mutbank L0_mutbank",
+    "expect": "fail",
+    "fail_regex": "^XG_CASE L0_mutbank FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/L0_mutbank.log",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg_mutoff",
+    "cmd": "bash tools/s81_slice/xg_bench.sh {RUN}/xg_mutoff L0_mutoff",
+    "expect": "fail",
+    "fail_regex": "^XG_CASE L0_mutoff FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg3/L0_mutoff.log",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_xs3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_xs3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_xs3 --out {RUN}/record/views/ot_s81sl_xs --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_xs3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_xs3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_xs3/s81sl_xs3-s81sl_xs3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-XG3 (LEAD3-S81 10-19): x streamer as its own hard leaf (sibling of ot_s81sl_rs in the slice parent; replaces the s81sl_xg tile whose gates xgr / xgr2 failed: 38k flops one root, 4,486-load index net, 585 / 299 reset fanouts, 27 macro channels < 20 um). RD2=2 = RD2=1 (bank-local 8:1 + 3:1 read stages) + arrival-table and block-exponent lookups through ot_s81sl_xs_lut (kept per-16-entry-group copies of the index low bits + a kept group-select copy: no index flop drives a whole table) + 11 reset regions (kept select copies get their own) + xs_ctl 3rd reset region (p1 / bt pipeline); fault glue fo = reg(fi | fault) moved in from ot_s81sl_xg (same edge). Same edges as xgr's RD2=1 (xg_bench). Floorplan: no abutted macros -- 3 banks x (2 columns x 4 rows), 34.8 um column / 23.7 um row channels, ROM row along S with 70 um gaps, 45 um to the SRAMs; std band N (gather pin flops) + middle (controller, lx) + S (frame-word flops). SAFE checklist: 1 pins waived-with-reason (source-registered), reset_landing ON; 2 reach PASS (864 um wide, every path flop -> <= ~450 um -> flop with the gd_q flops free to sit between face and bank); 3 fanout fixed (lut copies, kept select copies, reset regions); 4 depth PASS (two-stage read crossbar); 5 storage: x buffer SRAM, exponent table 384 x 10 b flops read through kept copies (waived: 3.8 kb with 3 write ports per beat; SRAM move = next variant if it shows); 6 floorplan PASS (channels >= 20, lattice, aspect 1.8); 7 clock km K=16, spread TT+FF <= 80, io_hold_margin 0.03; 8 schedule unchanged vs xgr."
+}

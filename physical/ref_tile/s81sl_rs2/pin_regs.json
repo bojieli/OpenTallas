@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_rs",
+ "enable": false,
+ "reason": "Source-registered (S81 slice ring stop leaf ot_s81sl_rs): every data input lands in a pin flop (iw / ie / iv / xf_q / neo_q / nwo_q / ci_q / sid_c and the 46 control copies' header / valid copies) and every output leaves a flop (ro_e / ro_w / vo / dl_* / nx_* relay registers, g_* gather registers, fault). recipe-3 pin_regs would add a second unpriced stage per ring hop (SPEC: +1 ring-stop register ~ +8 cycles per ring traversal) and break the landed-slice lockstep latencies."
+}
