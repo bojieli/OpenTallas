@@ -95,6 +95,7 @@ proc ot_native_cell_fence_seed_new {name box inst_names} {
     foreach nm $inst_names {
         set i [$b findInst $nm]
         if {$i eq "NULL" || [[$i getMaster] isBlock]} {error "NATIVE_FENCE_SEED invalid $nm"}
+        if {[$i isDoNotTouch]} {error "NATIVE_FENCE_SEED protected cell $nm"}
         if {[$i getPlacementStatus] ni {NONE UNPLACED SUGGESTED PLACED}} {error "NATIVE_FENCE_SEED fixed or unsupported cell $nm status=[$i getPlacementStatus]"}
         set g [$i getGroup]
         if {$g eq "NULL" || [$g getName] ne $name} {error "NATIVE_FENCE_SEED wrong owner $nm"}

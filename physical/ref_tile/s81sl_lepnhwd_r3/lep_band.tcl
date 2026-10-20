@@ -41,10 +41,10 @@ if {[$ot_lep_b findGroup ot_lep_band] eq "NULL"} {
   set ot_lep_new [ot_lep_movable]
   foreach nm $ot_lep_new {
     set master [[[$ot_lep_b findInst $nm] getMaster] getName]
-    if {![regexp {^(BUF|INV|TIE)} $master]} {error "LEP_BIRTH unmodelled functional cell $nm $master"}
+    if {[catch {ot_candidate_birth_role [$ot_lep_b findInst $nm]} detail]} {error "LEP_BIRTH unmodelled functional cell $nm $master: $detail"}
   }
   if {[llength $ot_lep_new]} { ot_native_cell_fence_add ot_lep_band $ot_lep_new }
-  if {$stage eq "DPL_CALL" && [llength $ot_lep_new]} {ot_native_cell_fence_seed_new ot_lep_band $::ot_lep_band $ot_lep_new}
+  if {$stage eq "DPL_CALL" && [llength $ot_lep_new]} {ot_candidate_seed_new ot_lep_band $::ot_lep_band $ot_lep_new}
   puts "LEP_BAND adopted=[llength $ot_lep_new]"
 }
 

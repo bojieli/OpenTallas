@@ -112,14 +112,14 @@ proc ot_hj_assign_births {seed} {
   if {[ot_candidate_physical_only $i]} {continue}
   # Physical synthesis may resize/delete old logic or insert buffers/ties.
   # A newly inserted state element or arbitrary gate needs an explicit new model.
-  if {![regexp {^(BUF|INV|TIE)} $master]} {error "HWIN_BIRTH unmodelled functional cell [$i getName] $master"}
+  if {[catch {ot_candidate_birth_role $i} detail]} {error "HWIN_BIRTH unmodelled functional cell [$i getName] $master: $detail"}
   set owner [ot_hj_leaf_groups $i]
   if {![dict exists $::ot_hj_boxes $owner]} {error "HWIN_BIRTH bad owner $owner"}
   dict lappend births $owner [$i getName]
  }
  dict for {owner names} $births {
   ot_native_cell_fence_add ot_hj_$owner $names
-  if {$seed} {ot_native_cell_fence_seed_new ot_hj_$owner [dict get $::ot_hj_boxes $owner] $names}
+  if {$seed} {ot_candidate_seed_new ot_hj_$owner [dict get $::ot_hj_boxes $owner] $names}
   puts "HWIN_BIRTH_ASSIGNED owner=$owner cells=[llength $names] seeded=$seed"
  }
  return $births
