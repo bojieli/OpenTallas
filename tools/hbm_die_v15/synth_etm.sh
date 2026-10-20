@@ -49,8 +49,8 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
         last = L.index('puts \"OT_ETM_CLOCKS $n\"') + 1
         domain_clocks = []
         for domain, period in (('stream', 833.333), ('hbm', 1024.0), ('serial', 1111.111)):
-            domain_clocks += [f'set p [get_ports -quiet pll_{domain}]',
-                              'if {[llength $p] != 1} {error \"Missing PLL domain output\"}',
+            domain_clocks += [f'set p [get_pins -quiet u/u_pll/clk_{domain}]',
+                              'if {[llength $p] != 1} {error \"Missing exact internal PLL domain output\"}',
                               f'create_clock -name ck_{domain} -period {period} $p']
         domain_clocks += ['puts \"OT_ETM_CLOCKS 3\"']
         L[first:last] = domain_clocks
