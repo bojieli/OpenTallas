@@ -1,0 +1,55 @@
+{
+  "scope": "SOURCE_CORE_ONLY_NOT_PHYSICAL_PIN_OR_ADMISSION",
+  "cold_data": {
+    "status": "PASS_TWO_SEEDS_THREE_RESET_RELOAD_EPOCHS_EACH",
+    "session": 6093,
+    "unit": "2360487-1792507932",
+    "checks": {
+      "score_tags_rows": 1536,
+      "changing_payload_words": 6144
+    },
+    "reset": "source RP release3, RC/RSC release5; input capture4 is core/source only",
+    "payload_scope": "synthetic independently scheduled head return payload checks control capture stage, not arithmetic head substitution",
+    "wrongstage": {
+      "session": 27016,
+      "unit": "2405140-1792507968",
+      "status": "EXPECTED_DATA_STAGE_FAIL epoch0 row0 head0"
+    }
+  },
+  "reset_publication_building_block": {
+    "status": "V3_PASS_73_WAVEFORM_CHECKS_8_EPOCHS_EARLY_RC_MUTANT_REFUSED",
+    "session": 89070,
+    "unit": "2796974-1792508298",
+    "integration": "NOT_INTEGRATED_IN_C_SOURCE; no repaired native result",
+    "startup": "arbitrary state established by two reset clock edges; no claim before these edges",
+    "edge_relation": "async assertion and RP3/R0-4/RC-RSC5 deassertion match existing source",
+    "overhead": "+67 controlFF versus old6, data latency0, same singleclock",
+    "historical_failures": [
+      "v1 bench compared undefined arbitrary startup before reset clocks",
+      "v2 benchmark generator accidentally reset epoch inside loop, infinite diagnostic; only verified own remote PID2692650 stopped, all other fleet jobs preserved"
+    ]
+  },
+  "future_wrapper_gap": {
+    "old_kit": "physical/ref_tile/qkd_ectl_c_st_rt80/pin_regs.json explicit false; old actual emitted reset wrapper not yet recovered",
+    "planned_spec": "distinct H15 spec recipe3, reset_ports present, pin_regs false, reset_landing omitted; current ref_tile.py recipe_defaults therefore inserts two plain reset stages by default",
+    "consequence": "unwrapped input capture4 cannot be priced at physical pin; default wrapper would add2reset release edges, actual emissions and full gold source plus cold proof required before adoption",
+    "status": "OPEN_NO_PHYSICAL_GATE"
+  },
+  "sha256": {
+    "tb_ectl_c_h15_cold_data.sv": "9ad65fb289bf3a37ce102eb914638ee755c1f05c11075f6cbc4a9fca8a1824b5",
+    "tb_ectl_c_h15_wrong_stage.sv": "188abe08443aaaf37d9d4e4e065bb7a1e40e853562a6b4b8afd13c1f04070a74",
+    "run_cold_data.sh": "0cb3e6a689e6a5cabe247655dad52fdceb03cc176f0efeb893e895793a16eb68",
+    "run_cold_wrong_stage.sh": "05cfc8a638a1c0d8d7561a4902dd9ec0cfd1e054228b63956a679872ae92734a",
+    "cold_data_seed11.log": "d2ed5c17ed99f6126cf7fe57045e02fa4d3263ca0dcac9d9151de1e8a41d8d29",
+    "cold_data_seed19.log": "b74f4c80df79692671a7881fcaeb382fbd750dcbd3935949d1db17e7a4b29c20",
+    "cold_wrong_stage.log": "60380a5297e19a6e22328bc7218529ccd8c7f6d53ee6e2079cf42b91c685b99e",
+    "tb_reset_publication.sv": "cbd2685424d5f40e48ba957e9737979417bce328581856ceb31dc63d2b9150db",
+    "tb_reset_publication_v2.sv": "002ca1c8e0300b6b53a8714fa095dadf7dbfe52738f10f477942221f70c1e188",
+    "tb_reset_publication_v3.sv": "8cbbf45992fea05a8a859c7e08349518fa3f5f22f799fc7dabb067e9db058962",
+    "run_reset_publication.sh": "b510ec73f1da8b5450073c878d0e285f9a4a2a9a04457c99d232a02c6712c7f2",
+    "run_reset_publication_v2.sh": "93451dfe460a220eca6e360bfe545c2f2d1fcce0db0a458a3d148acce1ded10d",
+    "run_reset_publication_v3.sh": "2213c81dbb8f8df0da317c5821b574d74c32023d81e00393a48991472f5500bf",
+    "run_resetpub_v3_0.log": "bf2be6d3605499eb2326e7e15c786a07827ce70996c8773b9132be77d9967c02",
+    "run_resetpub_v3_1.log": "2537f25b40ff6ba6aecbef2a0c2115067e17cb887360e51992b78d5f37ffe699"
+  }
+}

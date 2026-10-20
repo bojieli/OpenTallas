@@ -1,0 +1,13 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs0 captured0 slot0
+TRACE c12 localstart0 rq1 rs0 captured0 slot0
+TRACE c13 localstart0 rq1 rs0 captured0 slot0
+TRACE c14 localstart0 rq1 rs0 captured0 slot0
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+[186000] %Fatal: tb_ectl_c_h15_wrong_stage.sv:80: Assertion failed in tb_ectl_c_h15_wrong_stage.unnamedblk5: SCORE_DATA_STAGE_MISMATCH epoch0 row0 head0 got00000000 expected3f000000
+%Error: /srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/results/rtl/kv_ectl_h15_1020/tb_ectl_c_h15_wrong_stage.sv:80: Verilog $stop
+Aborting...

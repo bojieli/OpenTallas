@@ -1,0 +1,5 @@
+RESET_PUBLICATION_PASS checks=73 epochs=8 RP3_R0_4_RC_RSC5 async_assert
+- /srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/results/rtl/kv_ectl_h15_1020/tb_reset_publication_v3.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 180ns; walltime 0.000 s; speed 1.098 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
