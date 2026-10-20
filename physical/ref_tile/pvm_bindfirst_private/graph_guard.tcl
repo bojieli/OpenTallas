@@ -36,7 +36,13 @@ proc pvm_bf_guard {stage} {
   if {![info exists ::env(PVM_BF_EXPECTED)] || ![info exists ::env(PVM_BF_RECEIPTS)]} {error PVM_BF_MISSING_PROOF_PATHS}
   set f [open $::env(PVM_BF_EXPECTED) r]; set expected [read $f]; close $f
   set actual [pvm_bf_graph [ord::get_db_block]]
-  if {$actual ne [string trimright $expected "\n"]} {error "PVM_BF_GRAPH_DRIFT $stage"}
+  if {$actual ne [string trimright $expected "\n"]} {
+    # Preserve the first rejected state without changing any flag or graph.
+    set out [open [file join $::env(PVM_BF_RECEIPTS) "$stage.failed.graph.tcllist"] {WRONLY CREAT EXCL}]
+    puts $out $actual; close $out
+    write_db [file join $::env(PVM_BF_RECEIPTS) "$stage.failed.odb"]
+    error "PVM_BF_GRAPH_DRIFT $stage"
+  }
   set out [open [file join $::env(PVM_BF_RECEIPTS) "$stage.graph.tcllist"] {WRONLY CREAT EXCL}]
   puts $out $actual; close $out
   puts "PVM_BF_GRAPH_PASS $stage cells=56000 nets=[llength [lindex $actual 1]]"
