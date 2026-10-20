@@ -1,0 +1,142 @@
+{
+ "top": "ot_s81sl_capc5cf",
+ "top_lp": "ot_s81sl_capc5d",
+ "why": "S81-CAPC5 10-20 VARIANT D = parallel fallback of C (7 LOCAL regions): as C but each N/S face split at its natural pin-group boundary so no region spans more than ~165 um of face: rnc = cfg in-regs (N 2..164 um), rno = N out-regs (N 168..327), rsa = cw_s_v/cw_s_a out-regs (S 2..166), rsd = cw_s_d + fault out-regs (S 180..327). Same latency as C (all outputs W+8); regional_reset_copies; n32 writer.",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc5cf.sv"
+ ],
+ "child_sources": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv"
+ ],
+ "synthesis_hard_instances": [
+  "u_ld3",
+  "u_tw",
+  "u_te",
+  "u_ed",
+  "u_rt"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_dv/slice/lp",
+ "record_dir": "results/arch/landed_parent_1018/s81sl_capc5d",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk",
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "landing_chunk_bits": 24,
+ "regions": [
+  {
+   "name": "rt",
+   "insts": [
+    "u_rt"
+   ],
+   "centre": [
+    172.8,
+    100.0
+   ]
+  },
+  {
+   "name": "cw",
+   "insts": [
+    "u_fw",
+    "u_ld3",
+    "u_tw"
+   ],
+   "centre": [
+    86.4,
+    300.0
+   ]
+  },
+  {
+   "name": "ce",
+   "insts": [
+    "u_fe",
+    "u_te",
+    "u_ed"
+   ],
+   "centre": [
+    259.2,
+    300.0
+   ]
+  },
+  {
+   "name": "rnc",
+   "insts": [
+    "u_fcv",
+    "u_fcd"
+   ],
+   "centre": [
+    86.4,
+    405.0
+   ]
+  },
+  {
+   "name": "rno",
+   "insts": [
+    "u_onv",
+    "u_ona",
+    "u_ond"
+   ],
+   "centre": [
+    259.2,
+    405.0
+   ]
+  },
+  {
+   "name": "rsa",
+   "insts": [
+    "u_osv",
+    "u_osa"
+   ],
+   "centre": [
+    86.4,
+    10.0
+   ]
+  },
+  {
+   "name": "rsd",
+   "insts": [
+    "u_osd",
+    "u_osf"
+   ],
+   "centre": [
+    259.2,
+    10.0
+   ]
+  }
+ ],
+ "mut_child": "u_rt",
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "mut_waivers": {
+   "1": "random lockstep stimulus faults u_rt's sticky decode (F9/F10) within warm-up and the cap is valid-qualified, so a 1-bit landing slip is invisible to random words; the same RTL mutant FAILS the golden-vector bench tools/s81_slice/cap_c5d_gold_bench.sh MUT=1 (witness results/rtl/s81_slice_1017/capc5d_1020/gold_mut1.out)",
+   "2": "as MUT 1 (random stimulus blind); FAILS cap_c5d_gold_bench.sh MUT=2 (witness results/rtl/s81_slice_1017/capc5d_1020/gold_mut2.out)",
+   "4": "u_rt is event-driven (valid-qualified, no free-running calendar); MUT 4 holds its reset 64 stages longer and FAILS cap_c5d_gold_bench.sh MUT=4 on golden vectors (witness results/rtl/s81_slice_1017/capc5d_1020/gold_mut4.out)"
+  }
+ },
+ "mut4_stages": 64,
+ "landing_writer": "n32",
+ "reset_region": "rt",
+ "regional_reset_copies": true
+}
