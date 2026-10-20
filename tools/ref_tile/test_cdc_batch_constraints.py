@@ -50,7 +50,7 @@ puts "PENDING [llength $::ot_cdc_pending] [llength $::ot_cdc_seam_pending]"
 
     def test_kept_mapped_hierarchy_name_is_exactly_normalized(self):
         p = subprocess.run(['tclsh'], input=C.FLOW_WRAPPER_TCL + r'''
-puts "NAMES [ot_cdc_flow_names u_ot_pr_core.u_q.req[0].u_q/q]"
+puts "NAMES [ot_cdc_flow_names {u_ot_pr_core.u_q.req[0].u_q/q}]"
 puts "NESTED [ot_cdc_flow_names unrelated.u_ot_pr_core/u_q/q]"
 ''', text=True, capture_output=True)
         self.assertEqual(p.returncode, 0, p.stderr)
