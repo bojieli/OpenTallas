@@ -1,0 +1,12 @@
+{
+  "status": "FAIL_NATIVE_ADMISSION_NO_GATE",
+  "source_commit": "bc238af9a",
+  "native_max": 38,
+  "violations": 5,
+  "role_errors": 0,
+  "raw_groups": 8,
+  "group_size": 7,
+  "exact_failure": "5 mapped combinational type-decode roots exceed32: 35/33/38/34/33; all fed raw_type copies. No full-quarter rerun or gate.",
+  "native1": "Failed before map due omitted staging ot_rst_copies.py; retained; deps-only correction in native2",
+  "next_model": "4 selectors/group,14x4 raw type copies, +3FF versus53 legacy, +0edges, type-port <=17 target"
+}

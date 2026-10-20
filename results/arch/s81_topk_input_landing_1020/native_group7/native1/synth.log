@@ -1,0 +1,54 @@
+mkdir -p /work/results/asap7/codex_hq_input_raw/base/
+echo 833.333 > /work/results/asap7/codex_hq_input_raw/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/codex_hq_input_raw/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/codex_hq_input_raw/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/dut_hq_in.sv
+12. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+13. Executing HIERARCHY pass (managing design hierarchy).
+14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_hq_in'.
+14.1. Analyzing design hierarchy..
+14.2. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+15. Executing Verilog-2005 frontend: /work/results/asap7/codex_hq_input_raw/base/ot_rst_land_wrapper.v
+16. Executing HIERARCHY pass (managing design hierarchy).
+16.1. Analyzing design hierarchy..
+16.2. Analyzing design hierarchy..
+OT_RST_LAND ot_s81ph_hq_in: 1 reset port(s) landed in 2 registered stage(s) (clock clk); table /work/results/asap7/codex_hq_input_raw/base/ot_rst_land.tsv
+17. Executing PROC pass (convert processes to netlists).
+17.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+17.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+17.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+17.4. Executing PROC_INIT pass (extract init attributes).
+17.5. Executing PROC_ARST pass (detect async resets in processes).
+17.6. Executing PROC_ROM pass (convert switches to ROMs).
+17.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+17.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+17.9. Executing PROC_DFF pass (convert process syncs to FFs).
+17.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+17.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+17.12. Executing OPT_EXPR pass (perform const folding).
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+19. Executing TECHMAP pass (map to technology primitives).
+19.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+19.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 127 register cells driving keep wires
+20. Executing FLATTEN pass (flatten design).
+21. Executing OPT_CLEAN pass (remove unused cells and wires).
+22. Executing JSON backend.
+ERROR: TCL interpreter returned an error: python3: can't open file '/src/physical/common_flow/ot_rst_copies.py': [Errno 2] No such file or directory
+Elapsed time: 0:01.13[h:]min:sec. CPU time: user 1.02 sys 0.10 (99%). Peak memory: 83228KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/codex_hq_input_raw/base/1_1_yosys_canonicalize.rtlil] Error 2
