@@ -10,7 +10,7 @@
   sched  qkd_ctrl_pc_sched_nc             vs qkd_kvpc_s_sched         production parameters, random inputs
   tile   qkd_kvs_pc[_h] (_ds_rl)          vs the OT_KV_PC_SRAM tile (_ds_rl_sr), random inputs, storage roots = hck
 Mutants (--mut N, must FAIL): front 1 read +1 / 4 bank permutation / 5 no prefetch; return 1 bank perm / 2 no prefetch;
-cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; cal (KV-PC5) 1 wait +1 / 2 burst reload 0 / 3 lookahead copies ignore a refused go; sched 1 tag-queue read not advanced
+cdc 1 down bank perm / 2 down no prefetch / 3 up bank perm; tq 1 bypass dropped; cal (KV-PC5) 1 wait +1 / 2 burst reload 0 / 3 lookahead copies ignore a refused go; sched 1 tag-queue read not advanced
 (OT_KVPC_MUT_TQ_NEXT); tile 1 tag-queue read not advanced / 2 front bank permutation / 3 embedding up-FIFO bank permutation inside
 the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches) / 4 health export drops the
 chain fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
@@ -221,7 +221,10 @@ def main():
     if a.unit in ('front', 'return', 'cdc', 'tq', 'cal'):
         tag = a.unit.upper()
         tb = TB + f'tb_kvpc_{a.unit}.sv'
-        return build_run(out, f'tb_kvpc_{a.unit}', [tb] + base, [f'KVPC_MUT={a.mut}'], a.threads, tag, plus)
+        defs = [f'KVPC_MUT={a.mut}']
+        if a.unit == 'cdc' and a.mut == 3:
+            defs.append('OT_KVPC_CDC_UP_MUT')  # causal upstream payload permutation, checked only at e_v
+        return build_run(out, f'tb_kvpc_{a.unit}', [tb] + base, defs, a.threads, tag, plus)
     if a.unit == 'sched':
         ref = module('rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv', 'qkd_ctrl_pc_sched_nc')
         dut = module(CLONES, 'qkd_kvpc_s_sched')

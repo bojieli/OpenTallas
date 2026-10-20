@@ -5,7 +5,7 @@
 // Compared every edge of both clocks: c_v, s_credit, e_v, fault_core, fault_hbm exactly; c_d / c_context whenever c_v,
 // e_d whenever e_v (the payload of an EMPTY FIFO head is an undefined async read across domains in the original).
 // Unqualified payload differences are counted and printed (information).  +define+KVPC_MUT=N: DUT MUT (1 down bank
-// permutation, 2 down read without prefetch: must FAIL).
+// permutation, 2 down read without prefetch, 3 up bank permutation via runner define: must FAIL).
 `ifndef KVPC_MUT
 `define KVPC_MUT 0
 `endif

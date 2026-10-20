@@ -1,0 +1,16 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH ck  t=15012000 cv 0/0 cd 00000000/00000000 ev 1/1 ed b3941a14/00000001 sc 1/1 fc 1/1 fh 1/1
+MISMATCH hck t=15360000 cv 0/0 cd 00000000/00000000 ev 1/1 ed b3941a14/00000001 sc 1/1 fc 1/1 fh 1/1
+MISMATCH hck t=17408000 cv 0/0 cd 00000000/00000000 ev 1/1 ed 2b733a47/00000002 sc 0/0 fc 1/1 fh 1/1
+MISMATCH ck  t=17514000 cv 0/0 cd 00000000/00000000 ev 1/1 ed 2b733a47/00000002 sc 0/0 fc 1/1 fh 1/1
+MISMATCH ck  t=22518000 cv 0/0 cd 00000000/00000000 ev 1/1 ed bb3f9b77/00000003 sc 0/0 fc 1/1 fh 1/1
+MISMATCH hck t=22528000 cv 0/0 cd 00000000/00000000 ev 1/1 ed bb3f9b77/00000003 sc 0/0 fc 1/1 fh 1/1
+MISMATCH hck t=26624000 cv 0/0 cd 00000000/00000000 ev 1/1 ed ac3ac40b/00000000 sc 0/0 fc 1/1 fh 1/1
+MISMATCH ck  t=26688000 cv 0/0 cd 00000000/00000000 ev 1/1 ed ac3ac40b/00000000 sc 0/0 fc 1/1 fh 1/1
+MISMATCH ck  t=31692000 cv 0/0 cd 8cb838ae/00000000 ev 1/1 ed a922f2bd/00000002 sc 0/0 fc 1/1 fh 1/1
+KVPC_CDC FAIL edges=20000 checks=44608 errors=20923 c_v=27473 e_v=20923 mut=3
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_cdc.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.051 s; speed 401.703 us/s
+- Verilator: cpu 0.048 s on 1 threads; allocated 7 MB
+
