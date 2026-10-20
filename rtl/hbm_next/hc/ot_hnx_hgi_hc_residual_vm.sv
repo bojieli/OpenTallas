@@ -32,6 +32,7 @@ module ot_hnx_hgi_hc_residual_vm #(
     parameter integer MUT_FC=0
 )(
     input wire clk,rst_n,launch,
+    input wire [1:0] launch_c,        // HUB-SAFE3: KEPT copies of launch (same edge): [0] issue/total/active, [1] row walk
     input wire [3:0] npos,
     input wire [15:0] base_sector,
     input wire [15:0] row_stride,
@@ -59,22 +60,33 @@ module ot_hnx_hgi_hc_residual_vm #(
     wire [1:0] cap_beat=order[CAPTURE_LAT-1][1:0];
     wire [1:0] mut_beat=(MUT_BEAT==1&&cap_beat==1)?2'd2:(MUT_BEAT==1&&cap_beat==2)?2'd1:cap_beat;
     wire fire=active;
-    assign local_read={8{fire}};
-    for(genvar b=0;b<8;b=b+1)assign local_rq[b*17+:17]={fire,16'(rbase+rslot*8+b)};
+    // HUB-SAFE3 2026-10-20 (SAFE item 3, census safe2; zero added edges on every datapath):
+    //  * act_o: a KEPT copy of active (same next-state) drives the 8 request-valid / read bits (active: 39 loads);
+    //  * the request sector is s + b with s = rbase + 8 rslot computed ONCE (was 8 adders on rbase: rbase[1] 35 loads);
+    //  * the launch check (fault only; the run starts regardless, as before) runs ONE EDGE LATER from registered
+    //    operands (the 32-b bound multiplier hung on the calendar npos bits: c[1] 70 loads);
+    //  * launch drives the row walk through its kept copy launch_c[1] (c[0] 53 loads).
+    (* keep = "true", dont_touch = "true" *) reg act_o;
+    assign local_read={8{act_o}};
+    wire [15:0] rq_s=rbase+{1'b0,rslot,3'b000};
+    for(genvar b=0;b<8;b=b+1)assign local_rq[b*17+:17]={act_o,16'(rq_s+16'(b))};
+    reg ck_v,ck_busy; reg [3:0] ck_np; reg [15:0] ck_b; reg [16:0] ck_st;
+    always @(posedge clk)begin ck_np<=npos;ck_b<=base_sector;ck_st<=eff_stride;end
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin active<=0;issue<=0;total<=0;base<=0;rbase<=0;rstep<=0;rslot<=0;valid<=0;done<=0;fault<=0;end
+        if(!rst_n)begin active<=0;act_o<=0;issue<=0;total<=0;base<=0;rbase<=0;rstep<=0;rslot<=0;valid<=0;done<=0;fault<=0;
+            ck_v<=0;ck_busy<=0;end
         else begin
             valid<=(valid<<1)|fire;
             done<=0;
-            if(launch)begin
-                if(active||(|valid)||npos<1||npos>8||base_sector[4:0]!=0||eff_stride[4:0]!=0||eff_stride<17'(SPR*8)||
-                   (32'(base_sector)+32'(npos-1)*32'(eff_stride)+32'(SPR*8))>32768)fault<=1;
-                active<=1;issue<=0;total<=12'(npos*SPR);base<=base_sector;rbase<=base_sector;rstep<=16'(eff_stride);rslot<=0;
-            end
+            ck_v<=launch;ck_busy<=active||(|valid);
+            if(ck_v&&(ck_busy||ck_np<1||ck_np>8||ck_b[4:0]!=0||ck_st[4:0]!=0||ck_st<17'(SPR*8)||
+               (32'(ck_b)+32'(ck_np-1)*32'(ck_st)+32'(SPR*8))>32768))fault<=1;
+            if(launch_c[0])begin active<=1;act_o<=1;issue<=0;total<=12'(npos*SPR);base<=base_sector;end
+            if(launch_c[1])begin rbase<=base_sector;rstep<=16'(eff_stride);rslot<=0;end
             if(fire)begin
                 issue<=issue+1;
                 if(rslot==12'(SPR-1))begin rslot<=0;rbase<=rbase+rstep;end else rslot<=rslot+1;
-                if(issue==total-1)active<=0;
+                if(issue==total-1)begin active<=0;act_o<=0;end
             end
             for(integer b=0;b<8;b=b+1)
                 if(local_rr[b*257+256]!=valid[CAPTURE_LAT-1])fault<=1;
@@ -105,19 +117,25 @@ module ot_hnx_hgi_hc_residual_vm #(
         // HUB-SAFE2 2026-10-20 (SAFE item 3; zero added edges, x_wave bit-identical): the 2,048-b beat register loads
         // under 64 KEPT copies vc_c of the capture valid (one per 32-b lane group, each = valid[CAPTURE_LAT-1] on the same
         // edge: D = valid[CAPTURE_LAT-2]); census safe1019: valid[22] drove 4,129 loads.
-        (* keep = "true", dont_touch = "true" *) reg [63:0] vc_c;
-        initial if(CAPTURE_LAT<2)$fatal(1,"CAPTURE_LAT >= 2");
-        always @(posedge clk)vc_c<={64{valid[CAPTURE_LAT-2]}};
-        assign nx_v=valid[CAPTURE_LAT-1]; assign nx_en=valid[CAPTURE_LAT-1]; assign nx_beat=mut_beat;
+        // HUB-SAFE3 2026-10-20 (census safe2: vc_c 64 loads = 2 a bit, valid[CAPTURE_LAT-2] 66, the nx_en net 38):
+        // 128 kept copies (one per 16-b group), loaded from 4 kept pre-copies vp (= valid[CAPTURE_LAT-2], D =
+        // valid[CAPTURE_LAT-3]), and one kept copy vw for the word / beat enables.  Same edges, x_wave bit-identical.
+        (* keep = "true", dont_touch = "true" *) reg [127:0] vc_c;
+        (* keep = "true", dont_touch = "true" *) reg [3:0] vp;
+        (* keep = "true", dont_touch = "true" *) reg vw;
+        initial if(CAPTURE_LAT<3)$fatal(1,"CAPTURE_LAT >= 3");
+        always @(posedge clk)begin vp<={4{valid[CAPTURE_LAT-3]}};vw<=valid[CAPTURE_LAT-2];end
+        for(genvar k=0;k<4;k=k+1)begin:g_vc always @(posedge clk)vc_c[k*32+:32]<={32{vp[k]}}; end
+        assign nx_v=valid[CAPTURE_LAT-1]; assign nx_en=vw; assign nx_beat=mut_beat;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)x_wave_v<=0;
             else x_wave_v<=nx_v;
         always @(posedge clk)begin
-            if(nx_en)x_wave_beat<=nx_beat;
-            if(valid[CAPTURE_LAT-1])x_wave_word<=cap_word;
+            if(vw)x_wave_beat<=nx_beat;
+            if(vw)x_wave_word<=cap_word;
         end
-        for(genvar g=0;g<64;g=g+1)begin:g_xw
-            always @(posedge clk)if(vc_c[g])x_wave[g*32+:32]<=cap_d[g*32+:32];
+        for(genvar g=0;g<128;g=g+1)begin:g_xw
+            always @(posedge clk)if(vc_c[g])x_wave[g*16+:16]<=cap_d[g*16+:16];
         end
     end else begin:g_beats_m2
         reg late_v; reg [9:0] late_word; reg [2047:0] late_d;

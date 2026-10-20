@@ -81,8 +81,9 @@ module ot_hnx_hc_q #(
     // HUB-SAFE2 2026-10-20: the relay is u_rst_relay (the name the synthesis pass physical/common_flow/ot_rst_copies.py
     // recognises), REGIONS 16 kept identical copies; the pass re-points the ~420 reset loads over the copies (<= 32 each).
     // Regions 0..5 keep their roles; 6..15 are load-balancing copies.  Census safe1019: one copy (u_rst) drove 299.
-    wire [15:0] rr_n;
-    ot_rst_relay #(.REGIONS(16)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+    // HUB-SAFE3 2026-10-20: REGIONS 24 (the safe3 copies add ~150 reset loads; census safe2 copies were 33-37).
+    wire [23:0] rr_n;
+    ot_rst_relay #(.REGIONS(24)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
     // ---- input pin registers
     reg [2055:0] rr_q;
     reg [7:0] w_done_q;
@@ -108,12 +109,12 @@ module ot_hnx_hc_q #(
     // ---- programme issuer
     wire [110:0] c;
     wire cal_v,cal_fault;
-    wire [7:0] st_v; wire [127:0] st_hdr; wire [191:0] st_sel; wire [7:0] gp_c;
+    wire [7:0] st_v; wire [127:0] st_hdr; wire [191:0] st_sel; wire [15:0] gp_c; wire [5:0] lc_c;
     ot_hnx_hc_cal #(.W(111),.MUT_STRIDE((MUT==7)?1:0),.MUT_SBASE((MUT==2)?1:0)) programme(
         .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault),
-        .st_v(st_v),.st_hdr(st_hdr),.st_sel(st_sel),.gp_c(gp_c));
+        .st_v(st_v),.st_hdr(st_hdr),.st_sel(st_sel),.gp_c(gp_c),.lc_c(lc_c));
     wire residual_launch=c[0];
     wire [3:0] residual_npos=c[4:1];
     wire [15:0] residual_base=c[20:5];
@@ -131,20 +132,20 @@ module ot_hnx_hc_q #(
     // 3,524 loads through the two 2,056-b phase gates.  Readers' outputs are unchanged.
     wire [2055:0] rr_res,rr_gat;
     for(genvar b=0;b<8;b=b+1)begin:g_rrg
-        assign rr_res[b*257+:257]={rr_q[b*257+256]&!gp_c[b],rr_q[b*257+:256]};
-        assign rr_gat[b*257+:257]={rr_q[b*257+256]&gp_c[b],rr_q[b*257+:256]};
+        assign rr_res[b*257+:257]={rr_q[b*257+256]&!gp_c[8+b],rr_q[b*257+:256]};
+        assign rr_gat[b*257+:257]={rr_q[b*257+256]&gp_c[8+b],rr_q[b*257+:256]};
     end
     wire [135:0] res_rq,gat_rq;
     wire [7:0] res_read,gat_read,write_sel;
     wire res_fault,gat_fault,wr_fault;
     ot_hnx_hgi_hc_residual_vm #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
         .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SPR(SPR),.MUT_STRIDE((MUT==6)?1:0),.XFC(XFC),.MUT_FC((MUT==8)?1:0)) residual(
-        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),.row_stride(residual_stride),
+        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.launch_c(lc_c[1:0]),.npos(residual_npos),.base_sector(residual_base),.row_stride(residual_stride),
         .local_rq(res_rq),.local_read(res_read),.local_rr(rr_res),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.x_wave_vf(x_wave_vf),.x_wave_beatf(x_wave_beatf),
         .done(residual_done),.fault(res_fault));
     ot_hnx_hgi_hc_gathered_mix_reader #(.RESP_PHASE(GATHER_PHASE)) gather(
-        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
+        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.launch_c(lc_c[5:2]),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
         .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
@@ -165,7 +166,7 @@ module ot_hnx_hc_q #(
     reg [7:0] rq_v; reg [127:0] rq_a;
     always @(posedge clk or negedge rr_n[5])
         if(!rr_n[5])rq_v<=0;
-        else for(integer b=0;b<8;b=b+1)rq_v[b]<=gp_c[b]?gat_rq[b*17+16]:res_rq[b*17+16];
+        else for(integer b=0;b<8;b=b+1)rq_v[b]<=gp_c[8+b]?gat_rq[b*17+16]:res_rq[b*17+16];
     always @(posedge clk)for(integer b=0;b<8;b=b+1)rq_a[b*16+:16]<=gp_c[b]?gat_rq[b*17+:16]:res_rq[b*17+:16];
     for(genvar b=0;b<8;b=b+1)begin:g_rq assign lg_rq[b*17+:17]={rq_v[b],rq_a[b*16+:16]}; end
     // ---- write-done reservation: every store's banks return local_w_done exactly DONE_LAT edges later

@@ -45,11 +45,17 @@ module ot_hnx_hgi_hc_result_vm #(parameter integer MUT_STRIDE=0)(
         always @(posedge clk)begin wa[b*16+:16]<=st_hdr[b*16+:16]&{16{st_v[b]}};we[b*8+:8]<={8{st_v[b]}};end
         assign local_wq[b*281+:281]={wv[b],wa[b*16+:16],wd[b*256+:256],we[b*8+:8]};
     end
+    // HUB-SAFE3 2026-10-20 (SAFE item 3; census safe2: calendar store_position c[77] 36 loads into the bound multiplier):
+    // the store-slot check runs ONE EDGE LATER from registered copies of its operands (fault only: the store datapath
+    // above never reads it; the sticky fault rises one edge later than before, on the same illegal words).
+    reg ck_v,ck_rv; reg [2:0] ck_rp,ck_sp; reg [15:0] ck_b,ck_rs;
+    always @(posedge clk)begin ck_rv<=result_v;ck_rp<=result_position;ck_sp<=store_position;ck_b<=base_sector;ck_rs<=rs;end
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin wv<=0;local_write<=0;fault<=0;end
+        if(!rst_n)begin wv<=0;local_write<=0;fault<=0;ck_v<=0;end
         else begin
             wv<=st_v;local_write<=st_v;
-            if(store_slot&&(!result_v||result_position!=store_position||rs<16'd3||(32'(base_sector)+32'(store_position)*32'(rs)+3)>32768))fault<=1;
+            ck_v<=store_slot;
+            if(ck_v&&(!ck_rv||ck_rp!=ck_sp||ck_rs<16'd3||(32'(ck_b)+32'(ck_sp)*32'(ck_rs)+3)>32768))fault<=1;
             if(result_v&&!store_slot)fault<=1;
         end
     end

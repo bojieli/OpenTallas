@@ -17,6 +17,13 @@
 //    2 edges later; launch is refused before configured, as before; the host waits for configured).
 //  * program_cfg_data carries data_q on every edge (it is consumed only with program_cfg_we): no 256-load enable.
 // Everything else (descriptor arm / reuse, launch, fault conditions) is the generic module's code.
+// HUB-SAFE3 2026-10-20 (census safe2; zero added edges, F20 protocol / faults / configured unchanged):
+//  * reset_live is a 4-copy KEPT family (ot_rst_split: the synthesis pass ot_rst_copies.py spreads its reset loads, 55);
+//  * cfg_v / desc_v land in 2 / 3 KEPT copies, so the write strobe, the image clear and the descriptor accept are
+//    separate nets per row half / register group (we_n 42, io_n 33, the descriptor accept 55, scan_start 37);
+//  * program_cfg_addr and program_start_{base,limit,loops} load every edge (they are read only with program_cfg_we /
+//    program_start_v, which keep their exact edges): no enable net over them (the launch accept drove 74);
+//  * the scan column pointer has one kept copy per 2 rows (16; 32 drove srow_n 33).
 module ot_hnx_prog_target #(parameter integer PCW=10)(
     input wire clk,rst_n,
     input wire [7:0] tgt,
@@ -41,10 +48,12 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
 );
     localparam integer ROWS=1<<PCW, NR=ROWS/32, RB=PCW-5;
     initial if(PCW<8 || PCW>12)$fatal(1,"programme target PCW must be8..12");
-    (* async_reg = "true" *) reg reset_meta,reset_live;
+    (* async_reg = "true" *) reg reset_meta;
+    (* keep = "true", dont_touch = "true", ot_rst_split *) reg [3:0] rl_c;
     always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin reset_meta<=0;reset_live<=0;end
-        else begin reset_meta<=1;reset_live<=reset_meta;end
+        if(!rst_n)begin reset_meta<=0;rl_c<=4'd0;end
+        else begin reset_meta<=1;rl_c<={4{reset_meta}};end
+    wire reset_live=rl_c[0];
     reg cv,dv,lv;
     reg [7:0] target;
     reg [7:0] tgt_q; always @(posedge clk) tgt_q<=tgt;
@@ -65,37 +74,55 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
         target<=cfg_target;address<=cfg_addr;data_q<=cfg_data;
         base<=desc_base;limit<=desc_limit;loops<=desc_loops;
         program_cfg_data<=data_q;
+        program_cfg_addr<=address[PCW-1:0];
+        program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;
     end
+    (* keep = "true", dont_touch = "true" *) reg [1:0] cv_c;   // = cv
+    (* keep = "true", dont_touch = "true" *) reg [2:0] dv_c;   // = dv
     always @(posedge clk or negedge reset_live)
-        if(!reset_live)begin cv<=0;dv<=0;lv<=0;end
-        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;end
+        if(!reset_live)begin cv<=0;dv<=0;lv<=0;cv_c<=0;dv_c<=0;end
+        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;cv_c<={2{cfg_v}};dv_c<={3{desc_v}};end
     // ---- next-state of the write strobe and of install_open (exactly the assignments of the control block below)
-    wire cfg_hit=cv && target==tid;
-    wire dsc_hit=dv && target==tid;
+    wire t_hit=target==tid;
+    wire cfg_hit=cv && t_hit;
+    wire dsc_hit=dv && t_hit;
+    wire [1:0] cfg_hit_c={cv_c[1] && t_hit,cv_c[0] && t_hit};
+    wire [2:0] dsc_hit_c={dv_c[2] && t_hit,dv_c[1] && t_hit,dv_c[0] && t_hit};
     wire cfg_bad=program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                  data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address};
-    wire we_n=cfg_hit && !cfg_bad;
+    wire [1:0] we_n={cfg_hit_c[1] && !cfg_bad,cfg_hit_c[0] && !cfg_bad};   // rows 0..NR/2-1 | NR/2..
     wire dsc_bad=program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
-    wire io_n=dsc_hit ? 1'b0 : (program_cfg_we ? 1'b1 : install_open);
+    wire [1:0] io_n={dsc_hit_c[1] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open),
+                     dsc_hit_c[0] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open)};
+    wire dsc_ok_a=dsc_hit_c[1] && !dsc_bad, dsc_ok_b=dsc_hit_c[2] && !dsc_bad;   // stored_loops | stored_base/limit
     // scan pointer next-state
-    wire scan_start=dsc_hit && !dsc_bad && !(validated && base==stored_base && limit==stored_limit);
+    wire reuse=validated && base==stored_base && limit==stored_limit;
+    wire scan_start=dsc_hit_c[0] && !dsc_bad && !reuse;           // scan pointer (srow_n)
+    wire scan_start_l=dsc_ok_b && !reuse;                          // scan_limit
     wire scan_last={1'b0,scan_row}+1'b1==scan_limit;
+    always @(posedge clk)begin
+        if(dsc_ok_a)stored_loops<=loops;
+        if(dsc_ok_b)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];end
+        if(scan_start_l)scan_limit<=limit[PCW:0];
+    end
     wire [PCW-1:0] srow_n=scan_start ? base[PCW-1:0] : ((sissue && !scan_last) ? scan_row+1'b1 : scan_row);
     // ---- bitmap (no reset) with kept per-row copies
     reg [31:0] colbit_a;              // stage A: row r's bit at the scan column
+    (* keep = "true", dont_touch = "true" *) reg [5*((NR+1)/2)-1:0] scol_v;   // scan column copies, one per 2 rows
+    always @(posedge clk)scol_v<={((NR+1)/2){srow_n[4:0]}};
     for(genvar r=0;r<NR;r=r+1)begin:g_r
         (* keep = "true", dont_touch = "true" *) reg we_c,clr_c,row_c;
         (* keep = "true", dont_touch = "true" *) reg [31:0] col_c;
-        (* keep = "true", dont_touch = "true" *) reg [4:0] scol_c;
+        localparam integer H=(r<NR/2)?0:1;
         reg [31:0] inst;
         always @(posedge clk)begin
-            we_c<=we_n; clr_c<=!io_n; row_c<=address[PCW-1:5]==RB'(r);   // each <= 32 loads (used under we_c)
+            we_c<=we_n[H]; clr_c<=!io_n[H]; row_c<=address[PCW-1:5]==RB'(r);   // each <= 32 loads (used under we_c)
             col_c<=32'd1<<address[4:0];
-            scol_c<=srow_n[4:0];
             if(we_c)inst<=(clr_c?32'd0:inst)|({32{row_c}}&col_c);
         end
+        wire [4:0] scol=scol_v[(r/2)*5+:5];
         if(r<32)begin:g_a
-            always @(posedge clk)colbit_a[r]<=inst[scol_c];
+            always @(posedge clk)colbit_a[r]<=inst[scol];
         end
     end
     // stage B: the row group's bit (NR <= 32 rows of 32 for PCW <= 10)
@@ -110,7 +137,7 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
         if(!reset_live)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
             install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;img_v<=0;sissue<=0;
-            scan_row<=0;scan_limit<=0;commit<=0;sv_a<=0;sl_a<=0;sv_b<=0;sl_b<=0;
+            scan_row<=0;commit<=0;sv_a<=0;sl_a<=0;sv_b<=0;sl_b<=0;
         end else begin
             program_cfg_we<=0;program_start_v<=0;
             configured<=launch_ready&&!lv&&!((cv||dv)&&target==tid);
@@ -119,18 +146,17 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
             if(cfg_hit)begin
                 armed<=0;validated<=0;configured<=0;
                 if(cfg_bad)fault<=1;
-                else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];end
+                else program_cfg_we<=1;
             end
             if(dsc_hit)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
                 if(dsc_bad)fault<=1;
                 else begin
-                    stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
                         validated<=1;scanning<=0;
                     end else begin
-                        scanning<=1;sissue<=1;scan_row<=base[PCW-1:0];scan_limit<=limit[PCW:0];
+                        scanning<=1;sissue<=1;scan_row<=base[PCW-1:0];
                     end
                 end
             end
@@ -152,10 +178,7 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
             if(lv && armed)begin
                 armed<=0;configured<=0;
                 if(!launch_ready || cv || dv)fault<=1;
-                else begin
-                    program_start_v<=1;program_start_base<=stored_base;
-                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;
-                end
+                else program_start_v<=1;
             end
         end
 endmodule

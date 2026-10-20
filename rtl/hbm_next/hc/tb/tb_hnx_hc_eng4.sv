@@ -20,6 +20,12 @@
 `ifndef HC_SIREG
 `define HC_SIREG 0
 `endif
+`ifndef HC_FAN32
+`define HC_FAN32 0
+`endif
+`ifndef HC_QXL
+`define HC_QXL 0
+`endif
 module tb_hnx_hc_eng4;
     localparam integer K = 20480;
     reg clk = 0; always #1 clk = ~clk;
@@ -58,7 +64,7 @@ module tb_hnx_hc_eng4;
 `endif
     wire [3:0] qd_v, qd_ss, qi_v, qi_kind, qps_v, qps_f, q_fault; wire [27:0] qd_nv; wire [39:0] qd_wa, qd_xa, qi_word;
     wire [7:0] qi_slot; wire [19:0] qi_lo, qi_w; wire [47:0] qi_cnt; wire [127:0] qps;
-    ot_hnx_hc_root #(.MUT(MUTP), .QDRLY(`HC_QDRLY)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    ot_hnx_hc_root #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .QXL(`HC_QXL)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),
@@ -69,7 +75,7 @@ module tb_hnx_hc_eng4;
         .program_active(pa), .program_done(pd), .fault(fault));
     genvar gqi;
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
-        ot_hnx_hc_qeng #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .SIREG(`HC_SIREG)) u_q (
+        ot_hnx_hc_qeng #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .SIREG(`HC_SIREG), .FAN32(`HC_FAN32)) u_q (
             .clk(clk), .rst_n(rst_n),
             .d_v(qd_v[gqi]), .d_ss(qd_ss[gqi]), .d_nv(qd_nv[gqi*7 +: 7]), .d_wa(qd_wa[gqi*10 +: 10]), .d_xa(qd_xa[gqi*10 +: 10]),
             .i_v(qi_v[gqi]), .i_kind(qi_kind[gqi]), .i_slot(qi_slot[gqi*2 +: 2]), .i_lo(qi_lo[gqi*5 +: 5]),

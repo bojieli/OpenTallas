@@ -27,6 +27,7 @@ module ot_hnx_hc_root #(
     parameter integer XRU  = 0,                  // die relay stages quarter -> root (subtree sums)
     parameter integer QDRLY = 1,                 // quarter's centre <-> bank relays (ot_hnx_hc_qeng DRLY)
     parameter integer TLA  = 7,                  // quarter tree adder stages
+    parameter integer QXL  = 0,                  // HUB-SAFE3 10-20: extra quarter subtree-sum edges (1 = qcen FAN32 + SIREG 1)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -70,7 +71,7 @@ module ot_hnx_hc_root #(
     localparam integer SYS_LAT0 = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR + 2 * QDRLY;
     // d0 -> root out flop -> XRD -> quarter pin flop -> chain (SYS_LAT0) -> 6 tree levels -> quarter out flop -> XRU
     // -> root pin flop
-    localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + 6 * TLA + 1 + XRU + 1;
+    localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + 6 * TLA + 1 + XRU + 1 + QXL;
     localparam integer NVW = $clog2(W) + 1;
     initial if (K % (8 * W) != 0 || R > 16) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
 

@@ -36,8 +36,14 @@ module ot_hnx_hc_cal #(
     output reg [7:0] st_v,               // bank b is written by this word's store slot
     output reg [8*16-1:0] st_hdr,        // bank b's sector address (s_j of the sector that maps to b; 0 if none)
     output wire [3*8*8-1:0] st_sel,      // [(j*8+b)*8+g]: sector j -> bank b, copy for data lane group g (gated)
-    output wire [7:0] gp_c               // KEPT copies of calendar[21] (gather_phase), one per LG bank (hc_q lg_rq select)
+    output wire [15:0] gp_c,             // KEPT copies of calendar[21] (gather_phase): [b] lg_rq address select of bank b,
+                                         // [8+b] its request-valid select + return-valid gates (HUB-SAFE3: was 8, 37 loads)
+    output wire [5:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
+                                         // [1:0] residual_launch (calendar[0]), [5:2] gather_launch (calendar[22])
 );
+// HUB-SAFE3 2026-10-20 (census safe2, zero added edges): valid1 has 3 kept copies (the gate fans out per consumer group:
+// st routing / gp+lc copies / calendar action bits; word_ok drove 47), start_v_q 3 kept copies (start acceptance per
+// register group: 42), running a kept copy for the 32-b issued counter.
     initial if(W!=111)$fatal(1,"ot_hnx_hc_cal: the hc_<q> calendar word is 111 bits");
     reg cfg_we_q,start_v_q;
     reg [9:0] cfg_addr_q,start_base_q;
@@ -49,14 +55,17 @@ module ot_hnx_hc_cal #(
         start_base_q<=start_base;start_limit_q<=start_limit;start_loops_q<=start_loops;
     end
     always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin cfg_we_q<=0;start_v_q<=0;end
-        else begin cfg_we_q<=cfg_we;start_v_q<=start_v;end
+        if(!rst_n)begin cfg_we_q<=0;start_v_q<=0;sv_c<=0;end
+        else begin cfg_we_q<=cfg_we;start_v_q<=start_v;sv_c<={3{start_v}};end
     reg running;
     reg [9:0] pc,base;
     reg [10:0] limit;
     reg [15:0] loops_left;
     reg [31:0] issued;
     reg valid0,valid1,last0,last1;
+    (* keep = "true", dont_touch = "true" *) reg [2:0] v1_c;      // = valid1
+    (* keep = "true", dont_touch = "true" *) reg [2:0] sv_c;      // = start_v_q
+    (* keep = "true", dont_touch = "true" *) reg run_c;           // = running
     reg [9:0] pc0,pc1;
     reg [31:0] ord0,ord1;
     reg [255:0] captured;
@@ -71,10 +80,12 @@ module ot_hnx_hc_cal #(
         .w_ce_in(cfg_we_q && !busy && !start_v_q),.w_addr_in(cfg_addr_q),.wd_in(cfg_data_q),.w_mask_in({256{1'b1}}),
         .rr_en(2'b00),.rr_addr(18'd0),.cr_en(2'b00),.cr_sel(16'd0));
     // ---- (a) action-bit gating
-    wire gate=valid1 && word_ok;
+    wire gate=v1_c[2] && word_ok;            // calendar action bits
+    wire gate_s=v1_c[0] && word_ok;          // store routing
+    wire gate_c=v1_c[1] && word_ok;          // gp / lc copies
     localparam [W-1:0] ACT=(W'(1)<<0)|(W'(1)<<21)|(W'(1)<<22)|(W'(1)<<59);
     // ---- (b) store routing, decoded from the capture register
-    wire slot=gate && captured[59];
+    wire slot=gate_s && captured[59];
     wire [15:0] sbase=captured[75:60]+16'(MUT_SBASE);
     wire [2:0] spos=captured[78:76];
     wire [15:0] srs=(captured[110:95]==16'd0||MUT_STRIDE!=0)?16'd3:captured[110:95];
@@ -107,36 +118,36 @@ module ot_hnx_hc_cal #(
             assign st_sel[(j*8+b)*8+:8]=sel_c;
         end
     end
-    (* keep = "true", dont_touch = "true" *) reg [7:0] gp_r;
-    always @(posedge clk)gp_r<={8{gate && captured[21]}};
+    (* keep = "true", dont_touch = "true" *) reg [15:0] gp_r;
+    always @(posedge clk)gp_r<={16{gate_c && captured[21]}};
     assign gp_c=gp_r;
+    (* keep = "true", dont_touch = "true" *) reg [5:0] lc_r;
+    always @(posedge clk)lc_r<={{4{gate_c && captured[22]}},{2{gate_c && captured[0]}}};
+    assign lc_c=lc_r;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
             running<=0;pc<=0;base<=0;limit<=0;loops_left<=0;issued<=0;
-            valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;
+            valid0<=0;valid1<=0;v1_c<=0;last0<=0;last1<=0;calendar_v<=0;run_c<=0;
             active<=0;done<=0;fault<=0;st_v<=0;
         end else begin
-            valid0<=running;valid1<=valid0;last0<=running && final_issue;last1<=last0;
+            valid0<=running;valid1<=valid0;v1_c<={3{valid0}};last0<=running && final_issue;last1<=last0;
             calendar_v<=valid1;
             active<=busy;done<=valid1 && last1;
             st_v<=v_n;
             if(valid1 && !word_ok)fault<=1;
             if(cfg_we_q && (busy || start_v_q))fault<=1;
-            if(start_v_q)begin
-                if(busy || cfg_we_q || !legal_start)fault<=1;
-                else begin
-                    running<=1;pc<=start_base_q;base<=start_base_q;limit<=start_limit_q;
-                    loops_left<=start_loops_q;issued<=0;
-                end
-            end
+            if(start_v_q && (busy || cfg_we_q || !legal_start))fault<=1;
+            if(sv_c[0] && !(busy || cfg_we_q || !legal_start))begin running<=1;run_c<=1;pc<=start_base_q;end
+            if(sv_c[1] && !(busy || cfg_we_q || !legal_start))begin base<=start_base_q;limit<=start_limit_q;end
+            if(sv_c[2] && !(busy || cfg_we_q || !legal_start))begin loops_left<=start_loops_q;issued<=0;end
+            if(run_c)issued<=issued+1;
             if(running)begin
-                issued<=issued+1;
                 if({1'b0,pc}+11'd1==limit)begin
-                    if(loops_left==1)running<=0;
+                    if(loops_left==1)begin running<=0;run_c<=0;end
                     else begin
                         pc<=base + ((MUT==1)?10'd1:10'd0);
                         loops_left<=loops_left-1;
-                        if(MUT==2)running<=0;
+                        if(MUT==2)begin running<=0;run_c<=0;end
                     end
                 end else pc<=pc+1;
             end

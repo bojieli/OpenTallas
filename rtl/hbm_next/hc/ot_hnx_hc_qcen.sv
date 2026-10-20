@@ -23,6 +23,12 @@ module ot_hnx_hc_qcen #(
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
     parameter integer SIREG = 0,
+    // FAN32 (HUB-SAFE3 10-20, kit hnx_hcq_hub_safe3_1020; default 0 = unchanged): every tree adder is main's qualified
+    // native ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1 (LAT 7 / DRST 0 / all cuts only; <= 32 loads on every driver).  There is
+    // no LAT-6 native, so with SIREG 1 the level-1 adders stay at LAT 7: ps_v / ps / ps_f leave ONE edge later than the
+    // SIREG 0 form (+1 edge on the quarter subtree sum = root QXL 1, compiler RAW0 +1; priced in the kit README).
+    // FAN32 1 also gives the leaf valid and the ingest event kept per-consumer copies (census safe2: iv_q 96).
+    parameter integer FAN32 = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -43,11 +49,16 @@ module ot_hnx_hc_qcen #(
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
     initial if (SIREG != 0 && (SIREG != 1 || TLA != 7)) $fatal(1, "SIREG 1 needs TLA 7 (level-1 adders run LAT 6)");
+    initial if (FAN32 != 0 && TLA != 7) $fatal(1, "FAN32 needs TLA 7 (the native adder is LAT 7 only)");
+    localparam integer L1S = (SIREG != 0 && FAN32 == 0) ? 1 : 0;   // level-1 adders one cut shorter (SIREG, non-native)
 
     // HUB-SAFE2 2026-10-20: relay named u_rst_relay (recognised by physical/common_flow/ot_rst_copies.py, which re-points
     // the reset loads over the kept identical copies, <= 32 each); REGIONS 16 = the 9 regions + 7 balancing copies.
     wire [15:0] rn;
-    ot_rst_relay #(.REGIONS(16)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    localparam integer NRR = (FAN32 != 0) ? 32 : 16;   // FAN32: 32 copies (census safe2: copies c1/c2 37 loads)
+    wire [NRR-1:0] rn_all;
+    ot_rst_relay #(.REGIONS(NRR)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_all));
+    wire [15:0] rn = rn_all[15:0];
     wire rc = rn[8];
     assign rst_b = rn[7:0];
 
@@ -57,6 +68,16 @@ module ot_hnx_hc_qcen #(
     always @(posedge clk or negedge rc)
         if (!rc) begin dv_q <= 1'b0; iv_q <= 1'b0; wf_q <= 8'd0; end
         else begin dv_q <= d_v; iv_q <= i_v; wf_q <= wfault_i; end
+    // FAN32: kept copies of the ingest-event pin flop (same D, same reset): [0] check + act/kind/ph, [1] slot/lo/w,
+    // [2] left/word.  FAN32 0: wires of iv_q.
+    wire [2:0] ivc;
+    if (FAN32 != 0) begin : g_ivc
+        (* keep = "true", dont_touch = "true" *) reg [2:0] iv_c;
+        always @(posedge clk or negedge rc) if (!rc) iv_c <= 3'd0; else iv_c <= {3{i_v}};
+        assign ivc = iv_c;
+    end else begin : g_ivw
+        assign ivc = {3{iv_q}};
+    end
     always @(posedge clk) begin
         dss_q <= d_ss; dnv_q <= d_nv; dwa_q <= d_wa; dxa_q <= d_xa;
         ik_q <= i_kind; is_q <= i_slot; ilo_q <= i_lo; iw_q <= i_w; ic_q <= i_cnt; iwd_q <= i_word;
@@ -100,11 +121,12 @@ module ot_hnx_hc_qcen #(
                 end else in_w <= in_w + 1'b1;
             end
             if (in_act) in_ph <= in_ph + 1'b1;
-            if (iv_q) begin
+            if (ivc[0]) begin
                 if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
-                in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
-                in_left <= ic_q; in_word <= iwd_q;
+                in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0;
             end
+            if (ivc[1]) begin in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q; end
+            if (ivc[2]) begin in_left <= ic_q; in_word <= iwd_q; end
         end
     end
     always @(posedge clk) begin
@@ -141,6 +163,15 @@ module ot_hnx_hc_qcen #(
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
+    // FAN32: 32 kept copies of the leaf valid (one per level-1 adder; D = vl[VD-2], same edge as vl[VD-1])
+    wire [31:0] lvc;
+    if (FAN32 != 0) begin : g_lvc
+        (* keep = "true", dont_touch = "true" *) reg [31:0] lv_c;
+        always @(posedge clk or negedge rc) if (!rc) lv_c <= 32'd0; else lv_c <= {32{vl[VD-2]}};
+        assign lvc = lv_c;
+    end else begin : g_lvw
+        assign lvc = {32{leaf_v}};
+    end
     wire [64*32-1:0] lv0;
     for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
         localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
@@ -152,19 +183,24 @@ module ot_hnx_hc_qcen #(
         for (genvar i = 0; i < N; i = i + 1) begin : g_n
             wire [31:0] a, b; wire va; wire [1:0] e;
             if (l == 1) begin : g_leaf
-                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
+                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = lvc[i];
             end else begin : g_up
                 assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
             end
             // SIREG: level 1 runs one cut shorter (LAT TLA - 1 = 6: the standard LAT-6 cuts A, B, C; only the D cut inside
             // B2 goes); other levels unchanged
-            ot_hdc_fp32_add_lat #(.LAT((l == 1 && SIREG != 0) ? TLA - 1 : TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
-                .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+            if (FAN32 != 0) begin : g_f32
+                ot_hdc_fp32_add_lat_fan32 #(.LAT(7), .DRST(0), .SAFE_DIST(1)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+            end else begin : g_rel
+                ot_hdc_fp32_add_lat #(.LAT((l == 1 && L1S != 0) ? TLA - 1 : TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+            end
             assign ne[OFF + i] = nv[OFF + i] && (|e);
         end
     end
     localparam integer RT = 62;
-    localparam integer LFD = LT * TLA - ((SIREG != 0) ? 1 : 0);   // the lane-fault pipe matches the tree depth
+    localparam integer LFD = LT * TLA - L1S;   // the lane-fault pipe matches the tree depth
     reg [LFD-1:0] lfd;
     always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LFD-2:0], s_l[W*32] && leaf_v};
     always @(posedge clk or negedge rc) begin
