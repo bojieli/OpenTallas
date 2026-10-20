@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.hcoll.banklat_coll_price.v1",
+ "item": "H.STA.BANKLAT.COLL",
+ "lane": "LEAD2-HBM/L2H-COLLP",
+ "date": "2026-10-19",
+ "change": "COLL protocol leaf v74p (ot_hgi_coll_ctl_v5r_{n1s0,n2s1}_safephys #(MUL_PIPE 1)): iter_mul stage-3 combine split into two registered rungs",
+ "edges": {
+  "vm_rt": 74,
+  "added_issue_edges": 1,
+  "form": "uniform: parent feeds the protocol leaf the uop-pipe d3 word (was d2) and every other COLL child d4 (was d3); hgi_start/hgi_busy/issue_done delayed one more edge inside the leaf; every COLL output one edge later; II 1 unchanged",
+  "parent_change_owed": "ot_hfd_coll_q_hard_v8g_body/v8x + ot_hgi_coll_uop_pipe: one more 1,536-b bank (d4) for the non-protocol children, protocol leaf on d3, start_d3/busy_d3 to the other children -- applies when a die binds v74p"
+ },
+ "method": "tools/hbm_coll_static/injlat_cost.py --issue-edges 1 (S2 schedule of the per-die program, +1 cycle on every COLL op record)",
+ "token_cycles": {
+  "ds": {
+   "base": 576702.4,
+   "added": 473.9,
+   "e2e_loss_pct": 0.0821,
+   "per_op": {
+    "COLL.ALL_GATHER": 415.9,
+    "COLL.GROUP_REDUCE_MCAST": 40.0,
+    "COLL.TOPK_MERGE": 9.0,
+    "COLL.ROW_GATHER": 8.0,
+    "COLL.ARGMAX_MERGE": 1.0
+   }
+  },
+  "qwen": {
+   "base": 1269120.1,
+   "added": 73.0,
+   "e2e_loss_pct": 0.0058,
+   "per_op": {
+    "COLL.ALL_REDUCE_SUM": 72.0,
+    "COLL.ARGMAX_MERGE": 1.0
+   }
+  }
+ },
+ "ledger": "within accepted-cost (<=5%/unit, <=15%/design); DS ~1973.3 tok/s x (1-0.00082) ~= 1971.7",
+ "evidence": {
+  "proofs": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/summary.txt",
+  "cost": "results/arch/hbm_coll_mulpipe_1019/issue_edge_cost.json"
+ }
+}

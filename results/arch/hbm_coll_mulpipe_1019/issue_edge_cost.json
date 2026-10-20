@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.hcoll.issue_edge_cost.v1",
+ "mechanism": "e2e cost of raising the COLL SU-inject latency INJLAT (H-NETLIST/coll 2026-10-16).\n\nMechanism (ot_hfd_coll_q_static_v4 INJLAT, request P -> qslots capture P+INJLAT; SU 3:4 phase rule of\nH-NETLIST/suport: no SU-bound stream event at (P+1+Rq) mod 4 == 2):\n  * every COLL op whose sources are SU inject words pays dINJLAT = INJLAT-12 once a record (pipelined requests);\n  * COLL.GROUP_REDUCE_MCAST: measured delta of the production compiler tools/hbm_coll_static/g96_calendar.py\n    (--injlat I --su-rq 0) against INJLAT 12 (passed in with --g96 I:cycles ...);\n  * COLL.ALL_GATHER injects 96 flits a quadrant at 2 a cycle = 48 beats; the phase rule allows 3 of 4 edges, so the\n    inject stream takes 64 edges: +16 a record on top of dINJLAT (the rails take 1 flit/cycle each, so the inject is\n    the pace setter);\n  * COLL.ALL_REDUCE_SUM (qwen): dINJLAT + ceil(beats/3) with beats = its inject beats (charged as 16, conservative);\n  * COLL.TOPK_MERGE (IDX frames through cij_SW, no SU phase rule) and COLL.ARGMAX_MERGE: dINJLAT;\n  * COLL.ROW_GATHER sources VM words (vm_rq, no SU inject): 0.\nISSUE EDGES (L2H-COLLP 2026-10-19, --issue-edges N): a uniform +N COLL issue edge (v74p protocol leaf MUL_PIPE 1: the\niteration-product combine takes one more registered rung, so the parent feeds the leaf the uop-pipe d3 word and every\nother COLL child d4; every COLL output moves N edges later). Every COLL op record (ALL_GATHER, GROUP_REDUCE_MCAST,\nALL_REDUCE_SUM, TOPK_MERGE, ARGMAX_MERGE, ROW_GATHER, ...) pays +N cycles of latency; the II-1 stream is unchanged.\nMethod = tools/throughput/accepted_cost.py hbm_schedule: S2 schedule of the exact per-die program, fixed cycles\nadded to every record of each op (edges counted 1:1 as schedule cycles, conservative).\n",
+ "workloads": {
+  "ds": {
+   "coll_records": {
+    "COLL.ALL_GATHER": 584,
+    "COLL.GROUP_REDUCE_MCAST": 40,
+    "COLL.TOPK_MERGE": 9,
+    "COLL.ROW_GATHER": 8,
+    "COLL.ARGMAX_MERGE": 1
+   },
+   "rows": [
+    {
+     "issue_edges": 1,
+     "base_cycles": 576702.4,
+     "cycles": 577176.3,
+     "added_cycles": 473.9,
+     "e2e_loss_pct": 0.0821,
+     "per_op": {
+      "COLL.ALL_GATHER": {
+       "records": 584,
+       "cycles_per_record": 1,
+       "added_cycles": 415.9
+      },
+      "COLL.GROUP_REDUCE_MCAST": {
+       "records": 40,
+       "cycles_per_record": 1,
+       "added_cycles": 40.0
+      },
+      "COLL.TOPK_MERGE": {
+       "records": 9,
+       "cycles_per_record": 1,
+       "added_cycles": 9.0
+      },
+      "COLL.ROW_GATHER": {
+       "records": 8,
+       "cycles_per_record": 1,
+       "added_cycles": 8.0
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 1,
+       "added_cycles": 1.0
+      }
+     }
+    }
+   ]
+  },
+  "qwen": {
+   "coll_records": {
+    "COLL.ALL_REDUCE_SUM": 2,
+    "COLL.ARGMAX_MERGE": 1
+   },
+   "rows": [
+    {
+     "issue_edges": 1,
+     "base_cycles": 1269120.1,
+     "cycles": 1269193.1,
+     "added_cycles": 73.0,
+     "e2e_loss_pct": 0.0058,
+     "per_op": {
+      "COLL.ALL_REDUCE_SUM": {
+       "records": 2,
+       "cycles_per_record": 1,
+       "added_cycles": 72.0
+      },
+      "COLL.ARGMAX_MERGE": {
+       "records": 1,
+       "cycles_per_record": 1,
+       "added_cycles": 1.0
+      }
+     }
+    }
+   ]
+  }
+ }
+}
