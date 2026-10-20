@@ -24,8 +24,9 @@ COMMON="rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv
  rtl/qwen_dv/qfd_dv_redstn2_regional.sv rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv rtl/qwen_dv/qfd_dv_station_math_g.sv
  rtl/qwen_dv/qfd_dv_ring_delay.sv rtl/qwen_dv/qfd_dv_reset_tree.sv rtl/common/landed_parent/ot_pl_land.sv
  rtl/common/landed_parent/ot_pl_land_physical.sv
- rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_vm.sv"
-VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 +define+OT_STATION_REGIONAL"
+ rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_vm.sv rtl/qwen_dv/s5/qfd_dv_s5_vreduce_rb.sv"
+# S5_DEFS (env, opt-in): extra defines of a fallback build, e.g. S5_DEFS=+define+OT_S5_RED_RING (qfd_dv_s5_redb)
+VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 +define+OT_STATION_REGIONAL ${S5_DEFS:-}"
 case $KIND in
   eq)
     D=""; G=""
@@ -50,7 +51,7 @@ case $KIND in
     D=""; case $M in 0) ;; loff) D="+define+OT_S5_LOFF_MUT";; lrly) D="+define+OT_S5_LRLY_MUT";; red) D="+define+OT_S5_RED_MUT";;
       sc) D="+define+OT_S5_SC_MUT";; xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; esac
     MU=""; case $M in d*) MU="--mut ${M#d}";; esac
-    python3 rtl/test/qwen_dv/dv_bench2.py ${B2:-f j k q m n o} $MU --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3 $D" --work "$OUT/b2";;
+    python3 rtl/test/qwen_dv/dv_bench2.py ${B2:-f j k q m n o} $MU --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3 $D ${S5_DEFS:-}" --work "$OUT/b2";;
   lp)
     # landed parent (lp.py) vs its lagref (the flat parent with every cross-region reader pin delayed E+1), lp.py MUT M
     # (0 PASS; 1 landing bypassed, 2 landing read K+1, 4 mut_child reset run long: FAIL).  SPEC=qfd_dv_s5 | qfd_dv_s5b

@@ -176,7 +176,8 @@ S5SRCS = ["rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv", "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv"
           "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
           "rtl/qwen_dv/qfd_dv_redstn2_regional.sv", "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
           "rtl/qwen_dv/qfd_dv_station_math_g.sv", "rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/qwen_dv/qfd_dv_reset_tree.sv",
-          "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_physical.sv"]
+          "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_physical.sv",
+          "rtl/qwen_dv/s5/qfd_dv_s5_vreduce_rb.sv"]
 
 
 def run_sim2(name, ev, work, mut, ncyc, n=2):

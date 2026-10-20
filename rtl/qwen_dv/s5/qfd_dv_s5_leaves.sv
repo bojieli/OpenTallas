@@ -809,7 +809,12 @@ module qfd_dv_s5_red (
         for (li = 0; li < SW; li = li + 1)
             rd_x[32*li +: 32] <= l_ov[li] ? l_out[32*li +: 32] : (l_red0 == 2'd2) ? l_out[31:0] : 32'd0;
     end
+`ifdef OT_S5_RED_RING
+    // fallback qfd_dv_s5_redb: the same reducer with its >= 3-deep data delay lines as flop rings (cycle-exact)
+    qfd_dv_s5_vreduce_rb #(.SW(SW), .LV(4), .AW(AW)) u_red (.clk(ck), .rst_n(rst_c), .v_in(rd_v), .mx_in(rd_mx),
+`else
     ot_hdc_vreduce #(.SW(SW), .LV(4), .AW(AW)) u_red (.clk(ck), .rst_n(rst_c), .v_in(rd_v), .mx_in(rd_mx),
+`endif
         .sq_in(rd_sq), .last_in(rd_last), .addr_in(rd_addr), .x_in(rd_x),
         .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(busy), .fault(fault));
 endmodule
