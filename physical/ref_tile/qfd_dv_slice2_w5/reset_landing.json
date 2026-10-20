@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_s5_lp",
+ "enable": false,
+ "reason": "rst_n feeds the lp reset runs (depth 10, priced as boot release); each leaf lands its rst_n in 2 more stages on its own root"
+}
