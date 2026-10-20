@@ -50,3 +50,34 @@ full-width shim and boot-offset hold under four minimal cases, not the full
 receiver parent/calendar or die. Final SHA receipt matches committed default
 shim and bench script. Early harness failures remain remote under positive,
 positive2, positive3 and their build logs; no evidence overwritten.
+
+## Coherent ten-bus receiver cohort successor
+
+`qfd_dv_slice2_e_eiland` now intercepts every actual input from dvs_E1 to dvs_E2,
+not only st_ei: cmd_ei116, hr_ei453, st_ei1088, sc_ei48, rv_ei1, re_ei1,
+rr_ei3, rl_ei1, rd_ei512, dr_ei520 = 2743 bits. This matters because lpc captures
+the status, scalar, command, HR and return tuple on the same receiver edge.
+The st-only candidate above remains a scoped mechanism witness, unsuitable for
+cohort adoption by itself.
+
+The complete cohort source uses `qfd_slice_ei_face_land`: fifteen SRAM D8
+slices (14x192 +55), 43 physical32x64 macros, 88064 allocated bits/21944 payload
+ring bits. Each bit from this source root receives the same +5-edge price and
+same epoch. Fifteen kept boot-offset copies avoid a shared offset flop driving
+all pointer cones. Actual mapped kept-copy census is still required. Other
+source-root inputs are unchanged and remain distinct scheduling obligations.
+The model lists each of the ten buses and its +5 receiver-edge price. Data rate
+is 2743 bits/cycle; area is 43*31.992*17.304 um² macros plus unmeasured control.
+No claimed whole-parent latency/rate or replacement of released clock pins.
+
+The successor bench checks full2743bit words (all chunks change), both exact
+signed corner phases modulo a period, four reset/restart cases, boot-offset
+freeze under an externally changed K, and wrong-read selector mutation.
+Default candidate source is unbound; first receiver geometry, native census,
+standard equivalence and dependent calendar integration remain required.
+
+Complete2743b cohort exact unit42030-1792526497 TERMINAL0: positive1618checks
+0errors PASS; wrongread causal2935errors FAIL as required. All seven source and
+dependency SHA checks match this worktree. Logs retained in fleet/cohort_*.
+The receiver-parent integration remains a source candidate, not covered by the
+isolated ring mechanism witness; no mapped or physical result is inferred.

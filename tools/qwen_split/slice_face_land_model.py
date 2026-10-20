@@ -44,6 +44,14 @@ def main():
       # of this slice pair. They MUST NOT be substituted for pair measurements.
       global_drift_scope=dict(g5_ps=1536.3,g5b_ps=2568.9,applies_to='forwarded lane drift, not slice pair phase'),
       ledger=ledger)
+    cohort=[r for r in ledger if r['src']=='dvs_E1' and r['dst']=='dvs_E2']
+    assert len(cohort)==10 and sum(r['bits'] for r in cohort)==2743
+    rec['coherent_cohort']=dict(src='dvs_E1',dst='dvs_E2',width=2743,
+      buses=[dict(bus=r['bus'],bits=r['bits'],added_receiver_edges=5) for r in cohort],
+      byte_equivalent_per_cycle=2743/8,ring_slices=15,macro_count=43,
+      allocated_sram_bits=43*32*64,payload_ring_bits=2743*8,
+      macro_area_um2=43*31.992*17.304,physical_control_area_um2=None,
+      same_epoch_and_offset=True,schedule_adopted=False,**window(phases))
     assert len(ledger)==185 and rec['totals']['bits']==50270
     assert rec['representative']['selected_L']==5
     a.out.write_text(json.dumps(rec,indent=2)+'\n')

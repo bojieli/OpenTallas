@@ -3566,5 +3566,81 @@
       "bound": false,
       "schedule_adopted": false
     }
-  ]
+  ],
+  "coherent_cohort": {
+    "src": "dvs_E1",
+    "dst": "dvs_E2",
+    "width": 2743,
+    "buses": [
+      {
+        "bus": "n_dv_ch_E1_dr_dr",
+        "bits": 520,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_ch_E1_rt_rd",
+        "bits": 512,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_ch_E1_rt_re",
+        "bits": 1,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_ch_E1_rt_rl",
+        "bits": 1,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_ch_E1_rt_rr",
+        "bits": 3,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_ch_E1_rt_rv",
+        "bits": 1,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_st_E1_cmd_cmd",
+        "bits": 116,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_st_E1_hr_hr",
+        "bits": 453,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_st_E1_sc_u_sc",
+        "bits": 48,
+        "added_receiver_edges": 5
+      },
+      {
+        "bus": "n_dv_st_E1_st_u_st",
+        "bits": 1088,
+        "added_receiver_edges": 5
+      }
+    ],
+    "byte_equivalent_per_cycle": 342.875,
+    "ring_slices": 15,
+    "macro_count": 43,
+    "allocated_sram_bits": 88064,
+    "payload_ring_bits": 21944,
+    "macro_area_um2": 23804.351423999997,
+    "physical_control_area_um2": null,
+    "same_epoch_and_offset": true,
+    "schedule_adopted": false,
+    "phi_interval_ps": [
+      -330.086914,
+      316.32275400000003
+    ],
+    "feasible_L": [
+      5,
+      6
+    ],
+    "selected_L": 5,
+    "window_ok": true
+  }
 }
