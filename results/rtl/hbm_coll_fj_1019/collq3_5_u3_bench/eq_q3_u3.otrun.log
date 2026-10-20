@@ -1,0 +1,31 @@
+ot-run: ot-epyc5       admits   763 GB (avail 648, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 42 disk 35 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/collq3-5-bench/src_c1fa539ea
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collq3-5-bench/src_c1fa539ea
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/collq3-5-bench/src_c1fa539ea
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collq3-5-bench/src_c1fa539ea
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collq3-5-bench/src_c1fa539ea
+ot-run: -> ot-epyc5
+ot-heavy: request 24G is charged 13G (class 'run_coll_lp_ars_all.sh:q#' measured peak 4.1G, n=4+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3356759-1792488848 after 1 s
+f612ec8c28f9feed7f5c5cb22136962ac9d8e7fafbf5ab5e7d739ebffd0632bc  rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv
+Verilator 5.050 2026-07-01 rev v5.050
+eq LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+eq LPF_EQ PASS compared=144578 cycles=3164 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ PASS
+m_refnostep EQ_MISMATCH port=del_flit cyc=2500
+m_refnostep EQ_MISMATCH port=del_flit cyc=2762
+m_refnostep LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+m_refnostep LPF_EQ FAIL mismatches=2 of 144578 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ_MUTANT m_refnostep REJECTED
+m_leafedge EQ_MISMATCH port=fault_cause cyc=2474
+m_leafedge EQ_MISMATCH port=del_flit cyc=2500
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2504
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2505
+EQ_MUTANT m_leafedge REJECTED
+m_rlaneext EQ_MISMATCH port=del_flit cyc=2500
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2504
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2505
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2506
+EQ_MUTANT m_rlaneext REJECTED
+COLL_LP_ARS_ALL_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3356759-1792488848): exit 0
