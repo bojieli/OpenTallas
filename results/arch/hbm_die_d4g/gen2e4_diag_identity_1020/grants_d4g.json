@@ -15210,7 +15210,102 @@
      },
      "qualification": "SYNTH_DIAGNOSTIC_UNCLOSED"
     }
-   ]
+   ],
+   "synth_pin_bind": {
+    "source": "Exact surviving original hb_ckgen grant faces/offsets; diagnostic nolink placement only, no closure/PLL timing claim",
+    "faces": {
+     "refclk": "N",
+     "por_n": "N",
+     "por_hbm": "S",
+     "por_stream": "S",
+     "por_serial": "S",
+     "pll_hbm": "S",
+     "pll_stream": "S",
+     "pll_serial": "S"
+    },
+    "windows": [
+     {
+      "ports": [
+       "refclk"
+      ],
+      "face": "N",
+      "local_um": [
+       57.348,
+       57.78
+      ]
+     },
+     {
+      "ports": [
+       "por_n"
+      ],
+      "face": "N",
+      "local_um": [
+       62.148,
+       62.58
+      ]
+     },
+     {
+      "ports": [
+       "por_hbm"
+      ],
+      "face": "S",
+      "local_um": [
+       30.948,
+       31.38
+      ]
+     },
+     {
+      "ports": [
+       "por_stream"
+      ],
+      "face": "S",
+      "local_um": [
+       35.748,
+       36.18
+      ]
+     },
+     {
+      "ports": [
+       "por_serial"
+      ],
+      "face": "S",
+      "local_um": [
+       36.036,
+       36.468
+      ]
+     },
+     {
+      "ports": [
+       "pll_hbm"
+      ],
+      "face": "S",
+      "local_um": [
+       47.844,
+       48.276
+      ]
+     },
+     {
+      "ports": [
+       "pll_stream"
+      ],
+      "face": "S",
+      "local_um": [
+       52.644,
+       53.076
+      ]
+     },
+     {
+      "ports": [
+       "pll_serial"
+      ],
+      "face": "S",
+      "local_um": [
+       57.444,
+       57.876
+      ]
+     }
+    ]
+   }
   },
   {
    "name": "quant_NW0_lg",
