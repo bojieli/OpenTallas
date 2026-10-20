@@ -21,6 +21,7 @@ case "$CASE" in
  m_hold) MF=$F; FROM=".s((acc_t[2])&&rs_s[(5+gi_)%RS])"; TO=".s(((gi_==2)?acc_t[1]:acc_t[2])&&rs_s[(5+gi_)%RS])";;
  m_gap) MF=$F; FROM=".a(gq[LO+:W]),.b(lo_b[LO+:W])"; TO=".a((gs==1)?lo_b[LO+:W]:gq[LO+:W]),.b((gs==1)?gq[LO+:W]:lo_b[LO+:W])";;
  m_fl) MF=$F; FROM=".s(acc_t[5]&&l5&&gix[4]==gi_"; TO=".s(acc_t[5]&&gix[4]==gi_";;
+ m_div) MF=$F; FROM="assign q=n>=4'd6;"; TO="assign q=n>=4'd7;";;
  *) echo "S32D2 $CASE: unknown case"; exit 2;;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
