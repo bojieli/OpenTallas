@@ -1,0 +1,5 @@
+BOOT_PIN_DIFF n=0 time=5000 macro=u56130_c0.u_cell pin=w_ce_in a=0 b=1
+BOOT_PIN_DIFF n=0 time=5000 macro=u56130_c0.u_cell pin=wd_in a=0000000000000000000000000000000000000000000000000000000000000000 b=00803f4000803f4000803f4000803f4000803f4000803f4000803f4000803f40
+[226000] %Fatal: boot_replay_tb.sv:49030: Assertion failed in tb.unnamedblk1_1.unnamedblk68: PROMPT_STATE FAIL macro_arr u56130_c0.u_cell cycle=21 row=0
+%Error: boot_replay_tb.sv:49030: Verilog $stop
+Aborting...

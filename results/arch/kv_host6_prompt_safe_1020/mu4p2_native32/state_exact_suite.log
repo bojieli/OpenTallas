@@ -1,0 +1,21 @@
+PROMPT_N32 PASS cycles=20000 seed=712932366
+- state_exact_tb.sv:855: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 9.987 s; speed 20.026 us/s
+- Verilator: cpu 9.986 s on 1 threads; allocated 15 MB
+
+PROMPT_N32 PASS cycles=20000 seed=-1089966769
+- state_exact_tb.sv:855: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 9.933 s; speed 20.135 us/s
+- Verilator: cpu 9.931 s on 1 threads; allocated 15 MB
+
+[226000] %Fatal: state_exact_tb.sv:776: Assertion failed in tb.unnamedblk1_1.unnamedblk68: PROMPT_STATE FAIL macro_arr u56130_c0.u_cell cycle=21 row=0
+%Error: state_exact_tb.sv:776: Verilog $stop
+Aborting...
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-host6-prompt-mu4p2-n32-codex/host_prompt_state_exact.py", line 52, in <module>
+    assert (run.returncode==0 and 'PROMPT_N32 PASS'in t) if mode=='pass'else(run.returncode!=0 and ('PROMPT_N32 FAIL'in t or 'PROMPT_STATE FAIL'in t))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
