@@ -1,0 +1,212 @@
+{
+  "schema": "opentallas.qwen.actual_g5_n59_replacement_price.v1",
+  "status": "MODEL_ONLY_HOLD",
+  "source_commit": "d502ea9ae",
+  "inputs": {
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/chain/case_r22k/elements.lef": {
+      "sha256": "4a4a8a3b655f4b975a0df7f21f4d936d3c79ff3d0ba812a3e98b61d2a2a612e5",
+      "bytes": 25666441
+    },
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/chain/case_r22k/floorplan_placed.def": {
+      "sha256": "0d23c8063e0f6895d33fc4dfb1de86ed15c25bddf8eb6955e34b9422f805e710",
+      "bytes": 54936349
+    },
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/out/case/manifest.json": {
+      "sha256": "f4020e2dcab04cc0f5aac93e5084fba7801b544646ee5bcda3d750575102e735",
+      "bytes": 422
+    },
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/pre_bind/port_bind.json": {
+      "sha256": "6c47deb5ebffeab9f6c017374bc845e80f60b11fe06a81616ca2d6c0417c4fb2",
+      "bytes": 148965
+    },
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/chain/libs/views.json": {
+      "sha256": "2bba6e7e83579e1b3f9b421a0f84baf5a64c4be89cef176bba1cc4be0348e7c3",
+      "bytes": 357624
+    },
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/src/rtl/qwen_split/qfd_native59_dv_service.sv": {
+      "sha256": "8c40360594c677b1b416ef50dcd9e7658525e5931cae1d91dd8c8e96dc4a28bb",
+      "bytes": 28349
+    }
+  },
+  "native59_instances": [
+    {
+      "instance": "native59",
+      "master": "qfd_native59_dv_service",
+      "status": "FIXED",
+      "origin_um": [
+        216.0,
+        22194.0
+      ],
+      "orient": "FN",
+      "bbox_um": [
+        216.0,
+        22194.0,
+        993.6,
+        22712.4
+      ]
+    }
+  ],
+  "source_port_bind_native59": {
+    "verdict": "PASS",
+    "fails": [],
+    "instances": 1,
+    "rtl": "rtl/qwen_split/qfd_native59_dv_service.sv",
+    "kind": "real",
+    "ambiguous_defs": null,
+    "examples": [
+      "native59"
+    ],
+    "param_sets": {
+      "{}": 1
+    },
+    "die_port_not_in_rtl": [],
+    "input_unconnected": [],
+    "input_tied": [],
+    "straps": [],
+    "pad_bits": {},
+    "output_open": [
+      "completed"
+    ],
+    "width_mismatch": {},
+    "unparsed_conn": [],
+    "duplicate_port": []
+  },
+  "native59_assumed_in_chain": true,
+  "native59_clock_contract": "ideal zero-insertion assumption, no measured boundary evidence",
+  "die": {
+    "w": 31730.376,
+    "h": 24288.824,
+    "mm2": 770.694,
+    "budget_mm2": 858,
+    "margin_mm2": 116.347
+  },
+  "proposal_same_anchor_bbox_um": [
+    216.0,
+    22194.0,
+    1166.4,
+    22928.4
+  ],
+  "price": {
+    "old_actual_area_um2": 403107.83999999997,
+    "proposed_parent_area_um2": 697973.76,
+    "replicas": 1,
+    "delta_um2_per_replica": 294865.92000000004,
+    "ratio_to_actual": 1.7314814814814816,
+    "ratio_to_earlier_split_parent": 2.077777777777778,
+    "additional_die_area_mm2": 0.29486592000000006,
+    "die_area_fraction_delta": 0.00038259791823992413
+  },
+  "scope": "Actual selected g5 frozen placement inventory and proposed rectangle comparison only. No source replacement, geometry edits, parent/die route, timing, placement or adoption qualification.",
+  "omitted_components": {
+    "count": 18333,
+    "by_reason_master": {
+      "['no dimension', 'TIEHIx1_ASAP7_75t_R']": 152,
+      "['no dimension', 'TIELOx1_ASAP7_75t_R']": 18181
+    },
+    "examples": [
+      [
+        "c16_E0_0_1",
+        "no dimension",
+        "TIEHIx1_ASAP7_75t_R"
+      ],
+      [
+        "c16_E0_0_153",
+        "no dimension",
+        "TIELOx1_ASAP7_75t_R"
+      ],
+      [
+        "c16_E0_0_154",
+        "no dimension",
+        "TIELOx1_ASAP7_75t_R"
+      ],
+      [
+        "c16_E0_0_155",
+        "no dimension",
+        "TIELOx1_ASAP7_75t_R"
+      ],
+      [
+        "c16_E0_0_156",
+        "no dimension",
+        "TIELOx1_ASAP7_75t_R"
+      ]
+    ]
+  },
+  "hard_macro_dimension_errors": [],
+  "proposal_same_anchor_overlap_summary": {
+    "count": 142,
+    "masters": {
+      "qfd_landh_512_SW_89x30": 1,
+      "qfd_landh_187_ES_65x30": 1,
+      "qfd_rlyh_187_ES_65x30": 1,
+      "qfd_rlyh0_69_WE_65x30": 1,
+      "qfd_rlyh_1_WE_65x30": 4,
+      "qfd_rlyh0_76_WN_65x30": 1,
+      "qfd_landh_76_SE_65x30": 2,
+      "qfd_rlyh0_56_SN_65x30": 1,
+      "qfd_landh_56_SE_65x30": 1,
+      "qfd_landh_1_NS_65x30": 1,
+      "qfd_rlyh_1_WS_65x30": 1,
+      "qfd_landh_1_NE_65x30": 1,
+      "qfd_landh0_1_NS_65x30": 1,
+      "qfd_landh0_5_NS_65x30": 1,
+      "qfd_landh0_4_ES_65x30": 1,
+      "qfd_landh0_1_ES_65x30": 2,
+      "qfd_landh0_5_NE_65x30": 1,
+      "qfd_landh0_4_NE_65x30": 1,
+      "qfd_landh0_1_EN_65x30": 1,
+      "qfd_rlyh0_548_NE_95x60": 2,
+      "qfd_landh_548_WE_95x60": 1,
+      "qfd_rlyh_548_WE_95x60": 1,
+      "qfd_rlyh0_524_SW_92x60": 1,
+      "qfd_rlyh0_2_EN_65x30": 1,
+      "qfd_rlyh0_59_EW_65x30": 1,
+      "qfd_landh_1_WN_65x30": 1,
+      "qfd_rlyrl_1_NE_65x30": 1,
+      "qfd_rlyh_1_EW_65x30": 10,
+      "qfd_landh_1_EN_65x30": 4,
+      "qfd_rlyh0_1_EW_65x30": 2,
+      "qfd_rlyh0_6_SW_65x30": 1,
+      "qfd_rlyh0_1_SW_65x30": 1,
+      "qfd_rlyh0_1_EN_65x30": 2,
+      "qfd_landh0_1_EW_65x30": 3,
+      "qfd_landh_1_WE_65x30": 2,
+      "qfd_rlyh_1_NS_65x30": 1,
+      "qfd_rlyh_1_NE_65x30": 1,
+      "qfd_landh0_16_EW_65x30": 1,
+      "qfd_landh0_2_EW_65x30": 2,
+      "qfd_landh0_59_EW_65x30": 1,
+      "qfd_landh0_1_NW_65x30": 3,
+      "qfd_landh0_1_NE_65x30": 1,
+      "qfd_rlyh0_548_EW_95x60": 1,
+      "qfd_rlyh_548_EW_95x60": 1,
+      "qfd_landh_548_EN_95x60": 1,
+      "qfd_rlyh0_1_NE_65x30": 1,
+      "qfd_landh0_5_EN_65x30": 1,
+      "qfd_rlyh_32_EW_65x30": 1,
+      "qfd_rlyh_32_EN_65x30": 2,
+      "qfd_rlyh_1_SW_65x30": 1,
+      "qfd_rlyh_2_EW_65x30": 2,
+      "qfd_landh_2_EN_65x30": 1,
+      "qfd_rlyh0_16_EW_65x30": 1,
+      "qfd_rlyh_16_EW_65x30": 1,
+      "qfd_landh_1_SE_65x30": 1,
+      "qfd_landh0_75_NW_65x30": 1,
+      "qfd_rst_rep": 57,
+      "qfd_rst_rep_p8": 1
+    }
+  },
+  "aggregate_hard_instance_area_um2": 714427322.0877864,
+  "aggregate_hard_instance_area_plus_proposal_um2": 714722188.0077864,
+  "aggregate_note": "Sum of existing LEF rectangles, not occupied union or placeable free area. 18333 native tie cells excluded from hard-master inventory, no unused-space or route credit.",
+  "actual_die_v_sha256": "771ed19400e3e7fba0320409ee305cff9018b005c150eaa6b265c281e7a76ca2",
+  "actual_native59_source_semantics": {
+    "qbuf_declared_bits": 16384,
+    "qbuf_semantic_KiB": 2,
+    "default_NU": 1,
+    "actual_port_bind_params": {},
+    "direct_qbank_child_instances": 0,
+    "note": "This is legacy monolithic source; candidate16KiBbankorganization and32KiBphysical capacity are separate from2KiBsemanticQstate. No equivalence or MU4 adoption inferred."
+  },
+  "hard_instance_count": 13766,
+  "inventory_gzip_sha256": "726af0cdb0ec5ca97adbef9d857981fe3b4e0162d48ec03b145c1c91436637ef"
+}

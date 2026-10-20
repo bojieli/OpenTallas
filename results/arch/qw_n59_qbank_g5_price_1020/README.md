@@ -1,0 +1,11 @@
+# P192 qbank replacement price in selected g5: MODEL ONLY / HOLD
+
+Selected g5 source is d502ea9ae. Actual out/case and chain die.v both hash771ed19400e3e7fba0320409ee305cff9018b005c150eaa6b265c281e7a76ca2. The actual placement inventory contains13766hard instances, matching port_bind, with zero missing hard-master dimensions. 18333native tie cells (152TIEHI/18181TIELO) are counted separately and omitted from hard-rectangle areas; no unused-space credit is taken. Every source input SHA and every hard instance/master/orientation/rectangle is in the compressed inventory.
+
+There is exactly ONE top-level native59, masterqfd_native59_dv_service, with paramset{}. Its source is the legacy monolithic16384bit qbuf (2KiBsemanticQstate), no direct qbank child, defaultNU1. Candidate bank organization16KiBlogical/32KiBphysical is a separate architecture and must not be confused with old semantic state. The current die libs manifest places native59 in ASSUMED with IDEALzero-insertion, not a real measured closed view.
+
+Actual native59 size777.6x518.4=403107.84um2; FIXED FN origin(216,22194), box ending(993.6,22712.4). Candidate split parent950.4x734.4=697973.76um2 gives1.731481x the ACTUALg5 footprint, +294865.92um2=0.29486592mm2 for one replica. Earlier2.077778x correctly compares518.4x648 split-parentproposal; it is not the current g5 baseline.
+
+The replacement rectangle at the same anchor overlaps142existinghard instances:58reset reps plus84landing/relay blocks. Thus it cannot be dropped into the current placement. Sum of allhard LEFrectangleareas714.427322mm2 becomes714.722188mm2 after this one replacement. Delta is0.03826% of770.694mm2 diearea, but this arithmetic is not occupied union, legal freearea, capacity or route/reticlefit qualification. Newplacement/reach/pin/clock compensation and static calendar remain unproven; all existing jobs are preserved.
+
+P192 source proposal6507f9b64 remainsMODELONLY: eight canonical64x512p192_bs analytical macros, 32KiBphysical fully charged, TTread14.6046x/write8.435x legacybankenergy. Full334809stageedge continuous380um model needs2149extraFF/+512OR2/+2bodyedges (tentativeSOFF5/BOFF0/ROFF6). No provider view generation, source implementation, spacing waiver, default adoption or route launch.
