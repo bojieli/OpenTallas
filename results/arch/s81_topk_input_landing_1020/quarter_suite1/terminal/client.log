@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-quarter-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-quarter-1020/src
+ot-run: ot-epyc7       admits   918 GB (avail 743, growth 101, headroom 0, waiters 0/0 GB) load 62/96 running 25 disk 5488 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-quarter-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-topk-input-quarter-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-topk-input-quarter-1020/src
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc7 at 1.35 x cores
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4129561-1792498170 after 0 s
+HQ_SUITE FAIL {"r": {"indexed13": "PASS", "indexed13_corrupt": "FAIL", "indexed13_early": "FAIL", "indexed13_identity": "FAIL", "indexed13_ninf": "PASS", "indexed13_ties": "PASS", "indexed13_zeros": "PASS", "legacy": "PASS", "mut1_indexed13": "FAIL", "mut1_legacy": "FAIL", "mut2_indexed13": "FAIL", "mut2_legacy": "PASS"}, "positive": true, "negative": true, "mutants": {"1": true, "2": false}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4129561-1792498170): exit 1
