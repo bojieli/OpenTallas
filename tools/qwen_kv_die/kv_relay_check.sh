@@ -70,7 +70,7 @@ fi
 RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$RUNT" "$SCHED" "$R/relay_check.json") && RCR=0 || RCR=$?
 if [ -n "$KSM" ]; then
   python3 "$SRC/tools/qwen_kv_die/kv_static_params.py" --model "$KSM" --table "$RUNT" ${FWDL:+--fwd-lanes "$FWDL"} \
-    --die-v "$B/die_bound.v" --case-die-v "$C/die.v" --out "$R/static_params.json" > "$R/static_params.log" 2>&1 && KSR=0 || KSR=$?
+    --die-v "$B/die_bound.v" --case-die-v "$C/die.v" --boot-out "$R/boot_ages.json" --out "$R/static_params.json" > "$R/static_params.log" 2>&1 && KSR=0 || KSR=$?
   tail -1 "$R/static_params.log" | cut -c1-1500
   if [ "$KSR" != 0 ]; then echo "${RCL/RELAY_CHECK PASS/RELAY_CHECK FAIL} | KV_STATIC_PARAMS FAIL ($R/static_params.json)"; exit 1; fi
 fi

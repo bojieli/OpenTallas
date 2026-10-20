@@ -13,6 +13,13 @@ mkdir -p $O/libs
 # (kv_port_bind_v2.sh / die_port_bind_kv.py re-import kv_die: without the flags they used the non-V144_R6 vport binding
 # and reported 256 phantom undriven pvin epoch bits on kvs13h)
 env | grep -E '^OT_KV_[A-Z0-9_]*=' | sed -E "s/^([^=]*)=(.*)$/export \1='\2'/" > $O/kv_flags.env
+# KV-BIND8 10-20: the generated static tile RTL the die binds (kv_static_die.RTL_FILE for THESE flags) must exist and equal
+# the producer's text: d11r bound a stale _mu_ba body (legacy boot/programme/ownership, sha df665451) and d11s selected an
+# absent _hs_mu_ba.sv.  Fail closed before any GEN step (regenerate with kv_static_die.py --rtl and commit).
+if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_static_die.py --check > "$O/tile_rtl_check.log" 2>&1 || {
+    tail -3 "$O/tile_rtl_check.log"; echo 'KV static tile RTL missing / STALE for the run flags: regenerate (--rtl) and commit'; exit 8; }
+fi
 # v1.4 (OT_KV_HOST_V14=1): real HOST root core + 128 die-placed PC slices + PLL model (kv_die.py --host-v14)
 H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
