@@ -501,7 +501,8 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         if port not in edits[i]:
             edits[i][port] = list(die.bits(die.cells[i][2][port]))
         return edits[i][port]
-    for t in plan['transports']:
+    transport_wires = []
+    for tn, t in enumerate(plan['transports']):
         lane = next(l for l in inv['lanes'] if l['id'] == t['lane_id'])
         chain, w, k = lane['stations'], lane['width'], t['payload_bit']
         src = sig[t['source']]
@@ -510,13 +511,23 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         if a0[w - 1 - k] != ('CONST', 0):
             raise ValueError(f'{chain[0]}.a[{k}] is not a constant-0 spare')
         a0[w - 1 - k] = (nm, int(bi))
-        for j in range(1, len(chain)):
-            out = cur(chain[j - 1], 'b')[w - 1 - k]
-            aj = cur(chain[j], 'a')
-            if aj[w - 1 - k] == ('CONST', 0):
-                aj[w - 1 - k] = out
-            elif aj[w - 1 - k] != out:
-                raise ValueError(f'{chain[j]}.a[{k}] carries another signal')
+        # KV-BIND6 10-20: a transported health bit is a live functional payload, so every station output moves OFF the
+        # station's private n_<inst>__spare wire onto its own declared transport net n_hpt_<n>[j] (gen9d5p diag bind:
+        # kv_output_pads 'rly_pvin_WS_0_0__s1: private spare output has a dynamic/nonzero input'). The old spare bit is
+        # left undriven and unread; spare_lanes() already proved the next station was its only reader.
+        tw = f'n_hpt_{tn}'
+        transport_wires.append((tw, len(chain)))
+        for j in range(len(chain)):
+            bj = cur(chain[j], 'b')
+            old = bj[w - 1 - k]
+            new_bit = (tw, j)
+            bj[w - 1 - k] = new_bit
+            if j + 1 < len(chain):
+                aj = cur(chain[j + 1], 'a')
+                if aj[w - 1 - k] in (('CONST', 0), old):
+                    aj[w - 1 - k] = new_bit
+                else:
+                    raise ValueError(f'{chain[j + 1]}.a[{k}] carries another signal')
         for i in chain:
             padfree[i]['a'].add(k)
             padfree[i]['b'].add(k)
@@ -558,6 +569,8 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
     for s in inv['sources']:
         clock[s['id']], reset[s['id']] = s['clock'], s['reset']
     new, wires, place = [], [], []
+    for tw, n_ in transport_wires:
+        wires.append(f'  wire [{n_ - 1}:0] {tw};')
     for cn in connects.values():
         wires.append(f'  wire [{cn["width"] - 1}:0] {cn["net"]};')
     for n in plan['nodes']:
