@@ -1,4 +1,4 @@
-# qkd_kvs_attn_rv6 -- rv3 successor r17: SYNCHRONOUS RESET of the attention calendar S1..S9 (KV-ATTN4 10-20, COORD 09:56)
+# qkd_kvs_attn_rv6 -- rv3 successor r17: RESET of the attention calendar S1..S9 (landed rst_n) (KV-ATTN4 10-20, COORD 09:56)
 
 Top `qkd_kvs_attn_fl` (rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv) -> `qkd_kvs_attn_r17` (rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv). Geometry 302.4 x 302.4 um exact. Sibling kits rv5 (216, = rv3 slot) / rv6 (302.4, = rv4 / ba1 slot) gated in parallel; bind the first to close.
 
@@ -10,7 +10,7 @@ compiled calendar, tx_first / end, the calendar fault), so under the owner 10-20
 unreset) they get a SYNCHRONOUS reset from the landed rst_n.  Nothing else changes: module suffix _r16 -> _r17, same ports,
 same edges, same parameters (RETIRE_STATIC=1, STATUS_DELAY=213).  0 added cycles (no KV-GEN9 hand-off).  Datapath (result
 face 512-b beat, RX record, TX launch) stays unreset.
-Reset loads: +~1,100 S1..S9 bits -> kit reset_landing 2 stages, 4 first / 96 final kept copies (rv3: 2 / 48), <= 32 loads per
+Reset loads: +~1,100 S1..S9 bits -> kit reset_landing 2 stages, 2 first / 64 final kept copies (rv3: 2 / 48; 1,896 loads / 64 = 29.6), <= 32 loads per
 copy (ot_rst_copies split, reset_relay_split max 32).
 
 ## Benches (Verilator 5.050, fleet)
@@ -20,7 +20,7 @@ copy (ot_rst_copies split, reset_relay_split max 32).
   command still completes -> PASS; MUT 8 (= the r16 form, no data reset) FAIL (results/rtl/kv_attn4_1020/calrst_m8/verdict.log).
 
 ## Safe-design checklist (owner 10-19) -- unchanged from rv3 except item 1/3 reset
-1 Pins: PASS (RTL-registered faces as rv3); reset lands in 2 registered stages at the face (kit, balanced 4/96 copies).
+1 Pins: PASS (RTL-registered faces as rv3); reset lands in 2 registered stages at the face (kit, balanced 2/64 copies).
 2 Reach: PASS by model (rv3 gate reach 84.6 um at 216); measured by the gate.
 3 Fanout: kept copies as rv3 (<= 16 flops per copy); reset leaves <= 32 loads; in-gate native census (GATE_NATIVE_CENSUS,
   mapped netlist) must report max <= 32 / 0 violations.

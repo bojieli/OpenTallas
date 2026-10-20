@@ -99,12 +99,12 @@
   "h": 302.4,
   "exact": true
  },
- "structural_change": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + SYNCHRONOUS RESET of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 4 first / 96 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
+ "structural_change": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
  "job": {
   "owner": "Claude:KV-ATTN4",
   "branch": "claude/kv-attn4-1020",
   "tag": "rv6",
-  "purpose": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + SYNCHRONOUS RESET of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 4 first / 96 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
+  "purpose": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
   "benches": [
    {
     "name": "lint",
@@ -245,21 +245,21 @@
   "record_to": "results/rtl/ref_tile/qkd_kvs_attn_rv6",
   "reroute_reason": {
    "kind": "rtl_change",
-   "why": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + SYNCHRONOUS RESET of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 4 first / 96 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs)."
+   "why": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs)."
   }
  },
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + SYNCHRONOUS RESET of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 4 first / 96 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs)."
+  "why": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs)."
  },
  "reset_landing": {
   "enable": true,
   "stages": 2,
   "first_copies": {
-   "rst_n": 4
+   "rst_n": 2
   },
   "copies": {
-   "rst_n": 96
+   "rst_n": 64
   }
  },
  "clock": "spine",
@@ -272,8 +272,5 @@
  "slot_change_request": "Outline 302.4 um square, ba4 full-face groups N d2d / E tx+i_ctl / S ck,rst,uf*,fin / W outputs; ages vs ba1/bs: K.rx_record +1 (RESULT/STATUS TX slots +1: tx_first 1751, end 1785; ks_pvst/ks_ahs/ks_pvfst/acal/ks_prg/ks_arh +1 relative to the RX record), reset assert/release = kit landing 2 edges (was ot_rst_relay async assert / release +3); fin +1 / i_ctl +1 unchanged.",
  "reset_relay_split": {
   "max_loads": 32
- },
- "orfs_vars": {
-  "OT_RST_COPIES_WIDE": "1"
  }
 }
