@@ -1,0 +1,8 @@
+S3_EQUIV MISMATCH ctl cyc 19
+S3_EQUIV MISMATCH ctl cyc 28
+S3_EQUIV MISMATCH ctl cyc 30
+S3_EQUIV MISMATCH ctl cyc 36
+S3_EQUIV MISMATCH ctl cyc 44
+[400001000] %Fatal: tb_hidx_s3_equiv.sv:65: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT0 CMUT6 errors 54340
+%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:65: Verilog $stop
+Aborting...

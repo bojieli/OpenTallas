@@ -1,0 +1,8 @@
+S3_EQUIV MISMATCH quadrant cyc 245 sv 0/0 ret 01f4000/01f4000 qf 1/1 line_eq 0
+S3_EQUIV MISMATCH quadrant cyc 246 sv 0/0 ret 01b0000/01b0000 qf 1/1 line_eq 0
+S3_EQUIV MISMATCH quadrant cyc 247 sv 0/0 ret 0054008/0054008 qf 1/1 line_eq 0
+S3_EQUIV MISMATCH quadrant cyc 290 sv 0/0 ret 01d0000/01d0000 qf 1/1 line_eq 0
+S3_EQUIV MISMATCH quadrant cyc 291 sv 0/0 ret 01f4000/01f4000 qf 1/1 line_eq 0
+[400001000] %Fatal: tb_hidx_s3_equiv.sv:65: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT3 CMUT0 errors 178387
+%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:65: Verilog $stop
+Aborting...
