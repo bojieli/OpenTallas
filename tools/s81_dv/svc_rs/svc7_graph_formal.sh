@@ -2,7 +2,16 @@
 set -euo pipefail
 G=$(cd "${1:?graph output directory}" && pwd)
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
-O=$G/formal
+KIND=${2:-rtl}
+MODELS=${3:-$G/verify_canonical/coupon/library_model_pdk.v}
+python3 - "$MODELS" <<'PY'
+import hashlib,json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);j=json.loads((p.parent/'canonical_model_identity.json').read_text())
+assert j['checks']==544 and j['plain_dff_checks']==128,'canonical truth coupons missing'
+assert hashlib.sha256(p.read_bytes()).hexdigest()==j['normalized_library_sha256'],'model identity changed'
+PY
+O=$G/formal_$KIND
 mkdir -p "$O"
 cat > "$O/miter.sv" <<'SV'
 module svc7_graph_miter(input clk,rst_n,v,input [31:0] a,b,output bad);
@@ -17,8 +26,13 @@ module svc7_graph_miter(input clk,rst_n,v,input [31:0] a,b,output bad);
   assign bad=(xv!=yv) | ((xv|yv) & ({xe,x}!={ye,y}));
 endmodule
 SV
-cat > "$O/proof.ys" <<'YS'
-read_verilog -formal -sv /graph/native.v /graph/verify/cells.v /out/miter.sv /src/rtl/hdc/v41x/ot_s81svc7_add_graph_input.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv
+if [ "$KIND" = mapped ]; then
+    BASE=/graph/mapped.v
+else
+    BASE='/src/rtl/hdc/v41x/ot_s81svc7_add_graph_input.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv'
+fi
+printf 'read_verilog -formal -sv /graph/native.v /models/cells.v /out/miter.sv %s\n' "$BASE" > "$O/proof.ys"
+cat >> "$O/proof.ys" <<'YS'
 hierarchy -check -top svc7_graph_miter
 proc
 flatten
@@ -31,6 +45,6 @@ opt_clean
 # After step3 reset is an unconstrained input; no reset assumption/mask remains.
 sat -seq 14 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove bad 0 -prove-skip 3 -verify -show-inputs -show-outputs
 YS
-docker run --rm -v "$ROOT:/src:ro" -v "$G:/graph:ro" -v "$O:/out" \
+docker run --rm -v "$ROOT:/src:ro" -v "$G:/graph:ro" -v "$MODELS:/models/cells.v:ro" -v "$O:/out" \
     openroad/orfs:latest bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; yosys -l /out/proof.log -s /out/proof.ys' > "$O/proof.stdout" 2>&1
 tail -n 15 "$O/proof.log"
