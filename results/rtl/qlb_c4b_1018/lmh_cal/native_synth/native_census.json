@@ -1,0 +1,1120 @@
+{
+  "schema": "opentallas.segcal.native-driver-census.v1",
+  "flat_sha256": "c1627e5e775a6004842eefb41792bef507f3f881ef1a68bdee22b67542e05451",
+  "cells": 51490,
+  "flops": 9920,
+  "macros": [
+    {
+      "inst": "u_ot_pr_core.u_head.g_psram.g_m[0].u_pm",
+      "type": "ot_sram_1r1w_64x512_m1_r2c2"
+    },
+    {
+      "inst": "u_ot_pr_core.u_head.g_psram.g_m[1].u_pm",
+      "type": "ot_sram_1r1w_64x512_m1_r2c2"
+    }
+  ],
+  "maximum_nonclock_driver_loads": 619,
+  "violations": [
+    {
+      "inst": "_42717_",
+      "type": "BUFx2_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 11841,
+      "loads": 619,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[1].r[0]"
+      ]
+    },
+    {
+      "inst": "_67801_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43024,
+      "loads": 190,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r2[0]"
+      ]
+    },
+    {
+      "inst": "_67803_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43027,
+      "loads": 190,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r1[0]"
+      ]
+    },
+    {
+      "inst": "_68031_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43482,
+      "loads": 111,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[6].r[0]"
+      ]
+    },
+    {
+      "inst": "_67804_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43029,
+      "loads": 105,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r0[0]"
+      ]
+    },
+    {
+      "inst": "_68026_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43472,
+      "loads": 87,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[11].r[0]"
+      ]
+    },
+    {
+      "inst": "_68027_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43474,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[10].r[0]"
+      ]
+    },
+    {
+      "inst": "_68028_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43476,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[9].r[0]"
+      ]
+    },
+    {
+      "inst": "_68029_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43478,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[8].r[0]"
+      ]
+    },
+    {
+      "inst": "_38183_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4520,
+      "loads": 71,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[2]"
+      ]
+    },
+    {
+      "inst": "_38171_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4508,
+      "loads": 69,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[4]"
+      ]
+    },
+    {
+      "inst": "_38081_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4409,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[0]"
+      ]
+    },
+    {
+      "inst": "_38170_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4507,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[5]"
+      ]
+    },
+    {
+      "inst": "_38177_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4514,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[3]"
+      ]
+    },
+    {
+      "inst": "_38176_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4513,
+      "loads": 67,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[1]"
+      ]
+    },
+    {
+      "inst": "_38180_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4517,
+      "loads": 66,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[7]"
+      ]
+    },
+    {
+      "inst": "_67809_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43038,
+      "loads": 65,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[6]"
+      ]
+    },
+    {
+      "inst": "_67945_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43310,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[0]"
+      ]
+    },
+    {
+      "inst": "_67946_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43312,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[1]"
+      ]
+    },
+    {
+      "inst": "_67947_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43314,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[2]"
+      ]
+    },
+    {
+      "inst": "_67948_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43316,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[3]"
+      ]
+    },
+    {
+      "inst": "_67949_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43318,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[4]"
+      ]
+    },
+    {
+      "inst": "_67950_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43320,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[5]"
+      ]
+    },
+    {
+      "inst": "_67951_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43322,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[6]"
+      ]
+    },
+    {
+      "inst": "_67952_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43324,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[7]"
+      ]
+    },
+    {
+      "inst": "_68030_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43480,
+      "loads": 38,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[7].r[0]"
+      ]
+    },
+    {
+      "inst": "_38929_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 5740,
+      "loads": 35,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.p_rce"
+      ]
+    },
+    {
+      "inst": "_38707_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 5219,
+      "loads": 33,
+      "netnames": [
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[0]"
+      ]
+    },
+    {
+      "inst": "_68430_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44016,
+      "loads": 33,
+      "netnames": [
+        "_16501_"
+      ]
+    },
+    {
+      "inst": "_68445_",
+      "type": "AO32x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44031,
+      "loads": 33,
+      "netnames": [
+        "_16499_"
+      ]
+    },
+    {
+      "inst": "_68446_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44032,
+      "loads": 33,
+      "netnames": [
+        "_16500_"
+      ]
+    },
+    {
+      "inst": "_68470_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44067,
+      "loads": 33,
+      "netnames": [
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.hwr_nx"
+      ]
+    },
+    {
+      "inst": "_68471_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44068,
+      "loads": 33,
+      "netnames": [
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[1]"
+      ]
+    }
+  ],
+  "top_drivers": [
+    {
+      "inst": "_42717_",
+      "type": "BUFx2_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 11841,
+      "loads": 619,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[1].r[0]"
+      ]
+    },
+    {
+      "inst": "_67801_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43024,
+      "loads": 190,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r2[0]"
+      ]
+    },
+    {
+      "inst": "_67803_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43027,
+      "loads": 190,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r1[0]"
+      ]
+    },
+    {
+      "inst": "_68031_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43482,
+      "loads": 111,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[6].r[0]"
+      ]
+    },
+    {
+      "inst": "_67804_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43029,
+      "loads": 105,
+      "netnames": [
+        "u_ot_pr_core.g_rrep.r0[0]"
+      ]
+    },
+    {
+      "inst": "_68026_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43472,
+      "loads": 87,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[11].r[0]"
+      ]
+    },
+    {
+      "inst": "_68027_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43474,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[10].r[0]"
+      ]
+    },
+    {
+      "inst": "_68028_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43476,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[9].r[0]"
+      ]
+    },
+    {
+      "inst": "_68029_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43478,
+      "loads": 81,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[8].r[0]"
+      ]
+    },
+    {
+      "inst": "_38183_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4520,
+      "loads": 71,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[2]"
+      ]
+    },
+    {
+      "inst": "_38171_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4508,
+      "loads": 69,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[4]"
+      ]
+    },
+    {
+      "inst": "_38081_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4409,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[0]"
+      ]
+    },
+    {
+      "inst": "_38170_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4507,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[5]"
+      ]
+    },
+    {
+      "inst": "_38177_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4514,
+      "loads": 68,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[3]"
+      ]
+    },
+    {
+      "inst": "_38176_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4513,
+      "loads": 67,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[1]"
+      ]
+    },
+    {
+      "inst": "_38180_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 4517,
+      "loads": 66,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[7]"
+      ]
+    },
+    {
+      "inst": "_67809_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43038,
+      "loads": 65,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[1].g_cp.wr_sl[6]"
+      ]
+    },
+    {
+      "inst": "_67945_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43310,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[0]"
+      ]
+    },
+    {
+      "inst": "_67946_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43312,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[1]"
+      ]
+    },
+    {
+      "inst": "_67947_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43314,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[2]"
+      ]
+    },
+    {
+      "inst": "_67948_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43316,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[3]"
+      ]
+    },
+    {
+      "inst": "_67949_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43318,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[4]"
+      ]
+    },
+    {
+      "inst": "_67950_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43320,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[5]"
+      ]
+    },
+    {
+      "inst": "_67951_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43322,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[6]"
+      ]
+    },
+    {
+      "inst": "_67952_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43324,
+      "loads": 64,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.g_m[0].g_cp.wr_sl[7]"
+      ]
+    },
+    {
+      "inst": "_68030_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 43480,
+      "loads": 38,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_rrg.g_r[7].r[0]"
+      ]
+    },
+    {
+      "inst": "_38929_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 5740,
+      "loads": 35,
+      "netnames": [
+        "u_ot_pr_core.u_head.g_psram.p_rce"
+      ]
+    },
+    {
+      "inst": "_38707_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 5219,
+      "loads": 33,
+      "netnames": [
+        "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[0]"
+      ]
+    },
+    {
+      "inst": "_68430_",
+      "type": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44016,
+      "loads": 33,
+      "netnames": [
+        "_16501_"
+      ]
+    },
+    {
+      "inst": "_68445_",
+      "type": "AO32x1_ASAP7_75t_R",
+      "pin": "Y",
+      "bit": 44031,
+      "loads": 33,
+      "netnames": [
+        "_16499_"
+      ]
+    }
+  ],
+  "input_port_loads": {
+    "rom_ret_i": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "cp_active": [
+      1
+    ],
+    "native_ret": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "rst_n": [
+      3
+    ],
+    "h_start": [
+      1
+    ],
+    "stage_start": [
+      1
+    ],
+    "stage": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "token": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "pos": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "prog_base": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "pw_v": [
+      1
+    ],
+    "pw_addr": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "pw_data": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "x_oacc": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "x_oidle": [
+      1
+    ],
+    "x_oprog": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "x_orows": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "kv_ok": [
+      1
+    ],
+    "kv_write_drained": [
+      1
+    ],
+    "me_mem_ok": [
+      1
+    ]
+  },
+  "constant_output_bits": {},
+  "status": "FAIL",
+  "not_proven": [
+    "storage source-array classification",
+    "registered functional boundaries",
+    "placed reach <=405um"
+  ],
+  "fifo_netname_samples": [
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[0]",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[1]",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.fqnz_d",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.fqrd_d[0]",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_dsel.fqrd_d[1]",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[0].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[10].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[11].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[12].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[13].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[14].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[15].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[16].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[17].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[18].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[19].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[1].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[20].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[21].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[22].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[23].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[24].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[25].we",
+    "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.g_fqwe.g_e[0].g_w[26].we"
+  ],
+  "head_netname_samples": [],
+  "retained_storage_net_bits": {
+    "fqwe_fifo_distinct_retained_bits": 0,
+    "fifo_write_enable_register_bits": 128,
+    "fifo_first_sequential_endpoints_from_native_we": 0,
+    ".fqv[": 0,
+    ".fq[": 0,
+    ".hq": 0,
+    ".grows[": 0,
+    ".rows[": 0
+  }
+}

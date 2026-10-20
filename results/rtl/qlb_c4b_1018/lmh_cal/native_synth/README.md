@@ -1,0 +1,9 @@
+Native mapped head audit: FAIL, no layout gate authorized.
+
+Source: branch codex/qw-segcal-1019, hardware as6e943b668. Actual ORFS synthesis, STAGE_ME1 SEGCAL1; helper copy stops after mapped1_2_yosys.v before layout. Flat+mapped hashes in native_input.sha256. Native census includes combinational outputs, reset outputs and input port loads; clock/power excluded. Two real64x512 programSRAMs remain. Mapped51,490 cells,9,920 FF.33 nonclock drivers exceed32; maximum619.
+
+Source classes: u_head.g_rrg.g_r[1] reset619; static_hr g_rrep r1/r2 reset190 each,r0 reset105; inner reset g_r[6]111,g_r[11]87,g_r[8..10]81,g_r[7]38.16 macro wr_sl outputs64..71; p_rce35; three HFC state next values33 and three anonymous ABC controls33. Full aliases committed in native_census.json. No constant primary output bits detected; this does not independently establish every input/output registered.
+
+Storage is UNRESOLVED: source NFQ4*INSTR_BITS1024 queue is declared as FF vectors, but mapped aliases of its payload are purged; zero counts from alias searches are NOT a zero-storage result.128 retained write-enable names exist but their named cones may be kept-only copies; endpoint search therefore also cannot certify storage. Need pre-map retained-state/source mapping before a storage PASS. Raw mapped/flatJSON kept on fleet in native_synth_out/segcal/work/orfs. Reach and boundary-register checks remain unproven, no layout generated.
+
+Next structural work: reset leaves <=32 per driver with 2-stage face landing; split macro masks into kept<=32-load halves; preserve program-read edges using replicated native read-enable producer; reduce HFC next-state fanout; classify FIFO source retained bits then use SRAM if>2kb. After revised RTL/model schedule, repeat minimum exact+mutant tests and native census before designing/gating fresh lattice floorplan. Do not re-gate inherited h16c as a purported safe successor.
