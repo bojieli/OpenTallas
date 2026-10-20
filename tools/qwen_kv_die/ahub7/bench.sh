@@ -38,8 +38,8 @@ rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.
 rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv
 tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_g3.sv rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g6_lp.sv
 rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv
-rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_g6.sv rtl/hdc/nearhbm/qkd_ahub_static_dw_g6.sv tools/qwen_kv_die/ahub7/lp_spec.json"
-sha256sum $SRC "$0" > "$O/source_m$M.sha256"
+rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_g6.sv"
+sha256sum $SRC rtl/hdc/nearhbm/qkd_ahub_static_dw_g6.sv tools/qwen_kv_die/ahub7/lp_spec.json "$0" > "$O/source_m$M.sha256"
 "$VL" --version
 $VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 4 \
   --top-module tb_qkd_ahub_static_dw_g6 -GMUT=$M -GFLAT=${FLAT:-0} -GCSH_P=${CSH:-0} -GAML_P=${AML:-3} --Mdir "$O/obj_m$M" $SRC > "$O/build_m$M.log" 2>&1 \
