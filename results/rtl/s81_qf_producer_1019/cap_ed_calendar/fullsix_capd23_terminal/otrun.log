@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits  1032 GB (avail 836, growth 113, headroom 0, waiters 0/0 GB) load 115/128 running 46 disk 361 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tok2-capd/fullsix_capd23
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3860260-1792454354 after 0 s
+1
+1
+1019
+sim rc=0
+RESET_CAP_DIAGNOSTIC_CLASSIFIED returns 652 missing 0 duplicates 112 unknown 0 CAPcause 0122 NO_NUMERIC_PASS
+classify rc=0
+TOK2_CAPD_RESULT causes_first_seen {'0002': 1801, '0102': 1830, '0122': 1849} sticky 0122 missing_rows 0 dups 112 unknown 0 returns 652 srcerr 0
+FULLSIX_SOURCE_CHECK errors=0 rawwrites=320 gathers=20 epochs=15
+FULLSIX_PREPARATORY_TRACE_END CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL
+TOK2_FULLSIX_DONE
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3860260-1792454354): exit 0
