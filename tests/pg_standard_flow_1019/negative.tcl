@@ -9,6 +9,10 @@ set second [odb::dbInst_create $block $master pg_second]
 set before [ot_pg_binding_state $block]
 set kind $::env(CASE)
 switch $kind {
+ missing {
+  foreach rule [$block getGlobalConnects] {odb::dbGlobalConnect_destroy $rule}
+  set expected OT_PG_UNKNOWN_DOMAIN
+ }
  protected {$second setDoNotTouch 1;set expected OT_PG_ORDER_PROTECTED_UNBOUND}
  wrong {
   [$second findITerm VDD] connect [$block findNet VSS]

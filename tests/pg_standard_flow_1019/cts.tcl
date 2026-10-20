@@ -18,6 +18,8 @@ proc repair_timing_helper {} {
 }
 if {$::env(CASE) eq "old"} {
   source /src/tests/pg_standard_flow_1019/old_clk_net_protect.tcl
+} elseif {$::env(CASE) eq "omit_post"} {
+  source /src/tests/pg_standard_flow_1019/omit_post_clk_net_protect.tcl
 } else {
   source /src/physical/common_flow/clk_net_protect.tcl
 }
@@ -38,6 +40,9 @@ ot_pg_audit_snapshot $blk /src/output/$::env(CASE)/native_pg.json
 if {$::env(CASE) eq "old"} {
   if {$unbound == 0} {error OLD_PROTECTION_NEGATIVE_NOT_CAUGHT}
   puts OLD_PROTECTION_CAUSAL_CAUGHT
+} elseif {$::env(CASE) eq "omit_post"} {
+  if {$unbound != 66} {error "OMITTED_POST_REPAIR_NOT_CAUGHT $unbound"}
+  puts OMIT_POST_REPAIR_CAUSAL_CAUGHT
 } else {
   if {$unbound != 0} {error NEW_ALL_ROLES_FAILED}
   if {$::ot_pg_bindings_dirty != 0} {error PLACEMENT_RC_DIRTY}
