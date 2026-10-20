@@ -58,3 +58,31 @@ Checklist for candidate (not a layout-gate admission):
 7. Clock: use leaf regional clock, no new root; actual spread not measured.
 8. Schedule: +1 leaf result edge known; model price, compiler binding and
    through-lane deskew pending, so no gate or adoption claim.
+
+
+## Terminal +1-edge proof and unadopted reach alternatives
+
+Current RTL37519e39f places the matching through-lane extra edge in north GN,
+not south GS. Full source vs independently pinned original legacy compares
+all gout lanes at uniform age+4 (legacy+3): Verilator5.050 PASS12796 compares,
+4000 cycles after800 warm. Original full-shape MUT1/MUT2 reject2797/3199
+comparisons; primitive mutants are independently committed. These are direct
+RTL proofs and do not use the faulty read_liberty DFFASRHQN model.
+
+Fresh source native north13632FF/9macros and south7944FF/7macros both report
+no findings/refusals, no non-clock driver>32 includingreset, depth50ps. Their
+JSONs are north_r2_census32.json and south_r2_census32.json. These establish
+structural mapped counts, not native-cell functional equivalence. The root's
+PDK sequential model investigation does not alter these structural counts.
+
+price_g1_codex.json measures one additional SM.MATVEC result edge at unchanged
+II: DS1095 records+361cycles,0.0625581% loss; Qwen5 records+145cycles,0.0114239%.
+Compiler and final die binding remain unchanged until closed child geometry.
+
+The uncommitted three-station GN diagnostic plan is NOT a qualified reach
+packet. The approved +3/gout+6 model has NOT been implemented: two additional
+pure result FF delays would create a forbidden wide pure-delay chain. A +2
+useful capture/mask/OR compute pipeline with four spatial GN relays is being
+checked instead. No +2/+3 source, gate, or adoption is claimed by this packet.
+Existing G1 geometry PNGs are planned diagnostics only and immutable master
+MX phase needs declared+0.024 track-necessity review before any gate.

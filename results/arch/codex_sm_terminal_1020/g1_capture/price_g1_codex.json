@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.sm9.g1_capture_price.v1",
+  "source": "852c8c97e",
+  "mechanism": "+1 edge on every SM.MATVEC result; uniform gather deskew including through lanes; II unchanged; phase/compiler check owed",
+  "workloads": {
+    "ds": {
+      "records": 1095,
+      "base_cycles": 576702.4178468838,
+      "cycles": 577063.4178468838,
+      "added_cycles": 361.0,
+      "e2e_loss_pct": 0.06255811559618962
+    },
+    "qwen": {
+      "records": 5,
+      "base_cycles": 1269120.1126093396,
+      "cycles": 1269265.1126093396,
+      "added_cycles": 145.0,
+      "e2e_loss_pct": 0.011423933310661383
+    }
+  }
+}
