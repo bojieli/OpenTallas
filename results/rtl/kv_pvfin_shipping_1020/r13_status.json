@@ -2,7 +2,7 @@
   "source_rtl_commit": "e2e0a4482",
   "source_rtl_sha256": "ebb8a1db04be94e4ae83cb023ca06b3d7c2959c6f6256801ebd799819557f4c3",
   "gold": "0ae0a0d9c",
-  "status": "UNQUALIFIED_RUNNING",
+  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
   "expected_added_ff_vs_R10": 400,
   "new_token_edges": 0,
   "new_boot_edges_vs_R10_shipping": 0,
@@ -13,5 +13,22 @@
   "proof": "src/shipping_proof, src/cold, src/calendar_r13.log",
   "prior_R11": "FAIL34/1/0roles",
   "prior_R12": "FAIL40/3/0roles",
-  "gate_allowed": false
+  "gate_allowed": false,
+  "commands": 328,
+  "valid_beats": 10496,
+  "mutants": "MUT1..5 DETECTED",
+  "cold_seeds": [
+    1,
+    29,
+    53
+  ],
+  "calendar_cases": 201433,
+  "calendar_constants": [
+    1,
+    8,
+    9,
+    15
+  ],
+  "reset_earliest_fullblock": "RUNNING unit3200405-1792508668/session85117",
+  "age_date_controls": "RUNNING unit3260163-1792508724/session69993"
 }
