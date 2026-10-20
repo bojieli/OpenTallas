@@ -1,6 +1,9 @@
 """Source-only contract and weighted fanout checks; physical proof is separate."""
 import copy
 import json
+import hashlib
+import tempfile
+from pathlib import Path
 import ctlm6_bound_macro as B
 
 
@@ -59,6 +62,24 @@ def main():
     assert terminal['original_connections']['CLK'] == terminal['emitted_connections']['CLK']
     assert terminal['original_connections']['Q'] == terminal['emitted_connections']['Q']
     assert len(set(terminal['emitted_connections']['D'])) == 5
+    with tempfile.TemporaryDirectory(prefix='macro_sim_',dir=Path.cwd()) as td:
+        specpath=Path(td)/'spec.json'
+        specpath.write_text(json.dumps(dict(top='real_memory',params={'STAGE_ME':1})))
+        simdesign,simcontract=copy.deepcopy(design),copy.deepcopy(contracts)
+        simdesign['modules']['real_memory']['parameter_default_values']={'STAGE_ME':'0'}
+        simcontract['real_memory'].update(simulation_parameters={'STAGE_ME':'1'},
+            simulation_source={'path':str(specpath.relative_to(Path.cwd())),
+                               'sha256':hashlib.sha256(specpath.read_bytes()).hexdigest()})
+        simrtl,_,simrecord=run(simdesign,simcontract)
+        assert "`ifdef SYNTHESIS\n#(.DW(7'b1000010))\n`else" in simrtl
+        assert ".STAGE_ME(1'b1)" in simrtl
+        assert simrecord['retained_macro_terminals'][0]['parameters']=={'DW':'1000010'}
+        bad=copy.deepcopy(simcontract);bad['real_memory']['simulation_source']['sha256']='0'*64
+        rejects(simdesign,bad,'digest mismatch')
+        bad=copy.deepcopy(simcontract);bad['real_memory']['simulation_parameters']['STAGE_ME']='0'
+        rejects(simdesign,bad,'differs from source spec')
+        bad=copy.deepcopy(simcontract);bad['real_memory']['simulation_parameters']['UNKNOWN']='1'
+        rejects(simdesign,bad,'complete closed source spec')
     unused,unused_contract=copy.deepcopy(design),copy.deepcopy(contracts)
     unused['modules']['real_memory']['ports']['UNUSED']={'direction':'output','bits':[69]}
     unused['modules']['top']['cells']['u_gi.u_mem']['connections']['UNUSED']=[]

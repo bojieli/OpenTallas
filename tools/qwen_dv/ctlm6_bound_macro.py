@@ -62,6 +62,24 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
     raise ValueError(f'{n}.{pin}: nonbinary/empty parameter requires explicit string type metadata')
    if kind=='string' and any(ord(ch)>127 for ch in value):
     raise ValueError(f'{n}.{pin}: non-ASCII macro string parameter unsupported; no lossy conversion')
+  sim=contract.get('simulation_parameters',{})
+  if sim:
+   source=contract.get('simulation_source',{});path=Path(source.get('path',''))
+   if path.is_absolute() or '..' in path.parts or not path.is_file():
+    raise ValueError(f'{n}: simulation parameters require an existing relative source spec')
+   data=path.read_bytes()
+   if hashlib.sha256(data).hexdigest()!=source.get('sha256'):
+    raise ValueError(f'{n}: simulation source spec digest mismatch')
+   spec=json.loads(data)
+   if spec.get('top')!=typ or set(spec.get('params',{}))!=set(sim) or set(sim)-declared:
+    raise ValueError(f'{n}: simulation parameters differ from complete closed source spec')
+   for pin,value in sim.items():
+    expected=spec['params'][pin]
+    if parameter_types.get(pin)=='string':
+     if not isinstance(value,str) or value!=expected or any(ord(ch)>127 for ch in value):
+      raise ValueError(f'{n}.{pin}: simulation string parameter differs from source spec')
+    elif not isinstance(value,str) or not re.fullmatch('[01]+',value) or type(expected) is not int or int(value,2)!=expected:
+     raise ValueError(f'{n}.{pin}: simulation numeric parameter differs from source spec')
  # --retain-keep (QW-SLICE7 10-20): every (* keep *) net of the flattened source (e.g. the Kogge-Stone prefix levels of
  # ot_hdc_ksadd_k) stays a retained operator boundary, so ABC cannot re-ripple prefix carries (bounded red2 LA7: a
  # 9-deep AND chain in the round increment without it).
@@ -311,7 +329,14 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
     return sv_string(value) if macro_contracts[typ].get('parameter_types',{}).get(pin)=='string' else str(len(value))+"'b"+value
    pars=','.join('.'+vid(p)+'('+param_value(p,v)+')' for p,v in c.get('parameters',{}).items())
    con=','.join('.'+vid(p)+'('+(bus(bs) if bs else '')+')' for p,bs in c['connections'].items())
-   lines.append(f'{vid(typ)} '+(f'#({pars}) ' if pars else '')+f'{vid(n)}({con});')
+   sim=macro_contracts[typ].get('simulation_parameters',{})
+   if sim:
+    combined=dict(c.get('parameters',{}),**sim)
+    simpars=','.join('.'+vid(p)+'('+param_value(p,v)+')' for p,v in combined.items())
+    lines.append(vid(typ));lines.append('`ifdef SYNTHESIS')
+    if pars:lines.append(f'#({pars})')
+    lines.extend(['`else',f'#({simpars})','`endif',f'{vid(n)}({con});'])
+   else:lines.append(f'{vid(typ)} '+(f'#({pars}) ' if pars else '')+f'{vid(n)}({con});')
    continue
   if typ=='$_QFD_RING_':
    x=c['connections'];lines.append(f"qfd_dv_ring_delay #(.W({c['width']}),.D({c['depth']})) u_{idx}(.clk({bus(x['C'])}),.rst_n({bus(x['R'])}),.d({bus(x['D'])}),.q({bus(x['Q'])}));");continue
