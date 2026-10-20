@@ -1,6 +1,6 @@
 # writes physical/qwen_fwd_lane/qfd_land8_masters.sv (QW-LAND8 D8 landh0 class masters)
 import sys
-SIZES = {1: (15.12, 15.12), 3: (15.12, 15.12), 10: (19.44, 19.44), 32: (25.92, 23.76)}
+SIZES = {1: (16.2, 16.2), 3: (17.28, 17.28), 10: (19.44, 19.44), 32: (28.08, 25.92)}
 def main():
   out = ["`timescale 1ns/1ps",
          "// QW-LAND8 10-19: D8 hop-0 landing class masters (rtl/qwen_split/qfd_land8.sv ot_qfd_land8).  Written by",

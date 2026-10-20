@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_landh0d8n_1_EW_15x15",
- "enable": false,
- "reason": "the RTL lands it: rs -> u_land.rs0 -> kept rs1 copies (2 registered stages on ck, async assert); the source reset en -> u_land.en_s0 -> en_icg / en_qm / region en_q (2 stages on ck_s); both release latencies are in the die strap K = (L + G - R0 - 1) mod 16"
-}
