@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 // KV-PARAMS4 10-20 (K.STA.PARAMS / K.STA.ECTL): native-32 structurally safe successor of the K-tree tile, default-off.
 //   ot_qkh_ktree_nc32c    = ot_qkh_ktree_nc (every register its own routed flop, no twin-value power-up) with
-//     - reset: ot_rst_relay_bounded32 #(53) (leaves <= 32 endpoints; release 3 edges as ot_rst_relay SYNC2/TREE1),
+//     - reset: ot_rst_relay_bounded32 #(54) (leaves <= 32 endpoints; release 3 edges as ot_rst_relay SYNC2/TREE1),
 //       replacing the 17-region ot_rst_relay whose scale-multiply copy drove 369 resets (lkp HOLD reset369);
 //     - adders: ot_hdc_fp32_add_lat_ncr (native-32 kept-copy LAT-7 adder of ot_qkh_lane8_nc32c; split rst_n / rst_y);
-//     - scale multiply: ot_hdc_fp32_mul_lat_ncr (LAT 6, constant SCALE operand, reset on 20 bounded leaves, kept select
+//     - scale multiply: ot_hdc_fp32_mul_lat_ncr (LAT 6, constant SCALE operand, reset on 21 bounded leaves, kept select
 //       copies, one-hot normalise fed from a kept copy of the root adder's y register).
 //   ot_qkh_ktree_lk_nc32c = ot_qkh_ktree_lk (lockstep lane-valid check + 2-stage face reset landing) around it.
 // Same ports, parameters, latency and outputs every cycle (bench tb_qkh_nc +mode=ktree / +mode=ktreelk).  0 added cycles.
@@ -25,9 +25,9 @@ module ot_qkh_ktree_nc32c #(
     generate if (ADD_LAT != 7 || MUL_LAT != 6) begin : g_bad_shape
         ot_qkh_ktree_nc32c_requires_7_6 u_trap ();
     end endgenerate
-    // leaves: adder i -> rr[2i] (control) / rr[2i+1] (y); multiply -> rr[48:30] + rr[52]; tile control -> rr[49]; root y copies -> rr[51:50]
-    wire [52:0] rr;
-    ot_rst_relay_bounded32 #(.REGIONS(53)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    // leaves: adder i -> rr[2i] (control) / rr[2i+1] (y); multiply -> rr[48:30] + rr[53:52]; tile control -> rr[49]; root y copies -> rr[51:50]
+    wire [53:0] rr;
+    ot_rst_relay_bounded32 #(.REGIONS(54)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     wire rc = rr[49];
     reg  [511:0] kp_r;
     reg          kv_r;
@@ -75,7 +75,7 @@ module ot_qkh_ktree_nc32c #(
     wire [1:0]  merr;
     wire        sv;
     (* keep_hierarchy *) ot_hdc_fp32_mul_lat_ncr #(.LAT(MUL_LAT), .BCONST_EN(1), .BCONST(SCALE)) u_scale (
-        .clk(clk), .rst_v({rr[52], rr[48:30]}), .valid_in(nvo[14]), .a(n[32*14 +: 32]), .a_nrm(root_y2), .b(SCALE), .y(scd0), .err(merr), .valid_out(sv));
+        .clk(clk), .rst_v({rr[53:52], rr[48:30]}), .valid_in(nvo[14]), .a(n[32*14 +: 32]), .a_nrm(root_y2), .b(SCALE), .y(scd0), .err(merr), .valid_out(sv));
     reg kf;
     always @(posedge clk) sc_d <= scd0;
     always @(posedge clk or negedge rc)

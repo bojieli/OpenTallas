@@ -13,7 +13,7 @@ module ot_hdc_fp32_mul_lat_ncr #(
     parameter [31:0]  BCONST = 32'd0
 ) (
     input  wire        clk,
-    input  wire [19:0] rst_v,      // 20 bounded reset leaves (each <= 28 flops; native census <= 32)
+    input  wire [20:0] rst_v,      // 21 bounded reset leaves (each <= 28 flops; native census <= 32)
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [63:0] a_nrm,     // 2 copies of a (same value, separate drivers) for the subnormal normalise; tie to {a, a}
@@ -26,7 +26,7 @@ module ot_hdc_fp32_mul_lat_ncr #(
         ot_hdc_fp32_mul_lat_ncr_needs_LAT_6 u_trap ();
     end endgenerate
     localparam integer CUTS = -1, KCP = 1, DRST = 1;
-    // leaf map: c1 -> rst_v[3:0], c2 -> rst_v[13:4], c3 -> rst_v[15:14], s1_v/s2_v/err/valid_out -> rst_v[16], y -> rst_v[18:17], c3 B copy -> rst_v[19]
+    // leaf map: c1 -> rst_v[3:0], c2 -> rst_v[13:4], c3 -> rst_v[15:14], s1_v/s2_v/err/valid_out -> rst_v[16], y -> rst_v[18:17], c3 B copy -> rst_v[19], a_n B copy -> rst_v[20]
     wire rst_n = rst_v[16];
     localparam integer CUT1 = (CUTS >= 0) ? CUTS % 2       : (LAT >= 6) ? 1 : 0;
     localparam integer CUT2 = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 5) ? 1 : 0;
@@ -105,7 +105,14 @@ module ot_hdc_fp32_mul_lat_ncr #(
     // ---- S1b: rows, exponent sum ------------------------------------------------------------------
     wire [11:0] power;
     wire power_c;
-    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
+    // NCR (gate-flow census: c1 b_n bit 119 / a_n bit 36 loads): with a constant b the b operand and its power are used
+    // as constants (their c1 flops only differ from them in the reset window, whose payload is never read: valid is
+    // reset), and the a operand is registered twice (kept copy aB on its own leaf): rows 0..11 read c1, rows 12..23 aB.
+    (* keep="true",dont_touch="true" *) reg [23:0] aB;
+    always @(posedge clk or negedge rst_v[20]) if (!rst_v[20]) aB <= 24'd0; else aB <= a_n;
+    wire [23:0] pb_u  = (BCONST_EN != 0) ? b_n  : p_b;
+    wire [11:0] pbp_u = (BCONST_EN != 0) ? n_bp : p_bp;
+    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(pbp_u), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
     generate if (KCP > 1 && CUT1 != 0) begin : g_kcp
         wire [KCP*24-1:0] ka, kb;
@@ -120,7 +127,7 @@ module ot_hdc_fp32_mul_lat_ncr #(
         end
         ot_hdc_mul24_rows_k #(.K(KCP)) u_rows (.a(ka), .b(kb), .rows(rows));
     end else begin : g_nokcp
-        ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
+        ot_hdc_mul24_rows_k #(.K(2)) u_rows (.a({aB, p_a}), .b({pb_u, pb_u}), .rows(rows));
     end endgenerate
 
     reg        s1_v, s1_byp, s1_sign;

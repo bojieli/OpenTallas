@@ -236,18 +236,19 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg  [31:0] u_code;
     reg  [7:0]  u_exp;
     reg  [23:0] rnd;
-    (* keep="true",dont_touch="true" *) reg [1:0] rnd_c_dist;
+    (* keep="true",dont_touch="true" *) reg [3:0] rnd_c_dist;   // R9: 4 copies x 6 bits (gate-flow census: 2 copies 34)
     (* keep="true",dont_touch="true" *) reg [3:0] u_byp_dist;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) u_v <= 1'b0;
         else u_v <= s2_v;
     always @(posedge clk) begin
         u_byp <= s2_byp; u_zero <= s2_zero; u_sign <= s2_sign; u_nf <= s2_nf; u_code <= bypass_read; u_exp <= s2_exp;
-        rnd <= rnd_w; rnd_c <= rnd_cw; rnd_c_dist<={2{rnd_cw}};u_byp_dist<={4{s2_byp}};
+        rnd <= rnd_w; rnd_c <= rnd_cw; rnd_c_dist<={4{rnd_cw}};u_byp_dist<={4{s2_byp}};
     end
     // ---- C2 ----------------------------------------------------------------------------------------
     wire [23:0] shifted_rnd={1'b1,rnd[23:1]};
-    wire [23:0] man={rnd_c_dist[1]?shifted_rnd[23:12]:rnd[23:12],rnd_c_dist[0]?shifted_rnd[11:0]:rnd[11:0]};
+    wire [23:0] man={rnd_c_dist[3]?shifted_rnd[23:18]:rnd[23:18],rnd_c_dist[2]?shifted_rnd[17:12]:rnd[17:12],
+                     rnd_c_dist[1]?shifted_rnd[11:6]:rnd[11:6],rnd_c_dist[0]?shifted_rnd[5:0]:rnd[5:0]};
     wire [8:0]  e = {1'b0, u_exp} + {8'd0, rnd_c};
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};

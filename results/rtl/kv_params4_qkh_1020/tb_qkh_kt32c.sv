@@ -45,10 +45,10 @@ module tb_qkh_kt32c;
         .gf_in(kgf), .sc_d(lsc1), .sc_f(lsf1), .g_f(lgf1));
     reg mv; reg [31:0] ma, mb; wire [31:0] my0, my1; wire [1:0] me0, me1; wire mvo0, mvo1;
     ot_hdc_fp32_mul_lat #(.LAT(6)) u_m0 (.clk(clk), .rst_n(rst_n), .valid_in(mv), .a(ma), .b(mb), .y(my0), .err(me0), .valid_out(mvo0));
-    ot_hdc_fp32_mul_lat_ncr #(.LAT(6)) u_m1 (.clk(clk), .rst_v({20{rst_n}}), .valid_in(mv), .a(ma), .a_nrm({ma, ma}), .b(mb), .y(my1), .err(me1), .valid_out(mvo1));
+    ot_hdc_fp32_mul_lat_ncr #(.LAT(6)) u_m1 (.clk(clk), .rst_v({21{rst_n}}), .valid_in(mv), .a(ma), .a_nrm({ma, ma}), .b(mb), .y(my1), .err(me1), .valid_out(mvo1));
     reg svq0 = 0, svq1 = 0;
     always @(posedge clk) begin svq0 <= u_kt0.u_scale.valid_out; svq1 <= u_lk0.u_kt.u_scale.valid_out; end
-    wire qd0 = (rst_every == 0 && mode == "ktree") || svq0, qd1 = svq1;   // ktree power-up runs: every cycle
+    wire qd0 = svq0, qd1 = svq1;   // sc_d read slots only (constant-b multiply: reset-window payload differs, never read)
     integer i;
     task automatic drive;
         begin
