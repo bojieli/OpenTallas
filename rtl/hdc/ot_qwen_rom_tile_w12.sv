@@ -207,17 +207,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     //: REGROOT 8 (QW-A0-RC4 10-20, PRE-GATE NATIVE CENSUS): 28 KEPT copies of go_q (same D, reset and edge), one per
     //: two issue-loop copy groups / descriptor load groups of the engine, so no go-qualified enable is shared.
     wire [31:0] go_cp;
-    generate if (REGROOT >= 8 && IREG != 0) begin : g_gocp
-        genvar gc;
-        for (gc = 0; gc < 28; gc = gc + 1) begin : g_c
-            (* keep *) reg q;
-            always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= ib_go;
-            assign go_cp[gc] = q;
-        end
-        assign go_cp[31:28] = {4{go_q}};
-    end else begin : g_gocn
-        assign go_cp = {32{go_i}};
-    end endgenerate
+    //: (assigned by g_gocp at the end of the module: a generate construct here would renumber genblk5.g_ndh.u_node)
 
     wire [NW-1:0] b_nout, b_tiles, b_k;
     wire          b_wsrc, b_round, b_mmode, b_oen, b_amax, b_rmax;
@@ -774,6 +764,17 @@ module ot_qwen_rom_tile_logic_w12 #(
         end else begin : g_kvgnocap
             assign me_kv_q = kv_q;
         end
+    end endgenerate
+    generate if (REGROOT >= 8 && IREG != 0) begin : g_gocp
+        genvar gc;
+        for (gc = 0; gc < 28; gc = gc + 1) begin : g_c
+            (* keep *) reg q;
+            always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= ib_go;
+            assign go_cp[gc] = q;
+        end
+        assign go_cp[31:28] = {4{go_q}};
+    end else begin : g_gocn
+        assign go_cp = {32{go_i}};
     end endgenerate
 endmodule
 

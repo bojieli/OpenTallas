@@ -913,17 +913,17 @@ end else begin : g_issue_fast
         //:  (2) every loop address field is cut into <= 12-bit chunks (oa / ot thirds; cur / base_k / base_t /
         //:      wrom_addr / xc / xk halves), each chunk with its own kept {active, pend, j_last, k_last, t_last} copy
         //:      and a go copy shared by two chunks; the canonical active / k_last keep only the counters.
-        wire ra, rp, rkl, rtl;          // the counters' kept control copies (g_rc below)
+        wire ra, rp, rkl, rtl, ra2, rp2;   // the counters' kept control copies (g_rc below)
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin
                 active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
                 wrom_re <= 1'b0; kv_re <= 1'b0;
                 split_fault <= 1'b0;
-            end else if (rp) begin
+            end else if (rp2) begin
                 wrom_re <= 1'b0; kv_re <= 1'b0;
                 if (pcnt == 0) begin pend <= 1'b0; active <= 1'b1; end
                 else pcnt <= pcnt - 1'b1;
-            end else if (!ra) begin
+            end else if (!ra2) begin
                 wrom_re <= 1'b0; kv_re <= 1'b0;
                 if (go) begin
                     if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
@@ -970,6 +970,12 @@ end else begin : g_issue_fast
                 else begin a <= act_nx; p <= pend_nx; end
             always @(posedge clk) if (rst_n) begin kl <= kl_nx; tl <= tl_nx; end
             assign ra = a; assign rp = p; assign rkl = kl; assign rtl = tl;
+            //: a second {active, pend} copy for the counter block itself (rc8 r3 NL: g_rc.a 34 loads)
+            (* keep *) reg a2, p2;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin a2 <= 1'b0; p2 <= 1'b0; end
+                else begin a2 <= act_nx; p2 <= pend_nx; end
+            assign ra2 = a2; assign rp2 = p2;
         end
         wire idle_nx = !act_nx && !pend_nx;
         //: field chunk groups: 0 cur lo, 1 base_k lo, 2 base_t lo, 3 oa[7:0], 4 ot[7:0], 5 nb, 6 nb_t, 7 lb,
