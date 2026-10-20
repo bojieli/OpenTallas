@@ -13,9 +13,9 @@
 //     identical D = rst_n, NOT a split family), so no two slices share a gate (opt_merge / ABC cannot fold them) and every
 //     shared condition drives one gate per slice.  rs_s[j] == rn on every edge, so the function is unchanged (async-reset
 //     slices: rs_s and rnv are the same registered rst_n).
-//   * fault: FC KEPT identical copies (family fault_f, ot_rst_split, assigned on every fault site) -> the synthesis split
+//   * fault: FC KEPT identical registers (family fault_f, ot_rst_split, D = fault | fault_set: one net) -> the synthesis split
 //     (physical/common_flow/ot_rst_copies.py, OT_RST_COPIES_WIDE=1 folds the hold into identical enables) spreads its loads.
-//   * cfg data pin flop: 2 KEPT copies (strided family dqf, ot_rst_split = 64).
+//   * cfg data pin flop: 3 KEPT copies (strided family dqf, ot_rst_split = 64).
 //   * per-context counters: explicit next-state (start / wait / run / stage-end priority of the mus process, unchanged);
 //     the 4:1 output metadata muxes are one-hot AND-OR on per-slice gated selects; c_X[k] + 1 is formed per context.
 module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter integer MU=1,parameter integer CTLSRAM=0,
@@ -42,23 +42,25 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  (* keep = "true" *) reg[RS-1:0]rs_s;
  always @(posedge ck)rs_s<={RS{rst_n}};
  reg we_q,start_q,av_q,authorized_q;reg[8:0]addr_q;
- (* keep = "true", ot_rst_split = 64 *) reg[127:0]dqf;
+ (* keep = "true", ot_rst_split = 64 *) reg[191:0]dqf;
  wire[63:0]data_q=dqf[63:0];
  reg[15:0]epoch_q;reg[17:0]token_q,pos_q;reg[1:0]gen_q;
  wire[63:0]bound_digest;reg[15:0]bound_epoch;
  reg dig_ok_q,ep_ok_q,pos_ok_q;
  always @(posedge ck)begin
-  addr_q<=cfg_addr;dqf<={2{cfg_data}};
+  addr_q<=cfg_addr;dqf<={3{cfg_data}};
   epoch_q<=authority_epoch;token_q<=authority_token;pos_q<=authority_position;gen_q<=authority_generation;
   dig_ok_q<=programme_digest==bound_digest;ep_ok_q<=programme_epoch==bound_epoch;pos_ok_q<=authority_position<=18'd8191;
  end
  always @(posedge ck or negedge rn)
  if(!rn)begin we_q<=0;start_q<=0;av_q<=0;authorized_q<=0;end
  else begin we_q<=cfg_we;start_q<=start;av_q<=authority_valid;authorized_q<=programme_authorized;end
- // ---- fault + kept copies (family fault_f) ----
- reg fault_q;reg[FC-2:0]fault_c;
- (* keep = "true", ot_rst_split *) wire[FC-1:0]fault_f={fault_c,fault_q};
+ // ---- fault + kept copies (family fault_f): FC identical registers, D = fault | fault_set (one net), async clear ----
+ // fault_set mirrors every fault site of the mus process (taken only while !fault; fault is sticky until reset).
+ (* keep = "true", ot_rst_split *) reg[FC-1:0]fault_f;
+ wire fault_q=fault_f[0];
  assign fault=fault_q;
+ wire fault_set;
  // ---- contexts (flat per-context vectors; context k = [W*k +: W]) ----
  reg[3:0]c_act,c_wait,c_load,c_quiet;reg[5:0]c_stage[0:3];
  wire[4*32-1:0]c_cnt_f,c_age_f,c_tc_f;
@@ -87,6 +89,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  wire row_acc=accept_cfg&&addr_q<324;
  wire gap_acc=accept_cfg&&addr_q>=326&&addr_q<470;
  always @(posedge ck or negedge rn)if(!rn)begin wq<=0;wg<=0;end else begin wq<=row_acc;wg<=gap_acc&&gap_j!=0;end
+ // KV-CTL3 census: kept copies of wq / w_u for the rowb write mask (a 32-bit mask field + its flag bits were one net, 34 loads)
+ (* keep = "true" *) reg wq_m;(* keep = "true" *) reg[1:0]w_u_m;
+ always @(posedge ck or negedge rn)if(!rn)wq_m<=0;else wq_m<=row_acc;
+ always @(posedge ck)w_u_m<=gap_u;
  always @(posedge ck)begin
   w_row<=row_acc?cfg_stage:(gap_j-6'd1);w_field<=8'd1<<cfg_word[2:0];w_end<=cfg_word==8;w_u<=gap_u;
   w_data<=row_acc?(data_q[31:0]-32'd2):data_q[31:0];w_zero<=data_q[31:0]==0;w_one<=data_q[31:0]==1;
@@ -94,8 +100,8 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  wire[255:0]a_mask={{32{w_field[7]}},{32{w_field[6]}},{32{w_field[5]}},{32{w_field[4]}},
                     {32{w_field[3]}},{32{w_field[2]}},{32{w_field[1]}},{32{w_field[0]}}};
  wire[3:0]u1=4'd1<<w_u;
- wire[255:0]b_mask=wq?{224'd0,32'hffffffff}:
-                     {88'd0,u1,u1,{32{u1[3]}},{32{u1[2]}},{32{u1[1]}},{32{u1[0]}},32'd0};
+ wire[3:0]u1m=4'd1<<w_u_m;
+ wire[255:0]b_mask={88'd0,u1m&{4{!wq_m}},u1m&{4{!wq_m}},(wq?128'd0:{{32{u1[3]}},{32{u1[2]}},{32{u1[1]}},{32{u1[0]}}}),{32{wq_m}}};
  wire[255:0]b_data={88'd0,{4{w_one}},{4{w_zero}},{4{w_data}},w_data};
  // ---- stage begin / row read ----
  wire[1:0]us=epoch_q[1:0];
@@ -152,16 +158,25 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  // ---- events ----
  wire[3:0]e_ctrl=f_ctrl,e_k=f_k,e_v=f_v,e_issue=f_issue,e_run=f_run,e_writer=f_writer,e_link=f_link,e_quiet=f_quiet,e_end=f_end;
  wire collide=(e_any&(e_any-4'd1))!=0;
+ // fault_set: the mus process's fault sites, in its branch order (we_q word checks, collision, start refusal)
+ wire fs_we=we_q&&(!accept_cfg||
+  (addr_q<324&&(data_q[63:32]!=0||(cfg_word==8&&bad_row)))||
+  (addr_q==325&&data_q[63:16]!=0)||
+  (addr_q>325&&addr_q<470&&data_q[63:32]!=0)||
+  (addr_q==470&&(data_q!=64'h514b564c59523336||cfg_stage!=36||cfg_gap!=144||duration_sum==0))||
+  (addr_q>470));
+ assign fault_set=fs_we||collide||(start_q&&!start_ok);
+ always @(posedge ck or negedge rn)if(!rn)fault_f<=0;else fault_f<={FC{fault_q||fault_set}};
  reg[1:0]owner;reg[5:0]stage_o;
  reg[1:0]fire_u;always @*begin fire_u=owner;for(integer k=3;k>=0;k=k-1)if(e_any[k])fire_u=2'(k);end
  assign stage=(MUT==2)?(stage_o^6'd1):stage_o;
  assign layer=stage-6'd1;
- // ---- control process (the mus process without the sliced data registers; fault sites also set fault_c) ----
+ // ---- control process (the mus process without the sliced data registers; fault itself = fault_f, set by fault_set) ----
  always @(posedge ck or negedge rn)begin
   if(!rn)begin
    ctrl_go<=0;kgo<=0;vgo<=0;attention_issue<=0;attention_run<=0;writer_start<=0;link_start<=0;
    stage_start<=0;stage_done<=0;expected_upstream_quiet<=0;completed_stage<=0;
-   configured<=0;active<=0;done<=0;fault_q<=0;fault_c<=0;fault_code<=0;
+   configured<=0;active<=0;done<=0;fault_code<=0;
    next_cfg<=0;cfg_stage<=0;cfg_word<=0;cfg_gap<=0;gap_u<=0;gap_j<=0;bound_epoch<=0;
    c_act<=0;c_wait<=0;c_load<=0;c_quiet<=0;owner<=0;stage_o<=0;
    f_ctrl<=0;f_k<=0;f_v<=0;f_issue<=0;f_run<=0;f_writer<=0;f_link<=0;f_quiet<=0;f_end<=0;f_wx<=0;
@@ -174,27 +189,27 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
     f_ctrl<=0;f_k<=0;f_v<=0;f_issue<=0;f_run<=0;f_writer<=0;f_link<=0;f_quiet<=0;f_end<=0;f_wx<=0;
    end else begin
     if(we_q)begin
-     if(!accept_cfg)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[0]<=1;end
+     if(!accept_cfg)begin fault_code[0]<=1;end
      else if(addr_q<324)begin
-      if(data_q[63:32]!=0||(cfg_word==8&&bad_row))begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[1]<=1;end
+      if(data_q[63:32]!=0||(cfg_word==8&&bad_row))begin fault_code[1]<=1;end
       if(cfg_word==8)begin cfg_stage<=cfg_stage+1'b1;cfg_word<=0;end else cfg_word<=cfg_word+1'b1;
       next_cfg<=next_cfg+1'b1;
      end else if(addr_q==324)begin next_cfg<=325;end
      else if(addr_q==325)begin
-      if(data_q[63:16]!=0)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[2]<=1;end
+      if(data_q[63:16]!=0)begin fault_code[2]<=1;end
       bound_epoch<=data_q[15:0];next_cfg<=326;
      end else if(addr_q<470)begin
-      if(data_q[63:32]!=0)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[2]<=1;end
+      if(data_q[63:32]!=0)begin fault_code[2]<=1;end
       if(gap_j==35)begin gap_j<=0;gap_u<=gap_u+1'b1;end else gap_j<=gap_j+1'b1;
       next_cfg<=next_cfg+1'b1;cfg_gap<=cfg_gap+1'b1;
      end else if(addr_q==470)begin
-      if(data_q!=64'h514b564c59523336||cfg_stage!=36||cfg_gap!=144||duration_sum==0)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[2]<=1;end
+      if(data_q!=64'h514b564c59523336||cfg_stage!=36||cfg_gap!=144||duration_sum==0)begin fault_code[2]<=1;end
       else configured<=1;
-     end else begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[0]<=1;end
+     end else begin fault_code[0]<=1;end
     end
-    if(collide)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[4]<=1;end
+    if(collide)begin fault_code[4]<=1;end
     if(start_q)begin
-     if(!start_ok)begin fault_q<=1;fault_c<={(FC-1){1'b1}};fault_code[3]<=1;end
+     if(!start_ok)begin fault_code[3]<=1;end
      else begin
       c_act[us]<=1;c_stage[us]<=1;c_quiet[us]<=0;
       if(g0z[us])begin c_wait[us]<=0;c_load[us]<=1;end

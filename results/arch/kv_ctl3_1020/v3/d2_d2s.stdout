@@ -1,0 +1,17 @@
+DBG fault cyc 14346 epi 1 pe 3 fc 08 tg 10 addr 48
+DBG fault cyc 28539 epi 2 pe 40 fc 10 tg 10 addr 16
+DBG fault cyc 57135 epi 4 pe 3 fc 08 tg 10 addr 717
+DBG fault cyc 71272 epi 5 pe 40 fc 08 tg 10 addr 681
+DBG fault cyc 100696 epi 7 pe 3 fc 08 tg 2 addr 280
+DBG fault cyc 114068 epi 8 pe 40 fc 10 tg 10 addr 12
+DBG fault cyc 128319 epi 9 pe 0 fc 08 tg 4 addr 449
+DBG fault cyc 131382 epi 10 pe 3 fc 10 tg 10 addr 28
+DBG fault cyc 145485 epi 11 pe 40 fc 08 tg 10 addr 488
+DBG fault cyc 175138 epi 13 pe 3 fc 08 tg 2 addr 378
+DBG fault cyc 188286 epi 14 pe 40 fc 08 tg 10 addr 890
+DBG fault cyc 217414 epi 16 pe 3 fc 08 tg 2 addr 159
+PASS KV_S32_BOOT_LOCKSTEP mismatches0 cycles788246 words340794 boots54 faultcyc522333 setupcyc90 cw73728 cl2304 lw3456 fw3456 fl576 gap2644
+- rtl/test/mu_qwen_1018/tb_kv_s32_boot_lockstep.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8ms; walltime 1.696 s; speed 4.648 ms/s
+- Verilator: cpu 1.475 s on 1 threads; allocated 7 MB

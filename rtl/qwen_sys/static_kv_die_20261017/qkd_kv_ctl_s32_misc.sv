@@ -223,7 +223,8 @@ module qkd_kv_die_cfg_s32 #(parameter integer NRST = 43, parameter integer CAP =
         initial $fatal(1, "qkd_kv_die_cfg: NRST %0d CAP %0d", NRST, CAP);
     end endgenerate
     // POR: two-flop synchronised release (async assert), as qkd_rst_region
-    reg [1:0] ps;
+    // KV-CTL3: ps kept, else opt_merge folds ps[1] (pr_n) into the identical kept POR copy rcp[0] (census: 43 resets)
+    (* keep *) reg [1:0] ps;
     always @(posedge ck or negedge por_n) if (!por_n) ps <= 2'b00; else ps <= {ps[0], 1'b1};
     wire pr_n = ps[1];
     generate if (PCOPIES > 1) begin : g_pc
@@ -477,8 +478,11 @@ end else begin : g_mu
         wire en1 = !stop_bank[1] && we_q && addr_q == 1;
         wire en2 = !stop_bank[2] && we_q && addr_q == 2;
         wire [95:0] s0 = {data_q - 32'd2, data_q - ((MUT == 1) ? 32'd2 : 32'd1), data_q};
-        wire [95:0] s1 = {data_q - 32'd2, data_q - 32'd1, data_q};
-        wire [63:0] s2 = {data_q - 32'd1, data_q};
+        // KV-CTL3: banks 1 / 2 read a KEPT second copy of the cfg data pin flop (data_q bit: 34 loads)
+        (* keep *) reg [31:0] dq2;
+        always @(posedge ck) dq2 <= cfg_data;
+        wire [95:0] s1 = {dq2 - 32'd2, dq2 - 32'd1, dq2};
+        wire [63:0] s2 = {dq2 - 32'd1, dq2};
         reg [95:0] b0, b1; reg [63:0] b2; wire [95:0] n0, n1; wire [63:0] n2;
         genvar gs;
         // ot_s32_sel leaves (rtl/lib/ot_s32_cells.sv): kept hierarchy, so the bank enable cannot be folded into every bit

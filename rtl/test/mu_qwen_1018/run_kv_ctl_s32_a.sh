@@ -29,7 +29,7 @@ case "$CASE" in
  m_sl) MF=$S; FROM="else if (hs_hi[k]) es_data[128 + LO +: W]"; TO="else if (hs_hi[k] && k != 3) es_data[128 + LO +: W]";;
  m_lo) MF=$S; FROM="else if (ls_h[k]) half_data"; TO="else if (ls_h[k] && k != 5) half_data";;
  m_ld) MF=$S; FROM="else if(ldc[k])tv[LO+:W]<=rt_all[LO+:W];"; TO="else if(ldc[k]&&k!=0)tv[LO+:W]<=rt_all[LO+:W];";;
- m_cy) MF=$S; FROM="else if(actc[k])cyc[8*k+:8]<=cyc_inc[8*k+:8];"; TO="else if(actc[k]&&k!=0)cyc[8*k+:8]<=cyc_inc[8*k+:8];";;
+ m_cy) MF=$S; FROM=".s(actc[k]&&!spy[k])"; TO=".s(actc[k]&&!spy[k]&&k!=0)";;
  m_cp) MF=$S; FROM="wsc<={NC{actc[NCY]&&next_slot}};"; TO="wsc<={NC{actc[NCY]&&next_slot}}&{{(NC-1){1'b1}},1'b0};";;
  *) echo "S32A $CASE: unknown case"; exit 2;;
 esac

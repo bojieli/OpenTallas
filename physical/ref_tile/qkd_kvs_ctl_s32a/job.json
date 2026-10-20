@@ -131,7 +131,7 @@
      "verilator"
     ],
     "pass_regex": "^S32KB kb rc=0: PASS MU_KV_BOOT",
-    "pass_witness": "results/arch/kv_ctl3_1020/kb/kb.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb.stdout"
    },
    {
     "name": "s32_kb_first",
@@ -143,7 +143,7 @@
      "verilator"
     ],
     "pass_regex": "^S32KB kb_first rc=0: PASS MU_KV_BOOT",
-    "pass_witness": "results/arch/kv_ctl3_1020/kb/kb_first.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb_first.stdout"
    },
    {
     "name": "s32_kb_m_tl",
@@ -155,7 +155,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL MU_KV_BOOT: user 0 differs from MU 0",
-    "fail_witness": "results/arch/kv_ctl3_1020/kb/m_tl.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_tl.stdout"
    },
    {
     "name": "s32_kb_m_cnt",
@@ -167,7 +167,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL MU_KV_BOOT: event kinds differ",
-    "fail_witness": "results/arch/kv_ctl3_1020/kb/m_cnt.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_cnt.stdout"
    },
    {
     "name": "s32_lprg",
@@ -179,7 +179,7 @@
      "verilator"
     ],
     "pass_regex": "^PASS KV_LPRG_MU5_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/c/c1.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/c_c1.stdout"
    },
    {
     "name": "s32_lprg_m_land",
@@ -191,7 +191,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/c/m_land.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/c_m_land.stdout"
    },
    {
     "name": "s32_wr",
@@ -203,7 +203,7 @@
      "verilator"
     ],
     "pass_regex": "PASS KV_S32_A_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/a/lock.log"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/a_lock.stdout"
    },
    {
     "name": "s32_wr_m_sl",
@@ -215,7 +215,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_S32_A_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/a/fail_witness_m_sl.log"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/a_m_sl.stdout"
    },
    {
     "name": "s32_fanr",
@@ -227,7 +227,7 @@
      "verilator"
     ],
     "pass_regex": "PASS KV_FANR_MU6_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/b_misc/outb_fanr.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_fanr.stdout"
    },
    {
     "name": "s32_fanr_m_ub",
@@ -239,7 +239,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_FANR_MU6_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/b_misc/outb_m_ub.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_ub.stdout"
    },
    {
     "name": "s32_dcfg",
@@ -251,7 +251,7 @@
      "verilator"
     ],
     "pass_regex": "PASS KV_DCFG_S32_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/b_misc/outb_dcfg.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_dcfg.stdout"
    },
    {
     "name": "s32_dcfg_m_rc",
@@ -263,7 +263,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_DCFG_S32_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/b_misc/outb_m_rc.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_rc.stdout"
    },
    {
     "name": "s32_own",
@@ -275,7 +275,7 @@
      "verilator"
     ],
     "pass_regex": "PASS KV_OWN_S32_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/d/outd_own.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/d_own.stdout"
    },
    {
     "name": "s32_own_m_os1",
@@ -287,7 +287,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_OWN_S32_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/d/outd_m_os1.stdout"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/d_m_os1.stdout"
    },
    {
     "name": "s32_boot",
@@ -299,7 +299,7 @@
      "verilator"
     ],
     "pass_regex": "PASS KV_S32_BOOT_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/d2/d2.stdout"
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/d2_d2.stdout"
    },
    {
     "name": "s32_boot_m_cw",
@@ -311,7 +311,7 @@
      "verilator"
     ],
     "fail_regex": "FAIL KV_S32_BOOT_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/d2/m_cw_fail_witness.log"
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/d2_m_cw.stdout"
    }
   ],
   "calibrate": {

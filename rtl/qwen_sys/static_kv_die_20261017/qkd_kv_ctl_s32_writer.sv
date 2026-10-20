@@ -370,10 +370,14 @@ module qkd_kv_native_programme_s32 #(parameter integer MUT=0,parameter integer V
  reg[127:0]shv;                                  // {sh3, sh2, sh1, sh0}
  wire[31:0]sh0=shv[31:0],sh1=shv[63:32],sh2=shv[95:64],sh3=shv[127:96];
  wire sh_rest=acc_rest&&cfg_addr_p<180;
+ // KV-CTL3 census: each slice's next value through a kept-hierarchy ot_s32_sel leaf (ABC folded the shared
+ // cwe_c[k] && sh_rest term into every bit: 36..44 loads); the leaf select is distinct per (word, copy).
+ wire[127:0]shn;
  generate for(g=0;g<4;g=g+1)begin:g_shw for(k=0;k<3;k=k+1)begin:g_shs
   localparam integer LO=32*g+11*k, W=(k==2)?10:11;
-  always @(posedge ck)if(cwe_c[k]&&sh_rest&&cfg_word==g)shv[LO+:W]<=cfg_data_p[11*k+:W];
+  ot_s32_sel #(.W(W)) u_s(.s(cwe_c[k]&&sh_rest&&cfg_word==g),.a(cfg_data_p[11*k+:W]),.b(shv[LO+:W]),.y(shn[LO+:W]));
  end end endgenerate
+ always @(posedge ck)shv<=shn;
  wire[5:0]selected_stage=(MUT==5)?((stage_p==36)?6'd1:stage_p+6'd1):stage_p;
  reg ld;(* keep = "true" *) reg[NLD-1:0]ldc;
  reg[31:0]tm0,tm1,tm2,tm3;
@@ -447,11 +451,13 @@ module qkd_kv_native_programme_s32 #(parameter integer MUT=0,parameter integer V
  wire nbad=!bad;
  wire[72:0]sv_d={{epoch_p,stage_p,token_p,position_p,6'd0} ^ ((MUT==1)?(59'd1<<43):((MUT==6)?(59'd1<<37):59'd0)),
                  generation_p,stage_p,selected_stage-6'd1};
+ // KV-CTL3 census: sv slices behind ot_s32_sel leaves (ABC folded nbad into every bit: 71 loads); select spc[k] && nbad
+ wire[72:0]svn;
  generate for(k=0;k<NSS;k=k+1)begin:g_sv
   localparam integer LO=k*SW, W=(73-LO<SW)?73-LO:SW;
-  always @(posedge ck or negedge reset_pin_n)
-   if(!reset_pin_n)sv[LO+:W]<=0;else if(spc[k]&&nbad)sv[LO+:W]<=sv_d[LO+:W];
+  ot_s32_sel #(.W(W)) u_s(.s(spc[k]&&nbad),.a(sv_d[LO+:W]),.b(sv[LO+:W]),.y(svn[LO+:W]));
  end endgenerate
+ always @(posedge ck or negedge reset_pin_n)if(!reset_pin_n)sv<=0;else sv<=svn;
  // ld copies (D = start_p && !bad, as ld) and the root row slices they load
  wire[159:0]rt_all={rts,rt3,rt2,rt1,rt0};
  generate for(k=0;k<NLD;k=k+1)begin:g_ld
@@ -467,12 +473,14 @@ module qkd_kv_native_programme_s32 #(parameter integer MUT=0,parameter integer V
  always @(posedge ck or negedge reset_pin_n)
   if(!reset_pin_n)actc<=0;else actc<={NA{active_nx}};
  wire[31:0]cyc_inc=cyc+32'd1;
+ // KV-CTL3 census: cycle slices behind leaves: y1 = (actc && !spy) ? inc : cyc; next = y1 & !(spy && nbad)
+ wire[31:0]cyn;
  generate for(k=0;k<NCY;k=k+1)begin:g_cy
-  always @(posedge ck or negedge reset_pin_n)
-   if(!reset_pin_n)cyc[8*k+:8]<=0;
-   else if(spy[k])begin if(nbad)cyc[8*k+:8]<=8'd0;end
-   else if(actc[k])cyc[8*k+:8]<=cyc_inc[8*k+:8];
+  wire[7:0]y1;
+  ot_s32_sel #(.W(8)) u_i(.s(actc[k]&&!spy[k]),.a(cyc_inc[8*k+:8]),.b(cyc[8*k+:8]),.y(y1));
+  ot_s32_and #(.W(8)) u_z(.s(!(spy[k]&&nbad)),.a(y1),.y(cyn[8*k+:8]));
  end endgenerate
+ always @(posedge ck or negedge reset_pin_n)if(!reset_pin_n)cyc<=0;else cyc<=cyn;
  always @(posedge ck or negedge reset_pin_n)
   if(!reset_pin_n)begin wsc<=0;wic<=0;end
   else begin
