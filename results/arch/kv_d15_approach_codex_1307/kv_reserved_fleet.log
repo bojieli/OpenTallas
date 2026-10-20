@@ -1,0 +1,9 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-epyc6       admits   582 GB (avail 521, growth 113, headroom 0, waiters 0/0 GB) load 19/128 running 17 disk 3617 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-39651-1792526327 after 0 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-39651-1792526327): exit 1

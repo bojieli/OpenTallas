@@ -1,0 +1,11 @@
+# KV d15 concrete approach investigation — no qualified repair
+
+Original d15p/g planner fails actual ATTN tx_payload stage8 at6490.8,27010.8, remaining698um. Full bound D2D view qkd_d2d_static_r7w_sfm2 exposes548payload pins on SOUTH, x2.172..395.244. The geometry-only native-ASTK baseline has D2D6500.736,27131.76,475.608x282.936. A terminal relay45.36x82.08 at6654.084,27028.08 has zero tile overlap and actual farthest D2Dpin259.218um. This checks the receiver hop and footprint only; source-side hop, existing relay occupancy, full routing and standard bind remain outstanding.
+
+Priority-first allocation alone FAILS on the exact prelude-resolved bound source/view inputs: same actual ATTN5310,24829 and D2D6501,27132 as original, payload stage12 afterpath179, remaining607um. It does not repair the approach. The earlier priority run omitted native-ASTK geometry (108um xshift); retained as noncanonical diagnostic. Initial source-less prelude setup failed on missing view Git identities; separate object-backed own snapshot fixed identity resolution before the final exact run.
+
+The172.8um apron experiment also FAILS (seqst_rx stage0 remaining1209um); it causes automatic die-height growth28216.08->28388.88, area380.259->382.588mm2 (+2.329mm2). It is rejected. Initial explanation that a legacy link slab blocked the D2D SOUTHface is WITHDRAWN: static injection removes lnk, and baseline geometry already admits the terminal footprint. Reentrant geometry probe failed on reused mutable globals; freshprocess0/172.8 probes are the recorded geometry evidence.
+
+Both default-off prototype flags are preserved here for reproduction, NOT main integration. No gate, strict bind, no qualified leaf/die claim, and no canonical source/view mutation. Existing d13r-de48 chain remains live diagnostic. The next concrete task is to instrument/repair the forward relay allocator's terminal approach: it chooses first off-path free candidates and ends stranded on the wrong side although a legal terminal footprint exists. Prove all hops plus relay-body occupancy and complete model legality, then standard bind before any gate. Do not reuse the initial false physical-blocker explanation.
+
+P216 final standard LEC continues separately ep7unit1188539-1792525720/ABC1198253, correctCLOSEDnetlist250a194d. Its pending receipt does not waive planner/geometry failure.

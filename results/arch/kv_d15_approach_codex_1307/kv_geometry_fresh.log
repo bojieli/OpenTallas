@@ -1,0 +1,158 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-epyc6       admits   579 GB (avail 519, growth 113, headroom 0, waiters 0/0 GB) load 21/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-reservation-1257-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-43627-1792526621 after 0 s
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+[
+  {
+    "apron_um": 0.0,
+    "die": {
+      "w": 13476.672,
+      "h": 28216.08,
+      "mm2": 380.259
+    },
+    "d2d": [
+      6500.736,
+      27131.76,
+      475.608,
+      282.936
+    ],
+    "link": null,
+    "nearby": [
+      [
+        "ucie_rom",
+        6349.536,
+        27416.88,
+        777.576,
+        777.576
+      ],
+      [
+        "d2d_kv",
+        6500.736,
+        27131.76,
+        475.608,
+        282.936
+      ],
+      [
+        "pll",
+        7131.456,
+        27870.48,
+        323.976,
+        323.976
+      ],
+      [
+        "serdes_host",
+        7459.776,
+        26630.91,
+        2320.032,
+        1563.546
+      ],
+      [
+        "host",
+        6349.536,
+        26481.6,
+        777.576,
+        518.376
+      ],
+      [
+        "dcal",
+        6997.968,
+        27254.88,
+        26.328,
+        36.696
+      ],
+      [
+        "kvs_emb",
+        6071.76,
+        27077.76,
+        388.776,
+        302.376
+      ]
+    ],
+    "candidate_relay": [
+      6654.084,
+      27028.079999999998,
+      45.36,
+      82.08
+    ],
+    "candidate_endpoint_max_um": 259.21800000000076,
+    "overlap": [],
+    "scope": "geometry-only; no relays allocated, source-side hop and full bind outstanding"
+  }
+]
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+[
+  {
+    "apron_um": 172.8,
+    "die": {
+      "w": 13476.672,
+      "h": 28388.88,
+      "mm2": 382.588
+    },
+    "d2d": [
+      6500.736,
+      27304.56,
+      475.608,
+      282.936
+    ],
+    "link": null,
+    "nearby": [
+      [
+        "ucie_rom",
+        6349.536,
+        27589.68,
+        777.576,
+        777.576
+      ],
+      [
+        "d2d_kv",
+        6500.736,
+        27304.56,
+        475.608,
+        282.936
+      ],
+      [
+        "pll",
+        7131.456,
+        28043.28,
+        323.976,
+        323.976
+      ],
+      [
+        "serdes_host",
+        7459.776,
+        26803.71,
+        2320.032,
+        1563.546
+      ],
+      [
+        "dcal",
+        6997.968,
+        27427.68,
+        26.328,
+        36.696
+      ],
+      [
+        "kvs_emb",
+        6071.76,
+        27250.56,
+        388.776,
+        302.376
+      ]
+    ],
+    "candidate_relay": [
+      6654.084,
+      27200.88,
+      45.36,
+      82.08
+    ],
+    "candidate_endpoint_max_um": 259.21800000000076,
+    "overlap": [],
+    "scope": "geometry-only; no relays allocated, source-side hop and full bind outstanding"
+  }
+]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-43627-1792526621): exit 0

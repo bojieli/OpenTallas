@@ -1,0 +1,36 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-epyc6       admits   567 GB (avail 505, growth 108, headroom 0, waiters 0/0 GB) load 18/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-44902-1792526688 after 0 s
+OT_KV_RST_HOLD=273: qkd_rst_region -> physical/ref_tile/qkd_rst_region_pr_h273b/views/qkd_rst_region_pr_h273b
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+D2DS_VIEW BIND: closed view hardened at the die TXDP / NTX
+OT_KV_D2DS_VIEW=auto: BIND closed view hardened at the die TXDP / NTX
+OT_KV_HROOT_VIEW: qkd_kvs_hroot -> physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot (stand-in (same ports))
+OT_KV_DCAL STAND-IN: no MU view at physical/ref_tile/qkd_d2d_cal_seq_pin_mu/views/qkd_d2d_cal_seq_pin; qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image)
+OT_KV_DCAL_BC: qkd_dcal -> physical/ref_tile/qkd_d2d_cal_seq_pin_bc/views/qkd_d2d_cal_seq_pin_bc (boot cfg merged)
+OT_KV_DCAL_BC4: qkd_dcal -> physical/ref_tile/qkd_d2d_cal_seq_pin_bc4/views/qkd_d2d_cal_seq_pin_bc4 (safe K22)
+OT_KV_SEQ_STATIC: static die -> qkd_lprg superseded (programme boot-loaded by qkd_kvs_ctl); no lprg view bound, no lprg image check
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+KV_TILE_VIEW qkd_kvs_attn: ASSUMED no closed view passes identity + edges
+    qkd_kvs_attn/qkd_kvs_attn_fl: REFUSE view source commit qkd_kvs_attn-fl1-8e7ae12fb not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+    qkd_kvs_attn_rv1/qkd_kvs_attn_fl: REFUSE view source commit qkd_kvs_attn_rv1-rv1-dd84cbbc5 not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+    qkd_kvs_attn_rv2/qkd_kvs_attn_fl: REFUSE view source commit qkd_kvs_attn_rv2-rv2-6ec3388ff not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+    qkd_kvs_attn_rv3/qkd_kvs_attn_fl: REFUSE view source commit qkd_kvs_attn_rv3-rv3-6fdacf98c not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+    qkd_kvs_attn_rv4/qkd_kvs_attn_fl: REFUSE view source commit qkd_kvs_attn_rv4-rv4-69bab6da2 not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+KV_TILE_VIEW qkd_kvs_ctl: ASSUMED no closed view passes identity + edges
+    qkd_kvs_ctl/qkd_kvs_ctl: REFUSE view source commit qkd_kvs_ctl_mu2-mu2-9105d74ed not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+KV_TILE_VIEW qkd_kvs_emb: ASSUMED no closed view passes identity + edges
+    qkd_kvs_emb/qkd_kvs_emb: REFUSE view source commit qkd_kvs_emb-e1-c84feb9f9 not in this repository (fetch its branch); HEAD kit spec face edges pin_in 1 / pin_out 1 vs die 0 / 0
+KV_TILE_VIEW qkd_kvs_grp: ASSUMED no closed qkd_kvs_grp view committed
+KV_TILE_VIEW qkd_kvs_grp_h: ASSUMED no closed qkd_kvs_grp_h view committed
+KV_TILE_VIEW qkd_kvs_hroot: SKIP bound by kvsys_prep OT_KV_HROOT_VIEW
+KV_TILE_VIEW qkd_kvs_pc: ASSUMED no closed qkd_kvs_pc view committed
+KV_TILE_VIEW qkd_kvs_pc_h: ASSUMED no closed qkd_kvs_pc_h view committed
+KV_TILE_VIEWS FAIL FACE_LAND_VIEW: kvs_attn: selected in OT_KV_FACE_LAND but no closed qkd_kvs_attn_fl view passes (the compiler would charge {'land': {'fin': 1, 'i_ctl': 1}} on a frame): qkd_kvs_attn: view source commit qkd_kvs_attn-fl1-8e7ae12fb not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0; qkd_kvs_attn_rv1: view source commit qkd_kvs_attn_rv1-rv1-dd84cbbc5 not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0; qkd_kvs_attn_rv2: view source commit qkd_kvs_attn_rv2-rv2-6ec3388ff not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0; qkd_kvs_attn_rv3: view source commit qkd_kvs_attn_rv3-rv3-6fdacf98c not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0; qkd_kvs_attn_rv4: view source commit qkd_kvs_attn_rv4-rv4-69bab6da2 not in this repository (fetch its branch); HEAD kit spec face edges pin_in 0 / pin_out 0 vs die 0 / 0
+KV_TILE_VIEWS FAIL (tile_views.json)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-44902-1792526688): exit 10

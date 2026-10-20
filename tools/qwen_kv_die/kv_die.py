@@ -2230,12 +2230,20 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         dw, dh = d2d_fit_outline()
     dx = up(xc - dw / 2, GX) if (slice_w and D2D_FIT) else xc - dw / 2
     add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', dx, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    # Reserve a real south-face relay apron under the bound D2D view. The
+    # previous abutting 777.6um link slab covers every ATTN payload pin: its
+    # 129.6um body leaves no legal full-size relay within farthest-bit reach.
+    d2d_apron = float(os.environ.get('OT_KV_D2D_APRON_UM', '0'))
+    if d2d_apron < 0 or abs(d2d_apron / 43.2 - round(d2d_apron / 43.2)) > 1e-6:
+        raise ValueError('D2D relay apron must be a nonnegative multiple of43.2um')
+    if d2d_apron and not (split and slice_w and D2D_FIT and D2D_PINS):
+        raise ValueError('D2D relay apron needs split real-view-fit and real pin geometry')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
     if split:
         # qkd_lnk abuts the KV end (its rf / tf faces = the KV end's r / t faces); the sequencer below it
         lw_, lh_ = FRAMES['qkd_lnk']
-        ly = up(uy - GY - dh, GY) - GY - lh_
+        ly = up(uy - GY - dh, GY) - GY - lh_ - d2d_apron
         add('lnk', 'qkd_lnk', xc - lw_ / 2, up(ly - GY, GY), lw_ - SHAVE, lh_ - SHAVE, 'R0', 'd2d', 'io')
         sy = up(ly - 2 * GY - sh - 4 * CHAN, GY)
     hy_north = None
@@ -2243,7 +2251,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         # v1.4.1 HOST-north: the root core one relay channel below the D2D end, the sequencer / gateway one more relay
         # channel pair below it (the root's 32 slice-chain words + SerDes FDI + D2D service words need an apron)
         th_ = FRAMES['qkd_host'][1]
-        hy_north = up(uy - GY - dh, GY) - CHAN - th_
+        hy_north = up(uy - GY - dh, GY) - CHAN - th_ - d2d_apron
         hy_north -= hy_north % GY
         # KV-PLAN3 10-17: OT_KV_CTL_BAND um (multiple of 43.2) widens the sequencer <-> HOST-root gap that holds the static
         # control tile kvs_ctl: with 2 CHAN the tile left ~43-um slots either side and the stack roots' 299-b embedding
@@ -2398,6 +2406,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         m['geo']['pv144'] = pv_geo
     if SN_LIFT:
         m['geo']['sn_lift'] = dict(lift_um=SN_LIFT, die_h_um=Hk, die_w_um=Wk)
+    m['geo']['d2d_relay_apron_um'] = d2d_apron
     m['keepouts'] = m_keep
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -3234,6 +3243,12 @@ def _relays(m):
                         j_ = max([i_ + 1 for i_, b_ in enumerate(rest_) if b_[0] in ('lx', 'lr', 'host_fdi')
                                   or b_[0].startswith(pvx_)] or [0])
                         order_ = rest_[:j_] + top_ + rest_[j_:]
+    # Reserve actual south-face payload relay cells before unrelated chains.
+    if os.environ.get('OT_KV_D2D_PAYLOAD_FIRST', '0') == '1':
+        priority = [e for e in order_ if e[0] == 'ks_kvs_attn__attn__tx_payload']
+        if len(priority) != 1:
+            raise ValueError('payload reservation requires one actual ATTN payload bus')
+        order_ = priority + [e for e in order_ if e not in priority]
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net

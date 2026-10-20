@@ -1,0 +1,43 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-epyc6       admits   569 GB (avail 498, growth 100, headroom 0, waiters 0/0 GB) load 17/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-45984-1792526712 after 0 s
+OT_KV_RST_HOLD=273: qkd_rst_region -> physical/ref_tile/qkd_rst_region_pr_h273b/views/qkd_rst_region_pr_h273b
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+D2DS_VIEW BIND: closed view hardened at the die TXDP / NTX
+OT_KV_D2DS_VIEW=auto: BIND closed view hardened at the die TXDP / NTX
+OT_KV_HROOT_VIEW: qkd_kvs_hroot -> physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot (stand-in (same ports))
+OT_KV_DCAL STAND-IN: no MU view at physical/ref_tile/qkd_d2d_cal_seq_pin_mu/views/qkd_d2d_cal_seq_pin; qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image)
+OT_KV_DCAL_BC: qkd_dcal -> physical/ref_tile/qkd_d2d_cal_seq_pin_bc/views/qkd_d2d_cal_seq_pin_bc (boot cfg merged)
+OT_KV_DCAL_BC4: qkd_dcal -> physical/ref_tile/qkd_d2d_cal_seq_pin_bc4/views/qkd_d2d_cal_seq_pin_bc4 (safe K22)
+OT_KV_SEQ_STATIC: static die -> qkd_lprg superseded (programme boot-loaded by qkd_kvs_ctl); no lprg view bound, no lprg image check
+KV_TILE_VIEWS: bind [--view qkd_kvs_attn=physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl] assumed ['qkd_kvs_ctl', 'qkd_kvs_emb', 'qkd_kvs_grp', 'qkd_kvs_grp_h', 'qkd_kvs_pc', 'qkd_kvs_pc_h']
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 5503, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 5416, in main
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 1958, in build
+    m = _build_plan(*args, **kwargs)
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 2022, in _build_plan
+    m = _build(**kw)
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 2309, in _build
+    return _build(**_args)
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 2422, in _build
+    _relays(m)
+    ~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 3660, in _relays
+    chain_()
+    ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-kv-d15-priority-exact-1305-1020/src/tools/qwen_kv_die/kv_die.py", line 3624, in chain_
+    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}'
+                     f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
+                     f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
+ValueError: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 12 after path index 179 at (6901.200000000001, 27010.800000000003) (ends kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload; path 193 cells, remaining 607 um, wide True, src (5310, 24829, 302, 302, None) dst (6501, 27132, 476, 283, None))
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-45984-1792526712): exit 1
