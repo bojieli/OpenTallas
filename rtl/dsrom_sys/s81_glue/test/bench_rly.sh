@@ -34,6 +34,8 @@ module tb;
 endmodule
 EOT
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_S81_RLY_MUT"; [ "$mode" = rsmut ] && DEF="-DOT_S81_RLY_RSMUT"
+# OT_RLY_EXTRA_DEF (env, optional, S81-TILES-A 10-20): extra defines, e.g. -DOT_S81_RLY_RSSLICE (sliced reset pin registers)
+DEF="$DEF ${OT_RLY_EXTRA_DEF:-}"
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
   "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters*.sv ${OT_RLY_EXTRA_SRC:-} > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RLY_BENCH
