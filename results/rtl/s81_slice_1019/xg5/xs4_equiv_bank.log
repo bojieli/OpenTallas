@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits  1155 GB (avail 897, growth 88, headroom 0, waiters 0/0 GB) load 31/128 running 24 disk 241 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-tilese-xg5/src_486bf9732
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-tilese-xg5/src_486bf9732
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-tilese-xg5/src_486bf9732
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-tilese-xg5/src_486bf9732
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-tilese-xg5/src_486bf9732
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2226711-1792531260 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1 :: XS4_EQUIV cycles=1710 events=331 legal=1 expfault=0 inj=0 injt=0 rstat=0 valid=411 bf=84 qnz=320 ref_fault_at=-1 mismatches=320 fault_mismatches=0 post_fault_mismatches=0 first_bad=456
+MISMATCH xw cyc=456 bits: b1=1/0 b3=1/0 b10=1/0 b11=1/0 b13=1/0 b15=1/0 b19=1/0 b21=1/0 b22=1/0 b25=1/0
+MISMATCH xw cyc=458 bits: b1=1/0 b2=1/0 b3=1/0 b6=1/0 b7=1/0 b8=1/0 b10=1/0 b12=1/0 b17=1/0 b18=1/0
+MISMATCH xw cyc=460 bits: b1=1/0 b3=1/0 b4=1/0 b5=1/0 b8=1/0 b10=1/0 b11=1/0 b12=1/0 b13=1/0 b14=1/0
+XS4_CASE L2_near_s9 FAIL expected=FAIL ok=1 :: XS4_EQUIV cycles=1710 events=331 legal=1 expfault=0 inj=0 injt=0 rstat=0 valid=411 bf=84 qnz=320 ref_fault_at=-1 mismatches=320 fault_mismatches=0 post_fault_mismatches=0 first_bad=456
+MISMATCH xw cyc=456 bits: b1=1/0 b3=1/0 b10=1/0 b11=1/0 b13=1/0 b15=1/0 b19=1/0 b21=1/0 b22=1/0 b25=1/0
+MISMATCH xw cyc=458 bits: b1=1/0 b2=1/0 b3=1/0 b6=1/0 b7=1/0 b8=1/0 b10=1/0 b12=1/0 b17=1/0 b18=1/0
+MISMATCH xw cyc=460 bits: b1=1/0 b3=1/0 b4=1/0 b5=1/0 b8=1/0 b10=1/0 b11=1/0 b12=1/0 b13=1/0 b14=1/0
+XS4_EQUIV_BENCH PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2226711-1792531260): exit 0

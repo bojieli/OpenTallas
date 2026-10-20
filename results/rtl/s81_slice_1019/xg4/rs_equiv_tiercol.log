@@ -1,0 +1,40 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3442790-1792489605 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RS_CASE sid=0 seed=1 dens=40 legal=0 rstat=0 PASS expected=PASS ok=1 :: RS_EQUIV sid=0 seed=1 dens=40 legal=0 rstat=0 cycles=20000 mismatches=0 first_fault=42 gather0=1928 asm=1334 line_out=8350 fwd=4836 cixb_own=263 vtrain=550 nx=1531 dl=3727
+RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=5 seed=2 dens=40 legal=0 rstat=0 cycles=20000 mismatches=19977 first_fault=39 gather0=1937 asm=1294 line_out=9311 fwd=4960 cixb_own=308 vtrain=618 nx=1626 dl=3744
+MISMATCH cyc=24 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+MISMATCH cyc=25 ro_e=1 ro_w=1 vo=0 nx=11 g=0000 dl=000000 f=0/0
+RS_CASE sid=7 seed=3 dens=80 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=7 seed=3 dens=80 legal=0 rstat=0 cycles=20000 mismatches=19977 first_fault=25 gather0=3030 asm=2068 line_out=13372 fwd=7577 cixb_own=554 vtrain=1040 nx=2925 dl=5237
+MISMATCH cyc=24 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+MISMATCH cyc=25 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=1/1
+RS_CASE sid=8 seed=4 dens=20 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=8 seed=4 dens=20 legal=0 rstat=0 cycles=20000 mismatches=19977 first_fault=116 gather0=1214 asm=847 line_out=6216 fwd=3497 cixb_own=167 vtrain=331 nx=1055 dl=2840
+MISMATCH cyc=24 ro_e=1 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+MISMATCH cyc=25 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+RS_CASE sid=9 seed=5 dens=120 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=9 seed=5 dens=120 legal=0 rstat=0 cycles=20000 mismatches=5272 first_fault=23 gather0=3952 asm=2632 line_out=16151 fwd=9897 cixb_own=899 vtrain=1795 nx=4219 dl=6472
+MISMATCH cyc=28 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=32 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=14 seed=6 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=14 seed=6 dens=40 legal=0 rstat=0 cycles=20000 mismatches=19977 first_fault=25 gather0=1963 asm=1386 line_out=8409 fwd=4940 cixb_own=277 vtrain=577 nx=1488 dl=3641
+MISMATCH cyc=24 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+MISMATCH cyc=25 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=1/1
+RS_CASE sid=15 seed=7 dens=60 legal=0 rstat=0 PASS expected=PASS ok=1 :: RS_EQUIV sid=15 seed=7 dens=60 legal=0 rstat=0 cycles=20000 mismatches=0 first_fault=28 gather0=2577 asm=1740 line_out=10724 fwd=6331 cixb_own=446 vtrain=809 nx=2032 dl=4530
+RS_CASE sid=3 seed=8 dens=200 legal=0 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=3 seed=8 dens=200 legal=0 rstat=0 cycles=20000 mismatches=19977 first_fault=26 gather0=5094 asm=3324 line_out=18785 fwd=14075 cixb_own=1464 vtrain=2852 nx=6277 dl=9012
+MISMATCH cyc=24 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+MISMATCH cyc=25 ro_e=0 ro_w=0 vo=0 nx=11 g=0000 dl=000000 f=0/0
+RS_CASE sid=2 seed=11 dens=60 legal=1 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=2 seed=11 dens=60 legal=1 rstat=0 cycles=20000 mismatches=1111 first_fault=0 gather0=716 asm=301 line_out=2858 fwd=935 cixb_own=311 vtrain=675 nx=432 dl=548
+MISMATCH cyc=271 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+MISMATCH cyc=276 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+RS_CASE sid=13 seed=12 dens=100 legal=1 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=13 seed=12 dens=100 legal=1 rstat=0 cycles=20000 mismatches=1432 first_fault=0 gather0=942 asm=468 line_out=4155 fwd=1514 cixb_own=343 vtrain=642 nx=709 dl=941
+MISMATCH cyc=264 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+MISMATCH cyc=268 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+RS_CASE sid=6 seed=13 dens=30 legal=1 rstat=0 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=6 seed=13 dens=30 legal=1 rstat=0 cycles=20000 mismatches=786 first_fault=0 gather0=545 asm=175 line_out=1784 fwd=508 cixb_own=300 vtrain=618 nx=223 dl=338
+MISMATCH cyc=265 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+MISMATCH cyc=273 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+RS_CASE sid=4 seed=14 dens=60 legal=0 rstat=7000 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=4 seed=14 dens=60 legal=0 rstat=7000 cycles=20000 mismatches=4162 first_fault=27 gather0=2544 asm=1729 line_out=11659 fwd=6229 cixb_own=441 vtrain=881 nx=2332 dl=4405
+MISMATCH cyc=28 ro_e=0 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=29 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=11 seed=15 dens=80 legal=1 rstat=9000 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=11 seed=15 dens=80 legal=1 rstat=9000 cycles=20000 mismatches=1295 first_fault=0 gather0=877 asm=411 line_out=3479 fwd=1186 cixb_own=346 vtrain=675 nx=564 dl=732
+MISMATCH cyc=269 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+MISMATCH cyc=281 ro_e=1 ro_w=1 vo=0 nx=00 g=0000 dl=000000 f=0/0
+RS_EQUIV_BENCH PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3442790-1792489605): exit 0
