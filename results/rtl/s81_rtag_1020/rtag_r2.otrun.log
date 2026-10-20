@@ -1,0 +1,68 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rtag-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rtag-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rtag-1020
+ot-run: ot-epyc9       admits  1062 GB (avail 824, growth 81, headroom 0, waiters 0/0 GB) load 55/128 running 32 disk 127 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rtag-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rtag-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3006855-1792497321 after 1 s
+a43e28d3ba0f23f12f4d4728e5ff43e48da68f9f34068b5f4f6cea7413d44b29  src_r2/rtl/v41rom/ot_s81_so_label_q.sv
+==> /srv/opentallas-scratch/claude/s81-rtag-1020/b_r160_h10_e2.log <==
+FSMALL_BUILD_OK r160_h10_e2
+
+==> /srv/opentallas-scratch/claude/s81-rtag-1020/b_r160_h9MX_e1.log <==
+FSMALL_BUILD_OK r160_h9MX_e1
+
+==> /srv/opentallas-scratch/claude/s81-rtag-1020/b_r160_h9nx_e2.log <==
+FSMALL_BUILD_OK r160_h9nx_e2
+
+==> /srv/opentallas-scratch/claude/s81-rtag-1020/b_r160_h9nx_e5.log <==
+FSMALL_BUILD_OK r160_h9nx_e5
+
+==> /srv/opentallas-scratch/claude/s81-rtag-1020/b_rlate_h10_e2.log <==
+FSMALL_BUILD_OK rlate_h10_e2
+EXE r160_h9MX_e1 d00cd2cb3d20ac66 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h9nx_e2 0ba0d6f5288841e8 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h10_e2 8d17b74350e99dd4 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h9nx_e5 352051236fc1e773 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h9nx_e2 0ba0d6f5288841e8 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h10_e2 8d17b74350e99dd4 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h9MX_e1 d00cd2cb3d20ac66 Verilator 5.050 2026-07-01 rev v5.050
+EXE r160_h9nx_e5 352051236fc1e773 Verilator 5.050 2026-07-01 rev v5.050
+EXE rlate_h10_e2 a1ffd49656d0a1c0 Verilator 5.050 2026-07-01 rev v5.050
+EXE rlate_h10_e2 a1ffd49656d0a1c0 Verilator 5.050 2026-07-01 rev v5.050
+SEQ_NONE 0
+NOSEQ
+SEQ_NONE 0
+NOSEQ
+SEQ_NONE 0
+NOSEQ
+SEQ_NONE 0
+NOSEQ
+SEQ_NONE 0
+NOSEQ
+SEQ /srv/opentallas-scratch/claude/s81-rtag-1020/vec/L0/u_f_0L02/seq_router_r160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-rtag-1020/vec/L0/u_f_0L00/seq_router_r160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-rtag-1020/vec/L0/u_f_0L01/seq_router_r160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-rtag-1020/vec/L0/u_f_0L03/seq_router_r160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-rtag-1020/vec/L0/u_f_0L01/seq_router_rlate 5 5120 1 77
+RT_SEQ router u_f_0L02 r160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 920 span 857 errors 0 []
+RT_SEQ router u_f_0L00 r160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ router u_f_0L03 r160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 921 span 858 errors 0 []
+RT_SEQ router u_f_0L01 rlate rc=0 P=130 TOKSIM_FGU_SEQ FAIL op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 14 ['FAULT edge 416 status 11 lx 0', 'FAULT edge 417 status 11 lx 0', 'FAULT edge 418 status 11 lx 0']
+RT_SEQ_DONE router u_f_0L01 rlate
+RT_SEQ router u_f_0L01 r160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 920 span 857 errors 0 []
+RT_SEQ router u_f_0L02 r160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ router u_f_0L00 r160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 928 span 865 errors 0 []
+RT_SEQ router u_f_0L03 r160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 925 span 862 errors 0 []
+RT_SEQ router u_f_0L01 r160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ router u_f_0L02 r160 rc=0 P=231 TOKSIM_FGU_SEQ PASS op ffn.router PER 231 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 1328 span 1265 errors 0 []
+RT_SEQ_DONE router u_f_0L02 r160
+RT_SEQ router u_f_0L00 r160 rc=0 P=231 TOKSIM_FGU_SEQ PASS op ffn.router PER 231 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 1332 span 1269 errors 0 []
+RT_SEQ_DONE router u_f_0L00 r160
+RT_SEQ router u_f_0L03 r160 rc=0 P=231 TOKSIM_FGU_SEQ PASS op ffn.router PER 231 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 1329 span 1266 errors 0 []
+RT_SEQ_DONE router u_f_0L03 r160
+RT_SEQ router u_f_0L01 r160 rc=0 P=231 TOKSIM_FGU_SEQ PASS op ffn.router PER 231 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 1328 span 1265 errors 0 []
+RT_SEQ_DONE router u_f_0L01 r160
+RT_R2_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3006855-1792497321): exit 0

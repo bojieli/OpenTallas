@@ -1,0 +1,50 @@
+{
+ "soq0": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "dsfd_bf_front_roots",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 62186,
+  "max_dynamic_loads": 3224,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true
+ },
+ "soq1": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "dsfd_bf_front_roots",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 65662,
+  "max_dynamic_loads": 3224,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true
+ },
+ "soq_unit": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "ot_s81_so_label_q",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 3834,
+  "max_dynamic_loads": 68,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true
+ },
+ "soq_unit2": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "ot_s81_so_label_q",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 3870,
+  "max_dynamic_loads": 32,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true
+ }
+}
