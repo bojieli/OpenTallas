@@ -4358,6 +4358,14 @@ def _strip_face_pins(mst, mm):
         return
     for p, sp in list(mm.ports.items()):
         mt = re.fullmatch(r'(po|pi)(\d+)', p)
+        if sp[0] == 'face' and mst == SPLIT_PHY and re.fullmatch(r'(fh|rh)(\d+)', p):
+            # KV-BIND9 10-20 (COORD 08:20 dense-face check, d12r): the GEN9 static PC's front / return HBM words fh<k> / rh<k>
+            # (4 b each) had no face rule -> auto pins on the PHY's S face corner, one funnel of all 32 PCs per PHY (rh31 <->
+            # kvpc_*_31 12.8 mm, 496 bits > 405 um per PHY).  They leave the controller face level with PC k, after pi<k>.
+            mt2 = re.fullmatch(r'(fh|rh)(\d+)', p)
+            y = STRIP_PC_PITCH * int(mt2.group(2)) + (272.0 if mt2.group(1) == 'fh' else 284.0)
+            mm.ports[p] = ('face', sp[1], 'W', 'M4', y - PHY_STRIP_DY, 1)
+            continue
         if sp[0] == 'face' and mt:
             y = STRIP_PC_PITCH * int(mt.group(2)) + (200.0 if mt.group(1) == 'po' else 236.0)
             if mst == SPLIT_PHY:
