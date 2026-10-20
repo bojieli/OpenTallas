@@ -1,0 +1,15 @@
+{
+  "shape": "HARD1/NU4/MUT0 opt-in repair of cap16 candidate",
+  "steady_state_added_edges": 0,
+  "reset_assertion_added_edges": 1,
+  "reset_release_added_edges": 1,
+  "reset_contract_reference": "same rst1 candidate62255fc6b",
+  "source_cells_before22552": "21925 original ->22552 retained after transparent-inverter replication",
+  "qualification": "pureRTL exactPASS151677 comparisons/8000edges; realMUT11 caught5; nativeNOTYETRUN",
+  "default32_source_and_helpers_byte_identical": true,
+  "source_sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair1.sv": "37276334a0a03478082a79fa976339a85a8bbf4ea8756d8ce7ec4251416240d2",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair1_helpers.sv": "989c4dee85256e2bd36feea8f67a42074b9e5481f43da239d81a01388c28974e",
+    "tools/qwen_dv/bound_math_netlist.py": "16cc97530165efaf17189e911e15ccfb25fee896a273e4865f7ad792c4d47134"
+  }
+}
