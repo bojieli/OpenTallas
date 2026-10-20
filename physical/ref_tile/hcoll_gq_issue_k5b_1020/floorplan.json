@@ -133,7 +133,7 @@
    "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
    "idx": 0,
    "x": 86.4,
-   "y": 129.6,
+   "y": 123.744,
    "w": 94.824,
    "h": 80.472,
    "orient": "R0",
@@ -146,7 +146,7 @@
    "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
    "idx": 0,
    "x": 86.4,
-   "y": 216.0,
+   "y": 204.288,
    "w": 94.824,
    "h": 80.472,
    "orient": "R0",
@@ -159,7 +159,7 @@
    "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
    "idx": 0,
    "x": 86.4,
-   "y": 302.4,
+   "y": 284.832,
    "w": 94.824,
    "h": 80.472,
    "orient": "R0",
@@ -185,7 +185,7 @@
    "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
    "idx": 0,
    "x": 345.6,
-   "y": 129.6,
+   "y": 123.744,
    "w": 94.824,
    "h": 80.472,
    "orient": "MY",
@@ -198,7 +198,7 @@
    "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
    "idx": 0,
    "x": 345.6,
-   "y": 216.0,
+   "y": 204.288,
    "w": 94.824,
    "h": 80.472,
    "orient": "MY",
@@ -211,7 +211,7 @@
    "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
    "idx": 0,
    "x": 345.6,
-   "y": 302.4,
+   "y": 284.832,
    "w": 94.824,
    "h": 80.472,
    "orient": "MY",
@@ -245,42 +245,6 @@
   }
  ],
  "findings": [
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 / ot_sram_1r1w_128x256_m1_r2c2_p192_mir#0 channel 5.9 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ],
   [
    "WARN",
    "fill",

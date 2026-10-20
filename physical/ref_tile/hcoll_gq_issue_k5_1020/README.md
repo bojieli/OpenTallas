@@ -15,9 +15,9 @@ Params VM_RT 74, ISSUE_AHEAD 1 (the die's hcollgi bank-latency class); defines O
 - Two regional halves: aq0 + its 4-macro stack on the W, aq1 + its stack on the E (MY so both busy rd_out/wd faces face OUTWARD into the W/E
   channels; the centre only sees the light faces: tied w_mask + wd 119); the shared event/VM-request/ring/target logic in the centre band.
   Each half's crossing to the centre is flop->flop (aq_x register -> aq13 S0 pin register; aq13 output registers -> aq_q_q), i.e. landed.
-- Stacks on the literal 43.2 lattice (pitch 86.4, 5.9 um N/S gaps carry no pins; rows cut there by MACRO_ROWS_HALO_Y 3.24 so no cells
-  crowd into them). Pin-face halo 21.6 um. No SRAM pin face abuts another macro face, a tile pin face or a lane face.
-- Geometry: 475.2 x 475.2 (aspect 1.0); stacks y 86.4..426.1, aq0 x 86.4 R0, aq1 x 302.4 MY; centre band 121.2 um; S corridor 86.4 (VM ring macros (216,43.2) R0 / (259.2,43.2) MY), N corridor 49.1.
+- Each stack = 4 macros abutted N-S (abutted_stack: base on the 43.2 lattice, pitch 80.544 = 1678 M4 tracks, gap 0.072 um, no pins on
+  N/S faces) -> no gap pockets (k3's overflow) and no sub-20 um channels. Pin-face halo 21.6 um. No SRAM pin face abuts another macro face, a tile pin face or a lane face.
+- Geometry: 475.2 x 475.2 (aspect 1.0); stacks y 86.4..408.5, aq0 x 86.4 R0, aq1 x 302.4 MY; centre band 121.2 um; S corridor 86.4 (VM ring macros (216,43.2) R0 / (259.2,43.2) MY), N corridor 66.7.
 - Clock: clock_split_km K=8 regional roots on clk (k3 single root measured 99.1/86.6 ps spread).
 
 ## SAFE-DESIGN checklist (owner 10-19)
@@ -26,7 +26,7 @@ Params VM_RT 74, ISSUE_AHEAD 1 (the die's hcollgi bank-latency class); defines O
 3 Fanout: census at this gate (mandatory pre-floorplan native32 census; k4 K-census max 32, IA/VM_RT ring adds per-stage copies).
 4 Depth: PASS (k4 S2TOP removed the 768 ps s2->s3 path); TT setup measured at this gate.
 5 Storage: PASS -- 8 x 128x256 element-line SRAMs + VM_RT SRAM ring (2 x 64x16), no flop arrays.
-6 Floorplan: FIXED -- macro faces 5.1 pins/um, macros on the 43.2 lattice, busy faces outward to wide channels, no abutted pin faces,
+6 Floorplan: FIXED -- macro faces 5.1 pins/um, stack bases on the 43.2 lattice, busy faces outward to wide channels, no abutted pin faces,
   no gap pockets, one std band, aspect <= 1.2. Utilisation WAIVED below 40% (fill_reason pin_bound).
 7 Clock: FIXED -- K=8 regional roots (clock_split_km); pin-flop spread <= 80 ps TT+FF checked at this gate; io_hold_margin 0.03.
 8 Schedule: PASS -- static; 0 added edges vs k4ia1 (SRAM view swap only).

@@ -124,7 +124,7 @@
   "owner": "Claude:LEAD4-HBM/HBM-COLL6",
   "branch": "claude/coll6-gq-k5-1020",
   "tag": "k5b",
-  "purpose": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros on the 43.2 lattice (pitch 86.4, 5.9 um N/S gaps row-cut), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
+  "purpose": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros in one abutted N-S stack (base on the 43.2 lattice, pitch 80.544 = 1678 M4 tracks, 0.072 um gap, no N/S pins), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
   "benches": [
    {
     "name": "aq_sram_exact",
@@ -258,7 +258,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     86.4,
-    129.6
+    123.744
    ],
    "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
    "at_exact": true
@@ -267,7 +267,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     86.4,
-    216.0
+    204.288
    ],
    "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
    "at_exact": true
@@ -276,7 +276,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     86.4,
-    302.4
+    284.832
    ],
    "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
    "at_exact": true
@@ -295,7 +295,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     345.6,
-    129.6
+    123.744
    ],
    "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
    "at_exact": true,
@@ -305,7 +305,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     345.6,
-    216.0
+    204.288
    ],
    "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
    "at_exact": true,
@@ -315,7 +315,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
    "at": [
     345.6,
-    302.4
+    284.832
    ],
    "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
    "at_exact": true,
@@ -369,7 +369,7 @@
   "OT_GQ_S2TOP",
   "OT_GQ_P192"
  ],
- "structural_change": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros on the 43.2 lattice (pitch 86.4, 5.9 um N/S gaps row-cut), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
+ "structural_change": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros in one abutted N-S stack (base on the 43.2 lattice, pitch 80.544 = 1678 M4 tracks, 0.072 um gap, no N/S pins), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
  "reset_relay_split": {
   "max_loads": 32,
   "re": "(^|\\.)u_rst\\.rst_n$|__ot_rlv$|u_target\\.reset_ctrl_copies$"
@@ -378,7 +378,6 @@
   "pin_bound": "SRAM-face/stack bound: 8 x 128x256 arrays in the p192 view (80.472 um tall so each W/E face carries ~410 M4 pins at 5.1 pins/um <= 6) form two 4-high stacks (338 um) with 21.6 um pin-face halos and std channels on both faces; the denser 41-um-macro versions (s1/k1/k2/k3/k4) congested at the 10 pins/um faces. Tile faces carry 651-1261 pins."
  },
  "orfs_vars": {
-  "MACRO_ROWS_HALO_Y": "3.24",
   "OT_CKKM_K": "8",
   "OT_CKKM_PORT": "clk"
  },
