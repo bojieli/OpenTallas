@@ -1,0 +1,5 @@
+5d4cc226a
+r5 = r4 src 5d4cc226a/cd7a2f865 + 445ac5e26 (claude/hbm-smatt7-1020) graph_guard.tcl + tie_detach_audit.py; r4 floorplan fail log in stage_inventory.r4fail
+r6 = r5 (5d4cc226a/cd7a2f865 + 445ac5e26) resumed at 3_5_place_dp with DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer (HBM-SMATT8)
+r6b = r6 resumed at 4_1_cts with PVM kernel sequential dont_touch release/restore around CTS (hooks/pvm_cts_release.tcl, pvm_cts_restore.tcl)
+r6c = r6b + estimate_parasitics after ot_protect_clock_tree (EST-0104)
