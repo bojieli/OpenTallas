@@ -10,3 +10,5 @@ Strict launch remains blocked on four missing parameter-profile receipts; proven
 receipts are separately in the canonical manifest16 entries (old13+health3).
 Future PVJOIN/GRP/QKH/host/PG successor plans do not alter these immutable live snapshots.
 Failed predecessors retained unchanged; current p diagnostic not yet terminal at collection.
+
+04:42 PT: d9p terminal bind component FAIL: output_open_ports2, all other bind counters0;46294instances/69masters. ExpectedPChealth-pin view gap, failed witness retained. Wholejob post-bind prep still LIVE; no cancelled/relaunched inputs.
