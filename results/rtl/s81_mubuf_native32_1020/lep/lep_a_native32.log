@@ -1,0 +1,7 @@
+textbook_lint: WARN ot_s81sl_lep_mu_a cells 51,316 flops 18,070 depth 368.4 ps util None reach None um (2.2 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=18090 root=port:clk rule=PASS: 18,090 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,090 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port clk: 18,070 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: WARN(refuse-tier) high_fanout: net _35224_/Y (OR2x2_ASAP7_75t_R): 66 loads (2 flops, e.g. u_ot_pr_core.u.li1_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net _54431_/Y (OR3x1_ASAP7_75t_R): 37 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN clock_guidance: clock root port:clk: 18,090 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,090 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
