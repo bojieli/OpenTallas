@@ -24,7 +24,13 @@
 // SVC8_HGRP_MUT (bench mutants): 1 = gid ignored, 2 = head-0 fault dropped (the old group's OT_HGRP_MUT codes);
 // SVC8_MUT_BANK: chunk position 3 reads the bank of position 2; SVC8_RING_MUT_ADDR: ring read offset D-1.
 // ---------------------------------------------------------------------------
-module ot_s81svc8_hgrp_s81 (
+module ot_s81svc8_hgrp_s81 #(
+`ifdef SVC8_WRITE_PREDECODE
+    parameter integer WRITE_PREDECODE = 1
+`else
+    parameter integer WRITE_PREDECODE = 0
+`endif
+) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire [7:0]        gid,
@@ -149,10 +155,43 @@ module ot_s81svc8_hgrp_s81 (
     generate
         for (gh = 0; gh < HG; gh = gh + 1) begin : g_h
             // this head's kept copies of the stationary-load R0 registers (as the old group)
-            wire             r_ld_v, r_ld_mode;
-            wire [BW-1:0]    r_ld_bank;
-            wire [7:0]       r_ld_grp;
+            wire [BW-1:0] r_ld_bank;
             wire [PWORDS*TD*16-1:0] r_ld_w;
+            wire [R*16-1:0] pcol, pcol2;
+            wire [TD-1:0] we;
+            wire [TD*16-1:0] wd;
+            if (WRITE_PREDECODE != 0) begin : g_predecode
+            ot_hdc_v41x_kreg #(.W(BW), .R(0)) u_rc (.clk(clk), .rst_n(rst_l),
+                .d(ld_bank), .q(r_ld_bank));
+            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_l), .d(ld_w), .q(r_ld_w));
+            wire [PWORDS*R*16-1:0] r_ld_wp;
+            ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_l),
+                .d(ld_wp[gh*PWORDS*R*16 +: PWORDS*R*16]), .q(r_ld_wp));
+            assign pcol = r_ld_wp[0 +: R*16];
+            assign pcol2 = r_ld_wp[R*16 +: R*16];
+            // Decode stationary write classes before the existing R0 edge.
+            // The old raw mode R0 drove 512 data-mux bits/head; graph copies
+            // exposed 132 D loads on the raw mode port. Register the actual
+            // normal/low/high write predicates instead. Data and bank still
+            // cross precisely the same R0 edge and ab captures at R0+1.
+            wire write_normal;
+            wire [7:0] head_id = gid_m * HG + gh;
+            wire n_raw = ld_v && !ld_mode && (ld_grp == head_id);
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_wn (.clk(clk), .rst_n(rst_l),
+                .d(n_raw), .q(write_normal));
+            wire [TD/R-1:0] write_low, write_high;
+            for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_wdecode
+                wire lo_raw = ld_v && ld_mode && (ld_grp == gk);
+                wire hi_raw = ld_v && ld_mode && ld_w2v && ((ld_grp + 8'd1) == gk);
+                ot_hdc_v41x_kreg #(.W(2), .R(1)) u_wc (.clk(clk), .rst_n(rst_l),
+                    .d({hi_raw, lo_raw}), .q({write_high[gk], write_low[gk]}));
+            end
+
+                assign we = {TD{1'b0}};
+                assign wd = {TD*16{1'b0}};
+            end else begin : g_original
+            wire             r_ld_v, r_ld_mode;
+            wire [7:0]       r_ld_grp;
             wire             r_ld_w2v;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_l), .d(ld_v), .q(r_ld_v));
             ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_l),
@@ -163,10 +202,8 @@ module ot_s81svc8_hgrp_s81 (
             wire [PWORDS*R*16-1:0] r_ld_wp;
             ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_l),
                 .d(ld_wp[gh*PWORDS*R*16 +: PWORDS*R*16]), .q(r_ld_wp));
-            wire [R*16-1:0] pcol = r_ld_wp[0 +: R*16];
-            wire [R*16-1:0] pcol2 = r_ld_wp[R*16 +: R*16];
-            wire [TD-1:0]    we;
-            wire [TD*16-1:0] wd;
+            assign pcol = r_ld_wp[0 +: R*16];
+            assign pcol2 = r_ld_wp[R*16 +: R*16];
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
                 wire lo = (r_ld_grp == (gk / R));
                 wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
@@ -175,15 +212,27 @@ module ot_s81svc8_hgrp_s81 (
                 assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : (r_ld_grp == hh));
             end
 
+            end
+
             // products (old hdp_s g_m), dequant fault from the shared ring
             wire [TD*32-1:0] p;
             wire [TD-1:0]    pf;
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
                 reg [NBANK*16-1:0] ab;
                 integer bb;
+                if (WRITE_PREDECODE != 0) begin : g_prewrite
                 always @(posedge clk)
                     for (bb = 0; bb < NBANK; bb = bb + 1)
-                        if (we[gk] && (r_ld_bank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+                        if (r_ld_bank == bb) begin
+                            if (g_predecode.write_normal) ab[bb*16 +: 16] <= r_ld_w[gk*16 +: 16];
+                            else if (g_predecode.write_high[gk/R]) ab[bb*16 +: 16] <= pcol2[(gk%R)*16 +: 16];
+                            else if (g_predecode.write_low[gk/R]) ab[bb*16 +: 16] <= pcol[(gk%R)*16 +: 16];
+                        end
+                end else begin : g_oldwrite
+                    always @(posedge clk)
+                        for (bb = 0; bb < NBANK; bb = bb + 1)
+                            if (we[gk] && (r_ld_bank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+                end
                 wire [BW-1:0] bk = sk_bank[(gk % 8)*BW +: BW];
                 wire [15:0] av = ab[bk*16 +: 16];
                 wire [17:0] be = sk_b[gk*18 +: 18];
