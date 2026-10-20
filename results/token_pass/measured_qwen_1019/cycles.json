@@ -7,35 +7,35 @@
  "result": {
   "1u": {
    "users": 1,
-   "cycles_per_token": 224080,
-   "tok_s": 5357.4,
+   "cycles_per_token": 233497,
+   "tok_s": 5141.3,
    "clock_ps": 833.0,
    "layer": {
-    "chained": 6065,
-    "l0_cold": 6560,
-    "layer_latency": 6098,
+    "chained": 6326,
+    "l0_cold": 6842,
+    "layer_latency": 6359,
     "priced_chained_ctlm": 6843,
-    "dv_layer_priced_chained": 5569,
+    "dv_layer_priced_chained": 5830,
     "calendar": {
      "ok": true,
      "entries": 405,
-     "last_issue": 5999
+     "last_issue": 6239
     },
     "calendar_clashes": [
      {
-      "edge_w5": 5813,
-      "a": "resid2: PORTS s3 AR off b27",
-      "b": "SEG base 22"
+      "edge_w5": 3739,
+      "a": "resid1: PORTS s10 AR off b22",
+      "b": "SEG base 14"
      }
     ],
     "stages": [
      {
       "stage": "rmsnorm1 SSQ + fused ROOT r (DV)",
       "start": 26,
-      "end": 235,
-      "cycles": 209,
+      "end": 256,
+      "cycles": 230,
       "priced_cycles": 85,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "qkv matvec L9 -> VM QKV (column tiles + STN)",
@@ -48,96 +48,96 @@
      {
       "stage": "QK-norm / RoPE / v*r -> D2D q,k,v (DV)",
       "start": 359,
-      "end": 721,
-      "cycles": 362,
+      "end": 810,
+      "cycles": 451,
       "priced_cycles": 235,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "attention (D2D C2K + KV die + K2C, MEASURED)",
-      "start": 729,
-      "end": 2554,
+      "start": 818,
+      "end": 2643,
       "cycles": 1825,
       "priced_cycles": 1681,
       "grade": "DIAG"
      },
      {
       "stage": "attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)",
-      "start": 2554,
-      "end": 2652,
+      "start": 2643,
+      "end": 2741,
       "cycles": 98,
       "priced_cycles": 16,
       "grade": "DIAG"
      },
      {
       "stage": "o_proj matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 2660,
-      "end": 3191,
+      "start": 2749,
+      "end": 3280,
       "cycles": 531,
       "priced_cycles": 375,
       "grade": "REL"
      },
      {
       "stage": "all-reduce 1 (TP8 collective)",
-      "start": 2936,
-      "end": 3477,
+      "start": 3025,
+      "end": 3566,
       "cycles": 541,
       "priced_cycles": 856,
       "grade": "REL"
      },
      {
       "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
-      "start": 3477,
-      "end": 3982,
-      "cycles": 505,
+      "start": 3566,
+      "end": 4113,
+      "cycles": 547,
       "priced_cycles": 411,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "gate/up matvec L7 -> VM GU (column tiles + STN)",
-      "start": 3990,
-      "end": 4484,
+      "start": 4121,
+      "end": 4615,
       "cycles": 494,
       "priced_cycles": 562,
       "grade": "REL"
      },
      {
       "stage": "SiLU x up (GU*r, act stream) (DV)",
-      "start": 4486,
-      "end": 4736,
-      "cycles": 250,
+      "start": 4617,
+      "end": 4955,
+      "cycles": 338,
       "priced_cycles": 114,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "down matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 4744,
-      "end": 5307,
+      "start": 4963,
+      "end": 5526,
       "cycles": 563,
       "priced_cycles": 256,
       "grade": "REL"
      },
      {
       "stage": "all-reduce 2 (TP8 collective)",
-      "start": 5052,
-      "end": 5593,
+      "start": 5271,
+      "end": 5812,
       "cycles": 541,
       "priced_cycles": 714,
       "grade": "REL"
      },
      {
       "stage": "residual 2 + SSQ + x stream (DV)",
-      "start": 5593,
-      "end": 6098,
-      "cycles": 505,
+      "start": 5812,
+      "end": 6359,
+      "cycles": 547,
       "priced_cycles": 411,
-      "grade": "DIAG"
+      "grade": "REL"
      }
     ],
     "critical_path_cycles_by_grade": {
-     "DIAG": 3560,
-     "REL": 2476,
-     "PLAN_GAP": 36
+     "REL": 4374,
+     "PLAN_GAP": 36,
+     "DIAG": 1923
     },
     "tile": [
      {
@@ -151,22 +151,22 @@
      {
       "matvec": "o",
       "tile_first_eff": 207,
-      "priced_done": 3027,
-      "go_w5": 2681
+      "priced_done": 3116,
+      "go_w5": 2770
      },
      {
       "matvec": "gu",
       "tile_first_eff": 447,
       "dv_tail": 26,
-      "land": 4484,
-      "priced_done": 4484,
-      "go_w5": 4011
+      "land": 4615,
+      "priced_done": 4615,
+      "go_w5": 4142
      },
      {
       "matvec": "down",
       "tile_first_eff": 239,
-      "priced_done": 4992,
-      "go_w5": 4765
+      "priced_done": 5211,
+      "go_w5": 4984
      }
     ]
    },
@@ -174,14 +174,14 @@
     {
      "term": "L0 cold layer (stage-0 embedding landing + layer)",
      "n": 1,
-     "cycles": 6560,
+     "cycles": 6842,
      "grade": "composed",
      "by_grade": null
     },
     {
      "term": "L1..L35 chained layer period",
      "n": 35,
-     "cycles": 6065,
+     "cycles": 6326,
      "grade": "composed",
      "by_grade": null
     },
@@ -197,7 +197,7 @@
      "n": 1,
      "cycles": 3101,
      "grade": "PRICED",
-     "src": "token_path_compiled head.lm_head 3,101 (ctlm head plan); STG lm/amax bench on gen3 pending"
+     "src": "token_path_compiled head.lm_head 3,101 (ctlm head plan); function REL: STG lm (AMAX gather 26/26) + emb (4096/4096) PASS on gen3, amax_local / emb_late mutants FAIL; the benches give no head span -> cycles stay PRICED"
     },
     {
      "term": "embedding row fetch through the KV die (token start)",
@@ -208,23 +208,24 @@
     }
    ],
    "token_cycles_by_grade": {
-    "DIAG": 128302,
-    "REL": 89235,
-    "PLAN_GAP": 1297,
+    "REL": 157646,
+    "PLAN_GAP": 1298,
+    "DIAG": 69308,
     "PRICED": 5245
    },
-   "pct_measured": 39.8,
-   "pct_rel": 39.8,
+   "pct_measured": 67.5,
+   "pct_rel": 67.5,
    "pct_newest": 0.0,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431,
     "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
    },
-   "vs_price_pct": 11.36,
+   "vs_price_pct": 6.87,
    "gaps": [
+    "ATTENTION RETURN: measured span 98 != compiled 119 (re-bench the attn family)",
     "IMAGE CAPACITY: the full layer needs 13940 PW words (calendar 852 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
-    "CALENDAR: 1 W5 command-edge clashes between families (first [{'edge_w5': 5813, 'a': 'resid2: PORTS s3 AR off b27', 'b': 'SEG base 22'}])",
+    "CALENDAR: 1 W5 command-edge clashes between families (first [{'edge_w5': 3739, 'a': 'resid1: PORTS s10 AR off b22', 'b': 'SEG base 14'}])",
     "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
     "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
     "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
