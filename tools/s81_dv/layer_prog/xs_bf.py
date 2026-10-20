@@ -121,6 +121,14 @@ def _bf_groups(fx, op):
         ngr = o.size // K
         o_rank = tot // ngr
         per = deal(ra1 - ra0, NSLICE)            # slice s owns rank rows per[s] (all in one head group: o_rank % per == 0)
+        # S81-SMWIRE (10-19): the SO target gather wiring delivers each head group's o to ONE slice tier (group 0 =
+        # heads 0..7, E svc half -> s_4S band -> S-tier line, even sid; group 1 = heads 8..15, W half -> s_3S band -> V rung
+        # -> s_3N -> N-tier line, odd sid; tools/s81_dv/sm_target/smwire_cal.py wo_a_group).  So slice s takes row
+        # chunk 8 (s & 1) + (s >> 1) when the rank's rows split into two equal groups of 8 chunks.
+        _g = [sorted({(ra0 + r) // o_rank for r in c}) for c in per]
+        if NSLICE == 16 and all(len(x) == 1 for x in _g) and len({x[0] for x in _g[:8]}) == 1 and \
+                len({x[0] for x in _g[8:]}) == 1 and _g[0] != _g[8]:
+            per = [per[8 * (s & 1) + (s >> 1)] for s in range(NSLICE)]
         grp_of = [{(ra0 + r) // o_rank for r in per[s]} for s in range(NSLICE)]
         assert all(len(x) == 1 for x in grp_of), 'a slice spans two wo_a groups'
         rows = list(range(ra1 - ra0))
