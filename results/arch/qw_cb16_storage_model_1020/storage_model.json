@@ -1,0 +1,1193 @@
+{
+  "source_sha256": "001aa6ab128cd8c4490e625b0e09a0d662e42a54d6dc9ffea96b145f3d1a5ec5",
+  "storage_limit_bits": 2048,
+  "variants": {
+    "qfd_c_b16_full_fabric": {
+      "rings": 69,
+      "pad_rings": 15,
+      "bank_bits": 141960,
+      "reader_output_bits": 35490,
+      "over_2048_arrays": 69,
+      "rows": [
+        {
+          "instance": "u_land_dn0_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn0_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn0_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_0b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_1a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_1b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_2a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_2b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_3a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_3b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_4a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_4b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_5a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_5b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_6a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_6b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_7a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_1_7b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_0a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_2_0a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_2_1b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0a_4_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_3_0a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_3_0a_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_5_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1a_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_3_1a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_3_1a_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_7_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_9_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_5_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_pad_4_0b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_rs_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_6_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_9_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_13_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        }
+      ]
+    },
+    "qfd_c_b16_fullb_fabric": {
+      "rings": 54,
+      "pad_rings": 0,
+      "bank_bits": 111120,
+      "reader_output_bits": 27780,
+      "over_2048_arrays": 54,
+      "rows": [
+        {
+          "instance": "u_land_dn0_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn0_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn0_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn1_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn2_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly3_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly6_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_dn3_rly9_w",
+          "width": 516,
+          "depth": 4,
+          "array_bits": 2064,
+          "half_width": 258,
+          "half_array_bits": 1032,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_1b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_2b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_3a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_4b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_5b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_6a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_1_7a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_0a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_1b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_2b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3a_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_2_3b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0a_4_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_5_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1a_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_3_1b_3_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_7_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_9_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0a_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_1_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_5_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_leg_4_0b_y_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_rs_0_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_2_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_6_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_9_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        },
+        {
+          "instance": "u_land_ft_13_w",
+          "width": 514,
+          "depth": 4,
+          "array_bits": 2056,
+          "half_width": 257,
+          "half_array_bits": 1028,
+          "over_2048": true
+        }
+      ]
+    }
+  },
+  "existing_plan": {
+    "qfd_c_b16_full": {
+      "area_mm2": 16.117,
+      "children": 168,
+      "single_cycle_over405_count": 0
+    },
+    "qfd_c_b16_fullb": {
+      "area_mm2": 16.828,
+      "children": 213,
+      "single_cycle_over405_count": 0
+    },
+    "qfd_c_b16_fullh": {
+      "area_mm2": 23.918,
+      "children": 444,
+      "single_cycle_over405_count": 160
+    },
+    "qfd_c_b16_fullhb": {
+      "area_mm2": 22.731,
+      "children": 429,
+      "single_cycle_over405_count": 156
+    }
+  },
+  "candidate": {
+    "name": "combined_dual_clock_half_ring",
+    "supported_half_widths": [
+      257,
+      258
+    ],
+    "depth": 4,
+    "read_offset_K": 2,
+    "write_control_slice_bits": 15,
+    "external_pins_half_258": 520,
+    "storage_bits_half_258": 1032,
+    "clock_roots": [
+      "ck_w",
+      "ck_r"
+    ],
+    "reset_inputs": [
+      "rst_w",
+      "rst_r"
+    ],
+    "half_258_analytical_state_bits": 1672,
+    "proposed_outline_um": [
+      43.2,
+      51.84
+    ],
+    "outline_status": "analytical candidate; mapped W258 area964.816920um2/core1847.5776um2=52.22%; physical root/pin and full-parent fit unqualified",
+    "all_hard_pairs_before": 4,
+    "combined_halves_after": 2,
+    "steady_edge_change_vs_closed_narrow_halves": 0,
+    "cold_reset_change_vs_closed_narrow_halves": 0,
+    "seam_center_admission": "actual per-bit source/destination L1 balls <=405; full-parent placement not yet established",
+    "native32_status": "W257 and W258 exact mapped native all-driver max30 and zero over32; no tied output bits in W258 mapped diagnostic",
+    "storage_policy": "each 257/258 half is a 1028/1032-bit explicit static ring (not a >=3-deep shift delay line); no array above2048",
+    "macro_alternative": "available32x512 SRAM is single-clock, cannot transparently replace two-clock crossing without new address/clock contract; no zero-edge SRAM claim",
+    "half_258_synth_area_um2": 964.81692,
+    "half_258_native_cells": 6971,
+    "half_258_native_ff": 1672,
+    "write_root_ff": 1269,
+    "read_root_ff": 403,
+    "clock_timing_plan": "two related same-frequency fixed-phase PLL roots; conservative single-cycle leaf STA, no data path exceptions; actual roots/pins/CTS proof owed"
+  }
+}
