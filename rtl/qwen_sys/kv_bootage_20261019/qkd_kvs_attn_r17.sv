@@ -570,10 +570,10 @@ module qkd_attn_cal_gen_r17 #(
  reg v1;reg [13:0] t1;reg [15:0] e1;
  // KV-ATTN4 r17: S2..S9 data CLEAR when the stage is not valid (stage N <= v(N-1) ? f : 0): after one reset edge every
  // stage reads 0, so no calendar data stage can hold a pre-reset value; read only on vN, so the value is unchanged where read.
- // The clear enable is a kept copy family of v(N-1) (8 identical registers, ot_rst_split: loads re-pointed <= 32 per copy).
- (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v1c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v2c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v3c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v4c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v5c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v6c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v7c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v8c;
+ // The clear enable is a kept copy family of v(N-1) (8 identical registers, ot_rst_split: loads re-pointed <= 32 per copy); v7c/v8c 12 copies: gate 104741 census v8c c0 33 > 32 with 8).
+ (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v1c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v2c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v3c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v4c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v5c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v6c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [11:0] v7c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [11:0] v8c;
  always @(posedge ck or negedge rst_n)if(!rst_n)begin v1c<=0;v2c<=0;v3c<=0;v4c<=0;v5c<=0;v6c<=0;v7c<=0;v8c<=0;end
-  else begin v1c<={8{go}};v2c<={8{v1}};v3c<={8{v2}};v4c<={8{v3}};v5c<={8{v4}};v6c<={8{v5}};v7c<={8{v6}};v8c<={8{v7}};end
+  else begin v1c<={8{go}};v2c<={8{v1}};v3c<={8{v2}};v4c<={8{v3}};v5c<={8{v4}};v6c<={8{v5}};v7c<={12{v6}};v8c<={12{v7}};end
  always @(posedge ck or negedge rst_n)if(!rst_n)v1<=0;else v1<=go;
  always @(posedge ck or negedge rst_d)if(!rst_d)begin t1<=0;e1<=0;end else begin t1<=ctx_t;e1<=epoch;end
  reg v2,f2,big1;reg [15:0] e2;reg [3:0][12:0] x2;reg [3:0] p2;reg [11:0] ns2;reg [5:0] c0_2,c1_2;
