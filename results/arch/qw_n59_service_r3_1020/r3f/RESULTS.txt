@@ -1,0 +1,13 @@
+R3f 8fc9699c3 (QW-N59-6 10-20) on R3e: every publication sized to <= 16 enable bits (a DFFE enable costs 2 mapped loads per
+bit), formatter registered one-hot seat hits ht (valid folded), word_data 2-byte groups on 32 slot copies (data enable
+output-exact), 48 native_context / 38 request copies from A/B face registers, rst_cp fmt 256 / pin 128 / top 64.
+Six V5.050 legs PASS; causal mutants (local_dv) REJECTED:
+ ht0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+ cq0_zero: N59DV_FAIL SPLIT lockstep: 251 of 360 edges differ (split vs reference)
+ bpub0_zero: N59DV_FAIL SPLIT lockstep: 243 of 360 edges differ (split vs reference)
+ optag0_zero: N59DV_FAIL SPLIT lockstep: 242 of 360 edges differ (split vs reference)
+ emc0_zero: N59DV_FAIL SPLIT lockstep: 155 of 360 edges differ (split vs reference)
+ ddc0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+Strict mapped census: REFUSE 75 > 32, max 122 (from R3d 430 / 216): ht D-side partial decodes 61 (36-44), request_slot 122
+(q_open), dr_o beat 67/35, pu_c 60, q_epoch select 58/48, tx_valid 39 x2, rsb 38, q beat 36/35, c_user 34, e3/k3 33,
+landing beat / vm_commit_beat 33 -> R3g (second-order copies) + R3h (decode address copies, select quarters, tx_valid copy).
