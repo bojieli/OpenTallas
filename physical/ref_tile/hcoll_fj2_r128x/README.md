@@ -4,7 +4,7 @@ Owner: LEAD3-HBM / HBM-COLLFJ (10-19). Branch claude/collfj-1019 (= issuer v7 br
 RTL change vs the first gate: programme target ROWS 128 sets issuer_start_pc at descriptor accept (e0cf553cf; v7 issuer priming).
 Geometry: 90.72 x 86.4 um (1.05:1), util ~42% (FALLBACK of r128w, outline only); pins N (cfg/desc/status), S (issuer), E/W (faults); no macros.
 Benches (Verilator 5.050, results/rtl/hbm_coll_fj_1019): parent EQ vs v8g #(AR_ITER 1, ROWS 128) PASS + 3 EQ mutants; fj mutant OT_PT_MUT_LATE_SPC REJECTED.
-gate pending (see lanes/HBM-COLLQ3.md section fj regate).
+gate WARN (util 42% < 45% band, rst_q fanout): placement setup +2.1 (fj3) / +5.2 (fj2) ps = no gain over r128w (the margin is logic-bound, not placement) -> NOT submitted; kept as evidence. Next lever if the r128w route misses: flow table -> SRAM / register the assembly/flow decode (item 5).
 
 SAFE-DESIGN checklist:
 1 Pins: PASS -- every input registered at its pin in RTL (ot_hgi_coll_fj_core), every output a flop Q, reset landed in 2 registered stages at the face (reset_landing.json).
