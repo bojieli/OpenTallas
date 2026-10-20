@@ -1,0 +1,40 @@
+# Explicit hardware/domain proposal and fixed edge price
+
+Status: implementable contract proposal, not adopted RTL and not a clock certificate. No hardware phase interval is invented. Actual native corners, endpoints, reset cone and compiler join pricing remain required before any source build/gate.
+
+## Exact current-binding absence receipt
+
+Die owner directly inspected two current generated contracts read-only:
+
+* DIAG/source11bf `/srv/opentallas-scratch/claude/codex-gen2e4-diag-s3-1020/views/contract.json`, SHA256 `9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8`:16 `su_{SW,SE,NW,NE}{0..3}` instances use master `ot_hbm_su_static_pgslice_lg`; no `ot_hbm_su_static_pgslice_rgf_lp` or SAFE3 successor, and no PGLG `ck_s/ck_r0..3` clock_reset ports.
+* Current GENREACH expanded/fprsv input `/srv/opentallas-scratch/claude/codex-hbm-genreach-forkfix-1020/views/contract.json`, SHA256 `1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4`: likewise old `pgslice_lg`, no rgf_lp/SAFE3 successor. Its unrelated rf0070 serial-relay ck_s ports from `hb_ckgen.pll_serial` cannot establish a source for the unbound PGLG successor.
+
+Separately, indexed source search `git grep 'ot_hbm_su_static_pgslice_rgf_lp' claude/hd4g-gen2e4-1019 -- rtl tools physical/ref_tile` had no match. This statement is restricted to that ref/path search; it is not a claim about all production trees. Candidate lg4's five native clock input ports and source reset topology are documented in HBM_ANCHORS.md. QW/S81 owners report no actual source-bound regional phase or reset-order certificate. Existing consumer phase admission is OPEN.
+
+## Concrete alternative to an unspecified phase relationship
+
+Offer a new opt-in synchronous clock-domain contract, separately priced from the existing five/19/9 arbitrary regional input relationship:
+
+1. Select ONE actual production clock cell output (exact source instance/master/view/port required) and one implemented common reset-release root. Connect every writer/read clock of an admitted crossing to delivered branches of that same signal. No separate PLL output, inferred identical frequency, RTL clock alias disconnected from physical source, clock mux, or independent reset synchronizer may stand in for this connection.
+2. The parent owns separate physical regional CTS branches, but their common source is explicit in the production netlist and generated-clock/clock-entry constraints. Actual linked write/read macro and register pairs must pass the paired all-corner phase/minimum-pulse/period/setup/hold certificate. A common logical source removes frequency ambiguity; it does not waive delivered skew. Native clock propagation and paired phase measurements are still necessary.
+3. A synchronous reset-release root registers an explicit release on that same clock. Equal-depth bounded reset trees distribute it; their physical setup/hold and first-active local edges are proved against the same root. Do not independently synchronize each region and then assume equal count. Required assertion duration is explicit and checked; all externally observable output data is zero until the tracked write/read epoch becomes valid, with arbitrary SRAM initial contents.
+4. For the admitted first family, internal SRAM ring depth is at least4 and read offset is explicitly2. At common clock edge e, SRAM writes input epoch e to slot e mod D. At edge e+1 it reads that slot, which was written a full clock earlier. At edge e+2 a final output FF captures the synchronous macro read, with a matching registered valid/zero path. The receiving child samples that output at edge e+3. This is three source-to-child edges, before additional explicit input/output relay stages. The read occurs on a different edge from the same-address write; actual write completion before read setup must still be checked.
+
+Under this new contract, width replication and reset/control copies retain exactly the same epoch and edge ledger. Source pipeline SW and destination pipeline SR each add their own explicit edges. Memory wc/read counters are initialized with the corresponding fixed reset/epoch offsets; the generator must emit the event-edge ledger and prove it, not assume a counter offset from nominal depth.
+
+|Consumer existing contract|New admitted common-clock baseline|Minimum change before reach relays|
+|---|---|---|
+|HBM D2/K1/E1, +2 child edges|D>=4, explicit offset2, +3 child edges|+1 edge per migrated crossing; joins/pads and first-use reset priced|
+|S81 D4/K2/E2, +3 child edges|D>=4, explicit offset2, +3 child edges|0 only if new common-source delivery/reset contract is accepted and proven|
+|QW D4/K2/E2, +3 child edges|D>=4, explicit offset2, +3 child edges|0 only if new common-source delivery/reset contract is accepted and proven|
+|QW fallback D8/K4/E4, +5 child edges|Either preserve explicit +5 age with extra fixed output delay, or re-solve to new +3 age|No automatic -2 benefit; full dependency/bundle/reset re-solve required|
+
+For every migrated crossing, final charged age is3+SW+SR; replace the old crossing age exactly once. This is a proposed fixed interface price, not achieved timing or a rate claim. For short FF crossings retaining the old backend, the old age remains unless the reset/clock contract also changes. Parent joins therefore need per-edge ages, not one global replacement constant. HBM D2->D4 storage/macro cost uses the same physical32row master, but logical protocol and reset/epoch assumptions still change and require acceptance.
+
+If a consumer cannot supply a single actual common source with provable delivery and reset epoch, keep the general dual-clock API blocked until a hardware-backed related-clock certificate exists. An asynchronous FIFO/credit handshake is not an authorized substitute for the static schedule.
+
+## Endpoint-driven relay price
+
+For actual source-pin s, proposed memory input/output pin m, final register r and destination-use pin d, record each physical route segment. Source-side hops SW are charged to reach the SRAM write pins; destination SR hops are charged after SRAM read/final capture. All data and coherent valid/epoch fields travel the same fixed number of edges. Each ordinary register hop must satisfy <=405um and real setup/hold, not only a centre-distance division. Per-bit longest paths and obstacles determine the requirement; ceil(ManhattanDistance/405) is only a necessary hop-count lower bound.
+
+The actual HBM native bank/read anchors exceed810um for some matching bits, but they are old register locations, not approved new source-to-memory placement points. QW's actual183 pin/orientation geometry is missing. Hence no exact SW/SR is assigned here, and no complete price/gain is claimed. This explicit common-clock interface and +1 HBM minimum can be reviewed now; source build waits for an accepted actual hardware source/reset schedule and endpoint ledger.
