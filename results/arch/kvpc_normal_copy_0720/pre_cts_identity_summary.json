@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.pc_pre_cts_stage_pin_identity.v1",
+  "status": "PASS",
+  "scope": "PRE-CTS DIAGNOSTIC of exact normal PC6 3_place ODB. Complete Liberty-function combinational-stage endpoint graph; standard-cell centers approximate endpoint pin XY, macro actual pin XY. Not final CTS/GRT/405um or source-native reset admission.",
+  "odb_path": "/gate/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_pc_asap7_ref_gate/base/3_place.odb",
+  "odb_sha256": "b76d744885ddd05c3c5363679590dbb752d026d6c48afe92573cc2e26ef63a4a",
+  "audit_source_sha256": "d4ab7a25f91be1923de609b4dd838d4b7d3577dcc642a6b550bb84acb0025f55",
+  "spec_path": "/src/physical/ref_tile/qkd_kvs_pc_sr8/spec.json",
+  "spec_sha256": "c8d80fe8985214d422c1789797ffbc542b50921158d0b962634e4eff11148fb0",
+  "synchronous_memory_proof": [
+    {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+      "sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+      "boundary": "posedge rclk registered rd_out, separate wclk registered write, verified in exact behavioural source"
+    }
+  ],
+  "die_um": [
+    0.0,
+    0.0,
+    267.84,
+    300.24
+  ],
+  "role_errors": [],
+  "counts": {
+    "combinational_instances": 90511,
+    "constant_function_drivers": 7201,
+    "actual_liberty_clock_pins_excluded": 26492,
+    "sequential_instances": 26446,
+    "power_ground_only_instances": 9277,
+    "synchronous_sram_instances": 23,
+    "declared_clock_ports_excluded": 2
+  },
+  "port_bit_count": 4662,
+  "sequential_instance_count": 26469,
+  "data_stage_edge_count": 1301200,
+  "combinational_cell_count": 83310,
+  "boundary_classes": {
+    "interior_or_multistage_landing_unresolved": 21626,
+    "direct_port_data_output": 1781,
+    "direct_port_data_input": 2282,
+    "direct_port_data_input_and_output": 780
+  }
+}
