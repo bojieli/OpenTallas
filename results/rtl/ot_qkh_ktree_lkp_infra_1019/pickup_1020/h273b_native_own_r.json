@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_rst_region_pr_h273b",
+ "view": "results/rtl/ot_qkh_ktree_lkp_infra_1019/pickup_1020/h273b_record/physical/ref_tile/qkd_rst_region_pr_h273b/views/qkd_rst_region_pr_h273b",
+ "lib_cell": "qkd_rst_region_pr_h273b",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 53.9,
+ "spread_ps": 2.1,
+ "outputs": 1,
+ "inputs": 10,
+ "launch_ps": 219.2,
+ "launch_pin": "b",
+ "capture_ps": 115.8,
+ "capture_pin": "dly[6]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 1.7,
+ "ff_launch_min_ps": 156.6,
+ "ff_hold_need_ps": -60.6,
+ "pass": true,
+ "fail_why": ""
+}
