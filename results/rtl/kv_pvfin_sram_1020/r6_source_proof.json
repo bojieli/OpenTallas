@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.pvfin-sram.source-proof.v1",
   "source_commit": "21d73156e",
-  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
+  "status": "BEHAVIOR_PASS_NATIVE_FAIL",
   "tool": "Verilator 5.050",
   "shape": {
     "lanes": 16,
@@ -122,7 +122,17 @@
       "sha256": "0f99b98ce6a172db7dc74cf15d1c295e7f0464c1e34a6eff24c30225bbec439a"
     }
   ],
-  "native_status": "R6 production mapped census running; no gate admission",
+  "native_status": {
+    "status": "FAIL",
+    "max_dynamic_loads": 33,
+    "violations": 1,
+    "role_errors": 0,
+    "report": "r6_native_fail.json.gz",
+    "driver": "_157586_/Y",
+    "net": "_076359_",
+    "root_cause": "primary unkept cal_q merged into kept command_cal[9]; global calendar validation and local MUL_AGE capture share a cone; R7 keeps cal_q distinct",
+    "area_um2": 35473.9564
+  },
   "remote": "ot-epyc5:/srv/opentallas-scratch/claude/codex-pvfin-v4-1020",
   "build_unit": "oth-ubuntu-3932914-1792495289",
   "census_job": "ot-run session44312 src_r5/native_run.log",
