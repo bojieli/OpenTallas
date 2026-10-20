@@ -1,0 +1,9 @@
+CTL_MISMATCH w16_data cycle=17
+CTL_MISMATCH w16_data cycle=18
+CTL_MISMATCH w16_data cycle=19
+CTL_MISMATCH w16_data cycle=20
+CTL_BOUND_EQ FAIL mismatches=7983 compares=151677
+- rtl/test/qwen_dv/s5/ctlsafe/tb_ctl_bounded.sv:203: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 0.064 s; speed 1.250 ms/s
+- Verilator: cpu 0.064 s on 1 threads; allocated 8 MB
