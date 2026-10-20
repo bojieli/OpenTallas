@@ -38,7 +38,7 @@ Busiest-SM cycles per layer at the SM face (bench lines at req_lead 8; HBM first
 |---|---|---|
 | mut_qw_chainearly (chain_gap - 40: merge event during publication) | mut_qw_chainearly.log | `FAULT arithmetic cycle 526` (ot_hbm_sm_pv_merge sticky pub_fault: ev during pub) |
 | mut_qw_pwar (p of block k+1 written before block k reads it) | mut_qw_pwar.log | `FAULT schedule cycle 311` |
-| mut_ds_early (QK publish before landing) | mut_ds_early.log | `FAULT`, 16/64 results |
+| mut_ds_early (QK publish before landing) | mut_ds_early.log | tb fault (rc 1, "fault": true), 16/64 results |
 | mut_ds_xearly / mut_qw_xearly (x_lead -40) | mut_*_xearly.log | mismatches (DS 7, Qwen wave 0) |
 | mut_ds_kv2 / mut_qw_kv2 (converter KVMUT 2) | mut_*_kv2.log | 512/512 resp. all PV words mismatch |
 
