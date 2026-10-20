@@ -29,6 +29,22 @@ closure from either. dv2f19g2/g2j remain live in PDN, real-case legal28662/28638
 Saved dh2diag terminalGRT overflow7089 and severe TT/FF setup/hold failures are
 explicit diagnostic records, not a die result.
 
-Validation: 7channel unit casesPASS; Python compilePASS. Existing BOOTCTX suite
-10PASS/1FAIL only parse_modules importAPI absent on this predecessor; preserved,
-not relaxed. Source/model generation is permitted; no physical submission yet.
+Validation: all11channel+BOOTCTX testsPASS; Python compilePASS. Initial10PASS/1FAIL
+was a local sparse-checkout setup error (tools/die_port_bind.py omitted, Python
+imported the older same-name qwen_split module); adding the exact source dependency
+resolves it without code/check changes. Source/model generation is permitted;
+no physical submission yet.
+
+Additional contact audit: the legacy generated M.face implementation uses
+pitch_tr1/2 (=.048/.096um), so the larger frame's average bits/face dimension
+DOES NOT establish the actual local <=6contacts/um requirement. This entire
+source GEN remains diagnostic. A new directional physical kit needs >=4tracks
+(.192um actual pitch), real pin rectangles and the corresponding enlarged
+face spans (548bits needs~109um,1088bits~213um). No contactPASS is claimed.
+
+Fresh source-only GEN: dv2f19g3c1, ot-epyc6 unit1181378, native PythonPID1182671,
+48GB/1thread admission against917GB available and5505GB scratch. Exact66e6d5622
+source overlay of the frozen predecessor; no place/PDN/route. SOURCE_COMMIT's
+literal text accidentally says "2Tcl"; only dv_case.py and qwen_rom_fulldie_b3r2.py
+are executable changes (two Python files). The authoritative exact commit and
+content hashes, not that descriptive typo, identify the source.
