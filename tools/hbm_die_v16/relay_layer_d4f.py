@@ -161,6 +161,48 @@ def main():
         rowbits[bi].sort()
     for di, v in unmatched.items():
         notes.append(f'{di}: {v} driver bits with no list row of the same sink set (not relayed: local or new sink set)')
+    # HBM-DIE7 10-20 PORT-AGE: one producer->consumer port path carried by SEVERAL rows (the lane plan splits a driver port by sink
+    # set, e.g. sucore_NW.red_tag[0:7] also feeds stl_NW (rf1176, 12 edges) while red_tag[8:31] + red_sv go p2p (rf1262,
+    # 11 edges)) must see every bit at ONE age, else the word reaches the consumer torn (d4g_functional_bind 'unequal relay
+    # stages across bits').  Plain (non-forwarded) rows: the shorter rows get equal-age sink-root pads up to the longest
+    # row of that port, to a fixpoint (a padded row may share another port); the port latency stays the longest row's
+    # (no new cycle for the word).  Forwarded rows are aligned by their landings (land plan), listed loudly if mixed.
+    def _inter_row(r):
+        rd_ = region(r['driver'].split('.', 1)[0])
+        return rd_ is None or any(region(s_) is None or (region(s_) != rd_ and frozenset((region(s_), rd_)) not in neigh)
+                                  for s_ in r['sinks'])
+    port_eff, port_rows, port_mixed = {}, collections.defaultdict(set), collections.defaultdict(set)
+    for bi, r in enumerate(st['rows']):
+        if not rowbits.get(bi) or r['driver'].split('.', 1)[0] not in inst:
+            continue
+        fwd = _inter_row(r)
+        pl_ = {p_['sink']: p_['stages'] for p_ in r.get('pads', [])}
+        for s_, d_ in zip(r['sinks'], r['sink_depths']):
+            port_eff[bi, s_] = d_ + pl_.get(s_, 0)
+        di_ = r['driver'].split('.', 1)[0]
+        for p_, k_, ls_ in rowbits[bi]:
+            for x_ in ls_:   # one functional path = one producer port -> one consumer port (other drivers' slots differ)
+                (port_mixed if fwd else port_rows)[x_[0], x_[1], di_, p_].add(bi)
+    port_pad = collections.Counter()
+    for _it in range(64):
+        moved = 0
+        for (s_, sp_, _d, _p), bis_ in port_rows.items():
+            if len(bis_) < 2:
+                continue
+            tgt_ = max(port_eff[b_, s_] + port_pad[b_, s_] for b_ in bis_)
+            for b_ in bis_:
+                if port_eff[b_, s_] + port_pad[b_, s_] < tgt_:
+                    port_pad[b_, s_] = tgt_ - port_eff[b_, s_]; moved += 1
+        if not moved:
+            break
+    else:
+        problems.append('PORT-AGE: equal-age pad fixpoint not reached in 64 passes')
+    for (s_, sp_, d_, p_), bis_ in sorted(port_mixed.items()):
+        if (s_, sp_, d_, p_) in port_rows:
+            problems.append(f'PORT-AGE: {d_}.{p_} -> {s_}.{sp_} split over forwarded AND plain rows (align at the landing plan)')
+    port_age_pads = [dict(row=st['rows'][b_]['driver'], sink=s_, pads=v) for (b_, s_), v in sorted(port_pad.items()) if v]
+    for x_ in port_age_pads:
+        notes.append(f"PORT-AGE: {x_['row']} -> {x_['sink']} +{x_['pads']} equal-age sink pad (shared consumer port)")
     for bi, r in enumerate(st['rows']):
         di, ports = r['driver'].split('.', 1); ports = set(ports.split('+'))
         sinks = list(r['sinks']); sset = set(sinks)
@@ -241,7 +283,7 @@ def main():
             else:
                 stages = {s_: 1 for s_ in sinks}
         else:
-            stages = {s_: pads_list.get(s_, 0) for s_ in sinks}
+            stages = {s_: pads_list.get(s_, 0) + port_pad.get((bi, s_), 0) for s_ in sinks}
         depth_eff = {s_: sdep[s_] + stages[s_] for s_ in sinks}
         if lane48:
             WF = a.fork_lane_width
@@ -452,7 +494,8 @@ def main():
     rep = dict(schema='opentallas.hbm.relays_d4f_report.v1', tile_categories=dict(sorted(cat.items())), reach_um=R, region_source=region_src, buses=len(splice),
                tiles=dict(sorted(tiles.items())), kinds=dict(collections.Counter(x['kind'] for x in consts)),
                fork_buses=sum(1 for x in consts if x['fork']), inter_region_buses=sum(1 for x in consts if x['inter_region']),
-               equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts)
+               equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts,
+               port_age_pads=port_age_pads)
     if a.land:
         rep['landing'] = dict(links=len(land_rows), landing_tiles=sum(x['lanes'] for x in land_rows),
                               by_master=dict(collections.Counter(x['master'] for x in land_rows for _ in range(x['lanes']))),
