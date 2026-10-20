@@ -26,8 +26,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 259.2,
-  "h": 216.0
+  "w": 220.32,
+  "h": 259.2
  },
  "std_area_um2": 10989,
  "pins": {
@@ -76,8 +76,8 @@
    "count": 1,
    "inst": "*u_sd*g_d?0?*g_c?1?*u_m",
    "at": [
-    86.4,
-    43.2
+    43.2,
+    84.576
    ],
    "at_exact": true,
    "orient": "R0"
@@ -87,8 +87,8 @@
    "count": 1,
    "inst": "*u_sd*g_d?1?*g_c?0?*u_m",
    "at": [
-    129.6,
-    43.2
+    43.2,
+    125.952
    ],
    "at_exact": true,
    "orient": "R0"
@@ -98,8 +98,8 @@
    "count": 1,
    "inst": "*u_sd*g_d?1?*g_c?1?*u_m",
    "at": [
-    172.8,
-    43.2
+    43.2,
+    167.328
    ],
    "at_exact": true,
    "orient": "R0"
@@ -110,7 +110,7 @@
    "inst": "*u_pring*g_b?1?*u_m",
    "at": [
     43.2,
-    86.4
+    208.704
    ],
    "at_exact": true,
    "orient": "R0"
@@ -120,8 +120,8 @@
    "count": 1,
    "inst": "*u_xf*g_st?3?*u_dr*g_b?1?*u_m",
    "at": [
-    86.4,
-    86.4
+    129.6,
+    43.2
    ],
    "at_exact": true,
    "orient": "R0"
@@ -132,7 +132,7 @@
    "inst": "*u_xf*g_st?3?*u_dr*g_b?0?*u_m",
    "at": [
     129.6,
-    86.4
+    70.8
    ],
    "at_exact": true,
    "orient": "R0"
@@ -142,8 +142,8 @@
    "count": 1,
    "inst": "*u_xf*g_st?2?*u_dr*g_b?1?*u_m",
    "at": [
-    172.8,
-    86.4
+    129.6,
+    98.4
    ],
    "at_exact": true,
    "orient": "R0"
@@ -153,8 +153,8 @@
    "count": 1,
    "inst": "*u_xf*g_st?2?*u_dr*g_b?0?*u_m",
    "at": [
-    43.2,
-    129.6
+    129.6,
+    126.0
    ],
    "at_exact": true,
    "orient": "R0"
@@ -164,8 +164,8 @@
    "count": 1,
    "inst": "*u_rring*g_b?1?*u_m",
    "at": [
-    86.4,
-    129.6
+    129.6,
+    153.6
    ],
    "at_exact": true,
    "orient": "R0"
@@ -176,7 +176,7 @@
    "inst": "*u_rring*g_b?0?*u_m",
    "at": [
     129.6,
-    129.6
+    181.2
    ],
    "at_exact": true,
    "orient": "R0"
@@ -186,8 +186,8 @@
    "count": 1,
    "inst": "*u_pring*g_b?0?*u_m",
    "at": [
-    172.8,
-    129.6
+    129.6,
+    208.8
    ],
    "at_exact": true,
    "orient": "R0"
@@ -223,12 +223,35 @@
  },
  "children": [],
  "inter": [],
- "structural_change": "q4/q4w FAIL pin-flop spread 100.6/96.7 & 86.9/83.7 ps and 262 native >32: native32 caller + literal-lattice block + regional clock",
+ "structural_change": "qfd_coll_split_q4 FAIL: pin-flop spread q4 100.6/96.7, q4w 86.9/83.7 ps TT/FF and 262 native drivers >32 (legacy fp32 adder). q5: (1) native32 caller (Codex LAT7 FAN32/ADD_FAN32 + QW-ORPHANS reset leaves) census PASS 77257 roots max 32; (2) balanced symmetric clock spine with macro leaves (OT_SPINE SYM/SAFE_BALANCE/MACRO_LEAF) replacing the single Triton tree; (3) same abutted-stack 43.2-lattice geometry and pin faces, synth std 10989 um2. Zero added cycles.",
  "job": {
   "owner": "Claude:QW-ORPHANS",
   "branch": "claude/qw-orphans-coll-1020",
   "tag": "q5",
-  "status": "DRAFT_NOT_GATED",
-  "purpose": "Q leaf successor: native32 FAN32/ADD_FAN32 caller, literal 43.2 lattice 4x3 macro block, ring std band, regional face clock; gate only after census PASS + clock model"
+  "purpose": "QW-ORPHANS Q leaf q5: native32 FAN32/ADD_FAN32 caller (census r3 PASS max32, 0 viol) on qfd_coll_split_q4 abutted-stack geometry + balanced symmetric spine (q4/q4w single Triton tree FAIL spread)",
+  "extra_paths": [
+   "results/rtl/coll_native32_1020",
+   "rtl/test/tb_coll_tp8_native32.sv",
+   "tools/qwen_coll_tp8_native32_bench.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/hdc_golden.py",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet",
+   "rtl/rom/ot_coll_tp8_static.sv",
+   "rtl/physical/ot_qfd_io_collective_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1"
+  ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_PORT": "clk",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
  }
 }
