@@ -1,18 +1,27 @@
-# PRETREE2 pickup
+# PRETREE2 pickup status
 
-Pinned existing builds2332523/2332525 and chain2364203 are preserved.
-The scratch collector was redirected from the paused Claude worktree to the
-Codex worktree. Its original bytes are saved beside it as
-collect_pt.claude_original.sh. collect_pt_codex.sh preserves the new exact recipe.
+Existing builds2332523/2332525 and chain2364203 completed and were preserved.
+The12 production PRETREE records and4 regressions all PASS full-shape direct
+RTL. Exact logs/manifests and all six original negative outcomes are committed
+in production_terminal/. The original six-negative conjunction remains FALSE:
+3causal numeric failures,1inactive corruption,2insensitive pairing fixtures.
+Corrected collector selects each exact mutant filename, excluding copied
+baseline logs. It exits before any automatic units/rate update.
 
-Collection is blocked unless all12 pre-tree records and all4 regressions have
-SU_TOP PASS without SU_TOP ERROR/FAIL. All6 mutation runs (corrupted input,
-join-pairing1024 and unbound pre-tree, each for two production shapes) must
-produce actual SU_TOP ERROR and FAIL, without PASS. Crashes or missing markers
-never qualify. The acceptance JSON records every predicate before timing update.
+New production-shape sensitive qnorm witnesses use unchanged existing binaries:
+baseline model golden4b800006 PASS; actual MUT1024 pairing4b800007 FAIL2;
+first actual operand corruption4096->0 gives41600000 FAIL2. See terminal packet
+for scope, source pins and actual scalar/VM edges. No negative PASS is erased.
 
-Golden-order contract: prod_compile --pretree emits aligned model csum8
-subtrees and ((Q0+Q1)+(Q2+Q3)); compilation asserts each row against the model.
-Actual RTL exactness and causal witnesses are still pending. The8-row exp_sum
-entry remains an affine law from1/2/3 rows; it must retain that label even if
-those measured records pass. No rate or physical closure is established here.
+Actual four-row exp_sum uses two2row phases on the same256localrows, no reset,
+all fill/drain/dispatch/RF-clear/barrier costs charged:1422serial edges,
+4098VMreads/4098VMwrites/16scalars PASS. Both phase2causal mutants FAIL.
+The scheduled read/write alias certificate enumerates4098requests and4098writes
+with0prior-write conflicts; it is source-pinned contract analysis, not a DUT
+read-request trace. max_r4 full-shape measurement PASS378serial edges.
+See phase4/ and qw4_admission/ including direct512vs500capacity refusal.
+
+These are measured component programmes with exact model csum8/ordered-max
+arithmetic. Die PRETREE binding, actual source contracts/native closure and
+compiler model integration remain open. No affine8row, whole-die or token-rate
+performance is adopted by this branch.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# HBM-PRETREE2 collection (after run_all_pt.sh): copy results, update units/su.json in the worktree, census --measured, tok/s
+# HBM-PRETREE2 collection: exact logs and causal guard only; unit/rate adoption explicitly held below.
 set -u
 L=/home/ubuntu/scratch/hbm-pretree2; W=/home/ubuntu/wt/codex-hbm-pretree-pickup-1020; B=/srv/opentallas-scratch/claude/hbm-pretree2/suvop
 T=/srv/opentallas-scratch/claude/toksim-hbm; P=$W/results/token_pass/measured_hbm_1019/pretree2
