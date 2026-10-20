@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 import runpy
 import re
+import sys
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / 'sources'
@@ -200,6 +201,12 @@ def main():
             'packing_comparator_1728x2073p6_area_delta_16slots_mm2':
                 16 * (1728 * 2073.6 - old['w'] * old['h']) / 1e6,
             'limitation': 'Source ports exactly enumerated; candidate face assignment only. No track/PG/macro packing/reach/STA/CTS qualification.'},
+        'conditional_hgrp8_hierarchy_packing': {
+            'status': 'NOT_IMPLEMENTED_OR_ADOPTED; existing lineage generator evaluated as conditional planning evidence',
+            'hgrp8_outline_um': [432, 432], 'hgrp_instances_per_attw': 16,
+            'hgrp_reserved_area_per_attw_mm2': 16 * 432 * 432 / 1e6,
+            'pin_minimum_outline_area_mm2': prod_w * prod_h / 1e6,
+            'warning': 'Sixteen hgrp child outlines alone exceed the uniform service pin-minimum area, before all other children, SRAM, standard cells and channels.'},
         'saved_plan_overlap_evidence': plan['facts']['lane_band_over_block'],
         'structural_obligations': [
             'Retain every active source bit. Two physical pin layers do not halve aggregate face density.',
@@ -210,6 +217,25 @@ def main():
             'Recompute station counts, per-lane ages and compiler price before full protocol/token verification; no cycle delta has been measured here.',
             'Require full source identity, strict bind, actual die physical GRT/TT/FF/SS/clock/reach and parent/hardened child qualification before adoption.'
         ]}
+    # Evaluate only the unchanged generator's imports/constants/geometry section;
+    # its generation/output code is excluded, so this creates no RTL/spec/kit.
+    source = (SRC / 'mk_attw_lp.py').read_text()
+    prefix, rest = source.split('# ------------------------------------------------------------------ geometry', 1)
+    geometry = rest.split('ms = []', 1)[0]
+    old_argv = sys.argv
+    try:
+        sys.argv = ['planning_only', '190000', '432', '432']
+        ns = {'__file__': str(SRC / 'mk_attw_lp.py'), '__name__': 'conditional_geometry_only'}
+        exec(compile(prefix + geometry, 'archived_mk_attw_lp_geometry_only', 'exec'), ns)
+    finally:
+        sys.argv = old_argv
+    hierarchy = output['conditional_hgrp8_hierarchy_packing']
+    hierarchy.update({'lineage_generator_parameters': {'std_area_um2': ns['A'], 'HGW': ns['HGW'], 'HGH': ns['HGH']},
+                      'conditional_attw_outline_um': [ns['W'], ns['H']],
+                      'conditional_attw_area_mm2': ns['W'] * ns['H'] / 1e6,
+                      'per_attw_macro_count': {'hgrp_SRAM32x64': 16 * 17, 'centre_big': ns['big_n'],
+                                               'centre_small': ns['small_n']},
+                      'limitation': 'Landings, source clock/reset/native census, full reach, latency/current production ABI and parent packing are unqualified. This is not a service slot proposal.'})
     (ROOT / 'model.json').write_text(json.dumps(output, indent=2) + '\n')
     print(json.dumps({'status': output['status'], 'lower_bound': output['active_lane_lower_bound'],
                       'current_production_ABI': output['current_production_ABI']}, indent=2))

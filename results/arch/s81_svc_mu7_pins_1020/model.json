@@ -21,6 +21,10 @@
       "sha256": "e6f399e3391aab03f407a0afb53d37f14593eba32278342db50e466e267963b1",
       "bytes": 60818
     },
+    "mk_attw_lp.py": {
+      "sha256": "1451662ea0902a84a40e1dbb804156d958dcfb470d719643f1603300ddd719fa",
+      "bytes": 8954
+    },
     "p4l_plan.json": {
       "sha256": "a92f7ab89fd50423d6f3b8d34885bba752d7dc86f1f16635712ce31ff1e419d5",
       "bytes": 505453
@@ -1770,6 +1774,33 @@
     "additional_2row_height_preserving_gap_um": 607.5199999999995,
     "packing_comparator_1728x2073p6_area_delta_16slots_mm2": 30.53183846144,
     "limitation": "Source ports exactly enumerated; candidate face assignment only. No track/PG/macro packing/reach/STA/CTS qualification."
+  },
+  "conditional_hgrp8_hierarchy_packing": {
+    "status": "NOT_IMPLEMENTED_OR_ADOPTED; existing lineage generator evaluated as conditional planning evidence",
+    "hgrp8_outline_um": [
+      432,
+      432
+    ],
+    "hgrp_instances_per_attw": 16,
+    "hgrp_reserved_area_per_attw_mm2": 2.985984,
+    "pin_minimum_outline_area_mm2": 2.8366848,
+    "warning": "Sixteen hgrp child outlines alone exceed the uniform service pin-minimum area, before all other children, SRAM, standard cells and channels.",
+    "lineage_generator_parameters": {
+      "std_area_um2": 190000.0,
+      "HGW": 432.0,
+      "HGH": 432.0
+    },
+    "conditional_attw_outline_um": [
+      2851.2,
+      2160.0
+    ],
+    "conditional_attw_area_mm2": 6.158592,
+    "per_attw_macro_count": {
+      "hgrp_SRAM32x64": 272,
+      "centre_big": 32,
+      "centre_small": 38
+    },
+    "limitation": "Landings, source clock/reset/native census, full reach, latency/current production ABI and parent packing are unqualified. This is not a service slot proposal."
   },
   "saved_plan_overlap_evidence": {
     "bit_mm": 32.2,
