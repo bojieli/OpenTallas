@@ -1,0 +1,125 @@
+{
+ "name": "qfd_dv_s5_scb-s5scb-COMMIT",
+ "block": "qfd_dv_s5_sc",
+ "ref_tile": true,
+ "owner": "Claude:QW-SLICE6-SCRED",
+ "purpose": "PARALLEL FALLBACK of qfd_dv_s5_sc: qfd_dv_scalar2 with +define+OT_QFD_DV_SAFE_STORAGE (two-stage root argmax merge: the three cascaded 57-b candidate compares of the base cut into one registered per-edge winner + one running-best merge, +1 edge on the root argmax token; main's 4ddd08d8a opt-in, its storage witnesses) -- a structural fix of checklist item 4 (no 3-way arbitration in one cycle)",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-slice6-scred-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/hdc_program.py",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_s5_sc u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_DV_SAFE_STORAGE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/qwen_dv/qfd_dv_scalar2.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_flat0_eq_ss",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && S5_DEFS=+define+OT_QFD_DV_SAFE_STORAGE bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/eq eq 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "S5_EQ PASS"
+   },
+   {
+    "name": "s5_flat0_b2_ss",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && S5_DEFS=+define+OT_QFD_DV_SAFE_STORAGE bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/b2 b2 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "bench2 \\(o\\) MUT=0: PASS"
+   },
+   {
+    "name": "s5_mut_sc_ss",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && S5_DEFS=+define+OT_QFD_DV_SAFE_STORAGE bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/m eq sc",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice6_1019/witness/sc_mut_scb.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_s5_scb/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_s5_scb/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_s5_scb --out {RUN}/record/views/qfd_dv_s5_sc  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_s5_scb/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_s5_scb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_s5_scb/qfd_dv_s5_scb-s5scb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "PARALLEL FALLBACK of qfd_dv_s5_sc: qfd_dv_scalar2 with +define+OT_QFD_DV_SAFE_STORAGE (two-stage root argmax merge: the three cascaded 57-b candidate compares of the base cut into one registered per-edge winner + one running-best merge, +1 edge on the root argmax token; main's 4ddd08d8a opt-in, its storage witnesses) -- a structural fix of checklist item 4 (no 3-way arbitration in one cycle)"
+}
