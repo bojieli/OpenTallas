@@ -63,9 +63,16 @@ module tb_dsdv_svc_rs;
     parameter integer GODLY = 400;
     parameter integer PVS0 = 150;          // compiled PV send: GO + ceil(5 T / 4) + PVS0 (the D = 32 share scores
                                            // 1.25 cycles a row: tb_dsdv_svc_pfeed last score 1.25 T + 40; + tree + gd)
-    parameter integer KPV = 55;            // compiled P.V drain base: PO + 8 ceil(T / 32) + KPV (SVC-PV 10-18, PV_CRED 8:
-                                           // tb_dsdv_svc_pvdrain, all 8 beats in pvq by p0 + 53 + 8 ceil(T / 32); was
-                                           // PO + ceil(T / 4) + 112 for the 4-deep pvq, which faulted 15 / 19)
+    // compiled P.V drain base: PO + 8 ceil(T / 32) + KPV (SVC-PV 10-18, PV_CRED 8: tb_dsdv_svc_pvdrain, all 8 beats in
+    // pvq by p0 + 53 + 8 ceil(T / 32); was PO + ceil(T / 4) + 112 for the 4-deep pvq, which faulted 15 / 19).
+    // S81-SVC6 (10-19): the registered att pins (OT_SVC_ATT_PINREG, also under the landed attw OT_SVC_ATTW_LP) delay the
+    // owner's P.V beat vs its compiled slot at the production engine: measured on this bench (tail46, prod engine)
+    // KPV 55 / 58 FAIL (fault 19, first owner), 62 PASS for both pin and lp -> priced +7 edges (KPV 62).
+`ifdef OT_SVC_ATT_PINREG
+    parameter integer KPV = 62;
+`else
+    parameter integer KPV = 55;
+`endif
 `ifndef MUT
 `define MUT 0
 `endif
