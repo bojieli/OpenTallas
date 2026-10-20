@@ -4,7 +4,7 @@ Counts all data/reset/enable sinks and excludes only the named root clock net.
 Generic ABC-mapped measurement; technology-specific native mapping still required.
 """
 import json,sys,collections,re
-x=json.load(open(sys.argv[1]));top=sys.argv[2];mods=x['modules'];loads=collections.Counter();drivers={};names={};clocks=set();leaves=0;celltypes=collections.Counter();control_aliases={};buf_inputs={};buf_outputs={};sinks=collections.defaultdict(list)
+x=json.load(open(sys.argv[1]));top=sys.argv[2];mods=x['modules'];loads=collections.Counter();drivers={};names={};clocks=set();leaves=0;celltypes=collections.Counter();control_aliases={};buf_inputs={};buf_outputs={};sinks=collections.defaultdict(list);driver_info={}
 
 def visit(mod,path,portmap=None):
  global leaves
@@ -29,6 +29,7 @@ def visit(mod,path,portmap=None):
   if c['type'] in mods and not int(mods[c['type']].get('attributes',{}).get('blackbox','0'),2):
    visit(c['type'],path+'/'+n,conn)
   else:
+   if c['type']=='$scopeinfo':continue
    leaves+=1;celltypes[c['type']]+=1
    isbuf=c['type'].startswith(('BUF','INV'))
    if isbuf:
@@ -42,7 +43,9 @@ def visit(mod,path,portmap=None):
      if isinstance(b,str) or b in clocks:continue
      if direction=='input':
       loads[b]+=1;sinks[b].append((path+'/'+n+'/'+p,path+'/'+n if isbuf else None))
-     if direction=='output':drivers[b]=path+'/'+n+'/'+p
+     if direction=='output':
+      drivers[b]=path+'/'+n+'/'+p
+      driver_info[b]={'type':c['type'],'src':c.get('attributes',{}).get('src',''),'inputs':[v for pn,vs in conn.items() if c['port_directions'][pn]=='input' for v in vs if v not in clocks]}
 visit(top,top)
 def terminal_sinks(b,seen=None):
  seen=set() if seen is None else seen
@@ -59,5 +62,13 @@ for alias,b in sorted(control_aliases.items()):
  while root in buf_inputs and root not in seen:seen.add(root);root=buf_inputs[root]
  controls.append({'alias':alias,'direct_loads':loads[b],'root_driver':drivers.get(root,'top_input'),'root_direct_loads':loads[root],'root_through_buffers_loads':flatloads.get(root,0)})
 rank=sorted(loads,key=lambda b:loads[b],reverse=True)
-rows=[{'net':names.get(b,str(b)),'driver':drivers.get(b,'top_input'),'loads':loads[b]} for b in rank]
+def register_sources(b,depth=0,seen=None):
+ seen=set() if seen is None else seen
+ if depth>12 or b in seen or b not in driver_info:return set()
+ seen.add(b);info=driver_info[b]
+ if info['type'].startswith('DFF'):return {info['src']}
+ result=set()
+ for v in info['inputs']:result.update(register_sources(v,depth+1,seen))
+ return result
+rows=[{'net':names.get(b,str(b)),'driver':drivers.get(b,'top_input'),'loads':loads[b],'driver_type':driver_info.get(b,{}).get('type','top_input'),'driver_source':driver_info.get(b,{}).get('src',''),'upstream_register_sources':sorted(register_sources(b)) if loads[b]>32 else []} for b in rank]
 json.dump({'kind':'ASAP7_TT_recursive_primitive_pin_census','top':top,'primitive_cells':leaves,'primitive_types':dict(celltypes),'unmapped_internal_cells':{k:v for k,v in celltypes.items() if k.startswith('$')},'asr_model_proof':'NONE: counts only, never behavioral equivalence','controls':controls,'max_through_buffers_loads':max(flatloads.values(),default=0),'clock_exclusion':'ck_w and ck_r only','maximum_loads':max(loads.values(),default=0),'violations':[r for r in rows if r['loads']>32],'top_drivers':rows[:30],'through_buffer_violations':[{'net':names.get(b,str(b)),'loads':v} for b,v in flatloads.items() if v>32],'pass':not any(r['loads']>32 for r in rows) and max(flatloads.values(),default=0)<=32,'limits':'Physical reach/depth/storage/registered-boundary remain separate; no cell-model equivalence claim'},sys.stdout,indent=2);print()
