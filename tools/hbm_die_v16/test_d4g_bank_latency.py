@@ -95,6 +95,16 @@ def test():
     assert status(dma(12, extra=1))[:2] == ('FAIL', 12)                                       # unequal: pad bank 0
     assert status(dma([11, 12], extra=1))[0] == 'FAIL'                                         # no vector form (VECTOR_OK)
     assert L.dma_min_drain_lag(7) == 10 and L.dma_min_drain_lag() == L.DMA_RR_RT_BUDGET + 3
+    # HBM-VMEARLY-XL: x-load early issue rule
+    assert L.xl_footprint(5120, 1) == 40 and L.xl_footprint(5120, 2) == 24 and L.xl_footprint(512, 0) == 8
+    assert L.xl_slots([40, 40, 8, 64], 1) == [0, 40, 80, 88] and L.xl_slots([40, 40], 0) == [0, 0]
+    sl, fp = L.xl_slots([40, 40, 40, 40], 1), [40] * 4
+    # N=0: waits for the SM end of record 0; N=1: only for its start (and x-load free)
+    assert L.xl_min_fire(1, [0], [239], None, [300], [1099], 84, [0, 0], fp, 0) == 1100
+    assert L.xl_min_fire(1, [0], [239], None, [300], [1099], 84, sl, fp, 1) == 300
+    assert L.xl_min_fire(1, [0], [239], 1500, [300], [1099], 84, sl, fp, 1) == 1501          # RAW
+    assert L.xl_min_fire(3, [0, 300, 1100], [239] * 3, None, [300, 1100, 1900], [1099, 1899, 2699], 84, sl, fp, 1) == 1900
+    assert L.xl_min_fire(1, [0], [239], None, [300], [1099], 84, [0, 0], fp, 1) == 1016      # same slot: beat after end
     test_chain()
     print('test_d4g_bank_latency PASS')
 

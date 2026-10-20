@@ -1,0 +1,18 @@
+{
+ "lane": "HBM-VMEARLY-XL (10-19 night, HBM-VMEARLY-XLCOLL)",
+ "bench": "rtl/hbm_accel/generic/adapters/tb/run_xload_vmearly.sh <out> BMUT MVD (Verilator 5.050, ot-epyc6 via ot-run)",
+ "hardware": "ot_hgi_sm_xload_cl2_ctlx via xql NP2 T2, RD_LAT budget [37,39,27,29,53,55,43,45] (RLM 55), GEN2c NE lanes + die rq pads, faces bank n+7; ref unit RD_LAT 6 zero lanes",
+ "rtl_change": "none (compiler-only: x_busy covers only the x-load's own record; x_xb slot base already offsets every xw beat into the SM x store XD=128)",
+ "issue_ahead": 1, "nbuf": "static x_xb ring over the 128-word SM x store (record footprint 8..40 words); 0 added bits",
+ "compiler_rule": "tools/hbm_die_v16/d4g_bank_latency.py xl_min_fire / xl_slots / xl_footprint (unit test PASS)",
+ "layer5_29_records_mvd800": {"exposed_x_leg_rl6_n0": 4107, "exposed_rl55_n0": 5528, "exposed_rl55_n1": 1492,
+   "bank_latency_part_before": 1421, "bank_latency_part_after": 441, "layer_span_n0": 28727, "layer_span_n1": 24691},
+ "layer5_29_records_mvd200": {"exposed_rl55_n0": 5528, "exposed_rl55_n1": 1883, "bank_latency_part_before": 1421,
+   "bank_latency_part_after": 441, "layer_span_n0": 11327, "layer_span_n1": 7682},
+ "residual": "441 = the RAW-bound records (wq_a, wq_b, att.qk, att.pv, wo_a, wo_b, router, e1.w2, e6.w2): their x is the previous record's output",
+ "data": "every record's slot content at SM start bit-identical across N0 / N1 / RL6 units; 1104/1104/1104 beats; fault 0",
+ "mutants": {"BMUT1 slot index ignored": "vmearly_m1_mv800_fail.log  regex '^XLOAD_VMEARLY FAIL BMUT=1' (live-slot writes 240, 736 words differ)",
+             "BMUT2 read before producer retired": "vmearly_m2_mv800_fail.log  regex '^XLOAD_VMEARLY FAIL BMUT=2' (112 stale words)",
+             "BMUT3 ISSUE_AHEAD ignored": "vmearly_m3_mv800_fail.log  regex '^XLOAD_VMEARLY FAIL BMUT=3' (28 timing-off-plan)"},
+ "die_bind": "SM command op_xb (x read base) must come from the static programme = x_xb of the same record (ot_hgi_sm_record ties op_xb 0 today: single-buffered)"
+}

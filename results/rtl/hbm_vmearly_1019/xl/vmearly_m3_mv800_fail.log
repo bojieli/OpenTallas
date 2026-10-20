@@ -1,0 +1,74 @@
+XLOAD_VMEARLY BMUT=3 MVD=800 PW=24 RD_LAT budget 2d2b37351d1b2725 (RLM 55) lanes NE + pads 151425250d0c1d1d / ref RD_LAT 6
+CAL  0 wq_a       fmt 1 n 5120  fp 40 | RL55 F 84  X 240 B 239 | RL6 F 35  X 191 B 190
+CAL  1 wkv        fmt 1 n 5120  fp 40 | RL55 F 84  X 240 B 239 | RL6 F 35  X 191 B 190
+CAL  2 wq_b       fmt 1 n 1024  fp 8  | RL55 F 84  X 112 B 111 | RL6 F 35  X 63  B 62 
+CAL  3 att.qk(q)  fmt 0 n 512   fp 8  | RL55 F 81  X 97  B 96  | RL6 F 32  X 48  B 47 
+CAL  4 att.pv(P)  fmt 0 n 512   fp 8  | RL55 F 81  X 97  B 96  | RL6 F 32  X 48  B 47 
+CAL  5 wo_a       fmt 1 n 512   fp 8  | RL55 F 84  X 112 B 111 | RL6 F 35  X 63  B 62 
+CAL  6 wo_b       fmt 1 n 1024  fp 8  | RL55 F 84  X 112 B 111 | RL6 F 35  X 63  B 62 
+CAL  7 router     fmt 1 n 5120  fp 40 | RL55 F 84  X 240 B 239 | RL6 F 35  X 191 B 190
+CAL  8 e0.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL  9 e6.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 10 e6.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 11 e0.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 12 e1.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 13 e1.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 14 e2.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 15 e2.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 16 e3.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 17 e3.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 18 e4.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 19 e4.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 20 e5.w1      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 21 e5.w3      fmt 2 n 5120  fp 24 | RL55 F 88  X 224 B 223 | RL6 F 39  X 175 B 174
+CAL 22 e1.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 23 e4.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 24 e3.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 25 e0.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 26 e5.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 27 e2.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL 28 e6.w2      fmt 2 n 2048  fp 8  | RL55 F 88  X 128 B 127 | RL6 F 39  X 79  B 78 
+CAL launch->start FO 11 / 11 / 11
+ERR unit 1 record 1: x_done 1306 / SM start 1307, predicted 506 / 1066
+ERR unit 1 record 2: x_done 2243 / SM start 2244, predicted 2002 / 2003
+ERR unit 1 record 3: x_done 3165 / SM start 3166, predicted 2924 / 2925
+ERR unit 1 record 4: x_done 4087 / SM start 4088, predicted 3846 / 3847
+ERR unit 1 record 5: x_done 5024 / SM start 5025, predicted 4783 / 4784
+ERR unit 1 record 6: x_done 5961 / SM start 5962, predicted 5720 / 5721
+LAYER rec  name       fmt     n  xb1 | exposed RL6/N0  RL55/N0  RL55/N1 | N1 fire-before-prev-end
+LAYER   0  wq_a       1  5120   0   | 217      266      266    | no (RAW)
+LAYER   1  wkv        1  5120   40  | 192      241      241    | no 
+LAYER   2  wq_b       1  1024   80  | 88       137      137    | no (RAW)
+LAYER   3  att.qk(q)  0  512    88  | 73       122      122    | no (RAW)
+LAYER   4  att.pv(P)  0  512    96  | 73       122      122    | no (RAW)
+LAYER   5  wo_a       1  512    104 | 88       137      137    | no (RAW)
+LAYER   6  wo_b       1  1024   112 | 88       137      137    | no (RAW)
+LAYER   7  router     1  5120   120 | 216      265      265    | no (RAW)
+LAYER   8  e0.w1      2  5120   32  | 176      225      225    | no 
+LAYER   9  e6.w1      2  5120   56  | 176      225      225    | no 
+LAYER  10  e6.w3      2  5120   80  | 176      225      225    | no 
+LAYER  11  e0.w3      2  5120   104 | 176      225      225    | no 
+LAYER  12  e1.w1      2  5120   0   | 176      225      225    | no 
+LAYER  13  e1.w3      2  5120   24  | 176      225      225    | no 
+LAYER  14  e2.w1      2  5120   48  | 176      225      225    | no 
+LAYER  15  e2.w3      2  5120   72  | 176      225      225    | no 
+LAYER  16  e3.w1      2  5120   96  | 176      225      225    | no 
+LAYER  17  e3.w3      2  5120   120 | 176      225      225    | no 
+LAYER  18  e4.w1      2  5120   16  | 176      225      225    | no 
+LAYER  19  e4.w3      2  5120   40  | 176      225      225    | no 
+LAYER  20  e5.w1      2  5120   64  | 176      225      225    | no 
+LAYER  21  e5.w3      2  5120   88  | 176      225      225    | no 
+LAYER  22  e1.w2      2  2048   112 | 104      153      153    | no (RAW)
+LAYER  23  e4.w2      2  2048   120 | 80       129      129    | no 
+LAYER  24  e3.w2      2  2048   0   | 80       129      129    | no 
+LAYER  25  e0.w2      2  2048   8   | 80       129      129    | no 
+LAYER  26  e5.w2      2  2048   16  | 80       129      129    | no 
+LAYER  27  e2.w2      2  2048   24  | 80       129      129    | no 
+LAYER  28  e6.w2      2  2048   32  | 104      153      153    | no (RAW)
+XLOAD_VMEARLY_LAYER exposed x-leg edges (29 records): RL6 N0 4107 | RL55 N0 5528 | RL55 N1 5528; bank-latency part (vs RL6): before 1421 after 1421; layer span N0 28727 N1 28727
+XLOAD_VMEARLY checks: timing-off-plan 28, live-slot writes 0 (u 0/0/0), slot words differing 0, beats 1104/1104/1104, fault 0, lanefault 0/0/0
+XLOAD_VMEARLY FAIL BMUT=3 errors=1
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_vmearly.sv:393: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 89us; walltime 8.117 s; speed 10.917 us/s
+- Verilator: cpu 8.116 s on 1 threads; allocated 45 MB

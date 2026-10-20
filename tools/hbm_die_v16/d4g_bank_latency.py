@@ -97,6 +97,51 @@ def dma_min_drain_lag(rr_rt=DMA_RR_RT_BUDGET):
     last chunk is written before its drain read; the controller faults a smaller lag)."""
     return int(rr_rt) + 3
 
+
+# HBM-VMEARLY-XL 10-19: x-load early issue (ISSUE_AHEAD 1) is COMPILER-ONLY on ot_hgi_sm_xload_cl2_ctlx: x_busy covers only
+# the x-load's own record (command -> x_done) and the command's x_xb slot base offsets every xw beat into the SM x store
+# (XD = 128 words), which the SM reads at its op_xb base.  The compiler gives record i a static slot (ring over the 128
+# words, footprint xl_footprint) and fires it at xl_min_fire (bench rtl/hbm_accel/generic/adapters/tb/run_xload_vmearly.sh).
+XL_XD = 128
+
+
+def xl_footprint(n, fmt):
+    """x-store words of one x-load record: 8 per 512 (fmt 0 BF16), 1024 (fmt 1) or 2048 (fmt 2 BD) elements"""
+    sh = {0: 9, 1: 10, 2: 11}[int(fmt)]
+    return 8 * (((int(n) - 1) >> sh) + 1)
+
+
+def xl_slots(fps, n_ahead=1):
+    """static x_xb slot base of every record: ISSUE_AHEAD 0 = slot 0 (today), >0 = a ring over the XL_XD x-store words"""
+    out, xb = [], 0
+    for fp in fps:
+        out.append(xb if n_ahead else 0)
+        xb = (xb + fp) % XL_XD
+    return out
+
+
+def xl_overlap(xa, fa, xb, fb):
+    return any(((xb + r - xa) % XL_XD) < fa for r in range(fb))
+
+
+def xl_min_fire(i, fires, busy, raw_retire, sm_start, sm_end, first_beat, slots, fps, n_ahead=1):
+    """earliest legal x-load fire of record i (edges, one timebase).  fires/busy/sm_start/sm_end: records < i;
+    busy[j] = fire -> x_busy low; raw_retire = latest producer VM write retire of i's x region (None = none);
+    first_beat = fire -> first xw beat of record i.  ISSUE_AHEAD 0: after the SM ends record i-1 (one slot).
+    ISSUE_AHEAD 1: after the SM STARTS record i-1 (window), and no xw beat of i before the SM end of any earlier record
+    whose slot overlaps i's (slot free; never a runtime handshake)."""
+    lo = 0
+    if i:
+        lo = max(lo, fires[i - 1] + busy[i - 1])
+        lo = max(lo, sm_end[i - 1] + 1 if n_ahead == 0 else sm_start[i - 1])
+    if raw_retire is not None:
+        lo = max(lo, raw_retire + 1)
+    if n_ahead:
+        for j in range(i):
+            if xl_overlap(slots[j], fps[j], slots[i], fps[i]):
+                lo = max(lo, sm_end[j] + 1 - first_beat)
+    return lo
+
 # masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
 VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
 # LG tap chain: master -> {client request port: (far request port, near return port, far return port, req bits, ret bits)}
