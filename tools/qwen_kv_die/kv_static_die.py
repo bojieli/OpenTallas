@@ -469,7 +469,13 @@ FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1
 # Measured successor kit reservations, opt-in until the source/view/calendar epoch is coherent.
 # The SRAM CTL is portrait; the legacy 1123.2x172.8 strip cannot represent it.
 NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
+# KV-BIND9 10-20 (COORD 09:28 (c) APPROVED, PINBOUND: ctl <-> 4x hroot 2,524 b a side at 14.6 pins/um on the 172.8-um W / E
+# faces): OT_KV_CTL_PORTRAIT=1 takes ONLY the 345.6 x 475.2 portrait ctl slot (5.3 pins/um), not NATIVE_SLOTS' group
+# squares; the hroot words keep their planned control-channel corridors (_hroot_waypoints) as the feedthrough channel.
+CTL_PORTRAIT = os.environ.get('OT_KV_CTL_PORTRAIT', '0') == '1'
 if NATIVE_SLOTS:
+    FRAME['ctl'] = (345.6, 475.2)
+if CTL_PORTRAIT:
     FRAME['ctl'] = (345.6, 475.2)
 
 # Special bundles (die-port order = the existing master's binding order, LSB first)

@@ -71,8 +71,9 @@ SOURCES = {
 # KV-BIND7 10-20 (2): re-pinned (was 00db4b8a...).  Change: merge kv-clkfix-hroot (default-off OT_KV_HROOT_LAND) + default-off
 # OT_KV_HROOT_S32 (stack root children swapped to the safe32 modules); no PC / GRP chain-end text changed (GEN_ASSERT).
 # KV-BIND9 10-20: re-pinned (was 05d79ab2...).  Change: main 6f5ecb234 (opt-in OT_KV_QKH_SAFE32 calendar D_QK via
-# kv_qkh_safe32; default byte-identical); no PC / GRP chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8175373cd511943e59af4dc33c97eb0cfdfcecf446f1dc4d91cc6df4f6189b26')
+# kv_qkh_safe32; default byte-identical) + default-off OT_KV_CTL_PORTRAIT (ctl frame only, placement); no PC / GRP
+# chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '1fdd9870b47dcc68337c787cf282f7cebd8f26df2daf92787c9d26929568f10f')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
