@@ -1,0 +1,70 @@
+{
+  "scope": "RTL-only external forwarded-clock lineage, not measured parent STA qualification",
+  "source_commit": "3b79a9fb5532bee1b257a18fb377e919df9fb807",
+  "hashes": {
+    "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5",
+    "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "18bdaf923dcedd45bd34617fcd26e592461a2c974c2ebc09898f199f1ca0551c",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc"
+  },
+  "lanes": [
+    {
+      "clock_port": "xk[0]",
+      "data_input": "x[275:0]",
+      "capture_clock_pins": [
+        "u_cf/xk[0]",
+        "u_xo0/ck"
+      ],
+      "forwarded_output": "xok[0]",
+      "forward_data": "xo[275:0]",
+      "relay_phase": "non-inverted, two kept inverters (source RTL); actual insertion must be measured",
+      "cfifo_write_clock": "u_cf/g_lane[0].u_l.ck_f",
+      "cfifo_read_clock": "cr (regional frame clock); D4 fixed-latency ring, K compile-time strap"
+    },
+    {
+      "clock_port": "xk[1]",
+      "data_input": "x[551:276]",
+      "capture_clock_pins": [
+        "u_cf/xk[1]",
+        "u_xo1/ck"
+      ],
+      "forwarded_output": "xok[1]",
+      "forward_data": "xo[551:276]",
+      "relay_phase": "non-inverted, two kept inverters (source RTL); actual insertion must be measured",
+      "cfifo_write_clock": "u_cf/g_lane[1].u_l.ck_f",
+      "cfifo_read_clock": "cr (regional frame clock); D4 fixed-latency ring, K compile-time strap"
+    },
+    {
+      "clock_port": "xk[2]",
+      "data_input": "x[827:552]",
+      "capture_clock_pins": [
+        "u_cf/xk[2]",
+        "u_xo2/ck"
+      ],
+      "forwarded_output": "xok[2]",
+      "forward_data": "xo[827:552]",
+      "relay_phase": "non-inverted, two kept inverters (source RTL); actual insertion must be measured",
+      "cfifo_write_clock": "u_cf/g_lane[2].u_l.ck_f",
+      "cfifo_read_clock": "cr (regional frame clock); D4 fixed-latency ring, K compile-time strap"
+    },
+    {
+      "clock_port": "xk[3]",
+      "data_input": "x[1103:828]",
+      "capture_clock_pins": [
+        "u_cf/xk[3]",
+        "u_xo3/ck"
+      ],
+      "forwarded_output": "xok[3]",
+      "forward_data": "xo[1103:828]",
+      "relay_phase": "non-inverted, two kept inverters (source RTL); actual insertion must be measured",
+      "cfifo_write_clock": "u_cf/g_lane[3].u_l.ck_f",
+      "cfifo_read_clock": "cr (regional frame clock); D4 fixed-latency ring, K compile-time strap"
+    }
+  ],
+  "required_checks": [
+    "Define four actual xk lane clock domains in frame kit; they are not core data inputs",
+    "Keep all eight child clock pins in coverage using real clock/setup-hold arcs, including writer-only clocks",
+    "Assert lane K=lk[3*k+:3] and actual read-epoch/frame compiler rule; no blanket data false paths",
+    "Measure per-linked-child TT/FF clock boundary match<=80, validate u_xo.ck->ck_o combinational clock arc and its real phase",
+    "Then re-emit LP/kit and run production V5.050 frame bench before physical gate"
+  ]
+}
