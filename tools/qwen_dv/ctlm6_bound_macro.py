@@ -45,8 +45,8 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    if row['clock'] and dr!='input':raise ValueError(f'{n}.{pin}: macro clock must be input')
    if contract['kind']=='soft_child' and dr=='input' and not row['clock']:
     weights=contract.get('input_loads',{}).get(pin)
-    if not isinstance(weights,list) or len(weights)!=width or any(type(v) is not int or v<1 or v>32 for v in weights):
-     raise ValueError(f'{n}.{pin}: each soft input needs exact source-pinned1..32 terminal loads')
+    if not isinstance(weights,list) or len(weights)!=width or any(type(v) is not int or v<0 or v>32 for v in weights):
+     raise ValueError(f'{n}.{pin}: each soft input needs exact source-pinned0..32 terminal loads')
     if any(v>load_cap for v in weights):
      raise ValueError(f'{n}.{pin}: indivisible soft input exceeds constructor load cap; expand child interface first')
   for pin,value in c.get('parameters',{}).items():
@@ -181,7 +181,7 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
      elif not ((not macro(c) and p=='C') or (macro(c) and macro_contracts[c['type']]['ports'][p].get('clock',False))):
       cost=(macro_contracts[c['type']]['input_loads'][p][i] if macro(c) and macro_contracts[c['type']]['kind']=='soft_child'
             else 4 if c['type']=='$_QFD_RING_' and p=='D' and c['depth']%3==0 else 1)
-      sinks[b].append((cost,'cell',n,p,i))
+      if cost: sinks[b].append((cost,'cell',n,p,i))
   for n,p in ports.items():
    if p['direction']=='output':
     for i,b in enumerate(p['bits']):
