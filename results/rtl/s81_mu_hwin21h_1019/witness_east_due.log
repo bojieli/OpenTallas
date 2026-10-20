@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-hwin21h-1019/src
+ot-run: ot-epyc6       admits   677 GB (avail 588, growth 113, headroom 0, waiters 0/0 GB) load 36/128 running 20 disk 5330 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-hwin21h-1019/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-hwin21h-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hwin21h-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hwin21h-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2846367-1792470709 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+[1159000] %Fatal: tb_dsdv_mu_hwin_cfg_relay.sv:250: Assertion failed in tb_dsdv_mu_hwin_cfg_relay.g_assert_dut[8]: event boot count differs event8
+%Error: physical/ref_tile/dsdv_mu_hwin_c21h/tb_dsdv_mu_hwin_cfg_relay.sv:250: Verilog $stop
+Aborting...
+TB_RC 1
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2846367-1792470709): exit 1
