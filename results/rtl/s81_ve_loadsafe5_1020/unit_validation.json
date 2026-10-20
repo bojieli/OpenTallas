@@ -1,0 +1,25 @@
+{
+  "source_commit": "73b3a517a",
+  "define": "OT_S81_VE_LOADSAFE5",
+  "default": "OFF",
+  "source_sha256": "867dcf16e0a2d68e3237ee44c273e5c150d1cdb0335d82c19e95cda0a63ba7ba",
+  "seed": 17,
+  "cycles": 300000,
+  "startup": "Verilator random FF reset2 plus mid-run reset; outputs checked on valid module contract",
+  "optin_positive": "PASS 262613add/262612mul",
+  "default_positive": "PASS",
+  "scoreboard_mutants": [
+    "MUTANT1 REJECTED",
+    "MUTANT2 REJECTED"
+  ],
+  "source_mutant": "Wrong exponent/overflow product bit46 replacing47 REJECTED by reference",
+  "logs": {
+    "run_0.log": "ac1599b1c8890fa08c952d5cb594338ebb795e48a0d6c1ca302f204ebd2b41fa",
+    "run_1.log": "afc5da0e79c575614fd2a862dfc09122d51cd191964e2ab0fef94b0b6f5c89fb",
+    "run_2.log": "1bbbdcfa76d285d22f2a88b3eea195668074b49363887c459cf9902bbb870cfd",
+    "run_default.log": "ee6c4a3baece2131b647eb8cf775102d221069f906dda3bc2f0ac580e8b5ee3f",
+    "run_wrong.log": "27ff8b90d36078b2b8fd58b0ba6a3d4972d9681cc1be0338f2a475a268a63370",
+    "tool.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  },
+  "native_full": "RUNNING session14209 ep7unit2004335; frozen055315 actualsource cohort +FPflag only; no release gate/source admission"
+}

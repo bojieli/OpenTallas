@@ -1,0 +1,11 @@
+BAD mul t=17000 ref=ddadb91a/0 dut=dd2db91a/0 y2=dd2db91a
+BAD mul t=27000 ref=04e82cf1/0 dut=05682cf1/0 y2=05682cf1
+BAD mul t=39000 ref=24036da6/0 dut=23836da6/0 y2=23836da6
+BAD mul t=41000 ref=bce2114a/0 dut=bd62114a/0 y2=bd62114a
+BAD mul t=43000 ref=984fe95b/0 dut=98cfe95b/0 y2=98cfe95b
+checked add 262613 mul 262612 valid results
+FAIL ve_fp bad_add=0 bad_mul=113353
+- rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_ve_fp.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 1.510 s; speed 397.356 us/s
+- Verilator: cpu 1.510 s on 1 threads; allocated 7 MB

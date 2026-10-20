@@ -1,0 +1,11 @@
+BAD mul t=81000 ref=8000004a/0 dut=80000025/0 y2=8000004a
+BAD mul t=97000 ref=80000036/0 dut=8000001b/0 y2=80000036
+BAD mul t=147000 ref=0000180f/0 dut=00000c07/0 y2=0000180f
+BAD mul t=309000 ref=80000004/0 dut=80000002/0 y2=80000004
+BAD mul t=327000 ref=800000fb/0 dut=8000007d/0 y2=800000fb
+checked add 262613 mul 262612 valid results
+MUTANT 2 REJECTED mismatches=10627
+- rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_ve_fp.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 1.247 s; speed 481.203 us/s
+- Verilator: cpu 1.247 s on 1 threads; allocated 7 MB

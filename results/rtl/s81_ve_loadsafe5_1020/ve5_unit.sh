@@ -11,6 +11,7 @@ for m in 0 1 2; do
  ./obj_$m/Vtb_s81sl_ve_fp +n=300000 +verilator+seed+17 +verilator+rand+reset+2 > run_$m.log 2>&1
  rc=$?
  set -e
- if [ "$m" = 0 ]; then [ "$rc" = 0 ]; else [ "$rc" != 0 ]; fi
+ [ "$rc" = 0 ]
+ if [ "$m" = 0 ]; then grep -q "PASS ve_fp" run_$m.log; else grep -q "MUTANT $m REJECTED" run_$m.log; fi
  echo "UNIT m=$m rc=$rc"
 done
