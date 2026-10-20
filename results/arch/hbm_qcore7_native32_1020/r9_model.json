@@ -1,0 +1,10 @@
+{
+  "status": "SOURCE_ONLY_NO_GATE",
+  "triggers": "r7 actual native readroot64/primaryinput129 and reducerbinarywordselect256; r8 addsonehotread, productionmap progressing unchanged",
+  "change_read": "normalonehot selector2groups*16bits (registeredbit<=16ANDterms), class5still16groups*2bits (eightbanks32terms). Localencodedvalid/oldall-edgehold unchanged.",
+  "read_selector_ff": 3168,
+  "delta_readselector_vs_r6": 2352,
+  "change_reducer": "Registeredonehot3bit wordselector2x16b groups per SRAM A/B atsame stageC; 32FF replace6binarylowaddress FF, expected+26FF, no SRAM or externalport/latencychange.",
+  "scope": "Original shared reducer/FP32adder unchanged; new ownnamed reducer r32, opt-in qcore_r9 only. Existing pretree/library/reset/sectorwriteoffenders remain.",
+  "validation": "Directr5 alloutputeveryedgebench+MUT256. ExactproductionPRETREE1 ORFS native census before any gate. Realarea/dieprice still owed."
+}
