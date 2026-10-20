@@ -1,0 +1,165 @@
+{
+ "name": "hdie_col_idx256r_a",
+ "top": "ot_hbm_static_cfg_collar_idx256r",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "clk_in",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "launch_v",
+   "ready",
+   "active",
+   "fault"
+  ],
+  "N": [
+   "c_busy",
+   "c_done",
+   "c_fault",
+   "go",
+   "start_v",
+   "pw_we",
+   "pw_addr",
+   "pw_data"
+  ],
+  "S": [
+   "rec"
+  ],
+  "E": [],
+  "ANY": [
+   "prm"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge"
+ },
+ "params": {
+  "PAGE_W": 1,
+  "NS": 1,
+  "NPR": 6,
+  "NREC": 8,
+  "NGO": 2,
+  "NB": 2,
+  "NF": 5,
+  "XSER": 0,
+  "FAN32": 1
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-PAD",
+  "branch": "claude/l2h-idx256r-kit-1019",
+  "tag": "ra1",
+  "purpose": "GEN2e3 col_idx IDX256R packed master (769-bit prm, reserved-field fault) on the FAN32 banked structure of the closed-timing IDX256 tile; 129.6 sq pin-bound outline, 1559 pins all four faces <=3.7/um; first tile close of this master",
+  "extra_paths": [
+   "rtl/test/hbm_collar_idx256r",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256.sv",
+   "results/arch/hbm_idx_collar256r_1019"
+  ],
+  "benches": [
+   {
+    "name": "idx256r_0",
+    "cmd": "bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh {RUN}/bench/idx256r_0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256R_PASS cases=7"
+   },
+   {
+    "name": "idx256r_3",
+    "cmd": "bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh {RUN}/bench/idx256r_3 3 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256R_PASS cases=7",
+    "fail_regex": "IDX256R_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256r_1019/witness/f1_m3.log"
+   },
+   {
+    "name": "idx256r_12",
+    "cmd": "bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh {RUN}/bench/idx256r_12 12 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256R_PASS cases=7",
+    "fail_regex": "IDX256R_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256r_1019/witness/f1_m12.log"
+   },
+   {
+    "name": "idx256r_14",
+    "cmd": "bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh {RUN}/bench/idx256r_14 14 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256R_PASS cases=7",
+    "fail_regex": "IDX256R_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256r_1019/witness/f1_m14.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hdie_col_idx256r_a/views",
+  "record_to": "results/rtl/ref_tile/hdie_col_idx256r_a"
+ },
+ "slot_change_request": "col_idx GEN2e3 slot: IDX256R master 129.6 sq (was 129.6 sq idx256; 771 fewer pins).",
+ "structural_change": "IDX256R packed face ported onto the IDX256 FAN32 structure: 16 protected 16-bit banks, kept local cv/ct/ca copies, registered next-onehot record select, private run/counter copies, 25 kept reset stage-2 copies; operand words store only the 769 used bits; central reserved-field check inhibits banked loads + sticky fault same edge; 0 successful edges added vs idx256.",
+ "io_tcl": "physical/ref_tile/hdie_col_idx256r_a/io.tcl",
+ "std_area_um2": 2700,
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL g_rst_same.rc[0:1] is the two-stage face reset landing (raw pin only rc0) + 25 kept stage-2 copies; no added reset edges"
+ },
+ "fill_reason": {
+  "pin_bound": "1559 real pins (W/N/S 390, E 389) on full M4/M5 faces at 0.216 track grid; 129.6 sq gives 3.01 pins/um average; std ~2.7k um2 -> fill ~16% pin-bound like the closed idx256 129.6 sq (ROOT-approved 20% pin-bound component)."
+ }
+}
