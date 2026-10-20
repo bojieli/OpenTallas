@@ -999,7 +999,15 @@ def main():
             f = t / seg[i] if seg[i] else 0
             put_near(rn, x0 + (x1 - x0) * f, y0 + (y1 - y0) * f,
                      f"relay chain {chain[0]}..{chain[-1]} ({len(chain)}) between {a_} and {b_}, lane {lane or 'L'}", halo=0.0)
-    assert all(n in pl for n in inst)
+    missing = [n for n in inst if n not in pl]
+    if missing:
+        detail = dict(verdict='GEN_PLACEMENT_INCOMPLETE', missing=missing,
+                      expected_instances=len(inst), placed_instances=len(pl),
+                      instances={n: dict(master=I[n]['master'], note=I[n].get('note', ''),
+                                         lane_row=inst_rows.get(n) if a.lane_reach != 'legacy' else None) for n in missing},
+                      lane_reach=reach_rec, home_fail=home_fail)
+        (out / 'placement_incomplete.json').write_text(json.dumps(detail, indent=1))
+        raise SystemExit(f'GEN_PLACEMENT_INCOMPLETE {len(missing)} instances missing: {missing[:12]}; see placement_incomplete.json')
     if a.lane_reach != 'legacy':
         # HBM-GENREACH 10-20: placed-hop audit (lower bound: REAL LEF port pins, SYNTH block rectangles), per bus
         import lane_rows_reach as LRR
