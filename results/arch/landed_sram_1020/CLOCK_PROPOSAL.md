@@ -11,6 +11,26 @@ Die owner directly inspected two current generated contracts read-only:
 
 Separately, indexed source search `git grep 'ot_hbm_su_static_pgslice_rgf_lp' claude/hd4g-gen2e4-1019 -- rtl tools physical/ref_tile` had no match. This statement is restricted to that ref/path search; it is not a claim about all production trees. Candidate lg4's five native clock input ports and source reset topology are documented in HBM_ANCHORS.md. QW/S81 owners report no actual source-bound regional phase or reset-order certificate. Existing consumer phase admission is OPEN.
 
+Die owner's follow-up exact old `su_SW0` mapping in9d1a3f contract:
+
+|Actual old master port|Width|Domain|Actual source|
+|---|---:|---|---|
+|clk_bank|32|serial|hb_ckgen.pll_serial|
+|clk_bank_macro|192|serial|hb_ckgen.pll_serial|
+|clk_bcast|4|serial|hb_ckgen.pll_serial|
+|clk_ctl|1|serial|hb_ckgen.pll_serial|
+|clk_insert|128|serial|hb_ckgen.pll_serial|
+|clk_lane|256|serial|hb_ckgen.pll_serial|
+|clk_side|6|serial|hb_ckgen.pll_serial|
+|pg_clk|1|stream|hb_ckgen.pll_stream|
+|rst_bcast_n|4|serial|hb_ckgen.por_serial|
+|rst_lane_n|32|serial|hb_ckgen.por_serial|
+|rst_n|1|serial|hb_ckgen.por_serial|
+
+`bridge_rst_n` width1 exists on that interface but has no clock_resets receipt. Its source/first-active edge is unproven. `hb_ckgen` master is `hfd_ckgen_nolink`, source `rtl/hbm_accel/control/hfd_ckgen_nolink.sv`, dependency `hfd_ckgen.sv`, directly connected to u_pll outputs. Die owner's CKGEN ETM has real FF paths and three ideal clocks; the PLL remains an interface-only pin reservation with no implemented divider/configuration/phase certificate. Thus the table proves an old binding, not absolute period, reset first-active order or a successor mapping. A future proposal may explicitly select the existing serial source, but must not label all new PGLG clock ports as already bound to it.
+
+The candidate lg4 kit declares `clock_relationship={kind:same_pll_fixed_phase,ratio:[1,1],phase_ps:0}` and `clock_data_paths=related_same_frequency`. Those declarations are not source hardware evidence; they do not close the current missing phase/reset certificate.
+
 ## Concrete alternative to an unspecified phase relationship
 
 Offer a new opt-in synchronous clock-domain contract, separately priced from the existing five/19/9 arbitrary regional input relationship:
