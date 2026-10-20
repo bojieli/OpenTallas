@@ -1,0 +1,9 @@
+textbook_lint: WARN native_mu_top cells 54,887 flops 19,671 depth 378.4 ps util None reach None um (2.9 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=19691 root=port:clk rule=PASS: 19,691 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 19,691 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port clk: 19,671 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. $auto$ff.cc:337:slice$33912): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: WARN(refuse-tier) high_fanout: net $abc$153029$new_n68876: 74 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net $abc$153029$new_n60260: 60 loads (1 flops, e.g. $auto$ff.cc:337:slice$65205) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net $abc$153029$new_n60949: 50 loads (1 flops, e.g. $auto$ff.cc:337:slice$65206) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net $abc$153029$new_n60402: 44 loads (1 flops, e.g. $auto$ff.cc:337:slice$64602) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN clock_guidance: clock root port:clk: 19,691 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 19,691 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
