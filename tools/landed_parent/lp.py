@@ -1518,6 +1518,22 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         rst += 1
                     else:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
+    # QW-SLICE4 10-19: an input PORT is one region's boundary (the record times it against that region): every instance
+    # that reads it directly must sit on ONE region clock.  A port read in two regions is an unlanded port -> child
+    # crossing (the --make-unland mutant of a port-driven landing 0 passed the audit before this check).
+    skip = {spec.get("reset_port")} | set(spec.get("static") or []) | set(spec.get("clock_ports") or [])
+    for p in mod["ports"]:
+        if p["dir"] != "in" or p["name"] in skip or p["name"] in rcks:
+            continue
+        al = {p["name"]}                                   # the port and every net assigned from it (wires only)
+        for _ in range(len(assigns) + 1):
+            for lhs, rhs in assigns:
+                if rhs & al:
+                    al |= set(lhs)
+        rr = sorted({reg[i["inst"]] for i in insts for pin, ex in i["conns"].items()
+                     if dirs[i["module"]].get(pin) == "in" and idents(ex) & al})
+        if len(rr) > 1:
+            fails.append(f"UNLANDED port {p['name']}: read directly in regions {rr}")
     return dict(ok=not fails, landings=landed, reset_hops=rst, fails=fails)
 
 
