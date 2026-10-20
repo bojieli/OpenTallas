@@ -1,0 +1,88 @@
+{
+  "status": "REVIEW_ONLY_STRICT_FAIL_RETAINED_NO_EXCLUSION_APPLIED",
+  "exact_fields": [
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u",
+      "field": "attributes/module",
+      "left": "$paramod$38ec16275710cc4e7cdea186567a74e976c35b41\\qkd_ectl_a_tp8_direct",
+      "right": "$paramod$3509a583b371b5f4177566f723bac59b22f1fe64\\qkd_ectl_a_tp8_direct"
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u",
+      "field": "attributes/module",
+      "left": "$paramod$af985d1b17be4efae05d0779bc9d414b7e85086e\\ot_qkd_ectl_part",
+      "right": "$paramod$27b6ad265b91bffe593d93f19e6b93d986664012\\ot_qkd_ectl_part"
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u.u_scv",
+      "field": "attributes/module",
+      "left": "$paramod$56a66f6420192d9c41f99a3c9a0abf309ebeda7e\\ot_hdc_delay",
+      "right": "$paramod$879410994cee689c17705429a8c2fc288d752431\\ot_hdc_delay"
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u.u_tag",
+      "field": "attributes/module",
+      "left": "$paramod$4d484b99319dde98ae4f344b8c9eda1ad958ca6a\\ot_hdc_delay",
+      "right": "$paramod$1303a8acde6871794367f39211cc045fb9f5babc\\ot_hdc_delay"
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u",
+      "field": "attributes/module",
+      "left": "$paramod$f5789fb40a63078323d553f123a5641df1abd089\\ot_qkd_ectl_part",
+      "right": "$paramod$a023a6e5e6ca7eb29ac5b6e64c7e93b92c446139\\ot_qkd_ectl_part"
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u.u_scv",
+      "field": "attributes/module",
+      "left": "$paramod$56a66f6420192d9c41f99a3c9a0abf309ebeda7e\\ot_hdc_delay",
+      "right": "$paramod$879410994cee689c17705429a8c2fc288d752431\\ot_hdc_delay"
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u.u_tag",
+      "field": "attributes/module",
+      "left": "$paramod$4d484b99319dde98ae4f344b8c9eda1ad958ca6a\\ot_hdc_delay",
+      "right": "$paramod$1303a8acde6871794367f39211cc045fb9f5babc\\ot_hdc_delay"
+    }
+  ],
+  "installed_elaborator": {
+    "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+    "files_sha256": {
+      "bin/yosys": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "share/yosys/simlib.v": "e79c08085225bdc6f52ce99f128328158009a33b8ea0c8c273011dfde370561d",
+      "share/yosys/include/kernel/celltypes.h": "4498a655d3ac281dca7b0fbaae9eb63ec5482a81515a708f88390e3e8075e742",
+      "share/yosys/include/kernel/scopeinfo.h": "aa983fe1cc6e45c36ddc6af402f5d5b5849c69e91ae13b29b9d02b0c0c8b410d"
+    }
+  },
+  "evidence": [
+    "Installed simlib.v lines3220-3226 places $scopeinfo in debug group, empty port list, TYPE parameter, no logic or state.",
+    "Installed celltypes.h line114 registers $scopeinfo with zero inputs and zero outputs.",
+    "scopeinfo.h lines435-442 describes attributes of flattened module/cell represented by $scopeinfo.",
+    "All seven exact cells TYPE=module, connections={}, port_directions={}, and all complete cell fields except the listed attributes/module strings are byte-JSON equal.",
+    "Strict complete graph comparison retains every other cell/master/parameter/pin/state/net/port/hierarchy and reports only these seven fields, with top HXK13vs15 metadata and numeric net alpha exclusions already ROOT-approved."
+  ],
+  "requested_rule": "Only these seven exact old/new module-label pairs on these exact pinless TYPE=module $scopeinfo cells, pinned to the four input JSON SHA256 values and all source hashes. No global attributes/module removal, no matching by name alone.",
+  "required_causals_after_review": [
+    "Change actual functional cell TYPE",
+    "Change functional port direction/width/offset",
+    "Change reset/clock pin connectivity",
+    "Change SRAM master/parameter/pin connectivity",
+    "Change state cell parameter",
+    "Add or remove hierarchy/cell/alias/net occurrence",
+    "Change any unlisted metadata or listed string to a third value"
+  ],
+  "qualification_limits": "No A/B qualification now. Any reviewed graph identity additionally requires separately PASS exact same-stateful-SRAM lemma; no cold, native age, physical, hardparent, or receipt admission."
+}

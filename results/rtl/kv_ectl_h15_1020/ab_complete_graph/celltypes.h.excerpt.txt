@@ -1,0 +1,9 @@
+108: 		setup_type(ID($check), {ID::A, ID::EN, ID::ARGS, ID::TRG}, pool<RTLIL::IdString>());
+109: 		setup_type(ID($set_tag), {ID::A, ID::SET, ID::CLR}, {ID::Y});
+110: 		setup_type(ID($get_tag), {ID::A}, {ID::Y});
+111: 		setup_type(ID($overwrite_tag), {ID::A, ID::SET, ID::CLR}, pool<RTLIL::IdString>());
+112: 		setup_type(ID($original_tag), {ID::A}, {ID::Y});
+113: 		setup_type(ID($future_ff), {ID::A}, {ID::Y});
+114: 		setup_type(ID($scopeinfo), {}, {});
+115: 		setup_type(ID($input_port), {}, {ID::Y});
+116: 		setup_type(ID($connect), {ID::A, ID::B}, {});

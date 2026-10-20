@@ -1,0 +1,330 @@
+{
+  "scope": "EXACT7_METADATA_DIFF_ONLY_NO_EXCLUSION_OR_QUALIFICATION",
+  "rows": [
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv:29.128-30.119",
+          "module": "$paramod$38ec16275710cc4e7cdea186567a74e976c35b41\\qkd_ectl_a_tp8_direct",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "qkd_ectl_a_tp8_direct",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:6.1-32.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv:29.128-30.119",
+          "module": "$paramod$3509a583b371b5f4177566f723bac59b22f1fe64\\qkd_ectl_a_tp8_direct",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "qkd_ectl_a_tp8_direct",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:6.1-32.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "feae87ebd4f62de29ce3c023894e3446986b93792a64fd87817d869da6fb1582",
+        "87b00ca06edca71b6bc1fda8cf40030decd10515a194d947406601c821269dbd"
+      ]
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:23.153-31.38",
+          "hdlname": "u u",
+          "module": "$paramod$af985d1b17be4efae05d0779bc9d414b7e85086e\\ot_qkd_ectl_part",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_qkd_ectl_part",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:66.1-696.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:23.153-31.38",
+          "hdlname": "u u",
+          "module": "$paramod$27b6ad265b91bffe593d93f19e6b93d986664012\\ot_qkd_ectl_part",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_qkd_ectl_part",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:66.1-696.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "feae87ebd4f62de29ce3c023894e3446986b93792a64fd87817d869da6fb1582",
+        "87b00ca06edca71b6bc1fda8cf40030decd10515a194d947406601c821269dbd"
+      ]
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u.u_scv",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:662.51-662.105",
+          "hdlname": "u u u_scv",
+          "module": "$paramod$56a66f6420192d9c41f99a3c9a0abf309ebeda7e\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:662.51-662.105",
+          "hdlname": "u u u_scv",
+          "module": "$paramod$879410994cee689c17705429a8c2fc288d752431\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "feae87ebd4f62de29ce3c023894e3446986b93792a64fd87817d869da6fb1582",
+        "87b00ca06edca71b6bc1fda8cf40030decd10515a194d947406601c821269dbd"
+      ]
+    },
+    {
+      "top": "qkd_static_ectla_kiss",
+      "module": "qkd_static_ectla_kiss",
+      "cell": "u.u.u_tag",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:661.41-661.107",
+          "hdlname": "u u u_tag",
+          "module": "$paramod$4d484b99319dde98ae4f344b8c9eda1ad958ca6a\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:661.41-661.107",
+          "hdlname": "u u u_tag",
+          "module": "$paramod$1303a8acde6871794367f39211cc045fb9f5babc\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "feae87ebd4f62de29ce3c023894e3446986b93792a64fd87817d869da6fb1582",
+        "87b00ca06edca71b6bc1fda8cf40030decd10515a194d947406601c821269dbd"
+      ]
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:45.162-53.68",
+          "module": "$paramod$f5789fb40a63078323d553f123a5641df1abd089\\ot_qkd_ectl_part",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_qkd_ectl_part",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:66.1-696.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv:45.162-53.68",
+          "module": "$paramod$a023a6e5e6ca7eb29ac5b6e64c7e93b92c446139\\ot_qkd_ectl_part",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_qkd_ectl_part",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:66.1-696.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "aeb5ddb29f0ca90e5bb1864762e1aa5a9e84c0257e937170acfe7096b979d0db",
+        "4b1e0f8687e26961c65af36b8524501bf325a70c2956a6add0302d9087a7bb14"
+      ]
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u.u_scv",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:662.51-662.105",
+          "hdlname": "u u_scv",
+          "module": "$paramod$56a66f6420192d9c41f99a3c9a0abf309ebeda7e\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:662.51-662.105",
+          "hdlname": "u u_scv",
+          "module": "$paramod$879410994cee689c17705429a8c2fc288d752431\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "aeb5ddb29f0ca90e5bb1864762e1aa5a9e84c0257e937170acfe7096b979d0db",
+        "4b1e0f8687e26961c65af36b8524501bf325a70c2956a6add0302d9087a7bb14"
+      ]
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "module": "qkd_ectl_b_tp8_direct",
+      "cell": "u.u_tag",
+      "left": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:661.41-661.107",
+          "hdlname": "u u_tag",
+          "module": "$paramod$4d484b99319dde98ae4f344b8c9eda1ad958ca6a\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "right": {
+        "hide_name": 0,
+        "type": "$scopeinfo",
+        "parameters": {
+          "TYPE": "module"
+        },
+        "attributes": {
+          "cell_module_not_derived": "00000000000000000000000000000001",
+          "cell_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:661.41-661.107",
+          "hdlname": "u u_tag",
+          "module": "$paramod$1303a8acde6871794367f39211cc045fb9f5babc\\ot_hdc_delay",
+          "module_dynports": "00000000000000000000000000000001",
+          "module_hdlname": "ot_hdc_delay",
+          "module_src": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/rtl/hdc/ot_hdc_delay.sv:5.1-40.10"
+        },
+        "port_directions": {},
+        "connections": {}
+      },
+      "source_json_sha256": [
+        "aeb5ddb29f0ca90e5bb1864762e1aa5a9e84c0257e937170acfe7096b979d0db",
+        "4b1e0f8687e26961c65af36b8524501bf325a70c2956a6add0302d9087a7bb14"
+      ]
+    }
+  ],
+  "source_manifest": {
+    "sources": {
+      "rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+      "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+      "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+      "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+      "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+    },
+    "root_approved_method": "strict full elaborated graph with actual SRAM BB retained; stateful macro lemma separate, no cold/physical admission"
+  }
+}

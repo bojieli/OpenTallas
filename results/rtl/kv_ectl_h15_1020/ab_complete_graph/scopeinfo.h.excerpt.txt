@@ -1,0 +1,14 @@
+430: enum class ScopeinfoAttrs {
+431: 	Module,
+432: 	Cell,
+433: };
+434: 
+435: // Check whether the flattened module or flattened cell corresponding to a $scopeinfo cell had a specific attribute.
+436: bool scopeinfo_has_attribute(const RTLIL::Cell *scopeinfo, ScopeinfoAttrs attrs, RTLIL::IdString id);
+437: 
+438: // Get a specific attribute from the flattened module or flattened cell corresponding to a $scopeinfo cell.
+439: RTLIL::Const scopeinfo_get_attribute(const RTLIL::Cell *scopeinfo, ScopeinfoAttrs attrs, RTLIL::IdString id);
+440: 
+441: // Get all attribute from the flattened module or flattened cell corresponding to a $scopeinfo cell.
+442: dict<RTLIL::IdString, RTLIL::Const> scopeinfo_attributes(const RTLIL::Cell *scopeinfo, ScopeinfoAttrs attrs);
+443: 
