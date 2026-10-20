@@ -9,7 +9,7 @@ module DFFASRHQNx1_ASAP7_75t_R(input CLK,D,RESETN,SETN,output reg QN);
  wire asr_clear = ~SETN;
  wire asr_set = ~RESETN & SETN;
  always @(posedge CLK or posedge asr_set or posedge asr_clear)
-  if(!SETN) QN<=1'b0; else if(!RESETN) QN<=1'b1; else QN<=~D;
+  if(asr_clear) QN<=1'b0; else if(asr_set) QN<=1'b1; else QN<=~D;
 endmodule
 """;(p/'canonical_ASR_normalized.v').write_text(license+norm)
 
