@@ -1,0 +1,6 @@
+# QHUB-S1 10-19 ring lockstep MUT=0 (Verilator 5.050, ot-epyc5, claude/hcq-hub-s1-1019 @ca6cb0c03): HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' run_hbm_hc_eng4_ring.sh OUT 0
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2455 first_out_t=2954 last_out_t=2954 HC_MIX_CYCLES=1010
+HC_ENG PASS
+HC_RING_LOCKSTEP MUT=0 rc=0 (CPR=1 RAW0=179 XDEF=+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1)
+HC_RING_JOINTS names
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1385048-1792472110): exit 0

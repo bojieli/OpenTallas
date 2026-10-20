@@ -39,8 +39,8 @@ yosys, and its reset split never matched (the wrong relay names). This kit keeps
   - SAFE 1: MUT 0 PASS, 1/2/3/4/7 FAIL. The face-copy equality is checked on every edge.
   - Logs: `results/rtl/hbm_hcq_hub_s1/hcq_*.log`.
 - Ring lockstep, Verilator 5.050: `HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1'`.
-  - MUT 0 must PASS.
-  - MUT 6 (s_i register without the valid delay) must FAIL.
+  - MUT 0 **PASS**: HC_ENG PASS, mixbad 0, outbad 0, HC_MIX_CYCLES 1010 (RAW0 179). Log: `results/rtl/hbm_hcq_hub_s1/ring_m0.log`.
+  - MUT 6 (s_i register without the valid delay) **FAIL**: HC_ENG_FAULT ps=1 at t=2181, rc 1.
   - Witness: `results/rtl/hbm_hcq_hub_s1/ring_mut6.log`.
 
 ## Gate acceptance

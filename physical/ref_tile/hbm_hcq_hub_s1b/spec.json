@@ -203,7 +203,7 @@
     "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
     "expect": "fail",
     "pass_regex": "^HC_RING_LOCKSTEP MUT=6 rc=0",
-    "fail_regex": "HC_ENG FAIL",
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
     "threads": 16,
     "peak_ram_gb": 64,
     "needs": [
