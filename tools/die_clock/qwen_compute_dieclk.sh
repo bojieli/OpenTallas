@@ -82,7 +82,8 @@ if [ "$MODE" = regional ]; then
     | tee -a $D/STATUS.log || exit 1
   python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
     --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
-    $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) | tee -a $D/STATUS.log || exit 1
+    $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
+    | tee -a $D/STATUS.log || exit 1
   MODE=build; PER_REGION=--per-region
 fi
 V=$3; O=$D/$V; mkdir -p $O/ff; chmod a+rwx $O $O/ff   # measure_only does not create its --out dir

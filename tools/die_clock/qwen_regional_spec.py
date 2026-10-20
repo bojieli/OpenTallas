@@ -30,6 +30,8 @@ def main():
     ap.add_argument('--source')
     ap.add_argument('--period', type=float, default=833.333333)
     ap.add_argument('--ideal', action='store_true')
+    ap.add_argument('--grid-center', action='store_true', help='QW-DIECLK2: clock sites in the 17.28-um column gaps '
+                    '(build.py grid_center: centre-rule cells + exact site check against block rectangles)')
     a = ap.parse_args()
     sp = json.load(open(a.spec))
     for t in sp['trees']:
@@ -38,6 +40,8 @@ def main():
     stream = [t for t in sp['trees'] if abs(t['period'] - a.period) < 1e-3]
     src = a.source or max(stream, key=lambda t: t.get('sinks', 0))['root']
     sp['clock_at_root_buffer'] = True
+    if a.grid_center:
+        sp['grid_center'] = True
     sp.pop('neighbours', None); sp.pop('neighbour_budget_ps', None)
     if not a.ideal:
         sp['spine'] = dict(source=src, period=a.period, balance=False)
@@ -61,7 +65,7 @@ def main():
                    detail=owed), open(a.out_owed, 'w'), indent=1)
     print('QCLK_REGIONAL_SPEC', 'ideal entries' if a.ideal else f'forwarded spine {src} balance=false', 'trees',
           len(sp['trees']), 'stream', len(stream), 'land_owed links', len(owed), 'bits', sum(o['bits'] for o in owed),
-          'bus classes', len(by))
+          'bus classes', len(by), 'grid_center', bool(a.grid_center))
 
 
 if __name__ == '__main__':

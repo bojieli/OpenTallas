@@ -48,11 +48,26 @@ def log(*a):
 class Sites:
     """legal 1.62 x 0.27 sites outside hard blocks (10-um grid, conservative) and outside existing std cells."""
 
-    def __init__(self, grid, W, H, taken):
+    def __init__(self, grid, W, H, taken, exact=None):
         self.g, self.W, self.H = grid, W, H
         self.nx, self.ny = int(W / XPITCH), int(H / YPITCH)
         self.occ = set(taken)
         self._search = None
+        # QW-DIECLK2 10-19 grid_center: grid cells are free when their CENTRE is outside every block, so the
+        # 17.28-um abutment gaps between hard columns (2919 / 10880 Qwen clock entries) get clock sites; every site is
+        # then checked EXACTLY against the block rectangles bucketed per grid cell (no site may overlap a block)
+        self.exact = exact
+
+    def _clear(self, x, y):
+        if self.exact is None:
+            return True
+        G = rt.GRID
+        for ci in range(int(x / G), int((x + XPITCH - 1e-9) / G) + 1):
+            for cj in range(int(y / G), int((y + YPITCH - 1e-9) / G) + 1):
+                for (x0, y0, x1, y1) in self.exact.get((ci, cj), ()):
+                    if x < x1 and x + XPITCH > x0 and y < y1 and y + YPITCH > y0:
+                        return False
+        return True
 
     def legal(self, ix, iy):
         x, y = ix * XPITCH, iy * YPITCH
@@ -63,7 +78,7 @@ class Sites:
             for cj in range(int(y / G), int((y + YPITCH - 1e-9) / G) + 1):
                 if not (0 <= ci < self.g.nx and 0 <= cj < self.g.ny and self.g.free((ci, cj))):
                     return False
-        return True
+        return self._clear(x, y)
 
     def take(self, x0, y0):
         import heapq
@@ -89,6 +104,37 @@ class Sites:
                 self.occ.add((ix, iy))
                 return round(ix * XPITCH, 3), round(iy * YPITCH, 3)
         raise ValueError(f'no legal clock site near {x0},{y0}')
+
+
+def grid_center(g, obstacles):
+    """QW-DIECLK2 10-19: re-derive g.blk with the CENTRE rule (a cell is blocked iff its centre lies inside a block)
+    and return {cell: [block rects that touch the cell]} for the exact site check.  Before: a cell touching a block
+    by 0.3 um was blocked, so a 17.28-um gap between abutted hard columns had ZERO free 10-um cells: its clock pins
+    and reset relays were driven by leaf buffers mm away (Qwen rA/rB: 114/115 intra over-budget pairs, 13-15 ns
+    region trees).  Wires may still cross blocks (MAX_RUN); only cell legality changes."""
+    G = rt.GRID
+    blk = bytearray(g.nx * g.ny)
+    exact = defaultdict(list)
+    for r in obstacles:
+        x0, y0, x1, y1 = r
+        i0 = max(0, math.ceil(x0 / G - 0.5)); i1 = min(g.nx - 1, math.floor(x1 / G - 0.5))
+        j0 = max(0, math.ceil(y0 / G - 0.5)); j1 = min(g.ny - 1, math.floor(y1 / G - 0.5))
+        for j in range(j0, j1 + 1):
+            row = j * g.nx
+            for i in range(i0, i1 + 1):
+                blk[row + i] = 1
+        # partially covered border cells (and every cell of a block smaller than a cell) keep the exact rectangle
+        a0, a1 = max(0, int(x0 // G)), min(g.nx - 1, int(x1 // G))
+        b0, b1 = max(0, int(y0 // G)), min(g.ny - 1, int(y1 // G))
+        for j in range(b0, b1 + 1):
+            row = j * g.nx
+            for i in range(a0, a1 + 1):
+                if not blk[row + i]:
+                    exact[(i, j)].append(r)
+    freed = sum(1 for k in range(len(blk)) if g.blk[k] and not blk[k])
+    g.blk = blk
+    log('grid_center: freed', freed, 'cells; exact border cells', len(exact))
+    return exact
 
 
 def esc(n):
@@ -204,7 +250,10 @@ def build(a):
                     taken.add((ix, iy))
     log('obstacles', len(obstacles), 'std cell sites taken', len(taken))
     g = rt.dct.Grid(D.W, D.H, obstacles)
-    sites = Sites(g, D.W, D.H, taken)
+    exact = None
+    if spec.get('grid_center'):
+        exact = grid_center(g, obstacles)
+    sites = Sites(g, D.W, D.H, taken, exact)
     target = load_targets(a.targets)
     # expand tree specs
     trees = []
