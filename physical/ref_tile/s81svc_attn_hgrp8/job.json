@@ -1,5 +1,5 @@
 {
- "name": "s81svc_attn_hgrp8-s81svc_attn_hgrp8-COMMIT",
+ "name": "s81svc_attn_hgrp8-s81svc_attn_hgrp8-0c283fa0a",
  "block": "ot_s81svc8_hgrp_s81_bounded",
  "ref_tile": true,
  "owner": "Codex:S81-SVC8",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 160,
  "source": {
   "branch": "codex/svc8-recover-1020",
-  "commit": "COMMIT",
+  "commit": "0c283fa0a",
   "extra_paths": [
    "rtl/hdc/v41x",
    "tools/s81_dv/svc_rs",
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81svc_attn_hgrp8/s81svc_attn_hgrp8-s81svc_attn_hgrp8-COMMIT"
+   "to": "results/rtl/ref_tile/s81svc_attn_hgrp8/s81svc_attn_hgrp8-s81svc_attn_hgrp8-0c283fa0a"
   }
  ],
  "cycles_added": 0,
