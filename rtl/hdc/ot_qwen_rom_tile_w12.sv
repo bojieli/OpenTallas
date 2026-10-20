@@ -204,6 +204,20 @@ module ot_qwen_rom_tile_logic_w12 #(
         else go_q <= ib_go;
     end
     always @(posedge clk) begin ib_q <= ib; xl_q <= xl; end
+    //: REGROOT 8 (QW-A0-RC4 10-20, PRE-GATE NATIVE CENSUS): 26 KEPT copies of go_q (same D, reset and edge), one per
+    //: two issue-loop copy groups / descriptor load groups of the engine, so no go-qualified enable is shared.
+    wire [31:0] go_cp;
+    generate if (REGROOT >= 8 && IREG != 0) begin : g_gocp
+        genvar gc;
+        for (gc = 0; gc < 26; gc = gc + 1) begin : g_c
+            (* keep *) reg q;
+            always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= ib_go;
+            assign go_cp[gc] = q;
+        end
+        assign go_cp[31:26] = {6{go_q}};
+    end else begin : g_gocn
+        assign go_cp = {32{go_i}};
+    end endgenerate
 
     wire [NW-1:0] b_nout, b_tiles, b_k;
     wire          b_wsrc, b_round, b_mmode, b_oen, b_amax, b_rmax;
@@ -259,7 +273,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .ck_lsl(ck_lsl), .ck_tx(ck_tx), .ck_reg(ck_reg),
-        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
+        .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),

@@ -335,7 +335,7 @@ module ot_qwen_me_spine_w12 #(
     ot_qwen_w12_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .PART(2), .GT(GT), .SMIN(SMIN), .TCUT(TCUT),
         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
-        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+        .clk(clk), .rst_n(rst_n), .go(go), .go_cp({32{go}}), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
         .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
