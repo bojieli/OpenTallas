@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: ot-epyc9       admits   886 GB (avail 807, growth 187, headroom 0, waiters 0/0 GB) load 143/128 running 40 disk 649 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-ratefix
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-723352-1792463106 after 1 s
+DIFF_FROM_P224 source_ctl.txt
+sim rc=1
+RESET_CAP_DIAGNOSTIC_CLASSIFIED returns 625 missing 0 duplicates 113 unknown 0 CAPcause 0100 NO_NUMERIC_PASS
+classify rc=0
+RATEFIX_RESULT {"dir": ".", "calendar": {"mode": "pipeline", "period": 126, "cfg_lead": 52, "acc_gap": 10, "retire_gap": 6, "tags": [0, 2], "cal_rows": 1022}, "returns": 625, "missing": 0, "unknown": 0, "words_equal_P600_tagmasked": true, "only_new": 0, "only_600": 0, "tb_errors": 3, "tb_epoch_attribution_errs": 2, "tb_control_mismatch": ["gos15 ends1 gws1 macwrites40 lastcommit1260"], "residual_errors": 0, "reads_reattributed": [24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24], "reads_expected": [24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24], "reads_unattributed": 0, "read_parity_bad": 0, "gos": 15, "element_faults": 0, "cfg7_faults": 0, "other_mismatch": {"qout": 0, "macro": 0, "src": 0}, "trace_end": ["CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"], "CAPcause": "0100", "first_capture": 1573, "last_return": 3560, "span_edges": 1988, "PASS": true}
+RATEFIX_DONE p126c52
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-723352-1792463106): exit 0

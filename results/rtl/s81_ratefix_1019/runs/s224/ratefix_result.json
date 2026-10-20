@@ -1,0 +1,69 @@
+{
+ "dir": ".",
+ "calendar": {
+  "mode": "serial",
+  "epoch_period": 224
+ },
+ "returns": 625,
+ "missing": 0,
+ "unknown": 0,
+ "words_equal_P600_tagmasked": true,
+ "only_new": 0,
+ "only_600": 0,
+ "tb_errors": 0,
+ "tb_epoch_attribution_errs": 0,
+ "tb_control_mismatch": [],
+ "residual_errors": 0,
+ "reads_reattributed": [
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24
+ ],
+ "reads_expected": [
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24
+ ],
+ "reads_unattributed": 0,
+ "read_parity_bad": 0,
+ "gos": 15,
+ "element_faults": 0,
+ "cfg7_faults": 0,
+ "other_mismatch": {
+  "qout": 0,
+  "macro": 0,
+  "src": 0
+ },
+ "trace_end": [
+  "CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+ ],
+ "CAPcause": "0100",
+ "first_capture": 1573,
+ "last_return": 4932,
+ "span_edges": 3360,
+ "PASS": true
+}
