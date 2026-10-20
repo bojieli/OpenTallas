@@ -1,0 +1,4 @@
+SFU_STORE_R11_LOCKSTEP mode=1 seed=12345 pshift=11 ishift=6 edges=4058 mismatching=0 active_ctl=7 active_io=568 fault_edges=2207 fault_edge_r7c=1852 fault_edge_r11=1863
+SFU_STORE_R11_LOCKSTEP PASS mode=1
+SFU_STORE_R11_GATE POSITIVE PASS mode=1
+BENCH_EXIT 0

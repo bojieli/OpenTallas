@@ -1,0 +1,10 @@
+SFU_STORE_R11_MISMATCH edge=2295 io=0 ctl=0 pstat=1 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2298 io=0 ctl=1 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=2299 io=0 ctl=1 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=2300 io=0 ctl=1 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=2301 io=0 ctl=1 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=2302 io=0 ctl=1 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_LOCKSTEP mode=0 seed=1 pshift=11 ishift=6 edges=4318 mismatching=489 active_ctl=485 active_io=590 fault_edges=0 fault_edge_r7c=-1 fault_edge_r11=2296
+[4342000] %Fatal: tb_sfu_store_r11_lockstep.sv:157: Assertion failed in tb_sfu_store_r11_lockstep.unnamedblk3: SFU_STORE_R11_LOCKSTEP FAIL fault edge r11-r7c=2297 want 6
+SFU_STORE_R11_GATE MUTANT rowskew REJECTED (expected)
+BENCH_EXIT 0
