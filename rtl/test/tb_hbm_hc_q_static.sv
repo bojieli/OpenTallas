@@ -19,6 +19,7 @@ module tb_hbm_hc_q_static;
     parameter integer MUT=0;
     parameter integer XWB=4;
     parameter integer SAFE=0;
+    parameter integer GSTR=40;   // QHUB-S1: gathered position stride (43: return sectors cross banks, exercises the RSC copies)
     localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:0;
     localparam integer VM_RD=15, VM_WR=12;
     reg clk=0,rst_n=0;
@@ -110,7 +111,7 @@ module tb_hbm_hc_q_static;
         result<=res_val[pm_md[78:76]];
     end
     // programme
-    localparam integer RNPOS=2, RBASE=256, GNPOS=3, GBASE=8192, GSTRIDE=40, SBASE=12288;
+    localparam integer RNPOS=2, RBASE=256, GNPOS=3, GBASE=8192, GSTRIDE=GSTR, SBASE=12288;
     reg [78:0] prog[0:1023];
     integer n_words, errors, waves, mixes;
     reg [255:0] snap[0:32767];
