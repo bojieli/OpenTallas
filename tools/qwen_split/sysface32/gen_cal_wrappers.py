@@ -11,7 +11,7 @@ def generate(weights_root,source,out):
   outs=[('ev_v',1),('ev_port',3),('ev_kind',4),('ev_beat',5),('running',1),('fault',1)]
   def decl(dr,n,w):return f'  {dr} wire '+(f'[{w-1}:0] ' if w>1 else '')+n
   ports=[decl('input',n,w) for n,w in ins]+[decl('output',n,w) for n,w in outs]
-  name=f'qfd_syscal{ne}_n32';header=f'module {name}(\n'+',\n'.join(ports)+'\n);\n'
+  name=f'qfd_syscal{ne}_n32';header=f'(* keep_hierarchy="yes" *) module {name}(\n'+',\n'.join(ports)+'\n);\n'
   body=f'ot_qwen_d2d_cal_sysface32 #(.NE({ne})) u_cal('+','.join(f'.{n}({n})' for n,w in ins+outs)+');\nendmodule\n'
   full.append(header+body);stubs.append('(* blackbox *) '+header+'endmodule\n')
   wp=Path(weights_root)/f'native{ne}'/'input_weights.json';weights=json.loads(wp.read_text())

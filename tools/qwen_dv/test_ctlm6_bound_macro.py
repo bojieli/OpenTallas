@@ -116,6 +116,19 @@ def main():
     bad_enabled = copy.deepcopy(design)
     bad_enabled['modules']['top']['cells']['producer']['type'] = '$_DFFE_NN0P_'
     rejects(bad_enabled, contracts, 'unsupported enabled FF ABI')
+    muxd, _ = fixture()
+    muxm = muxd['modules']['top']
+    del muxm['cells']['u_gi.u_mem']
+    muxm['ports']['q']['bits'] = list(range(30,47))
+    for k in range(17):
+        muxm['cells']['mux'+str(k)] = {'type':'$_MUX_',
+          'connections':{'A':[5],'B':[3],'S':[10],'Y':[30+k]},
+          'port_directions':{'A':'input','B':'input','S':'input','Y':'output'}}
+    _, _, muxr = B.build(json.dumps(muxd).encode(), 'top', 'bounded', load_cap=32,
+                         transparent_inverters=True, retain_mux=True,
+                         shared_helpers=True, retain_all_comb=True)
+    #17 select endpoints are34 actual data pins; one source FF copy is needed.
+    assert muxr['added_by_type']['$_DFF_PN0_'] == 1
     for mutate, phrase in [
         ('missing_direction', 'ports differ'), ('wrong_width', 'direction/width mismatch'),
         ('no_clock_role', 'boolean clock'), ('not_blackbox', 'not an actual declared blackbox'),
