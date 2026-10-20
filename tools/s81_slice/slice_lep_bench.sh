@@ -1,9 +1,12 @@
 #!/bin/bash
-# slice_lep_bench.sh <outdir> [MUT none|swap] [B lepe|lepe_nh]  (cwd = repo root): RTL-BUILD-S81 composition bench of the end-slice masters
+# slice_lep_bench.sh <outdir> [MUT none|swap] [B lepe|lepe_nh|lepe_nh_lp]  (cwd = repo root): RTL-BUILD-S81 composition bench of the end-slice masters
 # (tb_s81sl_slice_lep: ot_s81sl_slice_lepw + ot_s81sl_slice_lepe, full slice clusters, through 2 x 2 ot_pdie_ucie).
 set -u; O=$1; M=${2:-none}; BV=${3:-lepe}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; M0=$M; M=${M}_$BV
+D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; LPS=""
+# S81-SLICE3-LEPENH 10-19: B lepe_nh_lp = die B is the LANDED parent ot_s81sl_slice_lepe_nh_x_lp (regions S / K)
+[ $BV = lepe_nh_lp ] && { D="$D +define+TB_SLEP_NH_LP +define+OT_S81PH_LANE_CR"; LPS="rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv"; }
+M0=$M; M=${M}_$BV
 MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
 CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
@@ -16,7 +19,7 @@ LEP="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv
  rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv
  $(ls rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg*.sv 2>/dev/null | tr '\n' ' ')"
-srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f | sort -u | tr '\n' ' ') $MAC $CEN $LEP"
+srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f | sort -u | tr '\n' ' ') $MAC $CEN $LEP $LPS"
 /usr/bin/time -v -o $O/time_$M.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN +define+DSFD_PQ_STATIC_X2 $D \
   --top-module tb_s81sl_slice_lep -Mdir $O/sobj_$M $srcs --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/sbuild_$M.log 2>&1 \
   || { echo "BUILD_FAILED"; grep -m10 -E "%Error" $O/sbuild_$M.log; exit 3; }

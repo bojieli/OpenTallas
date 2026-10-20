@@ -1,0 +1,232 @@
+{
+ "name": "s81sl_lepenh_diag",
+ "top": "ot_s81sl_slice_lepe_nh_x_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "physical/ref_tile/s81sl_lepenh_diag/standin_views/ot_s81sl_slice/ot_s81sl_slice_bb.v",
+  "physical/ref_tile/s81sl_lepenh_diag/standin_views/ot_s81sl_lep_nh/ot_s81sl_lep_nh_bb.v",
+  "physical/ref_tile/s81sl_lepenh_diag/standin_views/dsfd_coll_lane_e/dsfd_coll_lane_e_bb.v"
+ ],
+ "params": {},
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81PH_LANE_CR"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_S",
+ "clock_ports": [
+  "ck_S",
+  "ck_K"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_S"
+   ],
+   "inputs": [
+    "rst_n",
+    "sid",
+    "ri_w",
+    "vi",
+    "bi",
+    "rt"
+   ],
+   "outputs": [
+    "ro_w",
+    "vo",
+    "bo",
+    "xc",
+    "ck_line",
+    "ck_v",
+    "ck_xc",
+    "ck_rt"
+   ]
+  },
+  "lk": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_K"
+   ],
+   "inputs": [
+    "ch_b",
+    "rx0",
+    "rx1"
+   ],
+   "outputs": [
+    "tx0",
+    "tx1",
+    "tf",
+    "fault"
+   ]
+  }
+ },
+ "landed_record": "results/rtl/s81_slice3_lepenh_1019/lp/ot_s81sl_slice_lepe_nh_x_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_S) -> u_lpr_<r> regional runs (depth 3) -> per-child u_lprc_* pads; the port net has ONE sink"
+ },
+ "outline": {
+  "w": 2462.4,
+  "h": 5788.8,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_diag/standin_views/ot_s81sl_slice",
+   "count": 1,
+   "inst": "u_sl",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_diag/standin_views/ot_s81sl_lep_nh",
+   "count": 1,
+   "inst": "u_lep",
+   "at": [
+    1425.6,
+    2635.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_diag/standin_views/dsfd_coll_lane_e",
+   "count": 1,
+   "inst": "u_ln0",
+   "at": [
+    1987.2,
+    2548.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_diag/standin_views/dsfd_coll_lane_e",
+   "count": 1,
+   "inst": "u_ln1",
+   "at": [
+    1987.2,
+    2937.6
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "ck_S",
+   "ck_K",
+   "rst_n",
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "E": [
+   "tx0",
+   "rx0",
+   "tx1",
+   "rx1",
+   "tf",
+   "ch_b",
+   "fault"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "ri_w": [
+   2203.2,
+   2894.4
+  ],
+  "ro_w": [
+   2894.4,
+   3585.6
+  ],
+  "tx0": [
+   2548.8,
+   2743.2
+  ],
+  "rx0": [
+   2743.2,
+   2937.6
+  ],
+  "tx1": [
+   2937.6,
+   3132.0
+  ],
+  "rx1": [
+   3132.0,
+   3326.4
+  ],
+  "tf": [
+   3326.4,
+   3333.2
+  ],
+  "ch_b": [
+   3335.2,
+   3339.2
+  ],
+  "fault": [
+   3341.2,
+   3345.2
+  ],
+  "ck_S": [
+   663.2,
+   675.2
+  ],
+  "ck_K": [
+   2033.2,
+   2045.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "S81-SLICE3-LEPENH 10-19 DIAGNOSTIC parent (stand-in children, NEVER bindable): dsdv_slice_lepe_nh as a LANDED-REGION cluster (lp.py, tools/landed_parent/specs/dsdv_slice_lepe_nh.json): regions S (slice cluster) / K (lep_nh MY + 2 x dsfd_coll_lane_e at the slice E line face), 3 landings (ro_e 1104 b, ri_e 1104 b, slice fault; +3 edges RESCHEDULE on the off-die line hop), 1-bit reset runs only. Children are slice_standin.py abstracts (STANDIN_NOT_A_VIEW): slice 1252.8 x 5702.4 (PL-SLICE draft), lep_nh 475.2 sq (s81sl_lepnh pin plan), lane_e = closed lane_w plan mirrored.",
+ "job": {
+  "owner": "Claude:S81-SLICE3-LEPENH",
+  "branch": "claude/s81-slice3-lepenh-1019",
+  "tag": "d1",
+  "purpose": "early parent integration with stand-ins (owner EFFICIENCY 10-18): gate / GRT / clock pairs; no submit until real child views exist",
+  "submit": false,
+  "hold_merge": "stand-in children: diagnostic only, never route or bind",
+  "benches": [],
+  "no_bench_reason": "diagnostic stand-in gate; behavioural benches run separately (lockstep + slice_lep 2-die on the landed parent)",
+  "views_to": "physical/ref_tile/s81sl_lepenh_diag/views",
+  "record_to": "results/rtl/ref_tile/s81sl_lepenh_diag"
+ }
+}
