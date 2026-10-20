@@ -52,7 +52,12 @@ def prepare(repo, intermediate, original_wrapper, out, bounded=None, bounded_hel
     width = len(equations)
     assert width == 35
     modified = instance[0].replace("qfd_sys_face #(", "qfd_sys_face_core_n32 #(", 1)
-    modified = modified.replace(".MU(MU)", ".MU(MU), .MU_HEAD(1)", 1)
+    if ".MU_HEAD(" not in modified:
+        modified = modified.replace(".MU(MU)", ".MU(MU), .MU_HEAD(1)", 1)
+    # The current production fixture declares MU_HEAD itself; preserve its
+    # parameter connection and specialize the test profile rather than adding
+    # a duplicate named parameter. Older fixtures have no such parameter.
+    bench = re.sub(r"(parameter integer MU_HEAD\s*=\s*)0", r"\g<1>1", bench, count=1)
     modified = modified.replace("u_dut (", "u_dut (.pin_source_copies(protocol_only_pin_aliases), ", 1)
     bench = bench[:instance.start()] + f"    // FUNCTIONAL ADAPTER ONLY: these aliases are not physical producer copies.\n    wire [{width-1}:0] protocol_only_pin_aliases;\n" + "\n".join(aliases) + "\n" + modified + bench[instance.end():]
     bench = bench.replace("module tb_qfd_sys_face;", "module tb_qfd_sys_face;\n    initial if(MU!=1) $fatal(1,\"SYSFACE32 protocol proof requires production MU1\");", 1)

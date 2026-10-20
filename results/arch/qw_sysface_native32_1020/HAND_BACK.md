@@ -1,0 +1,23 @@
+# CLAUDE IS BACK — 10-20 handback, no new work after STOP
+
+Own branch codex/qw-sysface-native32-1020, WT /home/ubuntu/wt/codex-qw-sysface-native32-1020. This is NOT MERGE/GATE READY; original qfd_sys_face/default kit unchanged. Latest RTL candidate b7be1b295; this handback also preserves native results and a test-adapter correction.
+
+## Current candidate
+
+rtl/qwen_split/qfd_sys_face_n32_bounded.sv +qfd_sysface32_helpers.sv; real fixed calendar scopes in rtl/qwen_sys/d2d_static_20261015/qfd_syscal_n32.sv; generic cal and record n32 source are committed. Actual pin wrapper captured from original gate;35 independent same-edge boundary producerFFs, fixedMU1/MU_HEAD1. +1 boot/reset release, zero token/data execution edges. Native8358parent cells, +1100FF copies relative to normalized source. Every nonzero child input from a parent FF/Boolean cone gets its own actual producer; immutable macro output connections retain real weights and overload refusal. Generic MUX selects reserve2 actual mapped input loads. Original5child/macro instances/clock/output terminals unchanged.
+
+Official current-main68b9 native report on FULL real-ASAP7 mapping PASS:38327roots, maxdynamic32,0violations/0roleerrors. Source staging SHA verified. Preserved under native5_pass; actual remote out at ot-epyc5:/srv/opentallas-scratch2/claude/codex-qw-sysface-review-1020/full_native5/out. Session85049/unit3420623-1792496696 TERMINAL0. No independent nativeODB/physical reach/PG/layout audit yet; no layout gate launched. Ordinary constant-function policy applies; no reset/data waiver.
+
+Prior failures preserved: old physicalsysface mapped580/GRT561>32/max2043; initial newfullnative55/max108; second newfullnative2/max33. They are not overwritten.
+
+## Functional proof status
+
+Bounded2 ancestor (7451parent cells) has strong actual-wrapper250777cycles×56ports/1766bits comparison from FIRSTepoch edge, no post-anchor mask, plus an actual cloned witnessFF clock-negative caught at1135. Both realold/new boot+cal_ready must be ready before common epoch. Oldboot68/new69, cal_ready75/new76; exactly+1boot phase priced. Production bare fixture4contexts/54boot/PW1024/DW8/1512events PASS. Component genericcalNE16/32/64 exact17507comparisons+3causalFAIL and realdynamicnative32 PASS. Record actualemitter SAT2069/runtime1887+3causals and native24 PASS (additional latestrecordevidence branchdc468abec).
+
+NEW bounded5 candidate runtime proof remains NOT RUN. First attempt session68699/unit2654950-1792496697 failed during Verilator compilation because newer source fixture already has .MU_HEAD(MU_HEAD), and prepare_protocol.py added duplicate .MU_HEAD(1). This is a fixture adaptation error, not an RTL result. Corrected prepare_protocol.py preserves existing connection and sets testprofileMU_HEADdefault1; correction is preserved but untested. Distinct prepared protocol5b STAGED at ot-agidock128:/srv/opentallas-scratch/claude/codex-qw-syscal32-protocol-1020/src5/protocol5b. Frozen src5 contains all source/realROMmodels. No new run started after STOP. Next positive recipe, only after Claude resumes: ot-run --mem12 --threads4 --dir .../src5 -- bash -c 'export PATH="$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH"; bash rtl/test/qwen_split/run_sys_face_native32_protocol.sh ../bounded5b_pass protocol5b 0'. Then an actual current-candidate producer-clock negative. Do not reuse bounded2 positive as bounded5 proof.
+
+## Coordinator side actions
+
+STREAM metadata-only successor qfd_dv_stream_t3c_1020-c3r-c9be6ed8a SUBMITTED after preserving4ca CLOSED_STANDS refusal. OwnWT /home/ubuntu/wt/codex-qw-stream-reroute-1020 branchcodex/qw-stream-reroute-1020 pushed c9be6ed8a. Only job reroute_reason rtl_change; consumedkit spec byte-identical to4ca. Exact currentmainc076 tools were exported to ownscratch and used; NOregate. StaticDP2(+1pass/taps)/DX2(-1ownwrite) compiler obligations remain. Parent ROOT owns record import/binding.
+
+All descendants STOPped and running fleet jobs preserved. New LANDW107/116 CLOSED require immutable record/nativePG/clock/reach/boundary import audit; do not merge shared helper conflicts. TLOAD04:45 CLOSED differs from earlier preservedFAIL because daemon automatic enabled hold_eco+201cells/LVT, installed04:44:39. Both stages preserved; ECO final PG/native/reach/completeclock/constraint qualification remains for Claude. See child TAKEOVER_STOP.md, QW-GRT4, QW-DIECLK4, QW-A0-RC4, QW-CB16FULL2, QW-CTLM6 and LEAD4-QW lane handbacks for exact jobs.
