@@ -565,7 +565,7 @@
     "W": 1555
   },
   "packing_proposal": {
-    "status": "MAPPED_AREA_KNOWN; native+ROOTslot+reach+clock remain HOLD",
+    "status": "WITHDRAWN:432R90 core-edge clearance10.248<10.8 halo by0.552; R90 trackphase unproven; never gate/adopt",
     "outline_um": [
       432.0,
       388.8
@@ -696,5 +696,43 @@
     ],
     "area_delta_um2": -50.155200000008335,
     "data_edge_delta": 0
+  },
+  "rx_sram_next_packing": {
+    "status": "MODEL_OPTIONS_ONLY; no slot or gate approval",
+    "macro_count": 3,
+    "used_bits_per_rx_word": 534,
+    "macro_orientation": "R0 truthful existing p192 model; no R90 assumption",
+    "origins_um": [
+      [
+        43.2,
+        43.2
+      ],
+      [
+        302.4,
+        43.2
+      ],
+      [
+        43.2,
+        259.2
+      ]
+    ],
+    "outline_options_um": [
+      [
+        518.4,
+        475.2
+      ],
+      [
+        518.4,
+        518.4
+      ]
+    ],
+    "core_inset_um": 2.16,
+    "face_escape_um": 20.0,
+    "horizontal_gap_um": 81.432,
+    "vertical_gap_um": 55.608,
+    "min_core_edge_clearance_um": 36.072,
+    "full_width_cell_band_start_y_um": 439.592,
+    "width_height_choice": "pending actual mapped area, pin faces and cell-band capacity; no silent extra43.2umheight",
+    "pin_track_phase": "R0 source p192 view inherited;43.2 origin increments are225*0.192; explicit LEF pin-center phase/clock/data reach audit still required before gate"
   }
 }

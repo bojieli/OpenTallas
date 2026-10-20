@@ -555,7 +555,7 @@
     {
       "historical_path": "rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv",
       "compiled_path": "rtl/test/host_peer_main_fixture_1020/historical/rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv",
-      "sha256": "185993f3049b89f17d492917bc4988fb450a85b4557e5f829195c73a759315c2",
+      "sha256": "d555af287e47e12b8330a8f6c1479519753f7e0006e57b5d91e9164738d650d5",
       "same_as_main_batch_base": false
     },
     {
@@ -683,5 +683,17 @@
     "count": 277,
     "unit": "oth-ubuntu-3119432-1792486639",
     "scope": "no waiver; fullleaf still fails native32"
+  },
+  "rx_head_proposal": {
+    "status": "STOPPED_UNVALIDATED_PREP_ONLY_NO_OWNER_DISPOSITION",
+    "base_validated_fixture": "59b9e4d41",
+    "RX_SRAM32_default": 0,
+    "RX_HEAD_ONLY_default": 0,
+    "leaf_selection": "Neither selected; private RR still CMD_READ32(1) only",
+    "proofs_launched": false,
+    "reason": "CLAUDE IS BACK user STOP during preparation",
+    "invariant": "From reset count<=1 and wp==rp+count; every consumed head has h_fwd; delayed dl_h data is used only with same-edge take-qualified dl_src mask",
+    "alternatives": "Unselected real534b SRAM ring preserves4physicalslots vs unselected enable-free534b head; credits4 unchanged; owner disposition pending",
+    "layout": "No gate; prior432R90 withdrawn; truthfulR0 three-macro475.2/518.4height model options pendingarea/pin/reach/ROOTslot"
   }
 }

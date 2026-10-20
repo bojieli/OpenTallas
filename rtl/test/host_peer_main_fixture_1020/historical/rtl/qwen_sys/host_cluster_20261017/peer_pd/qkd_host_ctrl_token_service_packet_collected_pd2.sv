@@ -32,7 +32,7 @@
 // only after all copies were emitted. Routing preserves per-source FIFO order.
 // Status snapshots send on relevant-state change; active cycle counter changes
 // alone do not flood the link. Complete tk including final cycle count is sent.
-module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,CMD_READ32=0)(
+module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,CMD_READ32=0,RX_SRAM32=0,RX_HEAD_ONLY=0)(
  input wire ck,rst_n,input wire[2:0]die_id,
  input wire rx_v,input wire[511:0]rx_d,output reg rx_cr,
  output reg tx_v,output reg[511:0]tx_d,input wire tx_cr,
@@ -134,7 +134,7 @@ module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=
  reg busy;reg[3:0]dst;reg[181:0]active;
  reg[92:0]last_tk;reg[9:0]last_kst;reg[1:0]last_boot;reg sent_once;
  // HKV-PROMPT6: registered queue head (== q[rp] whenever count != 0) + its wide zero tests (hz)
- reg[511:0]h;reg[5:0]hz;reg[5:0]qz[0:3];
+ wire[511:0]h;wire[5:0]hz;reg[5:0]qz[0:3];
  wire[1:0]rp_n=take?rp+2'd1:rp;wire q_wr=rv&&count<4;
  wire[5:0]rz={rd[511:263]==0,rd[511:230]==0,rd[511:170]==0,rd[511:153]==0,rd[511:65]==0,rd[511:64]==0};
 `ifdef QKD_HR_PEPD_MUTANT
@@ -142,13 +142,43 @@ module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=
 `else
  wire h_fwd=q_wr&&wp==rp_n;
 `endif
- always @(posedge ck)begin if(q_wr)qz[wp]<=rz;h<=h_fwd?rd:q[rp_n];hz<=h_fwd?rz:qz[rp_n];end
+
  // r6 (1): data-only head flags, computed at queue write and registered with the head (same forwarding as h / hz)
  wire[15:0]rf={rd[86]&&rd[246]&&rd[65:61]==0&&rd[83:66]<18'd151936,rd[47:32]==0,
   (rd[15:8]==1||((ENABLE_SERVICE||ENABLE_TOKEN)&&rd[15:8]==2))&&rd[23:19]==0,rd[7:0]==8'h21,rd[7:0]==8'h22,rd[7:0]==8'h23,
   rd[15:8]==1,rd[15:8]==2,8'd1<<rd[18:16]};
- reg[15:0]hf;reg[15:0]qf[0:3];
- always @(posedge ck)begin if(q_wr)qf[wp]<=rf;hf<=h_fwd?rf:qf[rp_n];end
+ wire[15:0]hf;reg[15:0]qf[0:3];
+ generate if(RX_HEAD_ONLY)begin:g_rx_head_only
+  // PROPOSAL: count<=1 and wp==rp+count imply every consumed legacy
+  // head came from h_fwd. The original default ring remains below.
+  reg[533:0]head_q;
+  always @(posedge ck)head_q<={rf,rz,rd};
+  assign h=head_q[511:0];assign hz=head_q[517:512];
+`ifdef OT_PEER_RX_FLAG_MUT
+  assign hf=head_q[533:518]^16'h4000;
+`else
+  assign hf=head_q[533:518];
+`endif
+ end else if(RX_SRAM32)begin:g_rx_sram32
+  // Effective4slots, payload and all predecoded flags share one534b word.
+  // Fault is sticky and take is fault-gated; no invalid post-fault head can
+  // escape. Same reset/count/admission edges as the legacy queue.
+  wire[533:0]rx_head;
+  qkd_host_peer_sram_head #(.W(534)) u_rx_head(.ck(ck),.rst_n(rst_n),.put(rv&&!fault),.pop(take),.data({rf,rz,rd}),.head(rx_head));
+  assign h=rx_head[511:0];assign hz=rx_head[517:512];
+`ifdef OT_PEER_RX_FLAG_MUT
+  assign hf=rx_head[533:518]^16'h4000;
+`else
+  assign hf=rx_head[533:518];
+`endif
+ end else begin:g_rx_legacy
+  reg[511:0]h_q;reg[5:0]hz_q;reg[15:0]hf_q;
+  always @(posedge ck)begin
+   if(q_wr)begin q[wp]<=rd;qz[wp]<=rz;qf[wp]<=rf;end
+   h_q<=h_fwd?rd:q[rp_n];hz_q<=h_fwd?rz:qz[rp_n];hf_q<=h_fwd?rf:qf[rp_n];
+  end
+  assign h=h_q;assign hz=hz_q;assign hf=hf_q;
+ end endgenerate
  wire[7:0]src_oh=hf[7:0];wire f_v2=hf[8],f_v1=hf[9],f_t23=hf[10],f_t22=hf[11],f_t21=hf[12],f_hdrs=hf[13],f_rs0=hf[14],f_tok22=hf[15];
  wire[7:0]role_oh=8'd1<<role;
 wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
@@ -203,7 +233,7 @@ wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
  end
  always @(posedge ck)begin
   rd<=rx_d;cd<=cmd_hc;
-  if(rv&&count<4)q[wp]<=rd;
+
   if(cv&&cn<4)cq[cw]<=cd;
  end
  always @(posedge ck or negedge rst_n)begin
