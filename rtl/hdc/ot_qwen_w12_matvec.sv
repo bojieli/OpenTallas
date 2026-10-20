@@ -395,9 +395,15 @@ module ot_qwen_w12_matvec_part #(
     //: spc 0..7 the round-step shifters (tsh/osh even/odd set bits of GT, low/high halves), 8 pr_a/kpad_a, 9 kc_a,
     //: 10..13 KV-offset q per group, 14..17 KV-offset c per group, 18..21 K-limit mask per group, 22..25 K-limit
     //: shift / e_gm per group, 26 e_split.  wsc 0 kc_a, 1 tstep_r, 2 e_wsrc / e_gm.  REGROOT < 6: plain aliases.
-    localparam integer NSPC = 27;
+    //: REGROOT 7 (QW-CLUSTER3/A0 rc2, from the rc1 mapped census: 46 registers > 32, max 88): +18 split copies
+    //: (round-step shifter quarters 27..34, kpad 35, K-limit kdif 36..39 / compare 40..43, kc_a high half 44), a
+    //: tstep high-half wsrc copy (wsc 3) and per-destination ktot copies (kpad + four K-limit groups).  Copies
+    //: 24.. load a second next-state mux that holds from copy 0 (equal after the first go; every consumer's first
+    //: use follows a go), so no next-state net drives more than ~25 copy D pins.
+    localparam integer NSPC = (REGROOT >= 7) ? 45 : 27;
     wire [4*NSPC-1:0] spc;
-    wire [2:0]        wsc;
+    wire [3:0]        wsc;
+    wire [5*NW-1:0]   ktc;        // ktot copies: 0 kpad/kc_a, 1..4 K-limit group 0..3 (REGROOT 7; else ktot_r)
     wire [4:0]        acc;        // active copies (assigned in the issue block)
     wire              klc;        // k_last copy (assigned in the issue block)
     generate if (REGROOT >= 6) begin : g_rr6
@@ -407,19 +413,35 @@ module ot_qwen_w12_matvec_part #(
         wire [3:0] split_nx = ld_go ? i_split : split_r;
         wire       wsrc_nx  = ld_go ? i_wsrc : wsrc_r;
         genvar sc;
+        wire [3:0] split_nx2 = ld_go ? i_split : spc[3:0];      // REGROOT 7 second tier (copies 24..) holds from copy 0
         for (sc = 0; sc < NSPC; sc = sc + 1) begin : g_sp
             (* keep *) reg [3:0] q;
-            always @(posedge clk) q <= split_nx;
+            always @(posedge clk) q <= (REGROOT >= 7 && sc >= 24) ? split_nx2 : split_nx;
             assign spc[4*sc +: 4] = q;
         end
-        for (sc = 0; sc < 3; sc = sc + 1) begin : g_ws
-            (* keep *) reg q;
-            always @(posedge clk) q <= wsrc_nx;
-            assign wsc[sc] = q;
+        for (sc = 0; sc < 4; sc = sc + 1) begin : g_ws
+            if (sc < 3 || REGROOT >= 7) begin : g_w
+                (* keep *) reg q;
+                always @(posedge clk) q <= wsrc_nx;
+                assign wsc[sc] = q;
+            end else begin : g_wa
+                assign wsc[sc] = wsc[1];
+            end
+        end
+        if (REGROOT >= 7) begin : g_ktc
+            wire [NW-1:0] ktot_nx = ld_go ? i_k : ktot_r;
+            for (sc = 0; sc < 5; sc = sc + 1) begin : g_kt
+                (* keep *) reg [NW-1:0] q;
+                always @(posedge clk) q <= ktot_nx;
+                assign ktc[NW*sc +: NW] = q;
+            end
+        end else begin : g_kta
+            assign ktc = {5{ktot_r}};
         end
     end else begin : g_rr_alias
         assign spc = {NSPC{split_r}};
-        assign wsc = {3{wsrc_r}};
+        assign wsc = {4{wsrc_r}};
+        assign ktc = {5{ktot_r}};
     end endgenerate
 
 generate if (FAST_ISSUE == 0) begin : g_issue_legacy
@@ -519,16 +541,25 @@ end else begin : g_issue_fast
     reg [AW+PRW-1:0] osh [0:NB_GT-1];
     reg [NW:0]       kpad_a;
     localparam [AW+PRW-1:0] SH_LO = {(AW+PRW)/2{1'b1}};   // REGROOT 6: low half of a round-step shifter (own copy)
+    //: REGROOT 7: quarters (Q0|Q1 = SH_LO, Q2|Q3 = ~SH_LO), each with its own split copy; REGROOT 6 aliases the halves
+    localparam [AW+PRW-1:0] SH_Q0 = {(AW+PRW)/4{1'b1}};
+    localparam [AW+PRW-1:0] SH_Q1 = SH_LO & ~SH_Q0;
+    localparam [AW+PRW-1:0] SH_Q2 = ~SH_LO & {((AW+PRW)/2 + (AW+PRW)/4 + 1){1'b1}};
+    localparam [AW+PRW-1:0] SH_Q3 = ~SH_LO & ~SH_Q2;
     always @(posedge clk) begin : p_terms
         integer b;
         for (b = 0; b < NB_GT; b = b + 1) begin
-            tsh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_LO)
-                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)+1) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)+1) +: 4])) : {(AW+PRW){1'b0}}) & ~SH_LO);
-            osh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(4+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(4+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_LO)
-                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(5+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(5+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & ~SH_LO);
+            tsh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)+1) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)+1) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
+            osh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(4+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(4+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(5+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(5+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
+                    | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
         end
         pr_a <= GT >> spc[4*8 +: 4];
-        kpad_a <= {1'b0, ktot_r} + ((1 << spc[4*8 +: 4]) - 1);
+        kpad_a <= {1'b0, ktc[0 +: NW]} + ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
     end
     wire [AW+PRW-1:0] tsum, osum;
     wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
@@ -541,8 +572,10 @@ end else begin : g_issue_fast
     end
     always @(posedge clk) begin
         tsg_a <= tsum; otsg_a <= osum;
-        kc_a <= wsc[0] ? kpad_a[NW-1:0] >> spc[4*9 +: 4] : ktot_r;       // ceil(K/S) (K + S - 1 < 2^NW)
-        tstep_r <= !wsc[1] ? ts_r : tsg_a[AW-1:0];
+        kc_a <= wsc[0] ? {kpad_a[NW-1:0] >> spc[4*((REGROOT >= 7) ? 44 : 9) +: 4]} & {{(NW-NW/2){1'b1}}, {(NW/2){1'b0}}}
+                       | {kpad_a[NW-1:0] >> spc[4*9 +: 4]} & {(NW/2){1'b1}} : ktc[0 +: NW];   // ceil(K/S) (K + S - 1 < 2^NW)
+        tstep_r[AW/2-1:0] <= !wsc[1] ? ts_r[AW/2-1:0] : tsg_a[AW/2-1:0];
+        tstep_r[AW-1:AW/2] <= !wsc[3] ? ts_r[AW-1:AW/2] : tsg_a[AW-1:AW/2];
         ot_step <= otsg_a[AW-1:0];
         nb_step <= pr_a * (W * IL);
         lb_step <= pr_a * W;
@@ -691,7 +724,8 @@ end else begin : g_issue_fast
                                               : (j_last ? (!k_last ? (k_2 == k_r) : (k_r == 1)) : k_last));
         wire tl_nx = pend ? t_last : (!active ? (go ? (i_tiles == 1) : t_last)
                                               : ((j_last && k_last && !t_last) ? (t_2 == tiles_r) : t_last));
-        localparam integer NGF = 9;    // cur, base_k, base_t, oa, ot, nb, nb_t, lb, wrom_addr
+        localparam integer NGF = (REGROOT >= 7) ? 12 : 9;    // cur, base_k, base_t, oa, ot, nb, nb_t, lb, wrom_addr (+ REGROOT 7: cur/base_k/base_t high halves)
+        localparam integer HC = (REGROOT >= 7) ? AW/2 : AW;  // low-half width owned by groups 0..2
         wire [NGF-1:0] fa, fp, fjl, fkl, ftl;
         genvar fg;
         for (fg = 0; fg < NGF; fg = fg + 1) begin : g_fc
@@ -714,19 +748,24 @@ end else begin : g_issue_fast
             always @(posedge clk) if (rst_n) kl <= kl_nx;
             assign klc = kl;
         end
-            always @(posedge clk) if (rst_n && !fp[0]) begin
-            if (!fa[0]) begin if (go) cur <= i_wbase; end
-            else if (!fjl[0]) begin if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur_js; end
-            else if (!fkl[0]) cur <= bk_k;
-            else if (!ftl[0]) cur <= bt_t;
-        end
-        always @(posedge clk) if (rst_n && !fp[1]) begin
-            if (!fa[1]) begin if (go) base_k <= i_wbase; end
-            else if (fjl[1]) begin if (!fkl[1]) base_k <= bk_k; else if (!ftl[1]) base_k <= bt_t; end
-        end
-        always @(posedge clk) if (rst_n && !fp[2]) begin
-            if (!fa[2]) begin if (go) base_t <= i_wbase; end
-            else if (fjl[2] && fkl[2] && !ftl[2]) base_t <= bt_t;
+            for (fg = 0; fg < ((REGROOT >= 7) ? 2 : 1); fg = fg + 1) begin : g_hf
+            localparam integer C = (fg == 0) ? 0 : 9;          // copy set: low half 0..2, high half 9..11
+            localparam integer L = (fg == 0) ? 0 : HC;          // bit range [L, H)
+            localparam integer HH = (fg == 0) ? HC : AW;
+            always @(posedge clk) if (rst_n && !fp[C]) begin
+                if (!fa[C]) begin if (go) cur[HH-1:L] <= i_wbase[HH-1:L]; end
+                else if (!fjl[C]) begin if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur[HH-1:L] <= cur_js[HH-1:L]; end
+                else if (!fkl[C]) cur[HH-1:L] <= bk_k[HH-1:L];
+                else if (!ftl[C]) cur[HH-1:L] <= bt_t[HH-1:L];
+            end
+            always @(posedge clk) if (rst_n && !fp[C+1]) begin
+                if (!fa[C+1]) begin if (go) base_k[HH-1:L] <= i_wbase[HH-1:L]; end
+                else if (fjl[C+1]) begin if (!fkl[C+1]) base_k[HH-1:L] <= bk_k[HH-1:L]; else if (!ftl[C+1]) base_k[HH-1:L] <= bt_t[HH-1:L]; end
+            end
+            always @(posedge clk) if (rst_n && !fp[C+2]) begin
+                if (!fa[C+2]) begin if (go) base_t[HH-1:L] <= i_wbase[HH-1:L]; end
+                else if (fjl[C+2] && fkl[C+2] && !ftl[C+2]) base_t[HH-1:L] <= bt_t[HH-1:L];
+            end
         end
         always @(posedge clk) if (rst_n && !fp[3]) begin
             if (!fa[3]) begin if (go) oa <= i_obase; end
@@ -868,11 +907,13 @@ end endgenerate
         genvar gk;
         for (gk = 0; gk < G; gk = gk + 1) begin : g_kl
             wire [3:0]  sa = spc[4*(18+gk) +: 4], sb = spc[4*(22+gk) +: 4];
+            wire [3:0]  sd = spc[4*((REGROOT >= 7) ? 36+gk : 18+gk) +: 4], sc = spc[4*((REGROOT >= 7) ? 40+gk : 22+gk) +: 4];
+            wire [NW-1:0] kt = ktc[NW*(1+gk) +: NW];
             wire [31:0] c32 = (gb + gk) & ((1 << sa) - 1);
             always @(posedge clk) begin
-                kdif[gk] <= ({{(32-NW){1'b0}}, ktot_r} > c32) ? (ktot_r - c32[NW:0] + ((1 << sa) - 1)) : {(NW+1){1'b0}};
+                kdif[gk] <= ({{(32-NW){1'b0}}, kt} > c32) ? (kt - c32[NW:0] + ((1 << sd) - 1)) : {(NW+1){1'b0}};
                 klim[gk] <= kdif[gk] >> sb;
-                e_gm[gk] <= (((gb + gk) >> sb) < (GT >> sb)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
+                e_gm[gk] <= (((gb + gk) >> sc) < (GT >> sc)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
             end
         end
     end else if (LANES) begin : g_gm

@@ -119,10 +119,10 @@ def regions_tcl(kit, nk):
            "set qrl_groups [list \\"]
     return "\n".join(hdr + g + ["]", "source /src/tools/qwen_romleaf/parent_regions.tcl", ""])
 
-def spec(nk, fallback):
+def spec(nk, fallback, rev="rc1", regroot=6):
     k = "nk" if nk else "nl"
     base = json.load(open(ROOT / f"physical/ref_tile/qfd_tile_{k}_romleaf_c1/spec.json"))
-    kit = f"qfd_tile_{k}_romleaf_rc1" + ("f" if fallback else "")
+    kit = f"qfd_tile_{k}_romleaf_{rev}" + ("f" if fallback else "")
     s = copy.deepcopy(base)
     s["name"] = kit
     s["outline"] = {"w": W, "h": H, "exact": True}
@@ -130,19 +130,19 @@ def spec(nk, fallback):
     ptcl, faces = pins_tcl(kit, nk)
     s["pins"] = {"W": faces["W"], "E": faces["E"]}
     s["io_tcl"] = f"tools/qwen_romleaf/rc1/{kit}_pins.tcl"
-    s["params"] = {"REGROOT_MODE": 6}
+    s["params"] = {"REGROOT_MODE": regroot}
     s["pin_hook_before_flops"] = [] if fallback else [f"tools/qwen_romleaf/rc1/{kit}_regions.tcl"]
     s["reset_landing"] = {"enable": True, "stages": 2, "clock": "ck_fa4", "copies": {"rst_n": 8}}
     s["reset_relay_split"] = {"max_loads": 32}
-    s["structural_change"] = ("QW-CLUSTER3/A0 rc1 (10-19, safe-design rebuild after c1r9f): REGROOT 6 RTL (per-destination kept "
-        "copies of split_r/wsrc_r/active/k_last/pend/j_last/t_last, 0 cycles), kit reset landing 2 stages on ck_fa4 with 8 "
+    s["structural_change"] = (f"QW-CLUSTER3/A0 {rev} (10-19, safe-design rebuild after c1r9f): REGROOT {regroot} RTL (per-destination kept "
+        "copies of split_r/wsrc_r/active/k_last/pend/j_last/t_last" + ("; rc2: +18 split, ktot x5, tstep/cur/base halves from the rc1 mapped census" if regroot >= 7 else "") + ", 0 cycles), kit reset landing 2 stages on ck_fa4 with 8 "
         "kept last-stage copies <=32 loads (replaces the 1-stage native reset_q: +1 boot edge), new 820.8 x 907.2 outline "
         "(aspect 1.11, 43.2-lattice origins, full-width std rows, pins <=5.2/um)" + ("; FALLBACK: no soft-root regions "
         "(placer-free)" if fallback else "; soft-root regions beside each consumer") + ".")
     s["slot_change_request"] = ("QW-CLUSTER3/A0 rc1: die slot changes 457.92 x 1166.4 -> 820.8 x 907.2 (+210.5k um2 per tile); "
         "die re-plan required before adoption; pin faces W/E kept.")
     j = s["job"]
-    j["owner"] = "Claude:QW-CLUSTER3/A0"; j["branch"] = "claude/qw-cluster3-a0-1019"; j["tag"] = "rc1f" if fallback else "rc1"
+    j["owner"] = "Claude:QW-CLUSTER3/A0"; j["branch"] = "claude/qw-cluster3-a0-1019"; j["tag"] = rev + ("f" if fallback else "")
     j["purpose"] = s["structural_change"]
     j["views_to"] = f"physical/ref_tile/{kit}/views"; j["record_to"] = f"results/rtl/ref_tile/{kit}"
     j["hold_merge"] = s["hold_merge"] = ("CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / "
@@ -161,3 +161,9 @@ if __name__ == "__main__":
             if rtcl:
                 (ROOT / f"tools/qwen_romleaf/rc1/{kit}_regions.tcl").write_text(rtcl)
             print("RC1", kit, len(ptcl.splitlines()) - 2, "pins")
+    for nk in (True, False):     # rc2: REGROOT 7 (rc1 mapped census refinements), regions variant
+        kit, s, ptcl, rtcl = spec(nk, False, "rc2", 7)
+        (ROOT / f"tools/ref_tile/specs_qw_cluster3_1019/{kit}.json").write_text(json.dumps(s, indent=1) + "\n")
+        (ROOT / f"tools/qwen_romleaf/rc1/{kit}_pins.tcl").write_text(ptcl)
+        (ROOT / f"tools/qwen_romleaf/rc1/{kit}_regions.tcl").write_text(rtcl)
+        print("RC2", kit)
