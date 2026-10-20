@@ -1,5 +1,5 @@
 {
- "name": "hbm_hcq_bank_b0_s1-s1-928606aa1",
+ "name": "hbm_hcq_bank_b0_s1-s1-53a20b22c",
  "block": "ot_hbm_hc_bankq0_static",
  "ref_tile": true,
  "owner": "Claude:LEAD3-HBM/HBM-ELEMOWN3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 128,
  "source": {
   "branch": "claude/elemown3-hcb0-1019",
-  "commit": "928606aa15e842b6c72fa8af09a73668d3261337",
+  "commit": "53a20b22c87c5e081e9716d686e14cf33c946841",
   "extra_paths": [
    "rtl/test/run_hbm_hc_eng4_ring.sh",
    "rtl/test/tb_hbm_hc_eng4_static.sv",
@@ -119,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_hcq_bank_b0_s1/hbm_hcq_bank_b0_s1-s1-928606aa1"
+   "to": "results/rtl/ref_tile/hbm_hcq_bank_b0_s1/hbm_hcq_bank_b0_s1-s1-53a20b22c"
   }
  ],
  "cycles_added": 0,
