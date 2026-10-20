@@ -10,6 +10,8 @@ base): every bit of one bus has the same endpoints.  Per bus (span = max bit spa
   b_not_inserted  the PLANNED hop is already > hop + tol: driver/load planned positions (lane relay = its relay-layer row site
                'site (x, y) um', other relay = 'home (x, y) um', block = placed pin) are farther apart than one hop, i.e.
                the relay layer never inserted enough stations (or a block->block bus has no relay at all).
+  r_reset_pre_forest  POR / reset fan-out (hb_ckgen por_* -> every 'rs' pin): the pre-forest case has no reset tree yet; the
+               H.RST regional reset forest replaces these nets (not a lane-relay fix).
   c_long_wire  planned hop <= hop + tol but PLACED > hop: die_case moved a lane row / relay off its planned site ('row nearest
                free area', slides) and left a real single-cycle long wire (SAFE-DESIGN item 2).  Split by stage kind:
                c_sync = registered single-cycle stage (hbfd_rly / land / blocks), c_fwd = forwarded half-cycle hop between
@@ -30,6 +32,7 @@ import die_relay_pass as RP  # noqa: E402
 RLY = ('hbfd_rly', 'hbfd_lh', 'hbfd_land', 'hbfd_rrl')
 SITE = re.compile(r'site \(([-\d.]+), ([-\d.]+)\) um')
 HOME = re.compile(r'home \(([-\d.]+), ([-\d.]+)\) um')
+RST = re.compile(r'(^|_)(rst|reset|por)(_|n|$)|rst_n|_rstn|^rs$')   # d4f_overreach RESET class (+ lane 'rs' pins)
 
 
 def main():
@@ -82,7 +85,9 @@ def main():
         dm, lm = pl[di]['master'], pl[li]['master']
         pd, kd = planned(di, b['dxy']); pq, kl = planned(li, b['lxy'])
         pspan = RP.md(pd, pq)
-        if pspan > a.hop + a.tol:
+        if RST.search(dp.lower()):
+            c = 'r_reset_pre_forest'      # POR / reset fan-out: replaced by the H.RST regional reset forest (not a lane hop)
+        elif pspan > a.hop + a.tol:
             c = 'b_not_inserted'
         else:
             c = 'c_fwd' if dm.startswith('hbfd_lh') and lm.startswith(('hbfd_lh', 'hbfd_land')) else 'c_sync'
