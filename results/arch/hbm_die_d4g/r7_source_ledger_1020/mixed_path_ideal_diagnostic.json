@@ -1,0 +1,322 @@
+[
+  {
+    "path": [
+      "hb_vms_SW.vmstat",
+      "vm_status4"
+    ],
+    "bus": "rf1416",
+    "kind": "old",
+    "bits": 16,
+    "sink_age": 5,
+    "landing": [],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "hb_vms_SW.vmstat",
+      "vm_status4"
+    ],
+    "bus": "rf1731",
+    "kind": "fc",
+    "bits": 3,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "hb_vms_SW.vmstat->vm_status4",
+        "bus": "rf1731",
+        "sink": "vm_status4",
+        "master": "hbfd_land_48_WE",
+        "width": 48,
+        "lanes": 1,
+        "stations": 5,
+        "E": null,
+        "K": 4,
+        "pads": 12,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "stream",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 17,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_NE.command",
+      "sucore_NE"
+    ],
+    "bus": "rf1036",
+    "kind": "old",
+    "bits": 116,
+    "sink_age": 4,
+    "landing": [],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_NE.command",
+      "sucore_NE"
+    ],
+    "bus": "rf1430",
+    "kind": "fc136lane",
+    "bits": 12,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_NE.command->sucore_NE",
+        "bus": "rf1430",
+        "sink": "sucore_NE",
+        "master": "hbfd_land_136_SN",
+        "width": 136,
+        "lanes": 1,
+        "stations": 4,
+        "E": null,
+        "K": 3,
+        "pads": 25,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 29,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_NE.command",
+      "sucore_NE"
+    ],
+    "bus": "rf1919",
+    "kind": "fc",
+    "bits": 2,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_NE.command->sucore_NE",
+        "bus": "rf1919",
+        "sink": "sucore_NE",
+        "master": "hbfd_land_48_SN",
+        "width": 48,
+        "lanes": 1,
+        "stations": 4,
+        "E": null,
+        "K": 3,
+        "pads": 16,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 20,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SE.command",
+      "su_SE0"
+    ],
+    "bus": "rf0045",
+    "kind": "fc136lane",
+    "bits": 1742,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_SE.command->su_SE0",
+        "bus": "rf0045",
+        "sink": "su_SE0",
+        "master": "hbfd_land_136_WE",
+        "width": 136,
+        "lanes": 13,
+        "stations": 17,
+        "E": null,
+        "K": 2,
+        "pads": 0,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 11,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SE.command",
+      "su_SE0"
+    ],
+    "bus": "rf0980",
+    "kind": "old",
+    "bits": 136,
+    "sink_age": 9,
+    "landing": [],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SE.command",
+      "su_SE0"
+    ],
+    "bus": "rf1432",
+    "kind": "fc136lane",
+    "bits": 12,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_SE.command->su_SE0",
+        "bus": "rf1432",
+        "sink": "su_SE0",
+        "master": "hbfd_land_136_WE",
+        "width": 136,
+        "lanes": 1,
+        "stations": 17,
+        "E": null,
+        "K": 2,
+        "pads": 12,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 23,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SE.command",
+      "su_SE0"
+    ],
+    "bus": "rf1921",
+    "kind": "fc136lane",
+    "bits": 2,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_SE.command->su_SE0",
+        "bus": "rf1921",
+        "sink": "su_SE0",
+        "master": "hbfd_land_136_WE",
+        "width": 136,
+        "lanes": 1,
+        "stations": 9,
+        "E": null,
+        "K": 6,
+        "pads": 21,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 28,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SW.command",
+      "sucore_SW"
+    ],
+    "bus": "rf1039",
+    "kind": "old",
+    "bits": 116,
+    "sink_age": 10,
+    "landing": [],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SW.command",
+      "sucore_SW"
+    ],
+    "bus": "rf1433",
+    "kind": "fc136lane",
+    "bits": 12,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_SW.command->sucore_SW",
+        "bus": "rf1433",
+        "sink": "sucore_SW",
+        "master": "hbfd_land_136_NS",
+        "width": 136,
+        "lanes": 1,
+        "stations": 10,
+        "E": null,
+        "K": 6,
+        "pads": 10,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 17,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  },
+  {
+    "path": [
+      "pgp_SW.command",
+      "sucore_SW"
+    ],
+    "bus": "rf1922",
+    "kind": "fc",
+    "bits": 2,
+    "sink_age": null,
+    "landing": [
+      {
+        "link": "pgp_SW.command->sucore_SW",
+        "bus": "rf1922",
+        "sink": "sucore_SW",
+        "master": "hbfd_land_48_NS",
+        "width": 48,
+        "lanes": 1,
+        "stations": 10,
+        "E": null,
+        "K": 6,
+        "pads": 3,
+        "latency_edges": null,
+        "first_en_release_edges": 0,
+        "steady_latency_delta": 0,
+        "latency_formula": "ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: contract N/2 + 1 + E + 1)",
+        "K_source": "NO_E placeholder",
+        "domain": "serial",
+        "cls": "equal_age_pad",
+        "ideal_E1_diagnostic_age": 10,
+        "actual_age_qualified": false
+      }
+    ],
+    "qualification_eligible": false
+  }
+]

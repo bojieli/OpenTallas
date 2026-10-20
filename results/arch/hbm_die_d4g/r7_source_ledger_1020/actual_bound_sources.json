@@ -1,0 +1,127 @@
+{
+  "sucore_NW": {
+    "master": "ot_hbm_su_static_qcore",
+    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+    "params": {
+      "MUT": 0,
+      "COLLPORT": 1,
+      "RF_LOCAL": 1
+    },
+    "slot": "sucore_NW",
+    "owner": "H-SU",
+    "region": "su_sfu",
+    "note": "RF replica + reducer of quarter NW (QID 2) | su_rflocal_d4f: params {'RF_LOCAL': 1}",
+    "replaces_v15": null,
+    "source_sha256_actual": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c"
+  },
+  "pgp_NW": {
+    "master": "ot_hbm_su_programme_pslice_c5",
+    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+    "params": {},
+    "slot": "pgp_NW",
+    "owner": "H-SU/H-DIE",
+    "region": "d4g_gen1_l5",
+    "note": "partitioned SU programme producer 2 (quarter NW): command[4844+:2422]; r4 PIPE 2 (+4 edges, compiler start advance DEPTH+4 = 6) | d4g_gen1_l5: ot_hbm_su_programme_pslice_q4 -> ot_hbm_su_programme_pslice_c5; HBM-RTL5/pg per-column cluster (pghead r5 + pgcol_s r5 CLOSED, pgcol_l r5 SYNTH)",
+    "replaces_v15": null,
+    "rtl_deps": [
+      "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+    ],
+    "source_sha256_actual": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255"
+  },
+  "su_prog": {
+    "master": "ot_hbm_su_programme_root_h5",
+    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
+    "params": {},
+    "slot": "su_pgr",
+    "owner": "H-SU",
+    "region": "d4g_gen1_l5",
+    "note": "whole-SU serial programme plane (target 128x256 SRAM macros, 301 macros) at the 4 x 2422-bit command boundary; params from results/arch/hbm_su_f2_static_1014/programme/two_planes_1103/serial_manifest.json (the MR1 proof image 7116 edges, receipt multirate_native_d9507c056); DICT_BANKS is an packed little-column vector parameter (emit verbatim). NO die slot exists for it (H-DIE). command is registered and zeroed when !valid (ot_hbm_su_programme.sv always_ff), so the bench gate line=valid?command:0 is redundant and command binds directly. | su_prog_part_d4f: remastered ot_hbm_su_programme -> ot_hbm_su_programme_root_h | su_prog_part_d4f: slot None -> su_pgr | d4g_gen1_l5: ot_hbm_su_programme_root_h -> ot_hbm_su_programme_root_h5; HBM-RTL5/pg root_h5 (SMACROS 4x320, SDLY 2, RRLY 1); bench2 PASS",
+    "replaces_v15": null,
+    "rtl_deps": [],
+    "source_sha256_actual": "dd63e1b72a21ce3580c2e422cb8e43f383a9a1a316d7f979400c8407b4bee570"
+  },
+  "col_idx": {
+    "master": "ot_hbm_static_cfg_collar_idx256r",
+    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv",
+    "params": {
+      "PAGE_W": 1,
+      "NS": 1,
+      "NPR": 6,
+      "NREC": 8,
+      "NGO": 2,
+      "NB": 2,
+      "NF": 5,
+      "XSER": 0,
+      "FAN32": 1
+    },
+    "slot": null,
+    "owner": "host owner (H-NETLIST cp2)",
+    "region": "cp2",
+    "note": "F20 target 120. IDX + TOPK + ARGMAX.LOCAL of the SW slice (hb_idx, hb_argmax): space0 = IDX programme (addr8); operand rows 0..5 = length/sectors/rank/gbase/nkeys/keep/die_id + keep_bitmap; record rows = TOPK descriptors (go[0]) and ARGMAX records (go[1]) on compiler offsets. ARGMAX shares this collar (target 121 not used): one launch domain, one SW slice, one fewer tile. Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch). | d4g_gen1_l4: NF 4 -> 5 (c_fault[4] = hb_idx__nwsh.fault) | l19: physical programme rows256; page0 and need<=256; out-of-range writes/selection/counts stickyfault without aliased writes; no successful edge changes | l20p: IDX256R packed operand face prm769 (reserved operand fields not stored/exported, nonzero reserved write = sticky fault), pw_addr8 (row>=256 already faults); 0 added edges | l22f: FAN32=1 banked structure (kits hdie_col_idx256r_a/_b), SYNTH stand-in until one CLOSES",
+    "replaces_v15": null,
+    "rtl_deps": [],
+    "source_sha256_actual": "26d34bece786413235c5c0484be10cded7d6e53ae5820c1df2ec97b01b135426"
+  },
+  "hb_idx__ctl": {
+    "master": "ot_hbm_idx_rootctl_static_am",
+    "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+    "params": {},
+    "slot": "idx_ctl",
+    "owner": "HBM-RTL4 (IDX quad client)",
+    "region": "d4g_gen2c_l9",
+    "note": "d4g_gen2c_l9: idx PAIR rebind (d4g_bind_idxam.json): rootctl_am r4, one clk, argmax_m 264 b",
+    "replaces_v15": null,
+    "rtl_deps": [
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+      "rtl/lib/ot_rst_relay.sv"
+    ],
+    "source_sha256_actual": "d32133359d7b559a852a4066ffb398dfa3e999173fc5de6c7962292fc9979c25"
+  },
+  "hb_router_ids": {
+    "master": "ot_hbm_router_ids_static",
+    "source": "rtl/hbm_accel/loader/service_native/ot_hbm_router_ids_static.sv",
+    "params": {
+      "XRT": 1,
+      "GO_DELAY": 1,
+      "CQ_DELAY": 1
+    },
+    "slot": "router_ids",
+    "region": "l17_router_ids",
+    "owner": "HBM-ROUTER-IDS-CODEX",
+    "note": "real TOPK CQ capture; 79-bit landed broadcast, CP whole-layer run identity",
+    "source_sha256_actual": "897e7d4151242059210a545f9a7b4ba62f10485c2563502699f6c6f53988ed26"
+  },
+  "hb_vms_SE": {
+    "master": "hfd_hgi_vms_static_SE_glue",
+    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+    "params": {},
+    "slot": null,
+    "owner": null,
+    "region": "d4g_gen1_l4",
+    "note": "kept from v15.1 source contract | vm_hoist_d4f: remastered hfd_hgi_vms_static_SE -> hfd_hgi_vms_static_SE_glue | d4g_gen1_l3: hfd_hgi_vms_static_SE_glue -> hfd_hgi_vms_static_SEb_glue; E-quadrant hub with the SM client side (NC 1, RG 5, WG 2) | d4g_gen1_l4: hfd_hgi_vms_static_SEb_glue -> hfd_hgi_vms_static_SE_glue; NC 0: the per-quadrant IDX has no hub client (TOPK stays on SW client 1)",
+    "rtl_deps": [
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv"
+    ],
+    "source_sha256_actual": "33090faa944a5827c7a04031b6aff5f46830e13e2c35643f589abf543f0591f6"
+  },
+  "vm_status4": {
+    "master": "ot_vms_status4_static",
+    "source": "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+    "params": {
+      "NQ": 4
+    },
+    "slot": null,
+    "owner": "H-SM",
+    "region": "host_misc",
+    "note": "KEPT v15; inputs bound by v15 status_<q>; vmstat has no consumer | A2P: NQ 4 -> 4",
+    "replaces_v15": "ot_vms_status4_static",
+    "source_sha256_actual": "d6d20b4197d06544679d78da0ff1da328ec1f197abbd5c47f1ea9de3fecbe842"
+  }
+}
