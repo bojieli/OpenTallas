@@ -1,0 +1,40 @@
+{
+  "status": "SOURCE_DRAFT_UNQUALIFIED",
+  "gold": "0ae0a0d9c",
+  "source_base": "3979c4080",
+  "lanes": 16,
+  "outputs_per_command": 32,
+  "sram_count": 4,
+  "sram_bytes": 2048,
+  "macro_area_um2": 8217.05472,
+  "inherited_slot_um": [
+    259.2,
+    259.2
+  ],
+  "additional_registers": {
+    "age_images": 48,
+    "multiply_age_images": 32,
+    "command_add_sum_dates": 32,
+    "date_pin_images": 64,
+    "reset_leaf_second_and_leaf": 64,
+    "total": 240
+  },
+  "reset_roots_before_after": 32,
+  "reset_regions_before_after": [
+    480,
+    512
+  ],
+  "actual_shipping_reset_edges": 5,
+  "legacy_reset_edges": 1,
+  "unwrapped_r10_reset_edges": 3,
+  "command_token_age_delta": 0,
+  "cycle_boundary_bits": {
+    "p0": 512,
+    "p1": 512,
+    "out": 512,
+    "reciprocal": 128
+  },
+  "routing_ports_storage_geometry_unchanged": true,
+  "measured_area_standalone_r10_um2": 39374.6,
+  "new_area_depth_fanout": "UNMEASURED"
+}

@@ -3,6 +3,9 @@ module tb_pvfin_calendar;
  reg [15:0] a=0,b=0,r=0;wire [15:0] y,ym;
  ot_qkd_pvfin_calendar_value #(.C(9)) dut(.p0(a),.p1(b),.r(r),.y(y));
  ot_qkd_pvfin_calendar_value #(.C(9),.IGNORE_R(1)) mut3(.p0(a),.p1(b),.r(r),.y(ym));
+ wire [15:0] ya,ys;
+ ot_qkd_pvfin_calendar_value #(.C(1),.IGNORE_R(1)) adddate(.p0(a),.p1(b),.r(r),.y(ya));
+ ot_qkd_pvfin_calendar_value #(.C(8),.IGNORE_R(1)) sumdate(.p0(a),.p1(b),.r(r),.y(ys));
  integer checked=0,seed=1;reg [15:0] lastp,last,expect_y,expect_m;
  task check(input [15:0] x0,x1,xr);
   begin
@@ -10,6 +13,7 @@ module tb_pvfin_calendar;
    lastp=(a>b)?a:b;last=(lastp>r)?lastp:r;
    expect_y=last+16'd9;expect_m=lastp+16'd9;
    if(y!==expect_y||ym!==expect_m)$fatal(1,"PVFIN_CALENDAR FAIL a=%h b=%h r=%h y=%h/%h ym=%h/%h",a,b,r,y,expect_y,ym,expect_m);
+   if(ya!==(lastp+16'd1)||ys!==(lastp+16'd8))$fatal(1,"COMMAND_DATE FAIL a=%h b=%h r=%h",a,b,r);
    checked=checked+1;
   end
  endtask

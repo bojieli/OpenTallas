@@ -20,10 +20,12 @@ module qkd_pv_fin_s32 #(
  output reg fault
 );
  // Bounded reset farms: 16 lanes x (2 add + 21 multiply) plus control leaves.
- wire [239:0] rr0,rr1;
- ot_rst_relay_bounded32 #(.REGIONS(240)) u_rr0(.clk(ck),.rst_n_in(rst_n),.rst_n(rr0));
- ot_rst_relay_bounded32 #(.REGIONS(240)) u_rr1(.clk(ck),.rst_n_in(rst_n),.rst_n(rr1));
- wire [479:0] rr={rr1,rr0};
+ wire [255:0] rr0,rr1;
+ ot_rst_relay_bounded32 #(.REGIONS(256)) u_rr0(.clk(ck),.rst_n_in(rst_n),.rst_n(rr0));
+ ot_rst_relay_bounded32 #(.REGIONS(256)) u_rr1(.clk(ck),.rst_n_in(rst_n),.rst_n(rr1));
+ wire [511:0] rr;
+ assign rr[239:0]=rr0[239:0];assign rr[479:240]=rr1[239:0];
+ assign rr[495:480]=rr0[255:240];assign rr[511:496]=rr1[255:240];
  wire rc=rr[448];
  // pin registers (control); the data pins land in tap 0 of the operand lines
  reg start_q,p0v_q,p1v_q,rzv_q;reg [15:0] epoch_q,p0e_q,p1e_q,rze_q;(* keep="true",dont_touch="true" *) reg [47:0] cal_q;reg [4:0] p0b_q,p1b_q;reg [127:0] rz_q;
@@ -35,13 +37,23 @@ module qkd_pv_fin_s32 #(
  reg active;reg [15:0] age,ep,P0,P1,RA,MUL_AGE;
  wire [15:0] LASTP=(P0>P1)?P0:P1;
  wire [15:0] D0=LASTP-P0,D1=LASTP-P1;
- wire [15:0] ADD_AGE=LASTP+16'd1,SUM_AGE=ADD_AGE+16'(ADD_LAT),PRODUCT_AGE=MUL_AGE+16'(MUL_LAT);
+ // Command-time dates remove the runtime max-word distribution.
+ (* keep="true",dont_touch="true" *) reg [15:0] ADD_AGE,SUM_AGE;
+ wire [15:0] PRODUCT_AGE=MUL_AGE+16'(MUL_LAT);
+ (* keep="true",dont_touch="true" *) reg [15:0] age_operand,age_header,age_product;
+ (* keep="true",dont_touch="true" *) reg [15:0] mul_operand,mul_header;
+ wire [15:0] no=age_operand+16'd1,nh=age_header+16'd1,np=age_product+16'd1;
+ always @(posedge ck or negedge rr[480])if(!rr[480])age_operand<=0;else age_operand<=age_d;
+ always @(posedge ck or negedge rr[481])if(!rr[481])age_header<=0;else age_header<=age_d;
+ always @(posedge ck or negedge rr[482])if(!rr[482])age_product<=0;else age_product<=age_d;
+ always @(posedge ck or negedge rr[483])if(!rr[483])mul_operand<=16'hffff;else mul_operand<=MUL_AGE_d;
+ always @(posedge ck or negedge rr[484])if(!rr[484])mul_header<=16'hffff;else mul_header<=MUL_AGE_d;
  wire [15:0] n=age+16'd1;                                  // the edge that ends this cycle
  function automatic win(input [15:0] x,input [15:0] lo);win=(x>=lo)&&(x<lo+16'd32);endfunction
  wire p0_slot=active&&win(n,P0),p1_slot=active&&win(n,P1),r_slot=active&&n==RA;
  wire add_slot=active&&win(n,ADD_AGE),sum_slot=active&&win(n,SUM_AGE);
- wire mul_slot=active&&win(n,MUL_AGE),product_slot=active&&win(n,PRODUCT_AGE);
- wire [4:0] b_p0=5'(n-P0),b_p1=5'(n-P1),b_prod=5'(n-PRODUCT_AGE);
+ wire mul_slot=active&&win(n,MUL_AGE),product_slot=active&&win(np,PRODUCT_AGE);
+ wire [4:0] b_p0=5'(n-P0),b_p1=5'(n-P1),b_prod=5'(np-PRODUCT_AGE);
  // calendar of a new command (checked on the start edge)
  wire [15:0] c0=cal_q[15:0],c1=cal_q[31:16],cr=cal_q[47:32];
  wire [15:0] c_lastp=(c0>c1)?c0:c1;
@@ -109,10 +121,10 @@ module qkd_pv_fin_s32 #(
  // SRAM prefetch at multiply-2, then three independent same-edge operand
  // captures at multiply-1. Forward writes at either edge (the earliest
  // legal multiply is SUM_AGE+1); no read-before-write payload is observed.
- wire read_slot=active&&win(n,MUL_AGE-16'd2);
- wire capture_slot=active&&win(n,MUL_AGE-16'd1);
- wire [4:0] read_addr=5'(n-(MUL_AGE-16'd2));
- wire [4:0] capture_addr=5'(n-(MUL_AGE-16'd1));
+ wire read_slot=active&&win(no,mul_operand-16'd2);
+ wire capture_slot=active&&win(no,mul_operand-16'd1);
+ wire [4:0] read_addr=5'(no-(mul_operand-16'd2));
+ wire [4:0] capture_addr=5'(no-(mul_operand-16'd1));
  wire [511:0] ram_sum;
  reg [511:0] forward_sum;
  (* keep="true",dont_touch="true" *) reg [31:0] early_hit,direct_hit;
@@ -122,7 +134,7 @@ module qkd_pv_fin_s32 #(
  generate for(ol=0;ol<32;ol=ol+1)begin:g_operand_lane
   always @(posedge ck)begin
    early_hit[ol]<=read_slot&&sum_slot&&(read_addr==wptr);
-   direct_hit[ol]<=active&&win(n+16'd1,SUM_AGE)&&win(n+16'd1,MUL_AGE-16'd1)&&(SUM_AGE==MUL_AGE-16'd1);
+   direct_hit[ol]<=active&&win(no+16'd1,SUM_AGE)&&win(no+16'd1,mul_operand-16'd1)&&(SUM_AGE==mul_operand-16'd1);
   end
   wire [15:0] read_sum=(early_hit[ol]&&MUT!=4)?forward_sum[16*ol+:16]:ram_sum[16*ol+:16];
   wire [15:0] capture_sum=(direct_hit[ol]&&MUT!=5)?sum[16*ol+:16]:read_sum;
@@ -141,7 +153,7 @@ module qkd_pv_fin_s32 #(
  // Predict the head used on the following multiply edge; each lane has
  // three kept copies so both live-operand normalisers have bounded drivers.
  (* keep="true",dont_touch="true" *) reg [31:0] reciprocal_lane[0:15][0:2];
- wire [4:0] header_rptr=5'(n+16'd2-MUL_AGE);
+ wire [4:0] header_rptr=5'(nh+16'd2-mul_header);
  wire [2:0] header_hb=(MUT==1)?3'(({1'b0,header_rptr}+6'd1)>>3):3'(header_rptr>>3);
  (* keep="true",dont_touch="true" *) reg [3:0] head_select[0:15];
  genvar rl,rx;
@@ -162,7 +174,7 @@ module qkd_pv_fin_s32 #(
   (* keep="true",dont_touch="true" *) reg add_land,mul_land,lane_active;
   always @(posedge ck)begin
    add_land<=active&&!fault&&win(n+16'd1,ADD_AGE);
-   mul_land<=active&&!fault&&win(n+16'd1,MUL_AGE);
+   mul_land<=active&&!fault&&win(no+16'd1,mul_operand);
   end
   always @(posedge ck or negedge rr[462+l])if(!rr[462+l])lane_active<=0;else lane_active<=active_d;
   ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rr[28*l]),.rst_y(rr[28*l+1]),.rst_y2(2'b11),.y2(),.valid_in(add_land&&lane_active),
@@ -197,6 +209,21 @@ module qkd_pv_fin_s32 #(
   end else begin:g_no_value
    assign command_mulage[cg]=16'd0;
   end
+ end endgenerate
+ wire [15:0] date_add,date_sum;
+ (* keep="true",dont_touch="true" *) reg [31:0] date_cal[0:1];
+ generate for(genvar dc=0;dc<2;dc=dc+1)begin:g_date_cal
+  always @(posedge ck)date_cal[dc]<=cal[31:0];
+ end endgenerate
+ (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(1),.IGNORE_R(1)) u_add_date(
+  .p0(date_cal[0][15:0]),.p1(date_cal[0][31:16]),.r(16'd0),.y(date_add));
+ (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(ADD_LAT+1),.IGNORE_R(1)) u_sum_date(
+  .p0(date_cal[1][15:0]),.p1(date_cal[1][31:16]),.r(16'd0),.y(date_sum));
+ generate for(genvar dh=0;dh<2;dh=dh+1)begin:g_date_capture
+  always @(posedge ck or negedge rr[485])if(!rr[485])ADD_AGE[8*dh+:8]<=0;
+   else if(command_accept[2+dh])ADD_AGE[8*dh+:8]<=date_add[8*dh+:8];
+  always @(posedge ck or negedge rr[486])if(!rr[486])SUM_AGE[8*dh+:8]<=8'(ADD_LAT>>(8*dh));
+   else if(command_accept[4+dh])SUM_AGE[8*dh+:8]<=date_sum[8*dh+:8];
  end endgenerate
  reg active_d;
  reg [15:0] age_d;
@@ -253,7 +280,7 @@ module qkd_pv_fin_s32 #(
  wire [2:0] out_take;
  generate for(genvar oa=0;oa<3;oa=oa+1)begin:g_out_active
   always @(posedge ck or negedge rr[457+oa]) if(!rr[457+oa]) out_active[oa]<=0;else out_active[oa]<=active_d;
-  assign out_take[oa]=out_active[oa]&&!start_q&&!fault&&!bad&&win(n,PRODUCT_AGE);
+  assign out_take[oa]=out_active[oa]&&!start_q&&!fault&&!bad&&win(np,PRODUCT_AGE);
  end endgenerate
  always @(posedge ck or negedge rr[457]) if(!rr[457]) out_valid<=0;else out_valid<=out_take[0];
  always @(posedge ck or negedge rr[458]) if(!rr[458]) out_beat<=0;else if(out_take[1]) out_beat<=b_prod;
@@ -263,11 +290,11 @@ module qkd_pv_fin_s32 #(
  (* keep="true",dont_touch="true" *) reg [31:0] product_land;
  (* keep="true",dont_touch="true" *) reg [7:0] reciprocal_land;
  generate for(genvar oi=0;oi<32;oi=oi+1)begin:g_output_lane
-  always @(posedge ck)product_land[oi]<=active&&win(n+16'd1,PRODUCT_AGE);
+  always @(posedge ck)product_land[oi]<=active&&win(np+16'd1,PRODUCT_AGE);
   always @(posedge ck)if(product_land[oi])out_data[16*oi+:16]<=product[16*oi+:16];
  end
  for(genvar ri=0;ri<8;ri=ri+1)begin:g_rz_capture
-  always @(posedge ck)reciprocal_land[ri]<=start_q?(!active&&!cal_bad&&cr==16'd1):(active&&(n+16'd1==RA));
+  always @(posedge ck)reciprocal_land[ri]<=start_q?(!active&&!cal_bad&&cr==16'd1):(active&&(nh+16'd1==RA));
   always @(posedge ck)if(reciprocal_land[ri])rzr[16*ri+:16]<=rz_q[16*ri+:16];
  end endgenerate
 endmodule
