@@ -188,6 +188,7 @@ def elaborate(root, top, sources, params, yosys):
     with tempfile.TemporaryDirectory(prefix='ot-cdc-sync-') as tmp:
         out = Path(tmp) / 'netlist.json'
         cmd = (f'read_verilog -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+               f'setattr -mod -unset keep_hierarchy; '
                f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -615,6 +616,8 @@ proc ot_cdc_flow_names {name} {
     lappend names $core
     if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
   }
+  # Logical lint flattens module hierarchy with dots; mapped kept cells use slashes.
+  foreach n $names {if {[string first / $n] >= 0} {lappend names [string map {/ .} $n]}}
   return $names
 }
 '''
