@@ -230,6 +230,58 @@ class PlanningBirthBudgetTest(unittest.TestCase):
         self.mutate_artifact("cts_population", lambda d: d["cells"][0].__setitem__(1, "fake_master"))
         self.reject()
 
+    def test_previous_gate_requires_real_cts_and_snapshot_schema(self):
+        original = (self.root / PROOF / "previous_gate.json.gz").read_bytes()
+        for change in (lambda d: d.update(cts=1),
+                       lambda d: d["source_binding"].update(schema="fabricated")):
+            with self.subTest(change=change):
+                (self.root / PROOF / "previous_gate.json.gz").write_bytes(original)
+                self.mutate_artifact("previous_gate", change)
+                self.reject()
+
+    def test_native_census_strict_causal_fields(self):
+        original = (self.root / PROOF / "native_census.json.gz").read_bytes()
+        for key, value in (("schema", "fake"), ("max_dynamic_loads", 31),
+                           ("roots_examined", 49487), ("role_errors", ["unknown"]),
+                           ("violations", ["over32"])):
+            with self.subTest(key=key):
+                (self.root / PROOF / "native_census.json.gz").write_bytes(original)
+                self.mutate_artifact("native_census", lambda d: d.update({key: value}))
+                self.reject()
+
+    def test_previous_actual_band_validity_is_strict(self):
+        for change in (lambda d: d["measured_band_fill"].update(valid=1),
+                       lambda d: d["measured_band_fill"].update(valid=True, errors=["row hole"])):
+            with self.subTest(change=change):
+                self.mutate_artifact("previous_gate", change)
+                self.reject()
+
+    def test_changed_source_orfs_overrides(self):
+        for key in ("SYNTH_HIERARCHICAL", "VERILOG_DEFINES", "VERILOG_INCLUDE_DIRS", "SYNTH_SCRIPT"):
+            with self.subTest(key=key):
+                self.s["orfs_vars"][key] = "changed"
+                self.reject()
+                del self.s["orfs_vars"][key]
+
+    def test_changed_wrapper_hooks(self):
+        self.s["pin_hook_before_flops"] = ["changed.tcl"]
+        self.reject()
+
+    def test_placement_fences_can_change_without_source_waiver(self):
+        self.s["orfs_vars"].update(PRE_GLOBAL_PLACE_TCL="candidate_fences.tcl",
+                                    PRE_DETAIL_PLACE_TCL="candidate_fences.tcl")
+        self.assertEqual([], self.check())
+
+    def test_relative_escape_and_symlink_escape(self):
+        self.s["planning_birth_budget"]["path"] = "../receipt.json"
+        self.reject()
+        outside = self.root.parent / (self.root.name + "-outside")
+        outside.write_text("{}")
+        self.addCleanup(outside.unlink)
+        (self.root / "escape.json").symlink_to(outside)
+        self.s["planning_birth_budget"]["path"] = "escape.json"
+        self.reject()
+
     def test_previous_measured_area_not_a_claim(self):
         self.mutate_artifact("previous_gate", lambda d: d["measured_band_fill"].update(std_area_um2=12000))
         self.reject()
