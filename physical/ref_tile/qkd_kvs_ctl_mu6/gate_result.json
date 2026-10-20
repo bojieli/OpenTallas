@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_kvs_ctl_mu6",
- "verdict": "FAIL",
- "generated": "2026-10-19T21:20:00-0700",
- "host": "ot-epyc4",
+ "verdict": "WARN",
+ "generated": "2026-10-20T01:44:35-0700",
+ "host": "ot-epyc9",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "b15169ad35c6329444c40b47db5f73ce69860623",
+  "start_commit": "5a536aa3b6ea53b97c24c015d124a206dfad0aaa",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "755983d83c972b5e67ba1cc5a3a8b73c1c468b66f820237e0fcb3bc998030fe7",
-  "manifest_sha256": "8ebfcb0f618cae73a30b68ea9efbfe8afae39ab062ce7569524c65d42677ab2b",
+  "archive_sha256": "4746a7b07a360b7a5b24a295f8145e3c11ed8d25f18068851c38845c810679b9",
+  "manifest_sha256": "6ecfe41ec63a11cb37ce3b905e1f57b76ff9d9c2ead7131d6fa1ae637c9121f5",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.json",
@@ -17667,8 +17667,8 @@
    {
     "path": "rtl/lib/ot_rst_relay.sv",
     "kind": "file",
-    "sha256": "ad67f23f1b1e5b693372a259dfe4713c7f06b430e1452ecb16ed34444de3b94c",
-    "git_blob": "db4852f4e2b07faf47a9e7dc9f7c0cb25635f4ff",
+    "sha256": "231e571c0b3e355736f4def09c93b10640180114519be85ed84c4eb5a916da53",
+    "git_blob": "70e8f2063266a5578d05a0c9befbf00e42e263a8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -114651,14 +114651,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 125230628,
-   "unpacked_bytes": 714153984,
+   "archive_bytes": 125231400,
+   "unpacked_bytes": 714158080,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "f40571e8905c2763327b71d7bc40c918c4d21205",
+   "origin_main": "34428d84097602fda363c7f7290c9592947d1d09",
    "content_sha256": "72acb0e92fdd8e3380f47594602730a940f875afd26224756c568240f63cb39a",
    "files": [
     {
@@ -127411,7 +127411,7 @@
     "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
     "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
-    "rtl/lib/ot_rst_relay.sv": "ad67f23f1b1e5b693372a259dfe4713c7f06b430e1452ecb16ed34444de3b94c",
+    "rtl/lib/ot_rst_relay.sv": "231e571c0b3e355736f4def09c93b10640180114519be85ed84c4eb5a916da53",
     "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
     "rtl/lib/ot_sync_bits.sv": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f",
     "rtl/lib/ot_sync_level.sv": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6",
@@ -139537,16 +139537,16 @@
    },
    "digest": "3c783f4910659d05837c43a10d093cd60319c68f6a72e7af990d7ea11f45a6c6"
   },
-  "captured": "2026-10-19T16:44:56-0700",
+  "captured": "2026-10-19T21:21:33-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_kvs_ctl_mu6/signoff.sdc"
   },
-  "remote_script_sha256": "3be57af7083772d1516c5613fc47d6f1f47d8502549d334ad3345efae3ab1a4c",
+  "remote_script_sha256": "625dfe5ecca848cfdb314be4950bb6d0a58e51eb1ce4a6d729b50644d0670f50",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6-20261019-164359",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6-20261019-212045",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -139554,15 +139554,15 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 17980,
+  "max_root_sinks": 18024,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 546.0,
-  "tt_spread_ps": 45.0,
-  "tt_pin_spread_ps": 39.3,
-  "ff_insertion_ps": 446.1,
-  "ff_spread_ps": 47.1,
-  "ff_pin_spread_ps": 37.3,
+  "tt_insertion_ps": 546.5,
+  "tt_spread_ps": 48.4,
+  "tt_pin_spread_ps": 48.4,
+  "ff_insertion_ps": 448.4,
+  "ff_spread_ps": 49.4,
+  "ff_pin_spread_ps": 46.8,
   "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
@@ -139575,98 +139575,98 @@
     "clock": "core_clk",
     "tt": {
      "clock_family": {
-      "core_clk": 17602
+      "core_clk": 17745
      },
      "boundary": {
       "n": 6420,
-      "mean": 523.8,
-      "min": 504.3,
-      "max": 543.6
+      "mean": 521.2,
+      "min": 498.1,
+      "max": 546.5
      },
      "all": {
-      "n": 17602,
-      "mean": 522.3,
-      "min": 501.0,
-      "max": 546.0
+      "n": 17745,
+      "mean": 519.7,
+      "min": 498.1,
+      "max": 546.5
      },
      "errors": [],
      "macros": {
       "n": 10,
       "nets": 10,
       "max_per_net": 1,
-      "reg_mean": 522.3,
-      "max_slew": 14.5,
-      "max_late": 15.2,
+      "reg_mean": 519.7,
+      "max_slew": 15.0,
+      "max_late": 15.3,
       "pins": [
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b0/clk",
-        "arr": 537.5,
+        "arr": 519.0,
         "slew": 14.4,
-        "late": 15.2,
-        "net": "clkbuf_sp_d1_L861_net"
+        "late": -0.7,
+        "net": "clkbuf_sp_d1_L888_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b1/clk",
-        "arr": 536.2,
+        "arr": 535.0,
         "slew": 14.4,
-        "late": 13.9,
-        "net": "clkbuf_sp_d1_L860_net"
+        "late": 15.3,
+        "net": "clkbuf_sp_d1_L887_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b2/clk",
-        "arr": 529.3,
+        "arr": 527.2,
         "slew": 13.7,
-        "late": 7.0,
-        "net": "clkbuf_sp_d1_L859_net"
+        "late": 7.5,
+        "net": "clkbuf_sp_d1_L886_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b3/clk",
-        "arr": 514.2,
-        "slew": 14.4,
-        "late": -8.1,
-        "net": "clkbuf_sp_d1_L858_net"
+        "arr": 527.2,
+        "slew": 13.7,
+        "late": 7.5,
+        "net": "clkbuf_sp_d1_L885_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b0/clk",
-        "arr": 517.2,
-        "slew": 13.6,
-        "late": -5.1,
-        "net": "clkbuf_sp_d1_L857_net"
+        "arr": 515.3,
+        "slew": 14.4,
+        "late": -4.4,
+        "net": "clkbuf_sp_d1_L884_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b1/clk",
-        "arr": 526.8,
-        "slew": 14.4,
-        "late": 4.5,
-        "net": "clkbuf_sp_d1_L856_net"
+        "arr": 519.6,
+        "slew": 13.7,
+        "late": -0.1,
+        "net": "clkbuf_sp_d1_L883_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b2/clk",
-        "arr": 531.1,
-        "slew": 13.7,
-        "late": 8.8,
-        "net": "clkbuf_sp_d1_L855_net"
+        "arr": 516.3,
+        "slew": 14.5,
+        "late": -3.4,
+        "net": "clkbuf_sp_d1_L882_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b0/clk",
-        "arr": 524.9,
-        "slew": 13.7,
-        "late": 2.6,
-        "net": "clkbuf_sp_d1_L756_net"
+        "arr": 515.4,
+        "slew": 13.3,
+        "late": -4.3,
+        "net": "clkbuf_sp_d1_L762_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b1/clk",
-        "arr": 520.2,
-        "slew": 14.5,
-        "late": -2.1,
-        "net": "clkbuf_sp_d1_L755_net"
+        "arr": 513.7,
+        "slew": 15.0,
+        "late": -6.0,
+        "net": "clkbuf_sp_d1_L761_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b2/clk",
-        "arr": 527.9,
-        "slew": 13.7,
-        "late": 5.6,
-        "net": "clkbuf_sp_d1_L754_net"
+        "arr": 515.8,
+        "slew": 14.4,
+        "late": -3.9,
+        "net": "clkbuf_sp_d1_L760_net"
        }
       ]
      },
@@ -139674,15 +139674,15 @@
      "child_flop": {
       "boundary": {
        "n": 6420,
-       "mean": 523.8,
-       "min": 504.3,
-       "max": 543.6
+       "mean": 521.2,
+       "min": 498.1,
+       "max": 546.5
       },
       "all": {
-       "n": 17602,
-       "mean": 522.3,
-       "min": 501.0,
-       "max": 546.0
+       "n": 17745,
+       "mean": 519.7,
+       "min": 498.1,
+       "max": 546.5
       },
       "refs": {
        "ctl_sram_1r1w_64x64_p192": {
@@ -139694,15 +139694,15 @@
       "soft": {
        "boundary": {
         "n": 6420,
-        "mean": 523.8,
-        "min": 504.3,
-        "max": 543.6
+        "mean": 521.2,
+        "min": 498.1,
+        "max": 546.5
        },
        "all": {
-        "n": 17592,
-        "mean": 522.3,
-        "min": 501.0,
-        "max": 546.0
+        "n": 17735,
+        "mean": 519.7,
+        "min": 498.1,
+        "max": 546.5
        }
       }
      }
@@ -139710,28 +139710,28 @@
     "ff": {
      "boundary": {
       "n": 6420,
-      "mean": 427.3,
-      "min": 405.7,
-      "max": 443.0
+      "mean": 425.0,
+      "min": 401.6,
+      "max": 448.4
      },
      "all": {
-      "n": 17602,
-      "mean": 425.2,
+      "n": 17745,
+      "mean": 423.2,
       "min": 399.0,
-      "max": 446.1
+      "max": 448.4
      },
      "child_flop": {
       "boundary": {
        "n": 6420,
-       "mean": 427.3,
-       "min": 405.7,
-       "max": 443.0
+       "mean": 425.0,
+       "min": 401.6,
+       "max": 448.4
       },
       "all": {
-       "n": 17602,
-       "mean": 425.2,
+       "n": 17745,
+       "mean": 423.2,
        "min": 399.0,
-       "max": 446.1
+       "max": 448.4
       },
       "refs": {
        "ctl_sram_1r1w_64x64_p192": {
@@ -139743,15 +139743,15 @@
       "soft": {
        "boundary": {
         "n": 6420,
-        "mean": 427.3,
-        "min": 405.7,
-        "max": 443.0
+        "mean": 425.0,
+        "min": 401.6,
+        "max": 448.4
        },
        "all": {
-        "n": 17592,
-        "mean": 425.2,
+        "n": 17735,
+        "mean": 423.2,
         "min": 399.0,
-        "max": 446.1
+        "max": 448.4
        }
       }
      },
@@ -139759,79 +139759,79 @@
       "n": 10,
       "nets": 10,
       "max_per_net": 1,
-      "reg_mean": 425.2,
-      "max_slew": 12.3,
-      "max_late": 11.4,
+      "reg_mean": 423.2,
+      "max_slew": 12.8,
+      "max_late": 11.3,
       "pins": [
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b0/clk",
-        "arr": 436.6,
+        "arr": 418.7,
         "slew": 12.2,
-        "late": 11.4,
-        "net": "clkbuf_sp_d1_L861_net"
+        "late": -4.5,
+        "net": "clkbuf_sp_d1_L888_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b1/clk",
-        "arr": 435.3,
+        "arr": 434.5,
         "slew": 12.2,
-        "late": 10.1,
-        "net": "clkbuf_sp_d1_L860_net"
+        "late": 11.3,
+        "net": "clkbuf_sp_d1_L887_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b2/clk",
-        "arr": 430.9,
-        "slew": 11.6,
-        "late": 5.7,
-        "net": "clkbuf_sp_d1_L859_net"
+        "arr": 430.8,
+        "slew": 11.7,
+        "late": 7.6,
+        "net": "clkbuf_sp_d1_L886_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowa_b3/clk",
-        "arr": 416.3,
-        "slew": 12.2,
-        "late": -8.9,
-        "net": "clkbuf_sp_d1_L858_net"
+        "arr": 429.6,
+        "slew": 11.6,
+        "late": 6.4,
+        "net": "clkbuf_sp_d1_L885_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b0/clk",
-        "arr": 418.5,
-        "slew": 11.6,
-        "late": -6.7,
-        "net": "clkbuf_sp_d1_L857_net"
+        "arr": 416.7,
+        "slew": 12.2,
+        "late": -6.5,
+        "net": "clkbuf_sp_d1_L884_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b1/clk",
-        "arr": 426.6,
-        "slew": 12.2,
-        "late": 1.4,
-        "net": "clkbuf_sp_d1_L856_net"
+        "arr": 419.5,
+        "slew": 11.6,
+        "late": -3.7,
+        "net": "clkbuf_sp_d1_L883_net"
        },
        {
         "pin": "u_ot_pr_core.u_lprg.genblk1.g_s1.u_rowb_b2/clk",
-        "arr": 431.6,
-        "slew": 11.7,
-        "late": 6.4,
-        "net": "clkbuf_sp_d1_L855_net"
+        "arr": 419.2,
+        "slew": 12.4,
+        "late": -4.0,
+        "net": "clkbuf_sp_d1_L882_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b0/clk",
-        "arr": 430.5,
-        "slew": 11.6,
-        "late": 5.3,
-        "net": "clkbuf_sp_d1_L756_net"
+        "arr": 421.8,
+        "slew": 11.2,
+        "late": -1.4,
+        "net": "clkbuf_sp_d1_L762_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b1/clk",
-        "arr": 422.9,
-        "slew": 12.3,
-        "late": -2.3,
-        "net": "clkbuf_sp_d1_L755_net"
+        "arr": 417.4,
+        "slew": 12.8,
+        "late": -5.8,
+        "net": "clkbuf_sp_d1_L761_net"
        },
        {
         "pin": "u_ot_pr_core.u_wprg.g_sr.genblk1.g_s1.u_rows_b2/clk",
-        "arr": 430.0,
-        "slew": 11.6,
-        "late": 4.8,
-        "net": "clkbuf_sp_d1_L754_net"
+        "arr": 413.8,
+        "slew": 12.2,
+        "late": -9.4,
+        "net": "clkbuf_sp_d1_L760_net"
        }
       ]
      }
@@ -139854,7 +139854,7 @@
   },
   "measured_clock": "core_clk",
   "verdict": "WARN",
-  "text": "17,980 sinks on the largest root; measured TT insertion 546.0 ps, FF insertion 446.1 ps, TT pin-flop spread 39.3 ps, FF pin-flop spread 37.3 ps; WARN: 17,980 sinks on one clock root > 15,000 (guidance); insertion 546.0 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+  "text": "18,024 sinks on the largest root; measured TT insertion 546.5 ps, FF insertion 448.4 ps, TT pin-flop spread 48.4 ps, FF pin-flop spread 46.8 ps; WARN: 18,024 sinks on one clock root > 15,000 (guidance); insertion 546.5 ps > 300 (guidance; boundary matched by parent compensation / landing)"
  },
  "items": [
   {
@@ -139878,55 +139878,95 @@
   {
    "severity": "WARN",
    "check": "textbook.clock_domain",
-   "message": "clock root port ck: 17,970 flops > 15,000 on one root (+0 ICGs, 10 macro clock pins; e.g. _78154_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "message": "clock root port ck: 18,014 flops > 15,000 on one root (+0 ICGs, 10 macro clock pins; e.g. _78237_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
    "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
   },
   {
    "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "2 input->register endpoint(s) > 3 levels (worst boot__boot_image_target[2]->_78160_/D 4 lv, boot__boot_image_target[1]->_78155_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "message": "2 input->register endpoint(s) > 3 levels (worst boot__boot_image_target[2]->_78243_/D 4 lv, boot__boot_image_target[1]->_78238_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   },
   {
    "severity": "WARN",
    "check": "textbook.logic_depth",
-   "message": "reg->reg stage u_ot_pr_core.u_own.g_mu.go_q$_DFF_PN0_ -> u_ot_pr_core.u_own.cycle[31]$_DFFE_PN0P_/D: ~647 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage",
+   "message": "reg->reg stage u_ot_pr_core.u_own.cycle[1]$_DFFE_PN0P_ -> u_ot_pr_core.u_own.cycle[31]$_DFFE_PN0P_/D: ~635 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
    "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
   },
   {
    "severity": "WARN",
    "check": "textbook.clock_guidance",
-   "message": "clock root port:ck: 17,980 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,980 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "message": "clock root port:ck: 18,024 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,024 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
    "fix": ""
   },
   {
    "severity": "WARN",
    "check": "clock_rule",
-   "message": "root port:ck: 17,980 sinks on the largest root; measured TT insertion 546.0 ps, FF insertion 446.1 ps, TT pin-flop spread 39.3 ps, FF pin-flop spread 37.3 ps; WARN: 17,980 sinks on one clock root > 15,000 (guidance); insertion 546.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "message": "root port:ck: 18,024 sinks on the largest root; measured TT insertion 546.5 ps, FF insertion 448.4 ps, TT pin-flop spread 48.4 ps, FF pin-flop spread 46.8 ps; WARN: 18,024 sinks on one clock root > 15,000 (guidance); insertion 546.5 ps > 300 (guidance; boundary matched by parent compensation / landing)",
    "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
   },
   {
    "severity": "WARN",
    "check": "fill",
-   "message": "fill 10% = (hard macros 7104.8 + synthesized std cells 9248.8) / outline 164229.1 um2; pin demand per face: S 100 pins over 14.3/345.6 um (4%), N 1647 pins over 292.5/345.6 um (85%), W 2652 pins over 378.3/475.2 um (80%), E 2650 pins over 378.9/475.2 um (80%) (pin-bound: W/E faces carry 2524 hroot link bits each (i/o_hroot_WS/WN/ES/EN, registered at the face): >= 421 um of face at 6 pins/um; 475.2 um (11 x 43.2) gives 5.31/um, the density the mu4 gate placed. N face 1647 bits on 345.6 um = 4.77/um. Synthesis area (std ~13-15k um2 after the 21 kb of flop tables moved to 3 SRAM macros, + 11.7k um2 macros) would fit ~250 x 250 um at 40%; the perimeter, not the area, sets the outline.)",
+   "message": "fill 10% = (hard macros 7104.8 + synthesized std cells 9305.1) / outline 164229.1 um2; pin demand per face: S 100 pins over 14.3/345.6 um (4%), N 1647 pins over 292.5/345.6 um (85%), W 2652 pins over 378.3/475.2 um (80%), E 2650 pins over 377.7/475.2 um (80%) (pin-bound: W/E faces carry 2524 hroot link bits each (i/o_hroot_WS/WN/ES/EN, registered at the face): >= 421 um of face at 6 pins/um; 475.2 um (11 x 43.2) gives 5.31/um, the density the mu4 gate placed. N face 1647 bits on 345.6 um = 4.77/um. Synthesis area (std ~13-15k um2 after the 21 kb of flop tables moved to 3 SRAM macros, + 11.7k um2 macros) would fit ~250 x 250 um at 40%; the perimeter, not the area, sets the outline.)",
    "fix": ""
-  },
-  {
-   "severity": "FAIL",
-   "check": "trial_route",
-   "message": "trial global route produced no congestion table (GATE_GRT_RC=137)",
-   "fix": "read the remote grt.log"
   }
  ],
  "trial_route": {
   "schema": "opentallas.ref_tile.trial_route.v1",
-  "overflow": null,
+  "overflow": 0,
   "kind": "parent",
   "skip_incremental_repair": false,
-  "rc": "137",
-  "grt_s": 14461,
-  "layers": [],
-  "worst_layer_usage": null,
+  "rc": "0",
+  "grt_s": 8261,
+  "layers": [
+   {
+    "layer": "M1",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   },
+   {
+    "layer": "M2",
+    "capacity": 4558170,
+    "usage": 868726,
+    "pct": 19.06,
+    "overflow": 0
+   },
+   {
+    "layer": "M3",
+    "capacity": 5243366,
+    "usage": 835541,
+    "pct": 15.94,
+    "overflow": 0
+   },
+   {
+    "layer": "M4",
+    "capacity": 4133944,
+    "usage": 199747,
+    "pct": 4.83,
+    "overflow": 0
+   },
+   {
+    "layer": "M5",
+    "capacity": 3874437,
+    "usage": 319441,
+    "pct": 8.24,
+    "overflow": 0
+   },
+   {
+    "layer": "M6",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   }
+  ],
+  "worst_layer_usage": [
+   "M2",
+   19.06
+  ],
   "hotspot": null,
   "congestion_png": null
  },
