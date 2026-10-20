@@ -49,9 +49,18 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
      raise ValueError(f'{n}.{pin}: each soft input needs exact source-pinned0..32 terminal loads')
     if any(v>load_cap for v in weights):
      raise ValueError(f'{n}.{pin}: indivisible soft input exceeds constructor load cap; expand child interface first')
+  parameter_types=contract.get('parameter_types',{})
+  if not isinstance(parameter_types,dict) or any(v not in ('bits','string') for v in parameter_types.values()):
+   raise ValueError(f'{n}: macro parameter type must be bits or string')
+  declared=set(mod.get('parameter_default_values',{}))|set(c.get('parameters',{}))
+  if set(parameter_types)-declared:raise ValueError(f'{n}: parameter type metadata names undeclared parameter')
   for pin,value in c.get('parameters',{}).items():
-   if not isinstance(value,str) or not re.fullmatch('[01xz]+',value):
-    raise ValueError(f'{n}: only explicit Yosys binary parameter literals supported: {pin}')
+   kind=parameter_types.get(pin,'bits')
+   if not isinstance(value,str):raise ValueError(f'{n}.{pin}: macro parameter must be an explicit Yosys string/bits value')
+   if kind=='bits' and not re.fullmatch('[01xz]+',value):
+    raise ValueError(f'{n}.{pin}: nonbinary/empty parameter requires explicit string type metadata')
+   if kind=='string' and any(ord(ch)>127 for ch in value):
+    raise ValueError(f'{n}.{pin}: non-ASCII macro string parameter unsupported; no lossy conversion')
  # --retain-keep (QW-SLICE7 10-20): every (* keep *) net of the flattened source (e.g. the Kogge-Stone prefix levels of
  # ot_hdc_ksadd_k) stays a retained operator boundary, so ABC cannot re-ripple prefix carries (bounded red2 LA7: a
  # 9-deep AND chain in the round increment without it).
@@ -244,6 +253,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  for n,p in ports.items():lines.append(f'assign '+(bus(p['bits'])+' = '+n if p['direction']=='input' else n+' = '+bus(p['bits']))+';')
  used=set()
  def vid(name):return name if re.fullmatch('[a-zA-Z_][a-zA-Z0-9_$]*',name) else '\\'+name+' '
+ def sv_string(value):
+  escapes={'\\':'\\\\','"':'\\"','\n':'\\n','\r':'\\r','\t':'\\t'}
+  return '"'+''.join(escapes.get(ch,ch if 32<=ord(ch)<127 else '\\%03o'%ord(ch)) for ch in value)+'"'
  for idx,(n,c) in enumerate(cells.items()):
   typ=c['type']
   if macro(c):
@@ -252,7 +264,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    for pin,bs in old['connections'].items():
     if old['port_directions'][pin]=='output' or macro_contracts[typ]['ports'][pin].get('clock',False):
      if c['connections'][pin]!=bs:raise ValueError(f'{n}.{pin}: macro output/clock terminal changed')
-   pars=','.join('.'+vid(p)+'('+str(len(v))+"'b"+v+')' for p,v in c.get('parameters',{}).items())
+   def param_value(pin,value):
+    return sv_string(value) if macro_contracts[typ].get('parameter_types',{}).get(pin)=='string' else str(len(value))+"'b"+value
+   pars=','.join('.'+vid(p)+'('+param_value(p,v)+')' for p,v in c.get('parameters',{}).items())
    con=','.join('.'+vid(p)+'('+bus(bs)+')' for p,bs in c['connections'].items())
    lines.append(f'{vid(typ)} '+(f'#({pars}) ' if pars else '')+f'{vid(n)}({con});')
    continue
