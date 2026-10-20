@@ -10,7 +10,8 @@ set block [ord::get_db_block]
 set rules {}
 foreach g [$block getGlobalConnects] {lappend rules [list [$g getInstPattern] [$g getPinPattern] [[$g getNet] getName]]}
 set expect {{.* ^VDD$ VDD} {.* ^VDDPE$ VDD} {.* ^VDDCE$ VDD} {.* ^VSS$ VSS} {.* ^VSSE$ VSS}}
-if {[lsort $rules] ne [lsort $expect]} {error "PVM_BF_PG_RULES_DRIFT $rules"}
+set canon {}; foreach e $expect {lappend canon [list {*}$e]}
+if {[lsort $rules] ne [lsort $canon]} {error "PVM_BF_PG_RULES_DRIFT $rules"}
 global_connect
 puts "PVM_BF_POST_TAPCELL_GLOBAL_CONNECT rules=[llength $rules]"
 source [file join [file dirname [info script]] .. stage_guard.tcl]
