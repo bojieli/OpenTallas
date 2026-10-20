@@ -10,14 +10,15 @@ module ot_qw_lw_n32 #(parameter W=128,D=4,CB=24,C=(W+CB-1)/CB)(input ck,rsi,inpu
   localparam CW=(W-c*CB<CB)?W-c*CB:CB;
   for(genvar a=0;a<(CW+7)/8;a=a+1) begin:g_a
    localparam BW=(CW-a*8<8)?CW-a*8:8;
-   (* keep *) reg rq;
+   (* keep *) reg rq; (* keep *) reg rqd;
    (* keep *) reg [D-1:0] woh;
    reg [D-1:0] v;
    (* keep *) always @(posedge ck) rq<=rr[(c*NS+a)/16];
+   (* keep *) always @(posedge ck) rqd<=rr[(c*NS+a)/16];
    (* keep *) always @(posedge ck) if(!rq) begin woh<=1;v<=0;end else begin woh<={woh[D-2:0],woh[D-1]};v<=v|woh;end
    for(genvar s=0;s<D;s=s+1) begin:g_s
     reg [BW-1:0] dq;
-    (* keep *) always @(posedge ck) if(rq&&woh[s]) dq<=i[c*CB+a*8+:BW];
+    (* keep *) always @(posedge ck) if(rqd&&woh[s]) dq<=i[c*CB+a*8+:BW];
     assign bank[s*W+c*CB+a*8+:BW]=dq;
    end
    if(a==0) assign vld[c*D+:D]=v;

@@ -1,0 +1,18 @@
+{
+  "scope": "A0 REGROOT9 opt-in helper successor vs REGROOT8 baseline",
+  "t_out_extra_edges_vs_regroot8": 6,
+  "landing_added_edges": [
+    2,
+    2,
+    2
+  ],
+  "helper_added_data_edges_vs_rc10": 0,
+  "helper_added_reset_edges_vs_rc10": 0,
+  "engine_issue_memory_request_extra_edges": 0,
+  "full_source_positive_checks": 29899,
+  "full_source_positive_ref": "full_attempt1/run_0.log",
+  "full_current_revision_proof": "pending V4",
+  "compiler_schedule": "must retain +6 t_out; lane states price binding; no rate uplift claimed",
+  "physical_constraints": "ALL DATA SINGLECYCLE; ROOT forbids original setup2/hold3 exceptions",
+  "area_and_clock_cost": "additional same-edge control/reset FF copies; exact current full mapping area and clock tree remain pending"
+}
