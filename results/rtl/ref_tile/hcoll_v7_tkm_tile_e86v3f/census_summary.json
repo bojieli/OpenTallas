@@ -1,0 +1,55 @@
+{
+ "schema": "hbm_e86_5.native_census_summary.v1",
+ "gate_run": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86v3f-20261020-022738",
+ "census_sha256": "bd853d2ff555e4a724a2991b4526be5d377222b02041ba34c77985bf7723ee7c",
+ "netlist": {
+  "path": "/work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "5e95b26f8008a8f6f96f8ad8f4ae6da739a584dce9aa9a25420c12df85ce707c"
+ },
+ "status": "FAIL",
+ "roots_examined": 296868,
+ "max_dynamic_loads": 47,
+ "violations": [
+  {
+   "driver": "_292308_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 33
+  },
+  {
+   "driver": "_296345_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 41
+  },
+  {
+   "driver": "_336962_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 34
+  },
+  {
+   "driver": "_363523_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 47
+  },
+  {
+   "driver": "_374459_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 40
+  },
+  {
+   "driver": "_437137_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 34
+  },
+  {
+   "driver": "_447213_/Y",
+   "driver_role": "combinational_or_macro",
+   "loads": 43
+  }
+ ],
+ "role_errors": [],
+ "predecessor_v2b": {
+  "dynamic_over32": 21,
+  "max": 65,
+  "netlist_sha256": "527e73a6df494105efd8c8b593a81da4a2e31d6e7f2d69bc2cf388d5c0e1f68d"
+ }
+}

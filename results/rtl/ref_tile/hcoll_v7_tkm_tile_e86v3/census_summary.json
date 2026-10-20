@@ -1,0 +1,19 @@
+{
+ "schema": "hbm_e86_5.native_census_summary.v1",
+ "gate_run": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86v3-20261020-022738",
+ "census_sha256": "09cf570eab33eff3fec12ead21eddae128289d574384a2efaaf41b407299dfa0",
+ "netlist": {
+  "path": "/work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "d935f2b9c50f6670271b5ddf4d31c0277109adbbdd92176e123812b8bffb5862"
+ },
+ "status": "PASS",
+ "roots_examined": 285208,
+ "max_dynamic_loads": 32,
+ "violations": [],
+ "role_errors": [],
+ "predecessor_v2b": {
+  "dynamic_over32": 21,
+  "max": 65,
+  "netlist_sha256": "527e73a6df494105efd8c8b593a81da4a2e31d6e7f2d69bc2cf388d5c0e1f68d"
+ }
+}
