@@ -1,0 +1,106 @@
+[
+  {
+    "kit": "mu6c",
+    "host": "ot-epyc9",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6c-20261019-230301/textbook.json",
+    "sha256": "7a7f48757e7ceeb867612ab338dd8d8f53f6dcc7f0b7dfae89ac0378491957f2",
+    "flops": 18014,
+    "macros": 10,
+    "max_driver": 2357,
+    "top": [
+      {
+        "net": "_44180_/Y (OR2x2_ASAP7_75t_R)",
+        "loads": 2357,
+        "flops": 1
+      },
+      {
+        "net": "_61334_/Y (NAND2x1_ASAP7_75t_R)",
+        "loads": 1027,
+        "flops": 0
+      },
+      {
+        "net": "_45953_/Y (OR3x1_ASAP7_75t_R)",
+        "loads": 572,
+        "flops": 1
+      },
+      {
+        "net": "_50215_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 384,
+        "flops": 0
+      },
+      {
+        "net": "_50141_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 384,
+        "flops": 0
+      },
+      {
+        "net": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 325,
+        "flops": 0
+      },
+      {
+        "net": "_50363_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 320,
+        "flops": 0
+      },
+      {
+        "net": "_50289_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 320,
+        "flops": 0
+      }
+    ],
+    "qualification": "FAIL native32, no submit"
+  },
+  {
+    "kit": "mu6d",
+    "host": "ot-epyc9",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6d-20261019-230301/textbook.json",
+    "sha256": "84bc9df1136ad38ce40e37d2e6f139a2950901dd27c4fedc8ab563f7c23c4e6d",
+    "flops": 18014,
+    "macros": 6,
+    "max_driver": 2357,
+    "top": [
+      {
+        "net": "_44180_/Y (OR2x2_ASAP7_75t_R)",
+        "loads": 2357,
+        "flops": 1
+      },
+      {
+        "net": "_61334_/Y (NAND2x1_ASAP7_75t_R)",
+        "loads": 1027,
+        "flops": 0
+      },
+      {
+        "net": "_45953_/Y (OR3x1_ASAP7_75t_R)",
+        "loads": 572,
+        "flops": 1
+      },
+      {
+        "net": "_50215_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 384,
+        "flops": 0
+      },
+      {
+        "net": "_50141_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 384,
+        "flops": 0
+      },
+      {
+        "net": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 325,
+        "flops": 0
+      },
+      {
+        "net": "_50363_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 320,
+        "flops": 0
+      },
+      {
+        "net": "_50289_/Y (AND3x1_ASAP7_75t_R)",
+        "loads": 320,
+        "flops": 0
+      }
+    ],
+    "qualification": "FAIL native32, no submit"
+  }
+]
