@@ -12,9 +12,9 @@ SAFE checklist (owner 10-19) / pre-gate native census:
   (u_lpr_root_<region> kept copies), reset lands >= 2 stages in every region (forest depth 2 + child pads).
 2 Reach: PASS by construction: every cross-region bus is an lp.py D4/K2 landing; u_rx/u_ry inside c beside core and
   reciprocal child.  Gate measures placed legs.
-3 Fanout: census on the equivalent source (codex unit oth-ubuntu-502416-1792485497, real Liberty, BUF/INV transparent):
-  max 32 loads, 0 violations (baseline g4: 265 drivers > 32).  This gate's own GATE_NATIVE_CENSUS (before floorplan) re-measures
-  this exact source; a FAIL there stops the gate.
+3 Fanout: PASS. In-gate GATE_NATIVE_CENSUS on this exact source (gate eeb5302e0, 14 Liberties, mapped netlist): max 32 loads,
+  0 violations, 122,405 roots, 0 constant outputs (baseline g4: 265 drivers > 32). Codex unit oth-ubuntu-502416 agreed on the
+  equivalent derivative. Golden (V5.050): m0 PASS 7 passes; m1 FAIL 11935; m19 FAIL 49 (results/rtl/qwen_kv_ahub7_1020).
 4 Depth: stage boundaries unchanged vs g3 (a7 relays kept); gate measures <= 600 ps.
 5 Storage: PASS per instance (no waiver).  The only runtime-indexed flop storage is the 15 lp.py landing rings (the D4
   landed crossings the clocking standard mandates; 1 writer / 1 reader each, at its own region boundary).  Largest instance
