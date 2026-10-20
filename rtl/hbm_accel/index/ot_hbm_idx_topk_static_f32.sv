@@ -422,7 +422,7 @@ module ot_hbm_idx_topk_static_f32 #(
         for (a = 0; a < 8; a = a + 1) begin o_w[a] <= pk_id[a]; r_w[a] <= pk_val[a]; end
     end
     // ------------------------------------------------------------ static writer (free-running sector words, one-hot rotate)
-    wire [7:0] kmask = 8'hff >> (4'd8 - k_q);
+    wire [7:0] kmask = 8'hff >> (4'd8 - k_d);      // the kept k duplicate (k_q: sequencer only)
     wire [255:0] o_flat, r_flat;
     generate for (g = 0; g < 8; g = g + 1) begin : g_flat
         assign o_flat[g*32 +: 32] = {{(32-IDW){1'b0}}, o_w[g]};
