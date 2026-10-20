@@ -1,0 +1,60 @@
+{
+ "schema": "hbm_e86_5.r5s_census_summary.v1",
+ "gate_run": "ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/hidx_link_r5s-20261020-024059",
+ "census_sha256": "88fc95749bef45cbc443c738eb546a4a16b980f09c79e1b5760ee08b3fb20e5e",
+ "netlist": {
+  "path": "/work/results/asap7/opentallas_ot_hbm_idx_topk_link_static_p_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "3e7b693d1b613b28fc6c124b0c67cb397ac290a80ace46703bc7f98735a22163"
+ },
+ "status": "FAIL",
+ "roots_examined": 116809,
+ "max_dynamic_loads": 80,
+ "violations": 1127,
+ "combinational_violations": 0,
+ "classes": {
+  "u_ot_pr_core.g_safe.core.rg[i]$_DFF_P_/QN": {
+   "n": 14,
+   "min": 40,
+   "max": 48
+  },
+  "u_ot_pr_core.g_safe.core.rv[i]$_DFF_P_/QN": {
+   "n": 16,
+   "min": 34,
+   "max": 48
+  },
+  "u_ot_pr_core.g_safe.core.sl[s].u.s1_nac[i]$_DFF_P_/QN": {
+   "n": 117,
+   "min": 33,
+   "max": 74
+  },
+  "u_ot_pr_core.g_safe.core.sl[s].u.s1_nqc[i]$_DFF_P_/QN": {
+   "n": 155,
+   "min": 33,
+   "max": 80
+  },
+  "u_ot_pr_core.g_safe.core.sl[s].u.s2_qc[i]$_DFF_P_/QN": {
+   "n": 198,
+   "min": 34,
+   "max": 66
+  },
+  "u_ot_pr_core.g_safe.core.sl[s].u.s4_bnew[i]$_DFF_P_/QN": {
+   "n": 42,
+   "min": 48,
+   "max": 48
+  },
+  "u_ot_pr_core.g_safe.core.sl[s].u.trep[i]$_DFF_P_/QN": {
+   "n": 576,
+   "min": 48,
+   "max": 72
+  },
+  "u_ot_pr_core.g_safe.vrep[i]$_DFF_P_/QN": {
+   "n": 9,
+   "min": 33,
+   "max": 37
+  }
+ },
+ "predecessor_r4h": {
+  "dynamic_over32": 2294,
+  "max": 2855
+ }
+}
