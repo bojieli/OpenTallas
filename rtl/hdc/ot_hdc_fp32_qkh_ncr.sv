@@ -47,12 +47,7 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg         x_v;
     reg         x_byp, x_nf, x_sub, x_as, x_bs;
     (* keep="true", dont_touch="true" *) reg [6:0] x_swap;
-    // R9d (gate-flow census: the exponent-difference MSB generate drove 34 one-hot capture compares): the A1 -> A2 cut
-    // holds a 2-level one-hot (hi = d[7:5] == 0 && d[4:2] == k, k < 7; lo = d[1:0] == m), 11 compares per difference
-    // instead of 28; A2 forms oh[j] = hi[j / 4] & lo[j % 4] (one AND level; same values / ages as the old registers)
-    (* keep="true",dont_touch="true" *) reg [6:0] x_dab_hi,x_dba_hi;
-    (* keep="true",dont_touch="true" *) reg [3:0] x_dab_lo,x_dba_lo;
-    wire [27:0] x_dab_oh,x_dba_oh;
+    (* keep="true",dont_touch="true" *) reg [27:0] x_dab_oh,x_dba_oh;
     (* keep="true",dont_touch="true" *) reg x_dab_big,x_dba_big;
     reg [31:0] x_code_a,x_code_b;
     // R8: two kept copies per 8-bit bypass bank (one per 4-bit half) -> each copy feeds 4 bits x 4 ring slots (R7 census: 33 loads)
@@ -71,10 +66,7 @@ module ot_hdc_fp32_add_lat_ncr #(
     // ---- A2 ----------------------------------------------------------------------------------------
     genvar j;
     generate for(j=0;j<28;j=j+1)begin:jam_capture
-      assign x_dab_oh[j]=x_dab_hi[j/4]&x_dab_lo[j%4];
-      assign x_dba_oh[j]=x_dba_hi[j/4]&x_dba_lo[j%4];
-      if(j<7)begin:hi always @(posedge clk)begin x_dab_hi[j]<=(dab[7:2]==j);x_dba_hi[j]<=(dba[7:2]==j);end end
-      if(j<4)begin:lo always @(posedge clk)begin x_dab_lo[j]<=(dab[1:0]==j);x_dba_lo[j]<=(dba[1:0]==j);end end
+      always @(posedge clk)begin x_dab_oh[j]<=(dab==j);x_dba_oh[j]<=(dba==j);end
     end endgenerate
     function automatic [27:0] jam28oh;
       input [23:0] man;input [27:0] oh;input big;
