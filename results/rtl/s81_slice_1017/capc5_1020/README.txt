@@ -1,5 +1,5 @@
-S81-CAPC4 10-20: behavioural evidence for the LANDED capture cluster ot_s81sl_capc5 (source 235089270, branch claude/s81-capc5-land-1020).
-Fleet ot-epyc9, Verilator 5.050 (verilator.version), unpinned ot-run, source archive /srv/opentallas-scratch/claude/s81-capc4-1020/src_2350.
+S81-CAPC4 10-20: behavioural evidence for the LANDED capture cluster ot_s81sl_capc5 (source f56222658 (n32 writer), branch claude/s81-capc5-land-1020).
+Fleet ot-epyc5, Verilator 5.050 (verilator.version), unpinned ot-run, source archive /srv/opentallas-scratch/claude/s81-capc4-1020/src_f56222658.
 gold_pass.out  cap_c5_gold_bench.sh MUT=0: golden cap_model vectors (s_16_24 calendar), 1280/1280 rows written at W+5 exactly once, 7446/7446 lane
                arrivals at A+1, fault 0 -> PASS.  (capc2 contract was W+2: +3 = the three landed crossings into u_rt.)
 gold_mut1.out  lp MUT 1 (W-valid landing bypassed) -> CAP_C5_MUTANT_DETECTED (missing writes).
