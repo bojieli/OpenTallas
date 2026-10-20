@@ -73,12 +73,13 @@ if {$ot_mw_stuck > 0} { error "OT_MAXWIRE: $ot_mw_stuck cells inside hard childr
 set ot_mw_long [expr {$ot_mw_um * 1.25 * $ot_mw_dbu}]
 set ot_mw_up 0; set ot_mw_upf 0
 set ot_mw_pg [expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]
-if {$ot_mw_pg} {
-  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
-  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
-  source $ot_pg_helper
-  set ot_mw_pg_map [ot_pg_prepare $ot_mw_blk]
-}
+# PG before protection in BOTH modes (S81-CAPC3 10-19): global_connect skips dont_touch insts (dbGlobalConnect.cpp:163),
+# so a driver protected here stays unbound unless it is bound first.  Strict: per-instance source-owned binder; standard:
+# the design's own global_connect rules once for the whole batch (ot_pg_standard_bind, main 67cb1acc7), then protect.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+set ot_mw_protect {}
 foreach ot_n [$ot_mw_blk getNets] {
   if {[$ot_n getSigType] ne "SIGNAL" || [$ot_n isSpecial]} continue
   set drv {}; set lds {}
@@ -99,11 +100,22 @@ foreach ot_n [$ot_mw_blk getNets] {
     if {[llength [get_lib_cells -quiet */$cand]] == 0} continue
     if {![catch {replace_cell [$di getName] [lindex [get_lib_cells */$cand] 0]}]} { set done 1; break }
   }
-  if {$done} {
-    # PG before protection (LEAD2-S81/NATIVE 10-19: global_connect skips dont_touch insts -> unbound VDD/VSS)
-    if {$ot_mw_pg} { ot_pg_bind_before_protect $ot_mw_pg_map $di }
-    $di setDoNotTouch 1; incr ot_mw_up
-  } else { incr ot_mw_upf }
+  if {$done} { lappend ot_mw_protect $di; incr ot_mw_up } else { incr ot_mw_upf }
+}
+if {[llength $ot_mw_protect]} {
+  if {$ot_mw_pg} {
+    set ot_mw_pg_map [ot_pg_prepare $ot_mw_blk]
+    foreach di $ot_mw_protect { ot_pg_bind_before_protect $ot_mw_pg_map $di }
+  } else {
+    ot_pg_standard_bind max_wire_repeat
+  }
+  foreach di $ot_mw_protect {
+    foreach row [ot_pg_master_census $di] {
+      lassign $row mt term why
+      if {$why ne "" || [$term getNet] eq "NULL"} { error "OT_MAXWIRE_PG_UNBOUND_BEFORE_PROTECT [$di getName]/[$mt getName] $why" }
+    }
+    $di setDoNotTouch 1
+  }
 }
 puts [format "OT_MAXWIRE kept strong source drivers on %d nets > %.1f um (child crossings), %d not resizable" $ot_mw_up [expr {double($ot_mw_long) / $ot_mw_dbu}] $ot_mw_upf]
 estimate_parasitics -placement
