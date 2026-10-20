@@ -1,0 +1,65 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=25 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=35 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=37 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=57 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=67 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=0 seed=1 dens=40 cycles=20000 mismatches=4204 first_fault=24 gather0=1708 asm=1431 line_out=8230
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=28 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=39 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=54 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=58 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=14 seed=6 dens=40 cycles=20000 mismatches=4186 first_fault=23 gather0=1713 asm=1474 line_out=8433
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=42 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=53 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=56 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=59 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=67 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=15 seed=7 dens=60 cycles=20000 mismatches=5516 first_fault=33 gather0=2240 asm=1923 line_out=10612
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=24 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=26 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=28 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=30 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=33 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=3 seed=8 dens=200 cycles=20000 mismatches=10015 first_fault=23 gather0=3611 asm=3154 line_out=18740
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=34 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=38 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=48 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=50 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=5 seed=2 dens=40 cycles=20000 mismatches=4292 first_fault=34 gather0=1660 asm=1413 line_out=9363
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=28 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=37 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=38 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=39 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=7 seed=3 dens=80 cycles=20000 mismatches=6511 first_fault=27 gather0=2521 asm=2161 line_out=13541
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=44 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=45 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=48 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=57 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=59 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=8 seed=4 dens=20 cycles=20000 mismatches=2927 first_fault=44 gather0=1086 asm=925 line_out=6133
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish
+MISMATCH cyc=25 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=32 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=33 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=37 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=38 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV sid=9 seed=5 dens=120 cycles=20000 mismatches=8349 first_fault=24 gather0=3096 asm=2672 line_out=16109
+RS_EQUIV FAIL
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rs_equiv.sv:79: Verilog $finish

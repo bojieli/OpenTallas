@@ -1,0 +1,35 @@
+ot-run: ot-epyc5       admits  1059 GB (avail 854, growth 113, headroom 0, waiters 0/0 GB) load 74/128 running 41 disk 264 GB 
+ot-run: ot-epyc6       admits   898 GB (avail 742, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 28 disk 5118 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81xg3/src-a2dd45002
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81xg3/src-a2dd45002
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81xg3/src-a2dd45002
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81xg3/src-a2dd45002
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2031183-1792476009 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RS_CASE sid=0 seed=1 dens=40 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=0 seed=1 dens=40 cycles=20000 mismatches=4204 first_fault=24 gather0=1708 asm=1431 line_out=8230
+MISMATCH cyc=25 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=35 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=5 seed=2 dens=40 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=5 seed=2 dens=40 cycles=20000 mismatches=4292 first_fault=34 gather0=1660 asm=1413 line_out=9363
+MISMATCH cyc=34 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=7 seed=3 dens=80 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=7 seed=3 dens=80 cycles=20000 mismatches=6511 first_fault=27 gather0=2521 asm=2161 line_out=13541
+MISMATCH cyc=28 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=8 seed=4 dens=20 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=8 seed=4 dens=20 cycles=20000 mismatches=2927 first_fault=44 gather0=1086 asm=925 line_out=6133
+MISMATCH cyc=44 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=45 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=9 seed=5 dens=120 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=9 seed=5 dens=120 cycles=20000 mismatches=8349 first_fault=24 gather0=3096 asm=2672 line_out=16109
+MISMATCH cyc=25 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=32 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=14 seed=6 dens=40 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=14 seed=6 dens=40 cycles=20000 mismatches=4186 first_fault=23 gather0=1713 asm=1474 line_out=8433
+MISMATCH cyc=28 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=36 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=15 seed=7 dens=60 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=15 seed=7 dens=60 cycles=20000 mismatches=5516 first_fault=33 gather0=2240 asm=1923 line_out=10612
+MISMATCH cyc=42 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=53 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_CASE sid=3 seed=8 dens=200 FAIL expected=FAIL ok=1 :: RS_EQUIV sid=3 seed=8 dens=200 cycles=20000 mismatches=10015 first_fault=23 gather0=3611 asm=3154 line_out=18740
+MISMATCH cyc=24 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+MISMATCH cyc=26 ro_e=1 ro_w=0 vo=0 nx=00 g=0000 dl=000000 f=1/1
+RS_EQUIV_BENCH PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2031183-1792476009): exit 0

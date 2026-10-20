@@ -58,10 +58,12 @@ module ot_s81sl_xs_ctl (
     // ------------------------------------------------------------------ ot_s81_pq_ctl_static_native (INCAP + CALCAP)
     // reset relay: production REGIONS 4 (main / AQ metadata / count tree / bc+accept); AQ metadata and count regions
     // are dropped with their logic.
-    wire [1:0] rst_cv;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr
+    // S81-XG3 (10-19): a third region for the p1 / bt broadcast-header pipeline (gate xgr: rst_c drove 585 loads);
+    // all regions release on the same edge, so the function is unchanged.
+    wire [2:0] rst_cv;
+    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr
         (.clk(clk), .rst_n_in(state_rst_n), .rst_n(rst_cv));
-    wire rst_c = rst_cv[0], rst_bc = rst_cv[1];
+    wire rst_c = rst_cv[0], rst_bc = rst_cv[1], rst_p = rst_cv[2];
     reg [1:0] act_hi_q;
     always @(posedge clk) act_hi_q <= {2{cv_q}} & ca_q[74:73];
     wire [74:0] action = cv_q ? ca_q : 75'd0;
@@ -209,8 +211,6 @@ module ot_s81sl_xs_ctl (
             fault <= 0;
             a_v <= 0; a_v2 <= 0; a_tag <= 0; a_tag2 <= 0; a_ph <= 0;
             r0_v <= 0; ra_v <= 0; r1_v <= 0; r2_v <= 0; r3_v <= 0; hv <= 0;
-            p1_xs_v <= 0; p1_xb_v <= 0; p1_go <= 0; p1_gobf <= 0; p1_cfg <= 0; p1_tag <= 0; p1_ph <= 0; p1_np <= 0;
-            bt_xs_v <= 0; bt_xb_v <= 0; bt_go <= 0; bt_gobf <= 0; bt_cfg <= 0; bt_tag <= 0; bt_ph <= 0; bt_np <= 0;
             for (ks = 0; ks < 4; ks = ks + 1) begin sv[ks] <= 0; sr[ks] <= 0; si[ks] <= 0; end
         end else begin
             if (|act_hi_q) fault <= 1;
@@ -224,9 +224,7 @@ module ot_s81sl_xs_ctl (
             if (phase_store_valid) begin s_pw0[phase_store_tag] <= phase0_pin; sr[phase_store_tag] <= 1; end
             for (ks = 0; ks < 4; ks = ks + 1)
                 if (action[68 + ks]) begin sv[ks] <= 0; sr[ks] <= 0; si[ks] <= 0; end
-            p1_cfg <= action[62]; p1_go <= action[65];
-            if (action[62]) begin p1_ph <= s_ph[config_tag]; p1_np <= s_np[config_tag]; si[config_tag] <= 1; end
-            if (action[65]) begin p1_gobf <= s_pw0[launch_tag]; p1_tag <= launch_tag; end
+            if (action[62]) si[config_tag] <= 1;
             r0_v <= action[39]; r0_a <= action[53:40]; r0_tag <= action[55:54]; r0_pos <= action[58:56];
             r0_fam <= action[59]; r0_lp <= action[60]; r0_lo <= action[61];
             ra_v <= r0_v; ra_tag <= r0_tag; ra_pos <= r0_pos; ra_fam <= r0_fam; ra_lp <= r0_lp; ra_lo <= r0_lo;
@@ -239,6 +237,17 @@ module ot_s81sl_xs_ctl (
             r3_spar <= r2_spar; r3_nq <= r2_nq; r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
             r3_b0 <= r2_b0; r3_b1 <= r2_b1; r3_hi <= r2_hi;
             he <= r3_e; hv <= r3_v;
+        end
+    end
+    // p1 / bt broadcast-header pipeline (own reset region rst_p; same next-state functions as before the split)
+    always @(posedge clk or negedge rst_p) begin
+        if (!rst_p) begin
+            p1_xs_v <= 0; p1_xb_v <= 0; p1_go <= 0; p1_gobf <= 0; p1_cfg <= 0; p1_tag <= 0; p1_ph <= 0; p1_np <= 0;
+            bt_xs_v <= 0; bt_xb_v <= 0; bt_go <= 0; bt_gobf <= 0; bt_cfg <= 0; bt_tag <= 0; bt_ph <= 0; bt_np <= 0;
+        end else begin
+            p1_cfg <= action[62]; p1_go <= action[65];
+            if (action[62]) begin p1_ph <= s_ph[config_tag]; p1_np <= s_np[config_tag]; end
+            if (action[65]) begin p1_gobf <= s_pw0[launch_tag]; p1_tag <= launch_tag; end
             p1_xs_v <= hv && hw[0] && !h_fam; p1_xb_v <= hv && hw[0] && h_fam;
             bt_xs_v <= p1_xs_v; bt_xb_v <= p1_xb_v;
             bt_go <= p1_go; bt_gobf <= p1_gobf; bt_cfg <= p1_cfg; bt_tag <= p1_tag; bt_ph <= p1_ph; bt_np <= p1_np;

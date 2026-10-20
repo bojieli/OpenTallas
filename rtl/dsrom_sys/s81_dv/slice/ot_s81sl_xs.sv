@@ -65,6 +65,11 @@ module ot_s81sl_xs #(
     // 8:1 macro select registered beside each source bank column (kept per-bank select copies), then a 3:1 bank select.
     // Long read wires drop from 24 x 1,536 b to 3 x 1,536 b (gate2 GRT stalled 4 h in congestion).  The frame word leaves
     // one edge later (bench --xs-out 2); RD2 = 0 is the original.
+    // RD2 = 2 (S81-XG3 10-19, the x streamer as its own leaf): RD2 = 1 plus kept-copy table reads -- the arrival-table
+    // (q 2 x 96, BF 2 x 80) and block-exponent (384 x 10) lookups read through ot_s81sl_xs_lut: per-16-entry-group kept
+    // copies of the index low bits and a kept copy of the group select, so no index register drives a whole table's mux
+    // tree (gate xgr: one index flop drove 4,486 loads); reset relay 11 regions (kept-select copies get their own).  Same
+    // edges as RD2 = 1.
     parameter integer RD2 = 0
 ) (
     input  wire          clk,
@@ -77,16 +82,24 @@ module ot_s81sl_xs #(
     input  wire [159:0]  is_d,
     output wire          xw_v,
     output wire [1100:0] xw_d,
-    output reg           fault
+    output reg           fault,
+    // S81-XG3 (10-19): the gather sub-leaf's fault glue lives here so ot_s81sl_xg is wiring only (rs and xs are sibling
+    // hard leaves): fo = register(fi | fault), fi = the ring stop's registered fault (was ot_s81sl_xg's flt).
+    input  wire          fi,
+    output reg           fo
 );
 `ifndef DSFD_PQ_STATIC_X2
     DSFD_PQ_STATIC_X2_required_for_the_dsfd_pq_lx_static_frame_word u_missing_define ();
 `endif
     // reset relay: one region per <= ~256 reset loads (issue / gates / fault + lane / 4 arrival tables / write state)
-    wire [7:0] rsv;
-    ot_rst_relay #(.REGIONS(8), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+    localparam integer NRR = RD2 == 2 ? 11 : 8;
+    wire [NRR-1:0] rsv;
+    ot_rst_relay #(.REGIONS(NRR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_i = rsv[0], rs_g = rsv[1], rs_f = rsv[2], rs_w = rsv[7];
     wire [3:0] rs_t = rsv[6:3];
+    // kept-select copy regions (RD2 = 2): qsel copies, bsel copies, {gate, bank} copies
+    wire rs_kq = RD2 == 2 ? rsv[NRR > 8 ? 8 : 1] : rs_g, rs_kb = RD2 == 2 ? rsv[NRR > 9 ? 9 : 1] : rs_g;
+    wire rs_kg = RD2 == 2 ? rsv[NRR > 10 ? 10 : 1] : rs_g;
 
     // ================================================================== pin flops
     reg [2:0] gv_q; reg [2:0] gf_q; reg [20:0] gi_q; reg [3071:0] gd_q;
@@ -296,14 +309,57 @@ module ot_s81sl_xs #(
     reg  [1:0] r2_qg; reg [9:0] r2_e0, r2_e1;
     reg  [3:0] r2_bg;
     reg        rd_fault;
-    wire [1:0] q_s0 = tq_s[r1_qpar][r1_qbeat0], q_s1 = tq_s[r1_qpar][r1_qbeat1];
-    wire       q_v0 = tq_v[r1_qpar][r1_qbeat0], q_v1 = tq_v[r1_qpar][r1_qbeat1];
+    wire [1:0] q_s0, q_s1; wire q_v0, q_v1;
     reg  [3:0] b_vlo, b_vhi; reg [1:0] b_slo [0:3]; reg [1:0] b_shi [0:3]; reg b_conf;
+    wire [2:0] lb_lo [0:3], lb_hi [0:3];
+    wire [9:0] le0, le1;
+    generate if (RD2 == 2) begin : g_lut
+        // flat tables: q entry par * 96 + beat = {v, src}; BF entry par * 80 + beat = {v, src}; exponents as stored
+        wire [192*3-1:0] tq_f; wire [160*3-1:0] tb_f; wire [384*10-1:0] ex_f;
+        genvar ge;
+        for (ge = 0; ge < 192; ge = ge + 1) begin : g_tq
+            assign tq_f[3*ge +: 3] = {tq_v[ge / 96][ge % 96], tq_s[ge / 96][ge % 96]};
+        end
+        for (ge = 0; ge < 160; ge = ge + 1) begin : g_tb
+            assign tb_f[3*ge +: 3] = {tb_v[ge / 80][ge % 80], tb_s[ge / 80][ge % 80]};
+        end
+        for (ge = 0; ge < 384; ge = ge + 1) begin : g_ex
+            assign ex_f[10*ge +: 10] = ex[ge];
+        end
+        // stage-1 index values (the D of r1_qpar / r1_qbeat* / r1_bpar / r1_bu / r1_ei*); out of range -> 255 (reads 0)
+        wire [7:0] qi0 = q_blk0[7:1] >= 7'd96 ? 8'hff : 8'(q_par0 ? 8'd96 : 8'd0) + {1'b0, q_blk0[7:1]};
+        wire [7:0] qi1 = q_blk1[7:1] >= 7'd96 ? 8'hff : 8'(q_par0 ? 8'd96 : 8'd0) + {1'b0, q_blk1[7:1]};
+        wire [2:0] lq0, lq1;
+        ot_s81sl_xs_lut #(.N(192), .DW(3), .G(16), .IW(8)) u_lq0 (.clk(clk), .idx_d(qi0), .tab(tq_f), .q(lq0));
+        ot_s81sl_xs_lut #(.N(192), .DW(3), .G(16), .IW(8)) u_lq1 (.clk(clk), .idx_d(qi1), .tab(tq_f), .q(lq1));
+        assign {q_v0, q_s0} = lq0; assign {q_v1, q_s1} = lq1;
+        ot_s81sl_xs_lut #(.N(384), .DW(10), .G(16), .IW(9)) u_le0 (.clk(clk), .idx_d(9'(h_b0)), .tab(ex_f), .q(le0));
+        ot_s81sl_xs_lut #(.N(384), .DW(10), .G(16), .IW(9)) u_le1 (.clk(clk), .idx_d(9'(h_b1)), .tab(ex_f), .q(le1));
+        genvar gk;
+        for (gk = 0; gk < 4; gk = gk + 1) begin : g_lb
+            wire [8:0] hh = h_hi[9*gk +: 9];
+            wire       bp = hh >= 9'd48;
+            wire [5:0] bu = 6'(hh - (bp ? 9'd48 : 9'd0));
+            wire [7:0] bl = {bu, 1'b0} >= 7'd80 ? 8'hff : 8'(bp ? 8'd80 : 8'd0) + {1'b0, bu, 1'b0};
+            wire [7:0] bh = {bu, 1'b1} >= 7'd80 ? 8'hff : 8'(bp ? 8'd80 : 8'd0) + {1'b0, bu, 1'b1};
+            ot_s81sl_xs_lut #(.N(160), .DW(3), .G(16), .IW(8)) u_lo (.clk(clk), .idx_d(bl), .tab(tb_f), .q(lb_lo[gk]));
+            ot_s81sl_xs_lut #(.N(160), .DW(3), .G(16), .IW(8)) u_hi (.clk(clk), .idx_d(bh), .tab(tb_f), .q(lb_hi[gk]));
+        end
+    end else begin : g_nolut
+        assign q_s0 = tq_s[r1_qpar][r1_qbeat0]; assign q_s1 = tq_s[r1_qpar][r1_qbeat1];
+        assign q_v0 = tq_v[r1_qpar][r1_qbeat0]; assign q_v1 = tq_v[r1_qpar][r1_qbeat1];
+        genvar gk;
+        for (gk = 0; gk < 4; gk = gk + 1) begin : g_lb
+            assign lb_lo[gk] = {tb_v[r1_bpar[gk]][{r1_bu[gk], 1'b0}], tb_s[r1_bpar[gk]][{r1_bu[gk], 1'b0}]};
+            assign lb_hi[gk] = {tb_v[r1_bpar[gk]][{r1_bu[gk], 1'b1}], tb_s[r1_bpar[gk]][{r1_bu[gk], 1'b1}]};
+        end
+        assign le0 = ex[r1_ei0]; assign le1 = ex[r1_ei1];
+    end endgenerate
     always @* begin
         b_conf = 1'b0;
         for (k = 0; k < 4; k = k + 1) begin
-            b_vlo[k] = tb_v[r1_bpar[k]][{r1_bu[k], 1'b0}]; b_slo[k] = tb_s[r1_bpar[k]][{r1_bu[k], 1'b0}];
-            b_vhi[k] = tb_v[r1_bpar[k]][{r1_bu[k], 1'b1}]; b_shi[k] = tb_s[r1_bpar[k]][{r1_bu[k], 1'b1}];
+            {b_vlo[k], b_slo[k]} = lb_lo[k];
+            {b_vhi[k], b_shi[k]} = lb_hi[k];
             for (k2 = 0; k2 < k; k2 = k2 + 1)
                 if (r1_bg[k] && r1_bg[k2] && r1_bm[k] == r1_bm[k2]) b_conf = 1'b1;
         end
@@ -317,16 +373,16 @@ module ot_s81sl_xs #(
 `else
     wire [1:0] q_s0m = q_s0;
 `endif
-    always @(posedge clk) begin r2_e0 <= ex[r1_ei0]; r2_e1 <= ex[r1_ei1]; end
+    always @(posedge clk) begin r2_e0 <= le0; r2_e1 <= le1; end
     // read-mux selects {gate, source, macro}: kept copies, one per 32-b q slice / 64-b BF slice (<= ~256 loads each)
     wire [5:0] qsel0 [0:7], qsel1 [0:7], bsel [0:3][0:3];
     generate for (gm = 0; gm < 8; gm = gm + 1) begin : g_qsel
-        ot_v41_kreg #(.W(6), .AR(1)) u_q0 (.clk(clk), .arst_n(rs_g), .d({r1_qg[0], q_s0m, r1_qm0}), .q(qsel0[gm]));
-        ot_v41_kreg #(.W(6), .AR(1)) u_q1 (.clk(clk), .arst_n(rs_g), .d({r1_qg[1], q_s1, r1_qm1}), .q(qsel1[gm]));
+        ot_v41_kreg #(.W(6), .AR(1)) u_q0 (.clk(clk), .arst_n(rs_kq), .d({r1_qg[0], q_s0m, r1_qm0}), .q(qsel0[gm]));
+        ot_v41_kreg #(.W(6), .AR(1)) u_q1 (.clk(clk), .arst_n(rs_kq), .d({r1_qg[1], q_s1, r1_qm1}), .q(qsel1[gm]));
     end
     for (gs = 0; gs < 4; gs = gs + 1) begin : g_bsel
         for (gm = 0; gm < 4; gm = gm + 1) begin : g_sl
-            ot_v41_kreg #(.W(6), .AR(1)) u_b (.clk(clk), .arst_n(rs_g),
+            ot_v41_kreg #(.W(6), .AR(1)) u_b (.clk(clk), .arst_n(rs_kb),
                 .d({r1_bg[gs], gm < 2 ? b_slo[gs] : b_shi[gs], r1_bm[gs]}), .q(bsel[gs][gm]));
         end
     end endgenerate
@@ -376,11 +432,11 @@ module ot_s81sl_xs #(
         end
         // {gate, bank} copies, one edge after qsel / bsel (whose macro fields the per-bank copies replace)
         for (gm = 0; gm < 8; gm = gm + 1) begin : g_gq
-            ot_v41_kreg #(.W(3), .AR(1)) u_g0 (.clk(clk), .arst_n(rs_g), .d(qsel0[gm][5:3]), .q(gq0[gm]));
-            ot_v41_kreg #(.W(3), .AR(1)) u_g1 (.clk(clk), .arst_n(rs_g), .d(qsel1[gm][5:3]), .q(gq1[gm]));
+            ot_v41_kreg #(.W(3), .AR(1)) u_g0 (.clk(clk), .arst_n(rs_kg), .d(qsel0[gm][5:3]), .q(gq0[gm]));
+            ot_v41_kreg #(.W(3), .AR(1)) u_g1 (.clk(clk), .arst_n(rs_kg), .d(qsel1[gm][5:3]), .q(gq1[gm]));
         end
         for (gm = 0; gm < 16; gm = gm + 1) begin : g_gb
-            ot_v41_kreg #(.W(3), .AR(1)) u_g (.clk(clk), .arst_n(rs_g), .d(bsel[gm / 4][gm % 4][5:3]), .q(gb[gm / 4][gm % 4]));
+            ot_v41_kreg #(.W(3), .AR(1)) u_g (.clk(clk), .arst_n(rs_kg), .d(bsel[gm / 4][gm % 4][5:3]), .q(gb[gm / 4][gm % 4]));
         end
         reg [9:0] he0a, he1a; reg [609:0] bc_hr_d;
         always @(posedge clk) begin
@@ -467,5 +523,35 @@ module ot_s81sl_xs #(
     always @(posedge clk or negedge rs_f)
         if (!rs_f) fault <= 1'b0;
         else if (is_fault || cal_fault || ctl_fault || wr_fault || rd_fault || lx_fault) fault <= 1'b1;
+    always @(posedge clk) fo <= fi | fault;
 endmodule
 `undef OT_S81SL_XS_ROM
+
+// S81-XG3 (10-19): table read through kept index copies.  q = tab[idx] (0 when idx >= N), where idx is the value of
+// idx_d on the previous clock edge (each copy registers idx_d itself: the copies replace the caller's index register).
+// One kept copy of idx[LG-1:0] per G-entry group drives that group's G:1 mux (<= DW * G / 2 loads a bit) and one kept
+// copy of the group number drives the NG:1 group select.
+module ot_s81sl_xs_lut #(
+    parameter integer N = 192,
+    parameter integer DW = 3,
+    parameter integer G = 16,
+    parameter integer IW = 8
+) (
+    input  wire            clk,
+    input  wire [IW-1:0]   idx_d,
+    input  wire [N*DW-1:0] tab,
+    output wire [DW-1:0]   q
+);
+    localparam integer LG = $clog2(G), NG = N / G, HW = IW - LG;
+    wire [DW-1:0] gq [0:NG-1];
+    genvar g;
+    generate for (g = 0; g < NG; g = g + 1) begin : g_grp
+        wire [LG-1:0] lo;
+        ot_v41_kreg #(.W(LG)) u_c (.clk(clk), .arst_n(1'b1), .d(idx_d[LG-1:0]), .q(lo));
+        wire [G*DW-1:0] gt = tab[g*G*DW +: G*DW];
+        assign gq[g] = gt[lo*DW +: DW];
+    end endgenerate
+    wire [HW-1:0] hi;
+    ot_v41_kreg #(.W(HW)) u_h (.clk(clk), .arst_n(1'b1), .d(idx_d[IW-1:LG]), .q(hi));
+    assign q = hi < HW'(NG) ? gq[hi] : {DW{1'b0}};
+endmodule
