@@ -1,7 +1,7 @@
 import json,re,hashlib,sys,collections,gzip
 from pathlib import Path
 from functools import lru_cache
-root=Path.cwd();src=root/'synth_kept_742/mapped.json';d=json.loads(src.read_text());m=d['modules']['ot_s81ph_native_sel_hist_bank'];roles={};libs=[]
+root=Path.cwd();stage=(sys.argv[1] if len(sys.argv)>1 else 'synth_kept_742');src=root/stage/'mapped.json';d=json.loads(src.read_text());m=d['modules']['ot_s81ph_native_sel_hist_bank'];roles={};libs=[]
 def blocks(s,k):
  for q in re.finditer(r'\b'+k+r'\s*\(([^)]*)\)\s*\{',s):
   a=i=q.end();depth=1
@@ -47,5 +47,5 @@ def ends(net):
  return frozenset(out)
 rows=[{'driver':key,'master':typ,'data_loads':len(ends(net)),'endpoints':sorted(ends(net))}for key,net,typ in drivers]
 res={'schema':'opentallas.native_mapped_all_driver_census.v1','mapped_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'lib_sources':libs,'unknown_masters':sorted(set(unknown)),'cell_count':len(m['cells']),'max_data_loads':max(z['data_loads']for z in rows),'over32':[z for z in rows if z['data_loads']>32],'sequential_cells':sum('DFF'in c['type']for c in m['cells'].values()),'reset_leaf_drivers':[z for z in rows if 'relay_q'in z['driver']],'raw_reset_drivers':[z for z in rows if z['driver']=='PORT/rst_n'],'scope':'Mapped all-driver data/reset census, transparent unary buffers collapsed, clocks excluded only by pinned Liberty clock:true. No placement/reach/PG qualification.'}
-(root/'synth_kept_742/census.json').write_text(json.dumps(res,indent=2));print('MAPPED_CENSUS',res['cell_count'],'MAX',res['max_data_loads'],'OVER32',len(res['over32']),'UNKNOWN',res['unknown_masters']);
+(root/stage/'census.json').write_text(json.dumps(res,indent=2));print('MAPPED_CENSUS',res['cell_count'],'MAX',res['max_data_loads'],'OVER32',len(res['over32']),'UNKNOWN',res['unknown_masters']);
 for z in sorted(res['over32'],key=lambda z:-z['data_loads'])[:12]:print(z['driver'],z['data_loads'])

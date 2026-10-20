@@ -1,0 +1,127 @@
+{
+ "name": "s81dvbk_hist32_b0r2",
+ "top": "ot_s81ph_native_sel_hist_bank",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv"
+ ],
+ "params": {
+  "W": 16,
+  "CB": 11,
+  "BANK": 0,
+  "NB": 32,
+  "HPIPE": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 43.2
+ },
+ "layer_cap": "M5",
+ "clock": {
+  "period_ps": 833,
+  "uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25
+ },
+ "recipe": 4,
+ "pins": {
+  "W": [
+   "i_dg",
+   "i_en",
+   "i_v",
+   "clr"
+  ],
+  "E": [
+   "gbin"
+  ],
+  "N": [
+   "gsum",
+   "busy"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "gsel"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every data input captures in source HPIPE1 or kept gsel banks; gsum/gbin/busy outputs are registered. No double pin stages."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Source rst_l0/rst_l1 actual2kept face stages feed bounded20region relay (total5startupedges); rawport2sinks, secondstage22, leaves24. Native32 preflight required."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "std_area_um2": 1366.10226,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [],
+  "macro_halo_um": 5.4
+ },
+ "orfs_vars": {
+  "OT_RST_COPIES_MAX": "32"
+ },
+ "structural_change": "TOPK5 independent32-bin fixed-parallel arithmetic bank; true separately hardened leaf,352counterbits. Model+mapped native max32 all drivers before layout, source exact1159checks and two rejected query/clear mutants. Not a releasequarter claim;8leaves per hist,16per quarter require actual landed/clock/pin composition and priced transport before binding. gsel extra1edge, busy extra1edge, reset startup3edges; same gsum/update edges and saturation order. FirstB0 gate resetlanding FAIL corrected with actual2face resetFFs; startup3->5. No dataedges added.",
+ "why_floorplan": "Native kept synthesis area1366.10um2 gives48.8pct fill at64.8x43.2; no SRAM/macro needed for352bits of fixed parallel counters; physical bank is actual independent arithmetic module, no runtime-indexed large flop storage. W146pins/43.2 and E176/43.2 eachbelow6/um.",
+ "job": {
+  "owner": "Codex:S81-TOPK5",
+  "branch": "codex/s81-topk5-1020",
+  "tag": "hb0r2",
+  "purpose": "independent histogram bank qualification, not composed TOPK release; native32 and exact miter",
+  "benches": [
+   {
+    "name": "hist32_exact",
+    "cmd": "bash results/arch/s81_topk5_1020/run_bank.sh {RUN}/hist32_exact 0 raw",
+    "expect": "pass",
+    "pass_regex": "^HIST_BANK PASS MUT=0 checks=",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "hist32_mut_query",
+    "cmd": "bash results/arch/s81_topk5_1020/run_bank.sh {RUN}/hist32_mut_query 1 raw",
+    "expect": "fail",
+    "fail_regex": "^HIST_BANK FAIL MUT=1 ",
+    "fail_witness": "results/arch/s81_topk5_1020/evidence/m1.log",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "hist32_mut_clear",
+    "cmd": "bash results/arch/s81_topk5_1020/run_bank.sh {RUN}/hist32_mut_clear 2 raw",
+    "expect": "fail",
+    "fail_regex": "^HIST_BANK FAIL MUT=2 ",
+    "fail_witness": "results/arch/s81_topk5_1020/evidence/m2.log",
+    "threads": 4,
+    "peak_ram_gb": 16
+   }
+  ],
+  "extra_paths": [
+   "results/arch/s81_topk5_1020"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_hist32_b0r2/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_hist32_b0r2"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
+}

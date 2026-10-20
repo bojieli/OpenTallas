@@ -23,12 +23,16 @@ module ot_s81ph_native_sel_hist_bank #(
     output reg  [16*CB-1:0]     gbin,
     output reg                  busy
 );
+    (* async_reg="true",keep="true",dont_touch="true" *) reg rst_l0,rst_l1;
+    always@(posedge clk or negedge rst_n)
+        if(!rst_n)begin rst_l0<=0;rst_l1<=0;end
+        else begin rst_l0<=1;rst_l1<=rst_l0;end
     //20 preserved reset leaves: sixteen serve two bins+their clear/update
     // controls (24 loads each), leaf16 serves5 scalarcontrols. Input reset
-    // drives2sync+20leaf clear pins=22; release adds3 startupedges.
+    // drives2sync+20leaf clear pins=22; release adds5 startupedges.
     wire [19:0] bank_rst;
     ot_rst_relay #(.REGIONS(20),.SYNC_STAGES(2),.TREE_STAGES(1)) u_bank_rst
-        (.clk(clk),.rst_n_in(rst_n),.rst_n(bank_rst));
+        (.clk(clk),.rst_n_in(rst_l1),.rst_n(bank_rst));
     // Every group-select input lands in kept per-output-bin registers. This
     // adds one group-query capture edge; group sums/data-update edges unchanged.
     wire [16*4-1:0] gsel_c;

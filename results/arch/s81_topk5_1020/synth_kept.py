@@ -1,6 +1,6 @@
 from pathlib import Path
-import subprocess,json,hashlib
-root=Path.cwd();old=root/'synth_a7d/synth.ys';out=root/'synth_kept_742';out.mkdir(exist_ok=True)
+import subprocess,json,hashlib,sys
+root=Path.cwd();old=root/'synth_a7d/synth.ys';out=root/(sys.argv[1] if len(sys.argv)>1 else 'synth_kept_742');out.mkdir(exist_ok=True)
 lines=old.read_text().splitlines();script=[]
 script.append('set ::env(DESIGN_NAME) ot_s81ph_native_sel_hist_bank')
 script.append('set ::env(OT_KEEP_PIN_REGS) 1')

@@ -1,12 +1,16 @@
 `timescale 1ns/1ps
 // TOPK5 one-level composition prototype: eight copies of the SAME realBANK0
 // hard leaf. Constant digit/group inversions preserve exact original bin IDs.
-// Not bound into releasequarter. +2GS, +3group-query, +3busy edges; startup+6.
+// Not bound into releasequarter. +2GS, +3group-query, +3busy edges; startup+10.
 module ot_s81ph_native_sel_hist_banked #(parameter integer MUT=0)(
  input wire clk,rst_n,clr,i_v,input wire[15:0]i_en,input wire[127:0]i_dg,
  input wire[3:0]gsel,output reg[239:0]gsum,output reg[175:0]gbin,output reg busy);
+    (* async_reg="true",keep="true",dont_touch="true" *) reg rst_l0,rst_l1;
+    always@(posedge clk or negedge rst_n)
+        if(!rst_n)begin rst_l0<=0;rst_l1<=0;end
+        else begin rst_l0<=1;rst_l1<=rst_l0;end
  wire[7:0] local_rst;
- ot_rst_relay #(.REGIONS(8),.SYNC_STAGES(2),.TREE_STAGES(1))u_parent_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(local_rst));
+ ot_rst_relay #(.REGIONS(8),.SYNC_STAGES(2),.TREE_STAGES(1))u_parent_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(local_rst));
  reg rv;reg[15:0]re;reg[127:0]rd;
  always@(posedge clk or negedge local_rst[0])if(!local_rst[0])rv<=0;else rv<=i_v;
  always@(posedge clk)begin re<=i_en;rd<=i_dg;end

@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81dvbk_hist32_b0r2",
+ "top": "ot_s81ph_native_sel_hist_bank",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  64.8,
+  43.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  62.64,
+  41.040000000000006
+ ],
+ "why": "spec outline",
+ "std_area_um2": 1366.10226,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "i_dg",
+   "i_en",
+   "i_v",
+   "clr"
+  ],
+  "E": [
+   "gbin"
+  ],
+  "N": [
+   "gsum",
+   "busy"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "gsel"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/kit.env",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/clock.sdc",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/signoff.sdc",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/pdn.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/pre_cts.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/post_cts.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/post_grt.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/pre_drt.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/pre_fill.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/post_fill.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/pre_grt.tcl",
+  "physical/ref_tile/s81dvbk_hist32_b0r2/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}

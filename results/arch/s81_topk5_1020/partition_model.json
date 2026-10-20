@@ -74,10 +74,12 @@
       "REGIONS": 20,
       "SYNC_STAGES": 2,
       "TREE_STAGES": 1,
-      "raw_reset_pin_loads": 22,
+      "raw_reset_pin_loads": 2,
       "per_bin_leaf_loads": 24,
       "scalar_leaf_loads": 5,
-      "reset_release_edges_added": 3
+      "reset_release_edges_added": 5,
+      "face_landing_stages": 2,
+      "second_face_stage_loads": 22
     }
   },
   "native_blockers": {
@@ -132,17 +134,31 @@
     "extra_gsum_edges": 2,
     "extra_group_query_edges": 3,
     "extra_busy_edges": 3,
-    "reset_startup_edges_extra": 6,
+    "reset_startup_edges_extra": 10,
     "composition_status": "new soft/wires shell, not bound into releasequarter; multicast/reach regions and compiler price still owed beyond these explicit shell edges",
     "source_control_copy_budget": {
-      "parent_raw_reset_loads": 10,
+      "parent_raw_reset_loads": 2,
       "parent_leaf_maxresetload": 25,
       "clear_port_D_loads": 8,
       "gsel_bit_port_D_loads": 8,
       "each_gsel_copy_drives": 16,
       "each_clear_copy_drives": 17,
-      "parent_reset_release_edges": 3,
-      "child_reset_release_edges": 3
+      "parent_reset_release_edges": 5,
+      "child_reset_release_edges": 5,
+      "parent_face_stage1_loads": 10
     }
+  },
+  "first_bank_gate": {
+    "result": "FAIL textbook.reset_landing only: raw22>2",
+    "physical_GRT_overflow": 0,
+    "setup_ps": 263.4,
+    "hold_ps": 48.25,
+    "TT_FF_pin_flop_spread_ps": [
+      8.9,
+      8.5
+    ],
+    "fix": "actual2kept face resetlanding flops before boundedrelay; no dataedges change, startup3->5",
+    "PNGs_viewed": true,
+    "floorplan": "onefullstd band, no macros, aspect1.5,density distributed with locallyfullbins; no congestion"
   }
 }
