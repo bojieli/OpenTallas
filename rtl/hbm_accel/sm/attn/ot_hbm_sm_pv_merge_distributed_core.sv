@@ -139,7 +139,10 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     reg  [TAGW-1:0] e_tag [0:7];
     // events of this cycle (lane chunk sums of a PV beat)
     // stack read for entry nb, landing at its turn (next cycle)
-    wire [KW:0] rk = e_busy[nb_sr] ? e_k[nb_sr] : {(KW+1){1'b0}};
+    wire [7:0]  oh_sr;                                // r5c: stack-read entry nb, one-hot (FAN32; c_sr[2] drove 33)
+    reg  [KW:0] rk_oh; integer re;
+    always @(*) begin rk_oh={(KW+1){1'b0}}; for(re=0;re<8;re=re+1) rk_oh=rk_oh|({(KW+1){oh_sr[re]&e_busy[re]}}&e_k[re]); end
+    wire [KW:0] rk = (FAN32 != 0) ? rk_oh : (e_busy[nb_sr] ? e_k[nb_sr] : {(KW+1){1'b0}});
     wire [5:0]  sr_a = {nb_sr, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
     wire [L*32-1:0] st_rd;
     reg         sw_ce;
@@ -287,7 +290,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) c_sr<=0; else c_sr<=c_sr+3'd1;
         assign r_ent=c_ent; assign r_sw=c_sw; assign r_nt=c_nt; assign nb_sr=c_sr+3'd1;
         localparam [7:0] OH_Q = (MUT==5) ? 8'b0000_0001 : 8'b0000_0010;   // onehot(bp + 1) (MUT 5: bp)
-        (* keep *) reg [7:0] r_qa, r_qb, r_tg0, r_tg1, r_nt0, r_nt1, r_frw, r_frr;
+        (* keep *) reg [7:0] r_qa, r_qb, r_tg0, r_tg1, r_nt0, r_nt1, r_frw, r_frr, r_sr;
         (* keep *) reg [7:0] r_sg0, r_sg1, r_sg2, r_sg3;
         always @(posedge clk or negedge rst_core_n[16]) if(!rst_core_n[16]) r_sg0<=OH_Q; else r_sg0<={r_sg0[6:0],r_sg0[7]};
         always @(posedge clk or negedge rst_core_n[17]) if(!rst_core_n[17]) r_sg1<=OH_Q; else r_sg1<={r_sg1[6:0],r_sg1[7]};
@@ -301,12 +304,13 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         always @(posedge clk or negedge rst_core_n[25]) if(!rst_core_n[25]) r_nt1<=8'd1; else r_nt1<={r_nt1[6:0],r_nt1[7]};
         always @(posedge clk or negedge rst_core_n[26]) if(!rst_core_n[26]) r_frw<=8'd1; else r_frw<={r_frw[6:0],r_frw[7]};
         always @(posedge clk or negedge rst_core_n[27]) if(!rst_core_n[27]) r_frr<=8'd1; else r_frr<={r_frr[6:0],r_frr[7]};
+        always @(posedge clk or negedge rst_core_n[28]) if(!rst_core_n[28]) r_sr<=8'd2; else r_sr<={r_sr[6:0],r_sr[7]};
         assign oh_sg[0]=r_sg0; assign oh_sg[1]=r_sg1; assign oh_sg[2]=r_sg2; assign oh_sg[3]=r_sg3;
         assign oh_qa=r_qa; assign oh_qb=r_qb; assign oh_tg0=r_tg0; assign oh_tg1=r_tg1; assign oh_nt0=r_nt0; assign oh_nt1=r_nt1;
-        assign oh_frw=r_frw; assign oh_frr=r_frr;
+        assign oh_frw=r_frw; assign oh_frr=r_frr; assign oh_sr=r_sr;
 `ifndef SYNTHESIS
         assign roles_reset_clear = {c_ent,c_sw,c_nt,c_sr}==12'd0 && {r_sg0,r_sg1,r_sg2,r_sg3,r_qa,r_qb}=={6{OH_Q}} &&
-            {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr}=={6{8'd1}} &&
+            {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr}=={6{8'd1}} && r_sr==8'd2 &&
             g_operand_provenance[4].g_local.count==0 && g_operand_provenance[5].g_local.count==0 &&
             g_operand_provenance[6].g_local.count==0 && g_operand_provenance[7].g_local.count==0 &&
             g_operand_provenance[8].g_local.count==0;
@@ -315,14 +319,14 @@ module ot_hbm_sm_pv_merge_distributed_core #(
 `endif
 `ifndef SYNTHESIS
         wire [7:0] oh0 = 8'd1 << bp, ohq = 8'd1 << ((MUT==5) ? bp : nb);
-        always @(posedge clk) if (rst_n && ({c_ent,c_sw,c_nt,c_sr} !== {4{bp}} || {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr} !== {6{oh0}} ||
+        always @(posedge clk) if (rst_n && ({c_ent,c_sw,c_nt,c_sr} !== {4{bp}} || {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr} !== {6{oh0}} || r_sr !== (8'd1 << nb) ||
             {r_sg0,r_sg1,r_sg2,r_sg3,r_qa,r_qb} !== {6{ohq}} || fr_c !== bp))
             $fatal(1, "pv_merge PVMD r5 role counter / one-hot ring differs from bp");
 `endif
     end else begin:g_bp_original
         assign r_ent=bp; assign r_sw=bp; assign r_nt=bp; assign nb_sr=nb;
         assign oh_qa=8'd0; assign oh_qb=8'd0; assign oh_tg0=8'd0; assign oh_tg1=8'd0; assign oh_nt0=8'd0; assign oh_nt1=8'd0;
-        assign oh_frw=8'd0; assign oh_frr=8'd0; assign oh_sg[0]=8'd0; assign oh_sg[1]=8'd0; assign oh_sg[2]=8'd0; assign oh_sg[3]=8'd0;
+        assign oh_frw=8'd0; assign oh_frr=8'd0; assign oh_sr=8'd0; assign oh_sg[0]=8'd0; assign oh_sg[1]=8'd0; assign oh_sg[2]=8'd0; assign oh_sg[3]=8'd0;
         assign roles_reset_clear=1'b1;
     end endgenerate
 

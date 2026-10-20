@@ -1,9 +1,9 @@
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-381909-1792490255 after 0 s
-FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/r5b_mut3/native_cells.v
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-518110-1792491009 after 1 s
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/r5c_mut3/native_cells.v
 Verilator 5.050 2026-07-01 rev v5.050
 [431000] %Fatal: tb_pv_merge_distributed.sv:46: Assertion failed in tb_pv_merge_distributed: DISTRIBUTED_ALL_OUTPUT_AGE_MISMATCH
 %Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
 %Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
 Aborting...
 PVM FAIL mismatches=112 (pv 0, pub 111, done None)
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-381909-1792490255): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-518110-1792491009): exit 1

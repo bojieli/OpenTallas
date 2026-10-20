@@ -20,3 +20,6 @@ r5 in-flow census (gate @432d088cf, ot-pve1 smh_pvm_ref_s6a-20261020-025107): FA
 pubslot2t[1] 33 (2-bit node_tag read with binary select) and u_core.fd1 45 (fold ring write enables).
 r5b: 17 one-bit pub_slot copies; fr_a slot rewritten at every visit (read only under fr_v of the same visit),
 so fd1 drives only fr_v + the fold mux. Benches re-captured (9 PASS, 14 mutants FAIL, FAN32=0 PASS).
+
+r5b in-flow census (gate @53fef2c47, agidock smh_pvm_ref_s6a-20261020-030241): FAIL 63,711 roots, max 33, 1 root c_sr[2] 33
+(stack read rk mux). r5c: one-hot ring r_sr (group 28) for rk; c_sr binary only for the address bits. Benches re-captured.

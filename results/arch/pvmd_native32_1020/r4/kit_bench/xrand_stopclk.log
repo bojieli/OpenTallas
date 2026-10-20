@@ -1,9 +1,9 @@
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-382356-1792490255 after 1 s
-FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/r5b_xrand_stopclk/native_cells.v
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-518175-1792491009 after 1 s
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/r5c_xrand_stopclk/native_cells.v
 Verilator 5.050 2026-07-01 rev v5.050
 PVM STOPCLK reset tree + captures + core state + all provenance counters cleared with no clock edge
 PVM REASSERT 2 released
-- Verilator: $finish at 673ns; walltime 0.073 s; speed 9.255 us/s
-- Verilator: cpu 0.073 s on 1 threads; allocated 10 MB
+- Verilator: $finish at 673ns; walltime 0.057 s; speed 11.779 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 10 MB
 PVM PASS checked=240 (8 runs of 1..8 chunks, fold 0<-0+1, 7 publications; {'pv': '8', 'pub': '112', 'fault': '0', 'fault_cyc': '-1', 'cycles': '600', 'cmp_edges': '666', 'reassert': '2', 'xrand': '1'})
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-382356-1792490255): exit 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-518175-1792491009): exit 0
