@@ -1,0 +1,4891 @@
+{
+  "status": "MODEL ONLY / rawclock-reset qualification OPEN / no GEN or binding",
+  "row": "rf0027_k02_00",
+  "inputs": {
+    "/srv/opentallas-scratch/claude/codex-hbm-genreach-forkfix-1020/case_forkfix/manifest.json": "c2a5c4c38356ac3034e03acdbe9713f22027a8ea282e67ce9d33de9a16f83bea",
+    "/srv/opentallas-scratch/claude/codex-hbm-genreach-forkfix-1020/views/contract.json": "1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4",
+    "/srv/opentallas-scratch/claude/codex-hbm-genreach-forkfix-1020/views/views.json": "f8fd817e5a13aa9012c1bdc85a95fef4e97ae8a94fbd0f0b58e84ef0c2c73a6c"
+  },
+  "actual_generated_master": "hbfd_land_136_NS",
+  "tile_wh": [
+    23.328,
+    23.76
+  ],
+  "tiles": 17,
+  "bit_edges": 4666,
+  "baseline_max_um": 571.6499999999978,
+  "baseline_over405": 2933,
+  "clock_reset_ports": [
+    {
+      "instance": "rf0027_k02_00_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l1",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l1",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l2",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l2",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l3",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l3",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l4",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l4",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l5",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l5",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l6",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l6",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l7",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l7",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l8",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l8",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l9",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l9",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l10",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l10",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l11",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l11",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l12",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l12",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l13",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l13",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l14",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l14",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l15",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l15",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l16",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0027_k02_00_l16",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    }
+  ],
+  "raw_clock_reset_max_um": 2825.7299999999996,
+  "raw_clock_reset_over405": 34,
+  "typed_bit_costs": {
+    "data_control": {
+      "bit_edges": 4632,
+      "max_um": 571.6499999999978,
+      "over405": 2899,
+      "worst": [
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[122]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1023]"
+          ],
+          "span_um": 571.6499999999978,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[122]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              20.076,
+              0.096
+            ],
+            "die_pin": [
+              13493.939999999999,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1023]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              92.028
+            ],
+            "die_pin": [
+              13283.958,
+              14542.428
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[121]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1022]"
+          ],
+          "span_um": 571.601999999999,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[121]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.932000000000002,
+              0.096
+            ],
+            "die_pin": [
+              13493.796,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1022]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.932
+            ],
+            "die_pin": [
+              13283.958,
+              14542.332
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[120]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1021]"
+          ],
+          "span_um": 571.5540000000001,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[120]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.788,
+              0.096
+            ],
+            "die_pin": [
+              13493.652,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1021]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.836
+            ],
+            "die_pin": [
+              13283.958,
+              14542.235999999999
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[119]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1020]"
+          ],
+          "span_um": 571.5059999999994,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[119]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.644,
+              0.096
+            ],
+            "die_pin": [
+              13493.508,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1020]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.74
+            ],
+            "die_pin": [
+              13283.958,
+              14542.14
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[118]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1019]"
+          ],
+          "span_um": 571.4579999999987,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[118]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.5,
+              0.096
+            ],
+            "die_pin": [
+              13493.364,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1019]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.644
+            ],
+            "die_pin": [
+              13283.958,
+              14542.044
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[117]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1018]"
+          ],
+          "span_um": 571.3619999999992,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[117]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.308,
+              0.096
+            ],
+            "die_pin": [
+              13493.172,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1018]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.548
+            ],
+            "die_pin": [
+              13283.958,
+              14541.948
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[116]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1017]"
+          ],
+          "span_um": 571.3140000000003,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[116]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.164,
+              0.096
+            ],
+            "die_pin": [
+              13493.028,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1017]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.452
+            ],
+            "die_pin": [
+              13283.958,
+              14541.851999999999
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b[115]"
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0[1016]"
+          ],
+          "span_um": 571.2659999999996,
+          "source_detail": {
+            "instance": "rf0027_k02_00_l13",
+            "master": "hbfd_land_136_NS",
+            "pin": "b[115]",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13473.864,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              19.02,
+              0.096
+            ],
+            "die_pin": [
+              13492.884,
+              14904.096
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "cij_SE",
+            "master": "ot_hgi_coll_inj_idx_join_rg",
+            "pin": "idx_tx_r0[1016]",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13068.0,
+              "y": 14450.4,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              216.0,
+              432.0
+            ],
+            "local_pin": [
+              215.958,
+              91.356
+            ],
+            "die_pin": [
+              13283.958,
+              14541.756
+            ],
+            "qualification": "ROUTED_UNBOUND"
+          }
+        }
+      ],
+      "port_edges": [
+        {
+          "source": [
+            "rf0027_s029_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l0",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l1",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l1",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l2",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l2",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l3",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l3",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l4",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l4",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l5",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l5",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l6",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l6",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l7",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l7",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l8",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l8",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l9",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l9",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l10",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l10",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l11",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l11",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l12",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l12",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l13",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l13",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l14",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l14",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l15",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l15",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_s029_l16",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf0027_k02_00_l16",
+            "a",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            0,
+            136
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l1",
+            "b",
+            0,
+            120
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            136,
+            256
+          ],
+          "bits": 120
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l1",
+            "b",
+            120,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            0,
+            16
+          ],
+          "bits": 16
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l2",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            16,
+            152
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l3",
+            "b",
+            104,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            0,
+            32
+          ],
+          "bits": 32
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l3",
+            "b",
+            104,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            0,
+            32
+          ],
+          "bits": 32
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l3",
+            "b",
+            0,
+            104
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            152,
+            256
+          ],
+          "bits": 104
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l4",
+            "b",
+            0,
+            1
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            32,
+            33
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l4",
+            "b",
+            0,
+            1
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            32,
+            33
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l4",
+            "b",
+            1,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            256,
+            391
+          ],
+          "bits": 135
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l5",
+            "b",
+            0,
+            121
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            391,
+            512
+          ],
+          "bits": 121
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l5",
+            "b",
+            121,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            256,
+            271
+          ],
+          "bits": 15
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l6",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            271,
+            407
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l7",
+            "b",
+            105,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            33,
+            64
+          ],
+          "bits": 31
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l7",
+            "b",
+            105,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            33,
+            64
+          ],
+          "bits": 31
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l7",
+            "b",
+            0,
+            105
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            407,
+            512
+          ],
+          "bits": 105
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l8",
+            "b",
+            0,
+            2
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            64,
+            66
+          ],
+          "bits": 2
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l8",
+            "b",
+            0,
+            2
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            64,
+            66
+          ],
+          "bits": 2
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l8",
+            "b",
+            2,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            512,
+            646
+          ],
+          "bits": 134
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l9",
+            "b",
+            0,
+            122
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            646,
+            768
+          ],
+          "bits": 122
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l9",
+            "b",
+            122,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            512,
+            526
+          ],
+          "bits": 14
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l10",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            526,
+            662
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l11",
+            "b",
+            106,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            66,
+            96
+          ],
+          "bits": 30
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l11",
+            "b",
+            106,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            66,
+            96
+          ],
+          "bits": 30
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l11",
+            "b",
+            0,
+            106
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            662,
+            768
+          ],
+          "bits": 106
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l12",
+            "b",
+            0,
+            3
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            96,
+            99
+          ],
+          "bits": 3
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l12",
+            "b",
+            0,
+            3
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            96,
+            99
+          ],
+          "bits": 3
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l12",
+            "b",
+            3,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            768,
+            901
+          ],
+          "bits": 133
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b",
+            0,
+            123
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r0",
+            901,
+            1024
+          ],
+          "bits": 123
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l13",
+            "b",
+            123,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            768,
+            781
+          ],
+          "bits": 13
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l14",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            781,
+            917
+          ],
+          "bits": 136
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l15",
+            "b",
+            107,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            99,
+            128
+          ],
+          "bits": 29
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l15",
+            "b",
+            107,
+            136
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            99,
+            128
+          ],
+          "bits": 29
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l15",
+            "b",
+            0,
+            107
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_r1",
+            917,
+            1024
+          ],
+          "bits": 107
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l16",
+            "b",
+            0,
+            4
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h",
+            128,
+            132
+          ],
+          "bits": 4
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l16",
+            "b",
+            0,
+            4
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_h_r1",
+            128,
+            132
+          ],
+          "bits": 4
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l16",
+            "b",
+            4,
+            8
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_v",
+            0,
+            4
+          ],
+          "bits": 4
+        },
+        {
+          "source": [
+            "rf0027_k02_00_l16",
+            "b",
+            4,
+            8
+          ],
+          "sink": [
+            "cij_SE",
+            "idx_tx_v_r1",
+            0,
+            4
+          ],
+          "bits": 4
+        }
+      ]
+    },
+    "epoch_control": {
+      "bit_edges": 17,
+      "max_um": 563.3999999999978,
+      "over405": 17,
+      "worst": [
+        {
+          "source": [
+            "rf0027_s029_l0",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l0",
+            "ea"
+          ],
+          "span_um": 563.3999999999978,
+          "source_detail": {
+            "instance": "rf0027_s029_l0",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13689.0,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13709.46,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l0",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13170.6,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13192.692000000001,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l1",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l1",
+            "ea"
+          ],
+          "span_um": 561.6719999999987,
+          "source_detail": {
+            "instance": "rf0027_s029_l1",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13710.6,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13731.06,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l1",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13193.928,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13216.02,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l2",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l2",
+            "ea"
+          ],
+          "span_um": 559.9439999999995,
+          "source_detail": {
+            "instance": "rf0027_s029_l2",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13732.2,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13752.66,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l2",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13217.256,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13239.348,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l3",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l3",
+            "ea"
+          ],
+          "span_um": 558.2159999999967,
+          "source_detail": {
+            "instance": "rf0027_s029_l3",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13753.8,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13774.259999999998,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l3",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13240.584,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13262.676000000001,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l4",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l4",
+            "ea"
+          ],
+          "span_um": 556.4879999999976,
+          "source_detail": {
+            "instance": "rf0027_s029_l4",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13775.4,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13795.859999999999,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l4",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13263.912,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13286.004,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l5",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l5",
+            "ea"
+          ],
+          "span_um": 554.7599999999984,
+          "source_detail": {
+            "instance": "rf0027_s029_l5",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13797.0,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13817.46,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l5",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13287.24,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13309.332,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l6",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l6",
+            "ea"
+          ],
+          "span_um": 553.0319999999992,
+          "source_detail": {
+            "instance": "rf0027_s029_l6",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13818.6,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13839.06,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l6",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13310.568,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13332.66,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l7",
+            "eb"
+          ],
+          "sink": [
+            "rf0027_k02_00_l7",
+            "ea"
+          ],
+          "span_um": 551.3039999999983,
+          "source_detail": {
+            "instance": "rf0027_s029_l7",
+            "master": "hbfd_lh_136_NS",
+            "pin": "eb",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13840.2,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.46,
+              0.096
+            ],
+            "die_pin": [
+              13860.66,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l7",
+            "master": "hbfd_land_136_NS",
+            "pin": "ea",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13333.896,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              22.092,
+              23.664
+            ],
+            "die_pin": [
+              13355.988000000001,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        }
+      ],
+      "port_edges": [
+        {
+          "source": [
+            "rf0027_s029_l0",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l0",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l1",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l1",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l2",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l2",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l3",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l3",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l4",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l4",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l5",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l5",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l6",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l6",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l7",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l7",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l8",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l8",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l9",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l9",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l10",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l10",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l11",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l11",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l12",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l12",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l13",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l13",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l14",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l14",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l15",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l15",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l16",
+            "eb",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l16",
+            "ea",
+            0,
+            1
+          ],
+          "bits": 1
+        }
+      ]
+    },
+    "forwarded_clock": {
+      "bit_edges": 17,
+      "max_um": 563.3999999999996,
+      "over405": 17,
+      "worst": [
+        {
+          "source": [
+            "rf0027_s029_l0",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l0",
+            "ckf"
+          ],
+          "span_um": 563.3999999999996,
+          "source_detail": {
+            "instance": "rf0027_s029_l0",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13689.0,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13709.316,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l0",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13170.6,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13192.548,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l1",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l1",
+            "ckf"
+          ],
+          "span_um": 561.6720000000005,
+          "source_detail": {
+            "instance": "rf0027_s029_l1",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13710.6,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13730.916000000001,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l1",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13193.928,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13215.876,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l2",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l2",
+            "ckf"
+          ],
+          "span_um": 559.9440000000013,
+          "source_detail": {
+            "instance": "rf0027_s029_l2",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13732.2,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13752.516000000001,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l2",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13217.256,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13239.204,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l3",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l3",
+            "ckf"
+          ],
+          "span_um": 558.2159999999985,
+          "source_detail": {
+            "instance": "rf0027_s029_l3",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13753.8,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13774.116,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l3",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13240.584,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13262.532000000001,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l4",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l4",
+            "ckf"
+          ],
+          "span_um": 556.4879999999994,
+          "source_detail": {
+            "instance": "rf0027_s029_l4",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13775.4,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13795.716,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l4",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13263.912,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13285.86,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l5",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l5",
+            "ckf"
+          ],
+          "span_um": 554.7600000000002,
+          "source_detail": {
+            "instance": "rf0027_s029_l5",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13797.0,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13817.316,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l5",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13287.24,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13309.188,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l6",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l6",
+            "ckf"
+          ],
+          "span_um": 553.0320000000011,
+          "source_detail": {
+            "instance": "rf0027_s029_l6",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13818.6,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13838.916000000001,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l6",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13310.568,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13332.516,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        },
+        {
+          "source": [
+            "rf0027_s029_l7",
+            "ck_o"
+          ],
+          "sink": [
+            "rf0027_k02_00_l7",
+            "ckf"
+          ],
+          "span_um": 551.3040000000001,
+          "source_detail": {
+            "instance": "rf0027_s029_l7",
+            "master": "hbfd_lh_136_NS",
+            "pin": "ck_o",
+            "LEFdirection": "OUTPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13840.2,
+              "y": 14974.2,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              21.6,
+              21.6
+            ],
+            "local_pin": [
+              20.316,
+              0.096
+            ],
+            "die_pin": [
+              13860.516000000001,
+              14974.296
+            ],
+            "qualification": "SYNTH"
+          },
+          "sink_detail": {
+            "instance": "rf0027_k02_00_l7",
+            "master": "hbfd_land_136_NS",
+            "pin": "ckf",
+            "LEFdirection": "INPUT",
+            "LEFuse": "SIGNAL",
+            "placement": {
+              "x": 13333.896,
+              "y": 14904.0,
+              "orient": "R0"
+            },
+            "LEFwh": [
+              23.328,
+              23.76
+            ],
+            "local_pin": [
+              21.948,
+              23.664
+            ],
+            "die_pin": [
+              13355.844000000001,
+              14927.664
+            ],
+            "qualification": "SYNTH"
+          }
+        }
+      ],
+      "port_edges": [
+        {
+          "source": [
+            "rf0027_s029_l0",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l0",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l1",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l1",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l2",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l2",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l3",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l3",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l4",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l4",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l5",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l5",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l6",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l6",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l7",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l7",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l8",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l8",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l9",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l9",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l10",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l10",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l11",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l11",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l12",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l12",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l13",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l13",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l14",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l14",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l15",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l15",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        },
+        {
+          "source": [
+            "rf0027_s029_l16",
+            "ck_o",
+            0,
+            1
+          ],
+          "sink": [
+            "rf0027_k02_00_l16",
+            "ckf",
+            0,
+            1
+          ],
+          "bits": 1
+        }
+      ]
+    }
+  },
+  "raw_root_costs": {
+    "clock": {
+      "bit_edges": 17,
+      "max_um": 2822.442000000001,
+      "worst": [
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l16",
+            "ck"
+          ],
+          "span_um": 2822.442000000001
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l15",
+            "ck"
+          ],
+          "span_um": 2799.1140000000014
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l14",
+            "ck"
+          ],
+          "span_um": 2775.786
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l13",
+            "ck"
+          ],
+          "span_um": 2752.4580000000005
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l12",
+            "ck"
+          ],
+          "span_um": 2729.130000000001
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l11",
+            "ck"
+          ],
+          "span_um": 2705.8020000000015
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l10",
+            "ck"
+          ],
+          "span_um": 2682.474
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l9",
+            "ck"
+          ],
+          "span_um": 2659.1460000000006
+        }
+      ],
+      "interpretation": "Global CLOCK root Manhattan distance is NOT a data405 violation; actual CTS/root/phase authority required"
+    },
+    "reset": {
+      "bit_edges": 17,
+      "max_um": 2825.7299999999996,
+      "worst": [
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l16",
+            "rs"
+          ],
+          "span_um": 2825.7299999999996
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l15",
+            "rs"
+          ],
+          "span_um": 2802.402
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l14",
+            "rs"
+          ],
+          "span_um": 2779.0739999999987
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l13",
+            "rs"
+          ],
+          "span_um": 2755.745999999999
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l12",
+            "rs"
+          ],
+          "span_um": 2732.4179999999997
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l11",
+            "rs"
+          ],
+          "span_um": 2709.09
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l10",
+            "rs"
+          ],
+          "span_um": 2685.761999999999
+        },
+        {
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ],
+          "sink": [
+            "rf0027_k02_00_l9",
+            "rs"
+          ],
+          "span_um": 2662.4339999999993
+        }
+      ],
+      "interpretation": "Reset source distance requires actual regional/reset landing authority; not inferred from data routing"
+    }
+  },
+  "exact_translation_windows": [
+    {
+      "columns": 1,
+      "u_interval": [
+        28234.536,
+        27902.334
+      ],
+      "v_interval": [
+        -940.9679999999989,
+        -1015.4819999999993
+      ],
+      "minimum_max_span_um": 571.1010000000006,
+      "nonempty": false,
+      "source_scope": "Exact point-to-point pin geometry only; excludes occupancy, escapes and phase"
+    },
+    {
+      "columns": 3,
+      "u_interval": [
+        28439.736,
+        28092.846
+      ],
+      "v_interval": [
+        -1223.9279999999994,
+        -1086.8099999999993
+      ],
+      "minimum_max_span_um": 578.4449999999997,
+      "nonempty": false,
+      "source_scope": "Exact point-to-point pin geometry only; excludes occupancy, escapes and phase"
+    },
+    {
+      "columns": 6,
+      "u_interval": [
+        28446.216000000004,
+        28130.670000000002
+      ],
+      "v_interval": [
+        -1360.0079999999987,
+        -1183.5779999999995
+      ],
+      "minimum_max_span_um": 562.773000000001,
+      "nonempty": false,
+      "source_scope": "Exact point-to-point pin geometry only; excludes occupancy, escapes and phase"
+    },
+    {
+      "columns": 9,
+      "u_interval": [
+        28405.176000000003,
+        28055.406
+      ],
+      "v_interval": [
+        -1448.5679999999998,
+        -1240.793999999999
+      ],
+      "minimum_max_span_um": 579.885000000002,
+      "nonempty": false,
+      "source_scope": "Exact point-to-point pin geometry only; excludes occupancy, escapes and phase"
+    },
+    {
+      "columns": 17,
+      "u_interval": [
+        28234.536,
+        27907.949999999997
+      ],
+      "v_interval": [
+        -1666.7279999999994,
+        -1473.017999999999
+      ],
+      "minimum_max_span_um": 568.2930000000015,
+      "nonempty": false,
+      "source_scope": "Exact point-to-point pin geometry only; excludes occupancy, escapes and phase"
+    }
+  ],
+  "LEFsha256": {
+    "hbfd_land_136_NS": "be7216f9620306ad391d54d87506d98d662efaff8dec099a6a0441e287392d37",
+    "hbfd_lh_136_NS": "159db2b534f5288ad59c96a2f80727c7b4e7be0392aefa636a28580d50374a48",
+    "ot_hgi_coll_inj_idx_join_rg": "6310b41031cb841d7f0e59cc0a0106357e3f9b64a4a17a95074c55814eb98ac0",
+    "hfd_ckgen": "fe79f3735922965d7b5bff102232abf7e3c8a42cebf2bb22dd13552f8686eca6"
+  },
+  "candidates": [
+    {
+      "columns": 1,
+      "offset": [
+        -86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14817.6
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 1197.4320000000007,
+      "over405": 4168,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        -86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13084.2,
+        14904.0
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0057_s001_l1"
+      ],
+      "max_um": 1283.8320000000003,
+      "over405": 4650,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        -86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14990.4
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l13",
+        "rf0027_k02_00_l12"
+      ],
+      "max_um": 1370.232,
+      "over405": 4666,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        0.0,
+        -86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14817.6
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 1111.032000000001,
+      "over405": 3669,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        13170.6,
+        14904.0
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0057_s001_l3"
+      ],
+      "max_um": 1197.4320000000007,
+      "over405": 4168,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        0.0,
+        86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14990.4
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l13",
+        "rf0027_k02_00_l12"
+      ],
+      "max_um": 1283.8320000000003,
+      "over405": 4650,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14817.6
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 1024.6320000000014,
+      "over405": 3041,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13257.0,
+        14904.0
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0609_k00_00_l0"
+      ],
+      "max_um": 1111.032000000001,
+      "over405": 3669,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14990.4
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0417_s012_l0"
+      ],
+      "max_um": 1197.4320000000007,
+      "over405": 4168,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        124.19999999999891,
+        -439.5599999999995
+      ],
+      "origin": [
+        13294.8,
+        14464.44
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "hb_coll_SE"
+      ],
+      "max_um": 880.2960000000003,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        -136.72799999999916,
+        -439.5599999999995
+      ],
+      "origin": [
+        13033.872000000001,
+        14464.44
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0699_s078_l1"
+      ],
+      "max_um": 1141.2239999999983,
+      "over405": 2910,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        -6.264000000001033,
+        -10.800000000001091
+      ],
+      "origin": [
+        13164.336,
+        14893.199999999999
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf1124_s044_l0"
+      ],
+      "max_um": 1192.8960000000006,
+      "over405": 4141,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 1,
+      "offset": [
+        -6.264000000001033,
+        -868.3199999999997
+      ],
+      "origin": [
+        13164.336,
+        14035.68
+      ],
+      "width": 23.328,
+      "height": 403.92,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0842_s014_l0"
+      ],
+      "max_um": 1439.5200000000004,
+      "over405": 4336,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14817.6
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 942.9359999999997,
+      "over405": 2970,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13084.2,
+        14904.0
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1795_s087_l0"
+      ],
+      "max_um": 1000.8719999999994,
+      "over405": 3968,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14990.4
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_s080_l1"
+      ],
+      "max_um": 1087.271999999999,
+      "over405": 4666,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        0.0,
+        -86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14817.6
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 856.5360000000001,
+      "over405": 2724,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        13170.6,
+        14904.0
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0412_s001_l0"
+      ],
+      "max_um": 914.4719999999998,
+      "over405": 2970,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        0.0,
+        86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14990.4
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_k05_01_l1"
+      ],
+      "max_um": 1000.8719999999994,
+      "over405": 3968,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14817.6
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 770.1360000000004,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13257.0,
+        14904.0
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0609_k00_00_l0"
+      ],
+      "max_um": 828.0720000000001,
+      "over405": 2814,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14990.4
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0417_s012_l0"
+      ],
+      "max_um": 914.4719999999998,
+      "over405": 3190,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        124.19999999999891,
+        -308.880000000001
+      ],
+      "origin": [
+        13294.8,
+        14595.119999999999
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "hb_coll_SE"
+      ],
+      "max_um": 954.8160000000025,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -183.38400000000001,
+        -308.880000000001
+      ],
+      "origin": [
+        12987.216,
+        14595.119999999999
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0412_s000_l0"
+      ],
+      "max_um": 1262.4000000000015,
+      "over405": 2560,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -29.592000000000553,
+        -10.800000000001091
+      ],
+      "origin": [
+        13141.008,
+        14893.199999999999
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf1124_s044_l0"
+      ],
+      "max_um": 933.2639999999992,
+      "over405": 3121,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 3,
+      "offset": [
+        -29.592000000000553,
+        -606.9599999999991
+      ],
+      "origin": [
+        13141.008,
+        14297.04
+      ],
+      "width": 69.984,
+      "height": 142.56,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l15",
+        "rf0615_s016_l0"
+      ],
+      "max_um": 1406.688,
+      "over405": 3825,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14817.6
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 949.4159999999993,
+      "over405": 2663,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13084.2,
+        14904.0
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1795_s087_l0"
+      ],
+      "max_um": 864.7920000000013,
+      "over405": 3246,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14990.4
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_s080_l1"
+      ],
+      "max_um": 951.1920000000009,
+      "over405": 4119,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        0.0,
+        -86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14817.6
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 863.0159999999996,
+      "over405": 2450,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        13170.6,
+        14904.0
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0609_k00_00_l0"
+      ],
+      "max_um": 778.3920000000016,
+      "over405": 2663,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        0.0,
+        86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14990.4
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_k05_01_l1"
+      ],
+      "max_um": 864.7920000000013,
+      "over405": 3278,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14817.6
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 776.616,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13257.0,
+        14904.0
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf1124_k03_03_l0"
+      ],
+      "max_um": 691.992000000002,
+      "over405": 2619,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14990.4
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0417_s012_l0"
+      ],
+      "max_um": 778.3920000000016,
+      "over405": 3252,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        124.19999999999891,
+        -273.2399999999998
+      ],
+      "origin": [
+        13294.8,
+        14630.76
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "hb_coll_SE"
+      ],
+      "max_um": 925.6560000000009,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -253.3680000000004,
+        -273.2399999999998
+      ],
+      "origin": [
+        12917.232,
+        14630.76
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0615_s015_l0"
+      ],
+      "max_um": 1303.2240000000002,
+      "over405": 2957,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -64.58400000000074,
+        -10.800000000001091
+      ],
+      "origin": [
+        13106.016,
+        14893.199999999999
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf1438_s005_l0"
+      ],
+      "max_um": 852.0000000000018,
+      "over405": 3120,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 6,
+      "offset": [
+        -64.58400000000074,
+        -535.6800000000003
+      ],
+      "origin": [
+        13106.016,
+        14368.32
+      ],
+      "width": 139.968,
+      "height": 71.28,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l11",
+        "rf0743_s000_l0"
+      ],
+      "max_um": 1376.880000000001,
+      "over405": 3522,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14817.6
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 908.3759999999984,
+      "over405": 2516,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13084.2,
+        14904.0
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1795_s087_l0"
+      ],
+      "max_um": 821.9759999999987,
+      "over405": 3008,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14990.4
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_s080_l1"
+      ],
+      "max_um": 862.6319999999996,
+      "over405": 3858,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        0.0,
+        -86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14817.6
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 821.9759999999987,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        13170.6,
+        14904.0
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0057_s001_l3"
+      ],
+      "max_um": 735.5759999999991,
+      "over405": 2618,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        0.0,
+        86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14990.4
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_k05_01_l1"
+      ],
+      "max_um": 776.232,
+      "over405": 3215,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14817.6
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 735.5759999999991,
+      "over405": 2448,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13257.0,
+        14904.0
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l10",
+        "rf0609_k00_00_l0"
+      ],
+      "max_um": 649.1759999999995,
+      "over405": 2809,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14990.4
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0417_s012_l0"
+      ],
+      "max_um": 689.8320000000003,
+      "over405": 3255,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        124.19999999999891,
+        -261.3600000000006
+      ],
+      "origin": [
+        13294.8,
+        14642.64
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "hb_coll_SE"
+      ],
+      "max_um": 872.7360000000008,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -323.35199999999895,
+        -261.3600000000006
+      ],
+      "origin": [
+        12847.248000000001,
+        14642.64
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l14",
+        "rf0057_s000_l2"
+      ],
+      "max_um": 1320.2879999999986,
+      "over405": 3705,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -99.57600000000093,
+        -10.800000000001091
+      ],
+      "origin": [
+        13071.024,
+        14893.199999999999
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1438_s005_l0"
+      ],
+      "max_um": 845.9520000000011,
+      "over405": 3023,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 9,
+      "offset": [
+        -99.57600000000093,
+        -511.9200000000001
+      ],
+      "origin": [
+        13071.024,
+        14392.08
+      ],
+      "width": 209.952,
+      "height": 47.52,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0614_s000_l0"
+      ],
+      "max_um": 1347.0720000000001,
+      "over405": 3304,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14817.6
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 737.735999999999,
+      "over405": 2346,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13084.2,
+        14904.0
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1795_s087_l0"
+      ],
+      "max_um": 651.3359999999993,
+      "over405": 2925,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13084.2,
+        14990.4
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_s080_l1"
+      ],
+      "max_um": 644.4719999999998,
+      "over405": 3735,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        0.0,
+        -86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14817.6
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 651.3359999999993,
+      "over405": 2643,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        13170.6,
+        14904.0
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": true,
+      "conflict": null,
+      "max_um": 571.6499999999978,
+      "over405": 2933,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        0.0,
+        86.39999999999964
+      ],
+      "origin": [
+        13170.6,
+        14990.4
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0699_k05_01_l1"
+      ],
+      "max_um": 658.0499999999975,
+      "over405": 3601,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        86.39999999999964,
+        -86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14817.6
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "cij_SE"
+      ],
+      "max_um": 571.6499999999978,
+      "over405": 2933,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        86.39999999999964,
+        0.0
+      ],
+      "origin": [
+        13257.0,
+        14904.0
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": true,
+      "conflict": null,
+      "max_um": 658.0499999999975,
+      "over405": 3319,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        86.39999999999964,
+        86.39999999999964
+      ],
+      "origin": [
+        13257.0,
+        14990.4
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "rf0417_s012_l0"
+      ],
+      "max_um": 744.4499999999971,
+      "over405": 3833,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        124.19999999999891,
+        -249.47999999999956
+      ],
+      "origin": [
+        13294.8,
+        14654.52
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l0",
+        "hb_coll_SE"
+      ],
+      "max_um": 690.2160000000003,
+      "over405": 2754,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -509.97599999999875,
+        -249.47999999999956
+      ],
+      "origin": [
+        12660.624000000002,
+        14654.52
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l13",
+        "rf0057_s000_l1"
+      ],
+      "max_um": 1324.391999999998,
+      "over405": 4393,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -192.88800000000083,
+        -10.800000000001091
+      ],
+      "origin": [
+        12977.712,
+        14893.199999999999
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf1086_s017_l0"
+      ],
+      "max_um": 768.6240000000016,
+      "over405": 3356,
+      "all_data_forward_edges_fit": false
+    },
+    {
+      "columns": 17,
+      "offset": [
+        -192.88800000000083,
+        -488.15999999999985
+      ],
+      "origin": [
+        12977.712,
+        14415.84
+      ],
+      "width": 396.57599999999996,
+      "height": 23.76,
+      "nonoverlap": false,
+      "conflict": [
+        "rf0027_k02_00_l1",
+        "rf0417_s010_l0"
+      ],
+      "max_um": 1245.9840000000004,
+      "over405": 3348,
+      "all_data_forward_edges_fit": false
+    }
+  ],
+  "feasible_data_candidates": 0,
+  "qualification": "Frozen generated SYNTH per-bit pins, not hardened native pins. No source, stage/depth, schedule or production phase change."
+}

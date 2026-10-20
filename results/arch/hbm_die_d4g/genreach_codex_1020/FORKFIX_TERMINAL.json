@@ -1,0 +1,38 @@
+{
+  "source": "189871044",
+  "terminal_wrapper_rc": 4,
+  "GEN_rc": 0,
+  "instances": 57211,
+  "placed": 57211,
+  "placement_problems": 0,
+  "missing_instance_bug": "FIXED by reciprocalchainhelper; physical qualification stillFAIL",
+  "coverage": {
+    "schema": "opentallas.hbm.placement_coverage.v1",
+    "verdict": "FAIL",
+    "actual_instances": 57211,
+    "placed_instances": 57211,
+    "defects": 46,
+    "by_reason": {
+      "generic_centroid_fallback": 46
+    },
+    "affected_area_um2": 1696535.7984,
+    "extra_placed_instances": [],
+    "native_release_qualified": false,
+    "qualification": "Placement provenance census only; no geometry, reset, clock or timing waiver."
+  },
+  "audit": {
+    "buses_checked": 126817,
+    "over_buses": 18351,
+    "by_class": {
+      "not_inserted": 918,
+      "hop": 3624,
+      "hop_fwd": 13809
+    },
+    "reach_um": 405.0,
+    "basis": "lower bound: REAL LEF port pin centroids / SYNTH block rectangles; resets excluded"
+  },
+  "manifest_sha256": "c2a5c4c38356ac3034e03acdbe9713f22027a8ea282e67ce9d33de9a16f83bea",
+  "original_in_channel": [],
+  "new_prefilter_matches": true,
+  "pending": "Independent per-tile L1 windows/reservations NOT STARTED whenCLAUDEback. No newGEN allowed until actualcandidatepasses."
+}

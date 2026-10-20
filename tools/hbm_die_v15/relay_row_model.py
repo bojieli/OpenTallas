@@ -155,6 +155,8 @@ def translation_window(edges, placements, masters, views, port_widths, moving, r
     low_u,high_u=max(us)-reach,min(us)+reach
     low_v,high_v=max(vs)-reach,min(vs)+reach
     minimum=max((max(us)-min(us))/2,(max(vs)-min(vs))/2,max(internal,default=0))
+    for c in (low_u,high_u,low_v,high_v,minimum):
+        _number(c)
     return dict(u_interval=[low_u,high_u],v_interval=[low_v,high_v],
                 minimum_max_span_um=minimum,nonempty=minimum<=reach,
                 source_scope='Exact point-to-point pin geometry only; excludes occupancy, escapes and phase')
