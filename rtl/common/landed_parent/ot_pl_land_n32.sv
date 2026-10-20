@@ -6,14 +6,29 @@
 // unchanged ot_pl_land_chunk_r reads it.  Why: the mandatory pre-gate mapped native census (limit 32 loads incl. resets)
 // FAILS ot_pl_land_local_w for any chunk >= 3 bits: its slot write enable is (rq && write_oh[s]), and Yosys/ABC fans the
 // local rq flop out to every slot data / epoch mux (s81sl_capc5 gate 10-20 02:36: rq 120 loads at CHUNK_BITS 24).
-// Here the slot data enable is the kept one-hot write_oh[s] alone (<= CW + 1 loads).  rq only resets write_oh / valid.
+// Here the slot data enable is a kept one-hot selector copy alone, one copy (ot_pl_land_n32_oh, own hierarchy) per 12 data
+// bits (gate 02:42: one 24-bit write_oh drove 50 loads); rq only resets the copies and valid.
 // Equivalence: while rq is low the reader sees vld = 0 (valid is reset) and stays cold (its own rq/warm), so a data slot
 // written during reset is never read before it is rewritten after release: the read output o is identical edge for edge.
 // The write epoch tags exist only for simulation (assertion inputs of ot_pl_land_local_r); synthesis drives epo 0.
 // ---------------------------------------------------------------------------------------------------------------------
+// one kept copy of the one-hot slot selector (distinct ID per copy: separate hierarchies, never merged back by Yosys)
+(* keep_hierarchy = "yes" *)
+module ot_pl_land_n32_oh #(parameter integer D = 4, ID = 0) (
+    input wire ck, rq,
+    output wire [D-1:0] oh
+);
+    (* keep *) reg [D-1:0] r;
+    always @(posedge ck)
+        if (!rq) r <= {{(D-1){1'b0}},1'b1};
+        else     r <= {r[D-2:0], r[D-1]};
+    assign oh = r;
+endmodule
+
 module ot_pl_land_n32_local_w #(
     parameter integer W = 24, D = 4,
-    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer GB = 12                                  // data bits per kept selector copy (~2 GB + 2 loads)
 ) (
     input wire ck, rsi,
     input wire [W-1:0] i,
@@ -21,21 +36,26 @@ module ot_pl_land_n32_local_w #(
     output wire [D*(AW+1)-1:0] epo,
     output wire [D-1:0] vld
 );
+    localparam integer NC = (W + GB - 1) / GB;
     reg rq;
-    (* keep *) reg [D-1:0] write_oh;
     reg [D-1:0] valid;
-    reg [W-1:0] data [0:D-1];
+    wire [NC*D-1:0] oh;                                        // copy g = oh[g*D +: D]
     always @(posedge ck) rq <= rsi;
+    genvar s, g;
+    generate for (g = 0; g < NC; g = g + 1) begin : g_oh
+        ot_pl_land_n32_oh #(.D(D), .ID(g)) u_oh (.ck(ck), .rq(rq), .oh(oh[g*D +: D]));
+    end endgenerate
     always @(posedge ck)
-        if (!rq) begin write_oh <= {{(D-1){1'b0}},1'b1}; valid <= 0; end
-        else begin
-            write_oh <= {write_oh[D-2:0], write_oh[D-1]};
-            valid <= valid | write_oh;
-        end
-    genvar s;
+        if (!rq) valid <= 0;
+        else     valid <= valid | oh[D-1:0];
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (write_oh[s]) data[s] <= i;
-        assign bank[s*W+:W] = data[s];
+        for (g = 0; g < NC; g = g + 1) begin : g_grp
+            localparam integer LO = g * GB;
+            localparam integer GW = (W - LO < GB) ? W - LO : GB;
+            reg [GW-1:0] dq;
+            always @(posedge ck) if (oh[g*D + s]) dq <= i[LO +: GW];
+            assign bank[s*W + LO +: GW] = dq;
+        end
     end endgenerate
     assign vld = valid;
 `ifndef SYNTHESIS
@@ -43,7 +63,7 @@ module ot_pl_land_n32_local_w #(
     reg [AW:0] epoch [0:D-1];
     always @(posedge ck) if (!rq) wc <= 0; else wc <= wc + 1'b1;
     generate for (s=0;s<D;s=s+1) begin:g_ep
-        always @(posedge ck) if (rq && write_oh[s]) epoch[s] <= wc;
+        always @(posedge ck) if (rq && oh[s]) epoch[s] <= wc;
         assign epo[s*(AW+1)+:AW+1] = epoch[s];
     end endgenerate
 `else
