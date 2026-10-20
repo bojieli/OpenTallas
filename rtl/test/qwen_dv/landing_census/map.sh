@@ -9,10 +9,10 @@ import gzip,re,sys,hashlib,json
 p=Path(sys.argv[1]);lib=Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM')
 parts=[];hashes={}
 for kind in ('AO','INVBUF','OA','SIMPLE','SEQ'):
- candidates=sorted(lib.glob(f'asap7sc7p5t_{kind}_RVT_TT_nldm_*.lib.gz'))
+ candidates=sorted(lib.glob(f'asap7sc7p5t_{kind}_RVT_TT_nldm_*.lib*'))
  assert len(candidates)==1,(kind,candidates)
  f=candidates[0]
- s=gzip.open(f,'rt').read();parts.append(s[s.index('{')+1:s.rindex('}')]);hashes[str(f)]=hashlib.sha256(f.read_bytes()).hexdigest()
+ s=(gzip.open(f,'rt').read() if f.suffix=='.gz' else f.read_text());parts.append(s[s.index('{')+1:s.rindex('}')]);hashes[str(f)]=hashlib.sha256(f.read_bytes()).hexdigest()
 (p/'merged.lib').write_text('library(landing_count) {\n'+'\n'.join(parts)+'\n}\n')
 (p/'liberty_manifest.json').write_text(json.dumps(hashes,indent=2)+'\n')
 PY
