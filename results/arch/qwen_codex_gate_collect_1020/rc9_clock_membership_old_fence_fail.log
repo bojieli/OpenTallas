@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/audit_clock_membership.py", line 18, in <module>
+    print(json.dumps(result,indent=2));assert total=={"ck_dw":1056,"ck_de":1056};assert not bad
+                                                                                        ^^^^^^^
+AssertionError

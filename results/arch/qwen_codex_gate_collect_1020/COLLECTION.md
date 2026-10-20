@@ -7,3 +7,5 @@ Safe checklist: 1 pins/reset preflight PASS; 2 reach inherited preflight <=405um
 No REVIEW.json or submission. Remote exact cts.log, gate JSON/source-bound gate_result, shipping snapshots/stdout, README and original layout are preserved beside this file.
 Diagnosis: g_operand_rr s2_w is clocked on ck_dw/de but absent from dw/de fence regexes; it is caught by hub. 512 variable s2_w bits per half +512 mq_wrom+32csel=1056 sinks per root. Successor must co-locate complete regional mass and retain TT+FF<=80; zero source behavior change.
 CB16 fullk/fullkb and A0 NL rc8/rc8b are live and remain in pending_results. No progression claim based on empty buffered logs.
+
+Mapped-name correction: s2_w is optimized/aliased into g_hier.g_sl[*].g_hd.g_tx.g_r[0].di. Actual audit confirms old fences put512 ck_dw and512 ck_de source flops in hub; rc9 matches surviving di aliases and restores1056/1056 to their own region. Internal-only spread scope is applicable because these roots carry internal operand clocks without a boundary subset. Original-fence causal negative:1024 wrong memberships and AssertionError.
