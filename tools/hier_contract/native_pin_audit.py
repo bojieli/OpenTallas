@@ -26,11 +26,21 @@ RELATIVE MODE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017): wit
 parent's compensation C (or the neighbour's boundary mean for a landed link) instead of the view's own R: launch O - C,
 capture S + C, and the boundary match max |pin-flop arrival - C| <= 80 ps at TT and FF.  Every record also reports the
 pin-flop spread at TT and FF; spread > 80 ps at either corner is a FAIL (insertion alone never is).
+
+CASE PINS (QK-FWD 2026-10-18, coordinator 0gs (b)): --case PAT[,PAT...] (fnmatch on the Liberty pin name, e.g.
+k0,k1,k2) names input pins the die holds CONSTANT and declares so with set_case_analysis in the die SDC (strap / ID pins
+driven from tie outputs).  Die STA has no timing check on a case-constant pin, so these pins leave the launch / capture
+metric; they are listed in the record (case_pins, case_pins_raw = their unwaived metric) and never hide a data pin.
+--static-pins is an alias of --case (S81-MISC 10-18 receipts used that name; ONE mechanism, record field case_pins), and
+--case-evidence / --static-evidence records where the die ties the pins (case_evidence).  A pattern that matches no input
+pin of the view is an error (a typo must not silently pass a pin).  DIE OBLIGATION: the die netlist ties these pins and
+the die SDC set_case_analysis-es them; tools/fleet_viz/native_sync.py accepts a case-pin receipt PASS over an own FAIL.
 """
 from __future__ import annotations
 
 import argparse
 import collections
+import fnmatch
 import json
 import multiprocessing as mp
 import os
@@ -121,9 +131,12 @@ def job_status(name: str | None, cache={}) -> str | None:
 
 
 def audit_one(arg):
-    """arg = (root, cell, view) or (root, cell, view, comp): comp = pinreg_audit.compensation() dict (relative mode)."""
+    """arg = (root, cell, view[, comp[, case]]): comp = pinreg_audit.compensation() dict (relative mode), case = fnmatch
+    patterns of input pins held constant by die-SDC set_case_analysis (excluded from the launch / capture metric)."""
     root, cell, view = arg[:3]
     comp = arg[3] if len(arg) > 3 else None
+    case = tuple(arg[4]) if len(arg) > 4 and arg[4] else ()
+    is_case = lambda n: any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for c in case)
     root = Path(root)
     lib_path = root / view / f"{cell}_tt.lib"
     if not lib_path.exists():
@@ -151,7 +164,11 @@ def audit_one(arg):
     wl = wc = None
     nl = nc = nout = nin = 0
     comb = []
+    case_raw = {}
     for name, m in PA.pin_metrics(lib, refs).items():
+        if case and m["dir"] == "input" and is_case(name):
+            case_raw[name] = None if m["inp"] is None else round(m["inp"], 1)
+            continue
         if m["comb"] and m["dir"] in ("input", "output"):
             comb.append(name)
         if m["dir"] == "output" and m["out"] is not None:
@@ -167,6 +184,11 @@ def audit_one(arg):
     rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
+    if case:
+        miss = [c for c in case if not any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for n in case_raw)]
+        if miss:
+            return dict(cell=cell, view=view, error=f"case patterns match no input pin of the view: {miss}")
+        rec.update(case_patterns=list(case), case_pins=sorted(case_raw), case_pins_raw_capture_ps=case_raw)
     # DIE HOLD BUDGET inputs (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md): at FF, the
     # sender's guaranteed launch (min over outputs of O_min - R) and the receiver's pin hold need (max over inputs of
     # H - R; negative = data may arrive that long before the edge).  Die FF STA reads the same ETM arcs; reported here,
@@ -184,7 +206,7 @@ def audit_one(arg):
             if comp is not None and frefs and comp.get("ff") is not None:
                 rel["ff"] = PA.boundary_match(frefs, comp["ff"])
                 frefs = PA.relative_refs(frefs, comp["ff"])
-            fm = PA.pin_metrics(flib, frefs)
+            fm = {n: m for n, m in PA.pin_metrics(flib, frefs).items() if not (case and m["dir"] == "input" and is_case(n))}
             lm = [m["lmin"] for m in fm.values() if m["dir"] == "output" and m["lmin"] is not None]
             hn = [m["hold"] for m in fm.values() if m["dir"] == "input" and m["hold"] is not None]
             rec.update(ff_launch_min_ps=round(min(lm), 1) if lm else None, ff_hold_need_ps=round(max(hn), 1) if hn else None)
@@ -277,13 +299,21 @@ def main(argv=None) -> int:
     ap.add_argument("--cell", help="cell of --view (default: the only <cell>_tt.lib in it)")
     ap.add_argument("--relative-to", help="parent compensation C: ps, tt=PS,ff=PS, a neighbour view dir or its "
                                           "insertion.json (boundary mean); launch O - C, capture S + C, boundary match")
+    ap.add_argument("--case", "--static-pins", dest="case",
+                    help="comma list of input pin patterns held constant by die-SDC set_case_analysis "
+                         "(strap / ID pins): excluded from the launch / capture metric and listed (alias --static-pins)")
+    ap.add_argument("--case-evidence", "--static-evidence", dest="case_evidence",
+                    help="--view: where the die ties the case pins (bind table / RTL contract); recorded as case_evidence")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
     comp = PA.compensation(a.relative_to) if a.relative_to else None
     if a.view:
         vd = root / a.view
         cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
-        r = audit_one((str(root), cell, a.view, comp))
+        case = [c.strip() for c in (a.case or "").split(",") if c.strip()]
+        r = audit_one((str(root), cell, a.view, comp, case))
+        if case and a.case_evidence and not r.get("error"):
+            r["case_evidence"] = a.case_evidence
         print(json.dumps(r, indent=1))
         return 0 if r.get("pass") else 1
     if not a.out:

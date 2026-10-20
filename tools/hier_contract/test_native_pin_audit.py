@@ -75,6 +75,13 @@ def main():
         r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", comp))
         assert "TT boundary vs neighbour 110.0 > 80" in r["fail_why"], r
         assert N.PA.compensation("tt=160,ff=120") == {"tt": 160.0, "ff": 120.0, "src": "given tt=160,ff=120"}
+        # CASE PINS (QK-FWD / NS-CASE 10-18): a die-SDC case-analysed strap leaves the capture metric and is listed;
+        # --static-pins is the same option; a pattern matching no input pin is an error, never a silent pass
+        r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", None, ["far_*"]))
+        assert r["case_pins"] == ["far_i"] and r["capture_pin"] == "ok_i" and r["capture_ps"] == 120.0, r
+        assert r["case_pins_raw_capture_ps"]["far_i"] == 310.0, r
+        assert "error" in N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", None, ["nope"]))
+        assert N.main(["--root", str(root), "--view", "physical/ref_tile/k/views/t", "--static-pins", "nope"]) == 1
         # the CLI single-view form
         assert N.main(["--root", str(root), "--view", "physical/ref_tile/k/views/t", "--relative-to", "160"]) == 1
     assert N.family("qfd_cst_n", "") == "qwen" and N.family("dsfd_coll_ct", "") == "s81" and N.family("ot_hgi_seq_fe", "") == "hbm"

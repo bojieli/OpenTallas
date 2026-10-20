@@ -12,15 +12,20 @@
 // rule) instead of a 4-slot landing: no ring bank, no read mux, no read counter -> no high-fanout select at all.
 // LATENCY IS IDENTICAL TO THE PRICED LANDED PARENT (results/arch/landed_parent_1018/pl_smt/ot_hbm_smh_rp4_flat_lp_record
 // .json): every n->s lane keeps +3 edges --
-//   bin_l -> land_s.d : n relay u_xb1 (mid, keeps every hop < 405 um from the W-face pin flops) + n out u_xbo + s in u_xbi
+//   bin_l -> bk1_s    : n relays u_xb1 / u_xb2 (keep every hop < 405 um from the W-face pin flops) + n out u_xbo + the s
+//                       landing register u_lands (= s's N-face input pin register; replaces land_s.d -> land_s.q)
 //   g0m / gpm -> gs   : n out u_xgo / u_xpo + s in u_xgi / u_xpi + s relay u_xg2 / u_xp2 (mid of s, toward the S face)
 // and the leaf-1 alignment pads (rl1_s, st_s: 3 stages) and reset depths are the lp ones (n children 3, s row/pin
 // children 3, land_s / leaf 1 / gs 6), so ot_hbm_smh_rp4h2 == ot_hbm_smh_rp4_flat_lp cycle for cycle and the compiler
 // record (gout +3 on all 4 lanes, all other ports 0) is unchanged.
+// The two hard 216 x 43.2 landing children (ot_smh_tr_group_land: ONE register stage, valid bit reset) become SOFT kept
+// registers (u_landn / u_lands, same edge, same valid-bit clear): the placer spreads them under the x store's 300-um bk1
+// face, so the 818-b rl1 bus from row_w no longer has to cross a hard macro to reach the x store (the gate-1 M6 overflow
+// at the W macro column) and the macro stack fits the 43.2 lattice in <= 2:1 halves.
 // Reset: rst_n lands in 2 kept registers at the face (reset_landing), then one kept copy per consumer (<= ~10 loads
 // each); the s half's land_s / leaf 1 / gs copies carry the lp +3.
-// MUT (bench only, 0 in every kit): 1 = bin crossing one stage short (s in-register bypassed), 2 = gpm crossing one stage
-// short (s relay bypassed), 3 = leaf-1 rl1 pad one stage short (4 = land_s reset copy one short: not observable, reset only
+// MUT (bench only, 0 in every kit): 1 = bin crossing one stage short (n relay u_xb2 bypassed), 2 = gpm crossing one stage
+// short (s relay bypassed), 3 = leaf-1 rl1 pad one stage short (4 = s landing reset copy one short: not observable, reset only
 // clears valids, as lp MUT4; not benched).
 `timescale 1ns/1ps
 
@@ -61,7 +66,7 @@ module ot_hbm_smh_rp4h_n #(parameter integer MUT = 0) (
     ot_rp4h_rst #(.NC(11)) u_rst (.clk(clk), .rst_n(rst_n), .r(r));
     wire [25:0] st_n;
     wire [817:0] rl_n, rl1_n, rpm_n;
-    wire [2068:0] bin_l, bm, bk1_n, xb1;
+    wire [2068:0] bin_l, bm, bk1_n, xb1, xb2;
     wire [49:0] g0, g0m;
     wire [99:0] gpm;
     ot_rp4l_strap u_sr_n (.clk(clk), .d({xs_g2, xs_a2, xs_g1, xs_a1}), .q(st_n));
@@ -69,14 +74,19 @@ module ot_hbm_smh_rp4h_n #(parameter integer MUT = 0) (
     ot_rp4l_pinbeat u_pb (.clk(clk), .rst_n(r[1]), .d(bin), .q(bin_l));
     ot_smh_tr_group_row_w u_row0 (.clk(clk), .rst_a(r[2]), .d(rl_n), .first(rl1_n), .last(rpm_n));
     ot_smh_tr_group_beat_e u_beat_t (.clk(clk), .rst_a(r[3]), .d(bin_l), .last(bm));
-    ot_smh_tr_group_land u_land_n (.clk(clk), .rst_a(r[4]), .d(bin_l), .q(bk1_n));
+    ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_landn (.clk(clk), .rst_n(r[4]), .d(bin_l), .q(bk1_n));
     ot_smh_tr_group_row_e u_rowe0 (.clk(clk), .rst_a(r[5]), .d(rpm_n), .last(rout_n));
     ot_smh_tr_group_beat_e u_beate (.clk(clk), .rst_a(r[6]), .d(bm), .last(bout));
     ot_rp4l_leaf u_lf0 (.clk(clk), .rst_n(r[7]), .st(st_n), .rl1(rl1_n), .bk1(bk1_n), .g(g0));
     ot_rp4l_gn u_gn (.clk(clk), .rst_n(r[8]), .g0(g0), .gin(gin), .g0m(g0m), .gpm(gpm));
-    // n -> s crossing (lp +3 split: bin 2 here + 1 in s; gather 1 here + 2 in s)
+    // n -> s crossing (lp +3 split: bin 3 here + the s landing register; gather 1 here + 2 in s)
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xb1 (.clk(clk), .rst_n(r[9]), .d(bin_l), .q(xb1));
-    ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xbo (.clk(clk), .rst_n(r[9]), .d(xb1), .q(xo_b));
+    generate if (MUT == 1) begin : g_m1
+        assign xb2 = xb1;
+    end else begin : g_xb2
+        ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xb2 (.clk(clk), .rst_n(r[9]), .d(xb1), .q(xb2));
+    end endgenerate
+    ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xbo (.clk(clk), .rst_n(r[9]), .d(xb2), .q(xo_b));
     ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgo (.clk(clk), .rst_n(r[10]), .d(g0m), .q(xo_g0));
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpo (.clk(clk), .rst_n(r[10]), .d(gpm), .q(xo_gp));
 endmodule
@@ -97,22 +107,20 @@ module ot_hbm_smh_rp4h_s #(parameter integer MUT = 0) (
     ot_rp4h_rpad #(.N(3)) u_rp_gs (.clk(clk), .d(r[5]), .q(r_gs));
     wire [25:0] st_s, st_s_p;
     wire [817:0] rl_s, rl1_s, rl1_s_p, rpm_s;
-    wire [2068:0] xb, bk1_s;
+    wire [2068:0] bk1_s;
     wire [49:0] g1, xg, g0m;
     wire [99:0] xp, gpm;
     // in pin registers (N face) and s relays
-    ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xbi (.clk(clk), .rst_n(r[6]), .d(xi_b), .q(xb));
-    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgi (.clk(clk), .rst_n(r[7]), .d(xi_g0), .q(xg));
-    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xg2 (.clk(clk), .rst_n(r[7]), .d(xg), .q(g0m));
+    ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_lands (.clk(clk), .rst_n(r_land), .d(xi_b), .q(bk1_s));
+    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgi (.clk(clk), .rst_n(r[6]), .d(xi_g0), .q(xg));
+    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xg2 (.clk(clk), .rst_n(r[6]), .d(xg), .q(g0m));
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpi (.clk(clk), .rst_n(r[7]), .d(xi_gp), .q(xp));
     wire [99:0] xp2;
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xp2 (.clk(clk), .rst_n(r[7]), .d(xp), .q(xp2));
     assign gpm = (MUT == 2) ? xp : xp2;
-    wire [2068:0] bland = (MUT == 1) ? xi_b : xb;
     ot_rp4l_strap u_sr_s (.clk(clk), .d({xss_g2, xss_a2, xss_g1, xss_a1}), .q(st_s));
     ot_rp4l_pinrow u_pr_s (.clk(clk), .rst_n(r[0]), .d(rin_s), .q(rl_s));
     ot_smh_tr_group_row_w u_row1 (.clk(clk), .rst_a(r[1]), .d(rl_s), .first(rl1_s), .last(rpm_s));
-    ot_smh_tr_group_land u_land_s (.clk(clk), .rst_a(r_land), .d(bland), .q(bk1_s));
     ot_smh_tr_group_row_e u_rowe1 (.clk(clk), .rst_a(r[2]), .d(rpm_s), .last(rout_s));
     // leaf-1 alignment pads (lp u_lpp_0 / u_lpp_1: +3)
     ot_pl_pad #(.W(818), .N((MUT == 3) ? 2 : 3)) u_pp_rl1 (.ck(clk), .d(rl1_s), .q(rl1_s_p));

@@ -1,3 +1,10 @@
+if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
+  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+  source $ot_pg_helper
+  ot_pg_install_final_write_guard
+  ot_pg_install_rc_observers
+}
 # Opt-in strong output-pin driver (S-ELEM ENGRAM-LKP 2026-10-16, S81 relay/station electrical reach).
 # Use from a ref_tile spec:  "pin_hook_before_flops": ["physical/common_flow/out_pin_driver.tcl"],
 #                            "orfs_vars": {"OT_OUT_DRV": "BUFx8_ASAP7_75t_R"}
@@ -33,7 +40,7 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
     if {![string match "INV*" [$ot_od_m getName]]} { error "OUT_PIN_DRIVER: OT_OUT_DRV_ABSORB needs an INV master" }
   } elseif {![string match "BUF*" [$ot_od_m getName]]} { error "OUT_PIN_DRIVER: OT_OUT_DRV must be a non-inverting BUF" }
   set ot_od_ca [$ot_od_blk getCoreArea]
-  set ot_od_firm {}; set ot_od_abs {}; set ot_od_n 0; set ot_od_skip 0
+  set ot_od_pg_nets {}; set ot_od_pg {}; set ot_od_firm {}; set ot_od_abs {}; set ot_od_n 0; set ot_od_skip 0
   foreach bt [$ot_od_blk getBTerms] {
     if {[$bt getIoType] ne "OUTPUT"} continue
     set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] ne "SIGNAL"} continue
@@ -57,6 +64,7 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
       if {$src ne "NULL"} { foreach it [$src getITerms] { if {[$it isOutputSignal]} { set sdv $it; break } } }
       if {![string match "INV*" [[$di getMaster] getName]] || [llength [$net getITerms]] != 1 || $sdv eq "" || ![string match "DFF*" [[[$sdv getInst] getMaster] getName]]} { incr ot_od_skip; continue }
       $di swapMaster $ot_od_m
+      if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]} {lappend ot_od_pg $di}
       lappend ot_od_abs [$di getName]
       incr ot_od_n
       continue
@@ -76,8 +84,14 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
     $i setOrient R0
     $i setLocation $x $y
     if {$ot_od_free} { $i setPlacementStatus PLACED } else { $i setPlacementStatus FIRM; lappend ot_od_firm $nm }
-    $pn setDoNotTouch 1
+    if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]} {lappend ot_od_pg $i}
+    if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {lappend ot_od_pg_nets $pn} else {$pn setDoNotTouch 1}
     incr ot_od_n
+  }
+  if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}] && [llength $ot_od_pg]} {
+    set pg_mapping [ot_pg_prepare $ot_od_blk]
+    foreach pg_inst $ot_od_pg {ot_pg_bind_before_protect $pg_mapping $pg_inst}
+    foreach pg_net $ot_od_pg_nets {$pg_net setDoNotTouch 1}
   }
   if {[llength $ot_od_abs]} { foreach n $ot_od_abs { set_dont_touch [get_cells $n] } } elseif {$ot_od_n > 0} { set_dont_touch [get_cells ot_outdrv_*] }
   if {[info exists ::env(RESULTS_DIR)]} {
