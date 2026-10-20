@@ -23,6 +23,10 @@ re-derived -- re-run it after die STA sets the landing E (K straps are NO_E plac
 NO_E: every path through a NO_E landing is also evaluated at the sub-lanes' worst case E = 8; the report lists the lanes
 whose pad would go negative at E = 8 (budget too small if die STA lands at E 8: re-check there).
 Exit != 0 if a budget instance is missing, a lane is over budget, or the LAT class still fails.
+--budget-overlay JSON (HBM-SUPROF 10-20): a documented, priced budget raise for one die geometry, {"master": {M: {P: v}},
+"inst": {I: {P: v}}, "deltas": [...], "price": {...}} merged over BUDGET_MASTER / BUDGET_INST (an inst entry keeps its
+master pattern).  Every raised value is listed in the report (overlay + params old/new); it is a static fixed-latency
+budget handed to the compiler schedule and priced (TOK.HDS.PRICE), never a waiver: LAT must still PASS exactly.
 """
 import argparse, collections, gzip, json, math, re, sys, time
 from pathlib import Path
@@ -473,11 +477,24 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report', required=True)
     ap.add_argument('--max-iter', type=int, default=8)
+    ap.add_argument('--budget-overlay', default=None, help='documented, priced budget raise JSON (see module doc)')
     a = ap.parse_args()
     c = load(a.inp)
+    bm, bi, ov = dict(BUDGET_MASTER), dict(BUDGET_INST), None
+    if a.budget_overlay:
+        ov = json.load(open(a.budget_overlay))
+        for m, b in ov.get('master', {}).items():
+            bm[m] = {**bm.get(m, {}), **b}
+        for n, b in ov.get('inst', {}).items():
+            if n not in bi:
+                sys.exit(f'L12_FAIL overlay inst {n} has no BUDGET_INST entry (master pattern unknown)')
+            bi[n] = (bi[n][0], {**bi[n][1], **b})
+        print(f'L12 budget overlay {a.budget_overlay}: master {sorted(ov.get("master", {}))} inst {sorted(ov.get("inst", {}))}')
     rep = dict(schema='opentallas.hbm.d4g.l12_banklat.v1', region=REGION, inp=str(a.inp),
-               budgets=dict(master=BUDGET_MASTER, inst={k: v[1] for k, v in BUDGET_INST.items()}))
-    N, summ = run(c, rep, a.max_iter)
+               budgets=dict(master=bm, inst={k: v[1] for k, v in bi.items()}),
+               overlay=None if ov is None else dict(path=a.budget_overlay, master=ov.get('master'), inst=ov.get('inst'),
+                                                     deltas=ov.get('deltas'), price=ov.get('price')))
+    N, summ = run(c, rep, a.max_iter, bm=bm, bi=bi)
     ok = summ is not None and summ['fail'] == 0 and not rep['problems'] and not rep['over_budget']
     rep['verdict'] = 'PASS' if ok else 'FAIL'
     Path(a.report).write_text(json.dumps(rep, indent=1, default=str))

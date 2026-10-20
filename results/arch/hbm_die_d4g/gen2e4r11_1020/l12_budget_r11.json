@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.hbm.d4g.l12_budget_overlay.v1",
+ "lane": "HBM-SUPROF 10-20 (parent LEAD9-HBM)",
+ "applies_to": "d4g GEN2e4 r11 die chains (plans A and B, chain_d4g2e4_r11.sh S8b via $A/banklat/L12_ARGS)",
+ "why": "S8b l12_banklat on the r11 S5 contract (contract_pre.json, both plans) FAILS over_budget with the GEN2c budgets: the r11 floorplan (HC escape channels / cluster spread) puts the HC LG tap term 3+3 lane edges from its SFU tap in NE/SE (GEN2c 2/2), hb_quant_NW 16 lane edges from its share hb_idx__nwsh (budget 4), hb_argmax 8 lanes (budget 7), hcollrs_SW 1 edge and xl_NW_ctl bank 1 1 edge over. All are static fixed latencies (compile-time params, hbfd_pad lanes, no flow control); the SU pgslice_lg lanes are all SHORT (round trip 11..13 vs budget 14) and pad to 18/15, so S8c (SU 18/15) PASSES after S8b.",
+ "master": {
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": {"READ_RETURN": 34, "WRITE_RETURN": 31},
+  "ot_hbm_hc_qhub_static": {"RD_CAPTURE": 39, "GATHER_PHASE": 39, "DONE_LAT": 35},
+  "ot_hgi_sm_xload_cl2_ctlx": {"RD_LAT": [37, 40, 27, 29, 53, 55, 43, 45]}
+ },
+ "inst": {
+  "hb_argmax": {"VMX": 78},
+  "hb_quant_NW": {"RL": 57},
+  "hcollrs_SW": {"BANK_RT": 73}
+ },
+ "deltas": [
+  {"what": "HC LG tap term READ_RETURN / WRITE_RETURN", "from": [32, 29], "to": [34, 31], "delta": 2, "need": "A NE/SE 34/31, B NE/SE 33/30"},
+  {"what": "HC qhub RD_CAPTURE / GATHER_PHASE / DONE_LAT (tracks the HC tap: tap + 5 / + 5 / + 4; functional coupling, the LAT class does not check it)", "from": [37, 37, 33], "to": [39, 39, 35], "delta": 2},
+  {"what": "hb_quant_NW RL (client<->share lanes 16 vs budget 4)", "from": 45, "to": 57, "delta": 12, "need": "A 55, B 57"},
+  {"what": "hb_argmax VMX", "from": 77, "to": 78, "delta": 1, "need": "A 78"},
+  {"what": "hcollrs_SW BANK_RT (other quadrants stay 72)", "from": 72, "to": 73, "delta": 1, "need": "B 73"},
+  {"what": "xload ctlx RD_LAT bank 1", "from": 39, "to": 40, "delta": 1, "need": "B xl_NW_ctl vmb_NW1 40", "price_note": "0: x-load priced at max RD_LAT 55, unchanged"}
+ ],
+ "probe": "l12 run() with this overlay on planA/planB net/contract_pre.json: L12 PASS both (A 315 pads / 100,715 flops, B 306 / 99,944; LAT 0/124 fail, over_budget 0); d4g_su_lane_profile --stage final --require-budget PASS both (32/32 SU at 18/15). Probe input is pre-forest (S8 forest adds reset relays only).",
+ "price": {
+  "tool": "tools/hgi_sim/d4g_reprice_r11lat_1020.py (wraps d4g_reprice3c_1019, ot-epyc6:/srv/opentallas-scratch/claude/hbm-suprof)",
+  "basis": "price of record L2H-BW face p540 successor composed banklat: DS 1406.1 / Qwen 746.5",
+  "r11": "DS 1404.1 / Qwen 746.4 (DS -0.14 %, Qwen -0.01 %); added DS cycles/token hc_tap 964, coll 562, qdq 480, argmax 1",
+  "ledger": "HBM.D4G_GEN2E4_R11_BANKLAT 0.14 % (<= 5 %/unit; design total unchanged in class)"
+ },
+ "safe_design_note": "hb_quant_NW RL 57 -> transport ctl NP 59 x 48 b pipeline (~2.8 kb flop delay line, was ~2.3 kb at RL 45): item 5 guidance (rule freeze 10-20); structural alternative = place hb_quant_NW beside hb_idx__nwsh (saves 12 edges) in the next floorplan."
+}
