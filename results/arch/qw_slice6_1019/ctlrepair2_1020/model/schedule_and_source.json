@@ -1,0 +1,17 @@
+{
+  "shape": "HARD1/NU4/MUT0 opt-in cap16 repair2",
+  "original_cells": 21925,
+  "constructed_cells": 22552,
+  "source_ff_count": 7206,
+  "steady_state_added_edges": 0,
+  "reset_assertion_added_edges": 1,
+  "reset_release_added_edges": 1,
+  "carry_boundary_retained_bit": 14070,
+  "pure_rtl_proof": "PASS151677 comparisons/8000edges and2midrun resetbursts; actualMUT11 FAIL5",
+  "native_qualification": "NOTYETRUN; repair1 immutable native failure35loads preserved",
+  "source_sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair2.sv": "c9b28645b1d0cbba9caeed7c8dc8554b45551021c5baead8d620d8cd07ca92e4",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair2_helpers.sv": "989c4dee85256e2bd36feea8f67a42074b9e5481f43da239d81a01388c28974e",
+    "tools/qwen_dv/bound_math_netlist.py": "57d3d82769033005d6db60ffab97f94ca484167965a7f6dda1fafd450f44a24e"
+  }
+}
