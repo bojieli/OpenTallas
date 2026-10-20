@@ -99,13 +99,18 @@ def model_lite(m):
                     sinks[base] = [e[0], e[1].lstrip('*')]
     for base, v in bus_src.items():
         v += sinks.get(base, [])
+    grp = None
+    if KSD.GRP_SAFE2:
+        from kv_grp_safe2_ages import plan_receipt
+        grp = plan_receipt(m, KSD.STACKS, KSD.ORDER)
     return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan, dsts=dsts,
                 static_schedule=dict(paths=pp, schedule=schedule(pp, face_land_fin=fl_fin)), tile_ages=KSD.tile_ages(),
                 bindings=m.get('static_bindings') or {}, bus_src=bus_src,
                 masters={i.name: i.master for i in m['insts']},
                 face_land=dict(enabled=KSD.FACE_LAND, selected=sorted(KSD.FACE_LAND_SEL), tiles=KSD.FACE_LAND_TILES,
                                fin_edges=fl_fin),
-                flags=dict(attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
+                grp_safe2=grp,
+                flags=dict(grp_safe2=KSD.GRP_SAFE2, attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
                            astk_erl=KSD.ASTK_ERL, afault=KSD.AFAULT, ahub_static=KSD.AHUB_STATIC))
 
 

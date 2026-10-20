@@ -28,6 +28,8 @@ _PD = {}
 
 def _port_record(master):
     kind = re.sub(r'^qkd_kvs_', '', master or '')
+    if kind in ('grp_s2', 'grp_h_s2'):
+        kind = kind.removesuffix('_s2')
     if kind not in _PD:
         f = Path(__file__).resolve().parents[2] / PORT_DOMAINS / f'{kind}_ports.json'
         _PD[kind] = json.loads(f.read_text())['ports'] if master and master.startswith('qkd_kvs_') and f.exists() else None
@@ -36,6 +38,11 @@ def _port_record(master):
 
 def port_domain(master, port):
     """'core' | 'hbm' | 'mixed' | None (unknown / feed-through) for one die pin of a master"""
+    if master in ('qkd_kvs_grp_s2', 'qkd_kvs_grp_h_s2') and port.lstrip('*') in (
+            'i_ctl', 'o_dn', 'i_up', 'o_ctl', 'x__est', 'y__est__0_1'):
+        # Source-owned SAFE2 face flops run on ck. The unsuffixed measured record describes the OLD
+        # combinational EST/control feedthroughs; an instance's HBM domain is not their launch clock.
+        return 'core'
     rec = _port_record(master)
     if rec is None:
         return None

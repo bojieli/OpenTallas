@@ -21,6 +21,17 @@ SKIP = ABUT + ('clock_trunk', 'reset', 'constant', 'clock')
 
 def export_model(m, plan_id, commit=None, sources=(), reach=None):
     doc = QX.export_model(m, plan_id, commit, sources, reach, design='qwen_kv', skip_cls=SKIP)
+    # Mixed-clock static tiles carry a historical instance-wide 'hbm' label. A core control word or EST
+    # crossing is clocked by its actual port, not that instance label (the planner uses the same rule).
+    import kv_pin_repair as PR
+    by = {it.name: it for it in m['insts']}
+    for bus in doc['buses']:
+        src, dst = bus['src'], bus['dst']
+        sd = PR.port_domain(src.get('master'), src['port'])
+        dd = PR.port_domain(dst.get('master'), dst['port'])
+        if sd is not None or dd is not None:
+            bus['domain'] = PR.launch_domain(by, (src['inst'], src['port']), (dst['inst'], dst['port']))
+    doc['digest'] = QX.DRS.digest(doc['buses'])
     rs = m.get('relay_stages') or {}
     mism = []
     for b in doc['buses']:

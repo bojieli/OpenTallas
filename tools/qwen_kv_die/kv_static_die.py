@@ -2067,7 +2067,15 @@ def place(m, K, geo, F):
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            x_slot, y_slot, slot_w, slot_h = x_g, y0, gw, GH
+            if GRP_SAFE2:
+                # The native successor is square; the old narrow 1188-um frame is not its physical view.
+                # Reserve the complete real outline against all already placed objects before planning wires.
+                # A full old channel is a placement refusal, never permission to shrink the hardened master.
+                slot_w = slot_h = 388.8
+                x_slot, y_slot = free_spot(m, slot_w, slot_h,
+                                           (x_g + gw / 2, y0 + GH / 2), GX, GY)
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_slot, 4), round(y_slot, 4), slot_w - SH, slot_h - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
