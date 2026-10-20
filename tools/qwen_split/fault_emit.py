@@ -31,8 +31,10 @@ W = H = 21.6
 FANIN = 16
 REACH_UM = 340.0        # node centre -> node centre (pins add <= 2 x 21.6: < 405 pin to pin)
 LOCAL_UM = 180.0        # source pin -> leaf centre
-TREE_DEG = 8            # children per region root in the pre-relay MST
+TREE_DEG = int(os.environ.get('OT_SPLIT_FAULT_DEG', '8'))   # children per region root in the pre-relay MST
 CLS = 'spine_local'
+ARRAY_MASTERS = ('qfd_c_b16', 'qfd_dv_slice2')
+ROW_DY = 400.0
 HARD = 'io_collective:fault_code,transport_cdc_fault,transport_abort,transport_fault_cause;d2d_rom:transport_fault;' \
        'sys_face:fault;mu_ctxrx:mu_fault;mu_dhobs:mu_fault'
 RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
@@ -282,7 +284,8 @@ def pre(v, m, G):
         _join(m, rj, (nm, 'rs'))
         follow[(nm, 'ck')] = o
         roots[o] = dict(inst=nm, xy=_ctr(it), clock=m['buses'][cj][0], reset=m['buses'][rj][0], children=[],
-                        zone=zn.of_box((it.x, it.y, it.x + W, it.y + H)))
+                        zone=zn.of_box((it.x, it.y, it.x + W, it.y + H)),
+                        array=by[o].master.startswith(ARRAY_MASTERS))
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
     left = set(roots) - done
@@ -292,6 +295,8 @@ def pre(v, m, G):
             for p in done:
                 if len(roots[p]['children']) >= TREE_DEG or not Zones.linkable(roots[c]['zone'], roots[p]['zone']):
                     continue
+                if roots[c]['array'] and roots[p]['array'] and abs(roots[c]['xy'][1] - roots[p]['xy'][1]) > ROW_DY:
+                    continue      # array blocks link along their row gap only (a cross-row lane has no relay sites)
                 d = _man(roots[c]['xy'], roots[p]['xy'])
                 if best is None or d < best[0]:
                     best = (d, c, p)

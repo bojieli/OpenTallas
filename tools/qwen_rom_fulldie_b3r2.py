@@ -3820,6 +3820,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lifted0.add(idx)
     ripped = set()
     rounds = 0
+    RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
     while work:
         idx = work.pop(0)
         pl = plans[idx]
@@ -3835,7 +3836,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             # tree_27_1_6b had no free corridor slot within reach of its source pin)
             gap_tier.append(pl['bid'])
             continue
-        if idx in ripped or rounds >= 40:
+        if idx in ripped or rounds >= RIP_ROUNDS:
             continue
         ripped.add(idx)
         rounds += 1
