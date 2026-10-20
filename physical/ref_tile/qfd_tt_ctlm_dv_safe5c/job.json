@@ -36,7 +36,23 @@
    "rtl/test/mu_qwen_seq/mu_seq_bench.py",
    "rtl/test/mu_qwen_seq/tb_mu_cmd_cal.sv",
    "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
-   "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness"
+   "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness",
+   "rtl/qwen_dv",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/qwen_sys",
+   "rtl/hdc",
+   "rtl/physical",
+   "rtl/lib",
+   "rtl/qwen_split",
+   "results/rtl/qwen_layer_tput_1018/ctlm_prog",
+   "physical/ref_tile/qfd_tt_ctlm_dv_safe4/bench_witness",
+   "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness",
+   "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness"
   ]
  },
  "stages": {
@@ -143,7 +159,7 @@
      "verilator"
     ],
     "fail_regex": "CTLM_CAL MUT=1 NSL=0: FAIL",
-    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness/ctlm4_v5050/tt_cal1.log"
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe4/bench_witness/ctlm4_v5050/tt_cal1.log"
    },
    {
     "name": "ctlm_cal_m2",
@@ -155,7 +171,7 @@
      "verilator"
     ],
     "fail_regex": "CTLM_CAL MUT=2 NSL=0: FAIL",
-    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness/ctlm4_v5050/tt_cal2.log"
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe4/bench_witness/ctlm4_v5050/tt_cal2.log"
    },
    {
     "name": "ctlm_cal_m3",
@@ -167,7 +183,7 @@
      "verilator"
     ],
     "fail_regex": "CTLM_CAL MUT=3 NSL=0: FAIL",
-    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness/ctlm4_v5050/tt_cal3.log"
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe4/bench_witness/ctlm4_v5050/tt_cal3.log"
    },
    {
     "name": "mu_seq_m0",
@@ -190,7 +206,77 @@
      "verilator"
     ],
     "fail_regex": "MU_SEQ_FAIL mut 34",
-    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5c/bench_witness/ctlm4_v5050/museq_m34.log"
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe4/bench_witness/ctlm4_v5050/museq_m34.log"
+   },
+   {
+    "name": "lp_lockstep_m0",
+    "cmd": "SIM=verilator MUTS=0 bash rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh {RUN}/bench/lp_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS"
+   },
+   {
+    "name": "lp_lockstep_m1",
+    "cmd": "SIM=verilator MUTS=1 bash rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh {RUN}/bench/lp_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm5_v5050/lp_mut1.log"
+   },
+   {
+    "name": "lp_lockstep_m2",
+    "cmd": "SIM=verilator MUTS=2 bash rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh {RUN}/bench/lp_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm5_v5050/lp_mut2.log"
+   },
+   {
+    "name": "lp_lockstep_m4",
+    "cmd": "SIM=verilator MUTS=4 bash rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh {RUN}/bench/lp_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm5_v5050/lp_mut4.log"
+   },
+   {
+    "name": "lp_lockstep_m5",
+    "cmd": "SIM=verilator MUTS=5 bash rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh {RUN}/bench/lp_m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm5_v5050/lp_mut5.log"
+   },
+   {
+    "name": "prog_landed_m0",
+    "cmd": "python3 rtl/test/qwen_dv/tt_ctlm_prog_bench.py --img results/rtl/qwen_layer_tput_1018/ctlm_prog/image --hard 1 --landed 1 --work {RUN}/bench/prog_l0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "LANDED_LOCKSTEP PASS LMUT=0"
    }
   ],
   "calibrate": {
