@@ -1,0 +1,431 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_v41_bf_col#0: origin (691.224, 3110.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_v41_bf_col#0: origin (691.224, 950.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_v41_bf_col#0: origin (691.224, 2030.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M8 stripes as pins, signals M2-M7, parent strap M9; children PG {'dsfd_qbank_N': 'M5', 'dsfd_qbank_S': 'M5', 'dsfd_cfifo_crs4': 'M5', 'ot_v41_rom_elem_q_qxpq_w10': 'M7', 'dsfd_bf_front_roots': 'M5', 'ot_v41_bf_col': 'M7', 'dsfd_node_LLfu': 'M5', 'dsfd_node_NNfu': 'M5', 'dsfd_node_LLfd': 'M5', 'dsfd_node_NNfd': 'M5', 'dsfd_node_LLd': 'M5', 'dsfd_rstg': 'M5', 'ot_s81_cfg7_seq': 'M5', 'ot_s81_cfg7_seq_bfp': 'M5', 'ot_s81_sstn_base566': 'M5', 'ot_s81_sstn_payload536': 'M5', 'dsfd_dvrly_276_NS': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pin_order",
+   "message": "bit order not judged for 10 abutted port(s) with an unresolved width (xo, xok, xk, x); the route places them in chunks of 32",
+   "fix": "add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in pin_order_waiver {port: reason}"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_N: (f) face-pin access: 258 of 258 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,4.320), rs[0] M4 (0.060,4.320), d_r0[0] M5 (2.352,7.381))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_qbank_S: (f) face-pin access: 1210 of 1210 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M4 (0.060,8.640), rs[0] M4 (0.060,8.640), i_cfg[0] M5 (2.208,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_bf_col: (f) face-pin access: 841 of 842 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a_ctr[0] M4 (449.989,62.016), a_ctr[10] M4 (449.989,62.016), a_ctr[11] M4 (449.989,62.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (f) face-pin access: 726 of 739 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_free M5 (226.080,0.016), cfg_a[0] M5 (226.080,0.016), cfg_a[1] M5 (226.080,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_v41_rom_elem_q_qxpq_w10: (h) pockets: 6682 open own-layer pocket rects on M7 (14366.1 um2; gaps < 2.048 um between the child's own obstacles; largest (446.88,77.813)-(448.832,144.299), (449.056,7.147)-(450.944,74.667), (452.448,9.131)-(454.336,76.011)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_rstg: (f) face-pin access: 132 of 134 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i[0] M5 (17.856,34.259), i[10] M5 (17.856,34.259), i[11] M5 (17.856,34.259))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_rstg: (f) face-pin access: 132 of 134 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i[0] M5 (17.856,34.259), i[10] M5 (17.856,34.259), i[11] M5 (17.856,34.259))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "dsfd_rstg: (f) face-pin access: 132 of 134 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i[0] M5 (17.856,34.259), i[10] M5 (17.856,34.259), i[11] M5 (17.856,34.259))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81frame_col_h9_rf_20261020-024930.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81frame_col_h9_rf_20261020-024930.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/s81frame_col_h9_rf-20261020-024930",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook_execution",
+   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
+   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+  },
+  {
+   "severity": "FAIL",
+   "check": "native_census",
+   "message": "native census refused or provenance missing",
+   "fix": "run mapped native census before floorplan; repair dynamic/reset drivers to <=32 actual load pins"
+  },
+  {
+   "severity": "FAIL",
+   "check": "synth_smoke",
+   "message": "ORFS synthesis did not finish within 2700 s (yosys SHARE / ABC stall class): FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: floorplan.tcl, 5 PRE_GATE_NATIVE_CENSUS_REFUSED: inspect native_census.json; Error: floorplan.tcl, 5 PRE_GATE_NATIVE_CENSUS_REFUSED: inspect native_census.json",
+   "fix": "decoded constant-index slices instead of runtime part-selects; replicate instead of wide shifters"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}
