@@ -1,0 +1,15 @@
+{
+  "scope": "SOURCE MODEL ONLY: no centres or old register pins establish a new placed endpoint certificate",
+  "proof": "|s-d|1 <= |s-w|1+|w-r|1+|r-d|1 <= reachW+max_macro_write_read_pin_displacement+reachR",
+  "lef_sha256": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b",
+  "external_reach_each_um": 405,
+  "macro_width_um": 31.992,
+  "macro_height_um": 17.304,
+  "conservative_internal_displacement_um": 49.296,
+  "conservative_two_external_segment_limit_um": 859.296,
+  "same_bit_rect_corner_max_displacement_um": 35.184,
+  "same_bit_two_external_segment_limit_um": 845.184,
+  "selfcheck_unequal_pins_820_feasible": true,
+  "selfcheck_grid_cases": 15625,
+  "physical_qualified": false
+}
