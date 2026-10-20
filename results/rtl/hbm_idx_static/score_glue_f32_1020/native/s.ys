@@ -1,0 +1,21 @@
+script /o/rl.ys
+read_verilog -sv -DSYNTHESIS  /s/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv /s/rtl/hdc/ot_hdc_delay.sv /s/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /s/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /s/rtl/hdc/ot_hdc_fp32_add_lat.sv /s/rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv /s/rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v /s/rtl/hdc/ot_hdc_fastfp.sv /s/rtl/hdc/ot_hdc_prefix.sv /s/rtl/lib/ot_rst_relay_l.sv
+chparam -set RESET_F32 1 ot_hidx_chunk_glue
+hierarchy -check -top ot_hidx_chunk_glue
+rename -top ot_hidx_chunk_glue
+proc
+select -set ot_kw w:* a:keep %i
+select -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i
+techmap @ot_kc
+select -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i
+setattr -set keep 1 @ot_kc
+select -clear
+synth -top ot_hidx_chunk_glue
+flatten
+opt_clean -purge
+dfflibmap  -liberty /o/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /o/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /o/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+abc  -liberty /o/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /o/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /o/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+opt_clean -purge
+hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L
+write_verilog -noattr /o/mapped.v
+stat  -liberty /o/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /o/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /o/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /o/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib

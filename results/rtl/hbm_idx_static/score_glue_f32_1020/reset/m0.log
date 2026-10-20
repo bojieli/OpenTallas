@@ -1,0 +1,5 @@
+GLUE_RESET_F32_PASS epochs40 checks20256 extra_release_edges1 leaves32
+- rtl/test/hbm_idx_static/tb_idx_glue_reset_f32.sv:24: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 3.930 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
