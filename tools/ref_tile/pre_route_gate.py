@@ -66,8 +66,9 @@ GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach", "reset_landing")
 RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
-SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
-                "tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl",
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
+SHIP_HELPERS = (*GATE_ONLY_HELPERS,
+                "tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
                 "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl",
                 "physical/common_flow/native_pg_binding.tcl")
 
@@ -1073,7 +1074,7 @@ fi
 """
 
 
-def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None):
+def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None, overlay_head=None):
     import io
     import tarfile
     helpers = ship_helpers(spec)
@@ -1081,6 +1082,14 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None):
         plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in helpers if (DAEMON_TREE / h).exists()],
                                                  pg_strict=HO.pg_strict(spec or {}))
         overlay_modes = {f["path"]: f["mode"] for f in plan["files"]}
+    # These files execute only in new gates, not in historical frozen routes.
+    # Capture their authoritative effective bytes at the SAME main head and
+    # bind them in the staged archive, without retrofitting route-plan members.
+    missing = [h for h in GATE_ONLY_HELPERS if h not in overlay_payloads and (DAEMON_TREE / h).exists()]
+    if missing:
+        gate_plan, gate_bytes = HO.capture_plan(DAEMON_TREE, ROOT, paths=missing, head=overlay_head)
+        overlay_payloads = {**overlay_payloads, **gate_bytes}
+        overlay_modes = {**(overlay_modes or {}), **{f["path"]: f["mode"] for f in gate_plan["files"]}}
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for p in sorted(set(paths)):
@@ -1261,7 +1270,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     start_commit = SB.git_head(ROOT)
     daemon_commit = SB.git_head(DAEMON_TREE)
     route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=HO.pg_strict(spec))
-    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]}, spec=spec)
+    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]}, spec=spec,
+                    overlay_head=route_plan['origin_main'])
     budget = gate_disk_budget(spec, data, disk)
     auto = host == "auto"
     threads = int(spec.get("route", {}).get("threads", 8))
