@@ -1,0 +1,16 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_ECO bound_terminals=44 instances=22 dont_touch_instances=22
+OT_PG_ECO_POST_PASS checked=62094
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+e6d1e5b5f0a86ead0b68091aefb2cf0bfdee523db09eb1fdd6a661a279e03777  6_final_pgbound.odb
+e428d117b914967969f44c63dab83ddd19256e187d5f072fd7769b2a04335e71  pre_signal.txt
+e428d117b914967969f44c63dab83ddd19256e187d5f072fd7769b2a04335e71  post_signal.txt
+7d2ec3e1fbb9ad740e3bcc8f06f5edeb02d4f536541226e5712b1f7e4e171c4f  /srv/opentallas-scratch/claude/root4-stapg-eco-1019/qfd_c_land_r257_narrow-safe1-5bdb2ae92/base/6_final.odb
+RC=0
