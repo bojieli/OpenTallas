@@ -1,11 +1,11 @@
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 2.072 MB sources in 65 modules, into 0.873 MB in 6 C++ files needing 0.000 MB
-- Verilator: Walltime 1.165 s (elab=0.411, cvt=0.467, bld=0.000); cpu 0.623 s on 1 threads; allocated 55.387 MB
+- Verilator: Built from 2.075 MB sources in 65 modules, into 1.134 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 1.867 s (elab=0.879, cvt=0.743, bld=0.000); cpu 0.799 s on 1 threads; allocated 56.387 MB
 lint-ok
-%Warning-ALWNEVER: rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv:592:9: 'always @*' will never execute as expression list is empty (no variables read)
+%Warning-ALWNEVER: rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv:614:9: 'always @*' will never execute as expression list is empty (no variables read)
                                                                              : ... note: In instance 'ot_lint_top.u_top.u_core.u_end'
                                                                              : ... Suggest use 'always_comb'
-  592 |         always @* begin utx = 2'd0; urx = 2'd0; end
+  614 |         always @* begin utx = 2'd0; urx = 2'd0; end
       |         ^~~~~~
                    ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
                    ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
