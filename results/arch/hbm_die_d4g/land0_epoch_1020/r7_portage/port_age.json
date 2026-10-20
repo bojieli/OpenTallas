@@ -1,0 +1,30 @@
+{
+ "port_age_pads": [
+  {
+   "row": "col_idx.go+rec",
+   "sink": "hb_idx__ctl",
+   "pads": 7
+  },
+  {
+   "row": "col_idx.go+rec",
+   "sink": "hb_router_ids",
+   "pads": 7
+  },
+  {
+   "row": "sucore_NW.red_sv+red_tag",
+   "sink": "cxrc_NW_q",
+   "pads": 1
+  },
+  {
+   "row": "hb_vms_SE.vmstat",
+   "sink": "vm_status4",
+   "pads": 12
+  }
+ ],
+ "problems": [
+  "PORT-AGE: pgp_SE.command -> su_SE0.vmw_cmd split over forwarded AND plain rows (align at the landing plan)",
+  "PORT-AGE: pgp_NE.command -> sucore_NE.red_cmd split over forwarded AND plain rows (align at the landing plan)",
+  "PORT-AGE: pgp_SW.command -> sucore_SW.red_cmd split over forwarded AND plain rows (align at the landing plan)",
+  "PORT-AGE: hb_vms_SW.vmstat -> vm_status4.quadrant_status split over forwarded AND plain rows (align at the landing plan)"
+ ]
+}

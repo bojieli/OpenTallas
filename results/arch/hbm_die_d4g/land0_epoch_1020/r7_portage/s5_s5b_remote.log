@@ -1,0 +1,35 @@
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-374433-1792498113 after 0 s
+{"buses": 2309, "tile_categories": {"land0136": 41, "land048": 1, "land136": 787, "land48": 374, "land624": 424, "lh0136": 280, "lh0136_f2": 1, "lh0136_f3": 6, "lh048": 374, "lh0624": 424, "lh136": 6602, "lh136_f2": 335, "lh136_f3": 76, "lh48": 9873, "lh624": 9299, "old136": 9907, "old48": 10069, "old624": 9920}, "kinds": {"old": 1531, "fc": 719, "fc136lane": 59}, "fork_buses": 168, "inter_region_buses": 778, "equal_age_max_depth_by_domain": {"stream": 34, "hbm": 30, "serial": 26}} 77 hops over reach, 4 problems ['PORT-AGE: pgp_SE.command -> su_SE0.vmw_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: pgp_NE.command -> sucore_NE.red_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: pgp_SW.command -> sucore_SW.red_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: hb_vms_SW.vmstat -> vm_status4.quadrant_status split over forwarded AND plain rows (align at the landing plan)']
+PORT_AGE_PADS 4 [{'row': 'col_idx.go+rec', 'sink': 'hb_idx__ctl', 'pads': 7}, {'row': 'col_idx.go+rec', 'sink': 'hb_router_ids', 'pads': 7}, {'row': 'sucore_NW.red_sv+red_tag', 'sink': 'cxrc_NW_q', 'pads': 1}, {'row': 'hb_vms_SE.vmstat', 'sink': 'vm_status4', 'pads': 12}] PROBLEMS 4
+L7 {"fixed": 0, "closed": [], "functional_fail": 0}
+7a134ed29badbe1b503bf2613de0202afa22c7f9ebcdd22ec751de3b9f7414ee  /srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020/artifacts_0ae60e322/net/relays_d4g_land.json.gz
+2c955f5cc09ab648807f5075deb50bb9f8f98c6ef2fc2fbe65a48207c89be3df  rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv
+35740a171aa93b921e2dccdf49e99106bced6a9e328257918e38056c4c729d1b  tools/hbm_die_v16/relay_layer_d4f.py
+EXACT_TAIL_MODEL {"data_positions": 6699490, "instances": 43971, "straps_remastered": 3099, "tail_widths": 1033, "variants": 60, "buses": 2309}
+EXACT_TAIL_MAP_PASS {"buses": 2309, "real_edge_bits": 9961287, "map_sha256": "07362cfefcaa85a608eda0565ba2661b081d2c9f114ff7b03667621df0ec0dc8", "clock_reset_epoch_edges_unchanged": true}
+RELAY_SPLICE PASS tiles 58793 buses 2309 edges 12930 -> 130635
+STEP S5 bind 2026-10-20T05:10:52-07:00
+DIE_PORT_BIND FAIL masters=199 instances=60021 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=65066 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=125 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5_STRUCTURAL_BIND ['unread_net_bits'] 65066
+UNREAD_L21_TRANSFER entries 309 repointed 0 approved_bits 65066 die_unread 65066 remaining 0 sha a71ccd7f2886b82032f2d5b7cf9ca6a73fe3aee8e9a4fe8b030da2f2b7936fc2
+S5_UNREAD_PROPOSAL c5a69e8e77c6384dbe2aab664cd3766ca338fa84d4ec5399a38f7d34da5fbecc
+DIE_PORT_BIND PASS masters=199 instances=60021 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=125 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5_STRICT_PASS_WITH_PROPOSAL c5a69e8e77c6384dbe2aab664cd3766ca338fa84d4ec5399a38f7d34da5fbecc (LEAD digest admission pending)
+SU_LANE_PROFILE post_landing FAIL su_clients=32 at_budget=0 max_delta=-8 lat_fail=124
+   su_NE0.READ_RETURN have 10 want 15 budget 18 LAT FAIL
+   su_NE0.WRITE_RETURN have 7 want 12 budget 15 LAT FAIL
+   su_NE1.READ_RETURN have 10 want 15 budget 18 LAT FAIL
+   su_NE1.WRITE_RETURN have 7 want 12 budget 15 LAT FAIL
+   su_NE2.READ_RETURN have 10 want 15 budget 18 LAT FAIL
+STEP S5b post_l7 2026-10-20T05:17:55-07:00
+DIE_PORT_BIND FAIL masters=199 instances=60021 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=65066 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=125 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5B_STRUCTURAL_BIND ['unread_net_bits'] 65066
+  LAT   paths  124 bits       0 fail   0 relay_stages []
+  LAT   clients  124 fail 124 (--lat warn)  WARN: bank-client latency mismatches NOT failing this bind
+FUNCTIONAL_BIND PASS paths=1284 bits=289940 fail_paths=0 stale_gaps=0 open_gaps=0
+subprocess.CalledProcessError: Command '['git', '-C', '/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020/src_0ae60e322', 'ls-tree', '-r', '--name-only', 'HEAD', 'rtl', 'physical']' returned non-zero exit status 1.
+UNREAD_L21_TRANSFER entries 309 repointed 0 approved_bits 65066 die_unread 65066 remaining 0 sha 85c7cdd0439a704a0b868b841c1ff359edc2430b6f07a1b8bf888d0b6dd146fa
+S5B_UNREAD_PROPOSAL c0a08b3c531b6ef5ea2ccfd8fa98c4920aea85c4875f4f1414faa8ef83546dc9
+DIE_PORT_BIND PASS masters=199 instances=60021 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=125 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5B_STRICT_PASS_WITH_PROPOSAL c0a08b3c531b6ef5ea2ccfd8fa98c4920aea85c4875f4f1414faa8ef83546dc9 (LEAD digest admission pending)
+S5B_DONE_R6 0ae60e322 2026-10-20T05:25:26-07:00

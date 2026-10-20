@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   340 GB (avail 351, growth 113, headroom 0, waiters 0/0 GB) load 91/128 running 35 disk 503 GB 
+ot-run: ot-epyc6       admits   816 GB (avail 684, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 42 disk 4003 GB 
+ot-run: ot-epyc7       admits   938 GB (avail 757, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 39 disk 5487 GB 
+ot-run: ot-epyc9       admits   645 GB (avail 614, growth 162, headroom 0, waiters 0/0 GB) load 71/128 running 37 disk 153 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/relay_lockstep/lockstep_7855078afc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/relay_lockstep/lockstep_7855078afc
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1087076-1792498589 after 0 s
+LOCKSTEP_MISMATCH rf0019 sink cij_SE cyc 38
+LOCKSTEP_MISMATCH rf0019 sink cij_SE cyc 40
+LOCKSTEP_MISMATCH rf0019 sink cij_SE cyc 44
+LOCKSTEP_MISMATCH rf0019 sink cij_SE cyc 46
+RELAY_LOCKSTEP FAIL checks=133113 errors=182 landing_fault_cycles=0
+- bitswap/tb_relay_lockstep.sv:41831: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 805ns; walltime 0.397 s; speed 2.026 us/s
+- Verilator: cpu 0.397 s on 1 threads; allocated 21 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1087076-1792498589): exit 0
+OTRUN_RC 0
