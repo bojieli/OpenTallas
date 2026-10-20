@@ -53,21 +53,26 @@ module ot_rst_relay #(
         end
     endgenerate
 
-    assign rst_n = relay_q[TREE_STAGES-1];
-    genvar k;
+    // COPIES > 1: the last stage is ALSO built as one flat KEPT vector rcv of REGIONS*COPIES identical flops (same D,
+    // clock, async clear as relay_q[TREE_STAGES-1]); region k reads copy k*COPIES, and the synthesis reset split re-points
+    // every region's loads over the whole family (loads stay grouped by hierarchical name).  One flat named vector, no
+    // generate loop: a looped g_cp[k] copy has no addressable bit name for the split (KV-SRAM-CTL mu6b gate: REFUSED).
     generate if (COPIES > 1) begin : g_cps
-        for (k = 0; k < REGIONS; k = k + 1) begin : g_cp
-            (* keep = "true", dont_touch = "true" *) reg [COPIES-2:0] cp_q;
-            always @(posedge clk or negedge rst_n_in) begin
-                if (!rst_n_in)
-                    cp_q <= {(COPIES-1){1'b0}};
-                else if (TREE_STAGES == 1)
-                    cp_q <= {(COPIES-1){sync_q[SYNC_STAGES-1]}};
-                else
-                    cp_q <= {(COPIES-1){relay_q[(TREE_STAGES > 1) ? TREE_STAGES-2 : 0][k]}};
-            end
-            (* keep = "true", ot_rst_split *) wire [COPIES-1:0] rcv = {cp_q, relay_q[TREE_STAGES-1][k]};
+        (* keep = "true", dont_touch = "true", ot_rst_split *) reg [REGIONS*COPIES-1:0] rcv;
+        always @(posedge clk or negedge rst_n_in) begin
+            if (!rst_n_in)
+                rcv <= {(REGIONS*COPIES){1'b0}};
+            else if (TREE_STAGES == 1)
+                rcv <= {(REGIONS*COPIES){sync_q[SYNC_STAGES-1]}};
+            else
+                rcv <= {(REGIONS*COPIES){relay_q[(TREE_STAGES > 1) ? TREE_STAGES-2 : 0][0]}};
         end
+        genvar k;
+        for (k = 0; k < REGIONS; k = k + 1) begin : g_o
+            assign rst_n[k] = rcv[k*COPIES];
+        end
+    end else begin : g_c1
+        assign rst_n = relay_q[TREE_STAGES-1];
     end endgenerate
 
 `ifndef SYNTHESIS
