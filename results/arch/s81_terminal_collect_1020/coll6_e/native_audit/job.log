@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll6e-audit-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll6e-audit-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll6e-audit-1020
+ot-run: ot-epyc9       admits  1067 GB (avail 805, growth 58, headroom 0, waiters 0/0 GB) load 33/128 running 22 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll6e-audit-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll6e-audit-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3888374-1792509024 after 0 s
+dump 0
+reach 0
+raw_native 1 raw failure retained and requires actual DB class review
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3888374-1792509024): exit 0

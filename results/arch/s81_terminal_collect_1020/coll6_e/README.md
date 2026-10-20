@@ -1,0 +1,9 @@
+Original COLL E_s6c engineering rejection
+
+Gate WARN and clock TT67.6/FF63.3, GRT0overflow/M2max12.50. Actual saved 5_1_grt.odb native full unrestricted combinational cone Manhattan lower bound FAIL:139568 endpointpairs,5403>405um,max756.844,zero actualLib roleerrors. This is a lower bound, not routed delay/reach qualification. Worst credit-difference c_diff[2] QN(704.878,314.955) to FIFO slice26 valid_r D(85.194,177.795). Structural local credit/valid path architecture needed before new route. No submit/retry.
+
+Historical source9194consumed files independently SHA verified PASS against manifest start961020accbf4; this does not grant current-main source admission. ActualGRT ODB SHA4a886ecfcabcef58d865b79aa44fd76c114b88a5293608668b273cca63fcd891. Raw native CLI fails on41452missingLiberty physicalcells plus clockck749loads; raw retained, separate actualDBclassification pending at initial seal. Native ITerm PG233042bound/41566unbound; complete master-census PG/classification supplemental receipt pending. Do not infer functional native failure solely from raw physical/clock classifier.
+
+Manually viewed original floorplan.png and density.png at08:13PT:55SRAMs on broad lattice, standard cell mass concentrated in central band and both face columns, with visible cells around macro edges and channels. No congestion.png produced by original gate. Exact band occupancy/native PG/functional clock proof remains required; PNG cannot waive endpoint reach failure. Original receiving worktree never edited/no git there.
+
+STOP handback08:14PT: source/PNG/reach evidence frozen. Supplemental actualDB master/clock classification unit3906601 was already running; preserve it, no new work. Complete canonical PG snapshot preserved compressed and summarized; no binding/repair performed. Original n32s MUT_PACK remains daemon-owned/running, no duplicate.

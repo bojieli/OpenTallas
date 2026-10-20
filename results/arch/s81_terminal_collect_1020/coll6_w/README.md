@@ -1,0 +1,1 @@
+Original COLL W_s6c gate FAIL: TT pinflop spread83.9>80, FF77.6; insertion748.5/619.7. GRTtrial is INFO zerooverflow/M2max12.70/3059seconds, not a GRTnonzeroRC failure. Historical source9194consumedfiles independentlySHAverified PASS. No submit/samegeometryretry.
