@@ -1,0 +1,23 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: V6 (H-ELEM 14:20, +1 issue edge): inst/hgi_start/hgi_busy arrive at the issuer's d2 edge and are captured at this leaf's pins (= the d3 edge of the other children); tap_iteration/tap_steps are pin-captured by ot_hgi_coll_iter_mul, then 16x8 partial products, then a registered combine, so only field 
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hcoll_v5r_ctl_n1s0_v74g_20261020-025848.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hcoll_v5r_ctl_n1s0_v74g_20261020-025848.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hcoll_v5r_ctl_n1s0_v74g-20261020-025848
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 155 s (gate total 1260 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2656, 'pin_rectangles': 2656, 'pin_track_checked': 2656, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 b0e183b5402e460fd3885eb8b12f13765671f8551ad345013ae5d29f989405be
+GATE INFO util: synthesized std area 3343 um2 + macros 19370 in core 101729: util 4% (std-cell density 4.4% of placeable 76132 um2; total fill 22.3%)
+GATE INFO textbook: WARN ot_hgi_coll_ctl_v5r_n1s0_safephys cells 26,530 flops 3,813 depth 651.8 ps util 0.2218 reach 0.0 um (0.8 s)
+GATE WARN textbook.logic_depth: reg->reg stage u_ot_pr_core.u.u_mul.g_landk.g_bcd[1].u_lc.q[3]$_DFF_P_ -> u_ot_pr_core.u.u_mul.pc[1][14]$_DFF_P_/D: ~652 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 560.5..628.5 ps (spread 68.0), boundary mean 601.4; tt insertion all 433.8..487.4 ps (spread 53.6), boundary mean 460.5; ff insertion all 354.1..400.2 ps (spread 46.1), boundary mean 375.0; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hcoll_v5r_ctl_n1s0_v74g/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      509 paths, worst slack -45.4 ps (e.g. u_ot_pr_core.u.u.protocol_fault$_DFFE_PN0P_/D)
+GATE INFO path_classes: setup WNS -4.5384362934441924e-11 hold WNS 4.3066106236722135e-11
+GATE WARN clock_rule: root port:clk_control: 3,817 sinks on the largest root; measured TT insertion 487.4 ps, FF insertion 400.2 ps, TT pin-flop spread 49.6 ps, FF pin-flop spread 40.6 ps; WARN: insertion 487.4 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/coll6-v74-1020/physical/ref_tile/hcoll_v5r_ctl_n1s0_v74g/gate_layout/floorplan.png; density /home/ubuntu/wt/coll6-v74-1020/physical/ref_tile/hcoll_v5r_ctl_n1s0_v74g/gate_layout/density.png
+GATE WARN fill: fill 22% = (hard macros 19369.9 + synthesized std cells 3196.3) / outline 104509.4 um2; pin demand per face: S 204 pins over 210.2/302.4 um (70%), N 52 pins over 49.7/302.4 um (16%), W 1717 pins over 343.9/345.6 um (100%), E 795 pins over 159.6/345.6 um (46%) (pin-bound: L2H-SMATT 10-19: pin/macro-bound outline 302.4 x 345.6. W face ~1,700 pins at pin_min_tracks 4 (0.192 um) need >=331 um -> h 345.6; width set by two macro columns + three >=33 um std bands so no horizontal net must cross a macro (M3/M4 OBS, cap M5). Std area ~3.2k um2 -> ~25% fill incl. macros.)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 16.14% used; GRT 497 s
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: hcoll_v5r_ctl_n1s0_v74g/gate_result.json written (exact staged source binding; commit it with the kit)
