@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc9       admits   836 GB (avail 827, growth 241, headroom 0, waiters 0/0 GB) load 62/128 running 38 disk 90 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-789751-1792493971 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 982, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 978, in main
+    return {'tie': cmd_tie, 'frame': cmd_frame, 'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect}[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 556, in cmd_frame
+    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               only=None if a.only is None else set(a.only))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 400, in compile_frame
+    plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0)
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 307, in phase_plan
+    plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
+                        seg_extra=sx, assign=assign)
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/frame_return_plan.py", line 280, in plan_phase
+    topo = load_topology(master)
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/root/tools/s81_dv/frame_return_plan.py", line 129, in load_topology
+    assert hashlib.sha256(rtl.read_bytes()).hexdigest() == t['rtl_sha256'], f'stale topology record for {master}'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: stale topology record for col_h9
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-789751-1792493971): exit 1

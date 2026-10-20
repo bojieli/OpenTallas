@@ -1,0 +1,411 @@
+{
+ "cls": "LEG",
+ "written": "2026-10-19 21:55 PT",
+ "agent_branch": "claude/toksim-s81b-leg-1019@e3844acc3",
+ "ops": [
+  {
+   "op": "substage_hop0",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "substage_hop1",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "unplaced_hops",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 62,
+   "old_cycles_per_instance": 8308.0,
+   "cycles": 8680.0,
+   "range_per_instance": [
+    7936,
+    8680
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "head.hop",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "attn.a_allgather",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "ffn.router_allgather",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "attn.rows_allgather",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "attn.idx.topk_merge",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "head.argmax_merge",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "attn.out_allreduce",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 2,
+   "old_cycles_per_instance": 268.0,
+   "cycles": 280.0,
+   "range_per_instance": [
+    256,
+    280
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "ffn.combine_allreduce",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 2,
+   "old_cycles_per_instance": 268.0,
+   "cycles": 280.0,
+   "range_per_instance": [
+    256,
+    280
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "mtp.hop_in",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "wave.h2..h6",
+   "dag_cls": "hop",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  },
+  {
+   "op": "E1/E14.rows_allgather, attn.cand.merge",
+   "dag_cls": "coll",
+   "xdie_part": "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)",
+   "crossings_per_instance": 1,
+   "old_cycles_per_instance": 134.0,
+   "cycles": 140.0,
+   "range_per_instance": [
+    128,
+    140
+   ],
+   "grade": "measured-release-RTL",
+   "definition": "per crossing = OUT (source stop samples ci_b -> end stop samples ri = xdie issue edge) + IN (end stop loads inward ro = xdie landing edge -> owning stop loads dl_e/dl_w), farthest slice (7 ring links) at both ends; definitions identical to tb_xdie_s81_2 so the leg adds to the measured xdie co-sim with no gap/overlap. Circuits: S d.ES->(d+1).WS 132, S (d+1).WS->d.ES 140, N d.EN->(d+2).WN 128, N (d+2).WN->d.EN 138; the record uses the worst (140) on every crossing (which circuit each xdie term rides is not in the base record). Law: each ring link + the stop it enters = k_link + 5 edges; latency constant over all 128 windows / 6,320 beats, 1 beat a cycle sustained, so payload size adds no cycles",
+   "shape": "16 rstops, 2 tiers (S/N), W- and E-bound, OUT and IN, every production payload a peer (1/3/8/13/32/40/128/132/321 beats of 128 B) + 1..7-link column sweep: 128 windows, 6,320 beats",
+   "bit_exact": true,
+   "golden": "gen_leg.py stimulus (golden/stim.hex, windows.json): every beat full 1,104-bit compare incl. compiled hops field, in order; + law check parse_leg.py (0 violations)",
+   "rtl": {
+    "module": "ot_s81sl_rstop x16 + 112 ring links (hop-0 ICG, 7 x dsfd_dvrlyh_276 half-cycle relays, dsfd_dvland_276 strap k 4/5) transcribed from GEN mu4c die.v (sha ce6b7913) by gen_chain.py",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (die base ceaed19c4)",
+    "blob": "rstop d089448887d5, ot_s81_rly dd70cc2dc04a, rly_masters_dv276 72c17619b1b5, rly_masters_dvh 0567b4082944, ot_s81_land 29d5d8f807c1, dsfd_dvland 3f4a565f9307 (RELEASE_BLOBS.txt)",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/toksim_s81b_leg/tb_leg_s81.sv + leg_chain_gen.sv@claude/toksim-s81b-leg-1019@e3844acc3",
+   "evidence": "results/rtl/toksim_s81b_leg_1019/l1/otrun.log \"PASS leg_s81: 6320 beats ... bit-exact\" + LEG_STATS last_cycle 44694; l1/leg.json per-window latencies",
+   "job": "ot-run ot-epyc8 oth-ubuntu-410900-1792462807 (Verilator 5.050)",
+   "edges_owed": "NOT folded: LEAD2-S81 INBOX [SLICE 16:39] ot_s81sl_xg successor rstop RELAY=1 (claude/s81-xgr-1019@5e5845264, not in mu4c): +1 edge per stop = +7 an end, +14 a crossing (worst 154) once bound",
+   "note": "fold: replace the base xdie part \"on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)\" of every term of this op (base results/arch/token_path_1018/ds_rom.json, grade priced) by cycles. Off-critical / exposed-0 terms stay 0. AR 377 crossings 50,518 -> 52,780 (+2,262); MTP 403 crossings 54,002 -> 56,420 (+2,418). Mutants: OT_S81_RLY_MUT bench FAIL (790 mismatches); OT_S81_LAND_MUT_SEL (landing reads one slot early) NOT detected by the bench verdict (bits exact, BENCH_PASS, no epoch fault in the zero-delay sim) -- caught only by the law check (128 violations, 63 vs 70 at 7 links). Cross-tier owners (V rung, tv* links) not measured."
+  }
+ ],
+ "summary": {
+  "ar_crossings": 377,
+  "ar_old": 50518,
+  "ar_new": 52780,
+  "mtp_crossings": 403,
+  "mtp_old": 54002,
+  "mtp_new": 56420,
+  "mutants": {
+   "rly_mut": "bench FAIL (detected)",
+   "land_mut_sel": "bench PASS = NOT detected by the bench; law check FAIL"
+  }
+ }
+}

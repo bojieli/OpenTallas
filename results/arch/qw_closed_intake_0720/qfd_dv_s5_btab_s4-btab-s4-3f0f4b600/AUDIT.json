@@ -1,0 +1,96 @@
+{
+  "job": "qfd_dv_s5_btab_s4-btab-s4-3f0f4b600",
+  "record_commit": "1798794b3",
+  "source_commit": "3f0f4b600",
+  "record_file_count": 23,
+  "record_identity_PASS": true,
+  "source_file_count": 36,
+  "source_identity_PASS": true,
+  "final_ODB_matches_corner": true,
+  "native_ODB_sha256": "5436de4510f556796aa8b926de520a1463ecf0efe4098ed7381a98f2c5a2da8b",
+  "final_files_sha256": {
+    "6_final.spef": "dae9fd522c92596d562a8145b22f67b693b783d41f0f2039ade09791446104a0",
+    "6_final.odb": "5436de4510f556796aa8b926de520a1463ecf0efe4098ed7381a98f2c5a2da8b",
+    "6_final.sdc": "4d74f17a45a06e8c626f108a5934c85df8f8e3a1cc67b79f443ac36d0756aba9",
+    "6_final.v": "a995268b8ab63df274c9b349a55ba8db90314582b32a3dc0787c7173d2d0a5c7"
+  },
+  "TT_setup_ps": 114.34,
+  "FF_hold_ps": 32.58,
+  "SS_sensitivity_ps": -126.71,
+  "DRC": 0,
+  "native_dynamic_max": 16,
+  "native_over32": 0,
+  "reach_max_pin_bbox_L1_um": 326.784,
+  "reach_over405_roots": 0,
+  "PG_contacts": 314900,
+  "PG_unbound": 0,
+  "unknown_std_masters": [],
+  "missing_or_unknown_signal_pins": 0,
+  "complete_clock": {
+    "tt": {
+      "boundary_FF_clocks": 320,
+      "native_macro_clocks": 4,
+      "min_ps": 187.4,
+      "max_ps": 220.8,
+      "complete_spread_ps": 33.4,
+      "within80": true,
+      "routed_boundary_mean_ps": 209.1,
+      "root_families": {
+        "core_clk": 324
+      },
+      "complete_deduplicated_count": 324,
+      "count_basis": "Actual child_flop.soft.boundary plus explicit real macro pins; combined boundary metadata may already include raw macro capture pins, so never blindly add macro count twice."
+    },
+    "ff": {
+      "boundary_FF_clocks": 320,
+      "native_macro_clocks": 4,
+      "min_ps": 155.0,
+      "max_ps": 181.1,
+      "complete_spread_ps": 26.1,
+      "within80": true,
+      "routed_boundary_mean_ps": 171.0,
+      "root_families": {
+        "core_clk": 324
+      },
+      "complete_deduplicated_count": 324,
+      "count_basis": "Actual child_flop.soft.boundary plus explicit real macro pins; combined boundary metadata may already include raw macro capture pins, so never blindly add macro count twice."
+    }
+  },
+  "parent_boundary_scope": "Actual routed reference only. Parent must price/match this nominal insertion and registered/macro interface ages; composed neighbor qualification has not been performed.",
+  "promotion": "REVIEW_READY_COMPONENT_AUDIT",
+  "canonical_changes": false,
+  "PG_scope": "Native contact connectivity only; independent conductor/via/short proof not performed.",
+  "pin_probe_scope": "See port_audit.json: diagnostic FF-only direct-pin probe, not policy verdict.",
+  "bench_results": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true
+    },
+    "bench_btab_safe_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true
+    },
+    "bench_btab_safe_bankmut": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true
+    }
+  },
+  "images_viewed": [
+    "layout/floorplan.png",
+    "layout/density.png",
+    "layout/congestion.png"
+  ],
+  "native_census_scope": "Actual mapped final ODB; dynamic signals and reset included, clock-only terms excluded via actual Liberty clock flags/native clock types. All >32 counts zero, including constants.",
+  "memory_inventory": {
+    "actual_native_clocked_macros": 4,
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "source_shape": "4 x 128 x 256 = 131072 stored bits, real SRAM",
+    "source_FF_capture_bits": 320,
+    "source_FF_roles": "16x4 kept one-hot select bits +256 output capture bits",
+    "reset": "No resettable source state or reset port",
+    "inputs": "Clocked SRAM read/write interfaces, plus same-edge one-hot select capture. No generic input FF wrapper is claimed. Upper tw_addr[23:9] and low[1:0] are unread by exact source."
+  }
+}

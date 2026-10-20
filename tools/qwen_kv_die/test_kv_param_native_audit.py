@@ -231,5 +231,81 @@ class JointModeTest(unittest.TestCase):
         self.assertFalse(r['proven'])
 
 
+# KV-PARAMS3 10-20: --macro-cut (hard macro as a cut point) and --induct-seq (base window = induction depth).
+CBB = """(* blackbox *)
+module mac (input wire clk, input wire [1:0] a, output wire [1:0] q);
+endmodule
+"""
+CRTL = """module t #(parameter integer D = 2) (input ck, input rst_n, input [1:0] x, output reg [1:0] y);
+  reg [1:0] a_r;
+  wire [1:0] q;
+  always @(posedge ck) a_r <= x;
+  mac u_m (.clk(ck), .a(a_r), .q(q));
+  always @(posedge ck or negedge rst_n) if (!rst_n) y <= 2'b0; else y <= q;
+endmodule
+"""
+CGATE = r"""module t (ck, rst_n, x, y);
+ input ck;
+ input rst_n;
+ input [1:0] x;
+ output [1:0] y;
+ wire hi;
+ wire an0, an1, aq0, aq1, q0, q1, yn0, yn1;
+ TIEHIx1_ASAP7_75t_R tie (.H(hi));
+ DFFHQNx1_ASAP7_75t_R \a_r[0]$_DFF_P_  (.CLK(ck), .D(x[0]), .QN(an0));
+ INVx1_ASAP7_75t_R ia0 (.A(an0), .Y(aq0));
+ DFFHQNx1_ASAP7_75t_R \a_r[1]$_DFF_P_  (.CLK(ck), .D(x[1]), .QN(an1));
+ INVx1_ASAP7_75t_R ia1 (.A(an1), .Y(aq1));
+ mac u_m (.clk(ck), .a({aq1, aq0}), .q({q1, q0}));
+ DFFASRHQNx1_ASAP7_75t_R \y[0]$_DFF_PN0_  (.CLK(ck), .D(q0), .QN(yn0), .RESETN(rst_n), .SETN(hi));
+ INVx1_ASAP7_75t_R iy0 (.A(yn0), .Y(y[0]));
+ DFFASRHQNx1_ASAP7_75t_R \y[1]$_DFF_PN0_  (.CLK(ck), .D(q1), .QN(yn1), .RESETN(rst_n), .SETN(hi));
+ INVx1_ASAP7_75t_R iy1 (.A(yn1), .Y(y[1]));
+endmodule
+"""
+
+
+class CutFixture(Fixture):
+    def __init__(self, gate=CGATE):
+        super().__init__(gate=gate, rtl=CRTL)
+        (self.root / 'rtl/mac_bb.v').write_text(CBB)
+        pj = self.arch / 'run/routes/r/physical.json'
+        d = json.loads(pj.read_text())
+        d['design']['sources'].append(dict(path='rtl/mac_bb.v', sha256=sha(self.root / 'rtl/mac_bb.v')))
+        pj.write_text(json.dumps(d))
+
+
+@unittest.skipUnless(have_tools(), 'yosys 0.68 / ASAP7 liberty not installed (fleet test)')
+class MacroCutTest(JointModeTest):
+    def test_macro_cut_proves_and_records_cut_points(self):
+        fx = CutFixture()
+        r = self.run_audit(fx, 'cut', ['--macro-cut', 'mac', '--reset-base', '2', '--induct-seq', '2'])
+        self.assertTrue(r['proven'], r)
+        self.assertEqual(r['macro_cuts']['mac']['instances'], ['u_m'])
+        self.assertEqual(r['macro_cut_points'], dict(compared_inputs=2, compared_input_bits=3, free_outputs=1,
+                                                     free_output_bits=2))
+        self.assertEqual(r['base']['checked_steps'], [3, 4])
+        self.assertIn('macro cut points', r['equiv']['method'])
+        A.main(['receipt', '--root', str(fx.root), '--audits', str(fx.audits), '--out', str(fx.root / 'rc')])
+        self.assertEqual(set(json.loads((fx.root / 'rc/profiles.json').read_text())), {'t'})
+
+    def test_macro_input_that_differs_refuses(self):
+        fx = CutFixture(gate=CGATE.replace('INVx1_ASAP7_75t_R ia0', 'BUFx2_ASAP7_75t_R ia0'))
+        r = self.run_audit(fx, 'cut', ['--macro-cut', 'mac', '--reset-base', '2', '--induct-seq', '2'])
+        self.assertFalse(r['proven'])
+
+    def test_short_induction_base_still_catches_reset_bug(self):
+        g = JGATE.replace('(.CLK(ck), .D(d1q), .QN(yn), .RESETN(rst_n), .SETN(hi))',
+                          '(.CLK(ck), .D(d1q), .QN(yn), .RESETN(hi), .SETN(rst_n))')
+        fx = Fixture(gate=g, rtl=JRTL)
+        r = self.run_audit(fx, 'joint', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '2', '--induct-seq', '2'])
+        self.assertFalse(r['proven'])
+        # a 4-deep constant metadata chain needs a deeper induction: -seq 2 REFUSES (never a false pass); -seq 4 proves
+        fx2 = Fixture(gate=JGATE, rtl=JRTL)
+        r2 = self.run_audit(fx2, 'joint', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '2', '--induct-seq', '2'])
+        self.assertFalse(r2['proven'])
+        self.assertIsNone(r2.get('base'))
+
+
 if __name__ == '__main__':
     unittest.main()

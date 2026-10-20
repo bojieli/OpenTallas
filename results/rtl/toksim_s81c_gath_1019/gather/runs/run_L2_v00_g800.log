@@ -1,0 +1,10 @@
+SVCRS_CONFIG sram_macro=0 static_io=1 start2=8192
+SVCRS_ST hsdrop=-1 st_rg W=01 E=01 bad=0
+SVCRS_HOST sent=96 acks=96 credits=8/8 errors=0
+GATH_T static_io=1 sel_gap=800 lat=40 t_wl=2218 t_sel=3019 t_sel_last=3051 own_rq_first=3045 own_rq_last=3554 own_done_last=3595 own_reads=464 own_beats=688 win_rq_first=2225 win_rq_last=2601 win_done_last=2641 win_reads=2112 gather_span=577 winload_span=424 go=5316
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1331 go=5316 last_fold_score=5605 pv_sent=6266 pv_early=0 pv_words=160 pv_first=6703 pv_last=6862 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=0 T=640 window=128 nsel=512 pairs_in=1596 go=5316 first_score=5446 last_score=5605 end=6863 root_beats=160 sc_checked=2656 sc_errors=0 order_errors=0 se_checked=2656 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=7164 verdict=PASS
+- tb_toksim_gath.sv:537: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 2798.758 s; speed 2.560 ns/s
+- Verilator: cpu 2116.016 s on 17 threads; allocated 3301 MB

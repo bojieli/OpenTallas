@@ -1,0 +1,35 @@
+ot-run: ot-epyc5       admits   496 GB (avail 460, growth 113, headroom 0, waiters 0/0 GB) load 100/128 running 57 disk 312 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-epyc9       admits   812 GB (avail 805, growth 236, headroom 0, waiters 0/0 GB) load 204/128 running 63 disk 264 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-750789-1792477038 after 0 s
+ot-epyc5
+== tree32
+RMS_REDUCE tree32 [{"n": 32, "tag": 3, "tree32": true, "first_cmd": 0, "export_cmd": 81, "scalar_cycle": 90, "span": 91}]
+PASS scalars=1 cycles=101 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=89 expected_cycle=90 tag=3 expected_tag=3 fp32=53c5a308 expected=53c5a308
+rc=1
+== d4096
+RMS_REDUCE d4096 [{"n": 1024, "tag": 1, "first_cmd": 0, "export_cmd": 1313, "scalar_cycle": 1322, "span": 1323}, {"n": 4, "tag": 2, "combine": true, "first_cmd": 1314, "export_cmd": 1355, "scalar_cycle": 1364, "span": 51}]
+PASS scalars=2 cycles=1375 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=1321 expected_cycle=1322 tag=1 expected_tag=1 fp32=529fdad2 expected=529fdad2
+rc=1
+== d4096_ldx
+RMS_REDUCE d4096_ldx [{"n": 1024, "tag": 1, "first_cmd": 0, "export_cmd": 1185, "scalar_cycle": 1194, "span": 1195}, {"n": 4, "tag": 2, "combine": true, "first_cmd": 1186, "export_cmd": 1227, "scalar_cycle": 1236, "span": 51}]
+PASS scalars=2 cycles=1247 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=1193 expected_cycle=1194 tag=1 expected_tag=1 fp32=529fdad2 expected=529fdad2
+rc=1
+== seg128_k1_ldx
+RMS_REDUCE seg128_k1_ldx [{"n": 128, "tag": 1, "first_cmd": 0, "export_cmd": 177, "scalar_cycle": 186, "span": 187}]
+PASS scalars=1 cycles=197 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=185 expected_cycle=186 tag=1 expected_tag=1 fp32=50794cde expected=50794cde
+rc=1
+rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-750789-1792477038): exit 0

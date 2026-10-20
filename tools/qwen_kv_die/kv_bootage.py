@@ -26,6 +26,7 @@ No handshake, credit or ready anywhere: configuration nets, sealed before the fi
 import hashlib
 import json
 import os
+import kv_qkh_safe32 as QKH32
 import sys
 from pathlib import Path
 
@@ -149,7 +150,7 @@ def ages_of(sched, tile):
     fia = pv.get('FIRST_INPUT_AGE')
     qk = tile.get('ECTL_QK_ISSUE_AGE')
     return dict(attn=dict(PV_LEAD=A.get('PV_LEAD'), F_DLY=A.get('F_DLY'),
-                          D_QK=None if qk is None else qk - QK_CONSUME,
+                          D_QK=None if qk is None else QKH32.calendar_d_qk(qk, QK_CONSUME),
                           D_RL=None if fia is None else fia - 1 - RL_BASE),
                 pv={str(p): fia for p in (0, 1)},
                 vport={i: dict(RT=v.get('RT'), DQ=v.get('DQ')) for i, v in sorted(sched['vport'].items())},

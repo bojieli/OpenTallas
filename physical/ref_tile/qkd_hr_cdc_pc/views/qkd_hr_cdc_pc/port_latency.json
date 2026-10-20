@@ -26,7 +26,7 @@
     "ot_pin_regs.tsv": "d1470e857c7df3b09932589f3c3875f871440cb79f0d00790007357f60edf088",
     "ot_pin_regs_wrapper.v": "4fd38c4c446d66ce8df660689b6d4a7073be941dfb646d79d64ada7e10efd8e5"
   },
-  "job": "qkd_hr_cdc_pc-c3-50430b600",
+  "job": "qkd_hr_cdc_pc-pg2-506d8829a",
   "ports": {
     "ck_core": {
       "dir": "input",
@@ -133,6 +133,6 @@
   },
   "schema": "opentallas.ref_tile.port_latency.v1",
   "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
-  "source_commit": "50430b600774011f9079b8c035c85068152b8489",
+  "source_commit": "506d8829af7e289c37fa5728dfbbee6e7d136eed",
   "top": "qkd_hr_cdc_pc"
 }

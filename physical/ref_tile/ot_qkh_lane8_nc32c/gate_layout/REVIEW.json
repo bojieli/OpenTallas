@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "ot_qkh_lane8_nc32c",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-20T05:53:00-07:00",
+ "gate_commit": "a005c18a3",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "one compact std cluster, even density; small dense pin corner SW",
+  "pin_spread": "pins on faces, census max32",
+  "clock_entry": "spread 16.1/15.2",
+  "shape": "172.8 square slot (die growth adopted), GRT0, TT +153.7; +2 data edges MEASURED (LK lag 2) and priced (HXK 13->15, D_QK +2, OT_KV_QKH_SAFE32)"
+ },
+ "notes": "COORD 10-20 05:50: APPROVED (supersedes Codex CHANGES: the hold reason is now measured and priced)",
+ "geometry_sha256": "d0d3dc7ca0ca85427ec5ef469d3146dbb775a57bc4ae7e39668799a71d0c4338"
+}

@@ -21,7 +21,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import case_reach as CR  # noqa: E402
 
 
-def load_case(c, contract):
+def load_case(c, contract, coverage=None):
+    # Optional census lets callers refuse incomplete geometry instead of treating
+    # silently dropped instances/pins as evidence of short wires.
+    defects = []
+    seen = set()
+    connected_ports = set()
+    expected = set((contract or {}).get('instances', {}))
     clock_pins = CR.typed_clock_pins(contract) if contract else set()
     man = json.loads((c / 'manifest.json').read_text())
     L = {}
@@ -34,13 +40,45 @@ def load_case(c, contract):
     for hi, lo, name in re.findall(r'\binput\s+(?:wire\s+)?(?:\[(\d+):(\d+)\]\s*)?(\w+)', txt):
         top_inputs.update([f'{name}[{k}]' for k in range(int(lo), int(hi) + 1)] if hi else [name])
     nets, directions = collections.defaultdict(list), {}
-    for m in re.finditer(r'^\s+(\w+) (\w+) \(\n(.*?)\n\s+\);', txt, re.M | re.S):
+    pattern = (r'^\s+(\w+) (\w+) \(\n(.*?)\n\s+\);' if coverage is None else
+               r'^\s+(\w+)(?:\s+#\(.*?\))? (\w+) \(\n(.*?)\n\s+\);')
+    for m in re.finditer(pattern, txt, re.M | re.S):
         mas, inst = m.group(1), m.group(2)
+        seen.add(inst)
+        if expected and inst not in expected:
+            defects.append(dict(instance=inst, master=mas, reason='unexpected_instance'))
         if inst not in pl or mas not in L:
+            defects.append(dict(instance=inst, master=mas,
+                                reason='missing_placement' if inst not in pl else 'missing_lef'))
             continue
         v = pl[inst]; lv = L[mas]
+        if coverage is not None:
+            # Identity defects must refuse qualification without erasing real
+            # endpoints. Geometry still uses the parsed module's LEF below.
+            placed_master = v['master']
+            if not isinstance(placed_master, str) or not placed_master:
+                defects.append(dict(instance=inst, master=mas, reason='missing_placement_master'))
+                continue
+            if mas != placed_master:
+                defects.append(dict(instance=inst, master=mas, placement_master=placed_master,
+                                    reason='placement_master_mismatch'))
+            declared = (contract or {}).get('instances', {}).get(inst, {})
+            if 'master' in declared and declared['master'] != mas:
+                defects.append(dict(instance=inst, master=mas, contract_master=declared['master'],
+                                    reason='contract_master_mismatch'))
+            invalid = [k for k in ('x', 'y', 'w', 'h')
+                       if isinstance(v.get(k), bool) or not isinstance(v.get(k), (int, float))
+                       or not math.isfinite(v[k]) or (k in ('w', 'h') and v[k] <= 0)]
+            if v['orient'] not in ('R0', 'MX', 'MY', 'R180', 'R90', 'R270', 'MXR90', 'MYR90'):
+                invalid.append('orient')
+            if invalid:
+                defects.append(dict(instance=inst, master=mas, fields=invalid,
+                                    reason='invalid_placement_geometry'))
+                continue
         for pm in re.finditer(r'\.(\w+)\((.*?)\)(?:,|$)', m.group(3), re.S):
             p, e = pm.group(1), pm.group(2).strip()
+            if e:
+                connected_ports.add((inst, p))
             items = []
             if e.startswith('{'):
                 parts = [s.strip() for s in e[1:-1].split(',')]
@@ -48,12 +86,26 @@ def load_case(c, contract):
             elif e:
                 items = [(e, p)]
             for s, pn in items:
-                if s.startswith('nc_') or pn not in lv['pins']:
+                if s.startswith('nc_') or (inst, pn) in clock_pins:
                     continue
-                if lv['uses'][pn] == 'CLOCK' or (inst, pn) in clock_pins:
+                if pn not in lv['pins']:
+                    defects.append(dict(instance=inst, master=mas, pin=pn, reason='missing_pin_geometry'))
                     continue
+                if lv['uses'][pn] == 'CLOCK':
+                    continue
+                if lv['directions'][pn] not in ('INPUT', 'OUTPUT'):
+                    defects.append(dict(instance=inst, master=mas, pin=pn, reason='unknown_signal_direction'))
                 nets[s].append((inst, pn, CR.xf(v, lv['w'], lv['h'], *lv['pins'][pn])))
                 directions[(inst, pn)] = lv['directions'][pn]
+    required_ports = {tuple(e[k][:2]) for e in (contract or {}).get('edges', []) for k in ('source', 'sink')}
+    defects.extend(dict(instance=i, port=p, reason='missing_contract_port_connection')
+                   for i, p in sorted(required_ports - connected_ports) if i in seen and i in pl)
+    defects.extend(dict(instance=inst, reason='unparsed_instance') for inst in sorted(expected - seen))
+    if coverage is not None:
+        coverage.update(schema='opentallas.hbm.reach_geometry_coverage.v1',
+                        verdict='FAIL' if defects else 'PASS', expected_instances=len(expected),
+                        parsed_instances=len(seen), defects=defects,
+                        by_reason=dict(collections.Counter(d['reason'] for d in defects)))
     return pl, nets, directions, top_inputs
 
 

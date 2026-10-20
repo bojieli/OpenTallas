@@ -1,0 +1,21 @@
+{
+  "kind": "technology library area MODEL ONLY; emitted source not adopted",
+  "source_json_sha256": "7e48d1149a99d85a2371b92fc6ef0428f1c6efff54b893c6802ca34b17540dc8",
+  "candidate_sha256": "82bf18c8c4d62a937a58e225954461ac9e77f9710e657704ace7a4e3c54eba69",
+  "lib_sha256": {
+    "AO.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "INVBUF.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "OA.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "SEQ.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "SIMPLE.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "limit": 32,
+  "clones": 2194,
+  "old_cells": 309331,
+  "new_cells": 270415,
+  "old_library_area_um2": 33620.50314,
+  "new_library_area_um2": 32356.519200000002,
+  "old_ff": 46297,
+  "new_ff": 47990,
+  "extra_inv_note": "emit may add INV edges after transparent canonicalization; retention area/native census still required"
+}

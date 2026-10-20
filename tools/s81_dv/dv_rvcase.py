@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
 
@@ -128,6 +129,21 @@ def closed_views(refs):
             m = re.match(r'(physical/ref_tile/[^/]+/views/([^/]+))/\2\.lef$', p)
             if m and m.group(2) not in out:
                 out[m.group(2)] = (ref, m.group(1))
+    return out
+
+
+MACRO_DIR = 'physical/asap7_memory_macros_v2'
+
+
+def macro_views(refs, masters):
+    """master -> (ref, dir) for every die-level master that is a memory / PHY macro with a real view under
+    physical/asap7_memory_macros_v2/<m>/<m>.lef (+ <m>_<corner>.lib), e.g. the K-only HBM PHY _k (S81-MU5 10-19);
+    first ref wins. Without this the macro becomes a pin-only stand-in."""
+    out = {}
+    for ref in refs:
+        for m in sorted(masters):
+            if m not in out and git(ref, f'{MACRO_DIR}/{m}/{m}.lef') is not None:
+                out[m] = (ref, f'{MACRO_DIR}/{m}')
     return out
 
 
@@ -357,9 +373,12 @@ def main():
     ap.add_argument('--pin-window', type=float, default=3.0)
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
+    ap.add_argument('--macro-views', action='store_true',
+                    help=f'bind die-level macros with a real view under {MACRO_DIR}/<m>/ (HBM PHY _k, SRAMs) instead of a stand-in')
     a = ap.parse_args()
     out = a.out
     for d in ('views/sta', 'out', 'sta', 'dcc/tools/hbm_die_v15'):
@@ -384,6 +403,9 @@ def main():
     assigns = [x for x in insts if x[0] == '__assign__']
     insts = [x for x in insts if x[0] != '__assign__']
     views = closed_views(a.view_refs)
+    if a.macro_views:
+        for m_, v_ in macro_views(a.view_refs, {x[0] for x in insts if not x[0].endswith('_ASAP7_75t_R')} - set(views)).items():
+            views[m_] = v_
     # MU-DIE-S81/PO2 (10-19): the bind table pins each landing master's view (land_views: record commit + kit) -- the
     # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
     for m_, v_ in T.get('land_views', {}).items():
@@ -437,15 +459,14 @@ def main():
                 lib = git(ref, f'{d}/{m}_{c}.lib')
                 if lib is None:
                     raise SystemExit(f'dv_rvcase: closed view {m} has no {c} lib at {ref}:{d}')
-                if 'pin("ck_o")' in lib and m.startswith('dsfd_dvrlyh_'):
-                    # dv_sta_pilot: ETM self-related ck_o edges -> one ck -> ck_o arc, negative unate (half-cycle view)
-                    lib = SP.patch_ck_o(lib)
-                    i_ = lib.index('S81-DIE4 STA pilot: ETM self-related'); j_ = lib.rindex('timing_sense : positive_unate', 0, i_)
-                    lib = lib[:j_] + 'timing_sense : negative_unate' + lib[j_ + len('timing_sense : positive_unate'):]
-                elif 'pin("ck_o")' in lib:
-                    lib = SP.patch_ck_o(lib)
+                # Source-pinned native forwarding only: never reinterpret SELF ETM tables.
+                validate_native_forwarding(m, c, lib,
+                    lambda artifact: git(ref, f'{d}/{artifact}'))
                 (out / 'views' / 'sta' / f'{m}_{c}.lib').write_text(lib)    # STA corner libs (the GRT reads views/*.lib: TT copy below)
-            (out / 'views' / f'{m}.lib').write_text(git(ref, f'{d}/{m}_tt.lib'))
+            tt_lib = git(ref, f'{d}/{m}_tt.lib')
+            validate_native_forwarding(m, 'tt', tt_lib,
+                lambda artifact: git(ref, f'{d}/{artifact}'))
+            (out / 'views' / f'{m}.lib').write_text(tt_lib)
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     for b in blocks.values():
@@ -688,7 +709,7 @@ def main():
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
     # ------------------------------------------------------------------ GRT run
-    repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4', skip=()) if a.die_repair else '# no die repair\n'
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
@@ -760,7 +781,7 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
 {tie_step}write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
@@ -771,10 +792,10 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 # 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
 # (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
 {repair}{clocks_sdc}
-set_routing_layers -signal M2-M7 -clock M5-M9
+set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M7 0.20
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -815,7 +836,7 @@ foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
 foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 {clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]

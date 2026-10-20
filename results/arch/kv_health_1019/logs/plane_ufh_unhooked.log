@@ -1,0 +1,15 @@
+HEALTH_MISSING_AT_LATENCY src=0 cyc=1042 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1043 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1044 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1045 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1046 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1047 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1048 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1049 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1050 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1051 lat=102
+HEALTH_NOT_STICKY src=0 cyc=1052 lat=102
+KV_HEALTH_PLANE_FAIL errors=4590 checks=112596
+[217282000] %Fatal: tb.sv:57: Assertion failed in tb
+%Error: tb.sv:57: Verilog $stop
+Aborting...

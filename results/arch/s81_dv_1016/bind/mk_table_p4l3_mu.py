@@ -29,7 +29,7 @@ LEAF = {'a': 'ot_s81sl_lep_mu_a (copy-A endpoint; kit s81sl_lepmua, gate pending
 
 
 # MU-DIE-S81/PO2 (10-19): the closed view each landing master binds (closure-record commit + kit) and its reset landing.
-# po2 views (PO-SUBMIT, kit reset_landing 2 stages) carry landing_reset_stages 2; old views (l1 / g3a / p3) carry no key.
+# po2 views (PO-SUBMIT, kit reset_landing 2 stages) and pvrd p4 carry landing_reset_stages 2; old views (l1 / g3a) carry no key.
 # dv_bind's strict landing reset check derives RL from each view's source kit and FAILS any disagreement.
 LAND_VIEWS = {   # master: (record branch, commit, RL)
     'dsfd_dvland_276': ('codex/closure-record-s81dv_land_276-po2-df5c2d585', '4e4a509e266ac84a0ac9f77552936342956f7b21', 2),
@@ -38,7 +38,7 @@ LAND_VIEWS = {   # master: (record branch, commit, RL)
     'dsfd_dvland_562': ('codex/closure-record-s81dv_land_562-po2-df5c2d585', '23d9cbb8cfecf6303a8b3afe1e51d5127640faa6', 2),
     'dsfd_dvland_512': ('codex/closure-record-s81dv_land_512-po2-df5c2d585', '306a99997b1bfc28ebc33ea7948003a6a62e1860', 2),
     'dsfd_dvland_682': ('codex/closure-record-s81dv_land_682-l1-1da4d6aae', 'ff575a79ee8ef4f584b625c7b1dfd732aec483ce', 0),
-    'dsfd_dvland_pvrd': ('codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad', '3b83f2255f8e17caa8eb4ff7e6354214440b817b', 0),
+    'dsfd_dvland_pvrd': ('codex/closure-record-s81dv_land_pvrd-p4-c93cc5ab7', '2c374841ed5e469d99f50be954bb3338623f680b', 2),   # S81-SWEEP2 10-20: p4 CLOSED (TT +56.90 / FF +23.19, reset_landing 2)
 }
 
 

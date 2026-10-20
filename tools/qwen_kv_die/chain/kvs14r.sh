@@ -31,6 +31,11 @@ cd $W
 for c_ in $(python3 -c "import json,glob;print(' '.join(sorted({json.load(open(f)).get('source_binding',{}).get('start_commit','') for f in glob.glob('physical/ref_tile/qkd_astk*/gate_result.json')}-{''})))"); do
   git cat-file -e "$c_^{commit}" 2>/dev/null || git -C $M fetch -q $GH "$c_" || true
 done
+# KV-BIND4 10-19: kv_tile_views identifies a kvs_* tile view by its closure route's source commit (provenance orfs_dir
+# .../<kit>-<tag>-<sha9>/); a view hardened on another branch (attention r16 rv3 @6fdacf98c) needs that commit in the mirror
+for c_ in $(python3 -c "import glob,re;print(' '.join(sorted({m.group(1) for f in glob.glob('physical/ref_tile/qkd_kvs_*/views/*/provenance/view_export.abstract.json') for m in [re.search(r'closure-loop/[^/\"]+-([0-9a-f]{9})/', open(f).read())] if m})))"); do
+  git cat-file -e "$c_^{commit}" 2>/dev/null || { f_=$(git -C $M rev-parse -q --verify "$c_^{commit}" 2>/dev/null) || f_=; [ -n "$f_" ] || git -C $M fetch -q $GH claude/kv-attn2b-1019 || true; }
+done
 miss=
 while IFS=$'\t' read -r n rb sha; do
   case $n in qkd_d2d_static*) f=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static/qkd_d2d_static.lef;;
@@ -44,6 +49,8 @@ export OT_KV_PV_CTL_KIT=qkd_pv_ctl_rstpin_a72 OT_KV_HOST_V14=1 OT_KV_HOST_NORTH=
 export OT_KV_HROOT=1 OT_KV_FANFOLD=1 OT_KV_V144_DW=2462.4 OT_KV_SN_LIFT=432 OT_KV_CTL_BAND=302.4 OT_KV_PVT_HUB_CLEAR=172.8 OT_KV_KV_CHAN_EXTRA=86.4 OT_KV_V144_RLY_FIRST=pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_
 export OT_KV_STATIC_DIE_STRICT=1 OT_KV_TILE_KITS=1 OT_KV_PVFORK_GAP=64.8 OT_KV_ATTN_LAND=1 ${KVS14R_EXTRA:-}
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4,qkd_seq_st,qkd_pvw_s,qkd_pvw_n
+# KV-HEALTH 10-19 (MU release defaults): health plane installed, reset roots on the HOLD273 view
+export OT_KV_HEALTH=${OT_KV_HEALTH:-1} OT_KV_RST_HOLD=${OT_KV_RST_HOLD:-273}
 export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1 OT_KV_D2D_NTX=3
 # KVR-VIEWS 10-19 view defaults (each binds ONLY a CLOSED view; overridable from the caller's environment / KVS14R_EXTRA):
 #  * OT_KV_FACE_LAND=astk_rly_296: the expanded ASTK strip's relay child binds the CLOSED face-landed view
@@ -52,7 +59,11 @@ export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_
 #    (d2ds_view_select.py; fails closed on a mismatch; frame while absent)
 #  * OT_KV_HROOT_VIEW=auto (kvsys_prep): qkd_kvs_hroot binds the CLOSED k1 view as a stand-in (native FAIL)
 export OT_KV_FACE_LAND=${OT_KV_FACE_LAND:-astk_rly_296}
+# KV-BIND4 10-19: GEN9 d2ds kit = the CLOSED KV-SRAM-D2D successor qkd_d2d_static_r7w_sfm2 (sfm2-1c6c02ed7, TT +76.47 /
+#    FF +2.91; top qkd_d2d_static_sfm, TXDP 0x03030416 NTX 3 SAFE_RC 1 SRAMV 2 FEG 1): kv_die.d2ds_kit binds the sfm RTL
+#    with those params, d2ds_view_select its views/qkd_d2d_static_sfm (still fails closed on a TXDP / NTX mismatch)
 export OT_KV_D2DS_VIEW=${OT_KV_D2DS_VIEW:-auto} OT_KV_HROOT_VIEW=${OT_KV_HROOT_VIEW:-auto}
+export OT_KV_D2DS_KIT=${OT_KV_D2DS_KIT:-qkd_d2d_static_r7w_sfm2}
 # Clock evidence and legal landing reservations are mandatory even in diagnostics.
 unset OT_KV_FWD_UNLANDED_DIAG OT_KV_CLK_UNMEASURED_DIAG
 [ -f tools/qwen_kv_die/kv_lane_reach.py ] || {
@@ -74,6 +85,11 @@ if [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ]; then
   say "CLK UNMEASURED DIAGNOSTIC (R=0): $(cat $R/libs/CLK_UNMEASURED_DIAGNOSTIC | head -c 300) -- NOT A DIE RESULT"
   echo "CLK_UNMEASURED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
 fi
+# KV-HEALTH 10-19: an incomplete health plane / HOLD128 reset roots are diagnostics, never a die result
+for mk in HEALTH_DIAGNOSTIC RST_HOLD_DIAGNOSTIC; do
+  if [ -s $R/$mk ]; then say "$mk: $(head -c 400 $R/$mk) -- NOT A DIE RESULT"; echo "${mk}_ONLY" >> $R/NOT_A_DIE_RESULT; fi
+done
+say "HEALTH: $(grep -m1 '^KV_HEALTH {' $R/health_plane.log 2>/dev/null | head -c 600)"
 # KVR-LANDLAG 10-19: landed crossings vs compiled ages (kvsys_prep kv-check; only OT_KV_LAND_LAG_DIAG=1 lets a FAIL through)
 if [ -s $R/LAND_LAG_DIAGNOSTIC ]; then
   say "LAND_LAG DIAGNOSTIC: $(head -c 400 $R/LAND_LAG_DIAGNOSTIC) -- NOT A DIE RESULT"
@@ -108,6 +124,8 @@ unset OT_BIND_DIAGNOSTIC
 [ -s $R/FWD_UNLANDED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/LAND_LAG_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/HEALTH_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/RST_HOLD_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ "${OT_KV_PARAM_DIAG:-0}" = 1 ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"

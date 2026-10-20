@@ -20,7 +20,10 @@ module tb_hbm_smh_attn;
     reg [191:0] command = 0; reg [1098:0] packet = 0; reg [63:0] kv_desc = 0;
     reg xw_en = 0; reg [6:0] xw_addr = 0, xw_grp = 0; reg [2047:0] xw_data = 0;
     wire [42:0] request; wire rv, fault, sfault; wire [11:0] rrow; wire [255:0] rdata;
-`ifdef OT_SMH_ATTN_INT8
+`ifdef OT_SMH_ATTN_I8W
+    // HBM-QINT8B (10-20): the die's ENABLE_INT8 SM + the opt-in WIDE INT8 front (command mode 3, ot_hbm_sm_i8w_front)
+    ot_hbm_accel_smh_attn #(.KVMUT(DMUT), .ENABLE_INT8(1), .INT8W(1)) u_dut (
+`elsif OT_SMH_ATTN_INT8
     // SMB-INT8 (10-19): the opt-in INT8 packet path (command[116] = packed INT8 line); the default build is unchanged
     ot_hbm_accel_smh_attn #(.KVMUT(DMUT), .ENABLE_INT8(1)) u_dut (
 `else

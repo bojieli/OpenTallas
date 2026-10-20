@@ -1,0 +1,25 @@
+GATE INFO pin_regs: pin registers opted out: the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes t
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 11 port group(s) left to the IO placer (ANY): ['ts0', 'ts1', 'ts2', 'ts3']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc7 for 24 GB memory; disk pick 23 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_pv_join_s32_p216_20261020-042053.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_pv_join_s32_p216_20261020-042053.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 193 s (gate total 2499 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 4621, 'pin_rectangles': 4621, 'pin_track_checked': 4621, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2159eb1091454573212d62cdcbda231b0781707dd58b9914e6dfde2369fb428b
+GATE WARN pins: 11 port group(s) left to the IO placer (ANY): ['ts0', 'ts1', 'ts2', 'ts3']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE WARN util: synthesized std area 13800 um2 + macros 0 in core 44808: util 31%  -> FIX: set "std_area_um2": 13800 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qwen_tp8_pv_join_s32_t cells 106,556 flops 18,561 depth 491.8 ps util 0.2736 reach 0.0 um (3.0 s)
+GATE WARN textbook.clock_domain: clock root port clk: 18,561 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.util_channel: utilisation 27.4% outside 45%-65% (std 12261 + macro 0 um2 in 44808 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE WARN textbook.clock_guidance: clock root port:clk: 18,561 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,561 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 353.5..388.2 ps (spread 34.7), boundary mean 367.1; tt insertion all 267.4..300.3 ps (spread 32.9), boundary mean 280.8; ff insertion all 215.1..247.3 ps (spread 32.2), boundary mean 228.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_pv_join_s32_p216/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack 79.8 ps (e.g. u_ot_pr_core.g_join[15].u_add/x_dba_oh[24]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 7.981049154892617e-11 hold WNS 1.2077894240292153e-11
+GATE WARN clock_rule: root port:clk: 18,561 sinks on the largest root; measured TT insertion 300.3 ps, FF insertion 247.3 ps, TT pin-flop spread 30.6 ps, FF pin-flop spread 29.2 ps; WARN: 18,561 sinks on one clock root > 15,000 (guidance); insertion 300.3 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-kv-pvj-gate-packet-1020/physical/ref_tile/qkd_pv_join_s32_p216/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-kv-pvj-gate-packet-1020/physical/ref_tile/qkd_pv_join_s32_p216/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 39.90% used; GRT 566 s
+PRE_ROUTE_GATE: WARN (0 fail, 7 warn)
+GATE: qkd_pv_join_s32_p216/gate_result.json written (exact staged source binding; commit it with the kit)

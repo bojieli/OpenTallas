@@ -1,0 +1,61 @@
+{
+  "schema": "toksim.hbm.su_vop_record.v1",
+  "record": "ds_q_norm_ss",
+  "design": "ds_ar",
+  "N": 1280,
+  "rows": 1,
+  "roles": {
+    "A": "vm"
+  },
+  "mods": {
+    "cp_m1": 2,
+    "cm_m1": 2
+  },
+  "red": "sum",
+  "sfu_lanes": false,
+  "lanes_per_quarter": 128,
+  "issues": 10,
+  "emissions": 10,
+  "issue_to_write": 28,
+  "RR": 12,
+  "WR": 10,
+  "fill_slack": 1,
+  "drain_slack": 2,
+  "dispatch_edge": 4,
+  "first_emit": 21,
+  "last_emit": 39,
+  "last_lg_write": 236,
+  "retire_edge": 246,
+  "cycles_serial": 242,
+  "cycles_stream_833ps": 322.67,
+  "edges": 254,
+  "expected_vm_writes": 1,
+  "expected_scalars": 1,
+  "reduction": {
+    "rows": 1,
+    "finals": {
+      "0": "4b800006"
+    },
+    "model_check": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)"
+  },
+  "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree",
+  "pretree": {
+    "on": true,
+    "qpr": 1,
+    "quarter_run_words": 1280,
+    "blocks_per_row": 10,
+    "pt_red": 80
+  },
+  "fixture": {
+    "shape": "production ds_q_norm_ss N1280 rows1",
+    "input_join_leaves": [
+      4096,
+      1,
+      2,
+      3
+    ],
+    "canonical_squared_result": "4b800006",
+    "wrong_join_squared_result": "4b800007",
+    "reason": "canonical (2^24+1)+(4+9) rounds to2^24+12; wrong (2^24+4)+(1+9) gives2^24+14"
+  }
+}

@@ -1,0 +1,11 @@
+SVCRS_CONFIG sram_macro=0 static_io=0 start2=8192
+SVCRS_SO t_sot=2549 dso=6322 so_start=8871 pv_last=6891 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8988 last_w=9250 gw_first=9295 gw_last=9773 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 75 70 70 65 65 60 70 65 70 65 65 60 70 65 75 70
+SVCRS_ST hsdrop=-1 st_rg W=01 E=01 bad=0
+SVCRS_HOST sent=96 acks=96 credits=8/8 errors=0
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1338 go=5337 last_fold_score=5645 pv_sent=6287 pv_early=0 pv_words=160 pv_first=6732 pv_last=6891 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1774 go=5337 first_score=5486 last_score=5645 end=9779 root_beats=160 sc_checked=2512 sc_errors=0 order_errors=0 se_checked=2512 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=10080 verdict=PASS
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs.sv:636: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 3341.483 s; speed 3.017 ns/s
+- Verilator: cpu 3341.310 s on 17 threads; allocated 16932 MB

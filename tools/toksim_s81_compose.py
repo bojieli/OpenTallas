@@ -39,24 +39,124 @@ F_CLK = 1.2e9
 MEASURED = ('measured-release-RTL', 'measured-newest-element-RTL', 'measured-current-RTL')
 SCHEMA = 'opentallas.toksim_s81.v1'
 GROUP_KINDS = ('head', 'embed', 'hops', 'draft', 'wave', 'accept')
+EDGES = None
+
+
+def admitted(o, exact_ops):
+    """Strict admission (TOKSIM-S81B 10-19): a measured op folds only when its record says bit_exact true.  Two
+    exceptions, both carrying no cycles of their own: a 0-cycle op merged into a covering op, and a curation mapping
+    (zz_curation.json) of an op that another element record measured bit-exact."""
+    if o.get('grade') not in MEASURED:
+        return False
+    if o.get('bit_exact') is True:
+        return True
+    if o.get('bit_exact') is None and o.get('cycles') == 0 and not o.get('by_old') and not o.get('per_layer'):
+        return True
+    return o.get('bit_exact') is None and o.get('_curation') and o['op'] in exact_ops
 
 
 def load_elements(d):
-    """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms)."""
-    ops, slots, files = {}, {}, []
+    """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms); xdie part -> ratio."""
+    global EDGES
+    EDGES = None
+    ops, slots, xparts, files, excluded, inserts = {}, {}, {}, [], [], []
+    recs = []
     for f in sorted(glob.glob(str(d / '*.json'))):
-        e = json.load(open(f))
-        files.append(dict(file=str(Path(f).relative_to(ROOT)), cls=e.get('cls'), written=e.get('written'),
-                          branch=e.get('agent_branch')))
-        for o in e.get('ops', []):
-            if o.get('grade') not in MEASURED and not (o.get('slot') and o.get('term_grade')):
+        e = json.loads(Path(f).read_text())
+        rel = str(Path(f).relative_to(ROOT))
+        files.append(dict(file=rel, cls=e.get('cls'), written=e.get('written'), branch=e.get('agent_branch')))
+        if e.get('edge_ledger'):
+            if EDGES is not None: raise ValueError('multiple edge ledgers')
+            EDGES = dict(e, file=rel)
+        cur = Path(f).name.startswith('zz_curation')
+        recs += [dict(o, file=rel, _curation=cur) for o in e.get('ops', [])]
+    exact_ops = {o['op'] for o in recs if not o['_curation'] and o.get('bit_exact') is True}
+    for o in recs:
+        if o.get('compose_hook') and o.get('grade') == 'composed-measured-ops':
+            proof = next((x for x in recs if x['file'] == o['file'] and x['op'] == 'wave.handoff'
+                          and x.get('bit_exact') is True and x.get('grade') in MEASURED), None)
+            if proof is None or proof.get('cycles') != o['compose_hook'].get('handoff_cycles'):
+                raise ValueError('composed op lacks matching exact handoff evidence: ' + o['op'])
+            ops[(o.get('dag_cls'), o['op'])] = o
+            continue
+        if not admitted(o, exact_ops):
+            if o.get('grade') in MEASURED or o.get('grade', '').startswith('proposed'):
+                excluded.append(dict(op=o['op'], file=o['file'], grade=o['grade'], bit_exact=o.get('bit_exact'),
+                                     cycles=o.get('cycles'), reason='proposal: incomplete CAP/deadline/compiler qualification' if o.get('grade', '').startswith('proposed') else 'not bit-exact'))
+            continue
+        if o.get('xdie_part'):
+            # an on-die leg / crossing part of the base xdie terms, measured: scale every term of that part
+            xparts[o['xdie_part']] = dict(ratio=float(o['cycles']) / float(o['old_cycles_per_instance']),
+                                          grade=o['grade'], file=o['file'])
+        elif o.get('slot'):
+            slots[o['slot']] = o
+        elif o.get('insert'):
+            # a measured op with no DAG node (TOKSIM-S81C LEAD decision 10-19: attn.idx.q field projection): inserted
+            # serially on the edge insert.after -> insert.before in every listed layer, at its measured cycles
+            inserts.append(o)
+        elif o.get('cycles') is not None or o.get('by_old') or o.get('per_layer'):
+            ops[(o.get('dag_cls'), o['op'])] = o
+    return ops, slots, xparts, files, excluded, inserts
+
+
+def insert_nodes(dag, inserts):
+    """A copy of the DAG with the insert records' nodes spliced in (old cycles 0, so the base is unchanged)."""
+    if not inserts:
+        return dag
+    dag = dict(dag, nodes=list(dag['nodes']), edges=list(dag['edges']))
+    N = {n['id']: n for n in dag['nodes']}
+    for o in inserts:
+        ins = o['insert']
+        for L, prefix in [(L, prefix) for L in ins['layers'] for prefix in ('', 'V.')]:
+            a, b = f'{prefix}L{L}.{ins["after"]}', f'{prefix}L{L}.{ins["before"]}'
+            if a not in N or b not in N:
                 continue
-            o = dict(o, file=str(Path(f).relative_to(ROOT)))
-            if o.get('slot'):
-                slots[o['slot']] = o
-            elif o.get('cycles') is not None or o.get('by_old') or o.get('per_layer'):
-                ops[(o.get('dag_cls'), o['op'])] = o
-    return ops, slots, files
+            nid = f'{prefix}L{L}.{o["op"]}'
+            nb = N[b]
+            n = dict(id=nid, label=nid, group=nb.get('group'), cls=o.get('dag_cls'), op=o['op'], kind='inserted',
+                     base_cycles=0.0, cycles=0.0, layer=L, critical=bool(N[a].get('critical') and nb.get('critical')),
+                     src=dict(grade='inserted', record=o.get('file')))
+            dag['nodes'].append(n)
+            N[nid] = n
+            es = []
+            for e in dag['edges']:
+                if e['src'] == a and e['dst'] == b:
+                    es += [dict(e, dst=nid), dict(src=nid, dst=b, cycles=0)]
+                else:
+                    es.append(e)
+            dag['edges'] = es
+    return dag
+
+
+def crossing_phases(n):
+    op = n['id']
+    if n.get('cls') not in ('coll', 'hop') or op.endswith('lead_flit'):
+        return 0
+    if op.endswith('unplaced_hops'): return 62
+    if op.endswith('token.return'): return 8
+    return 2 if op.endswith('allreduce') else 1
+
+
+def edge_delta(n, override=None):
+    """Price only source-age edges not explicitly covered by the admitted component record."""
+    if EDGES is None:
+        return {}, {}
+    required = collections.Counter()
+    ledger = EDGES['edge_ledger']
+    merged = override and override.get('cycles') == 0 and not override.get('by_old')
+    # DAG idx.q is the SU qbank; idx.q_field is the separate inserted field projection.
+    if n.get('cls') == 'field' and n.get('op') != 'attn.idx.q' and not merged:
+        for key in ('CAPC2_PINPIPE', 'CAP_EDLD'):
+            if key in ledger: required[key] = ledger[key]['edges']
+    phases = crossing_phases(n)
+    for key in ('XDIE_GUARD2', 'LEPCAP_INPIPE'):
+        if key in ledger and phases: required[key] = phases * ledger[key]['edges']
+    if 'VPX_P6' in ledger and n['id'].endswith('attn.a_allgather'):
+        required['VPX_P6'] = ledger['VPX_P6']['edges']
+    file = Path((override or {}).get('file', '')).name
+    includes = EDGES.get('included_by_record', {}).get(file, {}).get(n.get('op'), {})
+    covered = {k: min(required.get(k, 0), value) for k, value in includes.items() if required.get(k)}
+    return {k: value - covered.get(k, 0) for k, value in required.items() if value - covered.get(k, 0)}, covered
 
 
 def node_cycles(n, ov):
@@ -116,7 +216,16 @@ def solve(dag, cyc):
     return end[last], path[::-1]
 
 
-def compose(wl, base, dag, ops, slots):
+def xdie_part(p, xparts):
+    """(cycles, grade) of one base xdie term, with a measured part override applied."""
+    x = xparts.get(p.get('part'))
+    if x and p['grade'] == 'priced':
+        return p['total'] * x['ratio'], x['grade']
+    return p['total'], p['grade']
+
+
+def compose(wl, base, dag, ops, slots, xparts=None):
+    xparts = xparts or {}
     gk = {g['id']: g['kind'] for g in dag['groups']}
     bterms = base['workloads'][wl]['terms']
     xd = {}
@@ -126,6 +235,8 @@ def compose(wl, base, dag, ops, slots):
     rows, cyc_new, cyc_old = [], {}, {}
     by_grade = collections.Counter()
     per_op = {}
+    node_grades, composed_ops = {}, []
+    node_edges, source_age_rows = {}, []
     for n in dag['nodes']:
         L = lkey(n, gk)
         old = float(n['cycles'])
@@ -133,13 +244,16 @@ def compose(wl, base, dag, ops, slots):
         if n.get('cls') in ('coll', 'hop'):
             parts = xd.get(f'{L}.xdie.{n["id"]}', [])
             if parts:
-                E = sum(p['total'] for p in parts)
-                cyc_new[n['id']] = E
+                vals = [xdie_part(p, xparts) for p in parts]
+                cyc_new[n['id']] = sum(c for c, _ in vals)
+                node_grades[n['id']] = collections.Counter()
+                for c, g in vals: node_grades[n['id']][g] += c
                 if n.get('critical'):
-                    for p in parts:
-                        by_grade[p['grade']] += p['total']
+                    for c, g in vals:
+                        by_grade[g] += c
             else:
                 cyc_new[n['id']] = old
+                node_grades[n['id']] = collections.Counter(priced=old)
                 if n.get('critical'):
                     by_grade['priced'] += old
             continue
@@ -147,13 +261,15 @@ def compose(wl, base, dag, ops, slots):
             (n.get('src') or {}).get('grade'), 'priced')
         new, how, tail = old, None, 0.0
         ov = ops.get((n.get('cls'), n.get('op'))) or ops.get((None, n.get('op')))
-        if ov:
+        if ov and not ov.get('compose_hook'):
             c, how = node_cycles(n, ov)
             if c is not None:
                 new = c
                 g = ov['grade'] if how == 'exact' else 'measured-scaled'
                 tail = float(ov.get('tail_priced') or 0.0)
         cyc_new[n['id']] = new + tail
+        node_grades[n['id']] = collections.Counter({g: new})
+        node_grades[n['id']]['priced'] += tail
         if n.get('critical'):
             by_grade[g] += new
             by_grade['priced'] += tail
@@ -165,8 +281,59 @@ def compose(wl, base, dag, ops, slots):
             r['grades'][g] += new
             if tail:
                 r['grades']['priced'] += tail
+    # Source-age costs remain priced; existing component budgets are not charged twice.
+    for n in dag['nodes']:
+        ov = ops.get((n.get('cls'), n.get('op'))) or ops.get((None, n.get('op')))
+        # A shape-unmatched record is not the source of this node's costs.
+        if ov and not ov.get('compose_hook') and node_cycles(n, ov)[0] is None:
+            ov = None
+        delta, covered = edge_delta(n, ov)
+        node_edges[n['id']] = collections.Counter(delta)
+        cost = sum(delta.values())
+        cyc_new[n['id']] += cost
+        node_grades[n['id']]['priced-edge'] += cost
+        if n.get('critical'):
+            by_grade['priced-edge'] += cost
+            row = per_op.get((n.get('cls'), n.get('op')))
+            if row is not None:
+                row['cycles'] += cost; row['grades']['priced-edge'] += cost
+            if delta or covered:
+                source_age_rows.append(dict(node=n['id'], record=(ov or {}).get('file'),
+                                            added=delta, already_included=covered))
+    # Composite wave positions inherit every component's grade; no blanket measured promotion.
+    for n in dag['nodes']:
+        ov = ops.get((n.get('cls'), n.get('op'))) or ops.get((None, n.get('op')))
+        if not ov or not ov.get('compose_hook'):
+            continue
+        hook = ov['compose_hook']
+        group = [x for x in dag['nodes'] if x.get('group') == hook['group']
+                 and x['id'] not in hook.get('exclude', [])]
+        if not group or any(x['id'] == n['id'] or (ops.get((x.get('cls'), x.get('op'))) or {}).get('compose_hook') for x in group):
+            raise ValueError('empty or recursive composite group: ' + hook['group'])
+        grades = collections.Counter()
+        for x in group:
+            grades.update(node_grades[x['id']])
+        grades['measured-release-RTL'] += float(hook['handoff_cycles'])
+        new = sum(grades.values())
+        old = cyc_new[n['id']]
+        if n.get('critical'):
+            by_grade.subtract(node_grades[n['id']]); by_grade.update(grades)
+            row = per_op[(n.get('cls'), n.get('op'))]
+            row['cycles'] += new - old
+            row['grades'].subtract(node_grades[n['id']]); row['grades'].update(grades)
+        cyc_new[n['id']] = new
+        node_grades[n['id']] = grades
+        node_edges[n['id']] = sum((node_edges[x['id']] for x in group), collections.Counter())
+        composed_ops.append(dict(node=n['id'], group=hook['group'], excluded=hook.get('exclude', []),
+                                 old_cycles=old, cycles=round(new, 1),
+                                 by_grade={g: round(v, 1) for g, v in sorted(grades.items()) if v},
+                                 source_nodes=[x['id'] for x in group], evidence=ov['evidence']))
     # base layer / adjust terms that are not DAG nodes (p4l DV deltas, scan option D, L20 split, residual)
     extra = []
+    for key, cycles in (EDGES or {}).get('per_token', {}).items():
+        extra.append(dict(slot='edges.' + key, kind='edge', cycles=cycles, grade='priced-edge',
+                          base_cycles=0, base_grade=None, evidence=EDGES['file']))
+        by_grade['priced-edge'] += cycles
     for t in bterms:
         if t['kind'] == 'xdie' or t['slot'].endswith('.die'):
             continue
@@ -190,25 +357,50 @@ def compose(wl, base, dag, ops, slots):
     T_solve, path = solve(dag, cyc_new)
     T_solve += sum(e['cycles'] for e in extra)
     tau = base['workloads'][wl].get('tau') or 1.0
-    tot = sum(by_grade.values())
-    meas = sum(v for k, v in by_grade.items() if k in MEASURED)
-    phy = by_grade.get('modelled-PHY', 0.0)
+    solved_grades = collections.Counter()
+    for node in path:
+        solved_grades.update(node_grades[node])
+    for e in extra:
+        solved_grades[e['grade']] += e['cycles']
+    # Explicit DAG edge latency, if present, has no new functional measurement.
+    path_edge_cycles = T_solve - sum(cyc_new[i] for i in path) - sum(e['cycles'] for e in extra)
+    solved_grades['priced'] += path_edge_cycles
+    selected_grades = by_grade if fixed >= T_solve else solved_grades
+    selected_path = crit if fixed >= T_solve else path
+    tot = sum(selected_grades.values())
+    meas = sum(v for k, v in selected_grades.items() if k in MEASURED)
+    phy = selected_grades.get('modelled-PHY', 0.0)
+    fixed_meas = sum(v for k, v in by_grade.items() if k in MEASURED)
+    solved_meas = sum(v for k, v in solved_grades.items() if k in MEASURED)
     out = dict(
         workload=wl, tau=base['workloads'][wl].get('tau'),
         T_cycles_fixed=round(fixed, 1), T_cycles_solved=round(T_solve, 1),
-        per_accepted_cycles=round(fixed / tau, 1),
-        tok_s=round(F_CLK * tau / fixed, 1), tok_s_solved=round(F_CLK * tau / T_solve, 1),
+        T_cycles=round(max(fixed, T_solve), 1),
+        per_accepted_cycles=round(max(fixed, T_solve) / tau, 1),
+        tok_s=round(F_CLK * tau / max(fixed, T_solve), 1),
+        tok_s_fixed=round(F_CLK * tau / fixed, 1), tok_s_solved=round(F_CLK * tau / T_solve, 1),
+        rate_basis='max(committed critical path composition, re-solved DAG)',
+        grade_accounting_basis='same path as conservative rate (fixed if tied, otherwise longest)',
+        per_op_accounting_basis='committed critical path diagnostics',
         base_T_cycles=base['workloads'][wl]['T_token_cycles'], base_tok_s=base['workloads'][wl]['tok_s'],
         price_of_record=base['workloads'][wl]['price_of_record'],
         solved_path_changed=set(path) != set(crit),
-        by_grade={k: round(v, 1) for k, v in sorted(by_grade.items())},
+        by_grade={k: round(v, 1) for k, v in sorted(selected_grades.items())},
+        by_grade_fixed={k: round(v, 1) for k, v in sorted(by_grade.items())},
+        by_grade_solved={k: round(v, 1) for k, v in sorted(solved_grades.items())},
+        pct_measured_fixed=round(100 * fixed_meas / sum(by_grade.values()), 2),
+        pct_measured_solved=round(100 * solved_meas / sum(solved_grades.values()), 2),
         pct_measured=round(100 * meas / tot, 2) if tot else 0.0,
         pct_measured_on_chip=round(100 * meas / (tot - phy), 2) if tot - phy else 0.0,
         pct_modelled_phy=round(100 * phy / tot, 2) if tot else 0.0,
         per_op=sorted(({**r, 'old_cycles': round(r['old_cycles'], 1), 'cycles': round(r['cycles'], 1),
                         'grades': {k: round(v, 1) for k, v in r['grades'].items()}} for r in per_op.values()),
                       key=lambda r: -r['cycles']),
-        extra_terms=extra)
+        extra_terms=extra, composed_ops=composed_ops,
+        source_age_accounting=source_age_rows,
+        edge_delta_total=round(selected_grades.get('priced-edge', 0), 1),
+        edge_deltas=dict(sum((node_edges[nid] for nid in selected_path),
+                            collections.Counter((EDGES or {}).get('per_token', {})))))
     return out
 
 
@@ -218,14 +410,16 @@ def multi_user(base, res):
         b = base.get('multi_user', {}).get(wl)
         if not b:
             continue
-        users = b['users']
-        period = b['period_cycles']
-        T_user = r['per_accepted_cycles'] if wl == 'mtp' else r['T_cycles_fixed']
+        cal = (EDGES or {}).get('mu_calendar', {}).get(wl) or b
+        users = cal['users']
+        period = cal['period_cycles']
+        T_user = r['per_accepted_cycles'] if wl == 'mtp' else r['T_cycles']
         # each user emits a token (AR) / a verify step (MTP) every max(own token cycles, calendar period)
-        step = r['T_cycles_fixed'] if wl == 'mtp' else T_user
+        step = r['T_cycles'] if wl == 'mtp' else T_user
         eff = max(step, period)
         tau = r['tau'] or 1.0
-        mu[wl] = dict(users=users, calendar_period_cycles=period, calendar_record=b['record'],
+        mu[wl] = dict(users=users, calendar_period_cycles=period, calendar_record=cal['record'],
+                      qualification='partial component composition; full MU release RTL token pass still open',
                       calendar_grade='slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run',
                       per_user_tok_s=round(F_CLK * tau / eff, 1), aggregate_tok_s=round(users * F_CLK * tau / eff, 0),
                       bound='calendar period' if period >= step else 'per-user token',
@@ -233,18 +427,49 @@ def multi_user(base, res):
     return mu
 
 
-def build(elem_dir):
-    base = json.load(open(BASE))
-    ops, slots, files = load_elements(elem_dir)
-    res = {wl: compose(wl, base, json.load(open(p)), ops, slots) for wl, p in DAGS.items()}
-    return dict(schema=SCHEMA, design='ds_rom', die='S81 p4l-MU (release source GEN mu4c 19bf4121e)', clock_hz=F_CLK,
+def build(elem_dir, scenario=None):
+    base = json.loads(BASE.read_text())
+    ops, slots, xparts, files, excluded, inserts = load_elements(elem_dir)
+    for o in inserts:
+        ops[(o.get('dag_cls'), o['op'])] = o
+    if scenario == 'wqbp-p126':
+        record = json.loads((elem_dir / 'WQBP.json').read_text())
+        for o in record['ops']:
+            ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str((elem_dir / 'WQBP.json').relative_to(ROOT)))
+    if scenario and scenario.startswith('calpipe'):
+        # S81-CALPIPE 10-20: pipelined compiler calendars (scenarios/calpipe/CALPIPE.json: wo_b P127, wo_a P231) on
+        # top of the WQBP wq_b P126 record; calpipe-wob / calpipe-woa = one op alone (step-by-step reporting)
+        sd = OUT / 'scenarios' / 'calpipe'
+        keep = dict(**{'calpipe-wob': ['attn.wo_b'], 'calpipe-woa': ['attn.wo_a']}).get(scenario)
+        if scenario == 'calpipe':
+            for o in json.loads((elem_dir / 'WQBP.json').read_text())['ops']:
+                ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str((elem_dir / 'WQBP.json').relative_to(ROOT)))
+        for f in sorted(sd.glob('*.json')):
+            for o in json.loads(f.read_text())['ops']:
+                if keep is None or o['op'] in keep:
+                    if not admitted(o, set()):
+                        raise ValueError('calpipe record not admissible: ' + o['op'])
+                    ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str(f.relative_to(ROOT)))
+    res = {wl: compose(wl, base, insert_nodes(json.loads(p.read_text()), inserts), ops, slots, xparts) for wl, p in DAGS.items()}
+    mu = multi_user(base, res)
+    if scenario:
+        for value in mu.values(): value['qualification'] = 'PROPOSED scenario only; CAP/deadline/compiler contract unresolved'
+    return dict(scenario=scenario or 'release-partial', schema=SCHEMA, design='ds_rom', die='S81 p4l-MU (release source GEN mu4c 19bf4121e)', clock_hz=F_CLK,
                 inputs=dict(base=str(BASE.relative_to(ROOT)), dags={k: str(v.relative_to(ROOT)) for k, v in DAGS.items()},
                             elements=files),
-                workloads=res, multi_user=multi_user(base, res))
+                release_qualification=('PROPOSED ONLY: WQBP P126 CAP/deadline/compiler contract unresolved; not eligible for release or MU adoption' if scenario else 'OPEN: partial component composition; source/transport/head/draft/MU release gates remain'),
+                admission='measured grade AND bit_exact true; composites inherit component grades plus verified handoff; source-age edges remain priced',
+                excluded_not_bit_exact=[o for o in excluded if o.get('bit_exact') is not True],
+                excluded_not_qualified=excluded,
+                inserted_nodes=[dict(op=o['op'], cycles=o.get('cycles'), grade=o['grade'], insert=o['insert'], file=o['file'])
+                                for o in inserts],
+                xdie_parts_measured={k: dict(v, ratio=round(v['ratio'], 6)) for k, v in xparts.items()},
+                workloads=res, multi_user=mu)
 
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument('--scenario', choices=['wqbp-p126', 'calpipe', 'calpipe-wob', 'calpipe-woa'], help='write an explicitly unqualified proposal; never overwrite baseline cycles.json')
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
@@ -257,17 +482,17 @@ def main():
             ok &= d < 1.0
         print('SELFTEST', 'PASS' if ok else 'FAIL')
         sys.exit(0 if ok else 1)
-    r = build(OUT / 'elements')
+    r = build(OUT / 'elements', a.scenario)
     s = json.dumps(r, indent=1, sort_keys=True) + '\n'
-    p = OUT / 'cycles.json'
+    p = OUT / 'cycles.json' if not a.scenario else OUT / 'scenarios' / (a.scenario + '.json')
     if a.check:
         same = p.exists() and p.read_text() == s
         print('CHECK', 'PASS' if same else 'FAIL (rerun without --check)')
         sys.exit(0 if same else 1)
-    OUT.mkdir(parents=True, exist_ok=True)
+    p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(s)
     for wl, w in r['workloads'].items():
-        print(f'{wl}: T {w["T_cycles_fixed"]:,} cyc (solved {w["T_cycles_solved"]:,}) -> {w["tok_s"]:,} tok/s; measured '
+        print(f'{wl}: T fixed {w["T_cycles_fixed"]:,} cyc (solved {w["T_cycles_solved"]:,}; conservative {w["T_cycles"]:,}) -> {w["tok_s"]:,} tok/s; measured '
               f'{w["pct_measured"]}% (on-chip {w["pct_measured_on_chip"]}%, PHY {w["pct_modelled_phy"]}%)')
     for wl, m in r['multi_user'].items():
         print(f'MU {wl}: {m["users"]} users -> {m["aggregate_tok_s"]:,.0f} agg ({m["per_user_tok_s"]} per user, {m["bound"]})')

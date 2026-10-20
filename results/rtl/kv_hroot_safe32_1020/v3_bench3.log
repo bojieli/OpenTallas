@@ -1,0 +1,7 @@
+MISMATCH edge=1001
+MISMATCH edge=1002
+MISMATCH edge=1003
+SAFE32 FAIL errors=10 checked=2091 mut=3
+[21006000] %Fatal: tb.sv:26: Assertion failed in tb
+%Error: results/rtl/kv_hroot_safe32_1020/tb.sv:26: Verilog $stop
+Aborting...

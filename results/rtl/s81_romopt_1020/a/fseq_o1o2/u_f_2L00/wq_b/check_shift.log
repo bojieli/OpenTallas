@@ -1,0 +1,56 @@
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 3195415316, 0), (344, 4, (2, 1, 3), 3201429808, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 1 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 1030446336, 0), (344, 4, (2, 1, 3), 1045183296, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 2 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 1046305088, 0), (344, 4, (2, 1, 3), 3180006784, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 3 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 3178419392, 0), (344, 4, (2, 1, 3), 3181210240, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 4 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 3187536128, 0), (344, 4, (2, 1, 3), 1052931904, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 5 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 3188124160, 0), (344, 4, (2, 1, 3), 3190377544, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 6 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 1043857168, 0), (344, 4, (2, 1, 3), 1035611648, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 7 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 4 segments [2] of 3
+COVERAGE row 6 segments [] of 3
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 6, (2, 1, 3), 1045686592, 0), (344, 4, (2, 1, 3), 1054132236, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 8 mutant=None rows=7 fixture_rows=7 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 2 segments [] of 3
+COVERAGE row 4 segments [] of 3
+PLAN_MISMATCH predicted 6 words, got 3; first diff ((354, 4, (0, 2, 3), 3207724148, 0), (354, 5, (0, 2, 3), 3170299696, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 9 mutant=None rows=6 fixture_rows=6 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 2 segments [] of 3
+COVERAGE row 4 segments [] of 3
+PLAN_MISMATCH predicted 6 words, got 3; first diff ((354, 4, (0, 2, 3), 1043172909, 0), (354, 5, (0, 2, 3), 1070875353, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 10 mutant=None rows=6 fixture_rows=6 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+COVERAGE row 0 segments [] of 3
+COVERAGE row 2 segments [] of 3
+COVERAGE row 4 segments [] of 3
+PLAN_MISMATCH predicted 6 words, got 3; first diff ((354, 4, (0, 2, 3), 3218926372, 0), (354, 5, (0, 2, 3), 1068212510, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wq_b phase 11 mutant=None rows=6 fixture_rows=6 errors=4 END edges=4209 ret_words=98 xo_checked=4207 fault=0
+TOKSIM_FGU_SEQ FAIL op attn.wq_b PER 126 phases 11 rows 74 fixture_rows 74 go0 63 last_ret 1621 span 1558 errors 52 ['UNASSIGNED_RET edge 343 17cec562810018447', 'UNASSIGNED_RET edge 353 07f897fd010000087', 'UNASSIGNED_RET edge 361 17f02d04010018047']

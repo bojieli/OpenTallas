@@ -2,21 +2,8 @@
  "cls": "CURATION",
  "written": "2026-10-19 19:10 PT",
  "agent_branch": "claude/toksim-s81-1019",
- "note": "parent TOKSIM-S81 curation: maps the four class records onto DAG nodes (definitions, merged ops, per-layer shapes, priced tails); loaded last, wins per op key",
+ "note": "parent TOKSIM-S81 curation: maps the four class records onto DAG nodes (definitions, merged ops, per-layer shapes, priced tails); loaded last, wins per op key | TOKSIM-S81C 10-19: ffn.down / ffn.experts_gu maps removed (FSDN / FSGU records now cover every DAG shape class)",
  "ops": [
-  {
-   "op": "attn.wq_b",
-   "dag_cls": "field",
-   "grade": "measured-newest-element-RTL",
-   "cycles": null,
-   "by_old": {
-    "1039.9": 3359,
-    "1559.6": 3359
-   },
-   "tail_priced": 195,
-   "evidence": "FIELD.json attn.wq_b (fullsix vehicle, 15 epochs x 224 + 231 + 1)",
-   "note": "tail 195 = CAP EDLY 24 + VP hand-off 28 + die wire 143 (old), priced, not in the measured span"
-  },
   {
    "op": "eng.dot",
    "dag_cls": "field",
@@ -259,6 +246,22 @@
    "grade": "measured-release-RTL",
    "cycles": 0,
    "note": "the measured topk_local root span already contains the p4l 1-stack reader"
+  },
+  {
+   "op": "attn.a_proj",
+   "dag_cls": "field",
+   "grade": "measured-release-RTL",
+   "bit_exact": null,
+   "by_old": {
+    "628.0": 531
+   },
+   "per_layer": {
+    "L2": 1677,
+    "L20": 1670,
+    "L24": 1670
+   },
+   "evidence": "FSMALL.json dense628->531 + APSP.json sparse per-layer fullfield sequence; explicit curation of bit-exact records",
+   "note": "Combine coverage maps without replacing unmatched sparse layers"
   }
  ]
 }

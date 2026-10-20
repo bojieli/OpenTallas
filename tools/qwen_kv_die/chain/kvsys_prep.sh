@@ -13,6 +13,13 @@ mkdir -p $O/libs
 # (kv_port_bind_v2.sh / die_port_bind_kv.py re-import kv_die: without the flags they used the non-V144_R6 vport binding
 # and reported 256 phantom undriven pvin epoch bits on kvs13h)
 env | grep -E '^OT_KV_[A-Z0-9_]*=' | sed -E "s/^([^=]*)=(.*)$/export \1='\2'/" > $O/kv_flags.env
+# KV-BIND8 10-20: the generated static tile RTL the die binds (kv_static_die.RTL_FILE for THESE flags) must exist and equal
+# the producer's text: d11r bound a stale _mu_ba body (legacy boot/programme/ownership, sha df665451) and d11s selected an
+# absent _hs_mu_ba.sv.  Fail closed before any GEN step (regenerate with kv_static_die.py --rtl and commit).
+if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_static_die.py --check > "$O/tile_rtl_check.log" 2>&1 || {
+    tail -3 "$O/tile_rtl_check.log"; echo 'KV static tile RTL missing / STALE for the run flags: regenerate (--rtl) and commit'; exit 8; }
+fi
 # v1.4 (OT_KV_HOST_V14=1): real HOST root core + 128 die-placed PC slices + PLL model (kv_die.py --host-v14)
 H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
@@ -28,6 +35,25 @@ if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18,
   python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$RPV" > "$O/rst_pin_view_audit.json" || {
     cat "$O/rst_pin_view_audit.json"; echo 'OT_KV_RST_PIN_REG: selected view is not native PASS'; exit 6;
   }
+  # KV-HEALTH 10-19 (OT_KV_RST_HOLD, default 273 = MU release): the health retirement reset contract needs every region
+  # held >= 263 edges after a re-assert (source clear + plane depth + skew); qkd_rst_region_pr_h273 (9-bit hold) binds
+  # when its CLOSED view audits PASS.  Absent view: HOLD128 _pr stays bound and RUN/RST_HOLD_DIAGNOSTIC marks the run.
+  if [ "${OT_KV_RST_HOLD:-273}" = 273 ]; then
+    # KV-BIND4 10-19: the native-pin successor qkd_rst_region_pr_h273b (dedicated b launch flop; h273's pin b launched
+    # 223.8 > 220 ps) binds first when its CLOSED view audits PASS; h273 stays the fallback.
+    HPV=physical/ref_tile/qkd_rst_region_pr_h273b/views/qkd_rst_region_pr_h273b
+    HPV2=physical/ref_tile/qkd_rst_region_pr_h273/views/qkd_rst_region_pr_h273
+    if python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV" --cell qkd_rst_region_pr_h273b > "$O/rst_hold_view_audit.json" 2>/dev/null; then
+      RPV=$HPV; export OT_KV_RST_HOLD_CELL=qkd_rst_region_pr_h273b; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV"
+    elif python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV2" --cell qkd_rst_region_pr_h273 > "$O/rst_hold_view_audit.json" 2>/dev/null; then
+      RPV=$HPV2; export OT_KV_RST_HOLD_CELL=qkd_rst_region_pr_h273; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV2"
+    else
+      export OT_KV_RST_HOLD=128
+      echo "qkd_rst_region_pr_h273b / _h273 views absent / not native PASS: HOLD128 bound, health reset contract (263) UNPROVEN" > "$O/RST_HOLD_DIAGNOSTIC"
+      cat "$O/RST_HOLD_DIAGNOSTIC"
+    fi
+  fi
+  export OT_KV_RST_HOLD=${OT_KV_RST_HOLD:-273}
   BV="$BV --view qkd_rst_region=$RPV"
 fi
 # KV-PLAN5 10-18 (OT_KV_D2DS_VIEW=1): the static D2D end qkd_d2ds on the CLOSED qkd_d2d_static r7t view (NTX = 3,
@@ -51,10 +77,22 @@ if [ "${OT_KV_D2DS_VIEW:-0}" != 0 ]; then
 # The k1 kit's qkd_kvs_hroot module is byte-identical to this tile file's; never bound under OT_KV_HROOT_LAND=1 (the
 # pin-registered _hl tile is a different RTL: its own kit must close first).  Absent view -> frame (ASSUMED) as before.
 if [ "${OT_KV_HROOT_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_TILE_KITS:-0}" = 1 ] && \
-   [ "${OT_KV_HROOT:-0}" = 1 ] && [ "${OT_KV_FANFOLD:-0}" = 1 ] && [ "${OT_KV_HROOT_LAND:-0}" != 1 ]; then
-  HRV=physical/ref_tile/${OT_KV_HROOT_KIT:-qkd_kvs_hroot_k1}/views/qkd_kvs_hroot
-  if [ -f $HRV/qkd_kvs_hroot.lef ] && [ -f $HRV/qkd_kvs_hroot_tt.lib ] && [ -f $HRV/qkd_kvs_hroot_ff.lib ]; then
-    BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV (stand-in: native FAIL view, CLOSED)"
+   [ "${OT_KV_HROOT:-0}" = 1 ] && [ "${OT_KV_FANFOLD:-0}" = 1 ]; then
+  # KV-BIND7 10-20: the k1 kit view is now the CLOSED pin-registered _hl view (qkd_kvs_hroot_k1-k1-da14c0bdf, own-R native
+  # PASS spread 42.5/42.0) = the matching view under OT_KV_HROOT_LAND=1 (a same-port stand-in otherwise).  Under
+  # OT_KV_HROOT_S32=1 the first CLOSED safe32 view (s32v4 / s32v4b, top qkd_kvs_hroot_safe32 = the _hs tile) binds; until
+  # one closes the _hl view is the labelled same-port stand-in.
+  HRN=qkd_kvs_hroot; HRV=physical/ref_tile/${OT_KV_HROOT_KIT:-qkd_kvs_hroot_k1}/views/qkd_kvs_hroot; HRWHY="stand-in (same ports)"
+  [ "${OT_KV_HROOT_LAND:-0}" = 1 ] && [ "${OT_KV_HROOT_S32:-0}" != 1 ] && HRWHY="matching _hl view (CLOSED da14c0bdf)"
+  if [ "${OT_KV_HROOT_S32:-0}" = 1 ]; then
+    for k in qkd_kvs_hroot_s32v4 qkd_kvs_hroot_s32v4b; do
+      v=physical/ref_tile/$k/views/qkd_kvs_hroot_safe32
+      if [ -f $v/qkd_kvs_hroot_safe32.lef ] && [ -f $v/qkd_kvs_hroot_safe32_tt.lib ] && [ -f $v/qkd_kvs_hroot_safe32_ff.lib ]; then
+        HRV=$v; HRN=qkd_kvs_hroot_safe32; HRWHY="matching safe32 view ($k CLOSED)"; break; fi
+    done
+  fi
+  if [ -f $HRV/$HRN.lef ] && [ -f ${HRV}/${HRN}_tt.lib ] && [ -f ${HRV}/${HRN}_ff.lib ]; then
+    BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV ($HRWHY)"
   else echo "OT_KV_HROOT_VIEW: no closed view at $HRV (frame ASSUMED)"; fi
 fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
@@ -161,7 +199,7 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --out $O/libs/views.json > $O/bind.log
 if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_d2ds' in d['bound'] else 1)" $O/libs/views.json \
   || { echo "OT_KV_D2DS_VIEW: qkd_d2ds view did not bind (bind.log)"; exit 7; }; echo "OT_KV_D2DS_VIEW: qkd_d2ds bound to $D2DSV"; fi
-if [ -n "${HRV:-}" ] && [ -f $HRV/qkd_kvs_hroot.lef ]; then
+if [ -n "${HRV:-}" ] && [ -f $HRV/${HRN:-qkd_kvs_hroot}.lef ]; then
   if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_kvs_hroot' in d['bound'] else 1)" $O/libs/views.json; then
     echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot bound to $HRV (stand-in)"
   else echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot view did NOT bind (bind.log) -- frame kept"; [ "${OT_KV_HROOT_VIEW:-auto}" = 1 ] && exit 7; fi
@@ -220,6 +258,18 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+fi
+# KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
+# landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
+# stack->core forwarded lanes, final sticky -> kvs_attn.ufh (owner 10-19 per-layer health retirement, STATUS 1982).
+# RUN/health_plane.json (+ health_successor.json for kv_retirement_contract).  A missing source export or a plane deeper
+# than the reserved STATUS writes RUN/HEALTH_DIAGNOSTIC (kvs14r: NOT a die result).  OT_KV_HEALTH_NETLIST_ONLY=1: before
+# the qkd_hp_or2 view closes (bind checks only).
+if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_health_plane.py install --run $O ${OT_KV_HEALTH_NETLIST_ONLY:+--netlist-only} > $O/health_plane.log 2>&1 \
+    || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
+  grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
+  EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)

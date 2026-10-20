@@ -61,8 +61,11 @@ def test_stations_change_ap_ofs_and_the_plan_record_is_stale():
     m['plan'] = dict(ahub_ages=KSD.ahub_ages(dict(relay_stages=RS)))
     r = KSP.run(m, table(stations=2))
     assert r['params']['ahub_ages']['AP_OFS'][STACKS.index('EN')] == 2 + 10 - 46
-    stale = next(f for f in r['fails'] if f['id'] == 'PLAN_PARAMS_STALE')
+    # KV-BIND8 10-20: plan drift is reported (info PLAN_PARAMS_DRIFT); the hub binding itself still FAILS (AHUB_OFS_BOUND)
+    assert not any(f['id'] == 'PLAN_PARAMS_STALE' for f in r['fails'])
+    stale = next(f for f in r['info'] if f['id'] == 'PLAN_PARAMS_DRIFT')
     assert any(d['param'] == f'AP_OFS[{STACKS.index("EN")}]' for d in stale['diffs'])
+    assert any(f['id'] == 'AHUB_OFS_BOUND' for f in r['fails'])
 
 
 def test_hub_bound_defaults_fail_against_the_table():
@@ -111,7 +114,8 @@ def test_face_land_compiler_ages():
         importlib.reload(K2)
         import kv_static_programme as C
         fl = C._face_land()
-        assert fl['enabled'] and fl['i_ctl'] == 1 and fl['F_DLY_delta'] == 1 and fl['rst_release_max'] == 3
+        assert fl['enabled'] and fl['i_ctl'] == 1 and fl['F_DLY_delta'] == 1 and fl['rst_release_max'] == 5   # KV-BIND3: astk rc1 (2 landing + 3 relay)
+        assert fl['rst_release'] == dict(kvs_attn=3, astk_rly_296=5, hr_core_queue=3)
     finally:
         os.environ.pop('OT_KV_FACE_LAND')
         importlib.reload(K2)

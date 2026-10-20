@@ -1,0 +1,12 @@
+{
+  "status": "FAILED_NATIVE_NO_GATE",
+  "max": 34,
+  "violations": 16,
+  "role_errors": [],
+  "remaining": "A1 nonfinite combined bypass-code32-bit mask+2controlpins; eightlanes times2adders",
+  "netlist": {
+    "path": "/work/native_ot_qkh_lane8_nc32c/results/asap7/ot_qkh_lane8_nc32c/base/1_2_yosys.v",
+    "sha256": "3977059cee0fcbb8567a2422aa760294282da5d38cdc69e04cba8db038e351e9"
+  },
+  "source": "arithmetic_r5_source.sv.txt"
+}

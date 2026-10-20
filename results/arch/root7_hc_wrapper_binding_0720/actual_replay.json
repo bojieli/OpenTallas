@@ -1,0 +1,52 @@
+{
+  "hbm_hcq_tree16_c1": {
+    "original_gate_verdict": "PASS",
+    "consumed": 624,
+    "exact_original_executed_helper_view": {
+      "ok": true,
+      "why": "gate-consumed source and gate-executed overlays match; exact reviewed HC terminal-verdict stdout repair compatible: rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh"
+    },
+    "manifest_unchanged": true,
+    "gate_unchanged": true,
+    "causals": {
+      "rtl": {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+        "ok": false,
+        "why": "route source differs from staged snapshot: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      },
+      "physical_spec": {
+        "path": "physical/ref_tile/hbm_hcq_tree16_c1/spec.json",
+        "ok": false,
+        "why": "route source differs from staged snapshot: physical/ref_tile/hbm_hcq_tree16_c1/spec.json, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      }
+    },
+    "failed_verdict_preserved": true
+  },
+  "hbm_hcq_tree16_c1b": {
+    "original_gate_verdict": "WARN",
+    "consumed": 624,
+    "exact_original_executed_helper_view": {
+      "ok": true,
+      "why": "gate-consumed source and gate-executed overlays match; exact reviewed HC terminal-verdict stdout repair compatible: rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh"
+    },
+    "manifest_unchanged": true,
+    "gate_unchanged": true,
+    "causals": {
+      "rtl": {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+        "ok": false,
+        "why": "route source differs from staged snapshot: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      },
+      "physical_spec": {
+        "path": "physical/ref_tile/hbm_hcq_tree16_c1b/spec.json",
+        "ok": false,
+        "why": "route source differs from staged snapshot: physical/ref_tile/hbm_hcq_tree16_c1b/spec.json, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      }
+    },
+    "failed_verdict_preserved": true
+  }
+}

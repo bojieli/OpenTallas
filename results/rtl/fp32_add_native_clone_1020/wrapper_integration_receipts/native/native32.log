@@ -1,0 +1,5 @@
+textbook_lint: WARN ot_hdc_fp32_add_lat_fan32 cells 3,500 flops 629 depth 288.4 ps util None reach None um (0.1 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":7,"flops":7,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=629 root=port:clk rule=PASS: 629 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN reset_landing: reset port rst_n: 7 sinks (7 flops, 0 hard-child / macro pins, e.g. genblk1.g_native7.u_native.c2602/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth
+textbook_lint: WARN boundary: 66 input->register endpoint(s) > 3 levels (worst b[9]->genblk1.g_native7.u_native.c2810/D 8 lv, b[9]->genblk1.g_native7.u_native.c2809/D 8 lv, b[9]->genblk1.g_native7.u_native.c2567/D 8 lv): register the boundary (pin flops / registered outputs)

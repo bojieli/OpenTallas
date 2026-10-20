@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Token-pass tracker, MU curve and freeze checklist (lane TOKEN-REC, 2026-10-19).
+"""Token-pass tracker, MU curve and freeze checklist (lane TOKEN-REC 2026-10-19; TOKEN-LEAD2 2026-10-20: measured RECORDS, TAG-named outputs).
 
 Owner rule (token-pass-release-gate-1018): the token pass = per-layer RTL sims on the CURRENT RELEASE dies + static schedule
 + inter-die traffic, real cycles, single-user AND multi-user, for every design.  This tool does not measure anything: it
@@ -29,7 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COMP = ROOT / 'results/arch/token_path_1018'
 OUT = ROOT / 'results/token_pass'
-STATUS_ASOF = '2026-10-19 18:30 PDT'
+STATUS_ASOF = '2026-10-20 08:40 PDT'
+TAG = '1020_0840'
 
 RELEASE_DIES = {
     'ds_rom': 'S81 p4l-MU (520 dies; die gates est. 10-22..24)',
@@ -42,62 +43,80 @@ RELEASE_DIES = {
 E = lambda el, g, ev, own, tid: dict(element=el, grade=g, evidence=ev, owner=own, tree=tid)
 ELEMENTS = {
     ('ds_rom', '1u'): [
-        E('L0 dense attention (die)', 'DIAG', 'S81 10-13 layer record (old die); p4l cut_0S L0 replay PASS partial', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.1'),
-        E('L2 sparse attention + indexer (die)', 'DIAG', 'old 10-13 record; p4l index reader/helper transport missing', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.2'),
-        E('L14 Engram layer (die)', 'DIAG', 'old 10-13 record; p4l row-read integration open', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.3'),
-        E('L20 compressed layer (die)', 'REL', 'partial: L20 k=6 split bk_sel job shapes RTL bench (Verilator 5.050), split.json; full layer open', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.4'),
-        E('LM head (die)', 'DIAG', 'old record; real fold/gain/G8-NX-XB producer missing on p4l', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.5'),
-        E('MTP draft layer (die)', 'DIAG', 'old record; draft body after real head producer', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.6'),
-        E('Layer bench cut from p4l GEN netlist', 'MISS', 'VPX slice bench base PASS; DV layer-programme compiler ED23 FAIL', 'LEAD2-S81/TOK2', 'TOK.DS.BENCH'),
-        E('TP4 collectives + hops (array)', 'REL', 'xdie_s81_1019: 12,096 beats bit-exact by compiled deadline; G8R2 p4m die RTL + HF-3 lanes + KP4 PHY', 'LEAD2-S81/XDIE', 'TOK.DS.XDIE'),
-        E('Off-chip PHY/switch legs', 'PRICE', 'modelled-PHY constants (17.5% of AR token cycles)', 'LEAD2-S81/XDIE', 'TOK.DS.XDIE'),
+        E('Per-family component benches composed (p4l release RTL)', 'REL', 'partial: toksim-s81e 1fd2cdf8f (sparse a_proj front L8/14/28/32/36 measured): AR 836.0 at 81.02% measured / MTP 2,653.9 at 72.21%; GL24 64/64 owner views PASS d5fcf23d5; PHY 12.0% modelled; S81-WQBP P126/P231 candidate 901.8/2,832 (36163250c) awaits COORD adoption', 'TOKEN-LEAD2', 'TOK.DS'),
+        E('L0 dense attention (die)', 'REL', 'partial: cut_7 L0 MU-A slice 564/564 + hop 480/480 PASS, 3 mutants CAUGHT (S81-TOK4 63b8a0d5e); full layer open', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.1'),
+        E('L2 sparse attention + indexer (die)', 'DIAG', 'old 10-13 record; p4l index reader/helper transport missing', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.2'),
+        E('L14 Engram layer (die)', 'DIAG', 'old 10-13 record; CAP L2/L14 512CW+512VP capture PASS (component); row-read integration open', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.3'),
+        E('L20 compressed layer (die)', 'REL', 'partial: L20 k=6 split bk_sel job shapes RTL bench (Verilator 5.050), split.json; full layer open', 'LEAD4-S81/L20', 'TOK.DS.LAYER.4'),
+        E('LM head (die)', 'DIAG', 'old record; real fold/gain/G8-NX-XB producer missing on p4l', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.5'),
+        E('MTP draft layer (die)', 'DIAG', 'old record; draft body after real head producer', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.6'),
+        E('DV layer-programme compiler (full layer)', 'MISS', 'private CAP512/VP512 source-derived proof 2ea06839c; 8-frame lowering + consumer retire/deadline OPEN', 'TOKEN-LEAD2/S81-CAP', 'TOK.DS.BENCH.1'),
+        E('TP4 collectives + hops (array)', 'REL', 'xdie_s81: SU strict 12,096/12,096 bit-exact (480895e39); c_g1 guard-2 WIN/INV PASS', 'TOKEN-LEAD2', 'TOK.DS.XDIE.5'),
+        E('Off-chip PHY/switch legs', 'PRICE', 'modelled-PHY constants (12.0% of AR / 10.9% of MTP token cycles)', 'TOKEN-LEAD2', 'TOK.DS.XDIE.5'),
     ],
     ('ds_rom', 'mu'): [
-        E('46-user AR / 10-user MTP calendar', 'PRICE', 'calendar_ar/mtp.json brute-force lemma PASS (modelled, 0 collisions)', 'LEAD2-S81/MU', 'MU.TOK'),
-        E('Multi-user collectives (3 users)', 'REL', 'xdie_s81_1019 mu_real: 18,132 beats bit-exact, 3,840 MU tags, 0 faults', 'LEAD2-S81/XDIE', 'TOK.DS.XDIE.5'),
-        E('Multi-user collectives on MU die ceaed19c4', 'MISS', 'xdie-s81-mu u/a/c/x jobs running', 'LEAD2-S81/XDIE', 'TOK.DS.XDIE.5'),
-        E('Host plane N outstanding + MTP seed', 'REL', 'partial: SEQHOST_MU on die master; NS47 ph0-5 PASS, 6-10 live', 'LEAD2-S81/MU', 'MU.TOK.DS4'),
-        E('Per-user layer benches', 'MISS', 'TOK.DS.LAYER.MU FAIL (QF child F1@1801); producers owed', 'LEAD2-S81/TOK2', 'TOK.DS.LAYER.MU'),
-        E('lep tag + second landing + A/B select', 'MISS', 'v1 matrix live; v2 unrun', 'LEAD2-S81/LEPCAP', 'MU.TOK.DS3'),
+        E('46-user AR / 10-user MTP calendar', 'REL', 'partial: slot issue measured on release seq_host/fixed_issue RTL, 0 collisions (cal1 152d70002); per-user = 1u compose', 'TOKEN-LEAD2', 'MU.S81.CAL'),
+        E('Multi-user collectives on MU die (u5, guard 2)', 'REL', 'u_ar46d 278,024 beats 46/46 + u_mtp10d 60,440 beats 10/10 WIN/INV PASS; realshift ar46r/mtp10r live ep5 (8h49m at 08:40, ~888k cycles, no check receipt)', 'TOKEN-LEAD2', 'TOK.DS.XDIE.5'),
+        E('Host plane N outstanding + MTP seed', 'REL', 'partial: SEQHOST_MU on die master; NS47 ph0-5 PASS, 6-10 state owed', 'LEAD4-S81/MU', 'MU.TOK.DS4'),
+        E('Per-user layer benches', 'REL', 'partial: L0 MU-A slice (prog_L0_mu_A) 564/564 PASS; other layers + QF producers owed', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.MU'),
+        E('lep tag + second landing + A/B select', 'MISS', 'lepmu{a,h}_dr gates; hier v2 d7cb08cb2 unrun', 'LEAD4-S81/MUBUF3', 'MU.TOK.DS3'),
     ],
     ('qwen_rom', '1u'): [
-        E('L0 layer (compute die)', 'DIAG', 'qwen_layer_tput_1013 old vehicle (98.4% of token cycles); no dv2f19 layer run', 'LEAD2-QW/QW-TOK3', 'TOK.QW.LAYER.1'),
-        E('Lc chained layer x35 (compute die)', 'DIAG', 'old 10-13; near+far matvec exact on real ROM (component only)', 'LEAD2-QW/QW-TOK3', 'TOK.QW.LAYER.2'),
-        E('LM head', 'DIAG', 'old 10-13 head 3,048 cyc; waits last-layer TP8 gold', 'LEAD2-QW/QW-TOK3', 'TOK.QW.LAYER.3'),
-        E('KV attention 1u (KV die)', 'MISS', 'r2 u1 sim running on repaired GEN9 vehicle (no cycles yet)', 'KV-TOK3', 'TOK.QW.KV'),
-        E('Layer bench from GEN netlists + programme compiler', 'MISS', 'tt_ctlm deployment programme (G-C3) missing', 'LEAD2-QW/QW-TOK3', 'TOK.QW.BENCH'),
-        E('36-layer TP4 golden', 'MISS', 'canonical gold P7712/8191 running on ep5', 'QW-TOK3', 'TOK.QW.BENCH.2'),
-        E('Compute <-> KV D2D (1u)', 'DIAG', 'pair_r2 PASS on dv2f14bn (pre-release); dh2 1u PASS', 'QW-TOK3', 'TOK.QW.XDIE'),
-        E('TP8 all-reduce windows', 'DIAG', 'old vehicle windows 2,184/layer; TP8 unit bench 862 evidence only', 'LEAD2-QW/QW-TOK3', 'TOK.QW.SCHED'),
+        E('L0 + chained layer x35 (compute die, GEN3 rel)', 'REL', 'partial: toksim-qw2 4eeeaf287 gen3 DV ages + priced die edges folded: 254,125 cyc/token, 62.8% REL / 26.9% DIAG / 9.8% PRICED', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.2'),
+        E('Attention return (dr words + o_proj stream)', 'DIAG', 'no gen3 attn bench mode (compiled 119 vs measured 98)', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.1'),
+        E('LM head', 'PRICE', 'priced 3,101 cyc; head span RTL owed (QW-SEGCAL head WIP)', 'LEAD4-QW', 'TOK.QW.LAYER.3'),
+        E('KV attention 1u (KV die GEN9)', 'MISS', 'tb_kvattn_rel job3 (src fafc28231, ep5 out_fafc28231) still in Verilator build at 08:40 (live since 02:20); KV service 1,779 on kvs14c stand-in = DIAG', 'TOKEN-LEAD2/TOK-KVATT', 'TOK.QW.KV'),
+        E('Layer-programme compiler (tt_ctlm deployment)', 'MISS', 'tt_ctlm deployment programme (G-C3) missing; STORE BLOCKED', 'LEAD4-QW', 'TOK.QW.BENCH.1'),
+        E('36-layer TP4 golden', 'MISS', 'canonical driver done 21:13; gold4 ISA golds generated (not RTL), provenance FAIL retained', 'LEAD4-QW', 'TOK.QW.BENCH.2'),
+        E('Compute <-> KV D2D (1u)', 'DIAG', 'dh2 1u PASS; shared D2D transport native proof c92c2be9d; release pair owed', 'LEAD4-QW', 'TOK.QW.XDIE'),
+        E('TP8 all-reduce windows', 'REL', 'TP8 AR E 286 per window measured (composer REL)', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.SCHED'),
     ],
     ('qwen_rom', 'mu'): [
-        E('4-user calendar (op-level, chunked head)', 'PRICE', 'mu_qwen_1018: 14,054 agg modelled occupancy / 12,568 priced', 'LEAD2-QW/QW-TOK3', 'MU.TOK.QW'),
-        E('2-user sequencer (layer granularity)', 'DIAG', 'mu_qwen_1018/tok pos2: 9,290.9 agg measured cmd stream; windows old+priced', 'LEAD2-QW/QW-TOK3', 'MU.TOK.QW'),
-        E('NU4 stage cuts', 'REL', 'partial: NU4 stage cuts PASS on dv2f18dh2', 'LEAD2-QW/QW-TOK3', 'MU.TOK.QW'),
-        E('4-user KV attention', 'MISS', 'KV-TOK3 u4 after u1; G7 WSQK QK-only', 'KV-TOK3', 'TOK.QW.KV'),
-        E('4-user compute <-> KV pair', 'MISS', 'cal_mu SYSFACE MU PASS; 4u pair TB owed', 'QW-TOK3', 'TOK.QW.XDIE'),
-        E('4-user golden (gold4)', 'MISS', 'armed trigger after canonical gold', 'QW-TOK3', 'MU.TOK.QW'),
+        E('4-user link schedule (OVL D2D pair full frame)', 'DIAG', '12,601.2 agg scheduled (users 4,383/4,109/2,192/1,918; die edges folded, toksim-qw2 4eeeaf287); OVL not in gen3 -> NEWEST, not release', 'TOKEN-LEAD2/TOK-QW', 'MU.TOK.QW'),
+        E('NU4 stage cuts', 'REL', 'partial: NU4 stage cuts PASS on dv2f18dh2', 'LEAD4-QW', 'MU.TOK.QW'),
+        E('4-user KV attention', 'MISS', 'u4 T1k/4k/8k in tb_kvattn_rel job2 (terminated); KV-TOK3 controlled_n identity FAIL', 'TOKEN-LEAD2/TOK-KVATT', 'MU.QW.KVATT'),
+        E('4-user compute <-> KV pair (serial MU calendar)', 'MISS', 'release uses serial MU calendar; paired 4u TB absent', 'LEAD4-QW', 'TOK.QW.XDIE'),
+        E('4-user golden (gold4)', 'MISS', 'four shared-prefix ISA golds generated, not RTL', 'LEAD4-QW', 'MU.TOK.QW'),
     ],
     ('hbm_gen_ds', '1u'): [
-        E('L0 / L1 / L2 / L3 MoE / L14 / L20.. layers (die)', 'PRICE', 'priced_layers (S2 compiler schedule) + LH-REPRICE3 measured unit latencies', 'LEAD2-HBM/L2H-TOK', 'TOK.HDS.VEH.1'),
-        E('d4g record -> per-unit image compiler (R6)', 'MISS', 'R6 native run live on ep5 / earlier exit 1; classify terminal', 'LEAD2-HBM/L2H-TOK', 'TOK.HDS.VEH.2'),
-        E('Quadrant (SW) cutter + bench', 'MISS', 'needs GEN2e4 die.v + R6 multi-group', 'LEAD2-HBM/L2H-TOK', 'TOK.HDS.VEH.4'),
-        E('Cross-die collectives (AG/RS144/COLL)', 'DIAG', 'xdie_hbm_1018/1019 on GEN2 RTL; die must bind COLL ROWS256/AR_ITER', 'LEAD2-HBM/L2H-TOK', 'TOK.HDS.XDIE'),
-        E('Unit latency re-price on GEN2e4 depths', 'PRICE', 'hbm_reprice_1019 (LH-REPRICE3); DS 1,406.1 accepted, -35% vs 1,905.4', 'LEAD2-HBM/L2H-BW', 'TOK.HDS.PRICE'),
+        E('Per-unit benches composed on the static schedule', 'REL', 'partial: toksim-hbm 20c323c47 combined 1,109.7; used cycles 12.3% bound-measured / 63.8% measured-not-bound / 24.0% model', 'TOKEN-LEAD2/TOK-HBM', 'TOK.HDS'),
+        E('SU reductions through bound HH-6 pre-tree', 'MISS', 'PRETREE2 a5cc6f083: max4/phased4 PASS (Qwen); census --measured fold owed', 'LEAD4-HBM/PRETREE', 'TOK.HDS'),
+        E('d4g record -> per-unit image compiler (R6)', 'MISS', 'R6 native exit 1 17:48; collect + classify', 'LEAD4-HBM/L2H-TOK', 'TOK.HDS.VEH.2'),
+        E('Quadrant (SW) cutter + bench', 'MISS', 'needs GEN2e4 die.v + R6 multi-group', 'LEAD4-HBM/L2H-TOK', 'TOK.HDS.VEH.4'),
+        E('Cross-die collectives (AG/RS144/COLL)', 'DIAG', 'xdie_hbm on GEN2 RTL; die must bind COLL ROWS256/AR_ITER', 'LEAD4-HBM/L2H-TOK', 'TOK.HDS.XDIE'),
     ],
     ('hbm_gen_ds', 'mu'): [
-        E('HBM multi-user', 'PRICE', 'NOT IN THIS RELEASE (owner 10-18 23:45: next release); 2-request admission study only', 'HBM-NEXT', '-'),
+        E('HBM multi-user', 'PRICE', 'NOT IN THIS RELEASE (owner 10-18 23:45: next release; HNEXT 4-user 4,251 priced)', 'HNEXT', '-'),
     ],
     ('hbm_gen_qwen', '1u'): [
-        E('L0 layer (d4g vehicle)', 'DIAG', 'L0p0 rec17/23 PASS, rec6/10 FAIL -> R6; on GEN2 vehicle', 'LEAD2-HBM/L2H-TOK', 'TOK.HQ.LAYER'),
-        E('L1..L35 + head', 'PRICE', 'HGI-1 sim exact TP8 + price_per_layer (TP8 948.8 basis)', 'LEAD2-HBM/L2H-TOK', 'TOK.HQ'),
-        E('TP8 all-reduce (cross-die)', 'DIAG', 'xdie_hbm_1019 Qwen AR on GEN2 RTL (2,926 cyc/layer)', 'LEAD2-HBM/L2H-TOK', 'TOK.HQ'),
-        E('Qwen fixture / calibration on d4g', 'MISS', 'unqualified', 'LEAD2-HBM/L2H-TOK', 'TOK.HQ'),
+        E('Per-unit benches composed (packed INT8 SM.MATVEC + SU.VOP)', 'REL', 'partial: toksim-hbm 20c323c47 combined 372.2; used cycles 10.6% bound / 80.8% not-bound / 8.6% model', 'TOKEN-LEAD2/TOK-HBM', 'TOK.HQ'),
+        E('Softmax reductions (pre-tree + MAX)', 'MISS', 'as-built ingress-bound exp_sum 22,316 vs 590/rec; bound pre-tree+MAX est ~990 (unmeasured)', 'LEAD4-HBM/PRETREE', 'TOK.HQ'),
+        E('L0 layer (d4g vehicle)', 'DIAG', 'L0p0 rec17/23 PASS, rec6/10 FAIL -> R6; on GEN2 vehicle', 'LEAD4-HBM/L2H-TOK', 'TOK.HQ.LAYER'),
+        E('TP8 all-reduce (cross-die)', 'DIAG', 'xdie_hbm_1019 Qwen AR on GEN2 RTL (2,926 cyc/layer); COLL 1.24x', 'LEAD4-HBM/L2H-TOK', 'TOK.HQ'),
     ],
     ('hbm_gen_qwen', 'mu'): [
-        E('HBM multi-user', 'PRICE', 'NOT IN THIS RELEASE (owner 10-18 23:45: next release)', 'HBM-NEXT', '-'),
+        E('HBM multi-user', 'PRICE', 'NOT IN THIS RELEASE (owner 10-18 23:45: next release)', 'HNEXT', '-'),
     ],
 }
+
+# Composition of record per design (TOKEN-LEAD2 10-20): latest measured records, not the 10-18 compose index.
+RECORDS = {
+    'ds_rom': dict(src='claude/toksim-s81e-1020 1fd2cdf8f results/token_pass/measured_s81_1019/cycles.json (on Codex GL24 d5fcf23d5)',
+                   ar=836.0, ar_pct=81.02, mtp=2653.9, mtp_pct=72.21, mu_ar=(46, 836.0, 38456.0), mu_mtp=(10, 2653.9, 26539.0),
+                   prev='834.0 AR / 2,649.1 MTP (10-20 02:45 status)'),
+    'qwen_rom': dict(src='claude/toksim-qw2-1020 4eeeaf287 results/token_pass/measured_qwen_1019', ar=4724.0, ar_pct=62.8,
+                     mu=(4, 1917.6, 12601.2, '4,383 / 4,109 / 2,192 / 1,918'), prev='5,141.3 (10-20 02:45 status, die edges not folded)'),
+    'hbm_gen_ds': dict(src='claude/toksim-hbm-1019 20c323c47 measured_hbm_1019/combined_1020', ar=1109.7, ar_pct=12.3, pct_label='bound-measured; 76.1% incl. measured-not-bound',
+                       prev='1,233.4 (10-19 compose incl. LH-REPRICE3)'),
+    'hbm_gen_qwen': dict(src='claude/toksim-hbm-1019 20c323c47 measured_hbm_1019/combined_1020', ar=372.2, ar_pct=10.6, pct_label='bound-measured; 91.4% incl. measured-not-bound',
+                         prev='403.2 (10-19 compose incl. LH-REPRICE3)'),
+}
+
+FLAGS = [
+    'S81 MTP 2,653.9 accepted tok/s is BELOW the owner floor (DS ROM MTP > ~3,000, owner 10-15); AR 836.0 is -31% vs the 1,212.6 compose (owner ledger: <= 15% total/design); S81-WQBP candidate 901.8/2,832 still below the floor. Coordinator/owner decision needed. S81-RATE3 real-die compiled 966.2 AR / 2,998.2 MTP (012a3a074) is a compiler component only: full-stage NOT ADMITTED (FIN repair e551b1e9a local), so it is not the record.',
+    'HBM-Qwen 372.2 tok/s as-built (softmax reductions ingress-bound); HH-6 pre-tree + MAX bind is the release lever (est ~990, unmeasured). HBM-RATE7 (main c87a7bd14) composes 1,341.1 DS / 1,011.3 Qwen component-only; COLLFUSE PRETREE TB/runner source-map owed before it becomes a measured record.',
+    'Qwen KV attention on GEN9 has NO measurement yet: tb_kvattn_rel job3 Verilator make still running on ep5 at 08:40 (since 02:20, no record); Qwen 1u falls 5,141.3 -> 4,724.0 once priced die edges are folded (toksim-qw2).',
+]
 
 # A100 80GB baseline (owner compare-against-a100-same-node-1018; HANDOFF section 2): Qwen3-8B measured on Vast.
 A100 = [dict(users=1, per_user_tok_s=114.8, aggregate_tok_s=114.8, grade='MEASURED (A100 80GB, Vast)'),
@@ -118,43 +137,40 @@ def tally(rows):
     return t
 
 
-def verdict(d, u):
+def verdict(d, u, rows):
     if d.startswith('hbm') and u == 'mu':
         return 'NOT IN RELEASE'
-    return 'NOT RUN'  # no design has a full token measured on its release die (10-19)
+    # No design has a full token measured on its release die (10-20). PARTIAL = some release-die RTL measurement composed.
+    return 'PARTIAL' if any(r['grade'] == 'REL' for r in rows) else 'NOT RUN'
 
 
 def curve(ix):
-    des, mu = ix['designs'], ix.get('multi_user', {}).get('ds_rom', {})
     pts = []
-    ar, mtp = des['ds_rom']['ar'], des['ds_rom']['mtp']
-    pts += [dict(design='ds_rom', mode='AR', users=1, per_user_tok_s=ar['tok_s'], aggregate_tok_s=ar['tok_s'],
-                 grade='PRICED (composed; %.1f%% current-RTL cycles)' % ar['pct_measured_current_rtl'])]
-    if mu.get('ar', {}).get('available'):
-        m = mu['ar']
-        pts.append(dict(design='ds_rom', mode='AR', users=m['users'], per_user_tok_s=m['per_user_tok_s'],
-                        aggregate_tok_s=m['aggregate_tok_s'], grade='PRICED (modelled calendar x composed per-user)'))
-    pts.append(dict(design='ds_rom', mode='MTP', users=1, per_user_tok_s=mtp['tok_s'], aggregate_tok_s=mtp['tok_s'],
-                    grade='PRICED (composed)'))
-    if mu.get('mtp', {}).get('available'):
-        m = mu['mtp']
-        pts.append(dict(design='ds_rom', mode='MTP', users=m['users'], per_user_tok_s=m['per_user_tok_s'],
-                        aggregate_tok_s=m['aggregate_tok_s'], grade='PRICED (modelled calendar)'))
-    q = des['qwen_rom']['ar']
-    pts.append(dict(design='qwen_rom', mode='AR', users=1, per_user_tok_s=q['tok_s'], aggregate_tok_s=q['tok_s'],
-                    grade='PRICED (composed; old-RTL layer cycles)'))
-    pts.append(dict(design='qwen_rom', mode='AR', users=2, per_user_tok_s=round(9290.9 / 2, 1), aggregate_tok_s=9290.9,
-                    grade='DIAG (2-user sequencer cmd stream measured; windows old-RTL + priced)'))
-    pts.append(dict(design='qwen_rom', mode='AR', users=4, per_user_tok_s=2321.0, aggregate_tok_s=14054.0,
-                    per_user_note='4,769 / 4,642 / 2,321 / 2,321 (slowest shown)', grade='PRICED (modelled occupancy)'))
+    r = RECORDS['ds_rom']
+    pts.append(dict(design='ds_rom', mode='AR', users=1, per_user_tok_s=r['ar'], aggregate_tok_s=r['ar'],
+                    grade='PARTIAL (%.2f%% measured on p4l component benches)' % r['ar_pct']))
+    u, pu, ag = r['mu_ar']
+    pts.append(dict(design='ds_rom', mode='AR', users=u, per_user_tok_s=pu, aggregate_tok_s=ag,
+                    grade='PARTIAL (calendar slot issue on release RTL x 1u compose; MU collectives u5 PASS)'))
+    pts.append(dict(design='ds_rom', mode='MTP', users=1, per_user_tok_s=r['mtp'], aggregate_tok_s=r['mtp'],
+                    grade='PARTIAL (%.2f%% measured)' % r['mtp_pct']))
+    u, pu, ag = r['mu_mtp']
+    pts.append(dict(design='ds_rom', mode='MTP', users=u, per_user_tok_s=pu, aggregate_tok_s=ag,
+                    grade='PARTIAL (calendar on release RTL x 1u compose)'))
+    q = RECORDS['qwen_rom']
+    pts.append(dict(design='qwen_rom', mode='AR', users=1, per_user_tok_s=q['ar'], aggregate_tok_s=q['ar'],
+                    grade='PARTIAL (%.1f%% REL, KV attention DIAG)' % q['ar_pct']))
+    u, pu, ag, note = q['mu']
+    pts.append(dict(design='qwen_rom', mode='AR', users=u, per_user_tok_s=pu, aggregate_tok_s=ag, per_user_note=note + ' (slowest shown)',
+                    grade='DIAG (OVL link schedule, not release gen3)'))
     for d in ('hbm_gen_ds', 'hbm_gen_qwen'):
-        w = des[d]['ar']
-        pts.append(dict(design=d, mode='AR', users=1, per_user_tok_s=w['tok_s'], aggregate_tok_s=w['tok_s'],
-                        grade='PRICED (composed incl. LH-REPRICE3)'))
+        w = RECORDS[d]
+        pts.append(dict(design=d, mode='AR', users=1, per_user_tok_s=w['ar'], aggregate_tok_s=w['ar'],
+                        grade='PARTIAL (unit benches composed; %.1f%% bound-measured)' % w['ar_pct']))
     for p in pts:
         base = 114.8 if p['design'] in ('qwen_rom', 'hbm_gen_qwen') else 33.0
         p['per_user_vs_baseline_x'] = round(p['per_user_tok_s'] / base, 1)
-    return dict(schema='opentallas.token_pass.mu_curve.v1', asof=STATUS_ASOF, label='PRICED until TOK.FREEZE measures it',
+    return dict(schema='opentallas.token_pass.mu_curve.v1', asof=STATUS_ASOF, label='PARTIAL: composed from measured records; TOK.FREEZE measures the final',
                 points=pts, a100_qwen3_8b=A100, deepseek_reference=DS_REF,
                 notes=['x = per-user decode rate (latency), y = aggregate tok/s per deployment (S81 = 520 dies + 520 stacks; '
                        'Qwen ROM = one compute+KV package; A100 = one 80 GB GPU).',
@@ -175,7 +191,7 @@ def plot(cv, path):
             if not ps:
                 continue
             ax.plot([p['per_user_tok_s'] for p in ps], [p['aggregate_tok_s'] for p in ps], marker=mk, color=col[d],
-                    ls='--', label=f'{lab[d]} {mode} (PRICED)')
+                    ls='--', label=f'{lab[d]} {mode} (PARTIAL)')
             for p in ps:
                 ax.annotate(f"{p['users']}u", (p['per_user_tok_s'], p['aggregate_tok_s']), textcoords='offset points',
                             xytext=(5, 4), fontsize=7, color=col[d])
@@ -190,7 +206,7 @@ def plot(cv, path):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('per-user decode rate (tok/s)  -> lower latency')
     ax.set_ylabel('aggregate decode rate (tok/s)')
-    ax.set_title('MU.CURVE latency-throughput vs A100 80GB  -  PRICED until the token pass measures it', fontsize=10)
+    ax.set_title(f'MU.CURVE latency-throughput vs A100 80GB  -  measured records {STATUS_ASOF} (PARTIAL)', fontsize=10)
     ax.grid(True, which='both', alpha=0.25)
     ax.legend(fontsize=7, loc='upper left')
     fig.tight_layout()
@@ -198,25 +214,27 @@ def plot(cv, path):
 
 
 def md(st, cv):
-    L = [f'# Token-pass tracker (TOKEN-REC, {STATUS_ASOF})', '',
+    L = [f'# Token-pass tracker (TOKEN-LEAD2, {STATUS_ASOF})', '',
          'Owner gate: per-layer RTL sims on the CURRENT RELEASE dies + static schedule + inter-die traffic, real cycles, '
          '1-user AND multi-user, every design. Grades are against the RELEASE dies: REL = measured on the release die '
          'build; DIAG = measured on an older/diagnostic die or old vehicle (does not count); PRICE = analytic/calendar '
-         'only; MISS = bench/vehicle missing. Generated by tools/token_pass_status.py from results/arch/token_path_1018 '
-         '(token_compose_xdie --check PASS) + the RELEASE_TREE TOKEN lines.', '',
+         'only; MISS = bench/vehicle missing. Generated by tools/token_pass_status.py from the latest measured records '
+         '(RECORDS: measured_s81/qwen/hbm) + the RELEASE_TREE TOKEN lines. PARTIAL = release-die RTL evidence composed, '
+         'no full token measured.', '',
          '## Summary', '',
          '| design | users | verdict | composed tok/s (grade) | REL | DIAG | PRICE | MISS | release die |',
          '|---|---|---|---|---|---|---|---|---|']
     for k, s in st['cells'].items():
         L.append(f"| {s['design']} | {s['users']} | **{s['verdict']}** | {s['rate']} | {s['tally']['REL']} | {s['tally']['DIAG']} | "
                  f"{s['tally']['PRICE']} | {s['tally']['MISS']} | {RELEASE_DIES[s['design']]} |")
-    L += ['', 'No design has a single layer fully measured on its release die. Measured-on-release-die evidence today is '
-          'collectives (S81 TP4 + 3-user MU tags) and partial slices (S81 L20 split jobs, SEQHOST_MU, Qwen NU4 cuts).', '']
+    L += ['', 'No design has a full token measured on its release die. Source of each composed rate:', '']
+    L += [f"- {d}: {r['src']} (was {r['prev']})" for d, r in RECORDS.items()]
+    L += ['', '## Flags for the coordinator / owner', ''] + [f'- {f}' for f in FLAGS] + ['']
     for k, s in st['cells'].items():
         L += [f"## {s['design']} - {s['users']}", '', '| element | grade | evidence / build | owner | tree |', '|---|---|---|---|---|']
         L += [f"| {r['element']} | {r['grade']} | {r['evidence']} | {r['owner']} | {r['tree']} |" for r in s['elements']]
         L.append('')
-    L += ['## MU.CURVE (PRICED)', '', 'Plot: results/token_pass/mu_curve_1019.png; data mu_curve_1019.json.', '',
+    L += ['## MU.CURVE (PARTIAL)', '', f'Plot: results/token_pass/mu_curve_{TAG}.png; data mu_curve_{TAG}.json.', '',
           '| design | mode | users | per-user tok/s | aggregate tok/s | per-user vs baseline | grade |', '|---|---|---|---|---|---|---|']
     for p in cv['points']:
         L.append(f"| {p['design']} | {p['mode']} | {p['users']} | {p['per_user_tok_s']:,} | {p['aggregate_tok_s']:,} | "
@@ -233,22 +251,22 @@ def build():
     ix = load_comp()
     cells = {}
     for (d, u), rows in ELEMENTS.items():
-        w = ix['designs'][d]['ar']
+        r = RECORDS[d]
         if u == '1u':
-            rate = f"{w['tok_s']:,} AR ({w['pct_measured_current_rtl']}% cur-RTL per compose)"
+            rate = f"{r['ar']:,} AR ({r['ar_pct']}% {r.get('pct_label', 'measured')})"
             if d == 'ds_rom':
-                rate += f"; MTP {ix['designs'][d]['mtp']['tok_s']:,}"
+                rate += f"; MTP {r['mtp']:,} ({r['mtp_pct']}%)"
         elif d == 'ds_rom':
-            m = ix['multi_user']['ds_rom']
-            rate = f"{m['ar']['users']}u AR {m['ar']['aggregate_tok_s']:,} / {m['mtp']['users']}u MTP {m['mtp']['aggregate_tok_s']:,} (modelled)"
+            rate = (f"{r['mu_ar'][0]}u AR {r['mu_ar'][2]:,} agg ({r['mu_ar'][1]:,}/user) / "
+                    f"{r['mu_mtp'][0]}u MTP {r['mu_mtp'][2]:,} agg ({r['mu_mtp'][1]:,}/user)")
         elif d == 'qwen_rom':
-            rate = '4u 14,054 agg (modelled)'
+            rate = f"{r['mu'][0]}u {r['mu'][2]:,} agg (OVL link schedule, DIAG)"
         else:
             rate = '-'
-        cells[f'{d}.{u}'] = dict(design=d, users='1-user' if u == '1u' else 'multi-user', verdict=verdict(d, u), rate=rate,
+        cells[f'{d}.{u}'] = dict(design=d, users='1-user' if u == '1u' else 'multi-user', verdict=verdict(d, u, rows), rate=rate,
                                  tally=tally(rows), elements=rows, release_die=RELEASE_DIES[d])
-    st = dict(schema='opentallas.token_pass.status.v1', asof=STATUS_ASOF, compose_index='results/arch/token_path_1018/index.json',
-              compose_generated_from=ix['generated_from'], cells=cells)
+    st = dict(schema='opentallas.token_pass.status.v1', asof=STATUS_ASOF, records=RECORDS, flags=FLAGS,
+              compose_index='results/arch/token_path_1018/index.json', compose_generated_from=ix['generated_from'], cells=cells)
     return st, curve(ix)
 
 
@@ -256,7 +274,7 @@ def page(pd, st, cv):
     ix = json.loads((pd / 'index.json').read_text())
     for e in ix['designs']:
         d = e['design']
-        blk = dict(asof=STATUS_ASOF, release_die=RELEASE_DIES.get(d, ''), record='results/token_pass/status_1019.md',
+        blk = dict(asof=STATUS_ASOF, release_die=RELEASE_DIES.get(d, ''), record=f'results/token_pass/status_{TAG}.md',
                    cells=[dict(users=c['users'], verdict=c['verdict'], rate=c['rate'], tally=c['tally'])
                           for c in st['cells'].values() if c['design'] == d],
                    curve=[p for p in cv['points'] if p['design'] == d],
@@ -277,10 +295,10 @@ def main():
     a = ap.parse_args()
     st, cv = build()
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / 'status_1019.json').write_text(json.dumps(st, indent=1) + '\n')
-    (OUT / 'mu_curve_1019.json').write_text(json.dumps(cv, indent=1) + '\n')
-    (OUT / 'status_1019.md').write_text(md(st, cv))
-    plot(cv, OUT / 'mu_curve_1019.png')
+    (OUT / f'status_{TAG}.json').write_text(json.dumps(st, indent=1) + '\n')
+    (OUT / f'mu_curve_{TAG}.json').write_text(json.dumps(cv, indent=1) + '\n')
+    (OUT / f'status_{TAG}.md').write_text(md(st, cv))
+    plot(cv, OUT / f'mu_curve_{TAG}.png')
     for pd in a.page_data:
         page(Path(pd).expanduser(), st, cv)
     for c in st['cells'].values():
