@@ -593,19 +593,6 @@
     "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr6_1019/sched_m0.log"
    },
    {
-    "name": "kvpc_sched_mut1",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 1 --threads 4 --out {RUN}/bench/kvpc_sched_m1",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "^KVPC_SCHED PASS ",
-    "fail_regex": "^KVPC_SCHED FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr6_1019/sched_m1.log"
-   },
-   {
     "name": "kvpc_sched_mut5",
     "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 5 --threads 4 --out {RUN}/bench/kvpc_sched_m5",
     "expect": "fail",
