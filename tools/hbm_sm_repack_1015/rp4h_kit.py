@@ -14,7 +14,8 @@ Variants (gate in parallel, bind the first pair that closes):
   s_a  457.92 x 691.2  row 1 y 561.6, N band 38.9 um for the landing / crossing registers  }    (current SM frame row)
   n_b  457.92 x 864.0  SOFTBEAT=1: the beat transits as soft kept registers (no macro band) } b: 864 + 734.4 = 1,598.4
   s_b  457.92 x 734.4  row 1 y 604.8 (x store -> row channel 101.5 um)                       }
-  python3 tools/hbm_sm_repack_1015/rp4h_kit.py   -> physical/ref_tile/smh_rp4h{n,s}_{a,b}1019/spec.json + stations
+  python3 tools/hbm_sm_repack_1015/rp4h_kit.py   -> SAFE2 kits physical/ref_tile/smh_rp4h{n,s}_{a,b}_km{32,64}[cx]/spec.json
+  (the 1019 kits came from main_1019(); see the SAFE2 note above safe2_kits)
 """
 import json
 from pathlib import Path
@@ -182,7 +183,75 @@ def spec(name, k, base):
     return s
 
 
+# SAFE2 (L2H-SM9/SAFE2 10-19 ~22:00): the four halves above FAILED the clock rule at CTS (gates 1749: one spine root, clk
+# on the S/N abutment face at x 404, TT insertion ~2.1 ns, boundary pin-flop spread TT/FF n_a 209/163, n_b 236/216, s_a
+# 196/174, s_b 200/179 ps > 80) and n_b GRT overflow 12,845 (M6 12,510) at the x store's W channel (x 0-43) and E end
+# (x 302-345) around y 432-475: the closed xs view brings o_ix out on THREE faces (467 M4 pins on its W face 5.4/um, 146
+# down, 175 up), so the W-face and the up-face o_ix wires all squeeze through the 41-um W channel beside the rin_n pin
+# rows and the bin relays.  Successors (all children still on 43.2, pair heights 1,598.4, cycles unchanged):
+#   clock: no spine; regional roots by k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K = 32 / 64, each root
+#     <= ~115 / 80 um across) under one CTS-balanced top tree, TritonCTS macro trees for the hard-child clock pins (lib
+#     insertion), clk pin moved off the abutment corner (x 404) to the W face at the half's centre height;
+#   n_b (cx): x store moved one lattice step E (x 86.4): its W channel 84 um (was 41) for the 467 W-face o_ix + rin_n
+#     landing traffic, E channel 67 um; everything else as n_b;
+#   hold: route.io_hold_margin_ns 0.03 (KITS 10-18 rule); the s-half landing regs stay at their pins (io_flop_at_pins)
+#     and the big pre-repair FF hold (-140 ps on u_lands.q) came from the 200-ps spine spread the km roots remove.
+CKKM = (32, 64)
+CLK_W = {"smh_rp4hn_a1019": (553.5, 554.58), "smh_rp4hn_b1019": (471.42, 472.5),   # rin_n / bin gap (centre 453.6 / 432)
+         "smh_rp4hs_a1019": (345.06, 346.14), "smh_rp4hs_b1019": (366.66, 367.74)}  # free W face below rin_s, at h / 2
+
+
+def safe2_kits():
+    out = {}
+    for base, k in KITS.items():
+        for K in CKKM:
+            kk = dict(k, ckkm=K, clk_w=CLK_W[base], base=base)
+            if base == "smh_rp4hn_b1019":
+                kk["kids"] = [(v, i, 86.4 if i.endswith("u_xs") else x, y, o) for v, i, x, y, o in k["kids"]]
+                kk["desc"] = k["desc"] + "; x store at x 86.4 (W channel 84 um)"
+                tag = "cx"
+            else:
+                tag = ""
+            out[base.replace("1019", f"_km{K}{tag}")] = kk
+    return out
+
+
+def safe2(s, name, k):
+    """the SAFE2 clock / hold changes on top of spec()"""
+    K = k["ckkm"]
+    s["clock"] = "cts"
+    s["pre_cts_extra"] = ["physical/common_flow/clock_split_km.tcl"]
+    s["orfs_vars"]["OT_CKKM_K"] = str(K)
+    s["orfs_vars"]["OT_CKKM_PORT"] = "clk"
+    for f in ("N", "S"):
+        if "clk" in s["pins"].get(f, []):
+            s["pins"][f] = [p for p in s["pins"][f] if p != "clk"]
+    s["pins"]["W"] = s["pins"]["W"] + ["clk"]
+    s["pin_ranges"]["clk"] = list(k["clk_w"])
+    s["route"] = dict(s["route"], io_hold_margin_ns=0.03)
+    j = s["job"]
+    j["tag"] = name.replace("smh_", "")
+    j["structural_change"] += (
+        f"  SAFE2 successor of {k['base']} (its gate failed the clock rule: one spine root from the abutment corner, TT "
+        f"insertion ~2.1 ns, boundary pin-flop spread ~200 ps): regional k-means clock roots (clock_split_km.tcl K={K}, "
+        "each root <= ~115 um across) under one balanced CTS top tree, hard-child clock pins on TritonCTS macro trees "
+        "(lib insertion), clk entry moved to the W face at the half's centre height; io_hold_margin 0.03"
+        + ("; x store moved to x 86.4 (W channel 41 -> 84 um: n_b GRT ovf 12,845 at the xs W channel / E end from its "
+           "3-face o_ix pins)" if k["base"] == "smh_rp4hn_b1019" else "") + ".  Cycles unchanged.")
+    return s
+
+
 def main():
+    base = json.loads(BASE.read_text())
+    for name, k in safe2_kits().items():
+        s = safe2(spec(name, k, base), name, k)
+        kd = ROOT / "physical/ref_tile" / name
+        kd.mkdir(parents=True, exist_ok=True)
+        (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
+        print(f"{kd / 'spec.json'}: {len(s['children'])} children, outline {W} x {k['h']}, K{k['ckkm']}")
+
+
+def main_1019():
     base = json.loads(BASE.read_text())
     for name, k in KITS.items():
         s = spec(name, k, base)
