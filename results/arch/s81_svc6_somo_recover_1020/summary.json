@@ -1,0 +1,18 @@
+[
+  {
+    "log": "run_s1.log",
+    "expected_mutant_failure": true,
+    "first_witness": [
+      "SO MISMATCH entry 11 head 2 beat 0 data",
+      "SO MISMATCH entry 11 head 2 beat 1 data"
+    ]
+  },
+  {
+    "log": "run_s2.log",
+    "expected_mutant_failure": true,
+    "first_witness": [
+      "SO MISMATCH entry 11 head 2 beat 0 data",
+      "SO MISMATCH entry 11 head 2 beat 1 data"
+    ]
+  }
+]
