@@ -1,0 +1,7 @@
+XDIE2_CFG MU 2 LEG 1 DMUT 0 NS 6044 NM 16 ERRP 0 LATE 0 CHB 1
+XDIE_LINK timeouts 0 retx_flits 0 (all 32 lanes; go-back-N ACK timeouts and replayed flits)
+XDIE_MU tagged_expected 1280 tagged_seen 1280 tag_errors 0
+XDIE_STATS beats 6044 landed 6044 mismatches 0 late 0 maxlate 0 extra 0 faults 0000000000000000 live 32/32 last_cycle 16446
+PASS xdie_s81: 6044 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault, every MU tag delivered
+BENCH_PASS a_su
+EXIT 0

@@ -1,0 +1,1819 @@
+{
+ "beats": 278024,
+ "win": 2,
+ "early": 0,
+ "late": 3164,
+ "land_minus_deadline": {
+  "-2": 67024,
+  "-1": 161080,
+  "0": 46756,
+  "1": 3164
+ },
+ "users": {
+  "0": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "1": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 581
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "2": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "3": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "4": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 607
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1232
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "5": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1232
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "6": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "7": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "8": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "9": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "10": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "11": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1232
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "12": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 606
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "13": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 740
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 671
+   }
+  },
+  "14": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "15": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "16": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "17": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "18": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1233
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "19": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "20": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 606
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "21": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "22": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 565
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "23": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "24": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "25": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "26": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1232
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "27": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "28": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 606
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "29": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "30": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "31": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "32": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 735
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1233
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "33": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 606
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 735
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1233
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "34": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "35": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "36": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "37": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 740
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "38": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 740
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "39": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  },
+  "40": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1232
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "41": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 606
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 734
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1233
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "42": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 567
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 737
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 670
+   }
+  },
+  "43": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 564
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "44": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 574
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 579
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 733
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 738
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1231
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  },
+  "45": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 572
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 604
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1230
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 669
+   }
+  }
+ },
+ "user_sched_equal_first": {
+  "0": true,
+  "1": true,
+  "2": true,
+  "3": true,
+  "4": true,
+  "5": true,
+  "6": true,
+  "7": true,
+  "8": true,
+  "9": true,
+  "10": true,
+  "11": true,
+  "12": true,
+  "13": true,
+  "14": true,
+  "15": true,
+  "16": true,
+  "17": true,
+  "18": true,
+  "19": true,
+  "20": true,
+  "21": true,
+  "22": true,
+  "23": true,
+  "24": true,
+  "25": true,
+  "26": true,
+  "27": true,
+  "28": true,
+  "29": true,
+  "30": true,
+  "31": true,
+  "32": true,
+  "33": true,
+  "34": true,
+  "35": true,
+  "36": true,
+  "37": true,
+  "38": true,
+  "39": true,
+  "40": true,
+  "41": true,
+  "42": true,
+  "43": true,
+  "44": true,
+  "45": true
+ },
+ "win_pass": false,
+ "inv_pass": true,
+ "dl_model": {
+  "model": "fluid",
+  "R": "4096/3069",
+  "flat": 563,
+  "guard": 1,
+  "window": 2
+ }
+}

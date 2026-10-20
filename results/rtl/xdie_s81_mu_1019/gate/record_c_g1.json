@@ -1,0 +1,563 @@
+{
+ "schema": "opentallas.xdie_s81.record.v1",
+ "config": "c_g1_mu0",
+ "verdict": "PASS xdie_s81: 12096 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault                        ",
+ "stats": "XDIE_STATS beats 12096 landed 12096 mismatches 0 late 0 maxlate 0 extra 0 faults 0000000000000000 live 32/32 last_cycle 85262",
+ "golden": {
+  "beats": 12096,
+  "gate": true,
+  "lat": {},
+  "per": {}
+ },
+ "collectives": {
+  "argmax_merge": {
+   "kind": "AG",
+   "payload_B": 32,
+   "beats_per_peer": 1,
+   "E": [
+    563,
+    564
+   ],
+   "L_first": [
+    563,
+    564
+   ],
+   "E_last": [
+    563,
+    564
+   ],
+   "drain_per_beat": [
+    0.0,
+    0.0
+   ],
+   "E_meas": 564,
+   "deterministic": false
+  },
+  "router_allgather": {
+   "kind": "AG",
+   "payload_B": 1536,
+   "beats_per_peer": 3,
+   "E": [
+    566,
+    567
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    564,
+    565
+   ],
+   "drain_per_beat": [
+    1.5,
+    2.0
+   ],
+   "E_meas": 567,
+   "deterministic": false
+  },
+  "a_allgather": {
+   "kind": "AG",
+   "payload_B": 3648,
+   "beats_per_peer": 8,
+   "E": [
+    573,
+    573
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    566,
+    566
+   ],
+   "drain_per_beat": [
+    1.429,
+    1.429
+   ],
+   "E_meas": 573,
+   "deterministic": true
+  },
+  "eng_rows_allgather": {
+   "kind": "AG",
+   "payload_B": 6336,
+   "beats_per_peer": 13,
+   "E": [
+    579,
+    580
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    567,
+    568
+   ],
+   "drain_per_beat": [
+    1.333,
+    1.417
+   ],
+   "E_meas": 580,
+   "deterministic": false
+  },
+  "idx_topk_merge": {
+   "kind": "AG",
+   "payload_B": 16384,
+   "beats_per_peer": 32,
+   "E": [
+    604,
+    606
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    573,
+    575
+   ],
+   "drain_per_beat": [
+    1.323,
+    1.387
+   ],
+   "E_meas": 606,
+   "deterministic": false
+  },
+  "cand_merge": {
+   "kind": "AG",
+   "payload_B": 65536,
+   "beats_per_peer": 128,
+   "E": [
+    732,
+    734
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    605,
+    607
+   ],
+   "drain_per_beat": [
+    1.331,
+    1.346
+   ],
+   "E_meas": 734,
+   "deterministic": false
+  },
+  "rows_allgather": {
+   "kind": "AG",
+   "payload_B": 67584,
+   "beats_per_peer": 132,
+   "E": [
+    739,
+    739
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_last": [
+    608,
+    608
+   ],
+   "drain_per_beat": [
+    1.344,
+    1.344
+   ],
+   "E_meas": 739,
+   "deterministic": true
+  },
+  "allreduce_20480": {
+   "kind": "AR",
+   "payload_B": 20480,
+   "beats_per_peer": 40,
+   "E": [
+    1232.0,
+    1231.0
+   ],
+   "E_RS": [
+    615,
+    616
+   ],
+   "E_AG": [
+    617,
+    615
+   ],
+   "L_first": [
+    563,
+    563
+   ],
+   "E_meas": 1232.0,
+   "deterministic": false
+  },
+  "stage_hop": {
+   "kind": "P2P",
+   "payload_B": 40976,
+   "beats_per_peer": 321,
+   "E": [
+    991,
+    990
+   ],
+   "L_first": [
+    564,
+    563
+   ],
+   "E_last": [
+    671,
+    670
+   ],
+   "drain_per_beat": [
+    1.334,
+    1.334
+   ],
+   "E_meas": 991,
+   "deterministic": false
+  }
+ },
+ "instances": {
+  "argmax_merge#0": {
+   "name": "argmax_merge",
+   "kind": "AG",
+   "payload_B": 32,
+   "rep": 0,
+   "beats_per_peer": 1,
+   "streams": 12,
+   "beats": 12,
+   "first_issue": 12000,
+   "last_land": 12563,
+   "L_first": 563,
+   "E_meas": 563,
+   "E_last": 563,
+   "drain_per_beat": 0.0,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  },
+  "router_allgather#0": {
+   "name": "router_allgather",
+   "kind": "AG",
+   "payload_B": 1536,
+   "rep": 0,
+   "beats_per_peer": 3,
+   "streams": 12,
+   "beats": 36,
+   "first_issue": 16001,
+   "last_land": 16567,
+   "L_first": 563,
+   "E_meas": 566,
+   "E_last": 564,
+   "drain_per_beat": 1.5,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  },
+  "a_allgather#0": {
+   "name": "a_allgather",
+   "kind": "AG",
+   "payload_B": 3648,
+   "rep": 0,
+   "beats_per_peer": 8,
+   "streams": 12,
+   "beats": 96,
+   "first_issue": 20004,
+   "last_land": 20577,
+   "L_first": 563,
+   "E_meas": 573,
+   "E_last": 566,
+   "drain_per_beat": 1.429,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "eng_rows_allgather#0": {
+   "name": "eng_rows_allgather",
+   "kind": "AG",
+   "payload_B": 6336,
+   "rep": 0,
+   "beats_per_peer": 13,
+   "streams": 12,
+   "beats": 156,
+   "first_issue": 24012,
+   "last_land": 24591,
+   "L_first": 563,
+   "E_meas": 579,
+   "E_last": 567,
+   "drain_per_beat": 1.333,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  },
+  "idx_topk_merge#0": {
+   "name": "idx_topk_merge",
+   "kind": "AG",
+   "payload_B": 16384,
+   "rep": 0,
+   "beats_per_peer": 32,
+   "streams": 12,
+   "beats": 384,
+   "first_issue": 28025,
+   "last_land": 28629,
+   "L_first": 563,
+   "E_meas": 604,
+   "E_last": 573,
+   "drain_per_beat": 1.323,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  },
+  "cand_merge#0": {
+   "name": "cand_merge",
+   "kind": "AG",
+   "payload_B": 65536,
+   "rep": 0,
+   "beats_per_peer": 128,
+   "streams": 12,
+   "beats": 1536,
+   "first_issue": 32057,
+   "last_land": 32789,
+   "L_first": 563,
+   "E_meas": 732,
+   "E_last": 605,
+   "drain_per_beat": 1.331,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  },
+  "rows_allgather#0": {
+   "name": "rows_allgather",
+   "kind": "AG",
+   "payload_B": 67584,
+   "rep": 0,
+   "beats_per_peer": 132,
+   "streams": 12,
+   "beats": 1584,
+   "first_issue": 36185,
+   "last_land": 36924,
+   "L_first": 563,
+   "E_meas": 739,
+   "E_last": 608,
+   "drain_per_beat": 1.344,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "allreduce_20480#0": {
+   "name": "allreduce_20480",
+   "kind": "AR",
+   "payload_B": 20480,
+   "rep": 0,
+   "beats_per_peer": 40,
+   "rs": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 40317,
+    "last_land": 40932,
+    "L_first": 563,
+    "E_meas": 615,
+    "E_last": 576,
+    "drain_per_beat": 1.333,
+    "L_first_min": 563,
+    "min_deadline_slack": 1
+   },
+   "ag": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 40935,
+    "last_land": 41552,
+    "L_first": 564,
+    "E_meas": 617,
+    "E_last": 578,
+    "drain_per_beat": 1.359,
+    "L_first_min": 564,
+    "min_deadline_slack": 0
+   },
+   "fold_die": 0.0,
+   "E_meas": 1232.0,
+   "ag_issue_after_rs_land": 3
+  },
+  "stage_hop#0": {
+   "name": "stage_hop",
+   "kind": "P2P",
+   "payload_B": 40976,
+   "rep": 0,
+   "beats_per_peer": 321,
+   "streams": 4,
+   "beats": 1284,
+   "first_issue": 44975,
+   "last_land": 45966,
+   "L_first": 564,
+   "E_meas": 991,
+   "E_last": 671,
+   "drain_per_beat": 1.334,
+   "L_first_min": 564,
+   "min_deadline_slack": 0
+  },
+  "argmax_merge#1": {
+   "name": "argmax_merge",
+   "kind": "AG",
+   "payload_B": 32,
+   "rep": 1,
+   "beats_per_peer": 1,
+   "streams": 12,
+   "beats": 12,
+   "first_issue": 49296,
+   "last_land": 49860,
+   "L_first": 564,
+   "E_meas": 564,
+   "E_last": 564,
+   "drain_per_beat": 0.0,
+   "L_first_min": 564,
+   "min_deadline_slack": 0
+  },
+  "router_allgather#1": {
+   "name": "router_allgather",
+   "kind": "AG",
+   "payload_B": 1536,
+   "rep": 1,
+   "beats_per_peer": 3,
+   "streams": 12,
+   "beats": 36,
+   "first_issue": 53297,
+   "last_land": 53864,
+   "L_first": 563,
+   "E_meas": 567,
+   "E_last": 565,
+   "drain_per_beat": 2.0,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "a_allgather#1": {
+   "name": "a_allgather",
+   "kind": "AG",
+   "payload_B": 3648,
+   "rep": 1,
+   "beats_per_peer": 8,
+   "streams": 12,
+   "beats": 96,
+   "first_issue": 57300,
+   "last_land": 57873,
+   "L_first": 563,
+   "E_meas": 573,
+   "E_last": 566,
+   "drain_per_beat": 1.429,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "eng_rows_allgather#1": {
+   "name": "eng_rows_allgather",
+   "kind": "AG",
+   "payload_B": 6336,
+   "rep": 1,
+   "beats_per_peer": 13,
+   "streams": 12,
+   "beats": 156,
+   "first_issue": 61308,
+   "last_land": 61888,
+   "L_first": 563,
+   "E_meas": 580,
+   "E_last": 568,
+   "drain_per_beat": 1.417,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "idx_topk_merge#1": {
+   "name": "idx_topk_merge",
+   "kind": "AG",
+   "payload_B": 16384,
+   "rep": 1,
+   "beats_per_peer": 32,
+   "streams": 12,
+   "beats": 384,
+   "first_issue": 65321,
+   "last_land": 65927,
+   "L_first": 563,
+   "E_meas": 606,
+   "E_last": 575,
+   "drain_per_beat": 1.387,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "cand_merge#1": {
+   "name": "cand_merge",
+   "kind": "AG",
+   "payload_B": 65536,
+   "rep": 1,
+   "beats_per_peer": 128,
+   "streams": 12,
+   "beats": 1536,
+   "first_issue": 69353,
+   "last_land": 70087,
+   "L_first": 563,
+   "E_meas": 734,
+   "E_last": 607,
+   "drain_per_beat": 1.346,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "rows_allgather#1": {
+   "name": "rows_allgather",
+   "kind": "AG",
+   "payload_B": 67584,
+   "rep": 1,
+   "beats_per_peer": 132,
+   "streams": 12,
+   "beats": 1584,
+   "first_issue": 73481,
+   "last_land": 74220,
+   "L_first": 563,
+   "E_meas": 739,
+   "E_last": 608,
+   "drain_per_beat": 1.344,
+   "L_first_min": 563,
+   "min_deadline_slack": 0
+  },
+  "allreduce_20480#1": {
+   "name": "allreduce_20480",
+   "kind": "AR",
+   "payload_B": 20480,
+   "rep": 1,
+   "beats_per_peer": 40,
+   "rs": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 77613,
+    "last_land": 78229,
+    "L_first": 563,
+    "E_meas": 616,
+    "E_last": 577,
+    "drain_per_beat": 1.359,
+    "L_first_min": 563,
+    "min_deadline_slack": 0
+   },
+   "ag": {
+    "streams": 12,
+    "beats": 480,
+    "first_issue": 78231,
+    "last_land": 78846,
+    "L_first": 563,
+    "E_meas": 615,
+    "E_last": 576,
+    "drain_per_beat": 1.333,
+    "L_first_min": 563,
+    "min_deadline_slack": 1
+   },
+   "fold_die": 0.0,
+   "E_meas": 1231.0,
+   "ag_issue_after_rs_land": 2
+  },
+  "stage_hop#1": {
+   "name": "stage_hop",
+   "kind": "P2P",
+   "payload_B": 40976,
+   "rep": 1,
+   "beats_per_peer": 321,
+   "streams": 4,
+   "beats": 1284,
+   "first_issue": 82271,
+   "last_land": 83261,
+   "L_first": 563,
+   "E_meas": 990,
+   "E_last": 670,
+   "drain_per_beat": 1.334,
+   "L_first_min": 563,
+   "min_deadline_slack": 1
+  }
+ }
+}

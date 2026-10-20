@@ -1,0 +1,63 @@
+{
+ "beats": 6044,
+ "win": 2,
+ "early": 4512,
+ "late": 0,
+ "land_minus_deadline": {
+  "-4": 2340,
+  "-3": 2172,
+  "-2": 1532
+ },
+ "users": {
+  "0": {
+   "argmax_merge": {
+    "E_sched": 564,
+    "E_meas": 561
+   },
+   "router_allgather": {
+    "E_sched": 567,
+    "E_meas": 564
+   },
+   "a_allgather": {
+    "E_sched": 574,
+    "E_meas": 571
+   },
+   "eng_rows_allgather": {
+    "E_sched": 581,
+    "E_meas": 578
+   },
+   "idx_topk_merge": {
+    "E_sched": 606,
+    "E_meas": 603
+   },
+   "cand_merge": {
+    "E_sched": 734,
+    "E_meas": 730
+   },
+   "rows_allgather": {
+    "E_sched": 739,
+    "E_meas": 737
+   },
+   "allreduce_20480": {
+    "E_sched": 1234,
+    "E_meas": 1226
+   },
+   "mu_hop": {
+    "E_sched": 670,
+    "E_meas": 668
+   }
+  }
+ },
+ "user_sched_equal_first": {
+  "0": true
+ },
+ "win_pass": false,
+ "inv_pass": true,
+ "dl_model": {
+  "model": "fluid",
+  "R": "4096/3069",
+  "flat": 563,
+  "guard": 1,
+  "window": 2
+ }
+}
