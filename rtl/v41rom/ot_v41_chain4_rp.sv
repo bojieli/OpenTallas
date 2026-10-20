@@ -118,7 +118,12 @@ module ot_v41_chain4_rp #(
     ot_v41_fadd2_rp #(.CUT(CUT), .EXT0(PD != 0 ? 1 : 0)) u_add (.clk(clk), .rst_pin(rst_pin), .valid_in(v_r), .a(a), .b(term_r),
                                      .o0_ext(o0_ext), .y(sum), .err(err), .valid_out(sv));
     wire [TW+2:0] dt;
+`ifdef OT_BF_TAG_RING
+    ot_v41_bf_tag_ring #(.W(TW+3),.D(LAT)) u_t (.clk(clk),.rst_w(rst_n),.rst_r(rst_f),
+        .d({tag_r,last_r,af|termf_r,1'b0}),.q(dt));
+`else
     ot_hdc_delay #(.W(TW + 3), .D(LAT)) u_t (.clk(clk), .rst_n(rst_n), .d({tag_r, last_r, af | termf_r, 1'b0}), .q(dt));
+`endif
     wire d_last = dt[2];
     wire d_f = dt[1] | (err != 2'd0);
     // the slot's previous sum: leaving the adder now (5 cycles ago), or one cycle ago (not yet in acc_r)
@@ -217,3 +222,30 @@ module ot_v41_chain4_rp #(
     assign of = d_f;
     assign otag = dt[TW+2:3];
 endmodule
+
+`ifdef OT_BF_TAG_RING
+// D-edge tag delay as a D-1 slot ring plus the existing final read register.
+// Separate onehot read/write token copies cap the read and write-control loads.
+// rst_w/rst_r are the chain's same-edge reset copies. Data stays unreset.
+module ot_v41_bf_tag_ring #(parameter integer W=11,D=8)(
+ input wire clk,rst_w,rst_r,input wire[W-1:0] d,output reg[W-1:0] q);
+ localparam integer N=D-1;
+ (* keep *) reg[N-1:0] wp,rp;
+ reg[W-1:0] mem[0:N-1];
+ always @(posedge clk or negedge rst_w) if(!rst_w) wp<=1;else wp<={wp[N-2:0],wp[N-1]};
+ always @(posedge clk or negedge rst_r) if(!rst_r) begin
+`ifdef OT_BF_TAG_RING_MUT_AGE
+  rp<=2;
+`else
+  rp<=1;
+`endif
+ end else rp<={rp[N-2:0],rp[N-1]};
+ reg[W-1:0] rd;
+ always @* begin rd=0;for(integer i=0;i<N;i++) rd=rd|({W{rp[i]}}&mem[i]);end
+ always @(posedge clk) begin
+  q<=rd;
+  for(integer i=0;i<N;i++) if(wp[i]) mem[i]<=d;
+ end
+ initial if(D<3 || D>8 || W>15) $fatal(1,"BF tag ring shape exceeds native32 budget");
+endmodule
+`endif

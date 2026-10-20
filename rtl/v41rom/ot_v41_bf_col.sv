@@ -250,7 +250,7 @@ module ot_v41_bf_col #(
         end
 `endif
         assign rst_mc = 1'b1;   // unused: the chains take b_rst_v[5]
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsp (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_mp));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsp (.clk(clk), .arst_n(b_rst_v[0]), .d(1'b1), .q(rst_mp));
         ot_v41_rst_copy u_rspv (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_mpv));
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rst (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_mt));
 `else
