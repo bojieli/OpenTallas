@@ -16,6 +16,8 @@
 //  * pc_fault is registered here (+1 observation edge of a sticky fault; no data or schedule effect).
 //  * Every store is a ceil(W/64) x ot_sram_1r1w_128x64_m1_p192 array (SRAM_P192=1): 5.2 contacts/um on each W/E face.
 //  * Reset: two kept face landing stages (rst_l0/rst_l1), then the native relay, exactly as the legacy top.
+//    HBM-MC3 (10-19) RST_FOREST=1: the native relay is ot_rst_forest (s0 -> 8 -> RST_LEAVES kept copies, <=32 loads a
+//    net after the ot_rst_copies synthesis pass), same 2+3 = 5 release edges; PCID_LOCAL=1: kept per-use pc_id copies.
 module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(
     parameter integer MRKEY=1,
     parameter integer RQ=128,
@@ -28,7 +30,10 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(
     parameter integer BW_MUT_ID_TAG=0,
     parameter integer RESET_LANDING=2,
     parameter integer SRAM_P192=1,
-    parameter integer PURE_FACE=1
+    parameter integer PURE_FACE=1,
+    parameter integer RST_FOREST=0,
+    parameter integer RST_LEAVES=192,
+    parameter integer PCID_LOCAL=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -58,7 +63,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(
     wire native_fault;
     ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.RQ(RQ),.QD(QD),
       .OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY),
-      .BW_MUT_ID_TAG(BW_MUT_ID_TAG),.SRAM_P192(SRAM_P192),.PURE_FACE(PURE_FACE)) u_native(
+      .BW_MUT_ID_TAG(BW_MUT_ID_TAG),.SRAM_P192(SRAM_P192),.PURE_FACE(PURE_FACE),
+      .RST_FOREST(RST_FOREST),.RST_LEAVES(RST_LEAVES),.PCID_LOCAL(PCID_LOCAL)) u_native(
       .clk(clk),.rst_n(core_rst_n),.pc_id(pc_id),.refresh_reload(refresh_reload),
       .k_v(k_v),.k_rdy(k_rdy),.k_we(k_we),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),
       .k_wdata(k_wdata),.k_wstrb(k_wstrb),

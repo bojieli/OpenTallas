@@ -90,7 +90,7 @@ FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_mr.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_mr.sv",
          "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_mr.sv",
-         "rtl/lib/ot_rst_relay.sv",
+         "rtl/lib/ot_rst_relay.sv", "rtl/lib/ot_rst_forest.sv",
          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv", "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v"]
 
 def run(a):
@@ -99,6 +99,7 @@ def run(a):
     defs += ["OT_PC_CFG_MUT_PC"] if a.pc_mut else []
     defs += ["BURST_GAPS"] if a.burst else []
     defs += ["EXPOSE"] if a.expose else []          # HBM-MC2: SAFE exposed-bank-latency census (observation only)
+    defs += ["OT_PC_SAFE_MC3"] if a.mc3 else []    # HBM-MC3: pure face + reset forest + local pc_id copies
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -140,7 +141,7 @@ def main():
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
     r.add_argument("--burst", action="store_true"); r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
-    r.add_argument("--gaps", action="store_true"); r.add_argument("--expose", action="store_true"); r.add_argument("--layers", type=int, default=4)
+    r.add_argument("--gaps", action="store_true"); r.add_argument("--expose", action="store_true"); r.add_argument("--mc3", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()
     if a.cmd == "gen":

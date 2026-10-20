@@ -36,7 +36,20 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // PURE_FACE=1: the 22 k_v and 18 kr_rdy region captures are pure D flops (no synchronous-reset AND in front);
     // the reset-owned ready_seen / skid valid state still masks every push/pop, so the cycle behaviour is identical.
     parameter integer SRAM_P192=0,
-    parameter integer PURE_FACE=0
+    parameter integer PURE_FACE=0,
+    // HBM-MC3 (10-19), both default 0 (existing users unchanged).  Native census bw_p540_v6 held the face kits: 202
+    // drivers > 32 endpoints (~190 reset) and 9 nets > 405 um (pc_id_q 441..500 um, reset landing 413 um).
+    // RST_FOREST=1: ot_rst_forest (s0 -> 8 l1 -> RST_LEAVES l2 kept copies, release still 3 edges after the input) in
+    //   place of ot_rst_relay; the synthesis pass ot_rst_copies spreads every reset load over the leaves (<= 28 each,
+    //   name-local groups: one bank / slice per leaf).  The synchronous resets on the reset family (K ready_seen /
+    //   k_rdy_q, fault_detail, K ring counts/pointers, KR skid valid) become asynchronous clears so each flop is one
+    //   counted reset endpoint (a synchronous reset hides behind one $logic_not load).  Release edges unchanged: a
+    //   flop cleared asynchronously or synchronously by a flop-driven reset leaves reset on the same edge.
+    // PCID_LOCAL=1: pc_id_q (pin capture) feeds KEPT per-use copies (K legality compare, refresh slot parity) placed by
+    //   their users, so no pc_id net spans the tile.  pc_id is a static strap (stable before reset release).
+    parameter integer RST_FOREST=0,
+    parameter integer RST_LEAVES=192,
+    parameter integer PCID_LOCAL=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -61,7 +74,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // Region seven is spare; regions 8..71 feed same-edge AQ bank/tournament resets.
     wire [93:0] region_rst_n;
     wire lrst_n=region_rst_n[0];
-    ot_rst_relay #(.REGIONS(94)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
+    generate if(RST_FOREST!=0)begin:g_rst_forest
+        wire [RST_LEAVES-1:0] leaves;
+        ot_rst_forest #(.LEAVES(RST_LEAVES),.FIRST(8)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(leaves));
+        assign region_rst_n=leaves[93:0];
+    end else begin:g_rst_relay
+        ot_rst_relay #(.REGIONS(94)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if(RST_FOREST!=0&&(PURE_FACE==0||RST_LEAVES<94))$fatal(1,"RST_FOREST needs PURE_FACE=1 and RST_LEAVES>=94");
+`endif
     // Native PHY-return pin capture: valid and all payload bits enter flops
     // together before response FIFO accounting/address/identity logic. This
     // adds one HBM edge before block-ready; normal on-die calendars do not
@@ -78,6 +100,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     end endgenerate
     reg [4:0]pc_id_q;reg [7:0]refresh_reload_q;
     always @(posedge clk)begin pc_id_q<=pc_id;refresh_reload_q<=refresh_reload;end
+    // pc_id uses: K legality compare (pc_id_k) and refresh slot parity (pc_id_sp); PCID_LOCAL=1 = kept copies by the user
+    wire [4:0]pc_id_k;wire pc_id_sp;
+    generate if(PCID_LOCAL!=0)begin:g_pcid_local
+        (* keep="true",dont_touch="true" *) reg [4:0]pc_id_k_q;
+        (* keep="true",dont_touch="true" *) reg pc_id_sp_q;
+        always @(posedge clk)begin pc_id_k_q<=pc_id_q;pc_id_sp_q<=pc_id_q[0];end
+        assign pc_id_k=pc_id_k_q;assign pc_id_sp=pc_id_sp_q;
+    end else begin:g_pcid_shared
+        assign pc_id_k=pc_id_q;assign pc_id_sp=pc_id_q[0];
+    end endgenerate
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
     reg sticky;
@@ -103,7 +135,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[4:0]incoming_pc=incoming[6:2]^incoming[11:7]^incoming[16:12];
     wire[3:0]length=i_len;
     wire legal;wire raw_legal=length>=1 && length<=4 && (!i_we || length==1) &&
-        {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
+        {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_k && {1'b0,incoming}+length<=31'd703125000;
     wire wr,cv_cfg,cwe,caq;wire[1:0]cv_regions;
     assign cv_cfg=cv_regions[1];wire[4:0]cb,cc;
     wire[2:0]pc_fault_regions;
@@ -149,11 +181,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         reg[29:0]kp_addr;(* keep="true",dont_touch="true" *)reg[3:0]kp_len;reg[16:0]kp_tag;reg[31:0]kp_strb;reg[255:0]kp_data;
         always @(posedge clk)begin kp_we<=k_we;kp_addr<=k_addr;kp_len<=k_len;kp_tag<=k_tag;kp_strb<=k_wstrb;kp_data<=k_wdata;end
         wire kp_legal=kp_len>=1&&kp_len<=4&&(!kp_we||kp_len==1)&&
-          {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
+          {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_k&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
         (* keep="true",dont_touch="true" *)wire[2:0]kp_prefix={kp_len==1,kp_len<=2,kp_len<=3};
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_bw_safe #(.WIDTH(344),.DEPTH(3),.REGIONAL(1),.REGIONAL_RESET(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
+        ot_hbm_svc_ring_bw_safe #(.WIDTH(344),.DEPTH(3),.REGIONAL(1),.REGIONAL_RESET(1),.ARST(RST_FOREST)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
           .in_v(push_regions[0]),.in_data({kp_prefix,kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
           .out_v(i_v),.pop(i_v&&i_rdy),.out_data({length_prefix,legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
           .cnt(n),.cnt_next(nn),.fault(kfront_fault),
@@ -173,15 +205,25 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           if(PURE_FACE!=0)begin:g_pure_kv
             // pure pin capture: k_v reaches only D pins; ready_seen (reset) masks the push during/after reset
             always @(posedge clk)kv_regions[r]<=k_v;
-            always @(posedge clk)if(!region_rst_n[72+r])ready_seen_regions[r]<=0;else ready_seen_regions[r]<=k_rdy_q;
+            if(RST_FOREST!=0)begin:g_arst
+              always @(posedge clk or negedge region_rst_n[72+r])
+                if(!region_rst_n[72+r])ready_seen_regions[r]<=0;else ready_seen_regions[r]<=k_rdy_q;
+            end else begin:g_srst
+              always @(posedge clk)if(!region_rst_n[72+r])ready_seen_regions[r]<=0;else ready_seen_regions[r]<=k_rdy_q;
+            end
           end else begin:g_reset_kv
           always @(posedge clk)if(!region_rst_n[72+r])begin
             kv_regions[r]<=0;ready_seen_regions[r]<=0;
           end else begin kv_regions[r]<=k_v;ready_seen_regions[r]<=k_rdy_q;end
           end
         end
-        always @(posedge clk)if(!region_rst_n[2])begin k_rdy_q<=0;end
-          else begin k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
+        if(RST_FOREST!=0)begin:g_krdy_arst
+          always @(posedge clk or negedge region_rst_n[2])if(!region_rst_n[2])begin k_rdy_q<=0;end
+            else begin k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
+        end else begin:g_krdy_srst
+          always @(posedge clk)if(!region_rst_n[2])begin k_rdy_q<=0;end
+            else begin k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
+        end
         assign k_rdy=k_rdy_q;
     end else begin:g_raw_k
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
@@ -210,7 +252,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         // PURE_FACE: kr_rdy reaches only the 18 D pins; skid hv (reset) masks every pop during/after reset
         if(PURE_FACE!=0)begin:g_pure_krdy always @(posedge clk)ready_q<={18{kr_rdy}}; end
         else begin:g_reset_krdy always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<={18{kr_rdy}}; end
-        ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1)) u_skid(
+        ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1),.ARST(RST_FOREST)) u_skid(
             .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
             .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}),.in_v_regions(admission_regions),.out_v_regions(kr_v_regions));
@@ -235,17 +277,24 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // Internal sticky traffic kill retains its original edge; pins follow one
     // diagnostic edge later, as on the released native controller.
     reg[5:0]fault_detail;
-    always @(posedge clk)if(!region_rst_n[6])begin fault_detail<=0;owner_fault_split<=0;end
-    else begin
-      owner_fault_split<=fault_detail;
-      if(i_v&&!legal)fault_detail[0]<=1;
+    reg[5:0]fault_detail_next;
+    always @*begin
+      fault_detail_next=fault_detail;
+      if(i_v&&!legal)fault_detail_next[0]=1;
       if(cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
-          (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)))fault_detail[1]<=1;
-      if(column_read&&pending_count>=RQ)fault_detail[2]<=1;
-      if(ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))fault_detail[3]<=1;
-      if((response_take&&(read_reserved==0||response_count==0))||read_reserved>RQ||pending_count>RQ||response_count>RQ)fault_detail[4]<=1;
-      if(kfront_fault)fault_detail[5]<=1;
+          (WPAY!=0&&cwe&&fresh_v&&fresh_slot==rp)))fault_detail_next[1]=1;
+      if(column_read&&pending_count>=RQ)fault_detail_next[2]=1;
+      if(ret_v&&(pending_count==0||(response_count>=RQ&&!response_take)))fault_detail_next[3]=1;
+      if((response_take&&(read_reserved==0||response_count==0))||read_reserved>RQ||pending_count>RQ||response_count>RQ)fault_detail_next[4]=1;
+      if(kfront_fault)fault_detail_next[5]=1;
     end
+    generate if(RST_FOREST!=0)begin:g_fault_arst
+      always @(posedge clk or negedge region_rst_n[6])if(!region_rst_n[6])begin fault_detail<=0;owner_fault_split<=0;end
+      else begin owner_fault_split<=fault_detail;fault_detail<=fault_detail_next;end
+    end else begin:g_fault_srst
+      always @(posedge clk)if(!region_rst_n[6])begin fault_detail<=0;owner_fault_split<=0;end
+      else begin owner_fault_split<=fault_detail;fault_detail<=fault_detail_next;end
+    end endgenerate
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
         wire[QW-1:0]wpay_raddr=cv_cfg?rp_plus1:rp;
@@ -375,7 +424,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       .r_addr(7'(response_read_address)),.rd(response_meta21),
       .w_ce(response_write),.w_addr(7'(response_wp)),.wd(pending_meta[20:0]));
     ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192)) controller(
-        .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
+        .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_sp),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
         .wr_v(enqueue_aq),.wr_bank(push[318:314]),.wr_bank_regions(qbank_post_regions),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),

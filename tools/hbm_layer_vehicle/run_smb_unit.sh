@@ -17,7 +17,7 @@ ssh "$HOST" "mkdir -p $OUT/src $OUT/out $OUT/work && rm -rf $OUT/src/*" || exit 
 git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tools/hdc_golden.py tools/rtl_gpu_sm_exact.py \
   tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py \
   rtl/hbm_accel/loader/service_native rtl/hbm_accel/sm/static rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
-  rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14 \
+  rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_forest.sv rtl/model_ready_hbm_r14 \
   physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 results/rtl/hbm_ds_layer_tput_1018/fixtures/L02 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L14 results/rtl/hbm_ds_layer_tput_1018/fixtures/head | ssh "$HOST" "tar -x -C $OUT/src" || exit 2

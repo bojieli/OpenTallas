@@ -50,8 +50,16 @@ module ot_hbm_svc_pc_ctrl_leaf_safe #(
 `else
     localparam integer REF_STRAP=RELOAD;
 `endif
+    // HBM-MC3 (10-19): +define+OT_PC_SAFE_MC3 measures the MC3 physical structure (pure face captures, reset forest,
+    // local pc_id copies) on this bench; default = unchanged.
+`ifdef OT_PC_SAFE_MC3
+    localparam integer MC3=1;
+`else
+    localparam integer MC3=0;
+`endif
     wire[5:0]owner_fault_split;assign owner_fault=|owner_fault_split;
-    ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY)) u_cfg(
+    ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY),
+      .PURE_FACE(MC3),.RST_FOREST(MC3),.PCID_LOCAL(MC3)) u_cfg(
         .pc_id(5'(PC_STRAP)),.refresh_reload(8'(REF_STRAP)),
         .k_v(k_v),
         .k_rdy(k_rdy),
