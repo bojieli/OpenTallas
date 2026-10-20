@@ -22,7 +22,10 @@
     "gather_4w_x4",
     "mixed_8w_x24"
   ],
-  "mutant_qualification": "PENDING",
+  "mutant_qualification": {
+    "OWNER": "actual reduce fault11111111/EXIT1; gather remainsPASS",
+    "GATHER": "actual gather mismatches2112/EXIT1; reduce remainsPASS"
+  },
   "remaining_violations": [
     {
       "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
@@ -2324,5 +2327,9 @@
       "ports": "0",
       "examples": "g_xf_legacy.u_xf/_62302_/C,g_xf_legacy.u_xf/_27356_/C,g_xf_legacy.u_xf/_27315_/C,g_xf_legacy.u_xf/_27207_/A,g_xf_legacy.u_xf/_27184_/A,g_xf_legacy.u_xf/_27173_/A"
     }
-  ]
+  ],
+  "optin_sources_sha256": {
+    "rtl/rom/ot_coll_tp8_split.sv": "de92750e3b003cd2602d4af0fdae6dcff2d73ed182984ef82b81fad2eab940b5",
+    "rtl/rom/ot_coll_fold_slice_fan32.sv": "2d5388c8c63c25aada4495371c3862e58143b1de5d2156afab995a7705eba1d7"
+  }
 }
