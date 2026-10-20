@@ -42,6 +42,11 @@ import numpy as np  # noqa: E402
 
 ROOT = LX.ROOT
 NSLICE, NFRAME = 16, 8
+# S81-ROMCAP (10-20): OT_XS_GU_MERGE=1 places a SwiGLU expert's gate and up rows as one matrix (rows gate ++ up, same x,
+# fmt and K), so plan_phase fills R-row phases across both tensors: 9 rows / frame -> 3 phases instead of 2 + 2.
+# Contents only (ROM images, cfg7 rows, xs streams); default 0 keeps every record byte-identical.
+import os  # noqa: E402
+GU_MERGE = os.environ.get('OT_XS_GU_MERGE', '0') == '1'
 
 
 def sha(b):
@@ -100,9 +105,13 @@ class Fix:
         return np.fromfile(self.d / rel, dtype=np.dtype(f['dtype'])).reshape(f['shape'])
 
     def w(self, n):
+        if n.endswith('.w13'):      # S81-ROMCAP (GU_MERGE): gate rows ++ up rows of one expert (same x, fmt, K)
+            return np.concatenate([self.w(n[:-3] + 'w1'), self.w(n[:-3] + 'w3')])
         return self.arr(f'weights/{n}.bin')
 
     def sc(self, n):
+        if n.endswith('.w13'):
+            return np.concatenate([self.sc(n[:-3] + 'w1'), self.sc(n[:-3] + 'w3')])
         return self.arr(f'weights/{n}.scale.bin')
 
     def op(self, n):
@@ -160,6 +169,13 @@ def op_groups(fx, op):
             j0 = (m['tp_split']['shared_ff_rows'] if e == 'shared' else m['tp_split']['expert_ff_rows'])[m['rank']][0]
             tot = 4 * nff
             tie_op = 'ffn.shared_gu' if e == 'shared' else f'ffn.experts.{e[3:]}.gu'
+            if GU_MERGE:    # S81-ROMCAP: ONE matrix per expert (gate ++ up rows), so a frame's 9 rows fill 3 phases, not 4
+                rows = list(range(2 * nff))
+                tie = [(tie_op, j0 + r) for r in range(nff)] + [(tie_op, tot + j0 + r) for r in range(nff)]
+                # gate j and up j interleaved, so they stay in the same frame (as the 2-matrix placement) +-1 row
+                g = [[fr for fr in deal_into([r for j in js for r in (j, nff + j)], NFRAME)] for js in deal(nff, NSLICE)]
+                out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e))
+                continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
                 rows = list(range(nff))
