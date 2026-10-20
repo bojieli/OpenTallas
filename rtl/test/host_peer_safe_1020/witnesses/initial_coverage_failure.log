@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020
+ot-run: ot-epyc6       admits   734 GB (avail 627, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 42 disk 4740 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2629990-1792484351 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL cycle=100000 coverage
+[1000006000] %Fatal: tb.sv:21: Assertion failed in tb.fail
+%Error: rtl/test/host_peer_safe_1020/tb.sv:21: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2629990-1792484351): exit 1

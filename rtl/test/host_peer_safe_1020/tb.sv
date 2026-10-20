@@ -20,6 +20,7 @@ module tb;
  reg[6:0]crpipe=0;integer seed=1234,rv;
  task fail(input string what);$display("FAIL cycle=%0d %s",cycle,what);$fatal(1);endtask
  initial begin
+  rv=$urandom(seed);
   for(cycle=0;cycle<100000;cycle=cycle+1)begin
    @(negedge ck);
    rst_n=(cycle%1024>=4);
@@ -27,14 +28,14 @@ module tb;
    else begin
     ntokens=ntokens+int'(a_normal_tx_cr);rtokens=rtokens+int'(a_rx_cr);
    end
-   rv=$urandom(seed);
+   rv=$urandom();
    normal_tx_v=rst_n&&ntokens>0&&(rv%5!=0);
    rx_v=rst_n&&rtokens>0&&(rv%7!=0);
    peer_tx_valid=rst_n&&(rv%3!=0);peer_rx_ready=rv[4];
    normal_rx_cr=a_normal_rx_v;tx_cr=crpipe[6];crpipe={crpipe[5:0],a_tx_v};
    if(normal_tx_v)ntokens=ntokens-1;if(rx_v)rtokens=rtokens-1;
    for(int j=0;j<16;j++)begin
-    normal_tx_d[j*32+:32]=$urandom(seed);rx_d[j*32+:32]=$urandom(seed);peer_tx_data[j*32+:32]=$urandom(seed);
+    normal_tx_d[j*32+:32]=$urandom();rx_d[j*32+:32]=$urandom();peer_tx_data[j*32+:32]=$urandom();
    end
    normal_tx_d[527:512]=16'h4321;rx_d[527:512]=rv[8]?16'h9000:16'h1234;
    // Every fourth epoch injects overcredit/malformed traffic; reset clears fault.
@@ -54,6 +55,7 @@ module tb;
    if(a_fault!==b_fault)fail("fault");
    checks=checks+1;normalwords=normalwords+int'(a_normal_tx_cr);peerwords=peerwords+int'(a_peer_rx_valid&&peer_rx_ready);peerout=peerout+int'(a_tx_v&&a_tx_d[527:524]==9);
   end
+   $display("COUNTS n=%0d pr=%0d pt=%0d",normalwords,peerwords,peerout);
   if(normalwords<1000||peerwords<1000||peerout<1000)fail("coverage");
   $display("PASS samecycle checks=%0d normal=%0d peer_rx=%0d peer_tx=%0d",checks,normalwords,peerwords,peerout);$finish;
  end
