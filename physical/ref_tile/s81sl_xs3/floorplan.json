@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "s81sl_xs3",
- "top": "ot_s81sl_xs",
+ "top": "ot_s81sl_xs3",
  "kind": "tile",
  "die": [
   0,
@@ -478,6 +478,7 @@
   "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs3.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
   "physical/common_flow/clock_split_km.tcl",

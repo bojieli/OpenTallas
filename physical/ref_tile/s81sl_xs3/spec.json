@@ -1,6 +1,6 @@
 {
  "name": "s81sl_xs3",
- "top": "ot_s81sl_xs",
+ "top": "ot_s81sl_xs3",
  "kind": "tile",
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
@@ -11,15 +11,14 @@
   "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs3.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
  ],
  "defines": [
   "DSFD_PQ_STATIC_X2"
  ],
- "params": {
-  "RD2": 2
- },
+ "params": {},
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
@@ -459,7 +458,7 @@
  "fill_reason": {
   "macro_channel": "31 macros (24 SRAM 128x256 in 3 banks x 2 columns x 4 rows, 7 ROM 4096x72 in one row) ~110k um2 with >= 23.7 um row / 34.8 um column channels and >= 43 um to every face; g_d enters the N face in [49.68, 583.2], the span of the ring stop leaf's S-face g_d."
  },
- "structural_change": "S81-XG3 (LEAD3-S81 10-19): x streamer as its own hard leaf (sibling of ot_s81sl_rs in the slice parent; replaces the s81sl_xg tile whose gates xgr / xgr2 failed: 38k flops one root, 4,486-load index net, 585 / 299 reset fanouts, 27 macro channels < 20 um). RD2=2 = RD2=1 (bank-local 8:1 + 3:1 read stages) + arrival-table and block-exponent lookups through ot_s81sl_xs_lut (kept per-16-entry-group copies of the index low bits + a kept group-select copy: no index flop drives a whole table) + 11 reset regions (kept select copies get their own) + xs_ctl 3rd reset region (p1 / bt pipeline); fault glue fo = reg(fi | fault) moved in from ot_s81sl_xg (same edge). Same edges as xgr's RD2=1 (xg_bench). Floorplan: no abutted macros -- 3 banks x (2 columns x 4 rows), 34.8 um column / 23.7 um row channels, ROM row along S with 70 um gaps, 45 um to the SRAMs; std band N (gather pin flops) + middle (controller, lx) + S (frame-word flops). SAFE checklist: 1 pins waived-with-reason (source-registered), reset_landing ON; 2 reach PASS (864 um wide, every path flop -> <= ~450 um -> flop with the gd_q flops free to sit between face and bank); 3 fanout fixed (lut copies, kept select copies, reset regions); 4 depth PASS (two-stage read crossbar); 5 storage: x buffer SRAM, exponent table 384 x 10 b flops read through kept copies (waived: 3.8 kb with 3 write ports per beat; SRAM move = next variant if it shows); 6 floorplan PASS (channels >= 20, lattice, aspect 1.8); 7 clock km K=16, spread TT+FF <= 80, io_hold_margin 0.03; 8 schedule unchanged vs xgr.",
+ "structural_change": "S81-XG3 (LEAD3-S81 10-19): x streamer as its own hard leaf ot_s81sl_xs3 (= ot_s81sl_xs #(.RD2(2)), unparameterised name) (sibling of ot_s81sl_rs in the slice parent; replaces the s81sl_xg tile whose gates xgr / xgr2 failed: 38k flops one root, 4,486-load index net, 585 / 299 reset fanouts, 27 macro channels < 20 um). RD2=2 = RD2=1 (bank-local 8:1 + 3:1 read stages) + arrival-table and block-exponent lookups through ot_s81sl_xs_lut (kept per-16-entry-group copies of the index low bits + a kept group-select copy: no index flop drives a whole table) + 11 reset regions (kept select copies get their own) + xs_ctl 3rd reset region (p1 / bt pipeline); fault glue fo = reg(fi | fault) moved in from ot_s81sl_xg (same edge). Same edges as xgr's RD2=1 (xg_bench). Floorplan: no abutted macros -- 3 banks x (2 columns x 4 rows), 34.8 um column / 23.7 um row channels, ROM row along S with 70 um gaps, 45 um to the SRAMs; std band N (gather pin flops) + middle (controller, lx) + S (frame-word flops). SAFE checklist: 1 pins waived-with-reason (source-registered), reset_landing ON; 2 reach PASS (864 um wide, every path flop -> <= ~450 um -> flop with the gd_q flops free to sit between face and bank); 3 fanout fixed (lut copies, kept select copies, reset regions); 4 depth PASS (two-stage read crossbar); 5 storage: x buffer SRAM, exponent table 384 x 10 b flops read through kept copies (waived: 3.8 kb with 3 write ports per beat; SRAM move = next variant if it shows); 6 floorplan PASS (channels >= 20, lattice, aspect 1.8); 7 clock km K=16, spread TT+FF <= 80, io_hold_margin 0.03; 8 schedule unchanged vs xgr.",
  "job": {
   "owner": "Claude:S81-XG3",
   "branch": "claude/s81-xgr-1019",

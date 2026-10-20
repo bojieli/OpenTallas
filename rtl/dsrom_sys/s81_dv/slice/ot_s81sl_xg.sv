@@ -27,7 +27,7 @@ module ot_s81sl_xg (
     output wire            fault
 );
     // S81-XG3 (10-19): wiring only.  The ring stop is ot_s81sl_rs (bit-sliced control copies, cycle-equal to
-    // ot_s81sl_rstop RELAY = 1) and the x streamer ot_s81sl_xs RD2 = 2 (RD2 = 1 + kept-copy table reads); both are hard
+    // ot_s81sl_rstop RELAY = 1) and the x streamer ot_s81sl_xs3 = ot_s81sl_xs RD2 = 2 (RD2 = 1 + kept-copy table reads); both are hard
     // sibling leaves (kits s81sl_rs, s81sl_xs3) with their own clock roots, the 3 x 1,031-b gather port registered on
     // both sides (rs g_* flops -> xs pin flops).  The fault register moved into xs (fo = reg(fi | fault)): same edge.
     wire [2:0] g_v, g_fam; wire [20:0] g_idx; wire [3071:0] g_d; wire f_r, f_s;
@@ -35,6 +35,6 @@ module ot_s81sl_xg (
         .vi(vi), .vo(vo), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo),
         .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .fault(f_r));
-    ot_s81sl_xs #(.RD2(2)) u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
+    ot_s81sl_xs3 u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
         .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_s), .fi(f_r), .fo(fault));
 endmodule
