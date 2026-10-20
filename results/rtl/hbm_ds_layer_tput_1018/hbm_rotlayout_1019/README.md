@@ -41,7 +41,9 @@ LEAD + tRFCpb = 244 cycles. REF_WIN = 160 is the hard refusal limit. It is the t
   - Per kind: phase steps 2/3/2/1, triples, and the full set sequence.
 - `SMB_LAYOUT=asbuilt` gives `ROTLAYOUT REFUSED` (`smb_compile_asbuilt.txt`).
 - `kv_image/L02`, `kv_image/L14`: PASS (readback exact), with rotated sets 0,1,2,1 per SM.
-- The full production run is `full96/` (bwsafe_face + FACE_MC3, G320/PNUM88/PADD8/FETCH96, compiled with this layout). Result: see `full96/README` once it is collected.
+- The full production run is `full96/` (run_smb_unit.sh ff63e9fd7 bwsafe_face, XDEF=,FACE_MC3, G320/PNUM88/PADD8/FETCH96, ot-epyc5, Verilator 5.050). The images were compiled with this layout and run through the real issuer + MC3b leaves.
+  - Result: **SMB_UNIT PASS**, ops 66/66 bit-exact, gos 154/154 with go_slots_exact, END 45260 cycles (same as the MC3b baseline), dram_reads 35372.
+  - END is unchanged because the calendar is paced at the price; the rotated addresses only have to decode exactly.
 
 ## Exposed-bank census on the successor controller (MC3b a575dc283, tb_hbm_bw_pc4 +EXPOSE, MR SAFE OT_PC_SAFE_MC3, Verilator 5.050, ot-epyc5) — `census_mc3b/`
 

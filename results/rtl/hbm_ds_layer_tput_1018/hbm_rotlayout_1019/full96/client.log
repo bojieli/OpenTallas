@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits  1011 GB (avail 821, growth 113, headroom 0, waiters 0/0 GB) load 173/128 running 43 disk 575 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-rotlayout-1019/full96/smb
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-rotlayout-1019/full96/smb
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hbm-rotlayout-1019/full96/smb
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-rotlayout-1019/full96/smb
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-rotlayout-1019/full96/smb
+ot-run: -> ot-epyc5
+ot-heavy: request 64G is charged 36G (class 'smb_unit.py:run' measured peak 23.5G, n=63+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1404426-1792472338 after 0 s
+bwsafe_face_RC 0
+SMB_UNIT PASS ops=66 pass=66 gos=154/154 go_slots_exact=True runs=4 fault=None DONE cycles=45260 results=301 gos=154 runs=4 ing=624/624 xw=25688/25688 ids=3/3 dram_reads=35372
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1404426-1792472338): exit 0
+SMB_UNIT_DONE bwsafe_face
