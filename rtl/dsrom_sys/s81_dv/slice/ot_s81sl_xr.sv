@@ -518,19 +518,25 @@ module ot_s81sl_xr #(
     // mux loads per bit; now <= 32); KEPT copies registered from un's next state.
     // XR7: one copy per 8 bits (was 16: 70 pins), reset-free (un_nx is a function of reset state).
     (* keep *) reg [5*32*2-1:0] un_c; reg [1:0] un_nx [0:4]; reg [1:0] un_na [0:4];
+    (* keep *) reg [5*2-1:0] un_s;          // C3: per-leaf state copy that only feeds the cone of copies 0..15
     always @(*)
         for (k = 0; k < 5; k = k + 1) begin
             un_nx[k] = un[k];
             if (ub[k]) un_nx[k] = un[k] + 2'd1;
             if (rwe[k]) un_nx[k] = 2'd0;
-            // XR3-CLS census (C3): un_nx drove 32 copies + the master = 33 pins.  Copies 0..15 take the same next state
-            // computed from copy 0's own value (un_c[64 k] == un[k] every cycle): two distinct cones of 16 / 17 pins.
-            un_na[k] = (CLS != 0) ? un_c[64 * k +: 2] : un[k];
+            // XR3-CLS census (C3): un_nx drove 32 copies + the master = 33 pins.  Copies 0..15 (+ un_s) take the same
+            // next state computed from the dedicated state copy un_s (== un[k] every cycle): two cones of 17 pins each.
+            un_na[k] = (CLS != 0) ? un_s[2 * k +: 2] : un[k];
             if (ub[k]) un_na[k] = un_na[k] + 2'd1;
             if (rwe[k]) un_na[k] = 2'd0;
         end
     always @(posedge clk) for (k = 0; k < 160; k = k + 1)
         un_c[2 * k +: 2] <= (CLS != 0 && k % 32 < 16) ? un_na[k / 32] : un_nx[k / 32];
+    // un_s feeds back on itself, so unlike the other copies it is RESET with un (region rs_r: 21 + 10 = 31 loads)
+    generate if (CLS != 0) begin : g_uns
+        always @(posedge clk or negedge rs_r)
+            if (!rs_r) un_s <= 10'd0; else for (k = 0; k < 5; k = k + 1) un_s[2 * k +: 2] <= un_na[k];
+    end endgenerate
     always @(posedge clk or negedge rs_r)
         if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
         else begin
