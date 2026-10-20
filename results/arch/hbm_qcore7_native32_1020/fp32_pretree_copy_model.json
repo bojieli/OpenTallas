@@ -21,5 +21,13 @@
     "additional_cycles": 0,
     "logic_cost_upper_bound": "Three extra pairs of 8-bit exponent equality and 31-bit zero reductions plus four local 8-bit selectors; actual mapped area/cell delta required",
     "scope": "standalone FP prototype only; no physical admission"
+  },
+  "fp5_LZC_split_model": {
+    "trigger": "FP4 actual native3 B2 control roots33/41/42 feed s2_val wide shift and s2_exp consumers",
+    "method": "Two independent kept LZC trees when CUT_D=0: original count for exponent, separate count for shift; cut-D path retains existing registered count. No arithmetic/capture edge changes, original shared files byte-identical.",
+    "added_ff": 0,
+    "added_cycles": 0,
+    "extra_logic": "At most one duplicate32-bit5-level LZC tree (31 merge nodes,5 count bits/node before optimization); actual mapped area required",
+    "qualification": "Full all-edge FP primitive bench+causal latency mutation+actual native required before any composition"
   }
 }
