@@ -1,0 +1,752 @@
+{
+ "name": "qfd_c_b16_reg1b",
+ "top": "qfd_c_b16_reg1b",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/a0_rr_bb.v",
+  "rtl/physical/qcluster/qfd_c_stn.sv",
+  "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+  "rtl/physical/qcluster/qfd_c_land_safe.sv",
+  "rtl/physical/qcluster/qfd_c_b16_reg1.sv"
+ ],
+ "params": {},
+ "clock": "cts",
+ "child_clock_ref": null,
+ "clock_port": "ck_c1r1",
+ "clock_ports": [
+  "ck_c1r1",
+  "ck_c1r0",
+  "ck_c1r2",
+  "ck_c0r1",
+  "ck_c2r1"
+ ],
+ "orfs_vars": {
+  "GPL_TIMING_DRIVEN": "0",
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "io_flop_at_pins": false,
+ "sdc_extra": [
+  "physical/qcluster/qfd_c_b16_reg1_regions.sdc"
+ ],
+ "reset_ports": [
+  "rst_c1r1",
+  "lrst_dn1_rly3_w",
+  "lrst_dn1_rly6_r",
+  "lrst_leg_2_0a_3_w",
+  "lrst_leg_2_0b_y_w",
+  "lrst_leg_1_1b_y_r",
+  "lrst_leg_3_0a_4_r",
+  "lrst_leg_4_0b_1_w",
+  "lrst_leg_4_0b_5_r"
+ ],
+ "outline": {
+  "w": 1900.8,
+  "h": 1987.2,
+  "exact": true
+ },
+ "child_lattice_um": 21.6,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t",
+   "at": [
+    907.2,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w258_narrow/views/qfd_c_land_w258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly3_wlo",
+   "at": [
+    1425.6,
+    259.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r258_narrow/views/qfd_c_land_r258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly3_rlo",
+   "at": [
+    1425.6,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w258_narrow/views/qfd_c_land_w258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly3_whi",
+   "at": [
+    1555.2,
+    259.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r258_narrow/views/qfd_c_land_r258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly3_rhi",
+   "at": [
+    1555.2,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_dn1_rly3",
+   "at": [
+    1425.6,
+    734.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_x",
+   "at": [
+    1425.6,
+    907.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_dn1_rly4",
+   "at": [
+    1425.6,
+    1166.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w258_narrow/views/qfd_c_land_w258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly6_wlo",
+   "at": [
+    1425.6,
+    1382.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r258_narrow/views/qfd_c_land_r258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly6_rlo",
+   "at": [
+    1425.6,
+    1555.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w258_narrow/views/qfd_c_land_w258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly6_whi",
+   "at": [
+    1555.2,
+    1382.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r258_narrow/views/qfd_c_land_r258_narrow",
+   "count": 1,
+   "inst": "u_l_dn1_rly6_rhi",
+   "at": [
+    1555.2,
+    1555.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0a_3_wlo",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0a_3_rlo",
+   "at": [
+    302.4,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0a_3_whi",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0a_3_rhi",
+   "at": [
+    432.0,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_p0",
+   "at": [
+    561.6,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_p1",
+   "at": [
+    648.0,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_p2",
+   "at": [
+    734.4,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_na",
+   "at": [
+    820.8,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0b_y_wlo",
+   "at": [
+    172.8,
+    604.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0b_y_rlo",
+   "at": [
+    691.2,
+    604.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0b_y_whi",
+   "at": [
+    43.2,
+    604.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_2_0b_y_rhi",
+   "at": [
+    561.6,
+    604.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_1_1b_y_wlo",
+   "at": [
+    820.8,
+    820.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_1_1b_y_rlo",
+   "at": [
+    172.8,
+    820.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_1_1b_y_whi",
+   "at": [
+    691.2,
+    820.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_1_1b_y_rhi",
+   "at": [
+    43.2,
+    820.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_y0",
+   "at": [
+    820.8,
+    1036.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_y1",
+   "at": [
+    820.8,
+    1382.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_y2",
+   "at": [
+    907.2,
+    1728.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_3_0a_4_wlo",
+   "at": [
+    1036.8,
+    1814.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_3_0a_4_rlo",
+   "at": [
+    1598.4,
+    1814.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_3_0a_4_whi",
+   "at": [
+    1166.4,
+    1814.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_3_0a_4_rhi",
+   "at": [
+    1728.0,
+    1814.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_1_wlo",
+   "at": [
+    1641.6,
+    1641.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_1_rlo",
+   "at": [
+    1641.6,
+    1468.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_1_whi",
+   "at": [
+    1771.2,
+    1641.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_1_rhi",
+   "at": [
+    1771.2,
+    1468.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_f1",
+   "at": [
+    1684.8,
+    1209.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_f2",
+   "at": [
+    1684.8,
+    907.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_f3",
+   "at": [
+    1684.8,
+    604.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_5_wlo",
+   "at": [
+    1641.6,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_5_rlo",
+   "at": [
+    1641.6,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_w257_narrow/views/qfd_c_land_w257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_5_whi",
+   "at": [
+    1771.2,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_land_r257_narrow/views/qfd_c_land_r257_narrow",
+   "count": 1,
+   "inst": "u_l_leg_4_0b_5_rhi",
+   "at": [
+    1771.2,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "bco",
+   "lf_i",
+   "lrst_dn1_rly6_r",
+   "lrst_leg_4_0b_1_w",
+   "ck_c1r2"
+  ],
+  "S": [
+   "bc",
+   "la_i",
+   "lf_o",
+   "lrst_dn1_rly3_w",
+   "lrst_leg_2_0a_3_w",
+   "lrst_leg_4_0b_5_r",
+   "ck_c1r1",
+   "ck_c1r0",
+   "rst_c1r1",
+   "far",
+   "cid"
+  ],
+  "E": [
+   "ly_o",
+   "lrst_leg_3_0a_4_r",
+   "ck_c2r1"
+  ],
+  "W": [
+   "lb_i",
+   "lt_o",
+   "lrst_leg_2_0b_y_w",
+   "lrst_leg_1_1b_y_r",
+   "ck_c0r1"
+  ]
+ },
+ "pin_ranges": {
+  "bc": [
+   1425.6,
+   1620.0
+  ],
+  "bco": [
+   1425.6,
+   1620.0
+  ],
+  "la_i": [
+   302.4,
+   496.8
+  ],
+  "lb_i": [
+   604.8,
+   734.4
+  ],
+  "lt_o": [
+   820.8,
+   950.4
+  ],
+  "ly_o": [
+   1814.4,
+   1944.0
+  ],
+  "lf_i": [
+   1641.6,
+   1836.0
+  ],
+  "lf_o": [
+   1641.6,
+   1836.0
+  ],
+  "lrst_dn1_rly3_w": [
+   1520.4,
+   1520.7
+  ],
+  "lrst_dn1_rly6_r": [
+   1520.4,
+   1520.7
+  ],
+  "lrst_leg_2_0a_3_w": [
+   400.2,
+   400.5
+  ],
+  "lrst_leg_2_0b_y_w": [
+   634.8,
+   635.1
+  ],
+  "lrst_leg_1_1b_y_r": [
+   853.8,
+   854.1
+  ],
+  "lrst_leg_3_0a_4_r": [
+   1844.4,
+   1844.7
+  ],
+  "lrst_leg_4_0b_1_w": [
+   1739.4,
+   1739.7
+  ],
+  "lrst_leg_4_0b_5_r": [
+   1742.4,
+   1742.7
+  ],
+  "ck_c1r1": [
+   1136.2,
+   1136.5
+  ],
+  "ck_c1r0": [
+   1405.6,
+   1405.9
+  ],
+  "ck_c1r2": [
+   1405.6,
+   1405.9
+  ],
+  "ck_c0r1": [
+   594.8,
+   595.1
+  ],
+  "ck_c2r1": [
+   1804.4,
+   1804.7
+  ],
+  "rst_c1r1": [
+   1138.2,
+   1138.5
+  ],
+  "far": [
+   1140.2,
+   1140.5
+  ],
+  "cid": [
+   1142.2,
+   1148.2
+  ]
+ },
+ "pin_layers": {
+  "bc": "M5",
+  "bco": "M5",
+  "la_i": "M5",
+  "lb_i": "M4",
+  "lt_o": "M4",
+  "ly_o": "M4",
+  "lf_i": "M5",
+  "lf_o": "M5",
+  "lrst_dn1_rly3_w": "M5",
+  "lrst_dn1_rly6_r": "M5",
+  "lrst_leg_2_0a_3_w": "M5",
+  "lrst_leg_2_0b_y_w": "M4",
+  "lrst_leg_1_1b_y_r": "M4",
+  "lrst_leg_3_0a_4_r": "M4",
+  "lrst_leg_4_0b_1_w": "M5",
+  "lrst_leg_4_0b_5_r": "M5",
+  "ck_c1r1": "M5",
+  "ck_c1r0": "M5",
+  "ck_c1r2": "M5",
+  "ck_c0r1": "M4",
+  "ck_c2r1": "M4",
+  "rst_c1r1": "M5",
+  "far": "M5",
+  "cid": "M5"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "pin_v": "M5",
+  "pin_h": "M4 M6",
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03
+ },
+ "cluster_level": 2,
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every data port lands directly in a hard-half register (writer slot capture / reader output flop, both closed views); rst_c1r1 is registered at the face (rpin_q) then 5 kept stages; lrst_* neighbour leaves are registered twice inside each closed half (rst_l0 -> r2); cid / far are static straps"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands rst_c1r1 in rpin_q + kept rr_* stages; every closed half lands rsi in 2 stages"
+ },
+ "structural_change": "QW-CLUSTER3/CB16 (LEAD-QW 12:15): CB16 parent as clock REGIONS joined only by LANDED crossings built from the CLOSED hard halves qfd_c_land_{w,r}{257,258}_narrow (writer on the source root, reader on the destination root, static D4/K2 ring, bank paths = landed multicycle window), CLOSED qfd_c_xstnw_safe column station and CLOSED qfd_c_stn514/516 relays; intra-region single-cycle wires <= 405 um by placement (per-bit LEF check, plan.json).  ONE representative interior region (c1r1) + all 8 crossings touching it; A0 = diagnostic STAND-IN (no qualified A0 view).",
+ "job": {
+  "owner": "Claude:QW-CLUSTER3/CB16",
+  "branch": "claude/qw-cluster3-cb16-1019",
+  "tag": "reg1b",
+  "purpose": "CB16 representative landed region c1r1 (critical prefix: gate only, no submit)",
+  "submit": false,
+  "hold_merge": "QW-CLUSTER3 diagnostic: stand-in A0 + closed station/landing views",
+  "extra_paths": [
+   "results/arch/qwen_cluster_1017/q_cluster16/reg1"
+  ],
+  "no_bench_reason": "representative-region PHYSICAL gate only (critical prefix, never submitted); region bench owed: ring K2 == 3-deep pad equivalence and reset-epoch equality across the 8 crossings"
+ }
+}

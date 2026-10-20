@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_b16_reg1",
+ "enable": false,
+ "reason": "every data port lands directly in a hard-half register (writer slot capture / reader output flop, both closed views); rst_c1r1 is registered at the face (rpin_q) then 5 kept stages; lrst_* neighbour leaves are registered twice inside each closed half (rst_l0 -> r2); cid / far are static straps"
+}
