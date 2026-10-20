@@ -73,7 +73,11 @@ module qkd_host_peer_link #(parameter integer MUT=0, parameter integer SAFE_SRAM
   for(genvar c=0;c<33;c=c+1)begin:g_out
    localparam integer LO=16*c;
    wire[527:0]pframe={4'd9,12'd0,peer_word ^ 512'(MUT==1)};
+`ifdef OT_PEER_MUT_CHOICE
+   always @(posedge ck)tx_d[LO+:16]<=(choice[c]^(c==0))?pframe[LO+:16]:nhead[LO+:16];
+`else
    always @(posedge ck)tx_d[LO+:16]<=choice[c]?pframe[LO+:16]:nhead[LO+:16];
+`endif
   end
  end else begin:g_payload_legacy
   reg[511:0]word_q;
