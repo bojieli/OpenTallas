@@ -327,12 +327,12 @@ module dsdv_idx_rg_r32 #(
     reg  [3:0]   sra;                         // the head item's scale row {slot, cell[3]}
     genvar gp;
     generate for (gp = 0; gp < 4; gp = gp + 1) begin : g_land
-        dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
+        dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
             .ck(ck), .re(lr_e[gp]), .ra(10'(lr_a)), .rd(lr_d[gp]),
             .we(lw_v[gp]), .wa(10'(lw_a[gp])), .wd(lw_dd[gp / 2]), .wm({256{1'b1}}));
     end
     for (gp = 0; gp < 2; gp = gp + 1) begin : g_scm
-        dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
+        dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
             .ck(ck), .re(sre[gp]), .ra(10'(sra)), .rd(sr_d[gp]),
             .we(sw_v[gp]), .wa(10'(sw_r[gp])), .wd(sw_d[gp]), .wm(sw_m[gp]));
     end endgenerate
@@ -397,7 +397,7 @@ module dsdv_idx_rg_r32 #(
     wire [511:0] lf_q;                         // held until the next read: the prefetched word itself
     genvar hh;
     generate for (hh = 0; hh < 2; hh = hh + 1) begin : g_lm
-        dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
+        dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
             .ck(ck), .re(lfr_e), .ra(10'(lfr_a)), .rd(lf_q[256 * hh +: 256]),
             .we(lf_push), .wa(10'(lf_wn[LFW-1:0])), .wd(q_d[256 * hh +: 256]), .wm({256{1'b1}}));
     end endgenerate
@@ -726,7 +726,7 @@ module dsdv_idx_rg_r32 #(
     reg  [3:0]     hwt;
     (* keep = "true" *) reg [3:0] hwea, hweb, hrta, hrtb;   // registered entry write enables / read-token copies
     wire           ir_e = (im_n != 0) && ({1'b0, hq_n} + {3'b0, ir_f} <= 4'd3);
-    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_iq (
+    dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_iq (
         .ck(ck), .re(ir_e), .ra(10'(iq_r)), .rd(iq_q),
         .we(ipush), .wa(10'(iq_w)), .wd({{(256-IWX){1'b0}}, ipd}), .wm({256{1'b1}}));
     reg  [IWX-1:0] hd;
@@ -835,7 +835,7 @@ module dsdv_idx_rg_r32 #(
     wire [255:0] mq_q;
     reg  [9:0]   mq_w, mq_r;
     reg          o_v1; reg o_f1; reg [15:0] o_s1;
-    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mq (
+    dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_mq (
         .ck(ck), .re(o_v), .ra(mq_r), .rd(mq_q),
         .we(k_v), .wa(mq_w), .wd({235'd0, k_m}), .wm({256{1'b1}}));
     // score queue (macro) + 4-entry head ring
@@ -849,7 +849,7 @@ module dsdv_idx_rg_r32 #(
     reg  [3:0]   swt;
     (* keep = "true" *) reg [3:0] swea, sweb, srta, srtb;
     wire         s_re = (sm_n != 0) && ({1'b0, sh_n} + {3'b0, sr_f} <= 4'd3);
-    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
+    dsdv_idx_m1k_r32 #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
         .ck(ck), .re(s_re), .ra(sq_r), .rd(sq_q),
         .we(o_v1), .wa(sq_w), .wd({218'd0, mq_q[20:0], o_f1, o_s1}), .wm({256{1'b1}}));
     reg  [37:0]  t_q;
@@ -1137,14 +1137,14 @@ module dsdv_idx_vring #(
 );
     initial if (D < 1 || D > 127) $fatal(1, "dsdv_idx_vring: D must be 1..127");
     localparam integer RP = 128 - D;          // read position at reset release
-    reg [127:0] cell;
+    reg [127:0] ring_bits;
     reg [15:0]  wr, rr;
     reg [7:0]   wc, rc;
     reg [6:0]   wn;
     reg         warm;
     integer k;
     always @(posedge ck) begin
-        for (k = 0; k < 128; k = k + 1) if (wr[k / 8] && wc[k % 8]) cell[k] <= d[k / 32];
+        for (k = 0; k < 128; k = k + 1) if (wr[k / 8] && wc[k % 8]) ring_bits[k] <= d[k / 32];
         wc <= {wc[6:0], wc[7]}; if (wc[7]) wr <= {wr[14:0], wr[15]};
         rc <= {rc[6:0], rc[7]}; if (rc[7]) rr <= {rr[14:0], rr[15]};
         if (!warm) begin wn <= wn + 7'd1; if (wn == 7'(D - 1)) warm <= 1'b1; end
@@ -1154,7 +1154,35 @@ module dsdv_idx_vring #(
     reg rq;
     always @* begin
         rq = 1'b0;
-        for (k = 0; k < 128; k = k + 1) rq = rq | (cell[k] & rr[k / 8] & rc[k % 8]);
+        for (k = 0; k < 128; k = k + 1) rq = rq | (ring_bits[k] & rr[k / 8] & rc[k % 8]);
     end
     assign q = warm && rq;
+endmodule
+
+module dsdv_idx_m1k_r32 #(
+    parameter bit SRAM_MACRO = 0
+) (
+    input  wire         ck,
+    input  wire         re,
+    input  wire [9:0]   ra,
+    output wire [255:0] rd,
+    input  wire         we,
+    input  wire [9:0]   wa,
+    input  wire [255:0] wd,
+    input  wire [255:0] wm
+);
+    generate if (SRAM_MACRO) begin : g_m
+        ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
+            .clk(ck), .r_ce_in(re), .r_addr_in(ra), .rd_out(rd),
+            .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
+            .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    end else begin : g_b
+        reg [255:0] mem [0:1023];
+        reg [255:0] q;
+        always @(posedge ck) begin
+            if (we) mem[wa] <= (mem[wa] & ~wm) | (wd & wm);
+            if (re) q <= mem[ra];
+        end
+        assign rd = q;
+    end endgenerate
 endmodule
