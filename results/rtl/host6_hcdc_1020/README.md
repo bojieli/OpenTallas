@@ -1,0 +1,9 @@
+# HOST6 HCDC source qualification
+
+The source-bound event proof now passes without a reset-copy theorem or shared checker change. The prior kept producer/fault/MSB copies are recovered from ep7's retained native32 source. Each snapshot byte requires the actual canonical request transition, each destination byte requires the canonical synchronized request != acknowledge, and each kept snapshot high-nibble copy holds until the canonical request changes. The explicit snapshot_hi payload declaration covers all source state read across the boundary.
+
+These guards are redundant after the original common reset has asserted (the kept copies share D/clock/reset). The checker treats every initial Q independently; it proves event publication/quiet capture directly. It never aliases state or assumes reset. No additional steady-state or reset-release edge is introduced; original files remain unchanged.
+
+Fleet actual wrapper lint PASS. Three causal source negatives (remove publication guard, capture guard, high payload hold) all refused in the original BDD checker; witnesses identify real violated event properties. Verilator5.050 lockstep fence: 15000cycles,4954sent,4945received,1245done,8282blocked PASS. SRAM old-address and missing-bypass mutants both fail with committed causal witnesses. Full mapped wrapper native census PASS,6394FF,depth411.7ps,max32,zero role errors; reset/comb drivers included. Native physical source wrappers include existing pin/reset landing and no tied output bits. Report's pin/storage declarations require separate source inspection; no gate/route qualification is implied.
+
+Native synthesis uses the original host_sram1 wrapper recipe. Current main native_census.py is a tool dependency (not part of this source commit). Gate kit generation and final pre-gate census are separate, pending work.

@@ -27,13 +27,14 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
  ot_host_reset_bank #(.N(3)) u_rsh(.clk(clk_h),.async_rst_n(rst_n),.sync_rst_n(rn_bank));
  always @(posedge clk_h or negedge rn_h)if(!rn_h)begin iv_q<=0;ocr_q<=0;fault_q<=0;end
  else begin iv_q<=in_v;ocr_q<=out_cr;fault_q<=fc2|fh;end
-  wire req_next=(!fc&&req==ac2&&commits!=snapshot)?~req:req;
   wire[32:0] add={1'b0,commits}+ack_q;
+  wire fc_next=fc|add[32];
+  wire req_next=(!fc&&req==ac2&&commits!=snapshot)?~req:req;
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin commits<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
    else begin
     ac1<=ack_host;ac2<=ac1;req<=req_next;
-    if(add[32])fc<=1;
+    fc<=fc_next;
     if(!fc)begin
      commits<=add[31:0];
     end
@@ -66,19 +67,32 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
   wire is_done=head[63:56]==8'h01;
   assign pop=count!=0&&host_credits!=0&&!fh&&!fc2&&(!is_done||MUT!=0||landed>=head[31:0]);
   assign fault=fault_q;assign landed_debug=landed;
-  (* keep *)reg[3:0] req_copy,ack_copy;
+  (* keep *)reg[3:0] req_copy,ack_copy,fc_copy;
+  (* keep *)reg[7:0] snapshot_hi,landed_hi;
+  wire[31:0] snapshot_next,landed_next;
+  wire[31:0] snapshot_cmp[0:1],landed_cmp[0:1];
+  for(genvar h=0;h<2;h=h+1)begin:g_compare_sources
+   assign snapshot_cmp[h]={snapshot_hi[h*4+:4],snapshot[27:0]};
+   assign landed_cmp[h]={landed_hi[h*4+:4],landed[27:0]};
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)snapshot_hi[h*4+:4]<=0;else if(req_next!=req)snapshot_hi[h*4+:4]<=snapshot_next[31:28];
+   always @(posedge clk_h or negedge rn_bank[2])
+    if(!rn_bank[2])landed_hi[h*4+:4]<=0;else landed_hi[h*4+:4]<=landed_next[31:28];
+  end
   for(genvar k=0;k<4;k=k+1)begin:g_capture_copies
    always @(posedge ck or negedge rst_n)
     if(!rst_n)req_copy[k]<=0;
     else req_copy[k]<=req_next;
    always @(posedge ck or negedge rst_n)
-    if(!rst_n)snapshot[k*8+:8]<=0;
-    else if(!fc&&req_copy[k]==ac2&&commits!=snapshot)snapshot[k*8+:8]<=commits[k*8+:8];
+    if(!rst_n)fc_copy[k]<=0;else fc_copy[k]<=fc_next;
+   assign snapshot_next[k*8+:8]=(req_next!=req&&!fc_copy[k]&&req_copy[k]==ac2&&commits!=snapshot_cmp[k/2])?commits[k*8+:8]:snapshot[k*8+:8];
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)snapshot[k*8+:8]<=0;else snapshot[k*8+:8]<=snapshot_next[k*8+:8];
    always @(posedge clk_h or negedge rn_h)
     if(!rn_h)ack_copy[k]<=0;else ack_copy[k]<=rc2;
+   assign landed_next[k*8+:8]=(rc2!=ack_host && rc2!=ack_copy[k] && snapshot_cmp[k/2]>=landed_cmp[k/2])?snapshot[k*8+:8]:landed[k*8+:8];
    always @(posedge clk_h or negedge rn_bank[1])
-    if(!rn_bank[1])landed[k*8+:8]<=0;
-    else if(rc2!=ack_copy[k] && snapshot>=landed)landed[k*8+:8]<=snapshot[k*8+:8];
+    if(!rn_bank[1])landed[k*8+:8]<=0;else landed[k*8+:8]<=landed_next[k*8+:8];
   end
   // Payload carries meaning only on out_v; enable-free capture avoids broad enables/reset.
   always @(posedge clk_h)out_d<=head;

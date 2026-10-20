@@ -1,0 +1,17 @@
+{
+  "publication": {
+    "verdict": "REFUSED",
+    "message": "fence_req: payload u_rank__u_fence.g_on.snapshot[0]/u_rank__u_fence.g_on.snapshot_cmp[0][0]/u_rank__u_fence.g_on.snapshot_cmp[1][0] changes while the Gray count holds (payload not published with the event)",
+    "source_sha256": "c85d6fbaa05bf79302d04c5a3eaec50e6e42f85c6f6afc7e91c995317bb3f6ed"
+  },
+  "capture": {
+    "verdict": "REFUSED",
+    "message": "fence_req: capture u_rank__fence_landed[16]/u_rank__u_fence.g_on.landed[16]/u_rank__u_fence.g_on.landed_cmp[0][16]/u_rank__u_fence.g_on.landed_cmp[1][16]/u_rank__u_fence.landed_debug[16] loads payload u_rank__u_fence.g_on.snapshot_cmp[1][30]/u_rank__u_fence.g_on.snapshot_hi[6] with no event on the synchronised count (capture not gated)",
+    "source_sha256": "8019e16f19de092e929ec0c91efa5428df08401de31d3505ecc599bcabe35065"
+  },
+  "high_payload_hold": {
+    "verdict": "REFUSED",
+    "message": "fence_req: payload u_rank__u_fence.g_on.snapshot_cmp[0][28]/u_rank__u_fence.g_on.snapshot_hi[0] changes while the Gray count holds (payload not published with the event)",
+    "source_sha256": "cf4fb1debd2c9906d691bc1be53e388986972e9edfbab9ef9728dfb585abc9aa"
+  }
+}
