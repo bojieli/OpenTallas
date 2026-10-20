@@ -1,0 +1,12 @@
+ERR word 40 got 000c0e38 exp 002c0e38
+ERR word 40 got 000e619b exp 002e619b
+ERR word 41 got 00000000 exp 00000004
+ERR word 41 got 00000000 exp 00008000
+ERR word 41 got 00000000 exp 10008000
+ERR word 42 got 00000000 exp 00000200
+ERR word 42 got 00000000 exp 00400200
+TB_QKD_HOST_OBS_CSR FAIL errors=7
+- /srv/opentallas-scratch/claude/kv-bind5-obs-1019/src/rtl/test/qwen_host/tb_qkd_host_obs_csr.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.739 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
