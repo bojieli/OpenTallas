@@ -1,0 +1,129 @@
+{
+ "name": "s81svc_attn_hgrp_ns",
+ "top": "ot_hdc_v41x_attn_hgrp_s81",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "ld_w"
+  ],
+  "N": [
+   "ld_wp",
+   "ld_v",
+   "ld_mode",
+   "ld_bank",
+   "ld_grp",
+   "ld_w2v",
+   "gid",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "ib",
+   "iv",
+   "ibank"
+  ],
+  "E": [
+   "ov",
+   "oy",
+   "oflt"
+  ]
+ },
+ "clock": "cts",
+ "layer_cap": "M5",
+ "inhold": false,
+ "outhold": false,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (ot_hdc_v41x_attn_hgrp_s header): every input lands in a flop at the pin (R0 r_iv/r_ibank/r_ib, per-head kept ot_hdc_v41x_kreg copies of ld_*, hh/gsel from gid) and every output is a flop (ov, oy, oflt); recipe pin_regs would add a second unpriced stage on every score / p.v beat."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 388.8
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "SVC3 10-19: dsdv_svc_rs_attw stalled in synthesis on its engine (4 x ot_hdc_v41x_attn_tile_l, 933k pre-cells each, the SVCQ_ENG_FG3 simulation latencies FPL 3 / FML 3, not 833 ps-safe). The production engine (no FG3) is TILE_S 1: each tile = 4 x ot_hdc_v41x_attn_hgrp_s + wiring. This kit hardens that head group ONCE at the S81 engine parameters as the parameter-free ot_hdc_v41x_attn_hgrp_s81 (H16 HG4 TD32 NBANK5 BW3 PWORDS2 FPL4 FML6 F12 1, PCOLP 1); 16 instances per attw engine (tile_s with -DOT_ATTN_HGRP_HARD). Zero added cycles vs hgrp_s. SVC5 10-19 _ns variant: identical RTL/outline; yosys synth -noshare (SAT resource sharing took 2169 s of the 3539 s synth and stalled the 2700 s gate cap; dedicated operators per lane = no shared-resource muxing, checklist item 4). Parallel fallback to s81svc_attn_hgrp (bind first to close).",
+ "job": {
+  "owner": "Claude:S81-SVC5",
+  "branch": "claude/s81-svc4-attw-1019",
+  "tag": "s81svc_attn_hgrp_ns",
+  "purpose": "S81 svc_rs attention head group (16 per dsdv_svc_rs_attw) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/test/tb_hdc_v41x_attn_tile_s_lockstep.sv",
+   "rtl/hdc/v41x",
+   "tools/s81_dv/svc_rs/hgrp_bench.sh",
+   "results/rtl/s81_dv_1016/svc_rs/svc3_1019"
+  ],
+  "benches": [
+   {
+    "name": "hgrp_lockstep",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 0 20000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "pass_regex": "^HGRP_BENCH PASS mut=0",
+    "min_count_regex": "TILESLOCK cycles=20000 mismatches=0 ov=([1-9][0-9]{3,})",
+    "pass_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m0.log"
+   },
+   {
+    "name": "hgrp_mut_gid",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 1 20000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "^HGRP_BENCH FAIL mut=1",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m1.log"
+   },
+   {
+    "name": "hgrp_mut_flt",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 2 20000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "^HGRP_BENCH FAIL mut=2",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m2.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81svc_attn_hgrp/views",
+  "record_to": "results/rtl/ref_tile/s81svc_attn_hgrp"
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "orfs_vars": {
+  "SYNTH_ARGS": "-noshare"
+ }
+}

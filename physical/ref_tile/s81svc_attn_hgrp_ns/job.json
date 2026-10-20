@@ -1,0 +1,118 @@
+{
+ "name": "s81svc_attn_hgrp_ns-s81svc_attn_hgrp_ns-COMMIT",
+ "block": "ot_hdc_v41x_attn_hgrp_s81",
+ "ref_tile": true,
+ "owner": "Claude:S81-SVC5",
+ "purpose": "S81 svc_rs attention head group (16 per dsdv_svc_rs_attw) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-svc4-attw-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/tb_hdc_v41x_attn_tile_s_lockstep.sv",
+   "rtl/hdc/v41x",
+   "tools/s81_dv/svc_rs/hgrp_bench.sh",
+   "results/rtl/s81_dv_1016/svc_rs/svc3_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hdc_v41x_attn_hgrp_s81 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hgrp_lockstep",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 0 20000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "pass_regex": "^HGRP_BENCH PASS mut=0",
+    "min_count_regex": "TILESLOCK cycles=20000 mismatches=0 ov=([1-9][0-9]{3,})",
+    "pass_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m0.log"
+   },
+   {
+    "name": "hgrp_mut_gid",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 1 20000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "^HGRP_BENCH FAIL mut=1",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m1.log"
+   },
+   {
+    "name": "hgrp_mut_flt",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/hgrp_bench.sh {RUN}/hgrp 2 20000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "^HGRP_BENCH FAIL mut=2",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc3_1019/hgrp_m2.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81svc_attn_hgrp_ns/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81svc_attn_hgrp_ns/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81svc_attn_hgrp_ns --out {RUN}/record/views/ot_hdc_v41x_attn_hgrp_s81  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81svc_attn_hgrp_ns/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81svc_attn_hgrp/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81svc_attn_hgrp/s81svc_attn_hgrp_ns-s81svc_attn_hgrp_ns-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SVC3 10-19: dsdv_svc_rs_attw stalled in synthesis on its engine (4 x ot_hdc_v41x_attn_tile_l, 933k pre-cells each, the SVCQ_ENG_FG3 simulation latencies FPL 3 / FML 3, not 833 ps-safe). The production engine (no FG3) is TILE_S 1: each tile = 4 x ot_hdc_v41x_attn_hgrp_s + wiring. This kit hardens that head group ONCE at the S81 engine parameters as the parameter-free ot_hdc_v41x_attn_hgrp_s81 (H16 HG4 TD32 NBANK5 BW3 PWORDS2 FPL4 FML6 F12 1, PCOLP 1); 16 instances per attw engine (tile_s with -DOT_ATTN_HGRP_HARD). Zero added cycles vs hgrp_s. SVC5 10-19 _ns variant: identical RTL/outline; yosys synth -noshare (SAT resource sharing took 2169 s of the 3539 s synth and stalled the 2700 s gate cap; dedicated operators per lane = no shared-resource muxing, checklist item 4). Parallel fallback to s81svc_attn_hgrp (bind first to close)."
+}
