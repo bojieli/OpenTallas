@@ -1,0 +1,5 @@
+PASS LOCKSTEP seed=9 segs=1500 cycles=228061 writes=95149 dones=756
+- /srv/opentallas-scratch/claude/s81-shlk12/src/rtl/hdc/ingest/test/tb_s81_ing_n32_lockstep.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 456us; walltime 1.705 s; speed 267.516 us/s
+- Verilator: cpu 1.705 s on 1 threads; allocated 75 MB

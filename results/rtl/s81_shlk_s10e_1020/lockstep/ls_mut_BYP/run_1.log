@@ -1,0 +1,10 @@
+MISMATCH cyc 118680: drdy 1/1 inrdy 1/1 busy 1/1 wv 1/1 done 0/0 wa 4e99d854/4ec0e2d4 tag 9b/9b ns 70274/70274 wd_eq 1
+MISMATCH cyc 118681: drdy 1/1 inrdy 0/0 busy 1/1 wv 1/1 done 0/0 wa 4e99d855/4ec0e2d5 tag 9b/9b ns 70274/70274 wd_eq 1
+MISMATCH cyc 118682: drdy 1/1 inrdy 0/0 busy 1/1 wv 1/1 done 0/0 wa 4e99d856/4ec0e2d6 tag 9b/9b ns 70274/70274 wd_eq 1
+MISMATCH cyc 118683: drdy 1/1 inrdy 0/0 busy 1/1 wv 1/1 done 0/0 wa 4e99d857/4ec0e2d7 tag 9b/9b ns 70274/70274 wd_eq 1
+MISMATCH cyc 118684: drdy 1/1 inrdy 0/0 busy 1/1 wv 1/1 done 0/0 wa 4e99d858/4ec0e2d8 tag 9b/9b ns 70274/70274 wd_eq 1
+FAIL LOCKSTEP seed=1 mismatches=292 cycles=227852 consumed=56686/56686
+- /srv/opentallas-scratch/claude/s81-shlk12/src/rtl/hdc/ingest/test/tb_s81_ing_n32_lockstep.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 456us; walltime 2.332 s; speed 195.435 us/s
+- Verilator: cpu 2.332 s on 1 threads; allocated 75 MB
