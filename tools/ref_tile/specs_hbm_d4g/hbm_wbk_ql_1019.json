@@ -545,7 +545,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_e",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e.log",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e.stdout",
     "note": "E quadrant lockstep vs GEN0 wb_kport"
    },
    {
@@ -559,7 +559,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_w",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_w.log",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_w.stdout",
     "note": "W quadrant lockstep"
    },
    {
@@ -573,7 +573,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_e_wopen",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e_wopen.log",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e_wopen.stdout",
     "note": "E quadrant WOPEN=1 lockstep"
    },
    {
