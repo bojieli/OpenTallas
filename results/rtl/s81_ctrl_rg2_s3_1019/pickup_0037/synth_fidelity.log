@@ -1,0 +1,36 @@
+22.10. Analyzing design hierarchy..
+22.11. Analyzing design hierarchy..
+Warning: Selection "ot_sram_1r1w2c_16x340_p192" did not match any module.
+23. Executing HIERARCHY pass (managing design hierarchy).
+23.1. Analyzing design hierarchy..
+23.2. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+24. Executing Verilog-2005 frontend: /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/ot_rst_land_wrapper.v
+25. Executing HIERARCHY pass (managing design hierarchy).
+25.1. Analyzing design hierarchy..
+25.2. Analyzing design hierarchy..
+OT_RST_LAND dsfd_ctrl_rg2: 1 reset port(s) landed in 2 registered stage(s) (clock clk); table /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/ot_rst_land.tsv
+26. Executing PROC pass (convert processes to netlists).
+26.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+26.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+26.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+26.4. Executing PROC_INIT pass (extract init attributes).
+26.5. Executing PROC_ARST pass (detect async resets in processes).
+26.6. Executing PROC_ROM pass (convert switches to ROMs).
+26.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+26.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+26.9. Executing PROC_DFF pass (convert process syncs to FFs).
+26.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+26.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+26.12. Executing OPT_EXPR pass (perform const folding).
+27. Executing OPT_CLEAN pass (remove unused cells and wires).
+28. Executing TECHMAP pass (map to technology primitives).
+28.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+28.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 97 register cells driving keep wires
+29. Executing OPT_CLEAN pass (remove unused cells and wires).
+30. Executing RTLIL backend.
+c2616d4826e750b227b234d9ee825ff933af12479c162dcb99becdceaf2d26a3  /srv/opentallas-scratch/claude/codex-s81-native32-1020/work/config.mk
+4e9b3d2203d741d10e7c32a01268bbdcc356cea1b1a6ba6b51d43176e2027524  /srv/opentallas-scratch/claude/codex-s81-native32-1020/work/constraint.sdc
+7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b  /srv/opentallas-scratch/claude/codex-s81-native32-1020/src/physical/common_flow/ot_keep_regs.tcl

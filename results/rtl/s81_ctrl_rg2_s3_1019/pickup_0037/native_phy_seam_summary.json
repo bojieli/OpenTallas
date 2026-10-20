@@ -1,0 +1,237 @@
+{
+ "manifest_sha256": "fdb6ec2e4e0133633360305d849040e1202a383764ebc3880a5c51862278cd53",
+ "pinplan_sha256": "591f47f8569a3e8305f54ca92216515ddc3ee20ee02f636442afb9a7f9cc5ad2",
+ "rows": 19904,
+ "ctrl_count": 16,
+ "missing": [],
+ "non_south_mapped_pins": [],
+ "worst_manhattan_um": 149.134,
+ "over405_count": 0,
+ "worst32": [
+  {
+   "ctrl": "u_ctrl_15",
+   "pin": "kr_data[255]",
+   "dx_um": 146.238,
+   "dy_um": 2.896,
+   "manhattan_um": 149.134
+  },
+  {
+   "ctrl": "u_ctrl_14",
+   "pin": "kr_data[255]",
+   "dx_um": 146.156,
+   "dy_um": 2.896,
+   "manhattan_um": 149.052
+  },
+  {
+   "ctrl": "u_ctrl_13",
+   "pin": "kr_data[255]",
+   "dx_um": 146.074,
+   "dy_um": 2.896,
+   "manhattan_um": 148.97
+  },
+  {
+   "ctrl": "u_ctrl_15",
+   "pin": "kr_data[254]",
+   "dx_um": 146.007,
+   "dy_um": 2.896,
+   "manhattan_um": 148.903
+  },
+  {
+   "ctrl": "u_ctrl_12",
+   "pin": "kr_data[255]",
+   "dx_um": 145.992,
+   "dy_um": 2.896,
+   "manhattan_um": 148.888
+  },
+  {
+   "ctrl": "u_ctrl_14",
+   "pin": "kr_data[254]",
+   "dx_um": 145.925,
+   "dy_um": 2.896,
+   "manhattan_um": 148.821
+  },
+  {
+   "ctrl": "u_ctrl_11",
+   "pin": "kr_data[255]",
+   "dx_um": 145.91,
+   "dy_um": 2.896,
+   "manhattan_um": 148.806
+  },
+  {
+   "ctrl": "u_ctrl_13",
+   "pin": "kr_data[254]",
+   "dx_um": 145.843,
+   "dy_um": 2.896,
+   "manhattan_um": 148.739
+  },
+  {
+   "ctrl": "u_ctrl_10",
+   "pin": "kr_data[255]",
+   "dx_um": 145.828,
+   "dy_um": 2.896,
+   "manhattan_um": 148.724
+  },
+  {
+   "ctrl": "u_ctrl_12",
+   "pin": "kr_data[254]",
+   "dx_um": 145.761,
+   "dy_um": 2.896,
+   "manhattan_um": 148.657
+  },
+  {
+   "ctrl": "u_ctrl_15",
+   "pin": "kr_data[253]",
+   "dx_um": 145.758,
+   "dy_um": 2.896,
+   "manhattan_um": 148.654
+  },
+  {
+   "ctrl": "u_ctrl_09",
+   "pin": "kr_data[255]",
+   "dx_um": 145.746,
+   "dy_um": 2.896,
+   "manhattan_um": 148.642
+  },
+  {
+   "ctrl": "u_ctrl_11",
+   "pin": "kr_data[254]",
+   "dx_um": 145.679,
+   "dy_um": 2.896,
+   "manhattan_um": 148.575
+  },
+  {
+   "ctrl": "u_ctrl_14",
+   "pin": "kr_data[253]",
+   "dx_um": 145.676,
+   "dy_um": 2.896,
+   "manhattan_um": 148.572
+  },
+  {
+   "ctrl": "u_ctrl_08",
+   "pin": "kr_data[255]",
+   "dx_um": 145.664,
+   "dy_um": 2.896,
+   "manhattan_um": 148.56
+  },
+  {
+   "ctrl": "u_ctrl_10",
+   "pin": "kr_data[254]",
+   "dx_um": 145.597,
+   "dy_um": 2.896,
+   "manhattan_um": 148.493
+  },
+  {
+   "ctrl": "u_ctrl_13",
+   "pin": "kr_data[253]",
+   "dx_um": 145.594,
+   "dy_um": 2.896,
+   "manhattan_um": 148.49
+  },
+  {
+   "ctrl": "u_ctrl_07",
+   "pin": "kr_data[255]",
+   "dx_um": 145.582,
+   "dy_um": 2.896,
+   "manhattan_um": 148.478
+  },
+  {
+   "ctrl": "u_ctrl_15",
+   "pin": "kr_data[252]",
+   "dx_um": 145.563,
+   "dy_um": 2.896,
+   "manhattan_um": 148.459
+  },
+  {
+   "ctrl": "u_ctrl_09",
+   "pin": "kr_data[254]",
+   "dx_um": 145.515,
+   "dy_um": 2.896,
+   "manhattan_um": 148.411
+  },
+  {
+   "ctrl": "u_ctrl_12",
+   "pin": "kr_data[253]",
+   "dx_um": 145.512,
+   "dy_um": 2.896,
+   "manhattan_um": 148.408
+  },
+  {
+   "ctrl": "u_ctrl_06",
+   "pin": "kr_data[255]",
+   "dx_um": 145.5,
+   "dy_um": 2.896,
+   "manhattan_um": 148.396
+  },
+  {
+   "ctrl": "u_ctrl_14",
+   "pin": "kr_data[252]",
+   "dx_um": 145.481,
+   "dy_um": 2.896,
+   "manhattan_um": 148.377
+  },
+  {
+   "ctrl": "u_ctrl_08",
+   "pin": "kr_data[254]",
+   "dx_um": 145.433,
+   "dy_um": 2.896,
+   "manhattan_um": 148.329
+  },
+  {
+   "ctrl": "u_ctrl_11",
+   "pin": "kr_data[253]",
+   "dx_um": 145.43,
+   "dy_um": 2.896,
+   "manhattan_um": 148.326
+  },
+  {
+   "ctrl": "u_ctrl_05",
+   "pin": "kr_data[255]",
+   "dx_um": 145.418,
+   "dy_um": 2.896,
+   "manhattan_um": 148.314
+  },
+  {
+   "ctrl": "u_ctrl_13",
+   "pin": "kr_data[252]",
+   "dx_um": 145.399,
+   "dy_um": 2.896,
+   "manhattan_um": 148.295
+  },
+  {
+   "ctrl": "u_ctrl_07",
+   "pin": "kr_data[254]",
+   "dx_um": 145.351,
+   "dy_um": 2.896,
+   "manhattan_um": 148.247
+  },
+  {
+   "ctrl": "u_ctrl_10",
+   "pin": "kr_data[253]",
+   "dx_um": 145.348,
+   "dy_um": 2.896,
+   "manhattan_um": 148.244
+  },
+  {
+   "ctrl": "u_ctrl_04",
+   "pin": "kr_data[255]",
+   "dx_um": 145.336,
+   "dy_um": 2.896,
+   "manhattan_um": 148.232
+  },
+  {
+   "ctrl": "u_ctrl_15",
+   "pin": "kr_data[251]",
+   "dx_um": 145.326,
+   "dy_um": 2.896,
+   "manhattan_um": 148.222
+  },
+  {
+   "ctrl": "u_ctrl_12",
+   "pin": "kr_data[252]",
+   "dx_um": 145.317,
+   "dy_um": 2.896,
+   "manhattan_um": 148.213
+  }
+ ],
+ "scope": "native PHY global pins vs explicit candidate CTRL Sface pins, R0 die origins; pre-route Manhattan estimate only, not routed reach or pinflop placement"
+}
