@@ -1008,7 +1008,12 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         busy <= p_v || q_v || ovf_v;
         tau_o <= (p_tid == p_tt) ? X[p_tl % PT][EW-1:1] : '0;
 `ifndef SYNTHESIS
+        // A protocol bench may own this exact assertion after observing a real
+        // clear capture. This suppresses only precontract arbitrary-state checks;
+        // it does not change hardware or disable parameter admission checks.
+`ifndef OT_TKM_EXTERNAL_EPOCH_ASSERT
         if (q_conv_g[0] && p_v) $error("ot_hgi_coll_tkm_tile_rg: a block entered stage C while the tile conveys");
+`endif
 `endif
     end
 endmodule

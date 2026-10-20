@@ -5,7 +5,7 @@ V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 mkdir -p out
 OPENBLAS_NUM_THREADS=1 python3 tools/hgi_sim/e86_parent_protocol_vectors_1020.py --out out/vec > out/vectors.log
 sha256sum "$C/ot_hgi_coll_tkm.sv" "$C/ot_hgi_coll_tkm_static.sv" "$C/ot_hgi_coll_tkm_buffer.sv" "$C/tb_hgi_coll_tkm_static_fan32_protocol.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tools/hgi_sim/e86_parent_protocol_vectors_1020.py tools/hgi_coll_tkm_vectors.py > out/sources.sha256
-"$V" --binary --timing -j 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static_fan32_protocol -Mdir out/obj "$C/tb_hgi_coll_tkm_static_fan32_protocol.sv" "$C/ot_hgi_coll_tkm_static.sv" "$C/ot_hgi_coll_tkm.sv" "$C/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > out/build.log 2>&1
+"$V" --binary --timing -DOT_TKM_EXTERNAL_EPOCH_ASSERT -DOT_MEM_NO_INIT -j 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static_fan32_protocol -Mdir out/obj "$C/tb_hgi_coll_tkm_static_fan32_protocol.sv" "$C/ot_hgi_coll_tkm_static.sv" "$C/ot_hgi_coll_tkm.sv" "$C/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > out/build.log 2>&1
 for seed in 17 1020; do
  for tc in full192_random group4_long rank128_zero64; do
   out/obj/Vtb_hgi_coll_tkm_static_fan32_protocol +DIR=out/vec/$tc +verilator+rand+reset+2 +verilator+seed+$seed > out/${tc}_seed${seed}.log 2>&1

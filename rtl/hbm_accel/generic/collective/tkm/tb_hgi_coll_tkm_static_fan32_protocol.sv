@@ -9,6 +9,8 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
  integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
  integer protocol_mut=0;reg[31:0] bad_read2;
+ bit assert_epoch=0;integer global_edge=0;
+ initial if(KMAX!=64||TP!=192||FAN32!=1)$fatal(1,"PROTOCOL_UNSUPPORTED_PARAMS");
  bit seeno[0:2047],seenr[0:2047];string dir;
  ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.FAN32(FAN32),.RANK_W(TIE_W_MUT?7:$clog2(TP)))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
@@ -69,6 +71,10 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
  always @(posedge clk) begin:protocol_trace
   integer t; reg c0,c63; reg active;
   t=int'(dut.tick);active=rst_n&&busy;
+  global_edge=global_edge+1;
+  if(!rst_n||!busy)assert_epoch=0;
+  if(global_edge<=8)$display("PARENT_PROTOCOL_PRECONTRACT time=%0t rst=%b busy=%b clr=%b qconv=%b pv=%b X0=%h",$time,rst_n,busy,dut.clr,dut.g_tiles[0].e86.u_tile.u.q_conv_g[0],dut.g_tiles[0].e86.u_tile.u.p_v,dut.g_tiles[0].e86.u_tile.u.X[0]);
+  if(assert_epoch&&active&&dut.g_tiles[0].e86.u_tile.u.q_conv_g[0]&&dut.g_tiles[0].e86.u_tile.u.p_v)$fatal(1,"PROTOCOL_CONVEY_OVERLAP_AFTER_CLEAR");
   c0=dut.g_tiles[0].e86.u_tile.u.g_crep.g_xr[0].g_s[0].m[0];
   c63=dut.g_tiles[0].e86.u_tile.u.g_crep.g_xr[63].g_s[0].m[0];
   if(active&&(t<16||dut.clr||t+4>=int'(dut.clear2)&&t<=int'(dut.clear2)+14||wv||dut.cap_tap))
@@ -76,6 +82,7 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
   #0.001;
   if(active&&protocol_mut==0&&(t==4||t==int'(dut.clear2)+3)&&(!c0||dut.g_tiles[0].e86.u_tile.u.X[0]!==0))$fatal(1,"PROTOCOL_CLEAR_X0");
   if(active&&protocol_mut==0&&(t==4||t==int'(dut.clear2)+3)&&(!c63||dut.g_tiles[0].e86.u_tile.u.X[63]!==0))$fatal(1,"PROTOCOL_CLEAR_X63");
+  if(active&&t==4&&c0&&c63&&dut.g_tiles[0].e86.u_tile.u.X[0]===0&&dut.g_tiles[0].e86.u_tile.u.X[63]===0)assert_epoch=1;
   if(active&&(c0||c63))$display("PARENT_PROTOCOL_CAPTURE time=%0t oldtick=%0d X0=%h X63=%h",$time,t,dut.g_tiles[0].e86.u_tile.u.X[0],dut.g_tiles[0].e86.u_tile.u.X[63]);
  end
 // Every kept clear/select copy must select the same actual capture edge.
