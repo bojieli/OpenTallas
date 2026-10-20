@@ -34,7 +34,7 @@ class Transport(unittest.TestCase):
             with patch.object(G, "ROOT", root), patch.object(G, "ship_tar", return_value=_tgz()), \
                  patch.object(G, "referenced_closure", return_value=(set(), [], set())), \
                  patch.object(G, "absent_working_inputs", return_value=[]), \
-                 patch.object(G.HO, "capture_plan", return_value=({"files": []}, {})), \
+                 patch.object(G.HO, "capture_plan", return_value=({"files": [], "origin_main": None}, {})), \
                  patch.object(G.SB, "snapshot", return_value={"commit": "a" * 40, "manifest_sha256": "m", "archive_sha256": "s", "files": []}), \
                  patch.object(G, "analyse_remote", lambda *a, **k: None), \
                  patch.object(G, "gate_route_clock_hooks", lambda sh, spec: sh), \
@@ -75,7 +75,7 @@ class Transport(unittest.TestCase):
             with patch.object(G, "ROOT", root), patch.object(G, "ship_tar", return_value=_tgz()), \
                  patch.object(G, "referenced_closure", return_value=(set(), [], set())), \
                  patch.object(G, "absent_working_inputs", return_value=[]), \
-                 patch.object(G.HO, "capture_plan", return_value=({"files": []}, {})), \
+                 patch.object(G.HO, "capture_plan", return_value=({"files": [], "origin_main": None}, {})), \
                  patch.object(G.SB, "snapshot", return_value={"commit": "a" * 40, "manifest_sha256": "m", "archive_sha256": "s", "files": []}), \
                  patch.object(G, "analyse_remote", lambda *a, **k: None), \
                  patch.object(G, "gate_route_clock_hooks", lambda sh, spec: sh), \
@@ -99,7 +99,7 @@ class Transport(unittest.TestCase):
             (kd / "floorplan.json").write_text(json.dumps({"referenced": []}))
             with patch.object(G, "ROOT", Path(td)), patch.object(G, "absent_working_inputs", return_value=[]), \
                  patch.object(G, "ship_tar", return_value=_tgz()), \
-                 patch.object(G.HO, "capture_plan", return_value=({"files": []}, {})), \
+                 patch.object(G.HO, "capture_plan", return_value=({"files": [], "origin_main": None}, {})), \
                  patch.object(G.subprocess, "run", return_value=SimpleNamespace(returncode=1, stdout="", stderr="no hosts")) as run:
                 g = G.Gate();G.remote(g, kd, {"name": "t", "top": "t", "clock_port": "ck"}, "auto", 600, 24, True)
         cmds = [c.args[0] for c in run.call_args_list]
