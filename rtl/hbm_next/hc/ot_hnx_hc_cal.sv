@@ -38,8 +38,8 @@ module ot_hnx_hc_cal #(
     output wire [3*8*8-1:0] st_sel,      // [(j*8+b)*8+g]: sector j -> bank b, copy for data lane group g (gated)
     output wire [15:0] gp_c,             // KEPT copies of calendar[21] (gather_phase): [b] lg_rq address select of bank b,
                                          // [8+b] its request-valid select + return-valid gates (HUB-SAFE3: was 8, 37 loads)
-    output wire [5:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
-                                         // [1:0] residual_launch (calendar[0]), [5:2] gather_launch (calendar[22])
+    output wire [8:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
+                                         // [3:0] residual_launch (calendar[0]), [8:4] gather_launch (calendar[22])
 );
 // HUB-SAFE3 2026-10-20 (census safe2, zero added edges): valid1 has 3 kept copies (the gate fans out per consumer group:
 // st routing / gp+lc copies / calendar action bits; word_ok drove 47), start_v_q 3 kept copies (start acceptance per
@@ -65,13 +65,15 @@ module ot_hnx_hc_cal #(
     reg valid0,valid1,last0,last1;
     (* keep = "true", dont_touch = "true" *) reg [2:0] v1_c;      // = valid1
     (* keep = "true", dont_touch = "true" *) reg [2:0] sv_c;      // = start_v_q
-    (* keep = "true", dont_touch = "true" *) reg run_c;           // = running
+    (* keep = "true", dont_touch = "true" *) reg run_c;           // = running (issued counter)
+    (* keep = "true", dont_touch = "true" *) reg run_d;           // = running (loops_left[15:8] decrement)
     reg [9:0] pc0,pc1;
     reg [31:0] ord0,ord1;
     reg [255:0] captured;
     wire [255:0] macro_data;
     wire busy=running|valid0|valid1;
     wire legal_start=start_limit_q>{1'b0,start_base_q} && start_limit_q<=11'd1024 && start_loops_q!=0;
+    wire [15:0] lm1=loops_left-16'd1;
     wire final_issue=({1'b0,pc}+11'd1==limit) && loops_left==1;
     wire word_ok=captured[255:240]==16'hc7a1 && captured[233:224]==pc1 &&
                  captured[239:234]==0 && captured[223:W]==0;
@@ -121,13 +123,13 @@ module ot_hnx_hc_cal #(
     (* keep = "true", dont_touch = "true" *) reg [15:0] gp_r;
     always @(posedge clk)gp_r<={16{gate_c && captured[21]}};
     assign gp_c=gp_r;
-    (* keep = "true", dont_touch = "true" *) reg [5:0] lc_r;
-    always @(posedge clk)lc_r<={{4{gate_c && captured[22]}},{2{gate_c && captured[0]}}};
+    (* keep = "true", dont_touch = "true" *) reg [8:0] lc_r;
+    always @(posedge clk)lc_r<={{5{gate_c && captured[22]}},{4{gate_c && captured[0]}}};
     assign lc_c=lc_r;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
             running<=0;pc<=0;base<=0;limit<=0;loops_left<=0;issued<=0;
-            valid0<=0;valid1<=0;v1_c<=0;last0<=0;last1<=0;calendar_v<=0;run_c<=0;
+            valid0<=0;valid1<=0;v1_c<=0;last0<=0;last1<=0;calendar_v<=0;run_c<=0;run_d<=0;
             active<=0;done<=0;fault<=0;st_v<=0;
         end else begin
             valid0<=running;valid1<=valid0;v1_c<={3{valid0}};last0<=running && final_issue;last1<=last0;
@@ -137,17 +139,18 @@ module ot_hnx_hc_cal #(
             if(valid1 && !word_ok)fault<=1;
             if(cfg_we_q && (busy || start_v_q))fault<=1;
             if(start_v_q && (busy || cfg_we_q || !legal_start))fault<=1;
-            if(sv_c[0] && !(busy || cfg_we_q || !legal_start))begin running<=1;run_c<=1;pc<=start_base_q;end
+            if(sv_c[0] && !(busy || cfg_we_q || !legal_start))begin running<=1;run_c<=1;run_d<=1;pc<=start_base_q;end
             if(sv_c[1] && !(busy || cfg_we_q || !legal_start))begin base<=start_base_q;limit<=start_limit_q;end
             if(sv_c[2] && !(busy || cfg_we_q || !legal_start))begin loops_left<=start_loops_q;issued<=0;end
             if(run_c)issued<=issued+1;
+            if(run_d && {1'b0,pc}+11'd1==limit && loops_left!=1)loops_left[15:8]<=lm1[15:8];   // = the [7:0] update's edge
             if(running)begin
                 if({1'b0,pc}+11'd1==limit)begin
-                    if(loops_left==1)begin running<=0;run_c<=0;end
+                    if(loops_left==1)begin running<=0;run_c<=0;run_d<=0;end
                     else begin
                         pc<=base + ((MUT==1)?10'd1:10'd0);
-                        loops_left<=loops_left-1;
-                        if(MUT==2)begin running<=0;run_c<=0;end
+                        loops_left[7:0]<=lm1[7:0];
+                        if(MUT==2)begin running<=0;run_c<=0;run_d<=0;end
                     end
                 end else pc<=pc+1;
             end

@@ -54,9 +54,13 @@ module ot_hnx_hc_qcen #(
 
     // HUB-SAFE2 2026-10-20: relay named u_rst_relay (recognised by physical/common_flow/ot_rst_copies.py, which re-points
     // the reset loads over the kept identical copies, <= 32 each); REGIONS 16 = the 9 regions + 7 balancing copies.
-    localparam integer NRR = (FAN32 != 0) ? 32 : 16;   // FAN32: 32 copies (census safe2: copies c1/c2 37 loads)
+    // FAN32: 28 copies (census safe2: copies c1/c2 37 loads) and SYNC_STAGES 3, so the relay's synchroniser is NOT the
+    // hc_q relay's (identical flops on the same rst_n were merged: one sync flop drove both relays, 56 loads); reset
+    // release is one edge later here (nothing counts cycles from reset release; the host programmes long after).
+    localparam integer NRR = (FAN32 != 0) ? 28 : 16;
+    localparam integer NSY = (FAN32 != 0) ? 3 : 2;
     wire [NRR-1:0] rn_all;
-    ot_rst_relay #(.REGIONS(NRR)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_all));
+    ot_rst_relay #(.REGIONS(NRR), .SYNC_STAGES(NSY)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_all));
     wire [15:0] rn = rn_all[15:0];
     wire rc = rn[8];
     assign rst_b = rn[7:0];
@@ -67,15 +71,15 @@ module ot_hnx_hc_qcen #(
     always @(posedge clk or negedge rc)
         if (!rc) begin dv_q <= 1'b0; iv_q <= 1'b0; wf_q <= 8'd0; end
         else begin dv_q <= d_v; iv_q <= i_v; wf_q <= wfault_i; end
-    // FAN32: kept copies of the ingest-event pin flop (same D, same reset): [0] check + act/kind/ph, [1] slot/lo/w,
-    // [2] left/word.  FAN32 0: wires of iv_q.
-    wire [2:0] ivc;
+    // FAN32: kept copies of the ingest-event pin flop (same D, same reset): [0] check + act/kind/ph, [1] slot/lo,
+    // [2] w, [3] left[5:0], [4] left[11:6], [5] word[4:0], [6] word[9:5].  FAN32 0: wires of iv_q.
+    wire [6:0] ivc;
     if (FAN32 != 0) begin : g_ivc
-        (* keep = "true", dont_touch = "true" *) reg [2:0] iv_c;
-        always @(posedge clk or negedge rc) if (!rc) iv_c <= 3'd0; else iv_c <= {3{i_v}};
+        (* keep = "true", dont_touch = "true" *) reg [6:0] iv_c;
+        always @(posedge clk or negedge rc) if (!rc) iv_c <= 7'd0; else iv_c <= {7{i_v}};
         assign ivc = iv_c;
     end else begin : g_ivw
-        assign ivc = {3{iv_q}};
+        assign ivc = {7{iv_q}};
     end
     always @(posedge clk) begin
         dss_q <= d_ss; dnv_q <= d_nv; dwa_q <= d_wa; dxa_q <= d_xa;
@@ -124,8 +128,12 @@ module ot_hnx_hc_qcen #(
                 if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
                 in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0;
             end
-            if (ivc[1]) begin in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q; end
-            if (ivc[2]) begin in_left <= ic_q; in_word <= iwd_q; end
+            if (ivc[1]) begin in_slot <= is_q; in_lo <= ilo_q; end
+            if (ivc[2]) in_w <= iw_q;
+            if (ivc[3]) in_left[5:0] <= ic_q[5:0];
+            if (ivc[4]) in_left[11:6] <= ic_q[11:6];
+            if (ivc[5]) in_word[4:0] <= iwd_q[4:0];
+            if (ivc[6]) in_word[9:5] <= iwd_q[9:5];
         end
     end
     always @(posedge clk) begin
@@ -162,11 +170,15 @@ module ot_hnx_hc_qcen #(
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
-    // FAN32: 32 kept copies of the leaf valid (one per level-1 adder; D = vl[VD-2], same edge as vl[VD-1])
+    // FAN32: 32 kept copies of the leaf valid (one per level-1 adder, same edge as vl[VD-1]), loaded from 2 kept
+    // pre-copies lp (= vl[VD-2]; D = vl[VD-3]): vl[VD-2] drove 33.
     wire [31:0] lvc;
     if (FAN32 != 0) begin : g_lvc
+        initial if (VD < 3) $fatal(1, "FAN32 needs VD >= 3");
         (* keep = "true", dont_touch = "true" *) reg [31:0] lv_c;
-        always @(posedge clk or negedge rc) if (!rc) lv_c <= 32'd0; else lv_c <= {32{vl[VD-2]}};
+        (* keep = "true", dont_touch = "true" *) reg [1:0] lp;
+        always @(posedge clk or negedge rc) if (!rc) lp <= 2'd0; else lp <= {2{vl[VD-3]}};
+        always @(posedge clk or negedge rc) if (!rc) lv_c <= 32'd0; else lv_c <= {{16{lp[1]}}, {16{lp[0]}}};
         assign lvc = lv_c;
     end else begin : g_lvw
         assign lvc = {32{leaf_v}};

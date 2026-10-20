@@ -78,27 +78,28 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
         program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;
     end
     (* keep = "true", dont_touch = "true" *) reg [1:0] cv_c;   // = cv
-    (* keep = "true", dont_touch = "true" *) reg [2:0] dv_c;   // = dv
+    (* keep = "true", dont_touch = "true" *) reg [4:0] dv_c;   // = dv: [0] scan ptr, [1] img clear hi, [2] loops, [3] base+limit, [4] scan_limit
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin cv<=0;dv<=0;lv<=0;cv_c<=0;dv_c<=0;end
-        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;cv_c<={2{cfg_v}};dv_c<={3{desc_v}};end
+        else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;cv_c<={2{cfg_v}};dv_c<={5{desc_v}};end
     // ---- next-state of the write strobe and of install_open (exactly the assignments of the control block below)
     wire t_hit=target==tid;
     wire cfg_hit=cv && t_hit;
     wire dsc_hit=dv && t_hit;
     wire [1:0] cfg_hit_c={cv_c[1] && t_hit,cv_c[0] && t_hit};
-    wire [2:0] dsc_hit_c={dv_c[2] && t_hit,dv_c[1] && t_hit,dv_c[0] && t_hit};
+    wire [4:0] dsc_hit_c;
+    for(genvar k=0;k<5;k=k+1)begin:g_dh assign dsc_hit_c[k]=dv_c[k] && t_hit; end
     wire cfg_bad=program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                  data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address};
     wire [1:0] we_n={cfg_hit_c[1] && !cfg_bad,cfg_hit_c[0] && !cfg_bad};   // rows 0..NR/2-1 | NR/2..
     wire dsc_bad=program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
     wire [1:0] io_n={dsc_hit_c[1] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open),
                      dsc_hit_c[0] ? 1'b0 : (program_cfg_we ? 1'b1 : install_open)};
-    wire dsc_ok_a=dsc_hit_c[1] && !dsc_bad, dsc_ok_b=dsc_hit_c[2] && !dsc_bad;   // stored_loops | stored_base/limit
+    wire dsc_ok_a=dsc_hit_c[2] && !dsc_bad, dsc_ok_b=dsc_hit_c[3] && !dsc_bad;   // stored_loops | stored_base/limit
     // scan pointer next-state
     wire reuse=validated && base==stored_base && limit==stored_limit;
     wire scan_start=dsc_hit_c[0] && !dsc_bad && !reuse;           // scan pointer (srow_n)
-    wire scan_start_l=dsc_ok_b && !reuse;                          // scan_limit
+    wire scan_start_l=dsc_hit_c[4] && !dsc_bad && !reuse;          // scan_limit
     wire scan_last={1'b0,scan_row}+1'b1==scan_limit;
     always @(posedge clk)begin
         if(dsc_ok_a)stored_loops<=loops;
@@ -108,8 +109,8 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
     wire [PCW-1:0] srow_n=scan_start ? base[PCW-1:0] : ((sissue && !scan_last) ? scan_row+1'b1 : scan_row);
     // ---- bitmap (no reset) with kept per-row copies
     reg [31:0] colbit_a;              // stage A: row r's bit at the scan column
-    (* keep = "true", dont_touch = "true" *) reg [5*((NR+1)/2)-1:0] scol_v;   // scan column copies, one per 2 rows
-    always @(posedge clk)scol_v<={((NR+1)/2){srow_n[4:0]}};
+    (* keep = "true", dont_touch = "true" *) reg [5*NR-1:0] scol_v;   // scan column copies, one per row
+    always @(posedge clk)scol_v<={NR{srow_n[4:0]}};
     for(genvar r=0;r<NR;r=r+1)begin:g_r
         (* keep = "true", dont_touch = "true" *) reg we_c,clr_c,row_c;
         (* keep = "true", dont_touch = "true" *) reg [31:0] col_c;
@@ -120,7 +121,7 @@ module ot_hnx_prog_target #(parameter integer PCW=10)(
             col_c<=32'd1<<address[4:0];
             if(we_c)inst<=(clr_c?32'd0:inst)|({32{row_c}}&col_c);
         end
-        wire [4:0] scol=scol_v[(r/2)*5+:5];
+        wire [4:0] scol=scol_v[r*5+:5];
         if(r<32)begin:g_a
             always @(posedge clk)colbit_a[r]<=inst[scol];
         end

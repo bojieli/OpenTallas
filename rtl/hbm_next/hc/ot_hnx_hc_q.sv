@@ -109,7 +109,7 @@ module ot_hnx_hc_q #(
     // ---- programme issuer
     wire [110:0] c;
     wire cal_v,cal_fault;
-    wire [7:0] st_v; wire [127:0] st_hdr; wire [191:0] st_sel; wire [15:0] gp_c; wire [5:0] lc_c;
+    wire [7:0] st_v; wire [127:0] st_hdr; wire [191:0] st_sel; wire [15:0] gp_c; wire [8:0] lc_c;
     ot_hnx_hc_cal #(.W(111),.MUT_STRIDE((MUT==7)?1:0),.MUT_SBASE((MUT==2)?1:0)) programme(
         .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
@@ -140,12 +140,12 @@ module ot_hnx_hc_q #(
     wire res_fault,gat_fault,wr_fault;
     ot_hnx_hgi_hc_residual_vm #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
         .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SPR(SPR),.MUT_STRIDE((MUT==6)?1:0),.XFC(XFC),.MUT_FC((MUT==8)?1:0)) residual(
-        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.launch_c(lc_c[1:0]),.npos(residual_npos),.base_sector(residual_base),.row_stride(residual_stride),
+        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.launch_c(lc_c[3:0]),.npos(residual_npos),.base_sector(residual_base),.row_stride(residual_stride),
         .local_rq(res_rq),.local_read(res_read),.local_rr(rr_res),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.x_wave_vf(x_wave_vf),.x_wave_beatf(x_wave_beatf),
         .done(residual_done),.fault(res_fault));
     ot_hnx_hgi_hc_gathered_mix_reader #(.RESP_PHASE(GATHER_PHASE)) gather(
-        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.launch_c(lc_c[5:2]),.npos(gather_npos),
+        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.launch_c(lc_c[8:4]),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
         .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),

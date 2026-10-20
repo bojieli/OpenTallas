@@ -26,7 +26,7 @@
 //    zeroed while the request valid is 0 (don't-care), the valid bits are; rsel has a 9th copy for expected_valid.
 module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
     input wire clk,rst_n,launch,
-    input wire [3:0] launch_c,        // KEPT copies of launch (same edge)
+    input wire [4:0] launch_c,        // KEPT copies of launch (same edge)
     input wire [3:0] npos,
     input wire [15:0] base_sector,position_stride_sector,
     output reg [135:0] local_rq,
@@ -44,7 +44,7 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
     reg [3:0] positions,issued,returned;
     reg [4:0] phase,next_row;
     reg [2:0] output_pos;
-    (* keep = "true", dont_touch = "true" *) reg [3:0] act_c;        // = active
+    (* keep = "true", dont_touch = "true" *) reg [4:0] act_c;        // = active
     (* keep = "true", dont_touch = "true" *) reg [1:0] str_c;        // = streaming
     (* keep = "true", dont_touch = "true" *) reg [9:0] ph_c;         // 2 x phase
     (* keep = "true", dont_touch = "true" *) reg [3:0] rsp_o;        // = response_slot: data lo, data hi, row/pos/stream, return
@@ -55,10 +55,11 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
                      ({19{nm1[2]}}&{1'd0,position_stride_sector,2'b0});
     wire [32:0] last_sector={17'd0,base_sector}+{14'd0,span}+33'd2;
     wire bounds_ok=npos>=1&&npos<=8&&!base_sector[15]&&last_sector<32768&&last_sector[14:13]==base_sector[14:13];
-    wire [3:0] st;                    // launch accepted, per register group
-    for(genvar k=0;k<4;k=k+1)begin:g_st assign st[k]=launch_c[k]&&!act_c[k]&&bounds_ok; end
+    wire [4:0] st;                    // launch accepted, per register group ([4]: the issue bank decode)
+    for(genvar k=0;k<5;k=k+1)begin:g_st assign st[k]=launch_c[k]&&!act_c[k]&&bounds_ok; end
     // next issue / return sectors (exactly the register updates below)
     wire [15:0] is_n=st[0]?base_sector:(request_slot?issue_sector+stride:issue_sector);
+    wire [2:0] is3_n=st[4]?base_sector[2:0]:(request_slot?issue_sector[2:0]+stride[2:0]:issue_sector[2:0]);   // = is_n[2:0]
     wire [15:0] rs_n=st[1]?base_sector:(rsp_o[3]?return_sector+stride:return_sector);
     wire [1:0] resp_n;
     for(genvar k=0;k<2;k=k+1)begin:g_rn assign resp_n[k]=act_c[2+k]&&ph_c[k*5+:5]==5'(RESP_PHASE-1)&&returned<positions; end
@@ -67,7 +68,7 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
     wire [3*8*9-1:0] rsel;        // [(j*8+b)*9+g], g 8 = expected_valid
     reg [15:0] q_r [0:2];
     for(genvar j=0;j<3;j=j+1)begin:g_j
-        wire [2:0] qn=is_n[2:0]+3'(j), rn=rs_n[2:0]+3'(j);
+        wire [2:0] qn=is3_n+3'(j), rn=rs_n[2:0]+3'(j);
         always @(posedge clk)q_r[j]<=is_n+16'(j);
         for(genvar b=0;b<8;b=b+1)begin:g_b
             (* keep = "true", dont_touch = "true" *) reg is_c;
@@ -106,10 +107,11 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
     always @(posedge clk or negedge rst_n)
         if(!rst_n)gathered_mix_data<=0;
         else begin
-            if(active&&rsp_o[0])gathered_mix_data[15:0]<=arrived[15:0];
-            else if(active&&str_c[0])gathered_mix_data[15:0]<=landing[15:0];
-            if(active&&rsp_o[1])gathered_mix_data[31:16]<=arrived[31:16];
-            else if(active&&str_c[1])gathered_mix_data[31:16]<=landing[31:16];
+            // rsp_o implies active; streaming implies active (it is set only under active and falls with it)
+            if(rsp_o[0])gathered_mix_data[15:0]<=arrived[15:0];
+            else if(str_c[0])gathered_mix_data[15:0]<=landing[15:0];
+            if(rsp_o[1])gathered_mix_data[31:16]<=arrived[31:16];
+            else if(str_c[1])gathered_mix_data[31:16]<=landing[31:16];
         end
     always @(posedge clk)begin issue_sector<=is_n;return_sector<=rs_n; end
     always @(posedge clk or negedge rst_n)begin
@@ -135,14 +137,14 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
                     next_row<=next_row+1'b1;
                     if(next_row==23)begin
                         streaming<=0;str_c<=2'b00;
-                        if(returned==positions)begin active<=0;act_c<=4'd0;done<=1;end
+                        if(returned==positions)begin active<=0;act_c<=5'd0;done<=1;end
                     end
                 end
             end
             if(launch&&(active||!bounds_ok))fault<=1;
             if(st[2])begin stride<=position_stride_sector;positions<=npos;issued<=0;end
             if(st[3])begin
-                active<=1;act_c<=4'hf;streaming<=0;str_c<=2'b00;phase<=0;ph_c<=0;
+                active<=1;act_c<=5'h1f;streaming<=0;str_c<=2'b00;phase<=0;ph_c<=0;
                 returned<=0;next_row<=0;output_pos<=0;
             end
         end

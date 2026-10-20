@@ -49,13 +49,14 @@ module ot_hnx_hgi_hc_result_vm #(parameter integer MUT_STRIDE=0)(
     // the store-slot check runs ONE EDGE LATER from registered copies of its operands (fault only: the store datapath
     // above never reads it; the sticky fault rises one edge later than before, on the same illegal words).
     reg ck_v,ck_rv; reg [2:0] ck_rp,ck_sp; reg [15:0] ck_b,ck_rs;
+    wire [18:0] ck_span=({19{ck_sp[0]}}&{3'd0,ck_rs})|({19{ck_sp[1]}}&{2'd0,ck_rs,1'b0})|({19{ck_sp[2]}}&{1'd0,ck_rs,2'b0});
     always @(posedge clk)begin ck_rv<=result_v;ck_rp<=result_position;ck_sp<=store_position;ck_b<=base_sector;ck_rs<=rs;end
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin wv<=0;local_write<=0;fault<=0;ck_v<=0;end
         else begin
             wv<=st_v;local_write<=st_v;
             ck_v<=store_slot;
-            if(ck_v&&(!ck_rv||ck_rp!=ck_sp||ck_rs<16'd3||(32'(ck_b)+32'(ck_sp)*32'(ck_rs)+3)>32768))fault<=1;
+            if(ck_v&&(!ck_rv||ck_rp!=ck_sp||ck_rs<16'd3||(32'(ck_b)+32'(ck_span)+3)>32768))fault<=1;
             if(result_v&&!store_slot)fault<=1;
         end
     end
