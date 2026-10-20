@@ -96,3 +96,42 @@ flops on one root (SS boundary spread 59 ps, placement RC). One failed gate = st
 7. Clock: one local root over a 0.3 mm tile; judged by pin-flop spread <= 80 TT+FF at the gate; io_hold 0.03. Gate.
 8. Schedule: zero added cycles (ring age = shift age; tie-offs and reset split change no data edge). PASS.
 Negative control for the new mechanism: OT_COLL_FOLD_MUT_DR (ring one edge short) must FAIL reduce_8w_x16.
+
+### Q safe3 tied always-zero inputs: per-input verdict (QW-COLL4 10-19, coordinator 18:34 rule)
+
+Rule: a tied input is allowed only if architecturally constant in every Qwen config (compiler proof cited); else it is a
+forbidden tied functional port and is restored + benched. The Q tile's own ports (`ot_coll_split_q`) carry no tie: every
+port is driven by the parent / C and lands in a pin flop. Tied connections inside the tile:
+
+| input (instance.port) | value | verdict | constant proof (file:line) |
+|---|---|---|---|
+| `u_pf.src[383:256]` (package fold source g=2) | 0 | CONSTANT (allowed) | A Qwen TP8 package has exactly 2 dies, so the package sum has exactly 2 live sources: compiler golden `tools/qwen_coll_tp8_static_bench.py:127` `pk = [G.add(f[2 * p], f[2 * p + 1]) for p in range(4)]` (ND = 8, `:30`); spec `results/arch/qwen_tp8_1012/SPEC.md:199` "8 dies in 4 B200-class packages (2 dies per package)" and `:205` "both fold p = d0 + d1"; the die-in-package strap is 1 bit (`rtl/rom/ot_coll_tp8_split.sv:158` `die_ps`), so no config can feed a 3rd/4th source. The original monolithic core already fed `{0, 0, hi, lo}` (`rtl/rom/ot_coll_tp8_die.sv:9,225`): ((lo + hi) + 0) + 0 = lo + hi bit for bit. |
+| `u_pf.src[511:384]` (package fold source g=3) | 0 | CONSTANT (allowed) | same proof as g=2. |
+| `u_pf` skew-line sources g >= NLIVE=2 (`rtl/rom/ot_coll_fold_slice.sv:51`, `pg = 0`) | 0 | CONSTANT (allowed) | these delay lines are fed only by the constant g=2/3 sources above (they could only ever hold 0); adders kept, fold latency and rounding unchanged; unit/prod benches 8f42f133d PASS. |
+| `u_rsg/u_rst0/u_rst1/u_rsx.d` (reset relay data) | 1 | CONSTANT (allowed) | reset synchroniser data input: release value by construction (async assert from rs, sync release); not a functional port. |
+| `ot_csp_rep_reg` strap / rank-select copies `.rst_n` with `RST(0)` | 1 | CONSTANT (allowed) | `RST(0)` copies have no reset; the port is unused by construction (static strap copies of pk_q/di_q). |
+
+No input RESTORED (none was a functional port).
+
+## Q slice safe4 / safe4w (QW-COLL4, 2026-10-19 21:50 PT) -- kits qfd_coll_split_q4 / qfd_coll_split_q4w
+
+Same RTL as safe3 (577229357; benches unit 13/13, prod 4/4 LU66+LU65, mutants dr/lead/ex/rerr/sbank FAIL, witnesses
+8f42f133d). Why: q3/q3w gates (ot-epyc4 ref_gate/qfd_coll_split_q3{,w}-20261019-164832) FAIL fill 28% / 25% (macros 13159 +
+synthesized std 8838 in 78382 / 89580 um2; outline from the 23.5k std ESTIMATE, synthesis gave 12669 (8838 placed)) with all
+1376 heavy data pins on W (560) + E (816); q3w also TT spread 83.1 ps > 80 (345.6 wide). One failed gate = re-floorplan:
+
+1. Pins: unchanged RTL pin flops. PASS.
+2. Reach: tile <= 260 um. PASS.
+3. Fanout: unchanged (safe3). PASS.
+4. Depth: unchanged (q3 TT setup +97.6 ps pre-CTS). PASS.
+5. Storage: unchanged (safe3 SRAM rings). PASS.
+6. Floorplan (fixed): outline from SYNTHESIS area: q4 220.32 x 259.2 (aspect 1.18) = 45 % fill with synth std 12669
+   (38 % with placed 8838; gate WARN band, > 35 %), q4w 233.28 x 259.2 (43 % / 36 %; placeable density INFO 56 %).
+   Pins re-faceted over all four faces: N clk/rst/straps/in/out (261), W SerDes 1/2 (512), E UCIe P/R up/dp/ur/dr (512),
+   S SerDes 0 + C tokens + errors (~300): <= 2.0 pins/um averaged on every face (q3 E 5.5/um over 57 %).
+   12 natives in two abutted N-S stacks on the 43.2 lattice: x 43.2 = 4 S-data 256x64 + P bank 1; x 129.6 (q4) / 172.8
+   (q4w) = xf skew rings g3/g2, R ring, P bank 0 (P banks both at the N in_data face); every macro >= 20 um from each
+   pin face; centre std channel 51.8 um (q4) / 95 um (q4w), full-width std bands at S (43 um) and N (21 um). PASS (gate).
+7. Clock: one local root over <= 233 x 259 um (q3 at 302 x 259 measured TT/FF spread 59.6/56.3; q3w's fail was the 345.6
+   width); io_hold 0.03. Gate --cts measures TT+FF spread <= 80.
+8. Schedule: zero added cycles. PASS.
