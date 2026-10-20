@@ -46,6 +46,8 @@ module tb_dsdv_idx_rg;
     // slice request can never meet a full owner FIFO)
     parameter integer DQC = 8;
     parameter integer DQR = 8;
+    parameter integer ENG = 0;          // S81-L20TOK: 1 = hardened head-key slice engine
+    parameter integer SQD = 64;
     localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
 
     // ------------------------------------------------------------------ clocks / reset
@@ -126,7 +128,7 @@ module tb_dsdv_idx_rg;
     wire [32*256-1:0] k_wdata, kr_data; wire [32*32-1:0] k_wstrb;
     genvar r;
     generate for (r = 0; r < R; r = r + 1) begin : g_r
-        dsdv_idx_rg #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQ(DQR)) u (
+        dsdv_idx_rg #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQ(DQR), .ENG(ENG), .SQD(SQD)) u (
             .ck(ck), .rst(rst), .sid(4'(r)), .qi(qch[r]), .qo(qch[r + 1]), .si(sch[r]), .so(sch[r + 1]),
             .rqi(rq_tb[r]), .rqo(rq_c[r]), .rdi(rd_c[r]), .rdo(rd_s[r]), .st(st[r]));
         wire ck_o_unused;

@@ -2,7 +2,7 @@
 # S81-IDXRD (10-19): build tb_dsdv_idx_rg once per build config, then run a set of plusarg cases in parallel.
 # Run from the repo root on a fleet host (Verilator 5.050, the closure daemon's version).
 #   idxrd_campaign.sh OUT BUILD "<-G build flags>" JOBS "name|+plusargs" ...
-#   build flags: -GMUT=<0..5> -GSRAM_MACRO=<0|1> -GCKH_PS=<ps>;  plusargs: +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED= +SLICE=
+#   build flags: -GMUT=<0..6> -GSRAM_MACRO=<0|1> -GCKH_PS=<ps> -GENG=<0|1> -GSQD=<n>;  plusargs: +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED= +SLICE=
 # Case names: pass_* must print TB_IDXRD PASS, fail_* must print TB_IDXRD FAIL, x_* are informational (sweeps).  Prints one line a case and
 # IDXRD_CAMPAIGN PASS when every case met its expectation (exit 0), else IDXRD_CAMPAIGN FAIL (exit 1).
 set -u
@@ -11,6 +11,8 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=$O/$BN; mkdir -p "$D"
 SRC=(rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/v41x/ot_hdc_v41x_idx.sv
      rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv
+     rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+     rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
      rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv
      rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv

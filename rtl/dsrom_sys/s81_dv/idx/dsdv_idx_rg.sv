@@ -79,7 +79,16 @@ module dsdv_idx_rg #(
     parameter integer IQD = 256,        // key items in flight (item queue) = the HBM request lead: >= (HBM latency ~240 + engine ~51 + jitter) x 0.5 key/cycle
     parameter integer SQD = 64,         // keys in the engine (<= ~51 at 1 key/cycle) + scores waiting for the assembler
     parameter integer LFD = 256,        // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
-    parameter integer RQD = 16          // read jobs queued a PC (scan: a 16-key group; gather: one key)
+    parameter integer RQD = 16,         // read jobs queued a PC (scan: a 16-key group; gather: one key)
+    // S81-L20TOK (10-20, SAFE checklist after the 57f81b048 native census FAIL: 94,962 flops on one root, 4,491 nets > 32
+    // loads, 6,736-load reset, 29-level stage -- all but ~15k flops in the flat legacy engine): ENG 1 scores with the
+    // HARDENED head-key slices (ot_hdc_v41x_idx_hslice, closed view ot_hdc_v41x_idx_hslice_m5, FPL 7 / FML 5 / QL 5):
+    // 4 x ot_hdc_v41x_idx_chunk_el (8 slices a column, systolic seams, reset through ot_rst_relay) + ot_hdc_v41x_idx_tail_l,
+    // bit for bit the chunk_l arithmetic (the bench's independent reference engine checks every score).  The engine has
+    // no output FIFO / credit: it is a fixed-latency pipeline (o_ready was tied 1).  Its metadata ring and the score
+    // queue (SQD x 21 b / SQD x 38 b, > 2 kb) are 1024 x 256 macros (2 more, 9 a reader); the score queue has a 3-entry
+    // show-ahead head like the item queue.  ENG 0 = the record flat engine (unchanged).
+    parameter integer ENG = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -658,6 +667,11 @@ module dsdv_idx_rg #(
     wire        o_v;
     wire [0:0]  o_kv, o_f;
     wire [15:0] o_s;
+    // score queue head (both engines): t_q = the oldest waiting {w 16, lane 4, lw, fault, score 16}, t_v = one waits
+    wire [37:0]   t_q;
+    wire          t_v;
+    wire          sq_pop;
+    generate if (ENG == 0) begin : g_e0
     ot_hdc_v41x_idx_engine #(.NK(1), .IH(32), .NB(4), .FD(56)) u_eng (
         .clk(ck), .rst_n(rn), .ql_v(ql_v), .ql_head(ql_h), .ql_codes(ql_c), .ql_sc(ql_s), .ql_w(ql_w),
         .k_valid(k_v), .k_ready(k_ready), .k_kv(1'b1), .k_keep(1'b1), .k_key(k_key),
@@ -670,6 +684,81 @@ module dsdv_idx_rg #(
     reg [37:0] sq [0:SQD-1];                  // {w 16, lane 4, lw, fault, score 16}
     reg [SQW-1:0] sq_w, sq_r;
     reg [SQW:0]   sq_n;
+    assign t_q = sq[sq_r];
+    assign t_v = sq_n != 0;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; end
+        else begin
+            if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
+            if (o_v) begin
+                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
+            end
+            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
+            if (sq_pop) sq_r <= sq_r + 1'b1;
+        end
+    end else begin : g_e1
+    // ---- hardened-slice engine: chunks (8 heads a column) + the chunk-sum tail; fixed latency, no stall
+    wire [3:0]  cv;
+    wire [3:0]  ckv;
+    wire [31:0] csum [0:3];
+    wire [3:0]  cfl;
+    genvar ce;
+    for (ce = 0; ce < 4; ce = ce + 1) begin : g_ch
+        ot_hdc_v41x_idx_chunk_el #(.NB(4), .NKT(1), .FPL(7), .FML(5), .QL(5)) u_c (
+            .clk(ck), .rst_n(rn), .hb(8'(8 * ce)), .ql_v(ql_v), .ql_head(ql_h), .ql_codes(ql_c), .ql_sc(ql_s),
+            .ql_w(ql_w), .k_v(k_v), .k_kv(1'b1), .k_key(k_key),
+            .c_v(cv[ce]), .c_kv(ckv[ce +: 1]), .c_sum(csum[ce]), .c_fault(cfl[ce +: 1]));
+    end
+    ot_hdc_v41x_idx_tail_l #(.NCH(4), .NKT(1), .FPL(7)) u_t (.clk(ck), .rst_n(rn), .i_v(cv[0]), .i_kv(ckv[0 +: 1]),
+        .i_keep(1'b1), .i_sum({csum[3], csum[2], csum[1], csum[0]}), .i_fault(cfl),
+        .o_v(o_v), .o_kv(o_kv), .o_score(o_s), .o_fault(o_f));
+    // a q-load beat reaches the slices' query registers 3 edges after it is presented; keys wait for it (as the engine
+    // candidate ot_hdc_v41x_idx_engine_hslice); the reader's q_done (5 edges after head 31) already orders this
+    reg [1:0] qst;
+    always @(posedge ck or negedge rn)
+        if (!rn) qst <= 2'd0;
+        else if (ql_v) qst <= 2'd3;
+        else if (qst != 0) qst <= qst - 2'd1;
+    assign k_ready = !ql_v && qst == 0;
+    // metadata ring (macro): written with the key, read with its score (fixed order), data one edge later
+    wire [255:0] mq_q;
+    reg  [9:0]   mq_w, mq_r;
+    reg          o_v1; reg o_f1; reg [15:0] o_s1;
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mq (
+        .ck(ck), .re(o_v), .ra(mq_r), .rd(mq_q),
+        .we(k_v), .wa(mq_w), .wd({235'd0, k_m}), .wm({256{1'b1}}));
+    // score queue (macro) + 3-entry show-ahead head
+    wire [255:0] sq_q;
+    reg  [9:0]   sq_w, sq_r;
+    reg  [10:0]  sm_n;                       // entries in the macro not yet read
+    reg          sr_f;                       // macro read issued last edge
+    reg  [37:0]  sh [0:2];
+    reg  [1:0]   sh_n;
+    wire         s_re = (sm_n != 0) && ({1'b0, sh_n} + {2'b0, sr_f} <= 3'd2);
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
+        .ck(ck), .re(s_re), .ra(sq_r), .rd(sq_q),
+        .we(o_v1), .wa(sq_w), .wd({218'd0, mq_q[20:0], o_f1, o_s1}), .wm({256{1'b1}}));
+    assign t_q = sh[0];
+    assign t_v = sh_n != 0;
+    always @(posedge ck) begin o_f1 <= o_f[0]; o_s1 <= o_s; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; o_v1 <= 1'b0; sq_w <= 0; sq_r <= 0; sm_n <= 0; sr_f <= 1'b0; sh_n <= 2'd0; end
+        else begin : g_sq
+            reg [1:0] n1;
+            if (k_v) mq_w <= mq_w + 1'b1;
+            if (o_v) mq_r <= mq_r + 1'b1;
+            o_v1 <= o_v;
+            if (o_v1) sq_w <= sq_w + 1'b1;
+            sr_f <= s_re;
+            if (s_re) sq_r <= sq_r + 1'b1;
+            sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+            n1 = sh_n - (sq_pop ? 2'd1 : 2'd0);
+            if (sq_pop) begin sh[0] <= sh[1]; sh[1] <= sh[2]; end
+            if (sr_f) sh[n1] <= sq_q[37:0];
+            sh_n <= n1 + (sr_f ? 2'd1 : 2'd0);
+        end
+    initial if (SQD > 1024) $fatal(1, "dsdv_idx_rg: ENG 1 queues are 1024 entries");
+    end endgenerate
     reg           a_v;                       // assembling word
     reg [15:0]    a_w; reg [15:0] a_lv; reg [255:0] a_s; reg a_f;
     reg           r_v;                       // ready word
@@ -679,19 +768,13 @@ module dsdv_idx_rg #(
     // a finished word moves to r when r is free or taken this cycle; the NEXT word starts assembling in the same cycle,
     // so a word of 2 scores (gather: up to 2 keys a region a word) still meets the next slot 2 cycles later
     wire          a_mv = a_v && a_done && (!r_v || r_take);
-    wire          sq_pop = (sq_n != 0) && !(a_v && a_done && !a_mv);
+    assign        sq_pop = t_v && !(a_v && a_done && !a_mv);
     always @(posedge ck or negedge rn)
-        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
-                       r_v <= 1'b0; end
+        if (!rn) begin infl <= 0; a_v <= 1'b0; a_done <= 1'b0; r_v <= 1'b0; end
         else begin
-            if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
-            if (o_v) begin
-                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
-            end
-            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
             infl <= infl + (ipop ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
             if (sq_pop) begin : g_as
-                reg [37:0] t; t = sq[sq_r]; sq_r <= sq_r + 1'b1;
+                reg [37:0] t; t = t_q;
                 if (!a_v || a_done) begin
                     a_v <= 1'b1; a_w <= t[37:22]; a_lv <= 16'd1 << t[21:18]; a_s <= 256'(t[15:0]) << (16 * t[21:18]);
                     a_f <= t[16]; a_done <= t[17];
