@@ -12,6 +12,8 @@ planned out_data -> ring and ring -> exit wires < 405 um); the 20-um gap at y 13
 stay open for E-W routing.  Variants (owner PARALLEL rule): a = spine, no tree padding; b = spine + tree padding.
 
     python3 tools/qwen_kv_die/kvs_grp_s6_kits.py r            # synth-smoke kits qkd_kvs_grp{,_h}_s6r (RTL tops)
+    python3 tools/qwen_kv_die/kvs_grp_s6_kits.py c            # gate kits qkd_kvs_grp{,_h}_s6{a,b} (structural s6c tops:
+        kv_grp_safe5.py bounded-driver copies of the s6r mapped netlists; macro instances from the generator record)
     then: python3 tools/ref_tile/ref_tile.py gen physical/ref_tile/<kit>/spec.json
 """
 import json
@@ -62,7 +64,62 @@ def spec_r(kind):
     return s
 
 
+WIT = 'results/rtl/qwen_kv_die/kvs_grp_s6_1020'
+
+
+def spec_c(kind, v):
+    top = 'qkd_kvs_grp_s6c' if kind == 'grp' else 'qkd_kvs_grp_h_s6c'
+    old = 'qkd_kvs_grp_s5a' if kind == 'grp' else 'qkd_kvs_grp_h_s5a'
+    s = json.loads((ROOT / 'physical/ref_tile' / old / 'spec.json').read_text())
+    rec = json.loads((ROOT / WIT / f'{top}.json').read_text())
+    inst = {m['original']: m['instance'] for m in rec['macros']}
+    name = top[:-2] + '6' + v
+    s['name'], s['top'] = name, top
+    s['sources'] = [f'rtl/qwen_sys/static_kv_die_20261017/{top}.sv', S6.RMACRO_DIR + '/' + S6.RMACRO + '_bb.v',
+                    s['sources'][1]]
+    big = [m for m in s['macros'] if '128x256' in m['view']]
+    assert len(big) == 4
+    for q, m in enumerate(big):
+        m['inst'] = '*' + inst[f'u_slg.g_pc[{q}].u_pc.u_rows']
+    s['macros'] = big + ring_macros(lambda b, k: '*' + inst[f'u_slg.g_hop[{b}].g_ring.u_ring.g_m[{k}].u_m'])
+    s['orfs_vars']['OT_SPINE_TREE_PAD'] = '0' if v == 'a' else '1'
+    s['purpose'] = (f'KV-GRP6 10-20: s6 KV landing-group tile {top}: bounded-driver structural copy (kv_grp_safe5.py, '
+                    f'max 32 loads) of the mapped s6 RTL ({S6.OUT}: response payload delay in 32 SRAM ring macros); '
+                    f'clock variant {v}: spine, tree padding {s["orfs_vars"]["OT_SPINE_TREE_PAD"]}.')
+    benches = []
+    for m in (0, 1, 2):
+        b = dict(name=f's6_m{m}', cmd=f'python3 tools/qwen_kv_die/kvs_grp_safe6c_bench.py --out {{RUN}}/bench/s6_m{m} --cases m{m} --raw',
+                 threads=8, peak_ram_gb=32, needs=['verilator'])
+        if m == 0:
+            b.update(expect='pass', pass_regex=r'^S2_PASS checks=\d+ edges=6000 mut=0', pass_witness=f'{WIT}/b2/m0.log',
+                     min_count_regex=r'checks=(\d+)')
+        else:
+            b.update(expect='fail', pass_regex=r'^S2_PASS ', fail_regex='(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)',
+                     fail_witness=f'{WIT}/b2/m{m}.log')
+        benches.append(b)
+    j = s['job']
+    j.update(owner='Claude:KV-GRP6', branch='claude/kv-grp6-ring-1020', tag=f'grp_s6{v}' if kind == 'grp' else f'grph_s6{v}',
+             benches=benches, views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}')
+    j['extra_paths'] = [p.replace('kvs_grp_s5_1020', 'kvs_grp_s6_1020') for p in j['extra_paths']] + [S6.RMACRO_DIR]
+    j['reroute_reason'] = dict(kind='rtl_change', reason=(
+        'Legacy s3/s4 sources fail the native driver census (max 399) and the Codex s5 structural copy keeps a 3-deep '
+        'unchanged payload flop delay line (SAFE 5, c1e5bec49).' + NOTE + ' Gated source = bounded-driver structural '
+        'copy (max 32) of the mapped s6 RTL.'))
+    s['structural_change'] = 'KV-GRP6 s6.' + NOTE + ' Bounded-driver primitive copies (kv_grp_safe5.py, Codex) of the mapped s6 RTL.'
+    s['kits_b']['rtl'] = s['sources'][0]
+    return s
+
+
 def main():
+    if sys.argv[1:] == ['c']:
+        for kind in ('grp', 'grp_h'):
+            for v in ('a', 'b'):
+                s = spec_c(kind, v)
+                d = ROOT / 'physical/ref_tile' / s['name']
+                d.mkdir(parents=True, exist_ok=True)
+                (d / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
+                print(s['name'], len(s['macros']), s['sources'])
+        return
     for kind in ('grp', 'grp_h'):
         s = spec_r(kind)
         d = ROOT / 'physical/ref_tile' / s['name']
