@@ -342,12 +342,14 @@ module ot_hgi_coll_static_program_target_s128 #(
                 end
         end
         for(genvar ac=0;ac<4;ac=ac+1)begin:g_addr
+            // Loaded write occurs only at drain step53, long after row settled.
+            // Unconditional local copies avoid a shared frame-accept hold mux.
+            always @(posedge clk)write_addr[ac]<=row[3:0];
             always @(posedge clk or negedge rst_n)
-                if(!rst_n)begin scan_addr[ac]<=1;write_addr[ac]<=0;end
+                if(!rst_n)begin scan_addr[ac]<=1;end
                 else begin
                     if(checking_copy[ac/2] && check_row!=127)scan_addr[ac]<=check_row[3:0]+4'd2;
                     else scan_addr[ac]<=1;
-                    if(frame && !frame_bad)write_addr[ac]<=a_row[3:0];
                 end
         end
         for(genvar bk=0;bk<8;bk=bk+1)begin:g_bank
