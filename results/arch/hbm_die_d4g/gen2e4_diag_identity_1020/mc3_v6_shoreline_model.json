@@ -1,0 +1,838 @@
+{
+ "source": "11bf17f45",
+ "basis": "actual ot_hbm3e_phy_rc_e8p5 LEF / die_case_v16 per-PC weighted pin-centroid formula",
+ "phy_origin_x_um": 5600.8,
+ "phy_width_um": 8500.056,
+ "pc_centres_local_x_um": [
+  57.03599999999997,
+  322.62,
+  588.204,
+  853.788,
+  1119.3720000000003,
+  1384.9560000000008,
+  1650.5400000000004,
+  1916.124,
+  2181.708,
+  2447.2920000000013,
+  2712.875999999998,
+  2978.4600000000005,
+  3244.0439999999994,
+  3509.628,
+  3775.212000000001,
+  4040.7959999999994,
+  4306.379999999999,
+  4571.964,
+  4837.548,
+  5103.1320000000005,
+  5368.716,
+  5634.3,
+  5899.883999999998,
+  6165.468,
+  6431.0520000000015,
+  6696.636000000001,
+  6962.219999999998,
+  7227.804,
+  7493.387999999999,
+  7758.972000000003,
+  8024.556,
+  8290.139999999998
+ ],
+ "pitch_min_um": 265.5839999999962,
+ "pitch_max_um": 265.5840000000044,
+ "two_row_pitch_min_um": 531.1679999999942,
+ "new_tile_um": [
+  388.8,
+  345.6
+ ],
+ "one_row_min_clearance_um": -123.21600000000382,
+ "two_row_min_clearance_um": 142.3679999999942,
+ "old_group_slot_um": [
+  1036.8,
+  637.2
+ ],
+ "two_row_tile_height_um": 691.2,
+ "old_svg_height_um": 228.96,
+ "minimum_strip_height_um": 920.1600000000001,
+ "minimum_growth_without_gaps_um": 282.96000000000004,
+ "status": "candidate model only; actualfaces/landedlinks/clockregion/reprice owed",
+ "phy_lef_sha256": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf",
+ "contract_sha256": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8",
+ "controllers": [
+  "ctl_NW_p00",
+  "ctl_NW_p01",
+  "ctl_NW_p02",
+  "ctl_NW_p03",
+  "ctl_NW_p04",
+  "ctl_NW_p05",
+  "ctl_NW_p06",
+  "ctl_NW_p07",
+  "ctl_NW_p08",
+  "ctl_NW_p09",
+  "ctl_NW_p10",
+  "ctl_NW_p11",
+  "ctl_NW_p12",
+  "ctl_NW_p13",
+  "ctl_NW_p14",
+  "ctl_NW_p15",
+  "ctl_NW_p16",
+  "ctl_NW_p17",
+  "ctl_NW_p18",
+  "ctl_NW_p19",
+  "ctl_NW_p20",
+  "ctl_NW_p21",
+  "ctl_NW_p22",
+  "ctl_NW_p23",
+  "ctl_NW_p24",
+  "ctl_NW_p25",
+  "ctl_NW_p26",
+  "ctl_NW_p27",
+  "ctl_NW_p28",
+  "ctl_NW_p29",
+  "ctl_NW_p30",
+  "ctl_NW_p31",
+  "ctl_SW_p00",
+  "ctl_SW_p01",
+  "ctl_SW_p02",
+  "ctl_SW_p03",
+  "ctl_SW_p04",
+  "ctl_SW_p05",
+  "ctl_SW_p06",
+  "ctl_SW_p07",
+  "ctl_SW_p08",
+  "ctl_SW_p09",
+  "ctl_SW_p10",
+  "ctl_SW_p11",
+  "ctl_SW_p12",
+  "ctl_SW_p13",
+  "ctl_SW_p14",
+  "ctl_SW_p15",
+  "ctl_SW_p16",
+  "ctl_SW_p17",
+  "ctl_SW_p18",
+  "ctl_SW_p19",
+  "ctl_SW_p20",
+  "ctl_SW_p21",
+  "ctl_SW_p22",
+  "ctl_SW_p23",
+  "ctl_SW_p24",
+  "ctl_SW_p25",
+  "ctl_SW_p26",
+  "ctl_SW_p27",
+  "ctl_SW_p28",
+  "ctl_SW_p29",
+  "ctl_SW_p30",
+  "ctl_SW_p31"
+ ],
+ "controller_clock_bindings": [
+  {
+   "instance": "ctl_NW_p00",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p01",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p02",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p03",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p04",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p05",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p06",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p07",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p08",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p09",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p10",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p11",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p12",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p13",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p14",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p15",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p16",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p17",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p18",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p19",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p20",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p21",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p22",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p23",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p24",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p25",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p26",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p27",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p28",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p29",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p30",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_NW_p31",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p00",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p01",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p02",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p03",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p04",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p05",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p06",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p07",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p08",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p09",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p10",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p11",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p12",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p13",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p14",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p15",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p16",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p17",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p18",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p19",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p20",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p21",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p22",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p23",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p24",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p25",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p26",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p27",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p28",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p29",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p30",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  },
+  {
+   "instance": "ctl_SW_p31",
+   "port": "clk",
+   "bits": 1,
+   "domain": "hbm",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_hbm"
+   ]
+  }
+ ],
+ "upper_row_sface_vertical_um": 378.0,
+ "upper_row_lateral_budget_at405_um": 27.0,
+ "upper_row_relay_requirement": "not automatic; actual final controller/PHY pin pairs must be measured",
+ "clock_period_table_ps": 1024.0,
+ "clock_implementation_qualification": "OPEN: PLL interface/model only; no implemented divider/configuration/phase proof in inspected source; no 1024 physical qualification from PERIOD table alone",
+ "compiler_hbm_budget_conversion": "not yet source-certified in this packet"
+}
