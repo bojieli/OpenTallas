@@ -109,7 +109,7 @@ module ot_rom_host_ingest_n32 #(
 `endif
     // reset copies <= 16 loads a copy (kit reset_relay_split max_loads 16), two-level copy tree (same release edge)
     ot_reset_sync #(.OUTPUT_COPIES(16), .TREE(1)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
-    ot_reset_sync #(.OUTPUT_COPIES(96), .TREE(1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
+    ot_reset_sync #(.OUTPUT_COPIES(128), .TREE(1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
     ot_reset_sync #(.OUTPUT_COPIES(32), .TREE(1)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
     localparam integer NWR = 18;                     // engine output-FIFO slices = request-room copies
     // cross-domain nets (declared ahead of use)
@@ -130,21 +130,23 @@ module ot_rom_host_ingest_n32 #(
     wire [513:0] hx_head;
     reg          hx_pop;
     // N32: hx_pop replica B (from kept clones) loads the upper hr_d slices and the head-field clones
-    localparam integer HRA = 17;                     // hr_d slices 0..HRA-1 on replica A (hx_pop), the rest on B
-    wire         hx_pop_b;
-    reg  [1:0]   hcl_b;                              // clones of hr_d[513:512] / hr_d[7:0] (loaded with copy HRC)
-    reg  [7:0]   h8_b;
-    wire         hv_b;
+    // hr_d slices 0..14 on replica A (hx_pop), 15..23 on B0, 24..32 on B1 (each slice: 2 load pins)
+    localparam integer NRB = 2;
+    function automatic integer hrep(input integer hs); hrep = (hs < 15) ? -1 : (hs < 24) ? 0 : 1; endfunction
+    wire [NRB-1:0]   hx_pop_r;
+    reg  [2*NRB-1:0] hcl_r;                          // replica r: clones of hr_d[513:512] / hr_d[7:0] (copy HRC + r)
+    reg  [8*NRB-1:0] h8_r;
+    wire [NRB-1:0]   hv_r;
     wire         hx_rd, hx_fempty;                // FIFO-side pop / empty (= hx_pop / hx_empty when APIPE < 7)
     wire [513:0] hx_fhead;
     // S81-SHLK s10b (2026-10-19, s10 mapped netlist: the hr_d load enable hx_rd = AND2(u_hx.empty, hr_take) drove 890
     // loads): with OT_S81_SH_S10B the registered head is HRC slices of HRS bits, each loaded by its own enable from
     // KEPT copies of hr_v and of the FIFO empty flag (same edge, same values); hx_pop is the only shared term.
     localparam integer HRS = 16, HRC = (514 + HRS - 1) / HRS;
-    wire [HRC:0] hx_fempty_c;
+    wire [HRC+NRB-1:0] hx_fempty_c;
 `ifdef OT_S81_SH_SRAM
     if (APIPE >= 9) begin : g_hx_sram
-        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA), .EC(HRC + 1)) u_hx (
+        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA), .EC(HRC + NRB), .HNR(2)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt),
         .rempty_c(hx_fempty_c));
@@ -170,15 +172,18 @@ module ot_rom_host_ingest_n32 #(
             if (!rn_i) hr_v <= 1'b0; else if (hr_take) hr_v <= !hx_fempty;
 `endif
 `ifdef OT_S81_SH_S10B
-        (* keep *) reg [HRC:0] hr_vc;     // kept copies of hr_v, one per HRS-bit slice of hr_d, + copy HRC (B head fields)
-        wire hr_take_bk = !hr_vc[HRC] || hx_pop_b;
-        always @(posedge clk_i or negedge rn_i) if (!rn_i) hr_vc[HRC] <= 1'b0; else if (hr_take_bk) hr_vc[HRC] <= !hx_fempty_c[HRC];
-        always @(posedge clk_i) if (hr_take_bk && !hx_fempty_c[HRC]) begin hcl_b <= hx_fhead[513:512]; h8_b <= hx_fhead[7:0]; end
-        assign hv_b = hr_vc[HRC];
+        (* keep *) reg [HRC+NRB-1:0] hr_vc;   // kept copies of hr_v: one per HRS-bit slice of hr_d + one per replica
+        genvar hr;
+        for (hr = 0; hr < NRB; hr = hr + 1) begin : g_hrr
+            wire hr_take_bk = !hr_vc[HRC+hr] || hx_pop_r[hr];
+            always @(posedge clk_i or negedge rn_i) if (!rn_i) hr_vc[HRC+hr] <= 1'b0; else if (hr_take_bk) hr_vc[HRC+hr] <= !hx_fempty_c[HRC+hr];
+            always @(posedge clk_i) if (hr_take_bk && !hx_fempty_c[HRC+hr]) begin hcl_r[2*hr +: 2] <= hx_fhead[513:512]; h8_r[8*hr +: 8] <= hx_fhead[7:0]; end
+            assign hv_r[hr] = hr_vc[HRC+hr];
+        end
         genvar hs;
         for (hs = 0; hs < HRC; hs = hs + 1) begin : g_hrs
             localparam integer LO = hs * HRS, HI = ((hs + 1) * HRS > 514) ? 514 : (hs + 1) * HRS;
-            wire hr_take_k = !hr_vc[hs] || ((hs < HRA) ? hx_pop : hx_pop_b);
+            wire hr_take_k = !hr_vc[hs] || ((hrep(hs) < 0) ? hx_pop : hx_pop_r[(hrep(hs) < 0) ? 0 : hrep(hs)]);
             wire hr_rd_k   = hr_take_k && !hx_fempty_c[hs];
             always @(posedge clk_i or negedge rn_i)
 `ifdef OT_ING_MUT_HRC
@@ -241,7 +246,7 @@ module ot_rom_host_ingest_n32 #(
     wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
     // N32: the native-32 stream engine (cycle-exact successor; tb_s81_ing_n32_lockstep), request-room copies, replica-B status
-    (* keep *) reg [NWR:0] oroom_c;                  // kept copies of ox_room (D = the next ofree != 0); copy NWR -> replica B
+    (* keep *) reg [NWR+NRB-1:0] oroom_c;            // kept copies of ox_room (D = the next ofree != 0); NWR + r -> replica r
     wire         e_drdy_b, e_inrdy_b, e_busy_b, e_wv_b;
     ot_s81_ing_stream_n32 #(.AW(AW), .NWR(NWR)) u_eng (
         .clk(clk_i), .rst_n(rn_i),
@@ -252,13 +257,17 @@ module ot_rom_host_ingest_n32 #(
         .done_v(e_done), .done_tag(e_tag), .busy(e_busy), .n_sectors(e_nsec), .n_beats(e_nbeat),
         .drdy_b(e_drdy_b), .inrdy_b(e_inrdy_b), .busy_b(e_busy_b), .wv_b(e_wv_b));
     // replica B of hx_pop: the same function from kept clones (hr_vc[HRC], head fields, f_any, room, engine B status)
-    reg          fany_b;
-    wire         mark_go_b = hv_b && !fany_b && hcl_b == 2'd0 && h8_b == 8'd2 && !e_busy_b && !e_wv_b && oroom_c[NWR];
-    assign       hx_pop_b = hv_b && (fany_b ? 1'b1 : (hcl_b == 2'd0) ? ((h8_b == 8'd2) ? mark_go_b : 1'b1)
-                                    : (hcl_b == 2'd1) ? ((h8_b[3:0] == 4'd1) ? 1'b1 : e_drdy_b)
-                                    : (hcl_b == 2'd2) ? e_inrdy_b : 1'b1);
+    reg  [NRB-1:0] fany_r;
+    genvar hq;
+    for (hq = 0; hq < NRB; hq = hq + 1) begin : g_hxr
+        wire [1:0] c = hcl_r[2*hq +: 2]; wire [7:0] h = h8_r[8*hq +: 8]; wire v = hv_r[hq], fa = fany_r[hq];
+        wire mark_go_r = v && !fa && c == 2'd0 && h == 8'd2 && !e_busy_b && !e_wv_b && oroom_c[NWR+hq];
+        assign hx_pop_r[hq] = v && (fa ? 1'b1 : (c == 2'd0) ? ((h == 8'd2) ? mark_go_r : 1'b1)
+                                      : (c == 2'd1) ? ((h[3:0] == 4'd1) ? 1'b1 : e_drdy_b)
+                                      : (c == 2'd2) ? e_inrdy_b : 1'b1);
+    end
 `ifndef SYNTHESIS
-    always @(posedge clk_i) if (rn_i && hx_pop_b != hx_pop) $fatal(1, "ot_rom_host_ingest: hx_pop replica B diverged");
+    always @(posedge clk_i) if (rn_i && hx_pop_r != {NRB{hx_pop}}) $fatal(1, "ot_rom_host_ingest: hx_pop replica diverged");
 `endif
     always @(*) begin
         hx_pop = 1'b0;
@@ -344,9 +353,9 @@ module ot_rom_host_ingest_n32 #(
         reg  [AW+256:0] ox_w_q;
         always @(posedge clk_i) ox_w_q <= ox_wn;
         wire [OFA:0] ofree_nx = ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
-        always @(posedge clk_i or negedge rn_i) if (!rn_i) oroom_c <= {(NWR+1){1'b1}}; else oroom_c <= {(NWR+1){ofree_nx != 0}};
+        always @(posedge clk_i or negedge rn_i) if (!rn_i) oroom_c <= {(NWR+NRB){1'b1}}; else oroom_c <= {(NWR+NRB){ofree_nx != 0}};
 `ifndef SYNTHESIS
-        always @(posedge clk_i) if (rn_i && oroom_c != {(NWR+1){ox_room}}) $fatal(1, "ot_rom_host_ingest: room copy diverged");
+        always @(posedge clk_i) if (rn_i && oroom_c != {(NWR+NRB){ox_room}}) $fatal(1, "ot_rom_host_ingest: room copy diverged");
 `endif
         always @(posedge clk_i or negedge rn_i)
             if (!rn_i) begin ox_wr_q <= 1'b0; ofree <= {1'b1, {OFA{1'b0}}}; end
@@ -381,7 +390,7 @@ module ot_rom_host_ingest_n32 #(
         if (!rn_i) begin
             f_code <= 0; share_i <= 0; csr_tgl <= 1'b0; all_done <= 1'b0; pcnt <= 0; outst <= 0;
             e_rdv <= 1'b0; e_rdd <= 0; cx_wr <= 1'b0; cx_w <= 0; f_sent <= 1'b0;
-            fany_b <= 1'b0;
+            fany_r <= '0;
         end else begin
             if (hv_i && !f_any && hcl == 2'd0) begin
                 if (hx_head[7:0] == 8'd0) begin share_i <= hx_head[40:32]; csr_tgl <= ~csr_tgl; end
@@ -398,8 +407,8 @@ module ot_rom_host_ingest_n32 #(
                 else if (cx_ovf)                          f_code <= 8'd5;
                 else if (rx_ovf_i)                        f_code <= 8'd6;
             end
-            fany_b <= fany_b | (hv_i && hcl == 2'd1 && (bad_qkv || bad_rmw || bad_native)) | (hv_i && hcl == 2'd3)
-                    | hx_ovf_i | cx_ovf | rx_ovf_i;
+            fany_r <= fany_r | {NRB{(hv_i && hcl == 2'd1 && (bad_qkv || bad_rmw || bad_native)) | (hv_i && hcl == 2'd3)
+                    | hx_ovf_i | cx_ovf | rx_ovf_i}};
             // read return: registered into the engine (it always accepts)
             e_rdv <= rx_pop;
             e_rdd <= rx_head;

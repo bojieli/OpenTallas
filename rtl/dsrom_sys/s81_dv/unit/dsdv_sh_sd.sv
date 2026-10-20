@@ -183,6 +183,7 @@ module dsdv_sh_sd #(
 `else
     localparam integer HWC = 10;
 `endif
+    localparam integer HWS = (291 + HWC - 1) / HWC;   // payload bits per copy (s10d 10 copies: 30)
     function automatic [NS-1:0] dec_dst(input [31:0] a, input [1:0] m, input we);
         reg [1:0] c; reg bd; reg [NS-1:0] d; reg mk; reg [31:0] ki; reg [29:0] px; integer kq;
         begin
@@ -299,7 +300,7 @@ module dsdv_sh_sd #(
     always @(posedge ck)
         for (s = 0; s < NS; s = s + 1)
             for (pb = 0; pb < 291; pb = pb + 1)
-                if (popq_c[pb / 30] && dst_c[NS * (pb / 30) + s]) hw[292*s + 1 + pb] <= hpl[pb];
+                if (popq_c[pb / HWS] && dst_c[NS * (pb / HWS) + s]) hw[292*s + 1 + pb] <= hpl[pb];
 `endif
 `else
     always @(posedge ck)

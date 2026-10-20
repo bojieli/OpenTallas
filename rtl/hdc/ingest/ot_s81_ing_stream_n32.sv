@@ -91,10 +91,12 @@ module ot_s81_ing_stream_n32 #(
         sd_pack = {d[233:232], d[231:224], d[217:216], d[183:168], d[143:112], d[84:80], d[79:48], d[47:16], d[15:8], d[7]};
     endfunction
     // queue entry = stream fields + mode d[3:0] + n0 d[167:144] + n2 d[199:184] + nb d[255:240] + 4 copies of (mode == RAW)
-    localparam integer HW = SDW + 4 + 24 + 16 + 16 + 4;      // 202
-    localparam integer HS = (HW + 15) / 16;                  // 13 slices
+    // (+ a second n0 copy for the left load value)
+    localparam integer HW = SDW + 4 + 24 + 16 + 16 + 4 + 24;  // 226
+    localparam integer QS = 12;                              // queue slice: <= 12 flops a slice copy
+    localparam integer HS = (HW + QS - 1) / QS;              // 19 slices
     function automatic [HW-1:0] h_pack(input [255:0] d);
-        h_pack = {{4{d[3:0] == M_RAW}}, d[255:240], d[199:184], d[167:144], d[3:0], sd_pack(d)};
+        h_pack = {d[167:144], {4{d[3:0] == M_RAW}}, d[255:240], d[199:184], d[167:144], d[3:0], sd_pack(d)};
     endfunction
 
     // =================================================================================================================
@@ -126,12 +128,14 @@ module ot_s81_ing_stream_n32 #(
 `endif
             for (j = 0; j < HS; j = j + 1) dq_roh_c[4*j +: 4] <= 4'b0001 << dq_rd_nx;
         end
-    always @(posedge clk)
-        for (i = 0; i < 4; i = i + 1) for (j = 0; j < HS; j = j + 1)
-            if (dq_we_c[i*HS + j]) dqm[i][16*j +: 16] <= dqs[16*j +: 16];
+    for (gi = 0; gi < HS; gi = gi + 1) begin : g_dqw
+        localparam integer LO = QS * gi, NB = (QS * gi + QS > HW) ? HW - QS * gi : QS;
+        integer e;
+        always @(posedge clk) for (e = 0; e < 4; e = e + 1) if (dq_we_c[e*HS + gi]) dqm[e][LO +: NB] <= dqs[LO +: NB];
+    end
     wire [HW-1:0] dh;
     for (gi = 0; gi < HS; gi = gi + 1) begin : g_dh
-        localparam integer LO = 16 * gi, NB = (16 * gi + 16 > HW) ? HW - 16 * gi : 16;
+        localparam integer LO = QS * gi, NB = (QS * gi + QS > HW) ? HW - QS * gi : QS;
         wire [3:0] oh = dq_roh_c[4*gi +: 4];
         wire [NB-1:0] rq = ({NB{oh[0]}} & dqm[0][LO +: NB]) | ({NB{oh[1]}} & dqm[1][LO +: NB])
                          | ({NB{oh[2]}} & dqm[2][LO +: NB]) | ({NB{oh[3]}} & dqm[3][LO +: NB]);
@@ -143,6 +147,7 @@ module ot_s81_ing_stream_n32 #(
     wire [15:0]    dh_n2   = dh[SDW + 28 +: 16];
     wire [15:0]    dh_nb   = dh[SDW + 44 +: 16];
     wire [3:0]     dh_raw  = dh[SDW + 60 +: 4];          // four copies of (mode == RAW)
+    wire [23:0]    dh_n0l  = dh[SDW + 64 +: 24];         // second n0 copy (left load)
     wire           dh_v    = dq_n != 3'd0;
 
     // =================================================================================================================
@@ -169,7 +174,7 @@ module ot_s81_ing_stream_n32 #(
     reg          sr_ac, sl_ac;
     // segment load values (four RAW-flag copies select the four 16-b / 8-b groups)
     wire [31:0]  row_ld  = {8'd0, dh_raw[1] ? 8'd0 : dh_n0[23:16], dh_raw[0] ? 16'd0 : dh_n0[15:0]};
-    wire [31:0]  left_ld = {8'd0, dh_raw[3] ? dh_n0[23:16] : 8'd0, dh_raw[2] ? dh_n0[15:0] : dh_n2};
+    wire [31:0]  left_ld = {8'd0, dh_raw[3] ? dh_n0l[23:16] : 8'd0, dh_raw[2] ? dh_n0l[15:0] : dh_n2};
     // descriptor field views
     wire         f_fence = sdf[0];
     wire [7:0]   f_tag   = sdf[8:1];
@@ -190,7 +195,7 @@ module ot_s81_ing_stream_n32 #(
 
     // ---- clone domains: every leaf is a kept clone of a master (D = the master's next state)
     //   act pad raw rows ikey ph3 ran9 rem16 sec5 pitch5 mine apok fqn3 pwv rlo4 llo4 left1 left0
-    localparam integer ND = 8;
+    localparam integer ND = 9;
     localparam integer LV = 1+1+3+3+9+16+5+5+1+1+3+1+4+4+1+1;   // 59
     (* keep *) reg [ND*LV-1:0] dl;
     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
@@ -252,7 +257,7 @@ module ot_s81_ing_stream_n32 #(
         assign d_ph_nx[gi*3 +: 3]    = (ikey && go) ? ((ph == 3'd2) ? ((rlo == 4'd15) ? 3'd3 : 3'd0) : (ph == 3'd4) ? 3'd0 : ph + 3'd1) : ph;
     end
     // domain roles: 0 ring / P stage / ap_inval, 1 st_row lo, 2 st_row hi, 3 st_left lo, 4 st_left hi, 5 st_rem,
-    // 6 st_sec / st_ph / st_pad, 7 P-stage kind copies / byte mask
+    // 6 st_sec / st_ph / st_pad, 7 P-stage kind copies / byte mask, 8 st_row[3:0] / st_left[3:0]
     wire        go0 = d_go[0];
     wire [5:0]  pop0 = d_pop[0 +: 6];
     wire        ap_inval = sdisp || (d_step[0] && !d_raw[0]);
@@ -277,18 +282,20 @@ module ot_s81_ing_stream_n32 #(
     wire [7:0]   ra_rp_nx    = st_pad ? 8'd0 : ra_rp + {2'd0, pop0};
     wire [4:0]   pit_nx      = sd_pit ? dh_sd[77:73] : f_pitch;
     // st_row / st_left: lo 16 bits by domains 1 / 3, hi 16 by 2 / 4 (each with its own hi-carry compare leaf)
-    wire [15:0]  row_inc_lo  = {d_rlo_f[1] ? sr_hp1[11:0] : st_row[15:4], st_row[3:0] + 4'd1};
+    wire [15:4]  row_inc_lo  = d_rlo_f[1] ? sr_hp1[11:0] : st_row[15:4];
     wire [15:0]  row_inc_hi  = d_rlo_f[2] ? sr_hp1[27:12] : st_row[31:16];
-    wire [15:0]  left_dec_lo = {d_llo_0[3] ? sl_hm1[11:0] : st_left[15:4], st_left[3:0] - 4'd1};
+    wire [15:4]  left_dec_lo = d_llo_0[3] ? sl_hm1[11:0] : st_left[15:4];
     wire [15:0]  left_dec_hi = d_llo_0[4] ? sl_hm1[27:12] : st_left[31:16];
     wire [31:0]  st_row_nx, st_left_nx;
-    assign st_row_nx[15:0]   = sd_row_lo  ? row_ld[15:0]   : d_step[1] ? row_inc_lo  : st_row[15:0];
+    assign st_row_nx[3:0]    = sd_row_lo  ? row_ld[3:0]    : d_step[8] ? st_row[3:0] + 4'd1 : st_row[3:0];
+    assign st_row_nx[15:4]   = sd_row_lo  ? row_ld[15:4]   : d_step[1] ? row_inc_lo  : st_row[15:4];
 `ifdef OT_N32_MUT_GOD
     assign st_row_nx[31:16]  = sd_row_hi  ? row_ld[31:16]  : st_row[31:16];                    // mutant: hi never steps
 `else
     assign st_row_nx[31:16]  = sd_row_hi  ? row_ld[31:16]  : d_step[2] ? row_inc_hi  : st_row[31:16];
 `endif
-    assign st_left_nx[15:0]  = sd_left_lo ? left_ld[15:0]  : d_step[3] ? left_dec_lo : st_left[15:0];
+    assign st_left_nx[3:0]   = sd_left_lo ? left_ld[3:0]   : d_step[8] ? st_left[3:0] - 4'd1 : st_left[3:0];
+    assign st_left_nx[15:4]  = sd_left_lo ? left_ld[15:4]  : d_step[3] ? left_dec_lo : st_left[15:4];
     assign st_left_nx[31:16] = sd_left_hi ? left_ld[31:16] : d_step[4] ? left_dec_hi : st_left[31:16];
     wire sdisp_nx = (dq_n_nx != 3'd0) && !st_act_nx;
 
@@ -346,20 +353,32 @@ module ot_s81_ing_stream_n32 #(
     // address pipeline (APIPE 10: A0 -> A1 -> X -> B0 -> B); each stage's hold enable as per-16-bit-slice clones
     // =================================================================================================================
     (* keep *) reg [31:0] row_c;                         // clone of st_row for the row decomposition
-    (* keep *) reg [5:0]  ldie_c, lns_c;                 // three clones each of the segment's ldie / lns
-    (* keep *) reg [1:0]  ringz_c;                       // clones of (ring == 0)
+    // one-hot ldie / lns clones (3 each: shifter halves, masks) and 8 ring==0 clones, loaded with the segment
+    (* keep *) reg [11:0] ldoh_c, lnoh_c;
+    (* keep *) reg [7:0]  ringz_c;
     always @(posedge clk or negedge rst_n) if (!rst_n) row_c <= 32'd0; else row_c <= st_row_nx;
     always @(posedge clk) if (sd_cl) begin
-        ldie_c <= {3{dh_sd[127:126]}}; lns_c <= {3{dh_sd[137:136]}}; ringz_c <= {2{dh_sd[109:78] == 32'd0}};
+        ldoh_c <= {3{4'b0001 << dh_sd[127:126]}}; lnoh_c <= {3{4'b0001 << dh_sd[137:136]}};
+        ringz_c <= {8{dh_sd[109:78] == 32'd0}};
     end
-    wire [1:0]  s_ldie_a = ldie_c[1:0], s_ldie_b = ldie_c[3:2];
-    wire [1:0]  s_lns_a = lns_c[1:0], s_lns_b = lns_c[3:2];
     wire [31:0] s_grp  = row_c >> 4;
-    wire        s_mine = (s_ldie_b == 2'd0) || ((s_grp & ((32'd1 << s_ldie_b) - 32'd1)) == {24'd0, f_die});
-    wire [31:0] s_gd   = s_grp >> s_ldie_a;
-    wire [2:0]  s_stk  = s_gd[2:0] & ((3'd1 << s_lns_b) - 3'd1);
-    wire [31:0] s_gs   = s_gd >> s_lns_a;
-    wire [31:0] s_local = !ringz_c[0] ? (row_c & (f_ring - 32'd1)) : ((s_gs << 4) | (row_c & 32'd15));
+    wire [31:0] ldm    = ldoh_c[9] ? 32'd1 : ldoh_c[10] ? 32'd3 : ldoh_c[11] ? 32'd7 : 32'd0;    // (1 << ldie) - 1
+    wire        s_mine = ldoh_c[8] || ((s_grp & ldm) == {24'd0, f_die});
+    wire [31:0] s_grp1 = s_grp >> 1, s_grp2 = s_grp >> 2, s_grp3 = s_grp >> 3;
+    wire [31:0] s_gd;
+    assign s_gd[15:0]  = ({16{ldoh_c[0]}} & s_grp[15:0])  | ({16{ldoh_c[1]}} & s_grp1[15:0])  | ({16{ldoh_c[2]}} & s_grp2[15:0])  | ({16{ldoh_c[3]}} & s_grp3[15:0]);
+    assign s_gd[31:16] = ({16{ldoh_c[4]}} & s_grp[31:16]) | ({16{ldoh_c[5]}} & s_grp1[31:16]) | ({16{ldoh_c[6]}} & s_grp2[31:16]) | ({16{ldoh_c[7]}} & s_grp3[31:16]);
+    wire [2:0]  lnm    = lnoh_c[9] ? 3'd1 : lnoh_c[10] ? 3'd3 : lnoh_c[11] ? 3'd7 : 3'd0;       // (1 << lns) - 1
+    wire [2:0]  s_stk  = s_gd[2:0] & lnm;
+    wire [31:0] s_gd1 = s_gd >> 1, s_gd2 = s_gd >> 2, s_gd3 = s_gd >> 3;
+    wire [31:0] s_gs;
+    assign s_gs[15:0]  = ({16{lnoh_c[0]}} & s_gd[15:0])  | ({16{lnoh_c[1]}} & s_gd1[15:0])  | ({16{lnoh_c[2]}} & s_gd2[15:0])  | ({16{lnoh_c[3]}} & s_gd3[15:0]);
+    assign s_gs[31:16] = ({16{lnoh_c[4]}} & s_gd[31:16]) | ({16{lnoh_c[5]}} & s_gd1[31:16]) | ({16{lnoh_c[6]}} & s_gd2[31:16]) | ({16{lnoh_c[7]}} & s_gd3[31:16]);
+    wire [31:0] s_lr = row_c & (f_ring - 32'd1), s_lg = (s_gs << 4) | (row_c & 32'd15);
+    wire [31:0] s_local = {!ringz_c[1] ? s_lr[31:16] : s_lg[31:16], !ringz_c[0] ? s_lr[15:0] : s_lg[15:0]};
+    function automatic [31:0] ppx(input zl, input zh, input st, input [31:0] v);
+        ppx = {(zh && st) ? v[31:16] : 16'd0, (zl && st) ? v[15:0] : 16'd0};
+    endfunction
     reg ap_ok0, ap_ok1, ap_okx, ap_okb;
     wire ap_ok0_nx = ap_inval ? 1'b0 : st_act;
     wire ap_ok1_nx = ap_inval ? 1'b0 : (st_act && ap_ok0);
@@ -371,15 +390,16 @@ module ot_s81_ing_stream_n32 #(
         else begin ap_ok0 <= ap_ok0_nx; ap_ok1 <= ap_ok1_nx; ap_okx <= ap_okx_nx; ap_okb <= ap_okb_nx; ap_ok <= ap_ok_nx; end
     // stage A0: {pp2, pp1, pp0, mine, pitch, row, gs, local, stk, ringz, stride, base}
     localparam integer A0W = 32+32+1+3+32+32+32+5+1+32+32+32;   // 266
-    wire [A0W-1:0] a0_in = {(ringz_c[1] && s_stk[2]) ? f_a1 << 2 : 32'd0, (ringz_c[1] && s_stk[1]) ? f_a1 << 1 : 32'd0,
-                            (ringz_c[1] && s_stk[0]) ? f_a1 : 32'd0, s_mine, f_pitch, row_c, s_gs, s_local, s_stk,
-                            ringz_c[1], f_a1, f_a0};
-    localparam integer A0S = (A0W + 15) / 16;            // 17 (+1 copy for the pitch clones)
+    wire [A0W-1:0] a0_in = {ppx(ringz_c[6], ringz_c[7], s_stk[2], f_a1 << 2), ppx(ringz_c[4], ringz_c[5], s_stk[1], f_a1 << 1),
+                            ppx(ringz_c[2], ringz_c[3], s_stk[0], f_a1), s_mine, f_pitch, row_c, s_gs, s_local, s_stk,
+                            1'b0, f_a1, f_a0};
+    localparam integer AS = 12;                          // address-stage slice: <= 12 flops an enable copy
+    localparam integer A0S = (A0W + AS - 1) / AS;        // 23 (+1 copy for the pitch clones)
     (* keep *) reg [A0S:0] ok0_c;
     reg [A0W-1:0] a0;
     always @(posedge clk or negedge rst_n) if (!rst_n) ok0_c <= '0; else ok0_c <= {(A0S+1){ap_ok0_nx}};
     for (gi = 0; gi < A0S; gi = gi + 1) begin : g_a0
-        localparam integer LO = 16 * gi, NB = (16 * gi + 16 > A0W) ? A0W - 16 * gi : 16;
+        localparam integer LO = AS * gi, NB = (AS * gi + AS > A0W) ? A0W - AS * gi : AS;
         always @(posedge clk) if (!ok0_c[gi]) a0[LO +: NB] <= a0_in[LO +: NB];
     end
     wire [31:0] ap0_base = a0[31:0];
@@ -387,18 +407,29 @@ module ot_s81_ing_stream_n32 #(
     wire [4:0]  ap0_pitch = a0[168:164];
     wire        ap0_mine = a0[169];
     wire [31:0] ap0_pp0 = a0[201:170], ap0_pp1 = a0[233:202], ap0_pp2 = a0[265:234];
-    (* keep *) reg [9:0] pitch_c;                        // two pitch clones for the two row products
+    (* keep *) reg [9:0] pitch_c;                        // pitch clones: [4:0] products' low halves, [9:5] high halves
     always @(posedge clk) if (!ok0_c[A0S]) pitch_c <= {2{f_pitch}};
+    function automatic [31:0] pmul(input [31:0] v, input [4:0] pl, input [4:0] ph, input integer k0, input integer k1);
+        integer k; reg [31:0] acc, sh;
+        begin
+            acc = 32'd0;
+            for (k = k0; k <= k1; k = k + 1) begin
+                sh = v << (k - k0);
+                acc = acc + {ph[k] ? sh[31:16] : 16'd0, pl[k] ? sh[15:0] : 16'd0};
+            end
+            pmul = acc;
+        end
+    endfunction
     // stage A1: {lph, lp, mine, pitch, row, gs, local, rbase}
     localparam integer A1W = 32+32+32+32+5+1+32+32;      // 198
-    wire [A1W-1:0] a1_in = {ap0_local * {30'd0, pitch_c[9:8]}, ap0_local * {29'd0, pitch_c[2:0]}, ap0_mine, ap0_pitch,
+    wire [A1W-1:0] a1_in = {pmul(ap0_local, pitch_c[4:0], pitch_c[9:5], 3, 4), pmul(ap0_local, pitch_c[4:0], pitch_c[9:5], 0, 2), ap0_mine, ap0_pitch,
                             ap0_row, ap0_gs, ap0_local, ap0_base + ap0_pp0 + ap0_pp1 + ap0_pp2};
-    localparam integer A1S = (A1W + 15) / 16;
+    localparam integer A1S = (A1W + AS - 1) / AS;
     (* keep *) reg [A1S-1:0] ok1_c;
     reg [A1W-1:0] a1;
     always @(posedge clk or negedge rst_n) if (!rst_n) ok1_c <= '0; else ok1_c <= {A1S{ap_ok1_nx}};
     for (gi = 0; gi < A1S; gi = gi + 1) begin : g_a1
-        localparam integer LO = 16 * gi, NB = (16 * gi + 16 > A1W) ? A1W - 16 * gi : 16;
+        localparam integer LO = AS * gi, NB = (AS * gi + AS > A1W) ? A1W - AS * gi : AS;
         always @(posedge clk) if (!ok1_c[gi]) a1[LO +: NB] <= a1_in[LO +: NB];
     end
     wire [31:0] ap1_rbase = a1[31:0], ap1_gs = a1[95:64], ap1_row = a1[127:96];
@@ -412,35 +443,35 @@ module ot_s81_ing_stream_n32 #(
     wire [AXW-1:0] ax_in = {ap1_mine, a2_raddr, {26'd0, a2_q} << 1,
                             ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1),
                             ap1_rbase, (a2_sb << 11) + (a2_sb << 7)};
-    localparam integer AXS = (AXW + 15) / 16;
+    localparam integer AXS = (AXW + AS - 1) / AS;
     (* keep *) reg [AXS-1:0] okx_c;
     reg [AXW-1:0] ax;
     always @(posedge clk or negedge rst_n) if (!rst_n) okx_c <= '0; else okx_c <= {AXS{ap_okx_nx}};
     for (gi = 0; gi < AXS; gi = gi + 1) begin : g_ax
-        localparam integer LO = 16 * gi, NB = (16 * gi + 16 > AXW) ? AXW - 16 * gi : 16;
+        localparam integer LO = AS * gi, NB = (AS * gi + AS > AXW) ? AXW - AS * gi : AS;
         always @(posedge clk) if (!okx_c[gi]) ax[LO +: NB] <= ax_in[LO +: NB];
     end
     // stage B0: {mine, raddr, soff, koff, blk = base + stride}
     localparam integer ABW = 32*4 + 1;
     wire [ABW-1:0] ab_in = {ax[160], ax[159:128], ax[127:96], ax[95:64], ax[63:32] + ax[31:0]};
-    localparam integer ABS = (ABW + 15) / 16;
+    localparam integer ABS = (ABW + AS - 1) / AS;
     (* keep *) reg [ABS-1:0] okb_c;
     reg [ABW-1:0] ab;
     always @(posedge clk or negedge rst_n) if (!rst_n) okb_c <= '0; else okb_c <= {ABS{ap_okb_nx}};
     for (gi = 0; gi < ABS; gi = gi + 1) begin : g_ab
-        localparam integer LO = 16 * gi, NB = (16 * gi + 16 > ABW) ? ABW - 16 * gi : 16;
+        localparam integer LO = AS * gi, NB = (AS * gi + AS > ABW) ? ABW - AS * gi : AS;
         always @(posedge clk) if (!okb_c[gi]) ab[LO +: NB] <= ab_in[LO +: NB];
     end
     // stage B: {kscal = blk + soff, kcode = blk + koff, raddr}; ap_mine is a control master (domain leaf)
     localparam integer APW = 32*3;
     wire [APW-1:0] ap_in = {ab[31:0] + ab[95:64], ab[31:0] + ab[63:32], ab[127:96]};
-    localparam integer APS = APW / 16;
+    localparam integer APS = APW / AS;
     (* keep *) reg [APS-1:0] okp_c;
     reg [APW-1:0] apr;
     wire ap_mine_nx = !ap_ok ? ab[128] : ap_mine;
     always @(posedge clk or negedge rst_n) if (!rst_n) okp_c <= '0; else okp_c <= {APS{ap_ok_nx}};
     for (gi = 0; gi < APS; gi = gi + 1) begin : g_ap
-        always @(posedge clk) if (!okp_c[gi]) apr[16*gi +: 16] <= ap_in[16*gi +: 16];
+        always @(posedge clk) if (!okp_c[gi]) apr[AS*gi +: AS] <= ap_in[AS*gi +: AS];
     end
     always @(posedge clk) ap_mine <= ap_mine_nx;
     wire [31:0] u_raddr = apr[31:0], u_kcode = apr[63:32], u_kscal = apr[95:64];
@@ -638,61 +669,55 @@ module ot_s81_ing_stream_n32 #(
     reg  [7:0]  dq_t1, dq_t2;
     reg  [31:0] dq_c2;
     wire [39:0] cqw = {dq_t2, dq_c2};
-    (* keep *) reg [2:0]  dq_e2_c;                       // 3 slices of the 40-b entry
-    (* keep *) reg [23:0] cq_wh_c;                       // 3 x one-hot write pointer
     reg  [39:0] cq [0:7];
+    reg  [2:0]  cq_rd, cq_wr;
     reg  [3:0]  cq_n;
-    localparam integer NCR = 3;                          // cq_go replicas: A count / done, B tag copy, C count-out copy
-    (* keep *) reg [NCR-1:0]    cq_nz_c;
-    (* keep *) reg [NCR*32-1:0] acc_c;
-    (* keep *) reg [NCR*8-1:0]  cq_roh_c;                // replica r's one-hot read pointer (its compare word)
-    (* keep *) reg [15:0]       cq_toh_c;                // tag read copy (by B), count-out read copy (by C)
-    wire [NCR-1:0] cq_go_r;
-    for (gi = 0; gi < NCR; gi = gi + 1) begin : g_cqg
-        wire [7:0] oh = cq_roh_c[8*gi +: 8];
-        reg  [31:0] hc;
-        integer k;
-        always @* begin hc = 32'd0; for (k = 0; k < 8; k = k + 1) hc = hc | ({32{oh[k]}} & cq[k][31:0]); end
+    // write enables: per (40-b slice, entry), registered from the next write (dq_e1 = the next dq_e2)
+    (* keep *) reg [23:0] cq_we_c;                       // [s*8 + e]
+    // read: one-hot copies of the read pointer (D = one-hot of the next read index; no enable):
+    //   0 / 1 compare word lo / hi, 2 tag, 3 / 4 count out lo / hi
+    (* keep *) reg [39:0] cq_roh_c;
+    reg              cq_nz;
+    reg  [31:0]      acc_q;                              // clone of sp_acc for the compare
+    function automatic [15:0] cqsel(input [7:0] oh, input integer lo);
+        integer k; reg [15:0] v;
+        begin v = 16'd0; for (k = 0; k < 8; k = k + 1) v = v | ({16{oh[k]}} & cq[k][lo +: 16]); cqsel = v; end
+    endfunction
+    wire [31:0] hc = {cqsel(cq_roh_c[8 +: 8], 16), cqsel(cq_roh_c[0 +: 8], 0)};
 `ifdef OT_N32_MUT_CQR
-        assign cq_go_r[gi] = cq_nz_c[gi] && ((gi == 2) ? 1'b1 : (acc_c[32*gi +: 32] >= hc));          // mutant
+    wire cq_go = cq_nz && ({acc_q[31:16], 16'hffff} >= hc);                       // mutant: low compare half ignored
 `else
-        assign cq_go_r[gi] = cq_nz_c[gi] && (acc_c[32*gi +: 32] >= hc);
+    wire cq_go = cq_nz && (acc_q >= hc);
 `endif
-    end
-    wire cq_go = cq_go_r[0];
+    wire [2:0] cq_rd_nx = cq_rd + (cq_go ? 3'd1 : 3'd0);
+    wire [2:0] cq_wr_nx = cq_wr + (dq_e2 ? 3'd1 : 3'd0);
     wire [3:0] cq_n_nx = cq_n + (dq_e2 ? 4'd1 : 4'd0) - (cq_go ? 4'd1 : 4'd0);
     always @(posedge clk) begin dq_t1 <= dtag_r; dq_t2 <= dq_t1; dq_c2 <= sp_iss; end
     for (gi = 0; gi < 3; gi = gi + 1) begin : g_cqw
         localparam integer LO = 16 * gi, NB = (gi == 2) ? 8 : 16;
         integer k;
         always @(posedge clk)
-            for (k = 0; k < 8; k = k + 1) if (dq_e2_c[gi] && cq_wh_c[8*gi + k]) cq[k][LO +: NB] <= cqw[LO +: NB];
+            for (k = 0; k < 8; k = k + 1) if (cq_we_c[8*gi + k]) cq[k][LO +: NB] <= cqw[LO +: NB];
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            iss_lo <= 16'd0; iss_hi <= 16'd0; acc_lo <= 16'd0; acc_hi <= 16'd0; dq_e1 <= 1'b0; dq_e2 <= 1'b0; dq_e2_c <= 3'd0;
-            cq_n <= 4'd0; cq_wh_c <= {3{8'd1}}; cq_nz_c <= '0; acc_c <= '0; cq_roh_c <= {NCR{8'd1}}; cq_toh_c <= {2{8'd1}};
+            iss_lo <= 16'd0; iss_hi <= 16'd0; acc_lo <= 16'd0; acc_hi <= 16'd0; dq_e1 <= 1'b0; dq_e2 <= 1'b0;
+            cq_rd <= 3'd0; cq_wr <= 3'd0; cq_n <= 4'd0; cq_we_c <= 24'd0; cq_roh_c <= {5{8'd1}}; cq_nz <= 1'b0; acc_q <= 32'd0;
         end else begin
             if (p_wv_c[0]) iss_lo <= iss_lo + 16'd1;
             if (p_wv_c[1] && iss_lo == 16'hffff) iss_hi <= iss_hi + 16'd1;
-            {acc_hi, acc_lo} <= sp_acc_nx;
-            dq_e1 <= done_r; dq_e2 <= dq_e1; dq_e2_c <= {3{dq_e1}};
-            for (i = 0; i < 3; i = i + 1) if (dq_e2_c[i]) cq_wh_c[8*i +: 8] <= {cq_wh_c[8*i +: 7], cq_wh_c[8*i + 7]};
-            cq_n <= cq_n_nx;
-            cq_nz_c <= {NCR{cq_n_nx != 4'd0}}; acc_c <= {NCR{sp_acc_nx}};
-            for (i = 0; i < NCR; i = i + 1) if (cq_go_r[i]) cq_roh_c[8*i +: 8] <= {cq_roh_c[8*i +: 7], cq_roh_c[8*i + 7]};
-            if (cq_go_r[1]) cq_toh_c[7:0]  <= {cq_toh_c[6:0],  cq_toh_c[7]};
-            if (cq_go_r[2]) cq_toh_c[15:8] <= {cq_toh_c[14:8], cq_toh_c[15]};
+            {acc_hi, acc_lo} <= sp_acc_nx; acc_q <= sp_acc_nx;
+            dq_e1 <= done_r; dq_e2 <= dq_e1;
+            cq_we_c <= {3{dq_e1 ? (8'd1 << cq_wr_nx) : 8'd0}};
+            cq_wr <= cq_wr_nx; cq_rd <= cq_rd_nx; cq_n <= cq_n_nx; cq_nz <= cq_n_nx != 4'd0;
+            cq_roh_c <= {5{8'd1 << cq_rd_nx}};
         end
-    reg [7:0] tg; reg [31:0] nc;
-    always @* begin
-        tg = 8'd0; nc = 32'd0;
-        for (i = 0; i < 8; i = i + 1) begin tg = tg | ({8{cq_toh_c[i]}} & cq[i][39:32]); nc = nc | ({32{cq_toh_c[8+i]}} & cq[i][31:0]); end
-    end
-    assign done_v = cq_go; assign done_tag = tg; assign n_sectors = nc;
+    reg [7:0] tg;
+    always @* begin tg = 8'd0; for (i = 0; i < 8; i = i + 1) tg = tg | ({8{cq_roh_c[16 + i]}} & cq[i][39:32]); end
+    assign done_v = cq_go; assign done_tag = tg;
+    assign n_sectors = {cqsel(cq_roh_c[32 +: 8], 16), cqsel(cq_roh_c[24 +: 8], 0)};
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && dq_e2 && cq_n == 4'd8 && !cq_go) $fatal(1, "ot_s81_ing_stream_n32: completion queue overflow");
-    always @(posedge clk) if (rst_n && (cq_go_r != {NCR{cq_go}})) $fatal(1, "ot_s81_ing_stream_n32: completion replica diverged");
 `endif
     wire sp_busy = p_wv || p_sc || (fq_n != 3'd0);
     assign busy = dh_v || st_act || sp_busy;

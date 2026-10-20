@@ -469,5 +469,8 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "note": "structural successor of dsdv_sh_lk_s10c/s10d (both routes terminal FAIL DRC2 M4 SRAM/VSS shorts + native census 264/323 roots >32)"
+ },
+ "orfs_vars": {
+  "OT_RST_COPIES_WIDE": "1"
  }
 }

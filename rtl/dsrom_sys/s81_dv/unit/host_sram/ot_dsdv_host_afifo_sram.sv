@@ -3,7 +3,7 @@
 // Registered SRAM head requires one additional empty-to-nonempty read edge;
 // every nonempty pop still advances one word per read clock. Gray stage2 alone
 // authorizes reads. No first-stage synchronizer output enters functional logic.
-module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1) (
+module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1, HNR=1) (
  input wire wclk,wrst_n,wr,input wire [W-1:0] wdata,
  output wire wfull,output reg [AW:0] wfreed,output reg ovf,
  input wire rclk,rrst_n,rd,output wire rempty,
@@ -48,8 +48,23 @@ module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1) (
   end
  assign rempty=empty;
  (* keep *) reg [EC-1:0] empty_c;
- always @(posedge rclk or negedge rrst_n)
-  if(!rrst_n) empty_c<={EC{1'b1}}; else empty_c<={EC{!have_next}};
+ generate if(HNR>1) begin:g_hnr
+  // S81-SHLK12 (HNR 2, default 1 = unchanged): the upper EC/2 empty copies take a REPLICA of have_next computed from
+  // kept clones of rbin / empty / the last Gray synchroniser stage (same values), so no net drives more than ~EC/2+2
+  (* keep *) reg [AW:0] rbin_b, wgray_r_b; (* keep *) reg empty_b;
+  wire [AW:0] rbin_n_b=rbin_b+{{AW{1'b0}},rd&&!empty_b};
+  wire have_next_b=((rbin_n_b^(rbin_n_b>>1))!=wgray_r_b);
+  always @(posedge rclk or negedge rrst_n)
+   if(!rrst_n)begin rbin_b<=0;wgray_r_b<=0;empty_b<=1;empty_c<={EC{1'b1}};end
+   else begin rbin_b<=rbin_n;wgray_r_b<=wgray_s[SYNC-2];empty_b<=!have_next;
+    empty_c<={{(EC-EC/2){!have_next_b}},{(EC/2){!have_next}}};end
+`ifndef SYNTHESIS
+  always @(posedge rclk) if(rrst_n&&have_next_b!=have_next) $fatal(1,"ot_dsdv_host_afifo_sram: have_next replica diverged");
+`endif
+ end else begin:g_hn1
+  always @(posedge rclk or negedge rrst_n)
+   if(!rrst_n) empty_c<={EC{1'b1}}; else empty_c<={EC{!have_next}};
+ end endgenerate
  assign rempty_c=empty_c;
  assign rcount=g2b(wgray_r)-rbin;
 `ifdef S81SH_SRAM_MUT_CURRENT

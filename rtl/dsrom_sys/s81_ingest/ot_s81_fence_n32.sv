@@ -30,7 +30,7 @@ module ot_s81_fence_n32 (
     reg [31:0] commits, snapshot;
     reg        req, ac1, ac2, fc;
     reg        ack_host;
-    (* keep *) reg [2:0] fc_c;                           // commits lo / hi, snapshot replica support
+    (* keep *) reg [3:0] fc_c;                           // commits lo / hi, snapshot replica support
     (* keep *) reg [1:0] req_c, ac2_c;
     wire [32:0] add = {1'b0, commits} + ack_n;
     wire        fc_nx = fc | add[32];
@@ -40,12 +40,12 @@ module ot_s81_fence_n32 (
         if (!rst_n) begin commits <= 0; snapshot <= 0; req <= 0; ac1 <= 0; ac2 <= 0; fc <= 0; fc_c <= 0; req_c <= 0; ac2_c <= 0; end
         else begin
             ac1 <= ack_host; ac2 <= ac1; ac2_c <= {2{ac1}};
-            fc <= fc_nx; fc_c <= {3{fc_nx}};
+            fc <= fc_nx; fc_c <= {4{fc_nx}};
             req <= req_nx; req_c <= {2{req_nx}};
             if (!fc_c[0]) commits[15:0]  <= add[15:0];
             if (!fc_c[1]) commits[31:16] <= add[31:16];
             if (!fc_c[2] && req_c[0] == ac2_c[0]) snapshot[15:0]  <= commits[15:0];
-            if (!fc_c[2] && req_c[1] == ac2_c[1]) snapshot[31:16] <= commits[31:16];
+            if (!fc_c[3] && req_c[1] == ac2_c[1]) snapshot[31:16] <= commits[31:16];
         end
     // ---------------------------------------------------------------- clk_h: landed / queue / credits
     reg rc1, rc2, fc1, fc2;
