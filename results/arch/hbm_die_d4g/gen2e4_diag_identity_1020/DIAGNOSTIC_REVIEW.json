@@ -1,0 +1,61 @@
+{
+  "status": "DIAGNOSTIC ONLY / NO PHYSICAL GO",
+  "generator_terminal_rc": 0,
+  "source_rtl": "11bf17f45",
+  "grant_identity_fix": "b62d34fca",
+  "manifest_label": "NOT_A_DIE_RESULT (source contract has unknown exposed input ports / unknown b; SYNTH views are estimates; full native/physical qualification remains OPEN)",
+  "input_sha256": {
+    "contract": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8",
+    "plan": "1ca383db47bdaf0d4af0d86ea074c8d610ebf0581a5b4a71e7f832df3ba57738",
+    "grants": "d53f15e9b00f37a6e9aab6af32d765cba1d4dc4b19e7f98951dc37f3ddb22e9b",
+    "lanes": "b61fde4bf29295d1e298806672df648f0f4e170a88321b814b348bed50fab45c",
+    "view_inventory": "ed5fbd11ec06c5d3170f53cc6b8849936bb506aaf963fc94d72f8e8729fdeded",
+    "generator": "b907ffd44eeb9c10b0eaed136de56286b4610ff6167209e30bf25f25c9805355"
+  },
+  "PNG": "/home/ubuntu/artifacts/codex-gen2e4-diag-s3-1020/layout_identity3.png",
+  "PNG_sha256": "11f5d679c7d59c23e8b7b029023239788992249ba7936b60cd59b70e49c0e18a",
+  "PNG_review": "Actually viewed. Gross shoreline/large-slot arrangement coherent; channels contain large unqualified clock networks. No child macro lattice/util/clock closure can be inferred from abstract SYNTH rectangles.",
+  "placement_problems": 0,
+  "native_complete": false,
+  "coverage": {
+    "schema": "opentallas.hbm.placement_coverage.v1",
+    "verdict": "FAIL",
+    "actual_instances": 1228,
+    "placed_instances": 1228,
+    "defects": 82,
+    "by_reason": {
+      "generic_centroid_fallback": 82
+    },
+    "affected_area_um2": 1157482.872,
+    "extra_placed_instances": [],
+    "native_release_qualified": false,
+    "qualification": "Placement provenance census only; no geometry, reset, clock or timing waiver."
+  },
+  "pin_density_over_count": 105,
+  "pin_density_max_per_um": 20.83,
+  "reset_reach": {
+    "reach_um": 405.0,
+    "por_direct_sinks": 1863,
+    "forest_sinks": 0,
+    "relay_row_sinks": 0,
+    "errors": 1861,
+    "kinds": {
+      "no_regional_tree": 1861
+    },
+    "reach_gate": "FAIL_DIAG"
+  },
+  "nets_over405": 659522,
+  "relay_nets_over405": 657083,
+  "stream_noncommon_max_ps": 8993.3,
+  "checklist": {
+    "1_pin_registration_reset": "FAIL:1861 no_regional_tree, full interfaces unqualified",
+    "2_reach": "FAIL:659522 nets over405um",
+    "3_fanout": "FAIL:standinMC3v1 actual native196 dynamic drivers over32 max2509",
+    "4_depth": "OPEN:diagnostic ETMs, no die timing qualification",
+    "5_storage": "PARTIAL:MC3 mapped27p192 macros; full die storage census absent",
+    "6_floorplan": "FAIL:82genericcentroid homes, pin density up to20.83/um, child lattice/fill not qualified",
+    "7_clock": "FAIL:stream noncommon max8993.3ps; hardware HBM1024 domain authorityOPEN",
+    "8_schedule": "OPEN:GENREACH/MC3 replacement ages not finalized; no compiler adoption"
+  },
+  "decision": "Keep original jobs/bindings. No GRT/STA/submission/closure. Artifact acceptance only."
+}
