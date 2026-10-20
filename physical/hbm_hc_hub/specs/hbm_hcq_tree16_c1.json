@@ -35,7 +35,7 @@
  "macros": [],
  "outline": {
   "w": 129.6,
-  "h": 108.0,
+  "h": 97.2,
   "exact": true
  },
  "route": {
@@ -69,7 +69,7 @@
  "children": [],
  "inter": [],
  "params": {},
- "structural_change": "HBM-HCBANK6 10-20 (H.STA.BLK.17.2): new hard child of the HC quarter hub cluster hbm_hcq_hub_c1. The SAFE 1 hub (hbm_hcq_hub_s1/s1b/s2/s2b) had ONE clock root for 51,337 flops over the 734.4 square; its --cts gates stalled 4 h in repair_timing -hold (28,269 hold endpoints, sink arrival 566..849 ps) and its mapped netlist failed the native32 census (1,057 drivers > 32, 693 inside the 63 LAT-7 adders). This slice takes levels 1..4 of the 6-level subtree over 16 chunk sums (15 of 63 adders, ~9.8k flops), every adder the reviewed native-fanout LAT-7 graph (ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1, 520dbea3a, SAT-equal to LAT 7 DRST 0), with its own compact clock root; one master x4. Outline 129.6 x 108.0 (1.2:1, ~43 % util of the ~6.0k um2 estimate), W face 515 pins = 4.8/um, E face 78 outputs.",
+ "structural_change": "HBM-HCBANK6 10-20 (H.STA.BLK.17.2): new hard child of the HC quarter hub cluster hbm_hcq_hub_c1. The SAFE 1 hub (hbm_hcq_hub_s1/s1b/s2/s2b) had ONE clock root for 51,337 flops over the 734.4 square; its --cts gates stalled 4 h in repair_timing -hold (28,269 hold endpoints, sink arrival 566..849 ps) and its mapped netlist failed the native32 census (1,057 drivers > 32, 693 inside the 63 LAT-7 adders). This slice takes levels 1..4 of the 6-level subtree over 16 chunk sums (15 of 63 adders, ~9.8k flops), every adder the reviewed native-fanout LAT-7 graph (ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1, 520dbea3a, SAT-equal to LAT 7 DRST 0), with its own compact clock root; one master x4. Outline 129.6 x 97.2 (1.33:1, 47 % util of the measured 5,947 um2), W face 515 pins = 5.3/um, E face 78 outputs.",
  "job": {
   "owner": "Claude:HBM-HCBANK6",
   "branch": "claude/hcbank6-hub-1020",
@@ -114,5 +114,9 @@
     "fail_witness": "results/rtl/hbm_hcq_hub_c1/qtree16_mut4.log"
    }
   ]
- }
+ },
+ "pin_hook_before_flops": [
+  "physical/hbm_hc_hub/native_untouch.tcl"
+ ],
+ "std_area_um2": 5947
 }

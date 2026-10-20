@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  151.2,
+  129.6,
   129.6
  ],
  "core": [
   2.16,
   2.16,
-  149.04,
+  127.44,
   127.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -53,6 +53,7 @@
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/lib/ot_rst_relay.sv",
+  "physical/hbm_hc_hub/native_untouch.tcl",
   "physical/ref_tile/hbm_hcq_tree16_c1b/kit.env",
   "physical/ref_tile/hbm_hcq_tree16_c1b/clock.sdc",
   "physical/ref_tile/hbm_hcq_tree16_c1b/signoff.sdc",
@@ -75,6 +76,8 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/hbm_hcq_tree16_c1b/pre_gpl.tcl",
+  "physical/ref_tile/hbm_hcq_tree16_c1b/pre_dpl.tcl"
  ]
 }
