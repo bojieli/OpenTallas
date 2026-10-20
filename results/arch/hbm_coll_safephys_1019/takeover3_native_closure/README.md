@@ -1,0 +1,9 @@
+# Takeover3 element closure hand-back, 17:44 PT
+
+Pinned native Liberty-function census of actual old gate 5_1_grt checkpoints supersedes loose SAFE claims. No closures/adoption/submissions occurred. All standard-cell masters checked against image16470 RVT_TT Liberty function/direction/clock:true. Native PG-only TAPs and block macros accounted explicitly. All roles include transparent descendants, combinational roots, FFs, top inputs and ties. Clock loads have functional graph provenance; no name-based waiver.
+
+COLL n1s0 v74w:230 rows over32,84 nontransparent functional roots+146 unary descendants; max64; full transformed pin-bbox endpoint L1max392.177um/zero>405. All165 floating-output genuine clockload cells classified separately by pinned clock-role graph. IntermediatePG26,742/92,132 unbound; no final conductor/via/short proof. Source roots: cycles reset64 (32 original FF+32 native output copies), hs_q33, shared multiplier operand/iteration captures33–64.
+
+BW p540:202 rows over32/42 functional+160 unary descendants; max237 (u_native.u_rst.rst_n[7]), next207 ([71]); face reset96 and sync94. Nine L1 upper violations, worstpc_id_q[0]499.915um. IntermediatePG39,324/138,802 unbound. Production full96 positive/idmut evidence remains behavioral only. No submit.
+
+Source successor30d65c3e0 has per-product KEPT operand capture, split16+16 cycle reset/start, modeled+218 raw FF/zero added edges. Full actual fleet proof terminal0, unitoth-ubuntu-1142502-1792456949 onagidock128: iter512PASS, fixed-delay39,824PASS, both1792 production+8192densePASS, all12mutants fail as required. Original source/expected arithmetic/calendar preserved. No successor mapping or physical gate launched; fanout after mapping, band/regions and sourcearea remain next. Current finite step completed at CLAUDE IS BACK.
