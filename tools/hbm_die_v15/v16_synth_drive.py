@@ -19,6 +19,11 @@ ROOT = Path(__file__).resolve().parents[2]
 # HBM-CHAIN3 10-18: ot-epyc5 added -- push_prefer scp'd the prefer list only to the hosts named here, so a retry admitted
 # on ot-epyc5 died FILELIST_FAIL (GEN2 S2: ot_hbm_idx_query_static, ot_hgi_coll_gq_issue)
 HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5'}
+# L2H-GEN2D-RST 10-19 22:00: ot-epyc4/ot-epyc8 drained (HELD); OT_SYNTH_HOSTS=h1,h2,.. names the hosts that carry src_<commit>
+# (prefer lists are pushed to exactly these; ot-run only admits where --dir exists).
+import os as _os
+if _os.environ.get('OT_SYNTH_HOSTS'):
+    HOSTS = {h: h for h in _os.environ['OT_SYNTH_HOSTS'].split(',') if h}
 PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],

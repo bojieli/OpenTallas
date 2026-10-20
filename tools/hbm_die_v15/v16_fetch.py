@@ -10,6 +10,9 @@ import argparse, hashlib, json, re, shlex, subprocess
 from pathlib import Path
 
 HOSTS = ['ot-epyc4', 'ot-agidock128']   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
+# L2H-GEN2D-RST 10-19 22:00: OT_SYNTH_HOSTS=h1,h2,.. (hosts that built cells; ot-epyc4/8 drained) are searched as well
+import os as _os
+HOSTS += [h for h in _os.environ.get('OT_SYNTH_HOSTS', '').split(',') if h and h not in HOSTS]
 REMOTE_PY = r'''
 import hashlib, json, re, sys, os, shlex, subprocess
 root, src, cell, wrap = sys.argv[1:5]
