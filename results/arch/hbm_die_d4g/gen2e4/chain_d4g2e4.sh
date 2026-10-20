@@ -44,7 +44,7 @@ cd $W
 H=$(git -C $W rev-parse --short=9 HEAD); echo "CHAIN chain_d4g2e4.sh (L2H-GEN2E: GEN2e3 + l21 + l22 FAN32/MC3 + exact-tail classes) HEAD $H $(date -Is)"
 ssh $HOST "mkdir -p $B" || exit 9
 FOREST_SRC_PATHS="rtl/hbm_accel/die_glue/hbfd_rrl.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv rtl/hbm_accel/die_glue/hbfd_rly_rr_masters.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_pad.sv rtl/hdc/ot_hdc_delay.sv"
-METAS="$A0/vplan/synth $A1/vplan/synth $A2/vplan_fast/synth $A2/vplan_a0/synth $A2/vplan_a1/synth $A2/vplan_a/synth $A2/vplan/synth $A2/vplan_b1/synth $AC/vplan_pre/synth $AC/vplan/synth $AD/vplan/synth $AE/vplan_a/synth $AE2/vplan_a/synth $AE3/vplan_a/synth"
+METAS="$A0/vplan/synth $A1/vplan/synth $A2/vplan_fast/synth $A2/vplan_a0/synth $A2/vplan_a1/synth $A2/vplan_a/synth $A2/vplan/synth $A2/vplan_b1/synth $AC/vplan_pre/synth $AC/vplan/synth $AD/vplan/synth $AE/vplan_a/synth $AE2/vplan_a/synth $AE3/vplan_a/synth $A/vplan_a_run3/synth"
 bind2() {   # $1 contract  $2 out dir  $3 tag -> strict port bind + functional bind (LAT strict when l12 is in)
   mkdir -p $2; bash tools/hbm_die_v16/d4g_layers/l1_bind_check.sh $1 $2 > /dev/null; tail -1 $2/port_bind.log
   if ! grep -q "^DIE_PORT_BIND PASS" $2/port_bind.log; then
@@ -158,7 +158,7 @@ REV0=$W/results/arch/hbm_unread_gen2e3_1019/l21/review_l21_candidate.json
 strict_manifest $A/net/pre_relay.json $A/pb0 S1 || { echo "S1_STRICT_FAIL (release gate): fix before the physical chain"; exit 11; }
 # ---------------- S2 / S3 relay-free case ----------------
 step S2 synth_a
-synth_round $A/net/pre_relay.json $A/vplan_a a $AE3/vplan_a || exit $?
+synth_round $A/net/pre_relay.json $A/vplan_a a $A/vplan_a_run3 || exit $?
 step S3 gen2e_case_a
 views_up $A/vplan_a $A/net/pre_relay.json || exit 17
 gen case_a diag "" || { echo S3_GEN_A_FAIL; exit 13; }

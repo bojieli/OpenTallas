@@ -33,7 +33,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(
     parameter integer PURE_FACE=1,
     parameter integer RST_FOREST=0,
     parameter integer RST_LEAVES=192,
-    parameter integer PCID_LOCAL=0
+    parameter integer PCID_LOCAL=0,
+    parameter integer WROK_COPIES=0,
+    parameter integer POST_REG=0   // HBM-MC3c: register stage on the post SRAM read data (+1 edge), see cfg_safe
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -64,7 +66,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(
     ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.RQ(RQ),.QD(QD),
       .OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY),
       .BW_MUT_ID_TAG(BW_MUT_ID_TAG),.SRAM_P192(SRAM_P192),.PURE_FACE(PURE_FACE),
-      .RST_FOREST(RST_FOREST),.RST_LEAVES(RST_LEAVES),.PCID_LOCAL(PCID_LOCAL)) u_native(
+      .RST_FOREST(RST_FOREST),.RST_LEAVES(RST_LEAVES),.PCID_LOCAL(PCID_LOCAL),.WROK_COPIES(WROK_COPIES),.POST_REG(POST_REG)) u_native(
       .clk(clk),.rst_n(core_rst_n),.pc_id(pc_id),.refresh_reload(refresh_reload),
       .k_v(k_v),.k_rdy(k_rdy),.k_we(k_we),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),
       .k_wdata(k_wdata),.k_wstrb(k_wstrb),

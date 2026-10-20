@@ -21,9 +21,12 @@ BIG = {  # measured --mem (tools/fleet/die_trial_mem.json 2026-10-16: typical sy
     'ot_hgi_sfu_scheduled_engine': 154, 'ot_hbm_idx_client_static_sw': 154, 'ot_hbm_accel_smh_static': 128,
     'ot_hbm_accel_smh_attn': 128, 'ot_hbm_hc_eng_static': 96, 'ot_hgi_sfu_core_split': 96,
 }
-ENV = {'ot_hbm_accel_smh_static': 'DEFINES=OT_SMH_FC_HIER LIBCELLS=1', 'ot_hbm_accel_smh_attn': 'DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY LIBCELLS=1', 'hfd_ckgen': 'DROP=rtl/hbm_accel/control/tb_hfd_ckgen.sv'}
+ENV = {'ot_hbm_accel_smh_static': 'DEFINES=OT_SMH_FC_HIER LIBCELLS=1', 'ot_hbm_accel_smh_attn': 'DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY LIBCELLS=1', 'hfd_ckgen': 'DROP=rtl/hbm_accel/control/tb_hfd_ckgen.sv',
+       # L2H-GEN2E 10-19: l21 hfd_ckgen_nolink has the same PLL model child (GEN2e4 S2 failed: tb file picked as its definer)
+       'hfd_ckgen_nolink': 'DROP=rtl/hbm_accel/control/tb_hfd_ckgen.sv'}
 PRE = {'hfd_ckgen': '(* blackbox *) module ot_hbm_pll_bb(input wire refclk, input wire reset_n, output wire clk_stream, '
        'output wire clk_serial, output wire clk_hbm, output wire clk_link, output wire locked); endmodule'}
+PRE['hfd_ckgen_nolink'] = PRE['hfd_ckgen']
 # DIE-HBM-LEAD 10-19: hop-0 / 0-station landing masters (hbfd_lh0_*, hbfd_land0_*) instantiate the ASAP7 ICG (ot_hdc_cg) directly:
 # read lib cells as boxes (the behavioural retention_cell_models.sv ICG became a 'reg IQ = 0' netlist that OpenSTA cannot parse).
 def env_of(m):

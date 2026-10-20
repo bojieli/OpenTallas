@@ -20,8 +20,10 @@ NEW_PC_SRC = SN + NEW_PC + '.sv'
 NEW_PC_DEPS = ['rtl/lib/ot_rst_relay.sv', 'rtl/lib/ot_rst_forest.sv', SN + 'ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv',
                SN + 'ot_hbm_svc_ring_h9b.sv', SN + 'ot_hbm_svc_pin_skid2_h9.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv',
                SN + 'ot_hbm_svc_ring_bw_safe.sv', SN + 'ot_hbm_svc_pin_skid2_bw_safe.sv', SN + 'ot_hbm_svc_sram128_n64.sv']
+# HBM-MC3c (claude/l2h-mc3c-1019 @6005d1419, kit hdie_pc_ctrl_mc3c_p540): MC3b reset forest 256 leaves + wr_ok copies
+# + post SRAM read-data stage (POST_REG, +1 edge hidden by the production calendar, full96 END 45260 = MC3b)
 MC3_PARAMS = {'OREG': 1, 'KREG': 1, 'KRREG': 1, 'RREG': 1, 'WPAY': 1, 'RESET_LANDING': 2, 'SRAM_P192': 1, 'PURE_FACE': 1,
-              'RST_FOREST': 1, 'PCID_LOCAL': 1}
+              'RST_FOREST': 1, 'PCID_LOCAL': 1, 'RST_LEAVES': 256, 'WROK_COPIES': 1, 'POST_REG': 1}
 
 
 def header_ports(src, mod, ports_too=True):
@@ -74,7 +76,7 @@ def apply(original, fan32=True, mc3=True):
                 raise ValueError(f'{name}: {NEW_PC} has extra ports {sorted(missing)}')
             v.update(master=NEW_PC, source=NEW_PC_SRC, rtl_deps=list(NEW_PC_DEPS), params=dict(MC3_PARAMS))
             v['note'] += (' | l22m: RELEASE controller HBM-MC3 SAFE face (per-bank open row, ACT lookahead, reset forest,'
-                          ' local pc_id) as LABELLED SYNTH STAND-IN until hdie_pc_ctrl_mc3_p540/_q648 is CLOSED')
+                          ' local pc_id) as LABELLED SYNTH STAND-IN until hdie_pc_ctrl_mc3c_p540/_q648 (or mc3b) is CLOSED')
             n += 1
         for s in c.get('straps', []):
             if s.get('master') == OLD_PC:
