@@ -42,6 +42,10 @@ HARD_PORT_RTL = {
 
 
 def header(text, mod):
+    # Port/parameter comments may contain ");". Remove them before finding
+    # the header terminator, or a real declared port silently disappears.
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S)
+    text = re.sub(r'//[^\n]*', '', text)
     m = re.search(r'^\s*module\s+' + mod + r'\b(.*?)\);', text, re.M | re.S)
     if not m:
         return None, None

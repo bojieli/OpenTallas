@@ -43,6 +43,7 @@ from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import placement_coverage
+from grant_slot_bind import resolve_slot
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
@@ -511,12 +512,7 @@ def main():
 
     # ---------------- outlines of SYNTH cells ----------------
     def eslot(n):
-        s = I[n].get('slot')
-        if s:
-            return s
-        if n in slots or (n in P and isinstance(P[n], dict) and 'x' in P[n]):
-            return n
-        return None
+        return resolve_slot(n, I[n], slots, P, slot_map.get(n))
     slot_users = defaultdict(list)
     for n in inst:
         s = eslot(n)
@@ -1081,9 +1077,12 @@ def main():
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
     exposed = C.get('exposed_inputs', {})
+    # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
+    # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
+    exposed_summary = exposed if isinstance(exposed, dict) else {}
     manifest = dict(schema='opentallas.hbm_v16.die_case.v1',
-                    label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
-                          f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
+                    label=f"NOT_A_DIE_RESULT (source contract has {exposed_summary.get('ports', 'unknown')} exposed "
+                          f"input ports / {exposed_summary.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,

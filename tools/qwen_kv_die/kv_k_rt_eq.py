@@ -129,6 +129,29 @@ def pvfin_align_on():
     return os.environ.get('OT_KV_PVFIN_ALIGN', '1') == '1'
 
 
+def equalize_pv_start(K, m):
+    """One PV_LEAD register controls both pairs: physically pad the faster start branch."""
+    by = {i.name: i for i in m['insts']}
+    if not all(x in by for x in ('kvs_attn', 'pvw_0', 'pvw_1')):
+        return m
+    members = [('kvs_attn', 'pvst', f'pvw_{p}') for p in (0, 1)]
+    m = BEQ.equalize(K, m, bundles={'PV.start': members}, record_key='pv_start_eq',
+                     rule='both PV start branches physically padded to their maximum age; one shared PV_LEAD')
+    # Read the actual resulting relay graph. A fork starts at the source,
+    # independently of the trunk, and its pads must update its own age.
+    by = {i.name: i for i in m['insts']}
+    reached = BEQ._walk(m, by, ('kvs_attn', 'pvst'))
+    ages = [reached[(f'pvw_{p}', 'st')][0] for p in (0, 1)]
+    if ages[0] != ages[1]:
+        raise ValueError(f'kv_pv_start_eq: unequal physical start ages after padding: {ages}')
+    m.setdefault('relay_stages', {})['ks_pvst'] = ages[0]
+    for q, endpoint in enumerate(m.get('forks', {}).get('ks_pvst', [])):
+        if tuple(endpoint) == ('pvw_1', 'st'):
+            m.setdefault('fork_stages', {})[f'ks_pvst__f{q}'] = ages[1]
+    m['pv_start_eq']['ages'] = ages
+    return m
+
+
 def pvfin_pads(paths):
     """{path key: age} (kv_static_params.plan_paths / table_paths) -> ({'pvfst'|'pvp_0'|'pvp_1': pads}, align per pair before).
     Target T = max(D(ks_pvfst) - PV_LEAD, D(ks_pvp_0), D(ks_pvp_1)); every member is padded up to it, so the start word and

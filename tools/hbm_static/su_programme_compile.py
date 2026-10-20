@@ -184,7 +184,8 @@ def lower_partitioned(source, out, parts=4, line_bits=9688, start_depth=2, unifo
     (out/'part_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
-def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mut_pc_col=None, mut_tpl_col=None):
+def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mut_pc_col=None, mut_tpl_col=None,
+                  resident_edges=None):
     """HBM-SU r5 2026-10-17 (opt-in, --columns): one quarter's command line (line_bits) lowered for the per-column
     cluster ot_hbm_su_programme_pslice_c5: column c (bits [256c, 256c+256)) is its own producer (lower() with
     line_bits 256, index_pack 16: 16 edges of 16-bit dictionary indices per index row), config bank = col_bits*c +
@@ -193,16 +194,22 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
     out.mkdir(parents=True,exist_ok=True)
     rows=[int(t,16) for t in source.read_text().split()]
     assert rows and all(0<=r<1<<line_bits for r in rows)
+    if resident_edges is not None:
+        assert len(rows)<=resident_edges<=65535, 'programme exceeds resident producer capacity'
     ref=lower(source,out/'ref',line_bits=line_bits,param_prefix='REF')
     cols=(line_bits+255)//256; lines=[]; lines_mut=[]; per=[]
     for c in range(cols):
         d=out/f'col{c}'; d.mkdir(parents=True,exist_ok=True)
         (d/'source.mem').write_text(''.join(f'{(r>>(256*c))&((1<<256)-1):064x}\n' for r in rows))
         m=lower(d/'source.mem',d,line_bits=256,param_prefix=f'COL{c}',index_pack=16)
-        db=m['dictionary_banks'][0]; ib=m['index_banks']
+        db=m['dictionary_banks'][0]; image_ib=m['index_banks']
+        ib=(resident_edges+2047)//2048 if resident_edges is not None else image_ib
         leaf=min(x for x in leaf_caps if x>=db)
         assert ib+leaf<col_bits-1, 'local bank id 31 is the reject code'
         own=[(int(l[:4],16),int(l[4:6],16),l[6:]) for l in (d/'config.mem').read_text().split()]
+        # Dictionary bases belong to the instantiated producer, not the current
+        # short programme. Unused index banks still occupy physical bank IDs.
+        own=[(b if b<image_ib else b+ib-image_ib,r,w) for b,r,w in own]
         for b,r,w in own: lines.append(f'{col_bits*c+b:04x}{r:02x}{w}\n')
         mo=own
         if mut_pc_col==c:  # MUT: this column's packed index table one edge late == its PC offset by one
@@ -215,7 +222,7 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         if mut_tpl_col==c:  # MUT: first dictionary word of this column flipped in bit 0
             mo=[(b,r,(f'{int(w,16)^1:064x}' if (b==ib and r==0) else w)) for b,r,w in mo]
         for b,r,w in mo: lines_mut.append(f'{col_bits*c+b:04x}{r:02x}{w}\n')
-        per.append(dict(column=c,index_banks=ib,dictionary_banks=db,leaf_dictionary_banks=leaf,
+        per.append(dict(column=c,index_banks=ib,image_index_banks=image_ib,dictionary_banks=db,leaf_dictionary_banks=leaf,
                         leaf='ot_hbm_su_programme_pgcol_s' if leaf==leaf_caps[0] else 'ot_hbm_su_programme_pgcol_l',
                         dictionary_entries=m['dictionary_entries'][0],writes=len(own)))
     (out/'config.mem').write_text(''.join(lines))
@@ -226,7 +233,7 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         f'localparam integer CL_SB={line_bits}, CL_NC={cols}, CL_EDGES={len(rows)}, CL_WRITES={len(lines)};\n'
         f'localparam [32*CL_NC-1:0] CL_CAP={{'+','.join("32'd"+str(x) for x in reversed(cap))+'};\n')
     man=dict(schema='opentallas.hbm.su_programme.columns.v1',qualified=False,source=str(source),source_sha256=sha(source),
-             edges=len(rows),line_bits=line_bits,columns=per,config_transactions=len(lines),
+             edges=len(rows),resident_edges=resident_edges,line_bits=line_bits,columns=per,config_transactions=len(lines),
              cluster_macros=sum(p['index_banks']+p['leaf_dictionary_banks'] for p in per),
              reference_macros=ref['total_macros'],bank_numbering=f'{col_bits} x column + local bank',
              mut_pc_col=mut_pc_col,mut_tpl_col=mut_tpl_col)

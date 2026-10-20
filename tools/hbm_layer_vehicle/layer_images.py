@@ -18,7 +18,8 @@ Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to
        vmr {v,sector16,grp4,row9} / vmw {v,src,grp4,row9,sector16,mask8} and their edges: ot_hbm_su_static_pgslice.sv:
        14-22 (FILL commit E+13; DRAIN LG write E+4, done +7).  Column image: su_programme_compile.lower_columns
        (config bank = 32 x column + local; 16 edges of 16-b dictionary index per row; leaf caps 3/13).
-       Start -> command line 0 at the consumer = DEPTH(1)+4 = 5 edges (pgcol.sv:16-17 "start advance DEPTH+4");
+       Start -> command line 0 at the native pslice_c5 consumer = 9 edges (measured native producer, including
+       registered column pins and PIPE=2 index/dictionary stages; the older five-edge reference is insufficient).
        config writes while idle, >= 2 edges before start (pgcol.sv:23-25).  Programme capacity EDGES 7111 a start
        (pgcol.sv:56): one programme per SU record, reloaded while the producer is idle (load-window conflicts listed).
   IDX  hb_idx__qctl_SW (ot_hbm_idx_qctl_static.sv) programme bus from col_idx (outside): col_idx__pw_we/pw_addr/pw_data,
@@ -59,7 +60,7 @@ for p in (TOOLS, TOOLS / "hbm_static", TOOLS / "hgi_adapters"):
     sys.path.insert(0, str(p))
 
 SB_W, Q_W = 2422, dict(control=1742, vmr=240, vmw=312, rf=54, red=74)
-START_ADVANCE, CFG_LEAD, EDGES_MAX = 5, 2, 7111
+START_ADVANCE, CFG_LEAD, EDGES_MAX = 9, 2, 7111
 FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
 SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
 # first lane output after the setup line: su_top_compile FO = 8 + 23 + 4(MLAT-3) + (ALAT-3) + LEAF + 4 PIN_REG with
@@ -256,16 +257,61 @@ def reducer_bound(words):
                 rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False):
+def calendar_collision(target, candidate, offset, *, exclusive_controls=False):
+    """Detect static resource conflicts; an owned control cycle cannot be ORed.
+
+    Disjoint control bits do not identify independent datapaths. The opt-in
+    repaired contract therefore reserves the entire control word, including
+    all-zero values, until that record's final declared consumer commit.
+    """
+    return any(offset + edge in target.f[field] and
+               ((exclusive_controls and field == "control") or
+                bool(target.f[field][offset + edge] & value))
+               for field in Q_W for edge, value in candidate.f[field].items())
+
+
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    if timing is not None and not isinstance(timing, NativeTiming):
+        raise TypeError("timing must be a source-defined NativeTiming")
+    if safe_calendar and timing is None:
+        raise ValueError("safe calendar requires an explicit native return contract")
+    fill_commit = FILL_COMMIT if timing is None else timing.fill_commit
+    drain_done = DRAIN_DONE if timing is None else timing.drain_done
     import su_arith_lower as L
     import su_program_inventory as I
     from su_arith_compile import pack, physical_word
     from su_arith_generate import FIELDS
-    row, sched = L.lower(raw)
     _, unit, sut, desc = I.decode(raw)
+    if safe_calendar and "A" not in desc:
+        raise ValueError("safe calendar supported profile requires a live A operand")
+    row, sched = L.lower(raw)
+    if safe_calendar and len(sched) != 1:
+        raise ValueError("safe calendar supported profile requires exactly one issue group")
+    if safe_calendar:
+        # The native numerical witness is record23's A -> BF16 -> O path.
+        # A single issue alone proves neither reducer/R commits nor another
+        # backend control lifetime. Keep these unproved modes fail-closed.
+        tested_sut = dict.fromkeys((
+            "a_src", "a_ind", "b_src", "b_half", "c_src", "c_pair", "d_src",
+            "a_rnd", "a_relu", "a_min", "c_clip", "m1", "m2", "qm", "ad", "sfu",
+            "e1", "e2", "rnd", "dst", "red", "red_sq", "red_whole", "red_rnd",
+            "su_vec", "red_tree", "imm1", "imm2", "imm3"), 0)
+        tested_sut.update(rnd=1, dst=1)
+        if unit != 2 or sut != tested_sut or set(desc) != {"A", "O"}:
+            raise ValueError("safe calendar requires the tested A-to-O BF16 non-reducer control profile")
+        for md in desc.values():
+            if (md.space != "VM" or md.fmt != "FP32" or md.n != 128 or md.m != 1
+                    or md.stride != 0 or md.istride not in (0, 1)
+                    or any(getattr(md, name) for name in
+                           ("lstride", "dyn_sel", "dyn_mul", "n_sel", "l1stride", "ibcast", "indexed"))
+                    or md.base % 8):
+                raise ValueError("safe calendar requires the tested aligned 128-word VM descriptor profile")
     res = dict(lowering={k: v for k, v in row.items() if k != "sut"}, sut=sut, reasons=[])
+    if timing is not None:
+        res["native_timing"] = timing.as_dict()
     if not row["supported"]:
         res.update(status="unsupported_lowering", reasons=row["reasons"])
         return res
@@ -287,6 +333,22 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
         off[n] = pos
         pos += w
     get = lambda v, n: (v >> off[n]) & ((1 << dict(FIELDS)[n]) - 1)
+    def put(v, name, value):
+        mask = ((1 << dict(FIELDS)[name]) - 1) << off[name]
+        return (v & ~mask) | (value << off[name])
+
+    if safe_calendar:
+        # All four physical readers qualify even when a semantic operand is absent.
+        # Use the live A stream's local identity; no additional FILL is required.
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            terms, vb = get(w, "ld_c"), get(w, "vb")
+            for index, role in enumerate("ABCD"):
+                if role not in desc:
+                    terms |= (terms & ((1 << 240) - 1)) << (240 * index)
+                    vb |= (vb & 0xffffff) << (24 * index)
+            words[q] = put(put(w, "ld_c", terms), "vb", vb)
     # per issue group: the quarter's 128 lanes' logical VM word address of every role (vb + lane terms)
     ls = get(sched[0][q], "ls")
     terms = get(sched[0][q], "ld_c")
@@ -332,7 +394,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
                 fill_e[p] = e + 1
                 QL.vmr(e, p, sec, k, st_row)
                 fills.append((int(la[0]) >> 3, e))
-                last_commit = max(last_commit, e + FILL_COMMIT)
+                last_commit = max(last_commit, e + fill_commit)
                 if (int(la[0]) >> 3) not in place.written:
                     preload[sec] = [int(a) for a in la]      # not produced earlier in this run: enters as an image
         e_issue.append(last_commit)
@@ -344,7 +406,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
     def with_vb(w, G):
         vb = 0
         for s, r in enumerate("ABCDO"):
-            if r in desc:
+            if r in desc or (safe_calendar and r in "ABCD"):
                 rr = G["srow"].get(r, G["srow"].get("A", 0)) if r != "O" else G["orow"]
                 vb |= physical_word(q, rr) << (24 * s)
         return (w & ~vbmask) | (vb << off["vb"])
@@ -365,7 +427,9 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
     commits = []
     if "O" in desc:
         for g, G in enumerate(groups):
-            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT)
+            # Pin-captured write and read coincide under the old calendar.
+            # OLD-read SRAM requires the DRAIN to sample one serial edge later.
+            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar)
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -382,10 +446,25 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
                 place.written.add(int(la[0]) >> 3)
                 mask = int(sum(1 << j for j in range(8) if m[j]))
                 QL.vmw(de, p, 0, k, G["orow"], sec, mask)
-                commits.append(de + DRAIN_DONE)
-                drains.append((int(la[0]) >> 3, de + DRAIN_DONE))
-                expect.append(dict(sector=sec, mask=mask, edge=de + DRAIN_DONE,
+                commits.append(de + drain_done)
+                drains.append((int(la[0]) >> 3, de + drain_done))
+                expect.append(dict(sector=sec, mask=mask, edge=de + drain_done,
                                    words=[int(a) for a in G["addr"]["O"][8 * k:8 * k + 8]]))
+    if safe_calendar:
+        # Conservative full-operation reservation: direct backend controls are
+        # consumed throughout the pipeline, not only at emit. Different
+        # records must never share this reservation, even for disjoint bits.
+        variable = sum(((1 << dict(FIELDS)[name]) - 1) << off[name]
+                       for name in ("emit", "ld", "vb", "o_v", "i_v"))
+        signature = ctl0 & ~variable
+        if any((G["word"] & ~variable) != signature for G in groups):
+            raise ValueError("heterogeneous arithmetic controls in one live reservation")
+        hold = with_vb(ctl0, groups[0]) & ~(1 << off["ld"]) & ~(1 << off["emit"])
+        end = max(commits, default=max(issue_at, default=setup))
+        for edge in range(end + 1):
+            QL.f["control"].setdefault(edge, hold)
+        res["control_reservation"] = dict(first=0, last=end, policy="exclusive_record",
+                                            drain_extra_serial_edges=1)
     # operand values (fixture or seeded placeholder) and the expected O words (hdc_golden)
     rng = rng or np.random.default_rng(0)
     logical = sorted({a for v in preload.values() for a in v})
@@ -429,7 +508,8 @@ def column_image(lines, work):
     import su_programme_compile as PC
     work.mkdir(parents=True, exist_ok=True)
     (work / "quarter.mem").write_text("".join(f"{v:0{(SB_W + 3) // 4}x}\n" for v in lines))
-    man = PC.lower_columns(work / "quarter.mem", work / "cols", line_bits=SB_W)
+    man = PC.lower_columns(work / "quarter.mem", work / "cols", line_bits=SB_W,
+                           resident_edges=EDGES_MAX)
     cfg = [(int(l[:4], 16), int(l[4:6], 16), l[6:]) for l in (work / "cols/config.mem").read_text().split()]
     return man, cfg
 
@@ -631,8 +711,18 @@ def main():
                     "ds_native state before each record, expected O checked against its state after (default: seeded "
                     "placeholder operands)")
     ap.add_argument("--rank", default="0", help="fixture rank")
+    ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
+    ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if (a.native_read_return is None) != (a.native_write_return is None):
+        ap.error("native read/write return contracts must be specified together")
+    if a.safe_calendar and a.native_read_return is None:
+        ap.error("--safe-calendar requires an explicit native read/write return contract")
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    native_timing = (None if a.native_read_return is None else
+                     NativeTiming(a.native_read_return, a.native_write_return))
     if a.design == "qwen":
         sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
     bnd = json.loads(a.boundary.read_text())
@@ -691,7 +781,7 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None)
+                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
             except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
                 ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
                 manifest.append(ent)
@@ -743,14 +833,15 @@ def main():
             progs.append(P)
         o = max(0, want0 - P["base"])
         while True:                                                     # first offset without a slot collision
-            clash = any((o + e) in P["ql"].f[fld] and (P["ql"].f[fld][o + e] & v) for fld in Q_W
-                        for e, v in su["ql"].f[fld].items())
+            clash = calendar_collision(P["ql"], su["ql"], o,
+                                       exclusive_controls=bool(su.get("control_reservation") or P.get("exclusive_control")))
             if not clash:
                 break
             o += 1
         for fld in Q_W:
             for e, v in su["ql"].f[fld].items():
                 P["ql"].f[fld][o + e] = P["ql"].f[fld].get(o + e, 0) | v
+        P["exclusive_control"] = P.get("exclusive_control", False) or bool(su.get("control_reservation"))
         P["end"] = max(P["end"], P["base"] + o + len(su["lines"]))
         P["recs"].append((r, ent, su, o))
     cfgs = []

@@ -240,11 +240,19 @@ class Net:
 
 
 def siblings(name, std_names):
-    base = re.sub(r'__s\d+$', '', name)
-    if base == name:
-        return [name]
-    pat = re.compile(re.escape(base) + r'__s\d+$')
-    return sorted(n for n in std_names if pat.match(n))
+    # Physical repairs must preserve the complete registered word, including
+    # qkd_pvfork's four expanded qkd_rlys_296 children (vi[1054:0]).
+    # A repair of just u_r1 tears a 128-bit V chunk at its replica boundary.
+    # Preserve an inserted stage's exact suffix: each depth is a separate group.
+    m = re.match(r'^(.*)__s\d+(.*)$', name)
+    if m:
+        pat = re.compile(re.escape(m.group(1)) + r'__s\d+' + re.escape(m.group(2)) + r'$')
+    else:
+        m = re.match(r'^(pvfork_[A-Z]+_\d+)__u_r[0-3](.*)$', name)
+        if not m:
+            return [name]
+        pat = re.compile(re.escape(m.group(1)) + r'__u_r[0-3]' + re.escape(m.group(2)) + r'$')
+    return sorted(n for n in std_names if pat.fullmatch(n))
 
 
 def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_bits, classes, tag, cache):

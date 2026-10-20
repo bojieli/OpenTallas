@@ -63,6 +63,18 @@ def name(s):
     return f'qkd_rlys_{s}'
 
 
+def replica_pads(s, used):
+    """One replica's exact paired tie-low inputs / unused registered outputs; never a master-wide minimum."""
+    if s not in STD or type(used) is not int or not 0 < used <= s:
+        raise ValueError(f'invalid standard replica padding {used}/{s}')
+    if used == s:
+        return None
+    return dict(master=name(s),
+                reason='kv_rly_std replica: exactly these high a bits are tied zero and the matching b bits '
+                       'drive private spare wires; lower logical bits remain required',
+                ports={p: [[used, s - 1]] for p in ('a', 'b')})
+
+
 def replicas(w):
     """standard widths for a w-bit forward word, widest first (deterministic)"""
     if w <= 0:
@@ -186,7 +198,7 @@ def main(argv=None):
     rep = dict(schema='opentallas.qwen_kvsys_rly_std.v1', standards={name(s): dict(w=STD[s][0], h=STD[s][1], bits=s) for s in STD},
                replica_gap_um=REPLICA_GAP, per_master={}, totals=defaultdict(int))
     used_std = defaultdict(int)
-    min_used = {}
+    instance_pads = {}
     for ln in lines:
         m = inst_re.match(ln)
         if not m:
@@ -227,13 +239,14 @@ def main(argv=None):
                 k_f += len(idx)
                 ain = [A[i] for i in idx] + ['0'] * (s - len(idx))
                 bout = [B[i] for i in idx]
-                min_used[s] = min(min_used.get(s, s), len(idx))
             else:
                 idx = rv[k_r:k_r + s]                     # reverse bits: b -> flop -> a (mirrored replica)
                 k_r += len(idx)
                 ain = [B[i] for i in idx] + ['0'] * (s - len(idx))
                 bout = [A[i] for i in idx]
-                min_used[s] = min(min_used.get(s, s), len(idx))
+            entry = replica_pads(s, len(idx))
+            if entry is not None:
+                instance_pads[nm] = entry
             if len(bout) < s:
                 sp = f'n_{nm}__spare'
                 add_wires.append(f'  wire [{s - len(bout) - 1}:0] {sp};')
@@ -262,9 +275,7 @@ def main(argv=None):
     rep['totals'] = dict(rep['totals'], per_standard={name(s): n for s, n in sorted(used_std.items())},
                          std_area_mm2=round(sum(n * STD[s][0] * STD[s][1] for s, n in used_std.items()) / 1e6, 3),
                          frames_not_fitting=sum(1 for v in rep['per_master'].values() if not v['frame_fits']))
-    pads = {name(s): dict(reason='KV relay standard used below its width (kv_rly_std.py): spare input bits tied low; '
-                                 'the matching output bits drive private open wires', ports={'a': [[u, s - 1]]})
-            for s, u in sorted(min_used.items()) if u < s}
+    pads = dict(pads={}, instances=instance_pads)
     rep['pads'] = pads
     if a.dry_run:
         out = a.run / 'rly_std.dry.json'
@@ -298,7 +309,7 @@ def main(argv=None):
     end = re.search(r'^END LIBRARY\s*$', t, re.M)
     t = (t[:end.start()] + '\n'.join(add_lef) + '\n' + t[end.start():]) if end else t + '\n' + '\n'.join(add_lef) + '\n'
     (case / 'elements.lef').write_text(t + '\n')
-    (case / 'die.v.pads.json').write_text(json.dumps(dict(pads=pads), indent=1) + '\n')
+    (case / 'die.v.pads.json').write_text(json.dumps(pads, indent=1) + '\n')
     vj = json.loads((libs / 'views.json').read_text())
     for s, (vd, _, sz) in sorted(views.items()):
         for c in CORNERS:

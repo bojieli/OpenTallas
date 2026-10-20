@@ -29,19 +29,29 @@ def readback(mask,expected):
         raise ValueError('actual physical mask decoder disagrees with released word bytes')
 
 
+LAYER_FMT='images/layer{layer}/die{rank}'
+HEAD_FMT='head_images/rank{rank}'
+
+
 def rank_build(request):
-    source,output,rank=request;source=Path(source);output=Path(output)
+    # request = (source, output, rank) [+ (layers, layer_fmt, head_fmt)]: layers None = every stage (the released build);
+    # a subset (QW-DIEFIX 10-19 partial-stage option) leaves the other stages' resident words ZERO and records them absent
+    source,output,rank=request[:3];source=Path(source);output=Path(output)
+    layers,layer_fmt,head_fmt=request[3:6] if len(request)>3 else (None,LAYER_FMT,HEAD_FMT)
     destination=output/f'rank{rank}';destination.mkdir()
     masks=destination/'masks';masks.mkdir();expected_dir=destination/'expected';expected_dir.mkdir()
     words=np.zeros((BANKS*4096,WORD_BYTES),dtype=np.uint8)
     stages=[];cursor=0
     for layer in list(range(36))+['head']:
-        directory=source/(f'head_images/rank{rank}' if layer=='head' else f'images/layer{layer}/die{rank}')
+        count=1600 if layer=='head' else 512
+        if layers is not None and layer not in layers:
+            stages.append(dict(stage=layer,resident_base=cursor,words=count,absent=True,note='partial build: ZERO words'))
+            cursor+=count;continue
+        directory=source/(head_fmt.format(rank=rank) if layer=='head' else layer_fmt.format(layer=layer,rank=rank))
         metadata=directory/('head_rom.json' if layer=='head' else f'layer{layer}_rom.json')
         meta=json.loads(metadata.read_text())
         if (meta['tp'],meta['die'],meta['checkpoint_revision'],meta['checkpoint_lock_sha256'])!=(8,rank,REV,LOCK):
             raise ValueError(f'wrong released source identity:{metadata}')
-        count=1600 if layer=='head' else 512
         if layer!='head' and meta['layer']!=layer:raise ValueError('wrong layer')
         path=directory/'matrix_int8.hex';stat=path.stat();digest=hashlib.sha256();actual=0
         with path.open('rb') as stream:
@@ -79,7 +89,8 @@ def rank_build(request):
     record=dict(schema='opentallas.qwen-tp8-native-code-mask-rank.v1',rank=rank,tp=8,groups=3072,tiles=768,
                 resident_words=ROWS,padded_words=20480,banks_per_tile=5,macros=7680,
                 checkpoint_revision=REV,checkpoint_lock_sha256=LOCK,source_bytes_requantized=False,
-                stages=stages,pairs=pairs,native_full_layer_qualified=False)
+                stages=stages,pairs=pairs,native_full_layer_qualified=False,
+                partial_stages=[x['stage'] for x in stages if x.get('absent')])
     path=destination/'manifest.json';path.write_text(json.dumps(record,separators=(',',':'))+'\n')
     print(f'PASS code rank{rank} actual20032residentrows,7680native ROM IDs',flush=True)
     return dict(rank=rank,manifest=str(path),manifest_sha256=sha(path),macros=7680)
@@ -88,7 +99,11 @@ def rank_build(request):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--banks',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--ranks',default='0,1,2,3,4,5,6,7');p.add_argument('--jobs',type=int,default=4)
+    p.add_argument('--layers',default='',help='partial build: comma list of stages (0..35, head); others ZERO + recorded absent')
+    p.add_argument('--layer-fmt',default=LAYER_FMT,help='per-layer image dir under --banks ({layer}, {rank})')
+    p.add_argument('--head-fmt',default=HEAD_FMT,help='head image dir under --banks ({rank})')
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+    layers=None if not a.layers else {('head' if x=='head' else int(x)) for x in a.layers.split(',')}
     if sha(ROOT/'compiler/models/qwen3-8b/checkpoint_source.json')!=LOCK:raise ValueError('repository source lock mismatch')
     ranks=[int(x) for x in a.ranks.split(',')]
     # Physical masks+observer payloads total~4GB/rank; require actual disk headroom.
@@ -96,13 +111,13 @@ def main():
     lookup=[struct.unpack('<I',struct.pack('<f',float(x if x<128 else x-256)))[0]>>16 for x in range(256)]
     (a.out/'int8_bf16_observer.hex').write_text(''.join(f'{v:04x}\n' for v in lookup))
     with concurrent.futures.ProcessPoolExecutor(max_workers=a.jobs) as pool:
-        results=list(pool.map(rank_build,[(str(a.banks),str(a.out),rank) for rank in ranks]))
+        results=list(pool.map(rank_build,[(str(a.banks),str(a.out),rank)+((layers,a.layer_fmt,a.head_fmt) if layers is not None else ()) for rank in ranks]))
     record=dict(schema='opentallas.qwen-tp8-native-code-masks.v1',checkpoint_revision=REV,checkpoint_lock_sha256=LOCK,
                 rank_manifests=results,code_words_per_layer=512,head_code_words=1600,head_resident_base=18432,
                 resident_words_per_rank=ROWS,padded_bank_words=20480,macros_per_rank=7680,
                 actual_payload_requantized=False,sources={str(path.relative_to(ROOT)):sha(path) for path in
                     [Path(__file__),ROOT/'rtl/physical/ot_qwen_tile_rpair.sv',ROOT/'compiler/models/qwen3-8b/checkpoint_source.json']},
-                native_layer_qualified=False,remaining=['static ROM_TILE constant must match actual die tile_id strap',
+                native_layer_qualified=False,partial_layers=None if layers is None else sorted(map(str,layers)),remaining=['static ROM_TILE constant must match actual die tile_id strap',
                   'actual native command code relocation512*layer/head18432','native layer/token and physical integration'])
     (a.out/'manifest.json').write_text(json.dumps(record,indent=2)+'\n')
 

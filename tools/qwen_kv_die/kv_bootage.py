@@ -88,6 +88,7 @@ def boot_ages_join(graph, root=ROOT, cfg='diecfg'):
     g = ins['attn_cal']
     gp = {k: v for k, v in g['parameters'].items() if k not in ('D_QK', 'D_RL')}
     gp.update(D_QK=BOUNDS['D_QK'], D_RL=BOUNDS['D_RL'], F_DLY=BOUNDS['F_DLY'])
+    gp.setdefault('STATUS_DELAY', 0)   # KV-GEN9: KV-RETIRE parameter; 0 = RTL default (delayed STATUS off until kv_retirement.prove)
     swap(g, 'attn_cal', gp)
     vps = sorted(n for n in ins if n.startswith('vport_'))
     for n in vps:

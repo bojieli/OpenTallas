@@ -568,6 +568,12 @@ def overrides(paths):
         ent = dict(record=rel, family=_family(rel), used=bool(tc and tc.get('terms')), n_terms=len((tc or {}).get('terms', [])),
                    why=None if tc and tc.get('terms') else ((tc or {}).get('note') or 'no token_compose block (record not yet in the override format)'),
                    rejected=[])
+        if tc and tc.get('active', True) is False:
+            ent.update(used=False, why=tc.get('selection_note') or 'explicitly inactive composition record',
+                       superseded_by=tc.get('superseded_by'))
+            ent.pop('rejected')
+            seen.append(ent)
+            continue
         commit = git('log', '-1', '--format=%h', '--', str(p)) or 'uncommitted'
         for i, o in enumerate((tc or {}).get('terms', [])):
             o = dict(o, _record=rel, _commit=commit, _i=i)
@@ -802,6 +808,17 @@ def main():
                 if w.get('tok_s') != ref[wl].get('tok_s') or w.get('by_grade') != ref[wl].get('by_grade'):
                     print(f'DIFF {d} {wl}: {w.get("tok_s")} vs committed {ref[wl].get("tok_s")}')
                     bad += 1
+        # the committed token page must show the committed composition (TOKEN-REC 10-19: page carried 10-18 numbers)
+        pd = ROOT / 'tools/fleet_viz/explorer/token/data'
+        if (pd / 'index.json').exists():
+            for e in json.loads((pd / 'index.json').read_text())['designs']:
+                d = e['design']
+                for wl, w in out.get(d, {}).items():
+                    shown = e.get('composition_1018', {}).get(wl, {}).get('tok_s')
+                    if w.get('available') and shown != w.get('tok_s'):
+                        print(f'STALE PAGE {d} {wl}: page {shown} vs composed {w.get("tok_s")} '
+                              f'(rerun with --page-data tools/fleet_viz/explorer/token/data)')
+                        bad += 1
         print('CHECK', 'FAIL' if bad else 'PASS')
         sys.exit(1 if bad else 0)
     write(out, seen, a.page_data)

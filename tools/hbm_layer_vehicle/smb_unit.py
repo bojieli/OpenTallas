@@ -57,7 +57,7 @@ MAGIC_ROW, MAGIC_DESC = 0xC7A1, 0x5D15
 # schedule constants (stream edges); LAT_GO = go edge -> first relocated word at the SM (start_v_q, running, macro,
 # capture, calendar, RELOC); OFF = launch event edge -> issuer rc 0
 LAT_GO, OFF = 7, 3
-X_GAP, OP_GAP, DRAIN = 16, int(os.environ.get("SMB_OP_GAP", 256)), 1200
+X_GAP, OP_GAP, DRAIN = 16, 256, 1200
 FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
 PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 200), ('SMB_PACE_DEN', 64), ('SMB_PACE_ADD', 4)))
 # >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
@@ -65,67 +65,6 @@ FETCH = int(os.environ.get('SMB_FETCH', 200))       # measured HBM boundary: one
 EXP_FIRST = int(os.environ.get('SMB_EXP_FIRST', 260))  # ids -> first routed block resident + copied
 IDS_LAG = int(os.environ.get('SMB_IDS_LAG', 200))     # router gate last command -> top-k ids broadcast
 BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
-
-
-LAYOUT = os.environ.get('SMB_LAYOUT', 'asbuilt')   # 'bw' = the HBM-BW bank-set layout (lanes/HBM-BW.md)
-RSETS = ((5, 6, 7), (1, 2, 3))                     # HBM-BW: routed copies, per routed block index (w1+w3, w2)
-
-
-def layout_bw(kd, recs, nonexp, exp_blocks, L):
-    """HBM-BW layout.  The sub-row slot of a block address IS the physical bank-set of the block on each of its four PCs
-    (owner bhi = slot ^ row[4:2], leaf bank[4:2] = bhi ^ row[4:2]); strides that are multiples of 8 keep it per layer
-    and per expert.  Contract with ot_hbm_r14_aq_pc_mr (refresh key: tail-2 .. tail+3 protected): in the fetch order,
-    non-expert blocks advance the set cyclically and the run before the first routed block ends on set 4; routed block
-    b_i of the p-th routed descriptor (fetch order) reads COPY p mod 3 on set RSETS[b_i][p mod 3] (one DRAM row index per
-    expert and layer holds the w1+w3 copies on sets 5/6/7 and the w2 copies on 1/2/3); non-expert blocks after the first
-    routed one end on set 0.  Experts are stored three times (HBM capacity, not bandwidth)."""
-    order = [b for r in recs for b in r["blocks"]]
-    routed = {id(b) for bl in exp_blocks.values() for b in bl}
-    first_r = next((i for i, b in enumerate(order) if id(b) in routed), len(order))
-    pre = [b for b in order[:first_r] if id(b) not in routed]
-    post = [b for b in order[first_r:] if id(b) not in routed]
-    end_pre = 4 if exp_blocks else (len(pre) - 1) % 8
-    want = {}
-    for j, b in enumerate(pre):
-        want[id(b)] = (end_pre - (len(pre) - 1 - j)) % 8
-    for j, b in enumerate(post):
-        want[id(b)] = (0 - (len(post) - 1 - j)) % 8
-    p, offs = -1, {}
-    for b in pre + post:
-        p += 1
-        while p % 8 != want[id(b)]:
-            p += 1
-        offs[id(b)] = p
-    lstride = 8 * (p // 8 + 1)
-
-    def after(row_top):
-        kbase = row_top
-        top = row_top + lstride * (max(L, 0) + 1)
-        kd.update(lstride=lstride, kbase=kbase, estride=8 if exp_blocks else 0)
-        for b in nonexp:
-            b.update(row_base=kbase + offs[id(b)], layer_stride=lstride, id_sel=0, expert_stride=0,
-                     dram_row=kbase + L * lstride + offs[id(b)], bank_set=offs[id(b)] % 8)
-        kd["exp"] = {}
-        if exp_blocks:
-            assert max(len(v) for v in exp_blocks.values()) <= len(RSETS), "routed expert with more blocks than RSETS"
-            elstride = NEXP * 8
-            eb = top
-            top += elstride * (L + 1)
-            pos = [0] * len(RSETS)
-            for b in order:
-                if id(b) not in routed:
-                    continue
-                s = next(s_ for s_, bl in exp_blocks.items() if any(x is b for x in bl))
-                b_i = next(i for i, x in enumerate(exp_blocks[s]) if x is b)
-                eid = next(r["eid"] for r in recs if r["slot"] == s)
-                kd["exp"][s] = eid
-                st = RSETS[b_i][pos[b_i] % 3]
-                pos[b_i] += 1
-                b.update(row_base=eb + st, layer_stride=elstride, id_sel=s + 1, expert_stride=8,
-                         dram_row=eb + L * elstride + eid * 8 + st, bank_set=st)
-            kd.update(ebase=eb, elstride=elstride)
-        return top
-    kd["row_top_after"] = after
 
 
 def put(v, lo, w, x, name):
@@ -310,33 +249,29 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 else:
                     exp_blocks.setdefault(r["slot"], []).append(blk)
         kd["nonexp_blocks"] = len(nonexp)
-        if LAYOUT == "bw":
-            layout_bw(kd, recs, nonexp, exp_blocks, L)
-            row_top = kd["row_top_after"](row_top)
-        else:
-            # 18-bit block addresses: nonexpert = kbase + L*lstride + j; routed = ebase + L*elstride + id*estride + b
-            lstride = len(nonexp) * BSCALE
-            kbase = row_top
-            row_top += lstride * (max(L, 0) + 1)
-            estride = max((len(v) for v in exp_blocks.values()), default=0) * BSCALE
-            if exp_blocks:
-                assert len({len(v) for v in exp_blocks.values()}) == 1, "routed experts of one kind must share a shape"
-            kd.update(lstride=lstride, kbase=kbase, estride=estride)
-            for j, b in enumerate(nonexp):
-                b.update(row_base=kbase + j * BSCALE, layer_stride=lstride, id_sel=0, expert_stride=0,
-                         dram_row=kbase + L * lstride + j * BSCALE)
-            kd["exp"] = {}
-            if exp_blocks:
-                elstride = NEXP * estride
-                eb = row_top
-                row_top += elstride * (L + 1)
-                for s, bl in exp_blocks.items():
-                    eid = next(r["eid"] for r in recs if r["slot"] == s)
-                    kd["exp"][s] = eid
-                    for b_i, b in enumerate(bl):
-                        b.update(row_base=eb + b_i * BSCALE, layer_stride=elstride, id_sel=s + 1, expert_stride=estride,
-                                 dram_row=eb + L * elstride + eid * estride + b_i * BSCALE)
-                kd.update(ebase=eb, elstride=elstride)
+        # 18-bit block addresses: nonexpert = kbase + L*lstride + j; routed = ebase + L*elstride + id*estride + b
+        lstride = len(nonexp) * BSCALE
+        kbase = row_top
+        row_top += lstride * (max(L, 0) + 1)
+        estride = max((len(v) for v in exp_blocks.values()), default=0) * BSCALE
+        if exp_blocks:
+            assert len({len(v) for v in exp_blocks.values()}) == 1, "routed experts of one kind must share a shape"
+        kd.update(lstride=lstride, kbase=kbase, estride=estride)
+        for j, b in enumerate(nonexp):
+            b.update(row_base=kbase + j * BSCALE, layer_stride=lstride, id_sel=0, expert_stride=0,
+                     dram_row=kbase + L * lstride + j * BSCALE)
+        kd["exp"] = {}
+        if exp_blocks:
+            elstride = NEXP * estride
+            eb = row_top
+            row_top += elstride * (L + 1)
+            for s, bl in exp_blocks.items():
+                eid = next(r["eid"] for r in recs if r["slot"] == s)
+                kd["exp"][s] = eid
+                for b_i, b in enumerate(bl):
+                    b.update(row_base=eb + b_i * BSCALE, layer_stride=elstride, id_sel=s + 1, expert_stride=estride,
+                             dram_row=eb + L * elstride + eid * estride + b_i * BSCALE)
+            kd.update(ebase=eb, elstride=elstride)
         if row_top >= BLK_MAX:
             raise SystemExit(f"block addresses exhausted ({row_top})")
         kd["recs"] = recs
@@ -586,17 +521,8 @@ def cmd_run(a):
     d = a.out_dir
     n = write_events(c, d)
     t0 = time.time()
-    phase_case = dict(hbm_ref_base=int(os.environ.get('SMB_HBM_REF_BASE', 0)),
-                      hbm_clock_offset_ps=int(os.environ.get('SMB_HBM_CLOCK_OFFSET_PS', 173)),
-                      hbm_reset_extra=int(os.environ.get('SMB_HBM_RESET_EXTRA', 0)))
-    if (phase_case != dict(hbm_ref_base=0,hbm_clock_offset_ps=173,hbm_reset_extra=0)
-            and 'HBM_SAFE_COMPOSED' not in defines):
-        raise SystemExit('adverse phase cases require source-owned HBM_SAFE_COMPOSED')
-    phase_args=[f"+HBM_REF_BASE={phase_case['hbm_ref_base']}",
-                f"+HBM_CLOCK_OFFSET_PS={phase_case['hbm_clock_offset_ps']}",
-                f"+HBM_RESET_EXTRA={phase_case['hbm_reset_extra']}"]
     r = subprocess.run([str(exe), f"+ING={d}/ing.hex", f"+XW={d}/xw.hex", f"+IDS={d}/ids.hex", f"+MEM={d}/mem.hex",
-                        f"+NI={n['NI']}", f"+NX={n['NX']}", f"+ND={n['ND']}", f"+END={n['END']}"]+phase_args,
+                        f"+NI={n['NI']}", f"+NX={n['NX']}", f"+ND={n['ND']}", f"+END={n['END']}"],
                        capture_output=True, text=True, cwd=d)
     log = r.stdout + r.stderr
     (d / "run.log").write_text(log)
@@ -610,11 +536,6 @@ def cmd_run(a):
                rtl="cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id (issuer_rel + feed_programmed_rel_id, "
                    "2,048-word store) -> 4 controller leaves -> DRAM fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM = "
                    "ot_hbm_accel_smh_attn die master (bundle master_files, DIE_DEFINES); tb_hbm_svg_rel_sm.sv, Verilator 5.050",
-               source_revision=(ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else "working_tree",
-               static_schedule=dict(first_go=FIRST_GO, op_gap=OP_GAP, x_gap=X_GAP, drain=DRAIN,
-                                    pace_num=PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, fetch=FETCH,
-                                    expert_first=EXP_FIRST, ids_lag=IDS_LAG, go_latency=LAT_GO, layout=LAYOUT),
-               physical_phase=phase_case, native_reset_release_edges=5 if "HBM_SAFE_COMPOSED" in defines else None,
                budget=c["budget"], events=n, fault=fault, done=done, runs_done=runs, gos=len(gos), go_slots_exact=go_ok,
                sim_s=round(time.time() - t0, 1), run_rc=r.returncode, run_log_sha256=sha(d / "run.log"), ops=ops,
                verdict="PASS" if ok else "FAIL")

@@ -97,7 +97,7 @@ class ClockPinUniqueness(unittest.TestCase):
         import qwen_rom_fulldie_b3r2 as G
         # Two distant sink fields force the regional median split. A duplicated
         # middle physical pin straddles that median without de-duplication.
-        ins=[I(name=n,x=x,y=0,w=10,h=10) for n,x in [('root',0),('a',0),('b',6000),('c',12000)]]
+        ins=[I(name=n,master='blk',x=x,y=0,w=10,h=10) for n,x in [('root',0),('a',0),('b',6000),('c',12000)]]
         model=dict(insts=ins,b3r2={},clock_regions=[dict(name='r',kind='test',rect=[0,0,13000,100])],
                    buses=[('clk_r0','clock_trunk',1,[('root','pll_r0'),('a','ck'),('b','ck'),('b','ck'),('c','ck')])])
         G._regions_from_placement(model)

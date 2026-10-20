@@ -41,7 +41,7 @@ STACKS = ['SW', 'NW']
 FCLR = 125
 
 
-def tree():
+def tree(vm_status=False):
     """leaf name -> dict(inputs=[(inst, port, lo, hi, kind)], slot, parent); kind in L (local), S (sync), C (child)."""
     T = {}
     for q in QS:
@@ -70,6 +70,10 @@ def tree():
         ins.append((f'fl_{q}3', 'fault', 0, 1, 'C'))
         if q in STACKS:
             ins.append((f'fs_{q}', 'fault', 0, 1, 'C'))
+        if vm_status:
+            # L16 opt-in: VM protocol/mask/uncorrectable-ECC flags, same stream domain.
+            # Append to preserve every existing serial synchroniser bit position.
+            ins.append((f'hb_vms_{q}', 'vmstat', 16, 19, 'L'))
         T[f'fr_{q}'] = dict(inputs=ins, slot=f'coll_{q}', parent='host_status', note=f'region {q} root')
     for n, t in T.items():
         n_bits, sm = 0, 0

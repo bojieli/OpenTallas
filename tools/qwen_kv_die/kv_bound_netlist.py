@@ -47,6 +47,20 @@ from binding_order import sliced_order  # noqa: E402
 SCHEMA = 'opentallas.qwen_kv_bound_netlist.v1'
 # analog hard macros / pad cells with no RTL: port models (directions derived from the real endpoints)
 HARD_MODELS = ('qkd_hbm3e_phy_pc', 'qkd_ckbump', 'qkd_fwdbump')
+# Licensed PHYs have real scalar tx/rx ports; the die's bundled fdi net
+# must be split in the same LSB order as its digital peer, never inferred
+# as a generic model inout. These are canonical macro port abstracts.
+PHY_BINDINGS = {
+    'ot_qkvd_ucie_x64_phy': dict(module='ot_qkvd_ucie_x64_phy',
+        file='physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v',
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'],
+                   tx_up=['tx_up'], tx_v=['tx_v'], tx_flit=['tx_flit'], rx_v=['rx_v'], rx_flit=['rx_flit'])),
+    'ot_qfd_serdes_112g_x12_phy': dict(module='ot_qfd_serdes_112g_x12_phy',
+        file='physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v',
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'],
+                   tx_up=['tx_up'], tx_v=['tx_v'], tx_flit=['tx_flit'], rx_v=['rx_v'], rx_flit=['rx_flit'])),
+}
+
 # classed inputs driven from OFF the die (package pads / package straps)
 OFF_CHIP = ('por_n', 'refclk', 'die_id')
 # die-top constant net classes (die.v 'assign n_<net> = const') -> why the constant is a die strap
@@ -154,6 +168,8 @@ def main(argv=None):
     ap.add_argument('--expanded', help='RUN/expand.json (kv_expand.py): die-placed closed leaves, bound by name')
     ap.add_argument('--out-dir', required=True)
     ap.add_argument('--top')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Permit source-only expanded profiles; unqualified',
+                    default=__import__('os').environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     a = ap.parse_args(argv)
     K._set_geometry(True)
     out = Path(a.out_dir)
@@ -161,14 +177,58 @@ def main(argv=None):
     nets, tin, tout, insts = PB.parse_die(a.die_v, a.top)
     # KVJ-G2 (kv_die OT_KV_STATIC_DIE): per-instance parameters the plan priced (ECTL kiss RESPONSE_LAT), a sidecar of die.v
     _pj = Path(a.die_v + '.params.json')
+    _ip = json.loads(_pj.read_text()) if _pj.exists() else {}
+    _expanded = None
+    if a.expanded:
+        import kv_expand_parameters as EP
+        from kv_expand import RTL as _configured_leaf_sources
+        _expanded = json.loads(Path(a.expanded).read_text())
+        _actual_masters = {_i: _m for _m, _i, _p, _c in insts}
+        for _i, _row in _expanded.get('parameter_instances', {}).items():
+            if _actual_masters.get(_i) != _row['module']:
+                raise ValueError(f'{_i}: expanded parameter instance/master missing or changed')
     if _pj.exists():
-        _ip = json.loads(_pj.read_text())
+        for _mst, _inst, _params, _cm in insts:
+            for _key, _value in _ip.get(_inst, {}).items():
+                if _key in (_params or {}) and str(_params[_key]) != str(_value):
+                    raise ValueError(f'{_inst}.{_key}: conflicting inline/sidecar parameters')
         insts = [(mst_, inst_, dict(params_ or {}, **{k_: str(v_) for k_, v_ in _ip.get(inst_, {}).items()}), cm_)
                  if mst_ != '__assign__' else (mst_, inst_, params_, cm_) for mst_, inst_, params_, cm_ in insts]
     top = a.top or re.search(r'^\s*module\s+(\w+)', Path(a.die_v).read_text(), re.M).group(1)
-    files = [str(ROOT / b['file']) for b in K.BINDINGS.values() if (ROOT / b['file']).exists()]
+    bindings = dict(PHY_BINDINGS, **K.BINDINGS)
+    files = [str(ROOT / b['file']) for b in bindings.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []
     idx, _amb = PB.rtl_index(['rtl'], files, {}, files)
+    if _expanded is not None:
+        _sources = dict(_configured_leaf_sources)
+        _reported = _expanded.get('leaves', {})
+        _preexpand = Path(a.die_v + '.preexp')
+        if _preexpand.exists() and _expanded.get('preexpand_die_sha256'):
+            if EP.sha(_preexpand) != _expanded['preexpand_die_sha256']:
+                raise ValueError('expanded pre-expansion source witness changed')
+            _original_instances = {_i: _m for _m, _i, _p, _c in PB.parse_die(str(_preexpand), a.top)[3]
+                                   if _m != '__assign__'}
+        else:
+            # Names and current binding membership cannot prove an instance
+            # predates expansion. Without source evidence no legacy exemption
+            # applies; parameterless leaves still require no parameter ledger.
+            _original_instances = {}
+        # Independently indexed by-name RTL also covers dynamically configured
+        # expanded leaf types absent from the static registry. A deleted report
+        # binding must not make such a parameterized module disappear.
+        for _mst, _inst, _params, _connections in insts:
+            if _mst in _sources or _mst in _reported or _original_instances.get(_inst) == _mst:
+                continue
+            _mod = idx.get(_mst)
+            if _mod is not None:
+                _path = Path(_mod.path)
+                try:
+                    _path = _path.relative_to(ROOT)
+                except ValueError:
+                    pass
+                _sources[_mst] = str(_path)
+        EP.verify_bound(ROOT, _expanded, _ip, insts, _sources, _original_instances,
+                        a.diagnostic_parameter_profiles)
     exp = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
     rseg = relay_segments(Path(a.relay_rtl).read_text()) if a.relay_rtl else {}
 
@@ -216,8 +276,13 @@ def main(argv=None):
                         hard[mst][p].add((t[1], t[2]))
             rows.append((mst, inst, params, conns))
             continue
-        if mst in K.BINDINGS and not (mst.startswith('qkd_rly') or mst in exp):
-            b = K.BINDINGS[mst]
+        if mst in bindings and not (mst.startswith('qkd_rly') or mst in exp):
+            # kv_native_phy may have split this bundle already. Preserve the exact scalar
+            # ports on a second binding pass; mixed forms would assign the same bit twice.
+            if mst in PHY_BINDINGS and 'fdi' in conns and any(
+                    p in conns for p in ('tx_up','tx_v','tx_flit','rx_v','rx_flit')):
+                raise SystemExit(f'{inst}: licensed PHY mixes bundled and native FDI ports')
+            b = bindings[mst]
             mod = idx.get(b['module'])
             if mod is None:
                 r.update(how='unbound', module=b['module'])
@@ -331,6 +396,10 @@ def main(argv=None):
     for n, c in const_nets.items():
         by[const_class(n)[0]] += c
     rec['constant_nets_by_class'] = dict(by)
+    if a.expanded:
+        rec['expanded_parameter_qualification'] = {i: row['profile']['native_qualified']
+            for i, row in _expanded.get('parameter_instances', {}).items()}
+        rec['diagnostic_parameter_profiles'] = bool(a.diagnostic_parameter_profiles)
     (out / 'bound_netlist.json').write_text(json.dumps(rec, indent=1) + '\n')
     bad = {k: v for k, v in rep.items() if v['how'] == 'unbound' or v['unassigned_bits']}
     print(f'kv_bound_netlist: {len(rows)} instances, {len(rep)} masters, {sum(1 for v in rep.values() if v["how"] == "bound")} '
