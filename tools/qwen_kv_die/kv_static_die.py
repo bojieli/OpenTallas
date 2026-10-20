@@ -257,11 +257,32 @@ FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', r
                    'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
 if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
     FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')
+# KV-BIND4 10-19 (OT_KV_ATTN_R16=1, needs OT_KV_BOOT_AGES=1 + kvs_attn in OT_KV_FACE_LAND): the die's kvs_attn binds the
+# structurally SAFE r16 attention tile (KV-ATTN2: qkd_kvs_attn_fl = rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv around
+# rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv; same 32 ports as the generated boot-age qkd_kvs_attn) on the
+# CLOSED view of kit qkd_kvs_attn_rv3 (qkd_kvs_attn_rv3-rv3-6fdacf98c, TT +74.30 / FF +9.56, record 6387c1f6c), with the
+# kit parameters RETIRE_STATIC=1 STATUS_DELAY=213 (KV-RETIRE / KV-HEALTH STATUS reserve).  Schedule (COORD 18:08 option (a)):
+#   * +1 edge after K.rx_record inside the tile (registered RX validation): start_qk / start_pv / ctx / ep / cal / prg / arh
+#     and the face window move +1 relative to the RX record and the run edge (ATTN_R16_RX_EDGES, compiler start_qk + 1);
+#   * the tile's calendar generator adds TX_SHIFT 1 (tx_first 1750 -> 1751): the link's K RESULT burst and STATUS move
+#     +1 edge (d2d_link_calendar --attn-tx-shift 1), NOT SERVICE_END - 1; the tile keeps SERVICE_END 1777;
+#   * STATUS_DELAY 213: the link STATUS slot at tx_first + 33 + 213 (compile_all status_delay, kv_retirement proof);
+#   * fin +1 / i_ctl +1 landed (as ba5); reset lands in 2 plain kit stages (no ot_rst_relay): rst_release 2.
+ATTN_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
+ATTN_R16_PARAMS = dict(RETIRE_STATIC=1, STATUS_DELAY=213)
+ATTN_R16_RX_EDGES = 1       # registered RX validation: every RX-derived attention event +1 edge (start_qk etc.)
+ATTN_R16_TX_SHIFT = 1       # qkd_attn_cal_gen_r16 TX_SHIFT: link K RESULT / STATUS slots +1
+if ATTN_R16:
+    if os.environ.get('OT_KV_BOOT_AGES', '0') != '1':
+        raise ValueError('kv_static_die: OT_KV_ATTN_R16=1 needs OT_KV_BOOT_AGES=1 (r16 ports = the boot-age tile, i_ctl 109 b)')
+    FACE_LAND_TILES['kvs_attn'] = dict(master='qkd_kvs_attn', kit='qkd_kvs_attn_rv3', rst_release=2, fin=1, i_ctl=1)
 _FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
 FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
                  else {t.strip() for t in _FL_ENV.split(',') if t.strip()})
 if FACE_LAND_SEL - set(FACE_LAND_TILES):
     raise ValueError(f'kv_static_die: OT_KV_FACE_LAND names unknown tiles {sorted(FACE_LAND_SEL - set(FACE_LAND_TILES))}')
+if ATTN_R16 and 'kvs_attn' not in FACE_LAND_SEL:
+    raise ValueError('kv_static_die: OT_KV_ATTN_R16=1 binds the face-landed r16 view: select kvs_attn in OT_KV_FACE_LAND')
 FACE_LAND = bool(FACE_LAND_SEL)
 
 
@@ -1541,6 +1562,8 @@ def bindings():
         t = FACE_LAND_TILES[tl]
         if t['master'] in out:
             out[t['master']] = dict(out[t['master']], module=t['master'] + '_fl', file=face_land_rtl(tl))
+            if tl == 'kvs_attn' and ATTN_R16:     # KV-BIND4: the r16 kit's parameters (= rv3 spec params, checked by kv_tile_views)
+                out[t['master']]['parameters'] = dict(out[t['master']].get('parameters') or {}, **ATTN_R16_PARAMS)
     return out
 
 

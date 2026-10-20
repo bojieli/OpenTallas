@@ -160,13 +160,26 @@ def _sfi():
     return m
 
 
-def link_calendar(workdir, status_delay=0):
+def attn_r16():
+    """KV-BIND4 10-19 (kv_static_die.ATTN_R16): (rx edges, tx shift, STATUS_DELAY) of the bound r16 attention tile"""
+    from tools.qwen_kv_die import kv_static_die as KSD
+    if not getattr(KSD, 'ATTN_R16', False):
+        return dict(on=False, rx_edges=0, tx_shift=0, status_delay=0)
+    return dict(on=True, rx_edges=KSD.ATTN_R16_RX_EDGES, tx_shift=KSD.ATTN_R16_TX_SHIFT,
+                status_delay=KSD.ATTN_R16_PARAMS['STATUS_DELAY'])
+
+
+def link_calendar(workdir, status_delay=0, attn_tx_shift=None):
+    """attn_tx_shift None = the bound attention tile's TX shift (KV-BIND4 r16: +1 on the K RESULT burst / STATUS)"""
     import gzip
+    if attn_tx_shift is None:
+        attn_tx_shift = attn_r16()['tx_shift']
     out = Path(workdir) / 'cal'
     tp = Path(workdir) / 'token_path_compiled.json'
     tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
     p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
-                       + ['--token-path', str(tp), '--status-delay', str(status_delay)],
+                       + ['--token-path', str(tp), '--status-delay', str(status_delay)]
+                       + (['--attn-tx-shift', str(attn_tx_shift)] if attn_tx_shift else []),
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
         raise SystemExit('link calendar compile failed: ' + p.stderr[-2000:])
@@ -361,7 +374,7 @@ def service_end_of(pr, workdir=None):
     res = sorted((m for m in seg0 if m['src'] == 'K' and m['tx_port'] == 0 and m['kind'] == 3), key=lambda m: m['beat'])
     run_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx'] - LR.RX_CMD
     tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev
-    return tx_first - LR.RX_CMD - 2 + 31
+    return tx_first - LR.RX_CMD - 2 + 31 - attn_r16()['tx_shift']   # KV-BIND4: r16 TX_SHIFT keeps SERVICE_END 1777
 
 
 def attention_checks(pr, service_end, fr_ofs=None, pvfin_skew=PVFIN_SKEW, pair_delta=0, Ts=range(1, 8193)):
@@ -686,7 +699,12 @@ def pacing_of(put):
 
 
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=0):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=None):
+    r16 = attn_r16()
+    if status_delay is None:     # KV-BIND4: the bound r16 tile's STATUS_DELAY (213) is a die fact, not an option
+        status_delay = r16['status_delay']
+    elif r16['on'] and status_delay != r16['status_delay']:
+        raise ValueError(f"r16 attention tile binds STATUS_DELAY {r16['status_delay']}, compile asked for {status_delay}")
     # die_cfg_words: the pre-boot target-10 image (kv_static_kvjf_join.die_cfg_image from a die plan's ECTL cfg + reset
     # delays); without it the bundle carries targets 0..9, 11..13 and the die plan supplies target 10
     sfi = _sfi()
@@ -714,10 +732,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     # ---- attention programme: link-fixed words ----
     cmd_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx']           # CMD at the attention programme's rx pin (run-base)
     run_ev = cmd_ev - LR.RX_CMD
-    start_qk = run_ev + LR.RX_CMD + LR.Q_TO_START
+    start_qk = run_ev + LR.RX_CMD + LR.Q_TO_START + r16['rx_edges']   # KV-BIND4: r16 registered RX validation +1
     tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev              # att_tx_slot of RESULT beat 0 at the programme
     tx_end = tx_first + 34 + status_delay
-    service_end = tx_first - LR.RX_CMD - 2 + 31
+    service_end = tx_first - LR.RX_CMD - 2 + 31 - r16['tx_shift']   # r16: TX_SHIFT 1 -> tx_first 1751, SERVICE_END 1777
     if res[-1]['cyc'] - res[0]['cyc'] != 31 or st[0]['cyc'] != res[0]['cyc'] + 33 + status_delay:   # static_ctl: STATUS at tx_first + 33
         raise ValueError('RESULT burst / STATUS not on consecutive link slots')
 

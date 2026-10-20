@@ -31,6 +31,11 @@ cd $W
 for c_ in $(python3 -c "import json,glob;print(' '.join(sorted({json.load(open(f)).get('source_binding',{}).get('start_commit','') for f in glob.glob('physical/ref_tile/qkd_astk*/gate_result.json')}-{''})))"); do
   git cat-file -e "$c_^{commit}" 2>/dev/null || git -C $M fetch -q $GH "$c_" || true
 done
+# KV-BIND4 10-19: kv_tile_views identifies a kvs_* tile view by its closure route's source commit (provenance orfs_dir
+# .../<kit>-<tag>-<sha9>/); a view hardened on another branch (attention r16 rv3 @6fdacf98c) needs that commit in the mirror
+for c_ in $(python3 -c "import glob,re;print(' '.join(sorted({m.group(1) for f in glob.glob('physical/ref_tile/qkd_kvs_*/views/*/provenance/view_export.abstract.json') for m in [re.search(r'closure-loop/[^/\"]+-([0-9a-f]{9})/', open(f).read())] if m})))"); do
+  git cat-file -e "$c_^{commit}" 2>/dev/null || { f_=$(git -C $M rev-parse -q --verify "$c_^{commit}" 2>/dev/null) || f_=; [ -n "$f_" ] || git -C $M fetch -q $GH claude/kv-attn2b-1019 || true; }
+done
 miss=
 while IFS=$'\t' read -r n rb sha; do
   case $n in qkd_d2d_static*) f=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static/qkd_d2d_static.lef;;
