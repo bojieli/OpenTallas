@@ -280,13 +280,13 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
     sx = ELEM_SEG.get((mat.fmt, mat.K, nseg))
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
-                        seg_extra=sx)
+                        seg_extra=sx, assign=assign)
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
     plan['elem_class'] = [mat.fmt, max(units), 2]

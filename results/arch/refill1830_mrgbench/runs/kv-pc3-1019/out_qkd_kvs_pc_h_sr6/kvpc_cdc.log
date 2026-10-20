@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVPC_CDC PASS edges=20000 checks=44608 c_v=27473 e_v=20923 errors=0 unqualified_payload_diffs=2615 mut=0
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_cdc.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.082 s; speed 249.548 us/s
+- Verilator: cpu 0.082 s on 1 threads; allocated 7 MB
+

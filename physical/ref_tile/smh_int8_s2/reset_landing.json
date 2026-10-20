@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_smh_int8_tile_safe",
+ "enable": false,
+ "reason": "the safe RTL lands rst_n itself in exactly two sampled posedge stages (kept reset_first -> 9 kept reset_final copies, each <=24 source reset pins) = the age of the old 2-stage flow landing; a flow landing would add two more reset edges"
+}

@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS",
+  "input_sha256": "f78cea8af28b15937316ca31ea473a916fe1342d8bf91255bd3023c5dfd2fc5e",
+  "output_sha256": "8b4bec803a414206357c445865111f94292af06282dfc60e539223a0375530fb",
+  "same_actual_transition_copies": 13,
+  "added_real_inverters": 13,
+  "changed_reset_endpoint_pins": 292,
+  "unchanged_original_cells_except_exact_reset_endpoints": 34576,
+  "unchanged_original_assignments": true,
+  "unchanged_ports": true,
+  "added_serial_edges": 0,
+  "first_convergence": "actual common rising clock edge OR actual shared asynchronous assertion; no power-up equality assumption",
+  "parent_before_use": "must preserve existing reset/boot admission; unchanged original full-source miter is separate evidence"
+}

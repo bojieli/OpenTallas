@@ -1,0 +1,4 @@
+CALIBRATE {"schema": "opentallas.qwen.dv-mat-ages.v1", "l8_ar": 26, "ar_hop": 2.0, "xc_cc": 2, "amax_ami": 3, "arx_after_amv": 3, "faults": []}
+CALIBRATE OK
+rc=0
+AGES MATCH {'l8_ar': (26, 26), 'ar_hop': (2.0, 2.0), 'amax_ami': (3, 3), 'arx_after_amv': (3, 3), 'xc_cc': (2, 2)}

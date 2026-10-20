@@ -31,7 +31,11 @@ module qkd_host_native_context_tx(
  end
 endmodule
 
-module qfd_host_native_context_rx(
+// MU_HEAD (MU-DQ-BOOTCTX 2026-10-19; opt-in, 0 = unchanged): on the Qwen multi-user die the head's layer context also
+// carries the fillers' native contexts, user on head_position[17:16] (MU-DQ-D2DUSER carrier; positions < 8192).  A
+// filler context (user != 0) is not the HOST latency-user context this receiver holds: it is skipped here (native59 NU 4
+// checks it against its own per-user epoch); a user-0 context is checked exactly as before.
+module qfd_host_native_context_rx #(parameter integer MU_HEAD = 0)(
  input wire ck,rst_n,receive_slot,rx_v,input wire[547:0]rx_record,
  input wire program_begin_v,program_ready,installed_fusedcap,
  input wire[15:0]program_epoch,input wire[63:0]program_digest,
@@ -56,7 +60,7 @@ module qfd_host_native_context_rx(
     else begin host_epoch_valid<=1;host_tag<=tag;host_gen<=rx_record[60:59];host_fusedcap<=rx_record[61];host_image_epoch<=rx_record[77:62];host_image_digest<=rx_record[141:78];end
    end
    if(host_epoch_valid&&(!program_ready||program_epoch!=host_image_epoch||program_digest!=host_image_digest||installed_fusedcap!=host_fusedcap))begin host_epoch_valid<=0;if(native_active)fault<=1;end
-   if(head_context_v&&head_stage>=1&&head_stage<=36)
+   if(head_context_v&&head_stage>=1&&head_stage<=36&&(MU_HEAD==0||head_position[17:16]==2'd0))
     if(!host_epoch_valid||!host_fusedcap||head_token!=host_tag[36:19]||head_position>=8192||head_position[12:0]!=host_tag[18:6])fault<=1;
   end
  end

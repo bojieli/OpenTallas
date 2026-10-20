@@ -1,0 +1,7 @@
+GEN7 reach repair moved 2,923 previously declared spare input zero literals onto newly inserted full-width relay stages. The original per-instance input permissions still named the downstream replicas, whose inputs had become nets. The strict binder correctly reported five forwarded relay master classes with INPUT_TIED failures.
+
+Source 7754d947e traces each exact existing instance-declared input bit through the actual payload graph of source-pinned bit-independent relay/landing families. It authorizes the actual zero-literal origin only. It does not infer a pad from an unrelated zero, another replica's used width, a master-wide minimum, or a repair-instance name. Output permissions are unchanged.
+
+Six replica-pad tests cover the inserted-stage mechanism, original input permissions, private spare outputs, functional zeros, wrong instance/master identity, actual bit permutations, and nonzero/ambiguous literals. Two existing tests exercise the actual FWD main/form/render migration and wrong-master refusal. All tests ran on the fleet.
+
+The actual proof reruns native binding, relay pad derivation, unchanged exact static-head and PV-zero contracts, and the full strict checker on the immutable GEN7 case. All outputs are external to the active run under ot-epyc5:/srv/opentallas-scratch/claude/kv-exact-padgap-1019/gen7_strict. The original run and gate worktrees were not modified. See receipt.json for exact source/input/output hashes and baseline/fixed summaries. Remaining functional unread/open faults remain failures; this is not release qualification.

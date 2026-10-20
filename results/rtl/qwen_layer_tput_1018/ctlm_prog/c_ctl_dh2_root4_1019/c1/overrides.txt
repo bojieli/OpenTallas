@@ -1,0 +1,3 @@
+image c36fbf0c46078f2b xpf_transport_edges 15 ages results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json
+drive: tools/qwen_layerbench/drive_qwc_slice_ctl_prog.svh with o_n_dvw_hr_wi__r25 -> __r26 (dh2 hr lane 26 hops); head probes -> g_hard_hr.u_hr (die HARD_HR=1 default, h16c hard head leaf)
+record bundle: SMOKE_COMP_AUTH=2 (as dv2f14bn cctl.sh)

@@ -151,7 +151,7 @@ def load_targets(path):
 
 
 def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False, budget=None, region_map=None,
-           families=None, ff_dump=None):
+           families=None, ff_dump=None, per_region=False):
     nodes, pairs, summ = load(dump)
     model = model_arrivals(nodes)
     R = load_targets(targets)
@@ -266,7 +266,7 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
     inter_summary["by_pair"] = {k: stats(v) for k, v in sorted(inter_summary["by_pair"].items())}
     neighbour = None
     if budget is not None:
-        neighbour = neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes)
+        neighbour = neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes, per_region)
     out = dict(
         neighbour_check=neighbour,
         schema="opentallas.die_clock_check.v1", dump=os.path.abspath(dump), dump_summary=summ,
@@ -285,7 +285,7 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
     return out
 
 
-def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
+def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes, per_region=False):
     """OWNER 2026-10-16 neighbour-relative clocking: every COMMUNICATING pair (die netlist data nets / bus list) whose
     two clock entries belong to one synchronous family must be within `budget` ps of flop-arrival skew at TT (this dump)
     and FF (--ff-dump, the same die at the FF corner).  Pairs are classed by region pair (region = balance group of the
@@ -322,6 +322,11 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
         ra, rb = root_of(ea), root_of(eb)
         fa, fb = fam.get(ra, ra if families else "one"), fam.get(rb, rb if families else "one")
         ga = gmap.get(p.get("region_a"), p.get("region_a")); gb = gmap.get(p.get("region_b"), p.get("region_b"))
+        if per_region:
+            # QW-DIECLK 10-19 landed-regions standard: every region is its own synchronous family even when a forwarded
+            # spine feeds several (one common ancestor); cross-region pairs are mesochronous and must be LANDED
+            # (judged by qwen_landed_pairs / regional_verdict), never by skew here
+            fa, fb = ga, gb
         if fa != fb:
             k = "async:" + "|".join(sorted((str(fa), str(fb))))
             c = classes.setdefault(k, dict(pairs=0, judged=False))
@@ -423,13 +428,15 @@ def main():
     r.add_argument("--budget-ps", type=float, help="neighbour-relative check: max flop-arrival skew of communicating pairs")
     r.add_argument("--ff-dump", help="the same die dumped at the FF corner (hold side of the neighbour check)")
     r.add_argument("--region-map", help="tools/die_clock build spec: tree name -> balance_group = region")
+    r.add_argument("--per-region", action="store_true", help="each region (balance group) is its own family")
     r.add_argument("--families", help='JSON {family: [root node, ...]}: synchronous families; pairs across are async')
     sub.add_parser("tcl")
     a = ap.parse_args()
     if a.cmd == "tcl":
         print(os.path.join(HERE, "die_clock_check.tcl"))
         return
-    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs, a.budget_ps, a.region_map, a.families, a.ff_dump)
+    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs, a.budget_ps, a.region_map, a.families, a.ff_dump,
+                 getattr(a, "per_region", False))
     txt = table(res, a.top)
     if a.out:
         with open(a.out, "w") as fh:

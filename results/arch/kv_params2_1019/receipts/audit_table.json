@@ -1,0 +1,50 @@
+{
+ "ot_qwen_tp8_pv_wide_ctl_tb": {
+  "closed": "qkd_pv_ctl_tb1-b1-cebb296c4",
+  "equiv": {
+   "cells": 916,
+   "log_sha256": "dfdcad696bbcec1449fa8fdad71e3ad748b64d85a77ec0814320009e2670d29f",
+   "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct; reset base: 6 rst_n=0 edges, paired initial state, steps 7..10 (miter, sat -verify)",
+   "proven_cells": 916,
+   "rc": 0,
+   "seconds": [
+    0.3,
+    409.1
+   ],
+   "unproven_cells": 0,
+   "unproven_sample": []
+  },
+  "identity_current": true,
+  "proven": true,
+  "spec_diff": {},
+  "state": {
+   "gate_only": 0,
+   "gate_only_sample": [],
+   "gold_only": 116,
+   "gold_only_sample": [
+    "cmd[21]",
+    "cmd[22]",
+    "cmd[23]",
+    "cmd[24]",
+    "cmd[32]",
+    "cmd[33]",
+    "cmd[34]",
+    "cmd[35]",
+    "cmd[36]",
+    "cmd[37]",
+    "cmd[38]",
+    "cmd[39]",
+    "cmd[40]",
+    "cmd[41]",
+    "cmd[42]",
+    "cmd[43]",
+    "cmd[44]",
+    "cmd[45]",
+    "cmd[46]",
+    "cmd[47]"
+   ],
+   "gold_regs": 804,
+   "paired": 697
+  }
+ }
+}

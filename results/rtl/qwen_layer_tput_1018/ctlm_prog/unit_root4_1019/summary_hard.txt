@@ -1,0 +1,38 @@
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+CTLM_PROG MUT=0 BMUT=1 HARD_HR=1 HRA=0 DECODE=3: FAIL 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 5062: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 6979: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 11645: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 13562: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 18488: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 20405: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+CTLM_PROG MUT=0 BMUT=2 HARD_HR=1 HRA=0 DECODE=3: FAIL 60/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 4960: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing CMD at 1193 0xf0000000000000000000000000003
+    missing CMD at 1260 0xf0000000000000000000000000023
+    missing CMD at 1467 0xf0000000000000000000000000033
+    missing CMD at 1493 0xf0000000000000000000000000043
+    missing CMD at 1524 0xf0000000000000000000000000053
+    missing CMD at 1549 0xf0000000000000000000000000063
+    missing CMD at 1580 0xf0000000000000000000000000073
+    missing CMD at 1607 0xf0000000000000000000000000083
+    unexpected CMD at 1194 0xf0000000000000000000000000003
+    unexpected CMD at 1261 0xf0000000000000000000000000023
+    unexpected CMD at 1468 0xf0000000000000000000000000033
+CTLM_PROG MUT=1 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: FAIL 58/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 4960: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing CMD at 1047 0xf000000000000000000000000000f
+    missing LOC at 1111 ('EMB', 0)
+    missing CMD at 1193 0xf0000000000000000000000000003
+    missing CMD at 1260 0xf0000000000000000000000000023
+    missing CMD at 1467 0xf0000000000000000000000000033
+    missing CMD at 1493 0xf0000000000000000000000000043
+    missing CMD at 1524 0xf0000000000000000000000000053
+    missing CMD at 1549 0xf0000000000000000000000000063
+    unexpected CMD at 1048 0xf000000000000000000000000000f
+    unexpected LOC at 1112 ('EMB', 0)
+    unexpected CMD at 1194 0xf0000000000000000000000000003

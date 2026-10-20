@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_sys_face_mu_dhobs",
+ "enable": false,
+ "reason": "observer at the die's tt_ctlm dh pins, zero added edges by contract (dh_user names the h_start on the edge tt_ctlm's dh pin register samples it). With the compiled lists (USER_SEQ 0: OPSEG face starts are user 0) dh_user / res_user synthesise to constants; mu_fault is a flop (fault_q); seq_dh[42:36] feed the k counter / stage compare into flops (one compare level); seq_dh[186:44], [43], [35:0] unread (one die bus with tt_ctlm.dh). A pin-register wrapper would delay dh_user by 2 edges against dh."
+}

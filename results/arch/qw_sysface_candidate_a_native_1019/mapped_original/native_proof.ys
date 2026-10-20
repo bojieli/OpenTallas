@@ -1,0 +1,6 @@
+read_verilog -formal mapped_original/native_proof.sv
+hierarchy -top native_proof
+proc
+flatten
+opt_clean
+sat -verify -prove ok 1 -show-inputs -show-outputs

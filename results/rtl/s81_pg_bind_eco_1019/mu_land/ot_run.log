@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits  1354 GB (avail 1004, growth 23, headroom 0, waiters 0/0 GB) load 25/128 running 11 disk 2108 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-660933-1792452539 after 0 s
+OT_PG_ECO bound_terminals=304 instances=152 dont_touch_instances=152
+OT_PG_ECO_POST_PASS checked=546800
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+2ef184731ee4470e1da0d813ac09b92225107992393ca8a9a2cfac2974cb4cfc  6_final_pgbound.odb
+fdfa6c8e43d967291d847850c49f671531dd2813fbbc765c9e7b480b59546a94  pre_signal.txt
+fdfa6c8e43d967291d847850c49f671531dd2813fbbc765c9e7b480b59546a94  post_signal.txt
+37a3b8c5af91ac91f6b7ad64c273f5e50de5b5d9fa041195227d358f99f2bba5  /srv/opentallas-scratch2/claude/closure-loop/dsdv_mu_land-dsdv_mu_land-263e13fc3/routes/dsdv_mu_land_dsdv_mu_land_263e13fc3/work/orfs/results/asap7/opentallas_dsdv_mu_land_asap7_ref_dsdv_mu_land_dsdv_mu_land_263e13fc3/base/6_final.odb
+RC=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-660933-1792452539): exit 0

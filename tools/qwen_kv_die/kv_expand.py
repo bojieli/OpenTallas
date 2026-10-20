@@ -44,6 +44,8 @@ VIEWS = dict(
     ot_qkh_head_nb_native=f'{RT}/qkh_r3_nb_1014/views/ot_qkh_head_nb_native',
     ot_qkh_lane8=f'{RT}/ot_qkh_lane8_m5/views/ot_qkh_lane8',
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
+    # KV-DCAL2 10-19 (OT_KV_KPV_LK=1 heads): the per-lane KPV lockstep K-tree (kit physical/ref_tile/ot_qkh_ktree_lk)
+    ot_qkh_ktree_lk=f'{RT}/ot_qkh_ktree_lk/views/ot_qkh_ktree_lk',
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
     # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
@@ -89,6 +91,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            ot_qkh_head_stin_native=f'{SR}/ot_qkh_head_native.sv', ot_qkh_head_stk_native=f'{SR}/ot_qkh_head_native_r3.sv',
            ot_qkh_head_nb_native=f'{SR}/ot_qkh_head_native_r3.sv', ot_qkh_lane8='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
            ot_qkh_ktree='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
+           ot_qkh_ktree_lk='rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv',
            **{f'qkd_ectl_{x}_tp8_direct': f'{SR}/qkd_ectl_native_direct_tp8.sv' for x in 'abc'},
            qkd_ectl_a_tp8_epoch_direct=f'{SR}/qkd_ectl_a_tp8_epoch_direct.sv',
            qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv',
@@ -350,7 +353,8 @@ def main(argv=None):
     ap.add_argument('--parameter-profiles', type=Path,
                     default=__import__('os').environ.get('OT_KV_PARAMETER_PROFILES'),
                     help='Exact selected child profiles (or OT_KV_PARAMETER_PROFILES)')
-    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification',
+                    default=__import__('os').environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
@@ -492,8 +496,8 @@ def main(argv=None):
         rectangles = []
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
-            ct = base_type(c['type'])
-            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
+            original_ct = base_type(c['type'])
+            ct = ALIAS.get(original_ct, original_ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
             if ct not in leaf:
                 raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
             used_leaf.add(ct)
@@ -518,11 +522,18 @@ def main(argv=None):
             if cinst in occupied or cinst in child_params:
                 raise ValueError(f'{cinst}: duplicate instance or stale child parameters')
             occupied.add(cinst)
-            literals, profile = EP.preserve(ROOT, base_type(c['type']), c.get('parameters', {}),
+            overrides = c.get('parameters', {})
+            if ct != original_ct:
+                # Same ports do not establish parameter compatibility. This alias
+                # preserves only a parameterless original with no inherited overrides;
+                # other aliases require an explicit compatible parameter mapping.
+                if overrides or EP.integer_defaults((ROOT / RTL[original_ct]).read_text(), original_ct):
+                    raise ValueError(f'{original_ct} -> {ct}: explicit compatible parameter mapping required')
+            literals, profile = EP.preserve(ROOT, ct, overrides,
                                             RTL[ct], L['view'], profiles, a.diagnostic_parameter_profiles)
             if profile is not None:
                 child_params[cinst] = literals
-                rep['parameter_instances'][cinst] = dict(module=base_type(c['type']), literals=literals, profile=profile)
+                rep['parameter_instances'][cinst] = dict(module=ct, literals=literals, profile=profile)
             pc = []
             for p, bits in c['connections'].items():
                 if p not in L['ports']:

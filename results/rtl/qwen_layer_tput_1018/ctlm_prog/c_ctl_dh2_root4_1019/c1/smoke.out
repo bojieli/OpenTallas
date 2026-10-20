@@ -1,0 +1,18 @@
+slice_smoke: /srv/opentallas-scratch/claude/root4-qwpost/runs/c1/smoke/tb_qwc_slice_ctl.sv: 68 inputs (43 clock, 6 reset), 98 outputs
+%Warning: /srv/opentallas-scratch/claude/root4-qwpost/runs/c1/sfimg/qfd_tt_ctlm_opseg.viamap.hex:0: $readmem file not found
+SMOKE_FAIL qwc_slice_ctl MUT=0 errors 59374
+RESET_DET ports 98 nondet 98 undeclared_nondet 96
+SMOKE_RESET_NONDETERMINISTIC qwc_slice_ctl
+  UNDECLARED o_n_dvw_cmd_wi__r25
+  UNDECLARED o_n_dvw_st_wi__r23
+  UNDECLARED o_n_dvw_sys_face_seq_dh__fo1__r3
+  UNDECLARED o_n_dvw_tt_ctlm_emb_start
+  UNDECLARED o_n_dvw_tt_ctlm_emb_token
+  UNDECLARED o_n_ng_tt_command_stage_0
+  UNDECLARED o_n_ng_tt_layer_context_v_0
+  UNDECLARED o_n_ng_tt_native_pos_0
+  UNDECLARED o_n_ng_tt_native_tok_0
+  UNDECLARED o_n_rst_d2d__fo1__r3__t15
+  UNDECLARED o_n_rst_d2d__fo1__r3__t3
+  UNDECLARED o_n_rst_d2d__fo1__r3__t45
+SMOKE_RESULT FAIL qwc_slice_ctl MUT=0

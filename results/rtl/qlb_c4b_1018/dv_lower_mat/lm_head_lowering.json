@@ -1,0 +1,1760 @@
+{
+ "schema": "opentallas.qwen.dv-lm-head-lowering.v1",
+ "tool": "tools/qwen_layerbench/dv_lower_mat.py",
+ "programme": [
+  {
+   "die": 0,
+   "row0": 0,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 1,
+   "row0": 18992,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 2,
+   "row0": 37984,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 3,
+   "row0": 56976,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 4,
+   "row0": 75968,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 5,
+   "row0": 94960,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 6,
+   "row0": 113952,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "die": 7,
+   "row0": 132944,
+   "me_pcs": [
+    3,
+    4,
+    5,
+    6
+   ]
+  }
+ ],
+ "calendar": {
+  "rows": [
+   {
+    "pc": 3,
+    "unit": 1,
+    "edge": 160,
+    "round0": 0,
+    "blocks": 48,
+    "cycle": 2,
+    "hex": "100300000002"
+   },
+   {
+    "pc": 4,
+    "unit": 1,
+    "edge": 800,
+    "round0": 8,
+    "blocks": 48,
+    "cycle": 642,
+    "hex": "100400000282"
+   },
+   {
+    "pc": 5,
+    "unit": 1,
+    "edge": 1440,
+    "round0": 16,
+    "blocks": 48,
+    "cycle": 1282,
+    "hex": "100500000502"
+   },
+   {
+    "pc": 6,
+    "unit": 1,
+    "edge": 2080,
+    "round0": 24,
+    "blocks": 5,
+    "cycle": 1922,
+    "hex": "100600000782"
+   },
+   {
+    "pc": 7,
+    "unit": 0,
+    "edge": 2649,
+    "round0": null,
+    "blocks": 0,
+    "cycle": 2491,
+    "hex": "4007000009bb"
+   }
+  ],
+  "segment_start_edge": 158,
+  "tile_first": 40,
+  "dependency": "per-segment fixed-issue calendar armed at a nonzero prog_base: QLB-C4b item 2 (claude/qlb-c4b-lmh-1018); current RTL arms u_fixed_issue only at prog_base 0"
+ },
+ "dv": {
+  "stn": 298,
+  "emits": {
+   "0": 2168,
+   "10": 2168,
+   "8": 2169,
+   "6": 2170,
+   "4": 2171,
+   "2": 2173
+  },
+  "arx_at_w5": 2193,
+  "xc": {
+   "entry": 2189,
+   "cc_edge": 2191,
+   "cmd": "000000000000000262680000000c1",
+   "cc_word": 844430505213952,
+   "dst": 0
+  },
+  "gather_first": 2633,
+  "commands": [
+   {
+    "edge": 136,
+    "cmd": "b00000000000000001900000c0407",
+    "label": "ROOT s11"
+   },
+   {
+    "edge": 137,
+    "cmd": "a00000000000000001900000c0407",
+    "label": "ROOT s10"
+   },
+   {
+    "edge": 138,
+    "cmd": "900000000000000001900000c0407",
+    "label": "ROOT s9"
+   },
+   {
+    "edge": 139,
+    "cmd": "800000000000000001900000c0407",
+    "label": "ROOT s8"
+   },
+   {
+    "edge": 140,
+    "cmd": "f000000000000000000000000001d",
+    "label": "AMAX clear (all)"
+   },
+   {
+    "edge": 141,
+    "cmd": "700000000000000001900000c0407",
+    "label": "ROOT s7"
+   },
+   {
+    "edge": 142,
+    "cmd": "600000000000000001900000c0407",
+    "label": "ROOT s6"
+   },
+   {
+    "edge": 143,
+    "cmd": "500000000000000001900000c0407",
+    "label": "ROOT s5"
+   },
+   {
+    "edge": 144,
+    "cmd": "400000000000000001900000c0407",
+    "label": "ROOT s4"
+   },
+   {
+    "edge": 145,
+    "cmd": "300000000000000001900000c0407",
+    "label": "ROOT s3"
+   },
+   {
+    "edge": 146,
+    "cmd": "200000000000000001900000c0407",
+    "label": "ROOT s2"
+   },
+   {
+    "edge": 147,
+    "cmd": "100000000000000001900000c0407",
+    "label": "ROOT s1"
+   },
+   {
+    "edge": 148,
+    "cmd": "0000cc358637bd0001908000c0417",
+    "label": "ROOT s0 (root, amnb 6)"
+   },
+   {
+    "edge": 170,
+    "cmd": "0000000000000000000000000004d",
+    "label": "AMAX ARX arm (root)"
+   },
+   {
+    "edge": 172,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r0 s11 snd"
+   },
+   {
+    "edge": 174,
+    "cmd": "a0000000000000004000a00240425",
+    "label": "STN lm_head r0 s10 fin"
+   },
+   {
+    "edge": 176,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r0 s9 snd"
+   },
+   {
+    "edge": 178,
+    "cmd": "80000000000000004000800240425",
+    "label": "STN lm_head r0 s8 fin"
+   },
+   {
+    "edge": 180,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r0 s7 snd"
+   },
+   {
+    "edge": 182,
+    "cmd": "60000000000000004000600240425",
+    "label": "STN lm_head r0 s6 fin"
+   },
+   {
+    "edge": 184,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r0 s5 snd"
+   },
+   {
+    "edge": 186,
+    "cmd": "40000000000000004000400240425",
+    "label": "STN lm_head r0 s4 fin"
+   },
+   {
+    "edge": 188,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r0 s3 snd"
+   },
+   {
+    "edge": 190,
+    "cmd": "20000000000000004000200240425",
+    "label": "STN lm_head r0 s2 fin"
+   },
+   {
+    "edge": 192,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r0 s1 snd"
+   },
+   {
+    "edge": 194,
+    "cmd": "00000000000000004000000240425",
+    "label": "STN lm_head r0 s0 fin"
+   },
+   {
+    "edge": 252,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r1 s11 snd"
+   },
+   {
+    "edge": 254,
+    "cmd": "a0000000000000004001600280425",
+    "label": "STN lm_head r1 s10 fin"
+   },
+   {
+    "edge": 256,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r1 s9 snd"
+   },
+   {
+    "edge": 258,
+    "cmd": "80000000000000004001400280425",
+    "label": "STN lm_head r1 s8 fin"
+   },
+   {
+    "edge": 260,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r1 s7 snd"
+   },
+   {
+    "edge": 262,
+    "cmd": "60000000000000004001200280425",
+    "label": "STN lm_head r1 s6 fin"
+   },
+   {
+    "edge": 264,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r1 s5 snd"
+   },
+   {
+    "edge": 266,
+    "cmd": "40000000000000004001000280425",
+    "label": "STN lm_head r1 s4 fin"
+   },
+   {
+    "edge": 268,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r1 s3 snd"
+   },
+   {
+    "edge": 270,
+    "cmd": "20000000000000004000e00280425",
+    "label": "STN lm_head r1 s2 fin"
+   },
+   {
+    "edge": 272,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r1 s1 snd"
+   },
+   {
+    "edge": 274,
+    "cmd": "00000000000000004000c00280425",
+    "label": "STN lm_head r1 s0 fin"
+   },
+   {
+    "edge": 332,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r2 s11 snd"
+   },
+   {
+    "edge": 334,
+    "cmd": "a00000000000000040022002c0425",
+    "label": "STN lm_head r2 s10 fin"
+   },
+   {
+    "edge": 336,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r2 s9 snd"
+   },
+   {
+    "edge": 338,
+    "cmd": "800000000000000040020002c0425",
+    "label": "STN lm_head r2 s8 fin"
+   },
+   {
+    "edge": 340,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r2 s7 snd"
+   },
+   {
+    "edge": 342,
+    "cmd": "60000000000000004001e002c0425",
+    "label": "STN lm_head r2 s6 fin"
+   },
+   {
+    "edge": 344,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r2 s5 snd"
+   },
+   {
+    "edge": 346,
+    "cmd": "40000000000000004001c002c0425",
+    "label": "STN lm_head r2 s4 fin"
+   },
+   {
+    "edge": 348,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r2 s3 snd"
+   },
+   {
+    "edge": 350,
+    "cmd": "20000000000000004001a002c0425",
+    "label": "STN lm_head r2 s2 fin"
+   },
+   {
+    "edge": 352,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r2 s1 snd"
+   },
+   {
+    "edge": 354,
+    "cmd": "000000000000000040018002c0425",
+    "label": "STN lm_head r2 s0 fin"
+   },
+   {
+    "edge": 412,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r3 s11 snd"
+   },
+   {
+    "edge": 414,
+    "cmd": "a0000000000000004002e00300425",
+    "label": "STN lm_head r3 s10 fin"
+   },
+   {
+    "edge": 416,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r3 s9 snd"
+   },
+   {
+    "edge": 418,
+    "cmd": "80000000000000004002c00300425",
+    "label": "STN lm_head r3 s8 fin"
+   },
+   {
+    "edge": 420,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r3 s7 snd"
+   },
+   {
+    "edge": 422,
+    "cmd": "60000000000000004002a00300425",
+    "label": "STN lm_head r3 s6 fin"
+   },
+   {
+    "edge": 424,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r3 s5 snd"
+   },
+   {
+    "edge": 426,
+    "cmd": "40000000000000004002800300425",
+    "label": "STN lm_head r3 s4 fin"
+   },
+   {
+    "edge": 428,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r3 s3 snd"
+   },
+   {
+    "edge": 430,
+    "cmd": "20000000000000004002600300425",
+    "label": "STN lm_head r3 s2 fin"
+   },
+   {
+    "edge": 432,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r3 s1 snd"
+   },
+   {
+    "edge": 434,
+    "cmd": "00000000000000004002400300425",
+    "label": "STN lm_head r3 s0 fin"
+   },
+   {
+    "edge": 492,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r4 s11 snd"
+   },
+   {
+    "edge": 494,
+    "cmd": "a0000000000000004003a00340425",
+    "label": "STN lm_head r4 s10 fin"
+   },
+   {
+    "edge": 496,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r4 s9 snd"
+   },
+   {
+    "edge": 498,
+    "cmd": "80000000000000004003800340425",
+    "label": "STN lm_head r4 s8 fin"
+   },
+   {
+    "edge": 500,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r4 s7 snd"
+   },
+   {
+    "edge": 502,
+    "cmd": "60000000000000004003600340425",
+    "label": "STN lm_head r4 s6 fin"
+   },
+   {
+    "edge": 504,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r4 s5 snd"
+   },
+   {
+    "edge": 506,
+    "cmd": "40000000000000004003400340425",
+    "label": "STN lm_head r4 s4 fin"
+   },
+   {
+    "edge": 508,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r4 s3 snd"
+   },
+   {
+    "edge": 510,
+    "cmd": "20000000000000004003200340425",
+    "label": "STN lm_head r4 s2 fin"
+   },
+   {
+    "edge": 512,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r4 s1 snd"
+   },
+   {
+    "edge": 514,
+    "cmd": "00000000000000004003000340425",
+    "label": "STN lm_head r4 s0 fin"
+   },
+   {
+    "edge": 572,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r5 s11 snd"
+   },
+   {
+    "edge": 574,
+    "cmd": "a0000000000000004004600380425",
+    "label": "STN lm_head r5 s10 fin"
+   },
+   {
+    "edge": 576,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r5 s9 snd"
+   },
+   {
+    "edge": 578,
+    "cmd": "80000000000000004004400380425",
+    "label": "STN lm_head r5 s8 fin"
+   },
+   {
+    "edge": 580,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r5 s7 snd"
+   },
+   {
+    "edge": 582,
+    "cmd": "60000000000000004004200380425",
+    "label": "STN lm_head r5 s6 fin"
+   },
+   {
+    "edge": 584,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r5 s5 snd"
+   },
+   {
+    "edge": 586,
+    "cmd": "40000000000000004004000380425",
+    "label": "STN lm_head r5 s4 fin"
+   },
+   {
+    "edge": 588,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r5 s3 snd"
+   },
+   {
+    "edge": 590,
+    "cmd": "20000000000000004003e00380425",
+    "label": "STN lm_head r5 s2 fin"
+   },
+   {
+    "edge": 592,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r5 s1 snd"
+   },
+   {
+    "edge": 594,
+    "cmd": "00000000000000004003c00380425",
+    "label": "STN lm_head r5 s0 fin"
+   },
+   {
+    "edge": 652,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r6 s11 snd"
+   },
+   {
+    "edge": 654,
+    "cmd": "a00000000000000040052003c0425",
+    "label": "STN lm_head r6 s10 fin"
+   },
+   {
+    "edge": 656,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r6 s9 snd"
+   },
+   {
+    "edge": 658,
+    "cmd": "800000000000000040050003c0425",
+    "label": "STN lm_head r6 s8 fin"
+   },
+   {
+    "edge": 660,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r6 s7 snd"
+   },
+   {
+    "edge": 662,
+    "cmd": "60000000000000004004e003c0425",
+    "label": "STN lm_head r6 s6 fin"
+   },
+   {
+    "edge": 664,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r6 s5 snd"
+   },
+   {
+    "edge": 666,
+    "cmd": "40000000000000004004c003c0425",
+    "label": "STN lm_head r6 s4 fin"
+   },
+   {
+    "edge": 668,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r6 s3 snd"
+   },
+   {
+    "edge": 670,
+    "cmd": "20000000000000004004a003c0425",
+    "label": "STN lm_head r6 s2 fin"
+   },
+   {
+    "edge": 672,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r6 s1 snd"
+   },
+   {
+    "edge": 674,
+    "cmd": "000000000000000040048003c0425",
+    "label": "STN lm_head r6 s0 fin"
+   },
+   {
+    "edge": 732,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r7 s11 snd"
+   },
+   {
+    "edge": 734,
+    "cmd": "a0000000000000004005e00400425",
+    "label": "STN lm_head r7 s10 fin"
+   },
+   {
+    "edge": 736,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r7 s9 snd"
+   },
+   {
+    "edge": 738,
+    "cmd": "80000000000000004005c00400425",
+    "label": "STN lm_head r7 s8 fin"
+   },
+   {
+    "edge": 740,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r7 s7 snd"
+   },
+   {
+    "edge": 742,
+    "cmd": "60000000000000004005a00400425",
+    "label": "STN lm_head r7 s6 fin"
+   },
+   {
+    "edge": 744,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r7 s5 snd"
+   },
+   {
+    "edge": 746,
+    "cmd": "40000000000000004005800400425",
+    "label": "STN lm_head r7 s4 fin"
+   },
+   {
+    "edge": 748,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r7 s3 snd"
+   },
+   {
+    "edge": 750,
+    "cmd": "20000000000000004005600400425",
+    "label": "STN lm_head r7 s2 fin"
+   },
+   {
+    "edge": 752,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r7 s1 snd"
+   },
+   {
+    "edge": 754,
+    "cmd": "00000000000000004005400400425",
+    "label": "STN lm_head r7 s0 fin"
+   },
+   {
+    "edge": 812,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r8 s11 snd"
+   },
+   {
+    "edge": 814,
+    "cmd": "a0000000000000004006a00440425",
+    "label": "STN lm_head r8 s10 fin"
+   },
+   {
+    "edge": 816,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r8 s9 snd"
+   },
+   {
+    "edge": 818,
+    "cmd": "80000000000000004006800440425",
+    "label": "STN lm_head r8 s8 fin"
+   },
+   {
+    "edge": 820,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r8 s7 snd"
+   },
+   {
+    "edge": 822,
+    "cmd": "60000000000000004006600440425",
+    "label": "STN lm_head r8 s6 fin"
+   },
+   {
+    "edge": 824,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r8 s5 snd"
+   },
+   {
+    "edge": 826,
+    "cmd": "40000000000000004006400440425",
+    "label": "STN lm_head r8 s4 fin"
+   },
+   {
+    "edge": 828,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r8 s3 snd"
+   },
+   {
+    "edge": 830,
+    "cmd": "20000000000000004006200440425",
+    "label": "STN lm_head r8 s2 fin"
+   },
+   {
+    "edge": 832,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r8 s1 snd"
+   },
+   {
+    "edge": 834,
+    "cmd": "00000000000000004006000440425",
+    "label": "STN lm_head r8 s0 fin"
+   },
+   {
+    "edge": 892,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r9 s11 snd"
+   },
+   {
+    "edge": 894,
+    "cmd": "a0000000000000004007600480425",
+    "label": "STN lm_head r9 s10 fin"
+   },
+   {
+    "edge": 896,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r9 s9 snd"
+   },
+   {
+    "edge": 898,
+    "cmd": "80000000000000004007400480425",
+    "label": "STN lm_head r9 s8 fin"
+   },
+   {
+    "edge": 900,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r9 s7 snd"
+   },
+   {
+    "edge": 902,
+    "cmd": "60000000000000004007200480425",
+    "label": "STN lm_head r9 s6 fin"
+   },
+   {
+    "edge": 904,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r9 s5 snd"
+   },
+   {
+    "edge": 906,
+    "cmd": "40000000000000004007000480425",
+    "label": "STN lm_head r9 s4 fin"
+   },
+   {
+    "edge": 908,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r9 s3 snd"
+   },
+   {
+    "edge": 910,
+    "cmd": "20000000000000004006e00480425",
+    "label": "STN lm_head r9 s2 fin"
+   },
+   {
+    "edge": 912,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r9 s1 snd"
+   },
+   {
+    "edge": 914,
+    "cmd": "00000000000000004006c00480425",
+    "label": "STN lm_head r9 s0 fin"
+   },
+   {
+    "edge": 972,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r10 s11 snd"
+   },
+   {
+    "edge": 974,
+    "cmd": "a00000000000000040082004c0425",
+    "label": "STN lm_head r10 s10 fin"
+   },
+   {
+    "edge": 976,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r10 s9 snd"
+   },
+   {
+    "edge": 978,
+    "cmd": "800000000000000040080004c0425",
+    "label": "STN lm_head r10 s8 fin"
+   },
+   {
+    "edge": 980,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r10 s7 snd"
+   },
+   {
+    "edge": 982,
+    "cmd": "60000000000000004007e004c0425",
+    "label": "STN lm_head r10 s6 fin"
+   },
+   {
+    "edge": 984,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r10 s5 snd"
+   },
+   {
+    "edge": 986,
+    "cmd": "40000000000000004007c004c0425",
+    "label": "STN lm_head r10 s4 fin"
+   },
+   {
+    "edge": 988,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r10 s3 snd"
+   },
+   {
+    "edge": 990,
+    "cmd": "20000000000000004007a004c0425",
+    "label": "STN lm_head r10 s2 fin"
+   },
+   {
+    "edge": 992,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r10 s1 snd"
+   },
+   {
+    "edge": 994,
+    "cmd": "000000000000000040078004c0425",
+    "label": "STN lm_head r10 s0 fin"
+   },
+   {
+    "edge": 1052,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r11 s11 snd"
+   },
+   {
+    "edge": 1054,
+    "cmd": "a0000000000000004008e00500425",
+    "label": "STN lm_head r11 s10 fin"
+   },
+   {
+    "edge": 1056,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r11 s9 snd"
+   },
+   {
+    "edge": 1058,
+    "cmd": "80000000000000004008c00500425",
+    "label": "STN lm_head r11 s8 fin"
+   },
+   {
+    "edge": 1060,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r11 s7 snd"
+   },
+   {
+    "edge": 1062,
+    "cmd": "60000000000000004008a00500425",
+    "label": "STN lm_head r11 s6 fin"
+   },
+   {
+    "edge": 1064,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r11 s5 snd"
+   },
+   {
+    "edge": 1066,
+    "cmd": "40000000000000004008800500425",
+    "label": "STN lm_head r11 s4 fin"
+   },
+   {
+    "edge": 1068,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r11 s3 snd"
+   },
+   {
+    "edge": 1070,
+    "cmd": "20000000000000004008600500425",
+    "label": "STN lm_head r11 s2 fin"
+   },
+   {
+    "edge": 1072,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r11 s1 snd"
+   },
+   {
+    "edge": 1074,
+    "cmd": "00000000000000004008400500425",
+    "label": "STN lm_head r11 s0 fin"
+   },
+   {
+    "edge": 1132,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r12 s11 snd"
+   },
+   {
+    "edge": 1134,
+    "cmd": "a0000000000000004009a00540425",
+    "label": "STN lm_head r12 s10 fin"
+   },
+   {
+    "edge": 1136,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r12 s9 snd"
+   },
+   {
+    "edge": 1138,
+    "cmd": "80000000000000004009800540425",
+    "label": "STN lm_head r12 s8 fin"
+   },
+   {
+    "edge": 1140,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r12 s7 snd"
+   },
+   {
+    "edge": 1142,
+    "cmd": "60000000000000004009600540425",
+    "label": "STN lm_head r12 s6 fin"
+   },
+   {
+    "edge": 1144,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r12 s5 snd"
+   },
+   {
+    "edge": 1146,
+    "cmd": "40000000000000004009400540425",
+    "label": "STN lm_head r12 s4 fin"
+   },
+   {
+    "edge": 1148,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r12 s3 snd"
+   },
+   {
+    "edge": 1150,
+    "cmd": "20000000000000004009200540425",
+    "label": "STN lm_head r12 s2 fin"
+   },
+   {
+    "edge": 1152,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r12 s1 snd"
+   },
+   {
+    "edge": 1154,
+    "cmd": "00000000000000004009000540425",
+    "label": "STN lm_head r12 s0 fin"
+   },
+   {
+    "edge": 1212,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r13 s11 snd"
+   },
+   {
+    "edge": 1214,
+    "cmd": "a000000000000000400a600580425",
+    "label": "STN lm_head r13 s10 fin"
+   },
+   {
+    "edge": 1216,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r13 s9 snd"
+   },
+   {
+    "edge": 1218,
+    "cmd": "8000000000000000400a400580425",
+    "label": "STN lm_head r13 s8 fin"
+   },
+   {
+    "edge": 1220,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r13 s7 snd"
+   },
+   {
+    "edge": 1222,
+    "cmd": "6000000000000000400a200580425",
+    "label": "STN lm_head r13 s6 fin"
+   },
+   {
+    "edge": 1224,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r13 s5 snd"
+   },
+   {
+    "edge": 1226,
+    "cmd": "4000000000000000400a000580425",
+    "label": "STN lm_head r13 s4 fin"
+   },
+   {
+    "edge": 1228,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r13 s3 snd"
+   },
+   {
+    "edge": 1230,
+    "cmd": "20000000000000004009e00580425",
+    "label": "STN lm_head r13 s2 fin"
+   },
+   {
+    "edge": 1232,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r13 s1 snd"
+   },
+   {
+    "edge": 1234,
+    "cmd": "00000000000000004009c00580425",
+    "label": "STN lm_head r13 s0 fin"
+   },
+   {
+    "edge": 1292,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r14 s11 snd"
+   },
+   {
+    "edge": 1294,
+    "cmd": "a000000000000000400b2005c0425",
+    "label": "STN lm_head r14 s10 fin"
+   },
+   {
+    "edge": 1296,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r14 s9 snd"
+   },
+   {
+    "edge": 1298,
+    "cmd": "8000000000000000400b0005c0425",
+    "label": "STN lm_head r14 s8 fin"
+   },
+   {
+    "edge": 1300,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r14 s7 snd"
+   },
+   {
+    "edge": 1302,
+    "cmd": "6000000000000000400ae005c0425",
+    "label": "STN lm_head r14 s6 fin"
+   },
+   {
+    "edge": 1304,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r14 s5 snd"
+   },
+   {
+    "edge": 1306,
+    "cmd": "4000000000000000400ac005c0425",
+    "label": "STN lm_head r14 s4 fin"
+   },
+   {
+    "edge": 1308,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r14 s3 snd"
+   },
+   {
+    "edge": 1310,
+    "cmd": "2000000000000000400aa005c0425",
+    "label": "STN lm_head r14 s2 fin"
+   },
+   {
+    "edge": 1312,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r14 s1 snd"
+   },
+   {
+    "edge": 1314,
+    "cmd": "0000000000000000400a8005c0425",
+    "label": "STN lm_head r14 s0 fin"
+   },
+   {
+    "edge": 1372,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r15 s11 snd"
+   },
+   {
+    "edge": 1374,
+    "cmd": "a000000000000000400be00600425",
+    "label": "STN lm_head r15 s10 fin"
+   },
+   {
+    "edge": 1376,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r15 s9 snd"
+   },
+   {
+    "edge": 1378,
+    "cmd": "8000000000000000400bc00600425",
+    "label": "STN lm_head r15 s8 fin"
+   },
+   {
+    "edge": 1380,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r15 s7 snd"
+   },
+   {
+    "edge": 1382,
+    "cmd": "6000000000000000400ba00600425",
+    "label": "STN lm_head r15 s6 fin"
+   },
+   {
+    "edge": 1384,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r15 s5 snd"
+   },
+   {
+    "edge": 1386,
+    "cmd": "4000000000000000400b800600425",
+    "label": "STN lm_head r15 s4 fin"
+   },
+   {
+    "edge": 1388,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r15 s3 snd"
+   },
+   {
+    "edge": 1390,
+    "cmd": "2000000000000000400b600600425",
+    "label": "STN lm_head r15 s2 fin"
+   },
+   {
+    "edge": 1392,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r15 s1 snd"
+   },
+   {
+    "edge": 1394,
+    "cmd": "0000000000000000400b400600425",
+    "label": "STN lm_head r15 s0 fin"
+   },
+   {
+    "edge": 1452,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r16 s11 snd"
+   },
+   {
+    "edge": 1454,
+    "cmd": "a000000000000000400ca00640425",
+    "label": "STN lm_head r16 s10 fin"
+   },
+   {
+    "edge": 1456,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r16 s9 snd"
+   },
+   {
+    "edge": 1458,
+    "cmd": "8000000000000000400c800640425",
+    "label": "STN lm_head r16 s8 fin"
+   },
+   {
+    "edge": 1460,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r16 s7 snd"
+   },
+   {
+    "edge": 1462,
+    "cmd": "6000000000000000400c600640425",
+    "label": "STN lm_head r16 s6 fin"
+   },
+   {
+    "edge": 1464,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r16 s5 snd"
+   },
+   {
+    "edge": 1466,
+    "cmd": "4000000000000000400c400640425",
+    "label": "STN lm_head r16 s4 fin"
+   },
+   {
+    "edge": 1468,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r16 s3 snd"
+   },
+   {
+    "edge": 1470,
+    "cmd": "2000000000000000400c200640425",
+    "label": "STN lm_head r16 s2 fin"
+   },
+   {
+    "edge": 1472,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r16 s1 snd"
+   },
+   {
+    "edge": 1474,
+    "cmd": "0000000000000000400c000640425",
+    "label": "STN lm_head r16 s0 fin"
+   },
+   {
+    "edge": 1532,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r17 s11 snd"
+   },
+   {
+    "edge": 1534,
+    "cmd": "a000000000000000400d600680425",
+    "label": "STN lm_head r17 s10 fin"
+   },
+   {
+    "edge": 1536,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r17 s9 snd"
+   },
+   {
+    "edge": 1538,
+    "cmd": "8000000000000000400d400680425",
+    "label": "STN lm_head r17 s8 fin"
+   },
+   {
+    "edge": 1540,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r17 s7 snd"
+   },
+   {
+    "edge": 1542,
+    "cmd": "6000000000000000400d200680425",
+    "label": "STN lm_head r17 s6 fin"
+   },
+   {
+    "edge": 1544,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r17 s5 snd"
+   },
+   {
+    "edge": 1546,
+    "cmd": "4000000000000000400d000680425",
+    "label": "STN lm_head r17 s4 fin"
+   },
+   {
+    "edge": 1548,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r17 s3 snd"
+   },
+   {
+    "edge": 1550,
+    "cmd": "2000000000000000400ce00680425",
+    "label": "STN lm_head r17 s2 fin"
+   },
+   {
+    "edge": 1552,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r17 s1 snd"
+   },
+   {
+    "edge": 1554,
+    "cmd": "0000000000000000400cc00680425",
+    "label": "STN lm_head r17 s0 fin"
+   },
+   {
+    "edge": 1612,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r18 s11 snd"
+   },
+   {
+    "edge": 1614,
+    "cmd": "a000000000000000400e2006c0425",
+    "label": "STN lm_head r18 s10 fin"
+   },
+   {
+    "edge": 1616,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r18 s9 snd"
+   },
+   {
+    "edge": 1618,
+    "cmd": "8000000000000000400e0006c0425",
+    "label": "STN lm_head r18 s8 fin"
+   },
+   {
+    "edge": 1620,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r18 s7 snd"
+   },
+   {
+    "edge": 1622,
+    "cmd": "6000000000000000400de006c0425",
+    "label": "STN lm_head r18 s6 fin"
+   },
+   {
+    "edge": 1624,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r18 s5 snd"
+   },
+   {
+    "edge": 1626,
+    "cmd": "4000000000000000400dc006c0425",
+    "label": "STN lm_head r18 s4 fin"
+   },
+   {
+    "edge": 1628,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r18 s3 snd"
+   },
+   {
+    "edge": 1630,
+    "cmd": "2000000000000000400da006c0425",
+    "label": "STN lm_head r18 s2 fin"
+   },
+   {
+    "edge": 1632,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r18 s1 snd"
+   },
+   {
+    "edge": 1634,
+    "cmd": "0000000000000000400d8006c0425",
+    "label": "STN lm_head r18 s0 fin"
+   },
+   {
+    "edge": 1692,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r19 s11 snd"
+   },
+   {
+    "edge": 1694,
+    "cmd": "a000000000000000400ee00700425",
+    "label": "STN lm_head r19 s10 fin"
+   },
+   {
+    "edge": 1696,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r19 s9 snd"
+   },
+   {
+    "edge": 1698,
+    "cmd": "8000000000000000400ec00700425",
+    "label": "STN lm_head r19 s8 fin"
+   },
+   {
+    "edge": 1700,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r19 s7 snd"
+   },
+   {
+    "edge": 1702,
+    "cmd": "6000000000000000400ea00700425",
+    "label": "STN lm_head r19 s6 fin"
+   },
+   {
+    "edge": 1704,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r19 s5 snd"
+   },
+   {
+    "edge": 1706,
+    "cmd": "4000000000000000400e800700425",
+    "label": "STN lm_head r19 s4 fin"
+   },
+   {
+    "edge": 1708,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r19 s3 snd"
+   },
+   {
+    "edge": 1710,
+    "cmd": "2000000000000000400e600700425",
+    "label": "STN lm_head r19 s2 fin"
+   },
+   {
+    "edge": 1712,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r19 s1 snd"
+   },
+   {
+    "edge": 1714,
+    "cmd": "0000000000000000400e400700425",
+    "label": "STN lm_head r19 s0 fin"
+   },
+   {
+    "edge": 1772,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r20 s11 snd"
+   },
+   {
+    "edge": 1774,
+    "cmd": "a000000000000000400fa00740425",
+    "label": "STN lm_head r20 s10 fin"
+   },
+   {
+    "edge": 1776,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r20 s9 snd"
+   },
+   {
+    "edge": 1778,
+    "cmd": "8000000000000000400f800740425",
+    "label": "STN lm_head r20 s8 fin"
+   },
+   {
+    "edge": 1780,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r20 s7 snd"
+   },
+   {
+    "edge": 1782,
+    "cmd": "6000000000000000400f600740425",
+    "label": "STN lm_head r20 s6 fin"
+   },
+   {
+    "edge": 1784,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r20 s5 snd"
+   },
+   {
+    "edge": 1786,
+    "cmd": "4000000000000000400f400740425",
+    "label": "STN lm_head r20 s4 fin"
+   },
+   {
+    "edge": 1788,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r20 s3 snd"
+   },
+   {
+    "edge": 1790,
+    "cmd": "2000000000000000400f200740425",
+    "label": "STN lm_head r20 s2 fin"
+   },
+   {
+    "edge": 1792,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r20 s1 snd"
+   },
+   {
+    "edge": 1794,
+    "cmd": "0000000000000000400f000740425",
+    "label": "STN lm_head r20 s0 fin"
+   },
+   {
+    "edge": 1852,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r21 s11 snd"
+   },
+   {
+    "edge": 1854,
+    "cmd": "a0000000000000004010600780425",
+    "label": "STN lm_head r21 s10 fin"
+   },
+   {
+    "edge": 1856,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r21 s9 snd"
+   },
+   {
+    "edge": 1858,
+    "cmd": "80000000000000004010400780425",
+    "label": "STN lm_head r21 s8 fin"
+   },
+   {
+    "edge": 1860,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r21 s7 snd"
+   },
+   {
+    "edge": 1862,
+    "cmd": "60000000000000004010200780425",
+    "label": "STN lm_head r21 s6 fin"
+   },
+   {
+    "edge": 1864,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r21 s5 snd"
+   },
+   {
+    "edge": 1866,
+    "cmd": "40000000000000004010000780425",
+    "label": "STN lm_head r21 s4 fin"
+   },
+   {
+    "edge": 1868,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r21 s3 snd"
+   },
+   {
+    "edge": 1870,
+    "cmd": "2000000000000000400fe00780425",
+    "label": "STN lm_head r21 s2 fin"
+   },
+   {
+    "edge": 1872,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r21 s1 snd"
+   },
+   {
+    "edge": 1874,
+    "cmd": "0000000000000000400fc00780425",
+    "label": "STN lm_head r21 s0 fin"
+   },
+   {
+    "edge": 1932,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r22 s11 snd"
+   },
+   {
+    "edge": 1934,
+    "cmd": "a00000000000000040112007c0425",
+    "label": "STN lm_head r22 s10 fin"
+   },
+   {
+    "edge": 1936,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r22 s9 snd"
+   },
+   {
+    "edge": 1938,
+    "cmd": "800000000000000040110007c0425",
+    "label": "STN lm_head r22 s8 fin"
+   },
+   {
+    "edge": 1940,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r22 s7 snd"
+   },
+   {
+    "edge": 1942,
+    "cmd": "60000000000000004010e007c0425",
+    "label": "STN lm_head r22 s6 fin"
+   },
+   {
+    "edge": 1944,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r22 s5 snd"
+   },
+   {
+    "edge": 1946,
+    "cmd": "40000000000000004010c007c0425",
+    "label": "STN lm_head r22 s4 fin"
+   },
+   {
+    "edge": 1948,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r22 s3 snd"
+   },
+   {
+    "edge": 1950,
+    "cmd": "20000000000000004010a007c0425",
+    "label": "STN lm_head r22 s2 fin"
+   },
+   {
+    "edge": 1952,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r22 s1 snd"
+   },
+   {
+    "edge": 1954,
+    "cmd": "000000000000000040108007c0425",
+    "label": "STN lm_head r22 s0 fin"
+   },
+   {
+    "edge": 2012,
+    "cmd": "b0000000000000000000000000435",
+    "label": "STN lm_head r23 s11 snd"
+   },
+   {
+    "edge": 2014,
+    "cmd": "a0000000000000004011e00800425",
+    "label": "STN lm_head r23 s10 fin"
+   },
+   {
+    "edge": 2016,
+    "cmd": "90000000000000000000000000435",
+    "label": "STN lm_head r23 s9 snd"
+   },
+   {
+    "edge": 2018,
+    "cmd": "80000000000000004011c00800425",
+    "label": "STN lm_head r23 s8 fin"
+   },
+   {
+    "edge": 2020,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r23 s7 snd"
+   },
+   {
+    "edge": 2022,
+    "cmd": "60000000000000004011a00800425",
+    "label": "STN lm_head r23 s6 fin"
+   },
+   {
+    "edge": 2024,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r23 s5 snd"
+   },
+   {
+    "edge": 2026,
+    "cmd": "40000000000000004011800800425",
+    "label": "STN lm_head r23 s4 fin"
+   },
+   {
+    "edge": 2028,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r23 s3 snd"
+   },
+   {
+    "edge": 2030,
+    "cmd": "20000000000000004011600800425",
+    "label": "STN lm_head r23 s2 fin"
+   },
+   {
+    "edge": 2032,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r23 s1 snd"
+   },
+   {
+    "edge": 2034,
+    "cmd": "00000000000000004011400800425",
+    "label": "STN lm_head r23 s0 fin"
+   },
+   {
+    "edge": 2096,
+    "cmd": "900000000000000000000000001b5",
+    "label": "STN lm_head r24 s9 snd"
+   },
+   {
+    "edge": 2098,
+    "cmd": "800000000000000040128008401a5",
+    "label": "STN lm_head r24 s8 fin"
+   },
+   {
+    "edge": 2100,
+    "cmd": "70000000000000000000000000435",
+    "label": "STN lm_head r24 s7 snd"
+   },
+   {
+    "edge": 2102,
+    "cmd": "60000000000000004012600840425",
+    "label": "STN lm_head r24 s6 fin"
+   },
+   {
+    "edge": 2104,
+    "cmd": "50000000000000000000000000435",
+    "label": "STN lm_head r24 s5 snd"
+   },
+   {
+    "edge": 2106,
+    "cmd": "40000000000000004012400840425",
+    "label": "STN lm_head r24 s4 fin"
+   },
+   {
+    "edge": 2108,
+    "cmd": "30000000000000000000000000435",
+    "label": "STN lm_head r24 s3 snd"
+   },
+   {
+    "edge": 2110,
+    "cmd": "20000000000000004012200840425",
+    "label": "STN lm_head r24 s2 fin"
+   },
+   {
+    "edge": 2112,
+    "cmd": "10000000000000000000000000435",
+    "label": "STN lm_head r24 s1 snd"
+   },
+   {
+    "edge": 2114,
+    "cmd": "00000000000000004012000840425",
+    "label": "STN lm_head r24 s0 fin"
+   },
+   {
+    "edge": 2148,
+    "cmd": "a000000000000000000000000002d",
+    "label": "AMAX emit s10"
+   },
+   {
+    "edge": 2153,
+    "cmd": "8000000000000000000000000002d",
+    "label": "AMAX emit s8"
+   },
+   {
+    "edge": 2158,
+    "cmd": "6000000000000000000000000002d",
+    "label": "AMAX emit s6"
+   },
+   {
+    "edge": 2163,
+    "cmd": "4000000000000000000000000002d",
+    "label": "AMAX emit s4"
+   },
+   {
+    "edge": 2168,
+    "cmd": "0000000000000000000000000002d",
+    "label": "AMAX emit s0 (root)"
+   },
+   {
+    "edge": 2169,
+    "cmd": "2000000000000000000000000002d",
+    "label": "AMAX emit s2"
+   },
+   {
+    "edge": 2189,
+    "cmd": "000000000000000262680000000c1",
+    "label": "XC tag 1280114688 words 1 mode 1 dst 0"
+   },
+   {
+    "edge": 2197,
+    "cmd": "f000000000000000000000000008d",
+    "label": "AMAX GATHER arm (all)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: ot-epyc8       admits  1413 GB (avail 1046, growth 14, headroom 0, waiters 0/0 GB) load 18/128 running 6 disk 538 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-kv-ctx
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1128557-1792415133 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   kvctx_pass: MU_KVCTX_PASS kmut 0 rmut 0
+OK   kvctx_k1: MU_KVCTX_FAIL kmut 1 rmut 0: kvctx_k1_r0 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 9011, 8168), (5394, 2, 16, 8465, 8180)]) | K4 leaf loads [(2, 8465, 8180), (3, 8738, 8174), (1, 9011, 8168)] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+OK   kvctx_k2: MU_KVCTX_FAIL kmut 2 rmut 0: K1 KV identity: 3 reference words differ (of 4, want 4): ['202 KID BAD mu 1 1 0002801088ffd00 ref 1 00020008807fe80', '402 KID BAD mu 1 1 00030011117fb80 ref 1 00020008807fe80'] | K3 face pair end 217: face TAG 2801088ffd00 (want user 0 20008807fe80) valid 1; pair end 417: face TAG 30011117fb80 (want user 0 20008807fe80) valid 1; pair end 617: face TAG 3801199ffa00 (want user 0 4000883ffec0) valid 1
+OK   kvctx_k3: MU_KVCTX_FAIL kmut 3 rmut 0: kvctx_k3_r0 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 0, 0), (5394, 2, 16, 0, 0)]) | K4 leaf loads [] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+OK   kvctx_r1: MU_KVCTX_FAIL kmut 0 rmut 1: kvctx_k0_r1 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 9011, 8168), (5394, 2, 16, 8465, 8180)]) | K4 leaf loads [(2, 8465, 8180), (3, 8738, 8174), (1, 9011, 8168)] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+MU_KVCTX BENCHES: PASS
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1128557-1792415133): exit 0

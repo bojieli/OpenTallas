@@ -1,0 +1,30 @@
+[
+ {
+  "cell": "ot_s81sl_vn",
+  "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+  "lib_cell": "ot_s81sl_vn",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 463.7,
+  "spread_ps": 65.0,
+  "outputs": 423,
+  "inputs": 689,
+  "launch_ps": 204.2,
+  "launch_pin": "fault",
+  "capture_ps": 182.6,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 63.3,
+  "ff_launch_min_ps": 43.2,
+  "ff_hold_need_ps": -17.0,
+  "pass": true,
+  "fail_why": "",
+  "job": "s81sl_vn-s81sl_vn-b384d72cb",
+  "src": "origin/codex/closure-record-s81sl_vn-s81sl_vn-b384d72cb (CLOSED TT +100.23 / FF +8.11, e4e6f5661)"
+ }
+]

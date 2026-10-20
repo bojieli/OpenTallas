@@ -1,0 +1,13 @@
+# leg sl_NEG_m_gap12_stnpend mem 16 threads 8 2026-10-19T12:30:07-07:00
+# cmd: bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh ONE /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w NEG_m_gap12_stnpend DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=12 -- m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/NEG_g12
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   812 GB (avail 669, growth 101, headroom 0, waiters 0/0 GB) load 127/96 running 80 disk 6308 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4141565-1792438209 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4141565-1792438209): exit 0
+# ot-run rc=0 2026-10-19T12:59:28-07:00

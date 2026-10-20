@@ -1,0 +1,5 @@
+LEP_STATS sent A->B 1000 recv 1000, B->A 1000 recv 1000, mismatches 0, fault_main 0, overflow_fault 1, lane_flt A 000000 B 000000
+PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+BENCH_PASS lep_nhr MUT=none seed 7
+rc=0
+# MU-S81-2/RX 10-19 ot-run ot-epyc4, source claude/mu-s81-2-rx-1019 ddc529908 (staged r2), Verilator 5.050; die P = ot_s81sl_lep_mu_ab (s81sl_lepmu), dies A / B = ot_s81sl_lep_mu_a (s81sl_lepmua)

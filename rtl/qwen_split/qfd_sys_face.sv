@@ -77,13 +77,18 @@
 // ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
 // only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
+// MU_HEAD (MU-DQ-BOOTCTX 2026-10-19; opt-in, 0 = unchanged on every edge): on the Qwen multi-user die the ctlm's
+// layer context also carries the fillers' native contexts (user on tt_native_pos[17:16], qfd_tt_ctlm_dv FCTX); the HOST
+// context receiver checks user-0 contexts only (qfd_host_native_context_rx MU_HEAD).  Re-close: MU-DQ-SYSFACE.
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
-    parameter ROM_INSTANCE = "sys_face_cfg"
+    parameter ROM_INSTANCE = "sys_face_cfg",
+    parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -315,6 +320,18 @@ module qfd_sys_face #(
     end
     wire prog_busy = (st == S_PROG) || (st == S_ARM) || iss_prog || rd_prog || dq_prog;
 
+    // ================================================================ MU head contexts (MU-DQ-SYSFACE 2026-10-19)
+    // MU 1: qfd_tt_ctlm_dv carries the user of the head start on tt_native_pos[17:16] (MU-DQ-D2DUSER hu; user 0 = 2'b00, so
+    // user 0's word is the NU 1 word).  The HOST context register holds USER 0's kind-12 TAG (MU-KV-CTX: the face ends every
+    // slot pair on user 0), so only user-0 head contexts are checked against it, exactly as before (token, position < 8192,
+    // host epoch valid + fused capability).  A filler (user 1..3) head context -- its token / position come from its own
+    // initial context (KV kind-12 MU slot -> qfd_mu_ctx_rx -> ctlm loader) and its own argmax chain, which the face does not
+    // hold -- is checked for what the face does know: a valid installed host epoch with the fused capability, position
+    // < 8192 (pos[15:13] = 0) and token < 151936; else mu_hc_fault (sticky, joins face_fault).  MU 0: hc_v_u0 =
+    // tt_layer_context_v and mu_hc_fault = 0 (constant), the closed face's logic.  MUT 6 (MU 1 only): filler contexts are
+    // checked against the HOST tag as in MU 0 (the closed face's behaviour) -> a filler context faults.
+    wire hc_user0 = (MU == 0) || (MUT == 6) || tt_native_pos[17:16] == 2'd0;
+    wire hc_v_u0 = tt_layer_context_v && hc_user0;
     // ================================================================ program record port (existing RTL)
     wire        rp_program_ready, rp_fault;
     wire        rp_commit_v, rp_cap;
@@ -322,12 +339,12 @@ module qfd_sys_face #(
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
     wire        rp_tx_v;
     reg         t_running_q;
-    qfd_sys_face_record_port u_record (
+    qfd_sys_face_record_port #(.MU_HEAD(MU_HEAD)) u_record (
         .ck(ck), .rst_rn(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
         .cfg_image_ready({seq_cfg_image_ready, tt_control_stores_ready}),
-        .head_context_v(tt_layer_context_v), .head_stage(tt_command_stage), .head_token(tt_native_tok), .head_position(tt_native_pos),
+        .head_context_v(hc_v_u0), .head_stage(tt_command_stage), .head_token(tt_native_tok), .head_position(tt_native_pos),
         .begin_v(begin_v), .auth_v(rp_auth_v), .begin_epoch(rp_begin_epoch), .auth_epoch(rp_auth_epoch),
         .expected_pw(rp_expected_pw), .expected_dw(rp_expected_dw), .auth_digest(rp_auth_digest),
         .program_ready(rp_program_ready), .installed_fusedcap(rp_cap), .commit_v(rp_commit_v),
@@ -335,6 +352,19 @@ module qfd_sys_face #(
         .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
         .tx_v(rp_tx_v), .tx_observed_v(prog_tx_observed_v), .tx_record(prog_tx_record), .fault(rp_fault));
     assign host_fused_capability = rp_cap;
+    // MU filler head-context check (see "MU head contexts" above)
+    wire mu_hc_fault;
+    if (MU != 0) begin : g_mu_hc
+        reg q;
+        always @(posedge ck or negedge rst_rec[4])
+            if (!rst_rec[4]) q <= 1'b0;
+            else if (tt_layer_context_v && !hc_user0 && tt_command_stage >= 6'd1 && tt_command_stage <= 6'd36 &&
+                     (!host_epoch_valid || !rp_cap || tt_native_pos[15:13] != 3'd0 || tt_native_tok >= 18'd151936))
+                q <= 1'b1;
+        assign mu_hc_fault = q;
+    end else begin : g_nu1_hc
+        assign mu_hc_fault = 1'b0;
+    end
 
     // ================================================================ calendars
     wire halt = d2d_epoch_abort;
@@ -532,6 +562,6 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault;
     assign fault = face_fault;
 endmodule

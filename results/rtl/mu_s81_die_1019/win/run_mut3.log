@@ -1,0 +1,70 @@
+ERR c350 ev0 start2 mu_c 000000011
+ERR c363 ev1 start2 mu_c 000000011
+ERR c414 ev0 start3 mu_c 00000001d
+ERR c427 ev1 start3 mu_c 00000001d
+ERR c606 ev0 start6 mu_c 000000031
+ERR c619 ev1 start6 mu_c 000000031
+ERR c670 ev0 start7 mu_c 00000003d
+KU c678 user 0 pos 0
+ERR c683 ev1 start7 mu_c 00000003d
+KU c742 user 1 pos 0
+KU c806 user 2 pos 0
+ERR c862 ev0 start10 mu_c 000002011
+KU c870 user 3 pos 0
+ERR c875 ev1 start10 mu_c 000002011
+ERR c926 ev0 start11 mu_c 00000201d
+KU c934 user 4 pos 0
+ERR c939 ev1 start11 mu_c 00000201d
+KU c998 user 5 pos 0
+KU c1062 user 6 pos 0
+ERR c1118 ev0 start14 mu_c 000002031
+KU c1126 user 7 pos 0
+ERR c1131 ev1 start14 mu_c 000002031
+ERR c1182 ev0 start15 mu_c 00000203d
+KU c1190 user 0 pos 1
+ERR c1195 ev1 start15 mu_c 00000203d
+KU c1254 user 1 pos 1
+KU c1318 user 2 pos 1
+ERR c1374 ev0 start18 mu_c 000004011
+KU c1382 user 3 pos 1
+ERR c1387 ev1 start18 mu_c 000004011
+ERR c1438 ev0 start19 mu_c 00000401d
+KU c1446 user 4 pos 1
+ERR c1451 ev1 start19 mu_c 00000401d
+KU c1510 user 5 pos 1
+KU c1574 user 6 pos 1
+ERR c1630 ev0 start22 mu_c 000004031
+KU c1638 user 7 pos 1
+ERR c1643 ev1 start22 mu_c 000004031
+ERR c1694 ev0 start23 mu_c 00000403d
+KU c1702 user 0 pos 2
+ERR c1707 ev1 start23 mu_c 00000403d
+KU c1766 user 1 pos 2
+KU c1830 user 2 pos 2
+ERR c1886 ev0 start26 mu_c 000006011
+KU c1894 user 3 pos 2
+ERR c1899 ev1 start26 mu_c 000006011
+ERR c1950 ev0 start27 mu_c 00000601d
+KU c1958 user 4 pos 2
+ERR c1963 ev1 start27 mu_c 00000601d
+KU c2022 user 5 pos 2
+KU c2086 user 6 pos 2
+ERR c2142 ev0 start30 mu_c 000006031
+KU c2150 user 7 pos 2
+ERR c2155 ev1 start30 mu_c 000006031
+ERR c2206 ev0 start31 mu_c 00000603d
+KU c2214 user 0 pos 3
+ERR c2219 ev1 start31 mu_c 00000603d
+KU c2278 user 1 pos 3
+KU c2342 user 2 pos 3
+KU c2406 user 3 pos 3
+KU c2470 user 4 pos 3
+KU c2534 user 5 pos 3
+KU c2598 user 6 pos 3
+KU c2662 user 7 pos 3
+MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0000
+MUWIN FAIL errs 32
+- /home/ubuntu/wt/mu-s81-die/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_win.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.001 s; speed 2.282 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

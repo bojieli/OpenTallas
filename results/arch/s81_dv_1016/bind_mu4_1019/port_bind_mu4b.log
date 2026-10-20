@@ -1,0 +1,3 @@
+FAIL dsdv_svc_rs                        x14     OUTPUT_OPEN 
+FAIL dsdv_svc_rs_entry                  x2      OUTPUT_OPEN 
+DIE_PORT_BIND FAIL masters=42 instances=9009 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=1182 output_open_ports=10 top_assigns=0 params_not_in_rtl=0 strap_ports=40 pad_bits=210628 spare_out_bits=210500 unresolved_children=0 ambiguous_children=0 variant_children=15 landing_reset_mismatch=0 landing_reset_unresolved=0
