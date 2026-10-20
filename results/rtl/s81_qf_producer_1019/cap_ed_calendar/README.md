@@ -42,3 +42,14 @@ Lint of ot_s81sl_cap with EDLY 0 and 23: 0 errors (bench/lint_e*.log).
    regenerate the 15-epoch images. 2. Vehicle TB `ot_s81sl_cap #(.EDLY(23))` + the new leaf in source_files.f; rebuild fullsix
    (frontend ~930 s, build ~110 s) and rerun the coupled diagnostic (expect no F1 at child/n6; then CAP target3 programme / FIN).
 3. Die: gate the new leaf (s81sl_cap_ed) and re-gate the cap parent.
+
+## TOK2 correction (10-19 ~19:30): EDLY 23 alone does NOT close -- W lane 3 +16 with E +24
+The CAP-ED23 fullsix rerun (ot-epyc4 tok2-capd/fullsix_capd23, unit oth-ubuntu-3860260) removed the n6 F1 but kept the W-tree
+fault 0002 at 1801: the W tree carries FOUR frames (lanes 0..3 = L01 L02 L03 R01; R01 is W lane 3, FIRST_TREE_FAULT.md), and the
+original packing assumed W = L frames, E = R frames. Exact repacking with the real columns and no twin symmetry
+(root_pack_nosym.py): E-only delay NONE for D 0/23/24/30 (wD_23.json); lane-3 shift a x E shift b grid: FOUND first at a = 16,
+b = 24 (s_16_24.json, 44 words 1773..1820). RTL: new leaf ot_s81sl_cap_ld (one 70-b lane, ot_hdc_delay_rf 70 x 14 = 980 b,
+primed valid) on W lane 3 + ot_s81sl_cap_ed D 24: ot_s81sl_cap #(.EDLY(24), .WL3DLY(16)). Cost: +16 edges on R01 words, +24 on
+R02/R03 words (latency only, 0 macros, ~2.6 kb RF total) vs the Codex pre-tree SRAM rings (5 macros, 327,680 b, +856 FF, up to
++320 edges, parent reset fanout 54 FAIL). Benches 5.050 (bench_l16e24/): ld D16 PASS 191 checks, D15/D17 FAIL; ed D24 PASS 204,
+D23/D25 FAIL. Compiler: retained_xs_program.py --placements s_16_24.json --shifts '{"R01":16,"R02":24,"R03":24,...}'.
