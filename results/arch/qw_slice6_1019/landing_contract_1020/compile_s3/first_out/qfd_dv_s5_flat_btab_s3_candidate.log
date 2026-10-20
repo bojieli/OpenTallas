@@ -1,0 +1,160 @@
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_head_safe1.sv:364:5: Cannot find file containing module: 'ot_hdc_fp32_add_lat'
+  364 |     ot_hdc_fp32_add_lat #(.LAT(L), .DRST(0)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+      |     ^~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... Looked in:
+                        ot_hdc_fp32_add_lat
+                        ot_hdc_fp32_add_lat.v
+                        ot_hdc_fp32_add_lat.sv
+                        obj_dir/ot_hdc_fp32_add_lat
+                        obj_dir/ot_hdc_fp32_add_lat.v
+                        obj_dir/ot_hdc_fp32_add_lat.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-qw-parent-bind-1020/src'
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_head_safe1.sv:357:5: Cannot find file containing module: 'ot_hdc_fp32_mul_lat'
+  357 |     ot_hdc_fp32_mul_lat #(.LAT(L), .DRST(0)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+      |     ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_head_safe1.sv:698:9: Cannot find file containing module: 'ot_sram_1r1w2c_128x64_m1'
+  698 |         ot_sram_1r1w2c_128x64_m1 u_tlm (.wclk(clk), .rclk(clk),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:780:5: Cannot find file containing module: 'ot_hdc_delay'
+  780 |     ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_i), .d(g_pin), .q(g_q));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:781:5: Cannot find file containing module: 'ot_hdc_delay'
+  781 |     ot_hdc_delay #(.W(1), .D(DX - FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_i), .d(g_q), .q(g_dx));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1069:5: Cannot find file containing module: 'ot_hdc_delay'
+ 1069 |     ot_hdc_delay #(.W(NH), .D(REQ_PIPE), .RESET(1)) u_lrv (.clk(ck), .rst_n(rst_i), .d(lr1_v), .q(lr_v));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1070:5: Cannot find file containing module: 'ot_hdc_delay'
+ 1070 |     ot_hdc_delay #(.W(2*NH+NH*28), .D(REQ_PIPE)) u_lrd (.clk(ck), .rst_n(rst_i), .d({lr1_t, lr1_ep, lr1_p}),
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1077:5: Cannot find file containing module: 'ot_hdc_delay'
+ 1077 |     ot_hdc_delay #(.W(3), .D(QD)) u_phd (.clk(ck), .rst_n(rst_i), .d(ph_now), .q(phd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1078:5: Cannot find file containing module: 'ot_hdc_delay'
+ 1078 |     ot_hdc_delay #(.W(1), .D(QD), .RESET(1)) u_vd (.clk(ck), .rst_n(rst_i), .d(rd_now && ph_now < NE), .q(vd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1079:5: Cannot find file containing module: 'ot_hdc_delay'
+ 1079 |     ot_hdc_delay #(.W(1), .D(QD)) u_pd (.clk(ck), .rst_n(rst_i), .d(pool_now), .q(pd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:69:1: Cannot find file containing module: 'qfd_dv_reset_tree'
+   69 | qfd_dv_reset_tree #(.N(44)) u_safe_reset (.ck(ck),.rst_n(rst_l1),.q(sr_reset));
+      | ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:71:1: Cannot find file containing module: 'qfd_dv_reset_tree'
+   71 | qfd_dv_reset_tree #(.N(10)) u_math_reset (.ck(ck),.rst_n(rst_l1),.q(math_reset));
+      | ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:94:28: Cannot find file containing module: 'qfd_dv_station_copy'
+   94 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(400)) u_cfg_mid(.ck(ck),.d(cfg_v),.q(cfg_mid));
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:96:28: Cannot find file containing module: 'qfd_dv_station_copy'
+   96 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(500+z)) u_c(.ck(ck),.d(cfg_mid),.q(cfg_final[z]));end
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:101:28: Cannot find file containing module: 'qfd_dv_station_copy'
+  101 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(0)) u_mode_mid(.ck(ck),.d(cfg_mode),.q(mode_mid));
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:103:29: Cannot find file containing module: 'qfd_dv_station_copy'
+  103 |  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(100+z)) u_p(.ck(ck),.d(mode_mid),.q(mode_payload[z]));
+      |                             ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:104:29: Cannot find file containing module: 'qfd_dv_station_mode'
+  104 |  (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z==0)) u_m(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
+      |                             ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:109:29: Cannot find file containing module: 'qfd_dv_station_cfgbit'
+  109 |  (* keep_hierarchy="yes" *) qfd_dv_station_cfgbit #(.ID(z)) u_c(.ck(ck),.rst_n(sr_reset[26+z]),.cfg_v(cfg_final[2*z]),.d(safe_cfg_wsrc),.q(ws_source));
+      |                             ^~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:110:2: Cannot find file containing module: 'qfd_dv_ring_delay'
+  110 |  qfd_dv_ring_delay #(.W(1),.D(3+BT_LAT)) u_d(.clk(ck),.rst_n(sr_reset[28+z]),.d(ws_source),.q(ws_rep[z]));
+      |  ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:133:5: Cannot find file containing module: 'qfd_dv_sram_delay'
+  133 |     qfd_dv_sram_delay #(.W(DW), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(sr_reset[30]), .d(rs_s_lo), .q(ns_d));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:134:5: Cannot find file containing module: 'qfd_dv_sram_delay'
+  134 |     qfd_dv_sram_delay #(.W(DW), .D(SKEW)) u_skn (.ck(ck), .rst_n(sr_reset[31]), .d(rs_n_lo), .q(nn_d));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:135:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  135 |     qfd_dv_ring_delay #(.W(2),.D(SKEW/2),.ID(1)) u_sks_c0 (.clk(ck),.rst_n(sr_reset[32]),.d(rs_s_c[1:0]),.q(ns_c7));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:136:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  136 |     qfd_dv_ring_delay #(.W(2),.D(SKEW-SKEW/2+((MUT == 16) ? -1 : 0)),.ID(2)) u_sks_c1 (.clk(ck),.rst_n(sr_reset[32]),.d(ns_c7),.q(ns_c));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:137:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  137 |     qfd_dv_ring_delay #(.W(2),.D(SKEW/2),.ID(3)) u_skn_c0 (.clk(ck),.rst_n(sr_reset[33]),.d(rs_n_c[1:0]),.q(nn_c7));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:138:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  138 |     qfd_dv_ring_delay #(.W(2),.D(SKEW-SKEW/2),.ID(4)) u_skn_c1 (.clk(ck),.rst_n(sr_reset[33]),.d(nn_c7),.q(nn_c));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:177:9: Cannot find file containing module: 'qfd_dv_station_add_bounded'
+  177 |         qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_lo (.clk(ck), .rst_n(math_reset[l]), .valid_in(vlo_in),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:179:9: Cannot find file containing module: 'qfd_dv_station_add_bounded'
+  179 |         qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_hi (.clk(ck), .rst_n(math_reset[NL+l]), .valid_in(vhi_in),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:202:5: Cannot find file containing module: 'qfd_dv_sram_lookahead'
+  202 |     qfd_dv_sram_lookahead #(.W(DW)) u_hb (.ck(ck), .write(vhi && mode == 2'd0),
+      |     ^~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:215:9: Cannot find file containing module: 'qfd_dv_station_add_bounded'
+  215 |         qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_add (.clk(ck), .rst_n(math_reset[2*NL+l]), .valid_in(v8_in),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:239:5: Cannot find file containing module: 'qfd_dv_sram_lookahead'
+  239 |     qfd_dv_sram_lookahead #(.W(DW), .MUT(MUT == 17)) u_h9 (.ck(ck), .write(own9),
+      |     ^~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:245:9: Cannot find file containing module: 'qfd_dv_station_add_bounded'
+  245 |         qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_add (.clk(ck), .rst_n(math_reset[3*NL+l]), .valid_in(nbv && local_mode[2*l][2]),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:250:6: Cannot find file containing module: 'qfd_dv_station_out'
+  250 |      qfd_dv_station_out #(.W(16),.ID(z)) u_o(.ck(ck),.rst_n(sr_reset[34+z]),.d((v8_rep[z]&&local_mode[z][3])?y8[16*z+:16]:16'd0),.q(nb_od[16*z+:16]));
+      |      ^~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:252:5: Cannot find file containing module: 'qfd_dv_station_out'
+  252 |     qfd_dv_station_out #(.W(2),.ID(100)) u_ov(.ck(ck),.rst_n(sr_reset[38]),.d({1'b0,v8&&mode==2'd3}),.q(nb_oc));
+      |     ^~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:271:5: Cannot find file containing module: 'qfd_dv_sram_delay'
+  271 |     qfd_dv_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:273:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  273 |     qfd_dv_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:279:9: Cannot find file containing module: 'qfd_dv_station_mul_bounded'
+  279 |         qfd_dv_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0),.ID(l)) u_mul (.clk(ck), .rst_n(math_reset[4*NL+l]), .valid_in(fv3),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:284:5: Cannot find file containing module: 'qfd_dv_ring_delay'
+  284 |     qfd_dv_ring_delay #(.W(9), .D(SCALE_LAT)) u_jd (.clk(ck), .rst_n(sr_reset[41]), .d({ls3, j3}), .q({lo, jo}));
+      |     ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:296:5: Cannot find file containing module: 'ot_pl_land_phys_chunk_w'
+  296 |     ot_pl_land_phys_chunk_w #(.W(1),.D(4),.CHUNK_BITS(24)) u_flt_w (.ck(ck),.rsi(sr_reset[42]),.i(fault),.bank(flt_bank_o),.vld(flt_vld_o));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:297:5: Cannot find file containing module: 'ot_pl_land_phys_chunk_r'
+  297 |     ot_pl_land_phys_chunk_r #(.W(1),.D(4),.K(2),.CHUNK_BITS(24)) u_flt_r (.ck(ck),.rsi(sr_reset[43]),.bank(flt_bank_i),.vld(flt_vld_i),.o(flt_up));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vstream_sfu_t.sv:82:5: Cannot find file containing module: 'ot_hdc_rsqrt_q'
+   82 |     ot_hdc_rsqrt_q #(.LA(LA), .LM(LM)) u_rsq (.clk(clk), .rst_n(rt), .v(qv), .x(qx), .y(ny), .vo(nvo), .fault(nf));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vstream_sfu_t.sv:55:5: Cannot find file containing module: 'ot_hdc_recip_q'
+   55 |     ot_hdc_recip_q #(.LA(LA), .LM(LM)) u_rcp (.clk(clk), .rst_n(rt), .v(qv), .x(qx), .y(ny), .vo(nvo), .fault(nf));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vstream_sfu_t.sv:28:5: Cannot find file containing module: 'ot_hdc_exp_q'
+   28 |     ot_hdc_exp_q #(.LA(LA), .LM(LM)) u_exp (.clk(clk), .rst_n(rt), .v(qv), .x(qx), .y(ny), .vo(nvo), .fault(nf));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:906:5: Cannot find file containing module: 'qfd_dv_stream'
+  906 |     qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(rst), .sid(sid),
+      |     ^~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:916:5: Cannot find file containing module: 'qfd_dv_slice_tload'
+  916 |     qfd_dv_slice_tload #(.SLICE(TSLICE)) u_tld (.ck(ck), .rst_n(rst), .treq(treq_i),
+      |     ^~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:858:5: Cannot find file containing module: 'qfd_dv_scalar2'
+  858 |     qfd_dv_scalar2 #(.MUT(MUT), .MU_NU(MU_NU), .MU_MUT(0)) u_sc (.ck(ck), .rst_n(rst),
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:812:5: Cannot find file containing module: 'ot_hdc_vreduce'
+  812 |     ot_hdc_vreduce #(.SW(SW), .LV(4), .AW(AW)) u_red (.clk(ck), .rst_n(rst_c), .v_in(rd_v), .mx_in(rd_mx),
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:703:5: Cannot find file containing module: 'ot_hdc_delay'
+  703 |     ot_hdc_delay #(.W(GBW - WR*16), .D(RD - 1)) u_bd (.clk(ck), .rst_n(rst_l), .d(gb[GBW-1:WR*16]), .q(b_q[GBW-1:WR*16]));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:705:5: Cannot find file containing module: 'ot_hdc_delay'
+  705 |     ot_hdc_delay #(.W(3), .D(RD - 1), .RESET(1)) u_bv (.clk(ck), .rst_n(rst_l), .d(gv), .q(bv_q));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:706:5: Cannot find file containing module: 'ot_hdc_delay'
+  706 |     ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_lv (.clk(ck), .rst_n(rst_l), .d(lv1), .q(lv_q));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv:707:5: Cannot find file containing module: 'ot_hdc_delay'
+  707 |     ot_hdc_delay #(.W(96), .D(1)) u_pd (.clk(ck), .rst_n(rst_l), .d(pd1), .q(pd_q));
+      |     ^~~~~~~~~~~~
+%Error: Exiting due to too many errors encountered; --error-limit=50

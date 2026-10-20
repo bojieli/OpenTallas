@@ -1,0 +1,168 @@
+%Warning-MODDUP: rtl/test/full_sm_service/sram_models.sv:3:8: Duplicate declaration of module: 'ot_sram_1r1w_128x256_m1_r2c2'
+    3 | module ot_sram_1r1w_128x256_m1_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v:5:8: ... Location of original declaration
+    5 | module ot_sram_1r1w_128x256_m1_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:59:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+   59 |     ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+      |     ^~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... Looked in:
+                        ot_hdc_ksadd_k
+                        ot_hdc_ksadd_k.v
+                        ot_hdc_ksadd_k.sv
+                        obj_dir/ot_hdc_ksadd_k
+                        obj_dir/ot_hdc_ksadd_k.v
+                        obj_dir/ot_hdc_ksadd_k.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-qw-parent-bind-1020/src'
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:62:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+   62 |     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:63:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+   63 |     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:119:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  119 |     ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:120:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  120 |     ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:137:5: Cannot find file containing module: 'ot_hdc_lzc32'
+  137 |     ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:154:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  154 |     ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:155:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  155 |     ot_hdc_ksadd_k #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_add_lat.sv:177:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  177 |     ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:73:5: Cannot find file containing module: 'ot_hdc_lzc32'
+   73 |     ot_hdc_lzc32 u_la (.x({a_raw, 8'hff}), .n(a_lz));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:74:5: Cannot find file containing module: 'ot_hdc_lzc32'
+   74 |     ot_hdc_lzc32 u_lb (.x({b_raw, 8'hff}), .n(b_lz));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:106:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  106 |     ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:121:9: Cannot find file containing module: 'ot_hdc_mul24_rows'
+  121 |         ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
+      |         ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:181:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  181 |     ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_fp32_mul_lat.sv:226:5: Cannot find file containing module: 'ot_hdc_ksadd_k'
+  226 |     ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));
+      |     ^~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2.sv:333:3: Cannot find file containing module: 'ot_sram_1r1w_32x64_m1'
+  333 |   ot_sram_1r1w_32x64_m1 u_m(.clk(clk),.r_ce_in(r_ce_in),.r_addr_in(r_addr_in),.rd_out(result[64*b+:64]),
+      |   ^~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_head_safe1.sv:698:9: Cannot find file containing module: 'ot_sram_1r1w2c_128x64_m1'
+  698 |         ot_sram_1r1w2c_128x64_m1 u_tlm (.wclk(clk), .rclk(clk),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:446:5: Cannot find file containing module: 'ot_hdc_vline'
+  446 |     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:459:5: Cannot find file containing module: 'ot_hdc_qmul'
+  459 |     ot_hdc_qmul #(.L(LM)) m_half (clk, rst_n, v, x, 32'h3F000000, half, f[12]);    
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:468:13: Cannot find file containing module: 'ot_hdc_qmul'
+  468 |             ot_hdc_qmul #(.L(LM)) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yi[k], yy[k], f[4*k]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:469:13: Cannot find file containing module: 'ot_hdc_qmul'
+  469 |             ot_hdc_qmul #(.L(LM)) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], yy[k], hm[k], f[4*k+1]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:470:13: Cannot find file containing module: 'ot_hdc_qadd'
+  470 |             ot_hdc_qadd #(.L(LA)) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:472:13: Cannot find file containing module: 'ot_hdc_qmul'
+  472 |             ot_hdc_qmul #(.L(LM)) m_y  (clk, rst_n, vd[1 + IT*k + 2*LM + LA], yd[k], s[k], yi[k+1], f[4*k+3]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:48:5: Cannot find file containing module: 'ot_hdc_qadd'
+   48 |     ot_hdc_qadd u_add (clk, rst_n, v && !mx, a, b, ys, f);
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:168:17: Cannot find file containing module: 'ot_hdc_qadd'
+  168 |                 ot_hdc_qadd #(.L(3)) u_a (.clk(ck), .rst_n(rst_n), .v(lvv[lv-1]),
+      |                 ^~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:176:13: Cannot find file containing module: 'ot_hdc_vline'
+  176 |             ot_hdc_vline #(.D(3)) u_v (.clk(ck), .rst_n(rst_n), .v(lvv[lv-1]), .vd(vd));
+      |             ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:188:5: Cannot find file containing module: 'ot_hdc_qmul'
+  188 |     ot_hdc_qmul #(.L(3)) u_m (.clk(ck), .rst_n(rst_n), .v(tot_v && fuse), .a(total), .b(inv_n), .y(p1), .fault(f1));
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:189:5: Cannot find file containing module: 'ot_hdc_vline'
+  189 |     ot_hdc_vline #(.D(3)) u_v1 (.clk(ck), .rst_n(rst_n), .v(tot_v && fuse), .vd(vd1));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:190:5: Cannot find file containing module: 'ot_hdc_qadd'
+  190 |     ot_hdc_qadd #(.L(3)) u_e (.clk(ck), .rst_n(rst_n), .v(vd1[3]), .a(p1), .b(eps), .y(p2), .fault(f2));
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_scalar2.sv:191:5: Cannot find file containing module: 'ot_hdc_vline'
+  191 |     ot_hdc_vline #(.D(3)) u_v2 (.clk(ck), .rst_n(rst_n), .v(vd1[3]), .vd(vd2));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:395:5: Cannot find file containing module: 'ot_hdc_vline'
+  395 |     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:420:13: Cannot find file containing module: 'ot_hdc_qmul'
+  420 |             ot_hdc_qmul #(.L(LM)) m_m (clk, rst_n, vd[1 + IT*k], dd[k], yi[k], m[k], f[3*k]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:421:13: Cannot find file containing module: 'ot_hdc_qadd'
+  421 |             ot_hdc_qadd #(.L(LA)) a_s (clk, rst_n, vd[1 + IT*k + LM], 32'h40000000, {~m[k][31], m[k][30:0]}, s[k], f[3*k+1]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:423:13: Cannot find file containing module: 'ot_hdc_qmul'
+  423 |             ot_hdc_qmul #(.L(LM)) m_y (clk, rst_n, vd[1 + IT*k + LM + LA], yd[k], s[k], yi[k+1], f[3*k+2]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:316:5: Cannot find file containing module: 'ot_hdc_vline'
+  316 |     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:329:5: Cannot find file containing module: 'ot_hdc_qmul'
+  329 |     ot_hdc_qmul #(.L(LM)) m_t (clk, rst_n, vd[1], xc, K_LOG2E, t, f[0]);    
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:350:5: Cannot find file containing module: 'ot_hdc_qadd'
+  350 |     ot_hdc_qadd #(.L(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:352:5: Cannot find file containing module: 'ot_hdc_qadd'
+  352 |     ot_hdc_qadd #(.L(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+      |     ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:367:13: Cannot find file containing module: 'ot_hdc_qmul'
+  367 |             ot_hdc_qmul #(.L(LM)) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_sfu_q.sv:368:13: Cannot find file containing module: 'ot_hdc_qadd'
+  368 |             ot_hdc_qadd #(.L(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+      |             ^~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_slice_tload.sv:68:5: Cannot find file containing module: 'qfd_dv_table_rom_loader'
+   68 |     qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .WE_COPIES(NWC)) u_ld (.ck(ck), .rst_n(rst_n),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:85:9: Cannot find file containing module: 'ot_hdc_qmul'
+   85 |         ot_hdc_qmul u_sq (clk, rst_n, v_in && sq_in, x_in[32*l +: 32], x_in[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+      |         ^~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:93:5: Cannot find file containing module: 'ot_hdc_vline'
+   93 |     ot_hdc_vline #(.D(LM)) u_vq (.clk(clk), .rst_n(rst_n), .v(v_in), .vd(vqs));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:111:5: Cannot find file containing module: 'ot_hdc_vline'
+  111 |     ot_hdc_vline #(.D(CD)) u_vch (.clk(clk), .rst_n(rst_n), .v(c_v), .vd(vch));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:113:5: Cannot find file containing module: 'ot_hdc_vline'
+  113 |     ot_hdc_vline #(.D(CD)) u_mxl (.clk(clk), .rst_n(rst_n), .v(c_v && c_mx), .vd(mxl));
+      |     ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/ot_hdc_vreduce.sv:210:9: Cannot find file containing module: 'ot_hdc_vline'
+  210 |         ot_hdc_vline #(.D(LA)) u_vd (.clk(clk), .rst_n(rst_n), .v(pair || pass), .vd(vd));
+      |         ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:94:28: Cannot find file containing module: 'qfd_dv_station_copy'
+   94 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(400)) u_cfg_mid(.ck(ck),.d(cfg_v),.q(cfg_mid));
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:96:28: Cannot find file containing module: 'qfd_dv_station_copy'
+   96 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(500+z)) u_c(.ck(ck),.d(cfg_mid),.q(cfg_final[z]));end
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:101:28: Cannot find file containing module: 'qfd_dv_station_copy'
+  101 | (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(0)) u_mode_mid(.ck(ck),.d(cfg_mode),.q(mode_mid));
+      |                            ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/qfd_dv_redstn2_regional.sv:103:29: Cannot find file containing module: 'qfd_dv_station_copy'
+  103 |  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(100+z)) u_p(.ck(ck),.d(mode_mid),.q(mode_payload[z]));
+      |                             ^~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to too many errors encountered; --error-limit=50
